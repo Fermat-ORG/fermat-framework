@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
@@ -42,7 +42,7 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
     CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias,
                                                     final byte[] image,
                                                     long accuracy,
-                                                    Frecuency frecuency) throws CantCreateCryptoBrokerIdentityException   ,
+                                                    Frequency frequency) throws CantCreateCryptoBrokerIdentityException   ,
                                                                                CryptoBrokerIdentityAlreadyExistsException;
     /**
      *
@@ -52,7 +52,7 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
      */
     void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile,
                                     long accuracy,
-                                    Frecuency frecuency) throws CantUpdateBrokerIdentityException;
+                                    Frequency frequency) throws CantUpdateBrokerIdentityException;
 
     CryptoBrokerIdentity getCryptoBrokerIdentity(String publicKey) throws CantGetCryptoBrokerIdentityException, IdentityNotFoundException;
 

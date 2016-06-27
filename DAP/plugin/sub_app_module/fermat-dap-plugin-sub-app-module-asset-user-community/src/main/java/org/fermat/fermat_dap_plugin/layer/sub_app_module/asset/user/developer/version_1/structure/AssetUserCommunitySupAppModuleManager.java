@@ -136,7 +136,7 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
     public List<AssetUserActorRecord> getAllActorAssetUserRegistered(int max, int offset) throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list = null;
         List<AssetUserActorRecord> assetUserActorRecords = null;
@@ -649,7 +649,10 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetUserManager.createNewIdentityAssetUser(name, profile_img);
+        identityAssetUserManager.createNewIdentityAssetUser(name,
+                profile_img,
+                identityAssetUserManager.getAccuracyDataDefault(),
+                identityAssetUserManager.getFrequencyDataDefault());
     }
 
     @Override

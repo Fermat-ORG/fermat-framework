@@ -36,13 +36,13 @@ public interface Cities extends Serializable {
      * This method returns the city latitude.
      * @return
      */
-    float getLatitude();
+    double getLatitude();
 
     /**
      * This method returns the city longitude.
      * @return
      */
-    float getLongitude();
+    double getLongitude();
 
     /**
      * This method returns the country code from a city.

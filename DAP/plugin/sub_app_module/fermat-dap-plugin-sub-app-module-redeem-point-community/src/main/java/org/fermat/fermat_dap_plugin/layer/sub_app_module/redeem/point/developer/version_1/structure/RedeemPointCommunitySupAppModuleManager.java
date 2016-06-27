@@ -115,7 +115,7 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
     public List<RedeemPointActorRecord> getAllActorAssetRedeemPointRegistered(int max, int offset) throws CantGetAssetRedeemPointActorsException {
         List<ActorAssetRedeemPoint> list = null;
         List<RedeemPointActorRecord> actorAssetRedeemPoints = null;

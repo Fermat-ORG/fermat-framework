@@ -42,6 +42,8 @@ import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
+import org.fermat.fermat_dap_core.DAPPlatform;
+
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -113,7 +115,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new CERPlatform());
             fermatSystemContext.registerPlatform(new CHTPlatform());
             fermatSystemContext.registerPlatform(new CSHPlatform());
-           // fermatSystemContext.registerPlatform(new DAPPlatform());
+            fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
            // fermatSystemContext.registerPlatform(new TKYPlatform());

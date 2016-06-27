@@ -104,14 +104,14 @@ public class MessageTransmitProcessor extends PackageProcessor {
                 /*
                  * Redirect the content and send
                  */
-                clientDestination.getBasicRemote().sendObject(packageReceived);
+                clientDestination.getAsyncRemote().sendObject(packageReceived);
 
                 /*
                  * Notify to de sender the message was transmitted
                  */
                 messageTransmitRespond = new MessageTransmitRespond(MsgRespond.STATUS.SUCCESS, MsgRespond.STATUS.SUCCESS.toString(), messageContent.getId());
                 Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPONSE, channelIdentityPrivateKey, senderIdentityPublicKey);
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }else {
 
@@ -120,14 +120,14 @@ public class MessageTransmitProcessor extends PackageProcessor {
                  */
                 messageTransmitRespond = new MessageTransmitRespond(MsgRespond.STATUS.FAIL, "The destination is not more available", messageContent.getId());
                 Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPONSE, channelIdentityPrivateKey, senderIdentityPublicKey);
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
             }
 
 
         }catch (Exception exception){
 
             try {
-
+            
                 exception.printStackTrace();
                 //LOG.error(exception.getMessage());
 
@@ -137,12 +137,10 @@ public class MessageTransmitProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException iOException) {
-                LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
 
         }
