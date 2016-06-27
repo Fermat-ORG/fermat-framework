@@ -231,7 +231,6 @@ public class ObjectInvocationHandler implements InvocationHandler {
 
         } catch (NoSuchMethodException e) {
             System.err.println("NoSuchMethodException: object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null") + "\n");
-            e.printStackTrace();
             objectToReturn = rebuild(objectToConvert);
             if (objectToReturn==null) e.printStackTrace();
             else System.out.println("Devolviendo objeto re construido!");
