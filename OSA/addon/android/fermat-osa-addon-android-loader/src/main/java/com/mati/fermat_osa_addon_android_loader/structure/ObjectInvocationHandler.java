@@ -175,7 +175,6 @@ public class ObjectInvocationHandler implements InvocationHandler {
                             int modifiers = field.getModifiers();
                             if (Modifier.isStatic(modifiers)) {
                                 if (Modifier.isFinal(modifiers)) {
-                                    System.out.println("Object to set is constant, jumping one loop" + "\n");
                                     continue;
                                 }
                             }
