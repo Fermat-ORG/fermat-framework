@@ -27,7 +27,7 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
     {
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
+        this.profileImage = profileImage;
         this.connectionState = connectionState;
         this.phrase = phrase;
         this.state = state;

@@ -63,6 +63,23 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
+    public IntraWalletUserIdentity getIntraWalletUsers() throws CantListIntraUsersIdentityException {
+        try {
+
+            return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+
+
+
+        } catch (CantListIntraWalletUsersException e) {
+            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
+        }
+        catch (Exception e) {
+            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Unknown error");
+        }
+    }
+
+
+    @Override
     public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, long accuracy, Frecuency frecuency) throws CantCreateNewIntraUserIdentityException {
         try {
 
