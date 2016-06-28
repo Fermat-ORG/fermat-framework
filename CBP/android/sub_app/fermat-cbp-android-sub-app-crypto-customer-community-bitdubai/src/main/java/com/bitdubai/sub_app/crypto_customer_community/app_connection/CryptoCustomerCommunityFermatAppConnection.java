@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.common.navigationDrawer.CustomerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_customer_community.common.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
@@ -42,7 +41,7 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return  new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CRYPTO_CUSTOMER_COMMUNITY,
@@ -59,8 +58,9 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
-
+        //TODO: Deshabilitado hasta nuevo aviso
+        // return new CustomerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return null;
     }
 
     @Override
@@ -75,10 +75,7 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
 
     @Override
     public NotificationPainter getNotificationPainter(final String code) {
-
-        return CommunityNotificationPainterBuilder.getNotification(
-                code
-        );
+        return CommunityNotificationPainterBuilder.getNotification(code);
     }
 
     @Override
