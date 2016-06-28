@@ -43,7 +43,8 @@ public class JaxRsActivator extends Application {
             NetworkData.class,
             Monitoring.class,
             UserAuth.class,
-            ConfigurationService.class
+            ConfigurationService.class,
+            Databases.class
     );
 
     @Override
