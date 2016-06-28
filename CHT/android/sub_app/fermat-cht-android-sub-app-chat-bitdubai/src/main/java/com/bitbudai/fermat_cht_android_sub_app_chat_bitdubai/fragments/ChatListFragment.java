@@ -493,7 +493,7 @@ public class ChatListFragment
         // Locate the search item = (MenuItem) fermatFragmentType.getOptionsMenu().getItem(1);
         //OptionsMenu menuu = fermatFragmentType.getOptionsMenu();
 //        MenuItem searchItem = menu.findItem(fermatFragmentType.getOptionsMenu().getItem(1).getId());
-        MenuItem searchItem = menu.findItem(fermatFragmentType.getOptionsMenu().getItem(1).getId());
+        MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
@@ -518,6 +518,9 @@ public class ChatListFragment
                if (filterString.length() > 0) {
                    searchView.setQuery(filterString, true);
                    searchView.setIconified(false);
+               }else{
+                   updatevalues();
+                   adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
                }
             }
     //        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.cht_help_icon)
@@ -525,15 +528,43 @@ public class ChatListFragment
         }
     }
 
+
+    public void onOptionMenuPrepared(Menu menu){
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        updatevalues();
+                        adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }else{
+                    updatevalues();
+                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                }
+            }
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if(id == ChtConstants.CHT_ICON_HELP){
-//            setUpHelpChat(false);
-//        }
-//        if (id == R.id.menu_search) {
-//            return true;
-//        }
         try {
             int id = item.getItemId();
             switch (id) {
@@ -615,7 +646,6 @@ public class ChatListFragment
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        //v.setBackgroundColor(Color.WHITE);
         if (v.getId()==R.id.list) {
             if (Build.VERSION.SDK_INT < 23) {
                 MenuInflater inflater = new MenuInflater(getActivity());

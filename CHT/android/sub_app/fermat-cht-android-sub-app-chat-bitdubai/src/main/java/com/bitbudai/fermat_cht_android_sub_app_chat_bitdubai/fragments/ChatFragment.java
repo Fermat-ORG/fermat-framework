@@ -211,13 +211,41 @@ public class ChatFragment
         }
     }
 
+    public void onOptionMenuPrepared(Menu menu){
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapterView.getFilter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
             switch (id) {
                 case 1:
-
                     break;
                 case 2:
                     try {
