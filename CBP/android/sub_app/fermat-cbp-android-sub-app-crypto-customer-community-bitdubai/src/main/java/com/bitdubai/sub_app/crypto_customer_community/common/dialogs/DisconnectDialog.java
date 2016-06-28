@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_customer_community.common.popups;
+package com.bitdubai.sub_app.crypto_customer_community.common.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,35 +8,31 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
+import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
 
 /**
  * Created by Alejandro Bicelis on 12/2/2016.
  */
-public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, ResourceProviderManager>
         implements View.OnClickListener {
 
     /**
      * UI components
      */
-    FermatButton positiveBtn;
-    FermatButton negativeBtn;
-    FermatTextView mDescription;
-    FermatTextView mUsername;
-    FermatTextView mTitle;
     CharSequence description;
-    CharSequence username;
+    CharSequence subtitle;
     CharSequence title;
 
     CryptoCustomerCommunityInformation cryptoCustomerCommunityInformation;
@@ -44,13 +40,13 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
     CryptoCustomerCommunitySelectableIdentity identity;
 
 
-    public DisconnectDialog(Activity a,
+    public DisconnectDialog(Activity activity,
                             ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager> session,
-                            SubAppResourcesProviderManager subAppResources,
+                            ResourceProviderManager subAppResources,
                             CryptoCustomerCommunityInformation cryptoCustomerCommunityInformation,
                             CryptoCustomerCommunitySelectableIdentity identity) {
 
-        super(a, session, subAppResources);
+        super(activity, session, subAppResources);
 
         this.cryptoCustomerCommunityInformation = cryptoCustomerCommunityInformation;
         this.identity = identity;
@@ -62,26 +58,31 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDescription = (FermatTextView) findViewById(R.id.description);
-        mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mTitle = (FermatTextView)findViewById(R.id.title);
-        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
+        FermatTextView mDescription = (FermatTextView) findViewById(R.id.ccc_description);
+        FermatTextView mSubtitle = (FermatTextView) findViewById(R.id.ccc_sub_title);
+        FermatTextView mTitle = (FermatTextView) findViewById(R.id.ccc_title);
+        FermatTextView positiveBtn = (FermatTextView) findViewById(R.id.positive_button);
+        FermatTextView negativeBtn = (FermatTextView) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mDescription.setText(description!= null ? description : "");
-        mUsername.setText(username!= null ? username: "");
-        mTitle.setText(title != null ? title: "");
 
+        if (title != null) mTitle.setText(title);
+        else mTitle.setVisibility(View.GONE);
+
+        if (subtitle != null) mSubtitle.setText(subtitle);
+        else mSubtitle.setVisibility(View.GONE);
+
+        if (description != null) mDescription.setText(description);
+        else mDescription.setVisibility(View.GONE);
     }
 
     public void setDescription(CharSequence description) {
         this.description = description;
     }
 
-    public void setUsername(CharSequence username) {
-        this.username = username;
+    public void setSubtitle(CharSequence subtitle) {
+        this.subtitle = subtitle;
     }
 
     @Override
@@ -91,7 +92,7 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.ccc_dialog_generic_use;
     }
 
     @Override
@@ -110,7 +111,7 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
                     Toast.makeText(getContext(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
-                    getSession().setData("connectionresult", 0);
+                    getSession().setData(FragmentsCommons.CONNECTION_RESULT, ConnectionState.DISCONNECTED_LOCALLY);
 
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
@@ -119,16 +120,11 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
             } catch (CryptoCustomerDisconnectingFailedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error. Could not disconnect.", Toast.LENGTH_SHORT).show();
             }
 
             dismiss();
-        }else if( i == R.id.negative_button){
+        } else if (i == R.id.negative_button) {
             dismiss();
         }
     }
-
-
 }
