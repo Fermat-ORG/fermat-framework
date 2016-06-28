@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
+import com.bitdubai.sub_app.crypto_customer_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
@@ -33,6 +33,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * Created by mati on 2015.11.24..
  */
+@Deprecated
 public class CustomerCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;

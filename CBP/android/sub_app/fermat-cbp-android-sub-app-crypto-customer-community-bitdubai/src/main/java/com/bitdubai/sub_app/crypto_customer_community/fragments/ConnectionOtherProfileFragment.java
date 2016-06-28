@@ -29,7 +29,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.common.popups.DisconnectDialog;
+import com.bitdubai.sub_app.crypto_customer_community.common.dialogs.DisconnectDialog;
 
 
 /**
@@ -70,7 +70,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
         // setting up  module
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        cryptoCustomerCommunityInformation = (CryptoCustomerCommunityInformation) appSession.getData(BrowserTabFragment.ACTOR_SELECTED);
+//        cryptoCustomerCommunityInformation = (CryptoCustomerCommunityInformation) appSession.getData(FragmentsCommons.ACTOR_SELECTED);
 
     }
 
@@ -139,12 +139,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                         cryptoCustomerCommunityInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(cryptoCustomerCommunityInformation.getAlias());
                 disconnectDialog.setOnDismissListener(this);
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         }
     }
