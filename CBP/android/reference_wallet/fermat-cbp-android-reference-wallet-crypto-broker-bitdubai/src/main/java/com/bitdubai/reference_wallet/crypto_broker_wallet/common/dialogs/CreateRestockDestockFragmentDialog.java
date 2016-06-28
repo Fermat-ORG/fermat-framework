@@ -146,7 +146,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             return false;
         }
 
-        final String memo = "Unhold funds, destock from the Broker Wallet";
+        final String memo = "Unheld funds, destocked from the Broker Wallet";
 
         System.out.println("*************DESTOCK DIALOG****************  [" + walletPlatform + "]");
 
@@ -205,11 +205,11 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
         final double availableBalance = getStockWalletBalance(walletPlatform, moduleManager);
         final double amountAsDouble = amount.doubleValue();
         if (amountAsDouble > availableBalance) {
-            Toast.makeText(activity.getApplicationContext(), "The selected wallet don't have enough money to restock the amount", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getApplicationContext(), "The selected wallet doesn't have enough money to restock the defined amount", Toast.LENGTH_LONG).show();
             return false;
         }
 
-        final String memo = "Hold funds, used to restock the Broker Wallet";
+        final String memo = "Held funds, used to restock the Broker Wallet";
 
         //TODO:Nelson falta pasar el price de reference en dolar al momento de hacer el restock/destock new BigDecimal(0)
         System.out.println("*************RESTOCK DIALOG****************   [" + walletPlatform + "]");

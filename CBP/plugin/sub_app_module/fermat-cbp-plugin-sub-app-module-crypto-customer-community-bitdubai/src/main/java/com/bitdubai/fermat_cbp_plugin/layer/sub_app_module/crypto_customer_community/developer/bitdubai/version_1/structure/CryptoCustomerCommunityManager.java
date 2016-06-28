@@ -50,6 +50,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
@@ -471,5 +472,10 @@ public class CryptoCustomerCommunityManager
     @Override
     public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
         return geolocationManager.getRandomGeoLocation();
+    }
+
+    @Override
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
+        return geolocationManager.getExtendedCitiesByFilter(filter);
     }
 }

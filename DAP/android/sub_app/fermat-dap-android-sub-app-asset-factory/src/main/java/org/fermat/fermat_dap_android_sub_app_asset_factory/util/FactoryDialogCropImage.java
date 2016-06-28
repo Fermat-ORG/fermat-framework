@@ -48,11 +48,11 @@ public class FactoryDialogCropImage extends FermatDialog implements View.OnClick
         cropImageView.setImageBitmap(image);
         cropImageView.setGuidelines(2);
         Button btnCrop = (Button) findViewById(R.id.btnCrop);
-//        Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
+        Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
         Button btnCancel = (Button) findViewById(R.id.btnCancel);
         btnCrop.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
-//        btnRotate.setOnClickListener(this);
+        btnRotate.setOnClickListener(this);
     }
 
     @Override
@@ -83,8 +83,8 @@ public class FactoryDialogCropImage extends FermatDialog implements View.OnClick
         if (i == R.id.btnCancel) {
             dismiss();
         }
-//        if (i == R.id.btnRotateCropper) {
-//            cropImageView.rotateImage(90);
-//        }
+        if (i == R.id.btnRotateCropper) {
+            cropImageView.rotateImage(90);
+        }
     }
 }

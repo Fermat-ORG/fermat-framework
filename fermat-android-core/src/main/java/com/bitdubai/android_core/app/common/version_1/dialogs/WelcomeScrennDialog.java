@@ -14,10 +14,7 @@ import android.widget.RadioGroup;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,28 +120,9 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceAppFermatSession,
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
 
-//        if(id == R.id.add_fermat_user){
-//            try {
-////                Object[] object = new Object[2];
-////                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
-//                changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY);
-//                dismiss();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        else if(id == R.id.add_extra_user){
-//            getSession().setData(SessionConstant.CREATE_EXTRA_USER, Boolean.TRUE);
-//
-//            dismiss();
-//        }
     }
 
-    private void changeActivity(Activities ccpBitcoinWalletAddConnectionActivity) {
-        ((FermatScreenSwapper)activity).changeActivity(ccpBitcoinWalletAddConnectionActivity.getCode(),getSession().getAppPublicKey());
-    }
 
 
 

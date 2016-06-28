@@ -24,6 +24,8 @@ public class AssetRedeemPointIdentityDatabaseConstants {
     public static final String ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME = "address_street_name";
     public static final String ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME = "address_house_number";
     public static final String ASSET_REDEEM_POINT_IDENTITY_FIRST_KEY_COLUMN = "public_key";
+    public static final String ASSET_REDEEM_POINT_IDENTITY_ACCURACY_KEY_COLUMN = "accuracy";
+    public static final String ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN = "frequency";
     //public static final String ASSET_REDEEM_POINT_IDENTITY_STATUS_COLUMN_NAME = "Asset_Issuer_Identity_status";
     //public static final String ASSET_REDEEM_POINT_IDENTITY_PRIVATE_KEY_COLUMN_NAME = "Asset_Issuer_Identity_private_key";
 }

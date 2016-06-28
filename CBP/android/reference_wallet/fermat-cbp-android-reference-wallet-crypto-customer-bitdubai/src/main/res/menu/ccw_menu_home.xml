@@ -1,8 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_start_negotiation"
-        android:orderInCategory="100"
-        android:title="@string/action_start_negotiation"
-        app:showAsAction="never"/>
-</menu>

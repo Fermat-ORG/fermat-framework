@@ -119,7 +119,7 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<Referen
     public int getResource(int id) {
         int resId = 0;
 
-        switch (id){
+        switch (id) {
             case 2:
                 resId = R.drawable.ic_menu_search;
                 break;

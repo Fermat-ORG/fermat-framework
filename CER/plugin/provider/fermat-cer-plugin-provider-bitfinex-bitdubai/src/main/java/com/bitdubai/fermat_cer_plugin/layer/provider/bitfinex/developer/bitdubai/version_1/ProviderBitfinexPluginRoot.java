@@ -37,7 +37,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.database.BitfinexProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.database.BitfinexProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.exceptions.CantInitializeBitfinexProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;

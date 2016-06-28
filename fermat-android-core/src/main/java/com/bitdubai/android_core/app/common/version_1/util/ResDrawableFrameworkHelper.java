@@ -2,8 +2,6 @@ package com.bitdubai.android_core.app.common.version_1.util;
 
 import android.content.Context;
 
-import com.bitdubai.fermat.R;
-
 import static com.bitdubai.android_core.app.common.version_1.util.FrameworkAvailableDrawables.IC_ARROW_BACK_WHITE;
 
 /**
@@ -15,7 +13,8 @@ public class ResDrawableFrameworkHelper {
         int resId = 0;
         switch (id){
             case IC_ARROW_BACK_WHITE:
-                resId = R.drawable.arrow_left;
+                //todo: ver esto
+//                resId = R.drawable.arrow_left;
                 break;
         }
         return resId;

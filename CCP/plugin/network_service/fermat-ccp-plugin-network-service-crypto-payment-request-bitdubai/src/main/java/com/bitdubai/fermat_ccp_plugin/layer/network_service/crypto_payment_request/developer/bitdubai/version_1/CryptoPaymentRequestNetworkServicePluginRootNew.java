@@ -496,7 +496,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     cryptoPaymentRequest.getIdentityPublicKey(),
                     cryptoPaymentRequest.getActorType(),
                     cryptoPaymentRequest.getActorPublicKey(),
-                    buildJsonInformationMessage(cryptoPaymentRequest)
+                    buildJsonRequestMessage(cryptoPaymentRequest)
             );
 
             toWaitingResponse(requestId);
