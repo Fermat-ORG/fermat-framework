@@ -941,13 +941,6 @@ public class SubAppAppsGenerator {
              owner = new Owner();
             owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_IDENTITY.getCode());
 
-            //Help optionMenu
-            optionMenuItem = new OptionMenuItem(1);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Help");
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-
 
             //Search optionMenu
             optionMenuItem = new OptionMenuItem(2);
@@ -955,6 +948,14 @@ public class SubAppAppsGenerator {
             optionMenuItem.setLabel("Geolocation");
             optionMenuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(optionMenuItem);
+
+            //Help optionMenu
+            optionMenuItem = new OptionMenuItem(1);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Help");
+            optionMenuItem.setShowAsAction(2);
+            optionsMenu.addMenuItem(optionMenuItem);
+
 
             runtimeActivity.setOptionsMenu(optionsMenu);
 

@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -443,7 +444,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
 
                         String SetServerString = "";
-                        CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
+                        CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.FERMAT);
                        FermatWalletWalletContact cryptoWalletWalletContact = null;
                         try {
                             cryptoWalletWalletContact = fermatWalletModule.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
@@ -508,7 +509,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                     Actors.EXTRA_USER,
                     Platforms.CRYPTO_CURRENCY_PLATFORM,
                     VaultType.CRYPTO_CURRENCY_VAULT,
-                    "BITV",
+                    CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                     appSession.getAppPublicKey(),
                     ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                     blockchainNetworkType
