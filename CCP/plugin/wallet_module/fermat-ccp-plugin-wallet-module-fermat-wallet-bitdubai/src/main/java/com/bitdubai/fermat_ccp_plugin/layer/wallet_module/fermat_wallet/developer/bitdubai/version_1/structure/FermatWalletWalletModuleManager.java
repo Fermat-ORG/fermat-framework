@@ -320,11 +320,11 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     }
 
     @Override
-    public ExchangeRate getCurrencyExchange(UUID rateProviderManagerId) throws CantGetCurrencyExchangeException {
+    public ExchangeRate getCurrencyExchange(UUID rateProviderManagerId,FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeException {
 
         ExchangeRate rate = null;
         try {
-            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
             CurrencyExchangeRateProviderManager  rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
             //your exchange rate.
             rate = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);

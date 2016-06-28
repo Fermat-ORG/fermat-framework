@@ -937,12 +937,12 @@ public class SubAppAppsGenerator {
             //Menu
 
 
-            OptionsMenu optionsMenu = new OptionsMenu();
-            Owner owner = new Owner();
+             optionsMenu = new OptionsMenu();
+             owner = new Owner();
             owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_IDENTITY.getCode());
 
             //Help optionMenu
-            OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+            optionMenuItem = new OptionMenuItem(1);
             optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
             optionMenuItem.setLabel("Help");
             optionMenuItem.setShowAsAction(2);

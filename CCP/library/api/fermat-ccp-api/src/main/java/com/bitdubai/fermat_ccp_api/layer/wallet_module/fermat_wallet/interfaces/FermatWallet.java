@@ -80,11 +80,11 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
 
 
     /**
-     * Through the method <code>getCurrencyExchange</code> you can get the actual currency exchange rate
+     * Through the method <code>getCurrencyExchange</code> you can get the actual currency exchange rate by provider and fiat currency
      * @return
      * @throws CantGetMnemonicTextException
      */
-    ExchangeRate getCurrencyExchange(UUID rateProviderManagerId) throws CantGetCurrencyExchangeException;
+    ExchangeRate getCurrencyExchange(UUID rateProviderManagerId,FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeException;
 
     /**
 
