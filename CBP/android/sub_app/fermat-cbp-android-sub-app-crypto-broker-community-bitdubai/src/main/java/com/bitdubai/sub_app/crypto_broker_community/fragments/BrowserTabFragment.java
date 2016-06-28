@@ -195,6 +195,7 @@ public class BrowserTabFragment
 
     @Override
     public RecyclerView.OnScrollListener getScrollListener() {
+        //TODO: Descomentar esto para activar la paginacion cuando esta funcionando en los Actor Network Service
 //        if (scrollListener == null) {
 //            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
 //            endlessScrollListener.setOnLoadMoreDataListener(this);

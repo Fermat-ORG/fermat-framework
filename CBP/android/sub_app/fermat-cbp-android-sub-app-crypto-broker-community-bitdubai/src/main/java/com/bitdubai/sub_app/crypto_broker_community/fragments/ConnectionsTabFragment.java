@@ -125,7 +125,7 @@ public class ConnectionsTabFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.cbc_fragment_conections_tab;
+        return R.layout.cbc_fragment_connections_tab;
     }
 
     @Override

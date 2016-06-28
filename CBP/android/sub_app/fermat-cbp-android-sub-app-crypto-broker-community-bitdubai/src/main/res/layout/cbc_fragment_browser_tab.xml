@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:src="@drawable/cbc_no_contacts"
+        android:src="@drawable/no_users"
         android:visibility="gone"/>
 
     <LinearLayout
