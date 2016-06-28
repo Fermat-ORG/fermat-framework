@@ -1,40 +1,44 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AppFriendsListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.adapters.ConnectionsListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.dialogs.DisconnectDialog;
+import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,179 +46,308 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 04/02/2016.
  */
-public class ConnectionsTabFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
+public class ConnectionsTabFragment
+        extends FermatListFragment<CryptoCustomerCommunityInformation, ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>>
+        implements FermatListItemListeners<CryptoCustomerCommunityInformation>, OnLoadMoreDataListener {
 
-    public static final String ACTOR_SELECTED = "actor_selected";
-    private static final int MAX = 20;
-    protected final String TAG = "RequestsTabFragment";
-    private int offset = 0;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
-    private SwipeRefreshLayout swipeRefresh;
-    private LinearLayout empty;
-    private boolean isRefreshing = false;
-    private View rootView;
-    private AppFriendsListAdapter adapter;
-    private LinearLayout emptyView;
+    //Constants
+    private static final int MAX = 10;
+    private static final int SPAN_COUNT = 2;
+    protected static final String TAG = "ConnectionsTabFragment";
+
+    //Managers
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationArrayList;
-    TextView noDatalabel;
-    ImageView noData;
+
+    private ArrayList<CryptoCustomerCommunityInformation> connectedActorList = new ArrayList<>();
+    private int offset;
+
+    private ConnectionsListAdapter adapter;
+    private PresentationDialog helpDialog;
+    private ImageView noContacts;
+
+
     public static ConnectionsTabFragment newInstance() {
         return new ConnectionsTabFragment();
     }
 
+
+    /**
+     * Fragment interface implementation.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        cryptoCustomerCommunityInformationArrayList = new ArrayList<>();
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+        loadSettings();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        try {
-            rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
-            setUpScreen(inflater);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setHasFixedSize(true);
-            adapter = new AppFriendsListAdapter(getActivity(), cryptoCustomerCommunityInformationArrayList);
+    protected void initViews(View rootView) {
+        super.initViews(rootView);
+
+        configureToolbar();
+
+        noContacts = (ImageView) rootView.findViewById(R.id.ccc_no_contacts);
+
+        onRefresh();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.ccc_fragment_connections_tab;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.gridView;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public FermatAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new ConnectionsListAdapter(getActivity(), connectedActorList);
             adapter.setFermatListEventListener(this);
-            recyclerView.setAdapter(adapter);
-            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-            noData=(ImageView) rootView.findViewById(R.id.nodata);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-            rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
-            onRefresh();
-        } catch (Exception ex) {
-            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-        return rootView;
-    }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
-//        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), appSession.getModuleManager().getSelectedActorIdentity()));
-        //AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-//        setNavigationDrawer(appNavigationAdapter);
+        return adapter;
     }
 
     @Override
-    public void onRefresh() {
-        if (!isRefreshing) {
-            isRefreshing = true;
-            final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-            connectionsProgressDialog.setMessage("Loading Connections");
-            connectionsProgressDialog.setCancelable(false);
-            connectionsProgressDialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreData();
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    connectionsProgressDialog.dismiss();
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
-                    if (result != null &&
-                            result.length > 0) {
-                        if (getActivity() != null && adapter != null) {
-                            cryptoCustomerCommunityInformationArrayList = (ArrayList<CryptoCustomerCommunityInformation>) result[0];
-                            adapter.changeDataSet(cryptoCustomerCommunityInformationArrayList);
-                            if (cryptoCustomerCommunityInformationArrayList.isEmpty()) {
-                                showEmpty(true, emptyView);
-                            } else {
-                                showEmpty(false, emptyView);
-                            }
-                        }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
-                }
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
 
+        return layoutManager;
+    }
+
+    @Override
+    public RecyclerView.OnScrollListener getScrollListener() {
+        //TODO: Descomentar esto cuando funcione lo de la paginacion en P2P
+//        if (scrollListener == null) {
+//            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+//            endlessScrollListener.setOnLoadMoreDataListener(this);
+//            scrollListener = endlessScrollListener;
+//        }
+//
+//        return scrollListener;
+
+        return null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                if (helpDialog == null)
+                    helpDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.ccc_banner)
+                            .setIconRes(R.drawable.crypto_customer)
+                            .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
+                            .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
+                            .setIsCheckEnabled(true)
+                            .build();
+
+                helpDialog.show();
+                return true;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el SearchView
+                return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onItemClickListener(final CryptoCustomerCommunityInformation data, final int position) {
+        try {
+            DisconnectDialog connectDialog = new DisconnectDialog(getActivity(), appSession, appResourcesProviderManager,
+                    data, moduleManager.getSelectedActorIdentity());
+
+            connectDialog.setTitle("Confirm Disconnection");
+            connectDialog.setDescription(String.format("Do you want to disconnect from %1$s?", data.getAlias()));
+            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
-                public void onErrorOccurred(Exception ex) {
-                    connectionsProgressDialog.dismiss();
-                    try {
-                        isRefreshing = false;
-                        if (swipeRefresh != null)
-                            swipeRefresh.setRefreshing(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                public void onDismiss(DialogInterface dialog) {
+                    updateSelectedActorInList(position);
                 }
             });
-            worker.execute();
+
+            connectDialog.show();
+
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+            Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private synchronized List<CryptoCustomerCommunityInformation> getMoreData() {
+    @Override
+    public void onLongItemClickListener(CryptoCustomerCommunityInformation data, int position) {
+    }
+
+    @Override
+    public void onLoadMoreData(int page, final int totalItemsCount) {
+        adapter.setLoadingData(true);
+        FermatWorker fermatWorker = new FermatWorker(getActivity(), this) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+            }
+        };
+
+        fermatWorker.execute();
+    }
+
+    @Override
+    public List<CryptoCustomerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
+
         try {
-            dataSet.addAll(moduleManager.listAllConnectedCryptoCustomers(moduleManager.getSelectedActorIdentity(), MAX, offset));
-        } catch (CantGetCryptoCustomerListException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
+            offset = pos;
+            final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
+            dataSet.addAll(result);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return dataSet;
     }
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show/* &&
-                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            noData.setAnimation(anim);
-            //emptyView.setBackgroundResource(R.drawable.cht_comm_background);
-            noDatalabel.setAnimation(anim);
-            noData.setVisibility(View.VISIBLE);
-            noDatalabel.setVisibility(View.VISIBLE);
-            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-            noData.setAnimation(anim);
-            emptyView.setBackgroundResource(0);
-            noDatalabel.setAnimation(anim);
-            noData.setVisibility(View.GONE);
-            noDatalabel.setVisibility(View.GONE);
-            rootView.setBackgroundResource(0);
-            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            emptyView.setBackground(bgcolor);
-            rootView.setBackground(bgcolor);
+
+    @Override
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            adapter.setLoadingData(false);
+            if (result != null && result.length > 0) {
+
+                if (adapter != null) {
+                    if (offset == 0) {
+                        connectedActorList.clear();
+                        connectedActorList.addAll((ArrayList) result[0]);
+                        adapter.changeDataSet(connectedActorList);
+                    } else {
+                        connectedActorList.addAll((ArrayList) result[0]);
+                        adapter.notifyItemRangeInserted(offset, connectedActorList.size() - 1);
+                    }
+
+                }
+            }
+        }
+
+        showOrHideEmptyView();
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            Log.e(TAG, ex.getMessage(), ex);
+        }
+
+        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Obtain Settings or create new Settings if first time opening subApp
+     */
+    private void loadSettings() {
+        CryptoCustomerCommunitySettings appSettings;
+        try {
+            appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            appSettings = null;
+        }
+
+        if (appSettings == null) {
+            appSettings = new CryptoCustomerCommunitySettings();
+            appSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    @Override
-    public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
-        appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+    /**
+     * Show or hide the empty view if there is data to show
+     */
+    private void showOrHideEmptyView() {
+        final boolean show = connectedActorList.isEmpty();
+        final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
+
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
+        if (show && (noContacts.getVisibility() == View.GONE || noContacts.getVisibility() == View.INVISIBLE)) {
+            noContacts.setAnimation(anim);
+            noContacts.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+
+        } else if (!show && noContacts.getVisibility() == View.VISIBLE) {
+            noContacts.setAnimation(anim);
+            noContacts.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
-    @Override
-    public void onLongItemClickListener(CryptoCustomerCommunityInformation data, int position) {
+    /**
+     * Update the actor information and notify the adapter to show the updated info
+     *
+     * @param position the actor's position in the adapter
+     */
+    private void updateSelectedActorInList(int position) {
+        if (appSession.getData(FragmentsCommons.CONNECTION_RESULT) == null)
+            return;
 
+        try {
+            final ConnectionState newConnectionState = (ConnectionState) appSession.getData(FragmentsCommons.CONNECTION_RESULT);
+            appSession.removeData(FragmentsCommons.CONNECTION_RESULT);
+
+            if (newConnectionState == ConnectionState.DISCONNECTED_LOCALLY) {
+                connectedActorList.remove(position);
+                adapter.notifyItemRemoved(position);
+            }
+
+        } catch (Exception ex) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        }
     }
 }
