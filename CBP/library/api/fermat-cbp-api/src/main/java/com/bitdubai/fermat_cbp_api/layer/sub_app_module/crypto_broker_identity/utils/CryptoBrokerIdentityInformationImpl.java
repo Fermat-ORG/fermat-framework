@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 
@@ -18,29 +18,20 @@ public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentity
     private final byte[]        profileImage;
     private final ExposureLevel exposureLevel;
     private long   accuracy;
-    private Frecuency frecuency;
-
-    public CryptoBrokerIdentityInformationImpl(CryptoBrokerIdentityInformation identityInfo, long accuracy, Frecuency frequency){
-        this.alias = identityInfo.getAlias();
-        this.publicKey = identityInfo.getPublicKey();
-        this.profileImage = identityInfo.getProfileImage();
-        this.exposureLevel = identityInfo.isPublished()? ExposureLevel.PUBLISH : ExposureLevel.HIDE;
-        this.accuracy      = accuracy     ;
-        this.frecuency     = frequency    ;
-    }
+    private Frequency frequency;
 
     public CryptoBrokerIdentityInformationImpl(final String alias,
                                                final String publicKey,
                                                final byte[] profileImage,
                                                final ExposureLevel exposureLevel,
                                                final long accuracy,
-                                               final Frecuency frecuency){
+                                               final Frequency frequency){
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.exposureLevel = exposureLevel;
         this.accuracy      = accuracy     ;
-        this.frecuency     = frecuency    ;
+        this.frequency = frequency;
     }
 
     @Override
@@ -69,8 +60,8 @@ public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentity
     }
 
     @Override
-    public Frecuency getFrecuency() {
-        return frecuency;
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     public boolean equals(Object o){

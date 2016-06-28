@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
@@ -51,7 +51,7 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
 
         final Context context = activity.get();
         final LayoutInflater layoutInflaterService = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View headerView = layoutInflaterService.inflate(R.layout.cbc_row_navigation_drawer_community_header, null, false);
+        final View headerView = layoutInflaterService.inflate(R.layout.cbc_navigation_view_header, null, false);
 
         FermatWorker fermatWorker = new FermatWorker(context) {
             @Override

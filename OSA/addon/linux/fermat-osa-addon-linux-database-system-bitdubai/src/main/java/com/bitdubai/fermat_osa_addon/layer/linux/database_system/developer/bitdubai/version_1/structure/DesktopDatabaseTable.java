@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 
 import org.apache.commons.lang.StringUtils;
@@ -55,6 +56,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
     private List<DataBaseTableOrder> tableOrder;
+    private List<DesktopDatabaseTableNearbyLocationOrder> tableNearbyLocationOrders;
     private String top = "";
     private String offset = "";
     private DatabaseTableFilterGroup tableFilterGroup;
@@ -249,6 +251,20 @@ public class DesktopDatabaseTable implements DatabaseTable {
         }
     }
 
+    private String buildNearbyLocationOrderSentence(final DesktopDatabaseTableNearbyLocationOrder nearbyLocationOrder) {
+
+        String latitude = nearbyLocationOrder.getPoint().getLatitude().toString();
+        String longitude = nearbyLocationOrder.getPoint().getLongitude().toString();
+        String latitudeField = nearbyLocationOrder.getLatitudeField();
+        String longitudeField = nearbyLocationOrder.getLongitudeField();
+
+        String sentence = ", (("+latitude+" - "+latitudeField+") * ("+latitude+" - "+latitudeField+") +" +
+                " ("+longitude+" - "+longitudeField+") * ("+longitude+" - "+longitudeField+")) as "+
+                nearbyLocationOrder.getDistanceField();
+
+        return sentence;
+    }
+
     @Override
     public void loadToMemory() throws CantLoadTableToMemoryException {
 
@@ -256,6 +272,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         String topSentence = "";
         String offsetSentence = "";
+        String nearbyLocationOrderSentence = "";
+        String orderSentence;
 
         if (!this.top.isEmpty())
             topSentence = " LIMIT " + this.top;
@@ -263,7 +281,29 @@ public class DesktopDatabaseTable implements DatabaseTable {
         if (!this.offset.isEmpty())
             offsetSentence = " OFFSET " + this.offset;
 
-        String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
+        // TODO do this in a better way...
+        if (this.tableNearbyLocationOrders != null) {
+
+            String nearbyLocationOrderFields = "";
+            String commonOrder = makeOrderWithoutOrderByClause();
+
+            for (DesktopDatabaseTableNearbyLocationOrder order : tableNearbyLocationOrders) {
+                nearbyLocationOrderSentence += buildNearbyLocationOrderSentence(order);
+                if (nearbyLocationOrderFields.isEmpty())
+                    nearbyLocationOrderFields += order.getDistanceField();
+                else
+                    nearbyLocationOrderFields += ", "+order.getDistanceField();
+            }
+
+            orderSentence = " ORDER BY "+nearbyLocationOrderFields+ (commonOrder.isEmpty() ? "" : ", "+commonOrder);
+
+        } else {
+            orderSentence = makeOrder();
+        }
+
+        String SQL_QUERY = "SELECT * "+nearbyLocationOrderSentence+" FROM " + tableName + makeFilter() + orderSentence + topSentence  + offsetSentence;
+
+        System.out.println(SQL_QUERY);
 
         synchronized (connectionPool) {
             try (Connection connection = connectionPool.getConnection();
@@ -393,6 +433,27 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
 
         this.tableOrder.add(order);
+    }
+
+    @Override
+    public void addNearbyLocationOrder(final String              latitudeField ,
+                                       final String              longitudeField,
+                                       final Location            point         ,
+                                       final DatabaseFilterOrder direction     ,
+                                       final String              distanceField ) {
+
+        if (tableNearbyLocationOrders == null)
+            tableNearbyLocationOrders = new ArrayList<>();
+
+        tableNearbyLocationOrders.add(
+                new DesktopDatabaseTableNearbyLocationOrder(
+                        latitudeField ,
+                        longitudeField,
+                        point         ,
+                        direction     ,
+                        distanceField
+                )
+        );
     }
 
     /**
@@ -691,6 +752,34 @@ public class DesktopDatabaseTable implements DatabaseTable {
         if (strOrder.length() > 0) order = " ORDER BY " + order;
 
         return order;
+    }
+
+    private String makeOrderWithoutOrderByClause() {
+
+        StringBuilder strOrder = new StringBuilder();
+
+        if (this.tableOrder != null) {
+            for (int i = 0; i < tableOrder.size(); ++i) {
+
+                switch (tableOrder.get(i).getDirection()) {
+                    case DESCENDING:
+                        strOrder.append(tableOrder.get(i).getColumnName())
+                                .append(" DESC ");
+                        break;
+                    case ASCENDING:
+                        strOrder.append(tableOrder.get(i).getColumnName());
+                        break;
+                    default:
+                        strOrder.append(" ");
+                        break;
+
+                }
+                if (i < tableOrder.size() - 1)
+                    strOrder.append(" , ");
+            }
+        }
+
+        return strOrder.toString();
     }
 
 

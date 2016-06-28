@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocati
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters</code>
  * <p/>
@@ -12,7 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DiscoveryQueryParameters {
+public class DiscoveryQueryParameters implements Serializable {
 
     /**
      * Represent the identityPublicKey

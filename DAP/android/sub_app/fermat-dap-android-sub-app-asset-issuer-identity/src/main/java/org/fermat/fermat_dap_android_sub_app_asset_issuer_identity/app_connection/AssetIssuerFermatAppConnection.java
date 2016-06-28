@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.fragmentFactory.IssuerIdentityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSessionReferenceApp;
@@ -64,5 +65,18 @@ public class AssetIssuerFermatAppConnection extends AppConnections<ReferenceAppF
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+
+        switch (id) {
+            case 1:
+                resId = R.drawable.ic_geolacation;
+                break;
+        }
+
+        return resId;
     }
 }

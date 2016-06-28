@@ -8,14 +8,15 @@ import java.io.Serializable;
 /**
  * Created by Franklin Marcano on 17/06/2016.
  * Modified by Roy on 20/06/2016
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 23/06/16.
  */
 public class CitiesImpl implements Cities, Serializable {
 
     //ATTRIBUTES
     private final String name;
     private final String countryCode;
-    private final float latitude;
-    private final float longitude;
+    private final double latitude;
+    private final double longitude;
     private final String countryName;
     private final String countryShortName;
     private final GeoRectangle mGeoRectangle;
@@ -24,8 +25,8 @@ public class CitiesImpl implements Cities, Serializable {
     //CONSTRUCTOR
     public CitiesImpl (String name,
                        String countryCode,
-                       float latitude,
-                       float longitude,
+                       double latitude,
+                       double longitude,
                        String countryName,
                        String countryShortName,
                        GeoRectangle mGeoRectangle){
@@ -44,12 +45,12 @@ public class CitiesImpl implements Cities, Serializable {
     }
 
     @Override
-    public float getLatitude(){
+    public double getLatitude(){
         return latitude;
     }
 
     @Override
-    public float getLongitude(){
+    public double getLongitude(){
         return longitude;
     }
 
@@ -87,11 +88,11 @@ public class CitiesImpl implements Cities, Serializable {
         newName = name;
     }
 
-    public void setLatitude (float newLatitude){
+    public void setLatitude (double newLatitude){
         newLatitude = latitude;
     }
 
-    public void setLongitude (float newLongitude){
+    public void setLongitude (double newLongitude){
         newLongitude = longitude;
     }
 

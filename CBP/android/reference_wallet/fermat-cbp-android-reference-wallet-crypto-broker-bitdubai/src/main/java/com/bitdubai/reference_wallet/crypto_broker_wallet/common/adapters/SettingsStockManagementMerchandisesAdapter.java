@@ -32,7 +32,7 @@ public class SettingsStockManagementMerchandisesAdapter extends FermatAdapter<Cr
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.cbw_earnings_currency_pair_item;
+        return R.layout.cbw_stock_management_item;
     }
 
     @Override

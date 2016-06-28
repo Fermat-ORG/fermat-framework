@@ -18,6 +18,10 @@ import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.xnio.BufferAllocator;
 import org.xnio.ByteBufferSlicePool;
+import org.xnio.OptionMap;
+import org.xnio.Options;
+import org.xnio.Xnio;
+import org.xnio.XnioWorker;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
@@ -128,10 +132,22 @@ public class FermatEmbeddedNodeServer {
     private HttpHandler createWebSocketAppServletHandler() throws Exception {
 
         /*
+         * Create and configure the xnioWorker
+         */
+        final Xnio xnio = Xnio.getInstance("nio", Undertow.class.getClassLoader());
+        final XnioWorker xnioWorker = xnio.createWorker(OptionMap.builder()
+                                                        .set(Options.WORKER_IO_THREADS, 1)
+                                                        .set(Options.WORKER_TASK_CORE_THREADS, 40)
+                                                        .set(Options.TCP_NODELAY, true)
+                                                        .getMap());
+
+        /*
          * Create the App WebSocketDeploymentInfo and configure
          */
         WebSocketDeploymentInfo appWebSocketDeploymentInfo = new WebSocketDeploymentInfo();
         appWebSocketDeploymentInfo.setBuffers(new XnioByteBufferPool(new ByteBufferSlicePool(BufferAllocator.BYTE_BUFFER_ALLOCATOR, 17000, 17000 * 16)));
+        appWebSocketDeploymentInfo.setWorker(xnioWorker);
+        appWebSocketDeploymentInfo.setDispatchToWorkerThread(Boolean.TRUE);
         appWebSocketDeploymentInfo.addEndpoint(FermatWebSocketNodeChannelServerEndpoint.class);
         appWebSocketDeploymentInfo.addEndpoint(FermatWebSocketClientChannelServerEndpoint.class);
 

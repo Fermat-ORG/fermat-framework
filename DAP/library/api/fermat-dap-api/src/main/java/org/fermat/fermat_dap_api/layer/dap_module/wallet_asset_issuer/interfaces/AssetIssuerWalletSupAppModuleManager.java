@@ -33,6 +33,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -97,4 +98,6 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<Asse
     BlockchainNetworkType getSelectedNetwork();
 
     List<AssetIssuerWalletTransaction> getTransactionsForDisplay(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException;
+
+    Date assetLastTransaction(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException;
 }

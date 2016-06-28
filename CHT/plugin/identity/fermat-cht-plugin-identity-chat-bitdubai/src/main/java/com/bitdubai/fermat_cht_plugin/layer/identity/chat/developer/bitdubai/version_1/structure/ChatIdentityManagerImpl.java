@@ -40,6 +40,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 30/03/16.
  * Edited by Miguel Rincon on 19/04/2016
+ * Updated by Miguel Rincon on 19/04/2016
  */
 public class ChatIdentityManagerImpl implements ChatIdentityManager {
 

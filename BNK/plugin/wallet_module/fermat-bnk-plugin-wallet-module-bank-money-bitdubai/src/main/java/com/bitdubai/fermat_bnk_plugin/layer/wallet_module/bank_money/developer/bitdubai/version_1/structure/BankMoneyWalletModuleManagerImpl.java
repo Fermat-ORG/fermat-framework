@@ -43,7 +43,7 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
     private DepositManager depositManager;
     private WithdrawManager withdrawManager;
     private final BankWalletAsyncTransactionAgent agent;
-    private BankTransactionParametersImpl tempLastParameter;
+    private com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.classes.BankTransactionParametersImpl tempLastParameter;
 
     public BankMoneyWalletModuleManagerImpl(BankMoneyWalletManager bankMoneyWalletManager,
                                             DepositManager depositManager,
@@ -168,7 +168,7 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
 
     @Override
     public void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters) {
-        tempLastParameter = new BankTransactionParametersImpl(
+        tempLastParameter = new com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.classes.BankTransactionParametersImpl(
                 bankTransactionParameters.getTransactionId(),
                 bankTransactionParameters.getPublicKeyPlugin(),
                 bankTransactionParameters.getPublicKeyWallet(),
@@ -184,7 +184,7 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
 
     @Override
     public void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters) {
-        tempLastParameter = new BankTransactionParametersImpl(
+        tempLastParameter = new com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.classes.BankTransactionParametersImpl(
                 bankTransactionParameters.getTransactionId(),
                 bankTransactionParameters.getPublicKeyPlugin(),
                 bankTransactionParameters.getPublicKeyWallet(),
@@ -219,7 +219,7 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
 
     @Override
     public void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction) {
-        BankTransactionParameters parameters = new BankTransactionParametersImpl(
+        BankTransactionParameters parameters = new com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.classes.BankTransactionParametersImpl(
                 transaction.getBankTransactionId(),
                 tempLastParameter.getPublicKeyPlugin(),
                 tempLastParameter.getPublicKeyWallet(),

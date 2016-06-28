@@ -66,17 +66,26 @@ public class ObjectInvocationHandler implements InvocationHandler {
 //                e.getTargetException().printStackTrace();
                 return e.getTargetException();
             }
-            if(result instanceof Serializable){
-                try {
-                    byte[] o = Serializer.prepareData(result);
-                    //class loader de la plataforma por ahora
-                    if (o!=null) objectToReturn = Serializer.desearialize(o, getClass().getClassLoader());
-                }catch (Exception e){
-//                    e.printStackTrace();
-                    System.out.println("Objeto no serializable");
-                }
-//                objectToReturn = rebuild(result);
+            if(result==null){
+                return null;
             }
+//            if(method.getName().equals("createDatabase")){
+//                return result;
+//            }
+            objectToReturn = result;
+//            if(result instanceof Serializable){
+//                try {
+//                    byte[] o = Serializer.prepareData(result);
+//                    //class loader de la plataforma por ahora
+//                    if (o!=null) objectToReturn = Serializer.desearialize(o, getClass().getClassLoader());
+//                }catch (Exception e){
+////                    e.printStackTrace();
+//                    System.out.println("Objeto no serializable");
+//                }
+////                objectToReturn = rebuild(result);
+//            }
+
+            //this is not necessary, i have to move it to another place.
             if(objectToReturn==null) {
                 Class<?> returnTypeClazz = method.getReturnType();
                 if (returnTypeClazz == null || returnTypeClazz.equals(Void.TYPE)) {
@@ -152,23 +161,11 @@ public class ObjectInvocationHandler implements InvocationHandler {
                     }
                 }
             }
-
-//        }
-//        catch (InvocationTargetException e){
-//            System.err.println("InvocationException: (bottom catch) Method: " + method.getName() + ", object: " + object.getClass() + ", args: " + ((args != null) ? Arrays.toString(args) : null) + "." + "\n");
-//            e.printStackTrace();
-//            System.err.println("...\n");
-//            return e.getTargetException();
         }catch (Exception e){
             System.err.println("Exception unknown");
             e.printStackTrace();
             throw new Exception("Exception in ObjectInvocationHandler",e);
         }
-//        catch (Throwable throwable) {
-//            System.err.println("Exception unknown");
-//            throwable.printStackTrace();
-//            throw new Exception("Exception in loadObject",throwable);
-//        }
         return objectToReturn;
     }
 

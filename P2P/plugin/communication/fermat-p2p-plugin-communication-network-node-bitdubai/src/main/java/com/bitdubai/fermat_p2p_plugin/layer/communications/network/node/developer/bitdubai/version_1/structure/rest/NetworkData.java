@@ -339,7 +339,7 @@ public class NetworkData {
 
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return new ArrayList<>();
@@ -371,7 +371,7 @@ public class NetworkData {
 
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return new ArrayList<>();
