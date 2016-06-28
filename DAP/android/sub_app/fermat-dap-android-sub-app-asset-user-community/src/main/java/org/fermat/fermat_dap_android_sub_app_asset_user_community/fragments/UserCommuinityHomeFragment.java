@@ -446,9 +446,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 //    }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
 //        searchView = (SearchView) menu.findItem(R.id.action_community_user_search).getActionView();
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();

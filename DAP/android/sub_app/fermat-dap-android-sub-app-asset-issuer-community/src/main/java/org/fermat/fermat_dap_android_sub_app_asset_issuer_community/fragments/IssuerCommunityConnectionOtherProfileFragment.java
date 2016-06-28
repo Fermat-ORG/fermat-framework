@@ -364,9 +364,9 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     }*/
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        menu.clear();
     }
 
     @Override
