@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
@@ -81,5 +82,14 @@ public final class SelectableIdentity implements CryptoBrokerCommunitySelectable
     @Override
     public void select() throws CantSelectIdentityException {
         // TODO implement
+    }
+
+    @Override
+    public Frequency getFrequency() {
+        return Frequency.NONE;
+    }
+
+    public long getAccuracy() {
+        return 0;
     }
 }
