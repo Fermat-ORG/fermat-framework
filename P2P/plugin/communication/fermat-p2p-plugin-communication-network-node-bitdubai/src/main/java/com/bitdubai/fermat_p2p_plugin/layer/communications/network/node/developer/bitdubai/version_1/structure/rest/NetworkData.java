@@ -55,7 +55,6 @@ public class NetworkData {
      */
     private Gson gson;
 
-
     /**
      * Represent the LOG
      */
