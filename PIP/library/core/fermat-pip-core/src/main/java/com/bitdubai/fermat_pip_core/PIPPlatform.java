@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_core;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
@@ -21,8 +22,12 @@ import com.bitdubai.fermat_pip_core.layer.user.UserLayer;
  */
 public final class PIPPlatform extends AbstractPlatform {
 
-    public PIPPlatform() {
-        super(new PlatformReference(Platforms.PLUG_INS_PLATFORM));
+//    public PIPPlatform() {
+//        super(new PlatformReference(Platforms.PLUG_INS_PLATFORM));
+//    }
+
+    public PIPPlatform(FermatContext fermatContext) {
+        super(new PlatformReference(Platforms.PLUG_INS_PLATFORM),fermatContext);
     }
 
     @Override

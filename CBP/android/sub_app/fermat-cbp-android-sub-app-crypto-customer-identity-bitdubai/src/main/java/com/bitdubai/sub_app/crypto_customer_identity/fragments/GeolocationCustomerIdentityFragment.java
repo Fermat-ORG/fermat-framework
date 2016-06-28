@@ -21,9 +21,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
@@ -129,7 +129,7 @@ public class GeolocationCustomerIdentityFragment
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-        } catch (CantGetChatIdentityException e) {
+        } catch (CantGetCryptoCustomerIdentityException e) {
             e.printStackTrace();
         }
 
@@ -151,7 +151,7 @@ public class GeolocationCustomerIdentityFragment
         }
     }
 
-    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetChatIdentityException {
+    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetCryptoCustomerIdentityException {
         final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         if (identityInfo != null) {

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -49,7 +50,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.CryptoBrokerCommunitySubAppModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
@@ -62,6 +62,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
@@ -143,7 +144,7 @@ public class CryptoBrokerCommunityManager
             worldBroker = worldBrokerList.get(i);
             for (CryptoBrokerActorConnection connectedBroker : actorConnections) {
                 if (worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
+                    worldBrokerList.set(i, new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
             }
         }
         return worldBrokerList;
@@ -378,7 +379,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbac));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -414,7 +415,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbac));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -449,7 +450,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbac));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -525,6 +526,11 @@ public class CryptoBrokerCommunityManager
     @Override
     public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
         return geolocationManager.getRandomGeoLocation();
+    }
+
+    @Override
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
+        return geolocationManager.getExtendedCitiesByFilter(filter);
     }
 
 

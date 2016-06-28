@@ -37,7 +37,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.exceptions.CantInitializeFermatExchangeProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.factory.CommunityUserFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.navigation_drawer.UserCommunityNavigationViewPainter;
@@ -90,5 +91,21 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<Refere
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+
+        switch (id) {
+            case 1:
+                resId = R.drawable.ic_geolacation;
+                break;
+            case 2:
+                resId = R.drawable.ic_menu_search;
+                break;
+        }
+
+        return resId;
     }
 }

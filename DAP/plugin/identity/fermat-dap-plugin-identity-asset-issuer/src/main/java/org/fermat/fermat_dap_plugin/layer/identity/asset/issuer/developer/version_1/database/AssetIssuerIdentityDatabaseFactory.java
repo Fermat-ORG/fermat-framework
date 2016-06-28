@@ -55,6 +55,13 @@ public class AssetIssuerIdentityDatabaseFactory implements DealsWithPluginDataba
             table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
             table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
 
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_COUNTRY_KEY_COLUMN, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_CITY_KEY_COLUMN, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_STATE_KEY_COLUMN, DatabaseDataType.STRING, 100, false);
+
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN, DatabaseDataType.INTEGER, 20, false);
+            table.addColumn(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN, DatabaseDataType.STRING, 20, false);
+
             table.addIndex(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(table);

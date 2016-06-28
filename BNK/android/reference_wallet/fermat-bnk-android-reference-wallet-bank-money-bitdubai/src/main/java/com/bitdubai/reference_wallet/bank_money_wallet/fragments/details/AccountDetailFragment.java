@@ -198,23 +198,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.EDIT_ACCOUNT_ACTION, 0, "Edit Account").setIcon(R.drawable.bw_ic_action_edit)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "Help").setIcon(R.drawable.bw_help_icon_action_bar)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int selectedItemId = item.getItemId();
-        if (selectedItemId == ReferenceWalletConstants.EDIT_ACCOUNT_ACTION) {
-
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT, appSession.getAppPublicKey());
-            return true;
-        }
-        else if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
+        if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
             presentationDialog.show();
             return true;
         }

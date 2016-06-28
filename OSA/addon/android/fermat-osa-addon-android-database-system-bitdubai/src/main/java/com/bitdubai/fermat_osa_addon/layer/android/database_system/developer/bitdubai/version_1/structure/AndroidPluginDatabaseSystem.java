@@ -105,7 +105,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem {
             throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
         } catch (final Exception e){
 
-            throw new CantCreateDatabaseException(e, null, "Unhandled Exception");
+            throw new CantCreateDatabaseException(e, "Context= ownerId: "+ownerId+", databaseName: "+databaseName, "Unhandled Exception");
         }
 
     }

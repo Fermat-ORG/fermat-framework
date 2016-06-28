@@ -3,17 +3,13 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.BlockchainDownloadUpToDateEvent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Block;
@@ -41,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 

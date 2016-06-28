@@ -11,7 +11,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_ac
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;

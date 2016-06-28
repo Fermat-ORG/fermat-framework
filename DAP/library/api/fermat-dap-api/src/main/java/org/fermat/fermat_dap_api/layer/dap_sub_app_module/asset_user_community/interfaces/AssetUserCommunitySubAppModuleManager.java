@@ -45,7 +45,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     DAPConnectionState getActorRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException;
 
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
     List<AssetUserActorRecord> getAllActorAssetUserRegistered(int max, int offset) throws CantGetAssetUserActorsException;
 
     ActorAssetUser getActorUser(String actorAssetUserPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;

@@ -160,6 +160,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                     Log.e(TAG,"FermatFragmentType null in fragment for app:"+appSession.getAppPublicKey()+", contact furszy");
             }
 
+            onOptionMenuPrepared(menu);
+
 
         } catch (Exception e) {
             if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
@@ -167,6 +169,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         }
         super.onPrepareOptionsMenu(menu);
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -205,7 +209,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 //            if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
 //            e.printStackTrace();
 //        }
-//        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     /**
@@ -498,6 +502,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     }
 
+    /**
+     * Method to prepare optionMenu
+     */
+    public void onOptionMenuPrepared(Menu menu){
+
+    }
 
     public ScreenSize getScreenSize(){
         int screenSize = getResources().getConfiguration().screenLayout &

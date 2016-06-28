@@ -34,7 +34,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetSellSelectU
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
@@ -126,7 +125,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User, 
 
             switch (id) {
                 case 1://IC_ACTION_USER_HELP_REDEEM_SELECT
-                setUpHelpAssetRedeem(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpHelpAssetRedeem(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
             }
 

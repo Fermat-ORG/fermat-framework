@@ -16,6 +16,7 @@ import java.lang.ref.WeakReference;
  */
 public class AppManagerServiceHelper {
 
+    private static final String TAG = "AppManagerServiceHelper";
     private WeakReference<Context> contextWeakReference;
 
     public AppManagerServiceHelper(Context contextWeakReference) {
@@ -40,7 +41,8 @@ public class AppManagerServiceHelper {
                 fermatAppsManagerService = binder.getService();
                 appsManagerBoundService = true;
             }catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
+                Log.e(TAG,"Exception in onServiceConnected");
             }
         }
 

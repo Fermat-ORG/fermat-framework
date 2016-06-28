@@ -104,7 +104,7 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
             //TODO: tomar los holdFunds de la wallet y compararlos contra el transaction amount para despues ejecutar el unhold
             try {
                 holdFunds = bankMoneyWalletManager.getBookBalance().getBalance(transaction.getAccountNumber());
-                if(transaction.getAmount().compareTo(holdFunds) >= 0) {
+                if(transaction.getAmount().compareTo(holdFunds) <= 0) {
                     bankMoneyWalletManager.unhold(new BankMoneyTransactionRecordImpl(
                             transaction.getTransactionId(),
                             BalanceType.AVAILABLE.getCode(),

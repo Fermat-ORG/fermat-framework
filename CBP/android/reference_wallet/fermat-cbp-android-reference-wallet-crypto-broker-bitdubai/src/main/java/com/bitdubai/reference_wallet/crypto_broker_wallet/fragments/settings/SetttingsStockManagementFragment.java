@@ -148,7 +148,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
         merchandisesAdapter.setFermatListEventListener(this);
         RecyclerView merchandisesRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_settings_current_merchandises);
-        merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         merchandisesRecyclerView.setAdapter(merchandisesAdapter);
 
         showOrHideNoSelectedWalletsView();

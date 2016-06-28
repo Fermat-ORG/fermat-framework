@@ -263,4 +263,6 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public BlockchainNetworkType getSelectedNetwork() {
         return selectedNetwork;
     }
+
+
 }

@@ -19,7 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CLoudClientConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FermatTyrusPacketProcessor;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

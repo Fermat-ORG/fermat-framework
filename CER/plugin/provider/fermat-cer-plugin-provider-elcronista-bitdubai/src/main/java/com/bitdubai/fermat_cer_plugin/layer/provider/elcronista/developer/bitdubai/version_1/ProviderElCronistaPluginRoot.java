@@ -34,7 +34,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.database.ElCronistaProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.database.ElCronistaProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.exceptions.CantInitializeElCronistaProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;

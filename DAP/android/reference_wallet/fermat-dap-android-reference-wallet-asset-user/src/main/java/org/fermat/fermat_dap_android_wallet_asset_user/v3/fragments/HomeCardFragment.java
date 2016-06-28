@@ -312,7 +312,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
 
             switch (id) {
                 case 1://IC_ACTION_USER_HELP_PRESENTATION
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
             }
 
