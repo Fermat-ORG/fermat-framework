@@ -39,7 +39,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
     /**
      * Represent the network service type.
      */
-    private ArrayList<ActorProfile> actorList;
+    private List<ActorProfile> actorList;
 
     /**
      * Represent the status
@@ -67,7 +67,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         this.networkServicePublicKey = networkServicePublicKey;
     }
 
-    public ArrayList<ActorProfile> getActorList() {
+    public List<ActorProfile> getActorList() {
         return actorList;
     }
 
@@ -75,7 +75,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         this.queryID = queryID;
     }
 
-    public void setActorList(ArrayList<ActorProfile> actorList) {
+    public void setActorList(List<ActorProfile> actorList) {
         this.actorList = actorList;
     }
 

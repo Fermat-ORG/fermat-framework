@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest;
@@ -14,6 +16,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
@@ -87,7 +90,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
              */
             if (messageContent.getMessageContentType() == MessageContentType.JSON) {
 
-                ArrayList<ActorProfile> actorsList = filterActors(messageContent.getParameters(), messageContent.getClientPublicKey());
+                List<ActorProfile> actorsList = filterActorsFromCheckedInActor(messageContent.getParameters(), messageContent.getClientPublicKey());
 
                 /*
                  * If all ok, respond whit success message
@@ -292,7 +295,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
 
         try {
 
-                                                                                                    NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(publicKey);
+            NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(publicKey);
             return nodesCatalog.getIp()+":"+nodesCatalog.getDefaultPort();
 
         } catch (RecordNotFoundException exception) {
@@ -300,6 +303,69 @@ public class ActorListRequestProcessor extends PackageProcessor {
         } catch (Exception exception) {
             throw new RuntimeException("Problem trying to find the node in the catalog: "+exception.getMessage());
         }
+    }
+
+    /*
+     * TOD: uso temporal para que los muchachos puedan probar su plugin
+     * mientras resolvemos lo de Actor_catalogs
+     */
+    private List<ActorProfile> filterActorsFromCheckedInActor(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
+
+        List<ActorProfile> profileList = new ArrayList<>();
+        List<CheckedInActor> listActorsLetf;
+        Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
+
+        int max    = 10;
+        int offset =  0;
+
+        if( discoveryQueryParameters.getMax() != null &&
+                discoveryQueryParameters.getOffset() != null &&
+                discoveryQueryParameters.getMax() > 0 &&
+                discoveryQueryParameters.getOffset() >= 0) {
+            max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+            offset = discoveryQueryParameters.getOffset();
+        }
+
+        if (discoveryQueryParameters.getLocation() != null)
+            listActorsLetf = getDaoFactory().getCheckedInActorDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
+        else
+            listActorsLetf = getDaoFactory().getCheckedInActorDao().findAll(filters, max, offset);
+
+        if(listActorsLetf != null) {
+            for (CheckedInActor actor : listActorsLetf) {
+
+                if (!actor.getClientIdentityPublicKey().equals(clientIdentityPublicKey))
+                    profileList.add(getActorProfileFromCheckedInActor(actor));
+
+            }
+        }
+
+        return profileList;
+
+    }
+
+    /*
+    * get ActorProfile From CheckedInActor
+    */
+    private ActorProfile getActorProfileFromCheckedInActor(CheckedInActor actor){
+
+        ActorProfile actorProfile = new ActorProfile();
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+        actorProfile.setPhoto(actor.getPhoto());
+        actorProfile.setExtraData(actor.getExtraData());
+        actorProfile.setLocation(new NetworkNodeCommunicationDeviceLocation(
+                actor.getLatitude(),
+                actor.getLongitude(),
+                null     ,
+                0        ,
+                null     ,
+                System.currentTimeMillis(),
+                LocationSource.UNKNOWN));
+
+        return actorProfile;
     }
 
 }
