@@ -4,11 +4,11 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,14 +20,12 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
@@ -36,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.crypto_customer_community.common.dialogs.ListIdentitiesDialog;
+import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ import java.util.List;
  */
 public class BrowserTabFragment
         extends FermatListFragment<CryptoCustomerCommunityInformation, ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>>
-        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation>, OnLoadMoreDataListener {
+        implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreDataListener {
 
     //Constants
     private static final int MAX = 15;
@@ -60,6 +59,7 @@ public class BrowserTabFragment
     private ErrorManager errorManager;
 
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+    private int offset;
 
     //Flags
     private boolean launchActorCreationDialog = false;
@@ -67,8 +67,8 @@ public class BrowserTabFragment
 
     //UI
     private AvailableActorsListAdapter adapter;
-    ImageView noUsers;
-    private int offset;
+    private ImageView noUsers;
+    private PresentationDialog helpDialog;
 
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
@@ -168,7 +168,6 @@ public class BrowserTabFragment
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new AvailableActorsListAdapter(getActivity(), cryptoCustomerCommunityInformationList);
-            adapter.setFermatListEventListener(this);
         }
 
         return adapter;
@@ -177,25 +176,8 @@ public class BrowserTabFragment
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    final int itemViewType = adapter.getItemViewType(position);
-                    switch (itemViewType) {
-                        case AvailableActorsListAdapter.DATA_ITEM:
-                            return 1;
-                        case AvailableActorsListAdapter.LOADING_ITEM:
-                            return SPAN_COUNT;
-                        default:
-                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
-                    }
-                }
-            });
-
-            layoutManager = gridLayoutManager;
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
-
 
         return layoutManager;
     }
@@ -214,12 +196,33 @@ public class BrowserTabFragment
     }
 
     @Override
-    public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                if (helpDialog == null)
+                    helpDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.ccc_banner)
+                            .setIconRes(R.drawable.crypto_customer)
+                            .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
+                            .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
+                            .setIsCheckEnabled(true)
+                            .build();
 
-    @Override
-    public void onLongItemClickListener(CryptoCustomerCommunityInformation data, int position) {
+                helpDialog.show();
+
+                return true;
+
+            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el filtro de geolocalizacion
+                return true;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el SearchView
+                return true;
+        }
+
+        return false;
     }
 
     @Override

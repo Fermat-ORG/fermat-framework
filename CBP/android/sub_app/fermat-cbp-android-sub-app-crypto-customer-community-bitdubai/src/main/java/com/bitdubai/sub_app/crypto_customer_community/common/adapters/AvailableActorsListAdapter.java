@@ -48,7 +48,7 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoCustomerComm
 
     protected int getCardViewResource(int type) {
         if (type == DATA_ITEM)
-            return R.layout.ccc_row_connections_world;
+            return R.layout.ccc_fragment_browser_tab_list_item;
         if (type == LOADING_ITEM)
             return R.layout.ccc_view_loading_more_list_item;
         return 0;

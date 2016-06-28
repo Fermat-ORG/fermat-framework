@@ -13,6 +13,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.sub_app.crypto_customer_community.R;
+import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
 
 /**
@@ -83,7 +84,7 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
                 BitmapFactory.decodeResource(res, R.drawable.ic_profile_male);
 
         RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(res, srcBitmap);
-        bitmapDrawable.setCornerRadius(100.0f);
+        bitmapDrawable.setCornerRadius(FragmentsCommons.CUSTOMER_IMAGES_CORNER_RADIUS);
         bitmapDrawable.setAntiAlias(true);
 
         return bitmapDrawable;
