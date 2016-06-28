@@ -17,6 +17,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -113,6 +114,7 @@ public class ConnectionsWorldFragment
 
     //UI
     private View rootView;
+    private SearchView searchView;
 
     //View layout;
     private LinearLayout emptyView;
@@ -488,7 +490,65 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        //super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        //updatevalues();
+                        adapter.changeDataSet(lstChatUserInformations);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
+    }
+
+    public void onOptionMenuPrepared(Menu menu){
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(lstChatUserInformations);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
     }
 
     @Override
@@ -504,7 +564,7 @@ public class ConnectionsWorldFragment
                 case 2:
                     try {
                         GeolocationDialog geolocationDialog =
-                                new GeolocationDialog(getActivity(),appSession, null, this);//,chatUserInformation, moduleManager.getSelectedActorIdentity());
+                                new GeolocationDialog(getActivity(),appSession, null, this);
                         geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {

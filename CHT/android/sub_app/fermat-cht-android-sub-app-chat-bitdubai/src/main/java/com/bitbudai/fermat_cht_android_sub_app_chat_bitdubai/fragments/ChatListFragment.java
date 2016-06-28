@@ -528,7 +528,6 @@ public class ChatListFragment
         }
     }
 
-
     public void onOptionMenuPrepared(Menu menu){
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
