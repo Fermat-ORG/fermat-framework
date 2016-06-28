@@ -88,12 +88,9 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
 
     /**
 
+
      * Through the method <code>getExchangeRateProviders</code> you can get the list of exchange rate providers
      * @return
-
-     * Through the method <code>getExchangeRateProviderManagers</code> you can get the list of exchange rate providers
-     * @return  List<ExchangeRateProvider> to dollar fiat currency
-
      * @throws CantGetCurrencyExchangeProviderException
      */
     List<ExchangeRateProvider> getExchangeRateProviders() throws CantGetCurrencyExchangeProviderException;
@@ -105,7 +102,6 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @throws CantGetCurrencyExchangeProviderException
      */
     List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException;
-
 
     /**
      * List all wallet contact related to an specific wallet.

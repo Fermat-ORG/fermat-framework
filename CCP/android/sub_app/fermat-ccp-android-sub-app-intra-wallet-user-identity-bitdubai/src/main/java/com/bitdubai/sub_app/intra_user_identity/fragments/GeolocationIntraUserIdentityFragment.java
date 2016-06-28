@@ -36,6 +36,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.I
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationGeolocationIntraUserIdentityDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,14 +122,14 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
         frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
-        frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
+        frequency.setBackgroundColor(Color.parseColor("#00000000"));
 
         try {
             ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
                     R.layout.frecuency_iden_spinner_item, dataspinner);
             //android.R.layout.simple_spinner_item, dataspinner);
             dataAdapter.setDropDownViewResource(R.layout.frecuency_iden_spinner_item);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             frequency.setAdapter(dataAdapter);
 
             setValues(frequency, accuracy, dataAdapter);
@@ -137,8 +139,8 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
                         frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString().toLowerCase());
-                        ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
-                        (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
+             //           ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
+               //         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
                         e.printStackTrace();
                     }
@@ -151,12 +153,9 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         } catch (CantGetIntraUserIdentityException e) {
             e.printStackTrace();
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
 
 
     }
@@ -170,11 +169,8 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-
-           // if (id == 1)
-                //showDialog();
-
-
+            if (id == 1)
+                showDialog();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -198,7 +194,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public void onBackPressed(){
         saveAndGoBack();
         changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
-        //super.onBackPressed();
+      //  super.onBackPressed();
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetIntraUserIdentityException {
@@ -246,6 +242,12 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         }
     }
 
+    public void showDialog(){
+        if(getActivity()!=null) {
+            PresentationGeolocationIntraUserIdentityDialog presentation = new PresentationGeolocationIntraUserIdentityDialog(getActivity(), appSession, null, appSession.getModuleManager());
+            presentation.show();
+        }
+    }
 
 
 }
