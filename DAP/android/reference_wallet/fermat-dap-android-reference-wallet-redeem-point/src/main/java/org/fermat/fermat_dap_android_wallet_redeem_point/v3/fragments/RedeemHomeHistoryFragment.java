@@ -280,8 +280,8 @@ public class RedeemHomeHistoryFragment extends FermatWalletListFragment<DigitalA
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.dap_wallet_asset_redeem_home_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();

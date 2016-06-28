@@ -212,9 +212,9 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
 
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();

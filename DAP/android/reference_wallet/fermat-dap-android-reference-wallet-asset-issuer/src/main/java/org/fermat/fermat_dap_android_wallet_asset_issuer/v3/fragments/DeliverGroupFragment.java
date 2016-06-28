@@ -152,9 +152,9 @@ public class DeliverGroupFragment extends FermatWalletListFragment<Group, Refere
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_asset_issuer_deliver_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        inflater.inflate(R.menu.dap_asset_issuer_deliver_menu, menu);
 //        searchView = (SearchView) menu.findItem(R.id.action_wallet_issuer_deliver_search).getActionView();
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();
