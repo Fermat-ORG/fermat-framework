@@ -23,12 +23,13 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile ('com.bitdubai.bch.api:fermat-bch-api:2'){
+    compile project(':fermat-bch-api'){
         dependencies{
-            compile ('com.bitdubai.fermat.api:fermat-api:2.0.10')
-       }
+            compile project(':fermat-api')
+        }
     }
 }
+
 
 publishing {
     publications {
