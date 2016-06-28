@@ -332,7 +332,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         try {
             super.onActivityCreated(savedInstanceState);
             animationManager = new AnimationManager(rootView,emptyListViewsContainer);
-            getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+            //getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -351,13 +351,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     @Override
     public void onResume() {
         animationManager = new AnimationManager(rootView, emptyListViewsContainer);
-        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+        //getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         super.onResume();
     }
 
     @Override
     public void onStop() {
-        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+        //getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
         super.onStop();
     }
 
@@ -376,23 +376,23 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         if(emptyListViewsContainer!=null)
             emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);    }
 
-    private void setUpHeader(LayoutInflater inflater) throws CantGetBalanceException {
+
+    private void setUpHeader(LayoutInflater inflater)  throws CantGetBalanceException {
         final RelativeLayout container_header_balance = getToolbarHeader();
         try{
             container_header_balance.removeAllViews();
         }catch (Exception e){
             e.printStackTrace();
         }
-        final int sdk = android.os.Build.VERSION.SDK_INT;
+       /* final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
         } else {
             container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
-        }
+        }*/
 
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
-
 
 
         //Select all header Element
@@ -611,13 +611,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             if (lstFermatWalletTransactions.isEmpty()) {
                recyclerView.setVisibility(View.GONE);
                 emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
-                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                //FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
                 emptyListViewsContainer.setVisibility(View.VISIBLE);
             }
         }else{
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            //FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
@@ -683,7 +683,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 if(!data.isEmpty())
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-                            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                            //FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                            emptyListViewsContainer.setVisibility(View.VISIBLE);
                         }
                     });
             }
@@ -713,12 +714,14 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 if(lstFermatWalletTransactions.size() > 0)
                 {
                     recyclerView.setVisibility(View.VISIBLE);
-                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                   // FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                    emptyListViewsContainer.setVisibility(View.GONE);
                 }
             }
             else {
                 recyclerView.setVisibility(View.GONE);
-                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                //FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                emptyListViewsContainer.setVisibility(View.VISIBLE);
             }
         }
     }
