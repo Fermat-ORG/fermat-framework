@@ -161,10 +161,7 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
         }
         long refreshInterval = 0;
         for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser()) {
-            if (chatIdentity.getFrecuency() == Frecuency.HIGH) refreshInterval = 1000;
-            if (chatIdentity.getFrecuency() == Frecuency.LOW) refreshInterval = 2000;
-            if (chatIdentity.getFrecuency() == Frecuency.NORMAL) refreshInterval = 3000;
-            if (chatIdentity.getFrecuency() == Frecuency.NONE) refreshInterval = 0;
+           refreshInterval = chatIdentity.getFrecuency().getRefreshInterval();
             chatExposingDataList.add(
                     new ChatExposingData(
                             chatIdentity.getPublicKey(),
