@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_customer_community.common.adapters;
+package com.bitdubai.sub_app.crypto_broker_community.common.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,18 +10,21 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
-import com.bitdubai.sub_app.crypto_customer_community.R;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
+import com.bitdubai.sub_app.crypto_broker_community.R;
 
 import java.util.List;
 
 /**
- * Created by Alejandro Bicelis on 18/02/2016.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 12/01/2015.
+ *
+ * @author lnacosta
+ * @version 1.0.0
  */
-public class AppSelectableIdentitiesListAdapter
-        extends FermatAdapter<CryptoCustomerCommunitySelectableIdentity, AppSelectableIdentitiesListAdapter.AppSelectableIdentityHolder> {
+public class SelectableIdentitiesListAdapter
+        extends FermatAdapter<CryptoBrokerCommunitySelectableIdentity, SelectableIdentitiesListAdapter.AppSelectableIdentityHolder> {
 
-    public AppSelectableIdentitiesListAdapter(Context context, List<CryptoCustomerCommunitySelectableIdentity> dataSet) {
+    public SelectableIdentitiesListAdapter(Context context, List<CryptoBrokerCommunitySelectableIdentity> dataSet) {
         super(context, dataSet);
     }
 
@@ -32,11 +35,11 @@ public class AppSelectableIdentitiesListAdapter
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.ccc_row_connection_list;
+        return R.layout.cbc_dialog_selectable_identity_list_item;
     }
 
     @Override
-    protected void bindHolder(AppSelectableIdentityHolder holder, CryptoCustomerCommunitySelectableIdentity data, int position) {
+    protected void bindHolder(AppSelectableIdentityHolder holder, CryptoBrokerCommunitySelectableIdentity data, int position) {
 
         if (data.getPublicKey() != null) {
             holder.friendName.setText(data.getAlias());
@@ -77,8 +80,8 @@ public class AppSelectableIdentitiesListAdapter
         public AppSelectableIdentityHolder(View itemView) {
             super(itemView);
 
-            friendName = (FermatTextView) itemView.findViewById(R.id.ccc_selectable_identity_username);
-            friendAvatar = (ImageView) itemView.findViewById(R.id.ccc_selectable_identity_user_avatar);
+            friendName = (FermatTextView) itemView.findViewById(R.id.cbc_selectable_identity_username);
+            friendAvatar = (ImageView) itemView.findViewById(R.id.cbc_selectable_identity_user_avatar);
         }
     }
 
