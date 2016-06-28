@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
@@ -22,7 +22,7 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
     private byte[] profileImage;
     private final boolean published;
     private long   accuracy;
-    private Frecuency frecuency;
+    private Frequency frequency;
 
     public CryptoCustomerIdentityImpl(final String alias,
                                       final String privateKey,
@@ -30,14 +30,14 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
                                       final byte[] profileImage,
                                       final boolean published,
                                       final long accuracy,
-                                      final Frecuency frecuency){
+                                      final Frequency frequency){
         this.alias = alias;
         this.privateKey = privateKey;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.published = published;
         this.accuracy      = accuracy     ;
-        this.frecuency     = frecuency    ;
+        this.frequency = frequency;
     }
 
     @Override
@@ -86,8 +86,8 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Seria
     }
 
     @Override
-    public Frecuency getFrecuency() {
-        return frecuency;
+    public Frequency getFrequency() {
+        return frequency;
     }
 
 

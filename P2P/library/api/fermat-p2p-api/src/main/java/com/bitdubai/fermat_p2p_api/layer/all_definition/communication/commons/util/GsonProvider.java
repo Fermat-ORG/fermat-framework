@@ -28,9 +28,9 @@ public class GsonProvider {
     private GsonProvider(){
 
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Timestamp.class, new JsonDateAdapter());
+        builder.registerTypeAdapter(Timestamp.class, new TimestampAdapter());
         builder.registerTypeAdapter(Profile.class, new InterfaceAdapter<Profile>());
-        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
+        builder.registerTypeAdapter(Location.class, new LocationAdapter());
         gson = builder.create();
     }
 

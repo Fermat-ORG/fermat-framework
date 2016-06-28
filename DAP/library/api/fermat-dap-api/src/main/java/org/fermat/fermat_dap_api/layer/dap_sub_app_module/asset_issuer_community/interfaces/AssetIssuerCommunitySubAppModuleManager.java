@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>,
         ModuleSettingsImpl<AssetIssuerSettings>, Serializable {
 
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
     List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered(int max, int offset) throws CantGetAssetIssuerActorsException;
 
     List<ActorAssetIssuer> getAllActorAssetIssuerConnected() throws CantGetAssetIssuerActorsException;

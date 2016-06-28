@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 
@@ -14,21 +14,21 @@ public class CryptoBrokerWalletActorIdentity implements ActorIdentity, Serializa
     private byte[] img;
     private String publicKey;
     private long accuracy;
-    private Frecuency frecuency;
+    private Frequency frequency;
 
-    public CryptoBrokerWalletActorIdentity(String alias, byte[] img, long accuracy, Frecuency frecuency) {
+    public CryptoBrokerWalletActorIdentity(String alias, byte[] img, long accuracy, Frequency frequency) {
         this.alias = alias;
         this.img = img;
         this.accuracy = accuracy;
-        this.frecuency = frecuency;
+        this.frequency = frequency;
     }
 
-    public CryptoBrokerWalletActorIdentity(String publicKey, String alias, byte[] img, long accuracy, Frecuency frecuency) {
+    public CryptoBrokerWalletActorIdentity(String publicKey, String alias, byte[] img, long accuracy, Frequency frequency) {
         this.alias = alias;
         this.img = img;
         this.publicKey = publicKey;
         this.accuracy = accuracy;
-        this.frecuency = frecuency;
+        this.frequency = frequency;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CryptoBrokerWalletActorIdentity implements ActorIdentity, Serializa
     }
 
     @Override
-    public Frecuency getFrecuency() {
-        return frecuency;
+    public Frequency getFrequency() {
+        return frequency;
     }
 }

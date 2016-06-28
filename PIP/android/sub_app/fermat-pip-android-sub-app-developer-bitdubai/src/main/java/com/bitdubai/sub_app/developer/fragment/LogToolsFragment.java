@@ -477,11 +477,15 @@ public class LogToolsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.developer_menu, menu);
 
         searchView = (SearchView) menu.findItem(R.id.developer_search).getActionView();
+//        searchView = (SearchView) menu.findItem(1).getActionView();
         searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//        toolbar = getToolbar();
+//        toolbar.addView(searchView);
+       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return false;

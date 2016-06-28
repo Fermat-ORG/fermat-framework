@@ -83,8 +83,7 @@ public class Data implements Serializable {
                     digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
                 }
 
-                List<Transaction> transactions = getTransactions(moduleManager, digitalAsset);
-                digitalAsset.setLastTransactionDate(transactions.get(0).getDate());
+                digitalAsset.setLastTransactionDate(moduleManager.assetLastTransaction(WalletUtilities.WALLET_PUBLIC_KEY,digitalAsset.getAssetPublicKey()));
 
                 digitalAssets.add(digitalAsset);
             }
@@ -270,6 +269,13 @@ public class Data implements Serializable {
             Transaction transaction = new Transaction(assetUserWalletTransaction, dapActor);
             transactions.add(transaction);
         }
+
+               Collections.sort(transactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction o1, Transaction o2) {
+                return (int) (o2.getDate().getTime() - o1.getDate().getTime());
+            }
+        });
         return transactions;
     }
 

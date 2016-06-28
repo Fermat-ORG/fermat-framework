@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -10,6 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection</code>
@@ -34,13 +37,38 @@ public interface NetworkClientConnection {
     void registerProfile(Profile profile) throws CantRegisterProfileException;
 
     /**
+     * Through the method <code>updateRegisteredProfile</code> we can update registered profile
+     * in the server.
+     *
+     * @param profile  of the component that we're trying to update.
+     *
+     * @throws CantUpdateRegisteredProfileException      if something goes wrong.
+     */
+    void updateRegisteredProfile(Profile profile) throws CantUpdateRegisteredProfileException;
+
+    /**
      * Through the method <code>unregisterProfile</code> we can unregister a profile in the server.
      *
      * @param profile that we're trying to unregister.
      *
      * @throws CantUnregisterProfileException if something goes wrong.
      */
-    void unregisterProfile(Profile profile) throws CantUnregisterProfileException;
+     void unregisterProfile(Profile profile) throws CantUnregisterProfileException;
+
+    /**
+     * Through this method we can ask to the fermat network a list of online actors.
+     * This method is asynchronous, it will raise a NETWORK_CLIENT_ACTOR_LIST_RECEIVED event
+     * when it get the results.
+     *
+     * @param discoveryQueryParameters  parameters for the query
+     * @param networkServicePublicKey   network service asking for the list of actors
+     *
+     * @return query id
+     *
+     * @throws CantRequestProfileListException if something goes wrong.
+     */
+     UUID onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+                                     final String                   networkServicePublicKey ) throws CantRequestProfileListException;
 
     /**
      * Through the method <code>registeredProfileDiscoveryQuery</code> we can make a discovery query

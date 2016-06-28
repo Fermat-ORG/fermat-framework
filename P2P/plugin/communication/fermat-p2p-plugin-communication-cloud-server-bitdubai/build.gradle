@@ -63,9 +63,7 @@ task serverJar(type: OneJar) {
 dependencies {
 
     //compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':fermat-api')
     compile project(':fermat-p2p-api')
-    compile project(':fermat-pip-api')
     compile 'org.eclipse.jetty:jetty-server:9.2.14.v20151106'
     compile 'org.eclipse.jetty.websocket:websocket-server:9.2.14.v20151106'
     compile 'org.eclipse.jetty.websocket:websocket-api:9.2.14.v20151106'

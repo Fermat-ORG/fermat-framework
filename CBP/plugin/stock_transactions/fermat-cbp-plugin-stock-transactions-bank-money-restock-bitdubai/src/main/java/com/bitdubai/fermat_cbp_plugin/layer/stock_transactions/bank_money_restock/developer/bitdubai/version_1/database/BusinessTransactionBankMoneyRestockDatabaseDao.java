@@ -180,7 +180,8 @@ public class BusinessTransactionBankMoneyRestockDatabaseDao {
             for (DatabaseTableRecord bankMoneyRestockRecord : getBankMoneyRestockData(filter)) {
                 final BankMoneyTransaction bankMoneyTransaction = getBankMoneyRestockTransaction(bankMoneyRestockRecord);
 
-                bankMoneyTransactions.add(bankMoneyTransaction);
+                if(!bankMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                    bankMoneyTransactions.add(bankMoneyTransaction);
             }
 
             database.closeDatabase();

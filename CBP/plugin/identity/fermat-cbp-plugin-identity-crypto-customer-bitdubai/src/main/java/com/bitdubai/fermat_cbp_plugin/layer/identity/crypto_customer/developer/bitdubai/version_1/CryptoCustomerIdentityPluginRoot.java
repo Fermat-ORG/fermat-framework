@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
@@ -139,13 +139,13 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
     public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage,
                                                                long accuracy,
-                                                               Frecuency frecuency) throws CantCreateCryptoCustomerIdentityException {
+                                                               Frequency frequency) throws CantCreateCryptoCustomerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
             // TODO BY DEFAULT THE CUSTOMER IS PUBLISHED
-            CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true, accuracy, frecuency);
-            cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser, accuracy, frecuency);
+            CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true, accuracy, frequency);
+            cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser, accuracy, frequency);
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_customer_creado");
 
@@ -167,8 +167,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
     @Override
     public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
                                              long accuracy,
-                                             Frecuency frecuency) throws CantUpdateCustomerIdentityException {
-        cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile, accuracy, frecuency);
+                                             Frequency frequency) throws CantUpdateCustomerIdentityException {
+        cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile, accuracy, frequency);
 
         try {
             CryptoCustomerIdentity customer = cryptoCustomerIdentityDatabaseDao.getIdentity(publicKey);

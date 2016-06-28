@@ -42,7 +42,8 @@ import java.util.UUID;
  * Created by Lozadaa on 05/03/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class cht_dialog_connections extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     private final Activity activity;
     private static final String TAG = "cht_dialog_connections";

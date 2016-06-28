@@ -126,7 +126,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 //                throw new CantCreateAssetUserActorException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET USER IN ACTOR NETWORK SERVICE", e, "", "");
 //            }
         }
-            //EN DESHUSO
+        //EN DESHUSO
 //        private void listByActorAssetUserNetworkService() throws CantCreateAssetUserActorException {
 //            try {
 //                if (assetUserActorNetworkServiceManager != null && assetUserActorDao.getActorAssetUser() != null) {

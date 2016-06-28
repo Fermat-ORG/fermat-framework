@@ -348,7 +348,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                 if (identity.getAlias().equals(alias)) assetIdentity = identity;
             }
             if (assetIdentity == null)
-                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null,Long.parseLong("0"), Frecuency.NONE);
+                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null, Long.parseLong("0"), Frecuency.NONE);
             return assetIdentity;
         }
 

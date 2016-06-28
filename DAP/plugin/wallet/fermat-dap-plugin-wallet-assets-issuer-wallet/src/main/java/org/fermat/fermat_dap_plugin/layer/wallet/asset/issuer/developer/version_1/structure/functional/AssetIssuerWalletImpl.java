@@ -310,12 +310,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         List<AssetIssuerWalletTransaction> toReturn = new ArrayList<>();
         toReturn.addAll(getCreditsForDisplay(creditAvailable, creditBook));
         toReturn.addAll(getDebitsForDisplay(debitAvailable, debitBook));
-        Collections.sort(toReturn, new Comparator<AssetIssuerWalletTransaction>() {
-            @Override
-            public int compare(AssetIssuerWalletTransaction o1, AssetIssuerWalletTransaction o2) {
-                return (int) (o2.getTimestamp() - o1.getTimestamp());
-            }
-        });
+
         return toReturn;
     }
 
@@ -329,7 +324,6 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     private List<AssetIssuerWalletTransaction> getDebitsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
-        Collections.reverse(available);
         for (AssetIssuerWalletTransaction transaction : book) {
             if (available.contains(transaction)) {
                 available.remove(transaction); //YES, THIS IS NECESSARY.
@@ -445,6 +439,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public int getUnusedAmountForAssetByStatus(AssetCurrentStatus status, String assetName) throws CantGetAssetStatisticException {
         return getStatisticForGivenAssetByStatus(assetName, status).size();
+    }
+
+    @Override
+    public Date assetLastTransaction(String assetPublicKey) throws CantGetTransactionsException {
+        return new Date(getTransactionsForDisplay(assetPublicKey).get(0).getTimestamp()) ;
     }
 
     private List<AssetStatistic> constructListFromAssetPublicKey(List<UUID> transactionIds) {
