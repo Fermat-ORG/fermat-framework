@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,8 +10,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -30,16 +34,20 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.GeolocationDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
@@ -55,7 +63,8 @@ import java.util.List;
  */
 public class BrowserTabFragment
         extends FermatListFragment<CryptoBrokerCommunityInformation, ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>>
-        implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener {
+        implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener,
+        GeolocationDialog.AdapterCallback  {
 
     //Constants
     private static final int MAX = 10;
@@ -67,7 +76,11 @@ public class BrowserTabFragment
     private ErrorManager errorManager;
 
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
-    private int offset;
+    private int offset = 0;
+    private DeviceLocation location = null;
+    private double distance = 0;
+    private String alias;
+    private CryptoBrokerCommunitySelectableIdentity identity;
 
     //Flags
     private boolean launchActorCreationDialog = false;
@@ -82,6 +95,16 @@ public class BrowserTabFragment
         return new BrowserTabFragment();
     }
 
+    @Override
+    public void onMethodCallback(ExtendedCity city) {
+        location=new DeviceLocation();
+        location.setLatitude((double) city.getLatitude());
+        location.setLongitude((double) city.getLongitude());
+        distance=identity.getAccuracy();
+        location.setAccuracy((long) distance);
+        offset=0;
+        onRefresh();
+    }
 
     /**
      * Fragment interface implementation.
@@ -98,7 +121,7 @@ public class BrowserTabFragment
 
         //Check if a default identity is configured
         try {
-            moduleManager.getSelectedActorIdentity();
+            identity = moduleManager.getSelectedActorIdentity();
         } catch (CantGetSelectedActorIdentityException e) {
             launchActorCreationDialog = true;  //There are no identities in device
         } catch (ActorIdentityNotSelectedException e) {
@@ -224,7 +247,24 @@ public class BrowserTabFragment
                 return true;
 
             case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
-                //TODO: colocar aqui el codigo para mostrar el filtro de geolocalizacion
+                try {
+                    GeolocationDialog geolocationDialog =
+                            new GeolocationDialog(getActivity(),appSession, null, this);//,chatUserInformation, moduleManager.getSelectedActorIdentity());
+                    geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    });
+                    Window window = geolocationDialog.getWindow();
+                    WindowManager.LayoutParams wlp = window.getAttributes();
+                    wlp.gravity = Gravity.TOP;
+                    wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                    window.setAttributes(wlp);
+                    geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    geolocationDialog.show();
+                } catch ( Exception e) {
+                    e.printStackTrace();
+                }
                 return true;
 
             case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
@@ -239,7 +279,7 @@ public class BrowserTabFragment
     public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
         try {
             ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager,
-                    data, moduleManager.getSelectedActorIdentity());
+                    data, identity);
 
             connectDialog.setTitle("Connection Request");
             connectDialog.setSubtitle("New Request");
@@ -253,7 +293,7 @@ public class BrowserTabFragment
 
             connectDialog.show();
 
-        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
             Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
         }
@@ -282,7 +322,7 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,48 +1,28 @@
-package com.bitdubai.sub_app.chat_community.common.popups;
+package com.bitdubai.sub_app.crypto_broker_community.common.dialogs;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.chat_community.R;
-import com.bitdubai.sub_app.chat_community.adapters.GeolocationAdapter;
-
-import org.json.JSONArray;
+import com.bitdubai.sub_app.crypto_broker_community.R;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.GeolocationAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,20 +31,21 @@ import java.util.List;
  * Created by roy on 11/06/16.
  * Update by Jose Cardozo josejcb (josejcb89@gmail.com) on 27/06/16.
  */
-public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class GeolocationDialog
+        extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     //ATTRIBUTES
     private EditText searchInput;
-    private ChatActorCommunitySubAppModuleManager mChatActorCommunityManager;
+    private CryptoBrokerCommunitySubAppModuleManager mActorCommunityManager;
     private ListView mListView;
-    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
-    private CitiesImpl cityFromList;
+    private ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> appSession;
     private ImageView lupaButton;
     private ImageView closeButton;
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
-    private List<ExtendedCity> lstChatUserInformations = new ArrayList<>();
+    private List<ExtendedCity> lstLocations = new ArrayList<>();
     private GeolocationAdapter adapter;
     private ErrorManager errorManager;
     private LinearLayout emptyView;
@@ -72,12 +53,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     TextView noDatalabel;
     private AdapterCallback mAdapterCallback;
 
-    //SETTERS ATTRIBUTES
-    String Country;
-    String State;
-    String Input;
-
-    public GeolocationDialog (Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
+    public GeolocationDialog (Activity activity, ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> appSession,
                               ResourceProviderManager resources, AdapterCallback mAdapterCallback){
         super(activity, appSession, null);
         this.appSession = appSession;
@@ -98,9 +74,9 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
 
         try {
 
-            mChatActorCommunityManager = appSession.getModuleManager();
+            mActorCommunityManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
+            mActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
             mListView = (ListView) findViewById(R.id.geolocation_view);
             noDatalabel = (TextView) findViewById(R.id.nodatalabel_geo);
@@ -116,17 +92,16 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                 }
             });
 
-            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
+            adapter = new GeolocationAdapter(getActivity(), lstLocations, errorManager, mAdapterCallback, GeolocationDialog.this);
             mListView.setAdapter(adapter);
             lupaButton.setOnClickListener( new View.OnClickListener() {
                                                @Override
                                                public void onClick(View v) {
                                                    try {
-                                                       lstChatUserInformations = mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
-                                                       adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
+                                                       lstLocations = mActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
+                                                       adapter = new GeolocationAdapter(getActivity(), lstLocations, errorManager, mAdapterCallback, GeolocationDialog.this);
                                                        mListView.setAdapter(adapter);
-                                                       adapter.refreshEvents(lstChatUserInformations);
-                                                       // onRefresh();
+                                                       adapter.refreshEvents(lstLocations);
                                                    }catch (CantGetCitiesListException e){
                                                        if (getActivity() != null)
                                                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
@@ -142,68 +117,11 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     }
 
     protected int setLayoutId() {
-        return R.layout.cht_comm_geolocation_dialog;
+        return R.layout.cbc_geolocation_dialog;
     }
 
     protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
-    }
-
-//    public void onRefresh(){
-//        if (!isRefreshing) {
-//            isRefreshing = true;
-//            FermatWorker worker = new FermatWorker() {
-//                @Override
-//                protected Object doInBackground() throws Exception {
-//                    return getMoreData(searchInput.getText().toString());
-//                }
-//            };
-//            worker.setContext(getActivity());
-//            worker.setCallBack(new FermatWorkerCallBack() {
-//                @SuppressWarnings("unchecked")
-//                @Override
-//                public void onPostExecute(Object... result) {
-//                    isRefreshing = false;
-//                    if (result != null &&
-//                            result.length > 0) {
-//                        if (getActivity()!= null && adapter != null) {
-//                            lstChatUserInformations = (ArrayList<ExtendedCity>) result[0];
-//                            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
-//                            mListView.setAdapter(adapter);
-//                            adapter.refreshEvents(lstChatUserInformations);
-//                            if (lstChatUserInformations.isEmpty()) {
-//                                showEmpty(true, emptyView);
-//                            } else {
-//                                showEmpty(false, emptyView);
-//                            }
-//                        }
-//                    } else
-//                        showEmpty(true, emptyView);
-//                }
-//
-//                @Override
-//                public void onErrorOccurred(Exception ex) {
-//                    isRefreshing = false;
-//                    if (getActivity() != null)
-//                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-//                }
-//            });
-//            worker.execute();
-//        }
-//    }
-
-    private synchronized List<ExtendedCity> getMoreData(String filter) {
-        System.out.println("****************** GETMORE DATA SYNCHRONIZED ENTERING");
-        List<ExtendedCity> dataSet = new ArrayList<>();
-
-        try {
-            List<ExtendedCity> result = mChatActorCommunityManager.getExtendedCitiesByFilter(filter);
-            dataSet.addAll(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("****************** GETMORE DATA SYNCRHONIZED SALIO BIEN: ");
-        return dataSet;
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -220,6 +138,4 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             emptyView.setVisibility(View.GONE);
         }
     }
-
-
 }

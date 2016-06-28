@@ -576,12 +576,16 @@ public class CryptoBrokerCommunityManager
                 if (lastSelectedActorType == Actors.CBP_CRYPTO_BROKER) {
                     for (CryptoBrokerIdentity i : brokerIdentitiesInDevice) {
                         if (i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
+                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(),
+                                    Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage(),
+                                    i.getAccuracy(), i.getFrequency());
                     }
                 } else if (lastSelectedActorType == Actors.CBP_CRYPTO_CUSTOMER) {
                     for (CryptoCustomerIdentity i : customerIdentitiesInDevice) {
                         if (i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, i.getAlias(), i.getProfileImage());
+                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(),
+                                    Actors.CBP_CRYPTO_CUSTOMER, i.getAlias(), i.getProfileImage(),
+                                    i.getAccuracy(), i.getFrequency());
                     }
                 }
 
