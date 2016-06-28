@@ -48,8 +48,10 @@ public abstract class AbstractPlatform {
         this.platformReference = platformReference;
     }
 
-    public AbstractPlatform(FermatContext fermatContext) {
+    public AbstractPlatform(final PlatformReference platformReference,
+                            final FermatContext fermatContext) {
         this.fermatContext = fermatContext;
+        this.platformReference = platformReference;
     }
 
     /**
@@ -63,6 +65,10 @@ public abstract class AbstractPlatform {
     protected final void registerLayer(final AbstractLayer abstractLayer) throws CantRegisterLayerException {
 
         LayerReference layerReference = abstractLayer.getLayerReference();
+
+        if (layerReference == null)
+            throw new CantRegisterLayerException("layerReference=null", "The layer does not contain a layer reference to recognize it.");
+
         layerReference.setPlatformReference(platformReference);
 
         try {

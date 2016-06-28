@@ -1,9 +1,5 @@
 package com.bitdubai.fermat_bch_core;
 
-import com.bitdubai.fermat_api.FermatContext;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_bch_core.layer.crypto_module.CryptoModuleLayer;
@@ -11,6 +7,9 @@ import com.bitdubai.fermat_bch_core.layer.crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_bch_core.layer.crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_bch_core.layer.crypto_vault.CryptoVaultLayer;
 import com.bitdubai.fermat_bch_core.layer.middleware.MiddlewareLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 
 /**
  * The class <code>com.bitdubai.fermat_bch_core.BCHPlatform</code>
@@ -22,10 +21,6 @@ public class BCHPlatform extends AbstractPlatform {
 
     public BCHPlatform() {
         super(new PlatformReference(Platforms.BLOCKCHAINS));
-    }
-
-    public BCHPlatform(FermatContext fermatContext) {
-        super(fermatContext);
     }
 
     @Override
@@ -47,10 +42,5 @@ public class BCHPlatform extends AbstractPlatform {
                     "Problem trying to register a layer."
             );
         }
-    }
-
-
-    public static void main(String[] args){
-
     }
 }
