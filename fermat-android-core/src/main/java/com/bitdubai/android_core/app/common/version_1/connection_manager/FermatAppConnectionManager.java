@@ -19,6 +19,17 @@ import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUser
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
 import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
 
+//import org.fermat.fermat_dap_android_sub_app_asset_factory.app_connection.AssetFactoryFermatAppConnection;
+//import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.app_connection.CommunityAssetIssuerFermatAppConnection;
+//import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.app_connection.AssetIssuerFermatAppConnection;
+//import org.fermat.fermat_dap_android_sub_app_asset_user_community.app_connection.CommunityAssetUserFermatAppConnection;
+//import org.fermat.fermat_dap_android_sub_app_asset_user_identity.app_connection.AssetUserFermatAppConnection;
+//import org.fermat.fermat_dap_android_sub_app_redeem_point_community.app_connection.CommunityRedeemPointFermatAppConnection;
+//import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.app_connection.RedeemPointFermatAppConnection;
+//import org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection.WalletAssetIssuerFermatAppConnection;
+//import org.fermat.fermat_dap_android_wallet_asset_user.app_connection.WalletAssetUserFermatAppConnection;
+//import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRedeemPointFermatAppConnection;
+
 import java.util.HashMap;
 import java.util.Map;
 
