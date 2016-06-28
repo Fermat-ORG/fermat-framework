@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.AbstractBaseEntity;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantDeleteRecordDataBaseException;
@@ -336,6 +337,25 @@ public abstract class AbstractBaseDao<T extends AbstractBaseEntity> {
 
             throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
+        }
+    }
+
+    /**
+     * Method that delete a entity in the data base.
+     *
+     * @throws CantDeleteRecordDataBaseException  if something goes wrong.
+     */
+    public final void deleteAll() throws CantDeleteRecordDataBaseException {
+
+        try {
+
+            final DatabaseTable table = this.getDatabaseTable();
+
+            table.truncate();
+
+        } catch (CantTruncateTableException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and I cannot delete all records.");
         }
     }
 

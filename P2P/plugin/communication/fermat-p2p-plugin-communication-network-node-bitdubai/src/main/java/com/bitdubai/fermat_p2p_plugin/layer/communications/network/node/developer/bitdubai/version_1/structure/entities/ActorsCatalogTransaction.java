@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 import java.io.Serializable;
@@ -19,9 +20,11 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	public static final String ADD_TRANSACTION_TYPE = "ADD";
 
-	public static final String DELETE_TRANSACTION_TYPE = "DELETE";
+	public static final String DELETE_TRANSACTION_TYPE = "DEL";
 
-	public static final String UPDATE_TRANSACTION_TYPE = "UPDATE";
+	public static final String UPDATE_TRANSACTION_TYPE = "UPD";
+
+	public static final String UPDATE_GEOLOCATION_TRANSACTION_TYPE = "GEO";
 
 	private String hashId;
 
@@ -35,7 +38,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private String identityPublicKey;
 
-	private NetworkNodeCommunicationDeviceLocation lastLocation;
+	private Location lastLocation;
 
 	private String name;
 
@@ -47,11 +50,23 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private String transactionType;
 
+	private Timestamp generationTime;
+
 	public ActorsCatalogTransaction() {
 		super();
-		this.hashId = UUID.randomUUID().toString();
+
+		this.hashId         = UUID.randomUUID().toString();
 		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
-        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
+		this.generationTime = new Timestamp(System.currentTimeMillis());
+        this.lastLocation   = new NetworkNodeCommunicationDeviceLocation();
+	}
+
+	public void setGenerationTime(Timestamp generationTime) {
+		this.generationTime = generationTime;
+	}
+
+	public Timestamp getGenerationTime() {
+		return generationTime;
 	}
 
 	public String getTransactionType() {
@@ -147,11 +162,11 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		return hashId;
 	}
 
-	public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+	public Location getLastLocation() {
 		return lastLocation;
 	}
 
-	public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+	public void setLastLocation(Location lastLocation) {
 		this.lastLocation = lastLocation;
 	}
 

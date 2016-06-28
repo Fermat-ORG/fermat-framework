@@ -28,20 +28,6 @@ public class NetworkServiceQuery implements AbstractBaseEntity, Serializable {
     private final QueryTypes               type                    ;
     private       QueryStatus              status                  ;
 
-    public NetworkServiceQuery(final String                   broadcastCode           ,
-                               final DiscoveryQueryParameters discoveryQueryParameters,
-                               final long                     executionTime           ,
-                               final QueryTypes               type                    ,
-                               final QueryStatus              status                  ) {
-
-        this.id                       = UUID.randomUUID()       ;
-        this.broadcastCode            = broadcastCode           ;
-        this.discoveryQueryParameters = discoveryQueryParameters;
-        this.executionTime            = executionTime           ;
-        this.type                     = type                    ;
-        this.status                   = status                  ;
-    }
-
     public NetworkServiceQuery(final UUID                     id                      ,
                                final String                   broadcastCode           ,
                                final DiscoveryQueryParameters discoveryQueryParameters,
