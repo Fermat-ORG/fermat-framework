@@ -1,20 +1,18 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -36,14 +34,17 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
+import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AvailableActorsListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.dialogs.ListIdentitiesDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
+ * <p/>
+ * Updated by Nelson Ramirez (nelsonalfo@gmail.com) on 27/06/2016.
  */
 public class BrowserTabFragment
         extends FermatListFragment<CryptoCustomerCommunityInformation, ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>>
@@ -52,8 +53,7 @@ public class BrowserTabFragment
     //Constants
     private static final int MAX = 15;
     private static final int SPAN_COUNT = 3;
-    protected static final String TAG = "ConnectionsWorldFrag";
-    public static final String ACTOR_SELECTED = "actor_selected";
+    protected static final String TAG = "BrowserTabFragment";
 
     //Managers
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
@@ -66,10 +66,8 @@ public class BrowserTabFragment
     private boolean launchListIdentitiesDialog = false;
 
     //UI
-    private LinearLayout emptyView;
-    private AppListAdapter adapter;
-    TextView noDataLabel;
-    ImageView noData;
+    private AvailableActorsListAdapter adapter;
+    ImageView noUsers;
     private int offset;
 
     public static BrowserTabFragment newInstance() {
@@ -83,46 +81,40 @@ public class BrowserTabFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        moduleManager = appSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+        loadSettings();
+
+        //Check if a default identity is configured
         try {
-            setHasOptionsMenu(true);
+            moduleManager.getSelectedActorIdentity();
+        } catch (CantGetSelectedActorIdentityException e) {
+            launchActorCreationDialog = true;   //There are no identities in device
+        } catch (ActorIdentityNotSelectedException e) {
+            launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+        }
+    }
 
-            //Get managers
-            moduleManager = appSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
-            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+    private void loadSettings() {
+        //Obtain Settings or create new Settings if first time opening subApp
+        CryptoCustomerCommunitySettings appSettings;
+        try {
+            appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            appSettings = null;
+        }
 
-
-            //Obtain Settings or create new Settings if first time opening subApp
-            CryptoCustomerCommunitySettings appSettings;
+        if (appSettings == null) {
+            appSettings = new CryptoCustomerCommunitySettings();
+            appSettings.setIsPresentationHelpEnabled(true);
             try {
-                appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
             } catch (Exception e) {
-                appSettings = null;
+                e.printStackTrace();
             }
-
-            if (appSettings == null) {
-                appSettings = new CryptoCustomerCommunitySettings();
-                appSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //Check if a default identity is configured
-            try {
-                moduleManager.getSelectedActorIdentity();
-            } catch (CantGetSelectedActorIdentityException e) {
-                //There are no identities in device
-                launchActorCreationDialog = true;
-            } catch (ActorIdentityNotSelectedException e) {
-                //There are identities in device, but none selected
-                launchListIdentitiesDialog = true;
-            }
-
-        } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
 
@@ -130,17 +122,21 @@ public class BrowserTabFragment
     protected void initViews(View rootView) {
         super.initViews(rootView);
 
-        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+        configureToolbar();
 
-        noDataLabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-        noData = (ImageView) rootView.findViewById(R.id.nodata);
-        emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
-        swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
-        rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
-        emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
+        noUsers = (ImageView) rootView.findViewById(R.id.ccc_no_users);
 
         launchPresentationDialog();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors));
     }
 
     @Override
@@ -150,7 +146,7 @@ public class BrowserTabFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_connections_world_cbp;
+        return R.layout.ccc_fragment_browser_tab;
     }
 
     @Override
@@ -171,7 +167,7 @@ public class BrowserTabFragment
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AppListAdapter(getActivity(), cryptoCustomerCommunityInformationList);
+            adapter = new AvailableActorsListAdapter(getActivity(), cryptoCustomerCommunityInformationList);
             adapter.setFermatListEventListener(this);
         }
 
@@ -187,9 +183,9 @@ public class BrowserTabFragment
                 public int getSpanSize(int position) {
                     final int itemViewType = adapter.getItemViewType(position);
                     switch (itemViewType) {
-                        case AppListAdapter.DATA_ITEM:
+                        case AvailableActorsListAdapter.DATA_ITEM:
                             return 1;
-                        case AppListAdapter.LOADING_ITEM:
+                        case AvailableActorsListAdapter.LOADING_ITEM:
                             return SPAN_COUNT;
                         default:
                             return GridLayoutManager.DEFAULT_SPAN_COUNT;
@@ -206,6 +202,7 @@ public class BrowserTabFragment
 
     @Override
     public RecyclerView.OnScrollListener getScrollListener() {
+        //TODO: Descomentar esto para activar la paginacion cuando esta funcionando en los Actor Network Service
 //        if (scrollListener == null) {
 //            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
 //            endlessScrollListener.setOnLoadMoreDataListener(this);
@@ -218,7 +215,6 @@ public class BrowserTabFragment
 
     @Override
     public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
-        appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
@@ -316,7 +312,7 @@ public class BrowserTabFragment
                 presentationDialog.show();
 
             } else if (launchListIdentitiesDialog) {
-                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, null);
+                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
                 listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -343,25 +339,14 @@ public class BrowserTabFragment
         final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
 
         Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
-        if (show && (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            noData.setAnimation(anim);
-            noDataLabel.setAnimation(anim);
-            noData.setVisibility(View.VISIBLE);
-            noDataLabel.setVisibility(View.VISIBLE);
+        if (show && (noUsers.getVisibility() == View.GONE || noUsers.getVisibility() == View.INVISIBLE)) {
+            noUsers.setAnimation(anim);
+            noUsers.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
 
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-            noData.setAnimation(anim);
-            emptyView.setBackgroundResource(0);
-            noDataLabel.setAnimation(anim);
-            noData.setVisibility(View.GONE);
-            noDataLabel.setVisibility(View.GONE);
-            ColorDrawable bgColor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            emptyView.setBackground(bgColor);
+        } else if (!show && noUsers.getVisibility() == View.VISIBLE) {
+            noUsers.setAnimation(anim);
+            noUsers.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
