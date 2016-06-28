@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private boolean automaticRestock;
     private List<CryptoBrokerWalletAssociatedSetting> associatedSettings;
     private CryptoBrokerWalletSettingSpread spreadSettings;
+    private ProgressBar processingProgressBar;
+
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -102,6 +105,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         super.initViews(layout);
         configureToolbar();
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
+        processingProgressBar = (ProgressBar) layout.findViewById(R.id.cbw_processing_progress_bar);
+
         if (spreadSettings != null) {
             spreadValue = (int) spreadSettings.getSpread();
             automaticRestock = spreadSettings.getRestockAutomatic();
@@ -226,8 +231,14 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        System.out.println("*************ONDISMISS STOCK DIALOG***********************");
-        onRefresh();
+        Object data = appSession.getData(CreateRestockDestockFragmentDialog.TRANSACTION_APPLIED);
+        if(data != null)
+        {
+            appSession.removeData(CreateRestockDestockFragmentDialog.TRANSACTION_APPLIED);
+            processingProgressBar.setVisibility(View.VISIBLE);
+
+        }
+
     }
 
     @Override
@@ -286,10 +297,19 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     @Override
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
-            case CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW:
+            case CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW_ERROR:
+                Toast.makeText(this.getActivity(), "There has been an error processing your request.", Toast.LENGTH_SHORT).show();
+                processingProgressBar.setVisibility(View.INVISIBLE);
+                onRefresh();
+                break;
+
+            case CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW:
+                Toast.makeText(this.getActivity(), "Transaction completed.", Toast.LENGTH_SHORT).show();
+                processingProgressBar.setVisibility(View.INVISIBLE);
                 onRefresh();
                 break;
         }
+
     }
 
     @Override
