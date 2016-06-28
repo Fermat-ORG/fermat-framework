@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantExposeActorIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
@@ -158,7 +159,12 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException("Cant Expose Chat Identity, in Get Location.", FermatException.wrapException(e), null, null);
         }
+        long refreshInterval = 0;
         for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser()) {
+            if (chatIdentity.getFrecuency() == Frecuency.HIGH) refreshInterval = 1000;
+            if (chatIdentity.getFrecuency() == Frecuency.LOW) refreshInterval = 2000;
+            if (chatIdentity.getFrecuency() == Frecuency.NORMAL) refreshInterval = 3000;
+            if (chatIdentity.getFrecuency() == Frecuency.NONE) refreshInterval = 0;
             chatExposingDataList.add(
                     new ChatExposingData(
                             chatIdentity.getPublicKey(),
@@ -168,7 +174,9 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                             chatIdentity.getState(),
                             chatIdentity.getCity(),
                             chatIdentity.getConnectionState(),
-                            location
+                            location,
+                            refreshInterval,
+                            chatIdentity.getAccuracy()
                     )
             );
 
