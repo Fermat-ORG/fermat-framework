@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_customer_community.common.popups;
+package com.bitdubai.sub_app.crypto_customer_community.common.dialogs;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,11 +15,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AppSelectableIdentitiesListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.adapters.SelectableIdentitiesListAdapter;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 18/02/2016.
  */
-public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<CryptoCustomerCommunitySelectableIdentity> {
 
 
@@ -38,13 +38,9 @@ public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession
 
     public ListIdentitiesDialog(final Context activity,
                                 final ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager> subAppSession,
-                                final SubAppResourcesProviderManager subAppResources) {
+                                final ResourceProviderManager subAppResources) {
 
-        super(
-                activity,
-                subAppSession,
-                subAppResources
-        );
+        super(activity, subAppSession, subAppResources);
 
         manager = subAppSession.getModuleManager();
     }
@@ -76,7 +72,7 @@ public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession
 
     @Override
     protected int setLayoutId() {
-        return R.layout.ccc_fragment_list_identities;
+        return R.layout.ccc_dialog_selectable_identity_list;
     }
 
     @Override
@@ -100,7 +96,7 @@ public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession
                 if (result != null && result[0] != null) {
                     List<CryptoCustomerCommunitySelectableIdentity> selectableIdentities = (List<CryptoCustomerCommunitySelectableIdentity>) result[0];
 
-                    AppSelectableIdentitiesListAdapter adapter = new AppSelectableIdentitiesListAdapter(getActivity(), selectableIdentities);
+                    SelectableIdentitiesListAdapter adapter = new SelectableIdentitiesListAdapter(getActivity(), selectableIdentities);
                     adapter.setFermatListEventListener(ListIdentitiesDialog.this);
 
                     adapter.changeDataSet(selectableIdentities);
