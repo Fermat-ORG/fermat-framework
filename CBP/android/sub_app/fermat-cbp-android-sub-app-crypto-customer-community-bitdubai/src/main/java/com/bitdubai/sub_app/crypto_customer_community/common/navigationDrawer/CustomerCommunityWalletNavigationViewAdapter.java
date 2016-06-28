@@ -12,6 +12,7 @@ import com.bitdubai.sub_app.crypto_customer_community.R;
  *
  * @since 18/12/2015
  */
+@Deprecated
 public class CustomerCommunityWalletNavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
 
     protected CustomerCommunityWalletNavigationViewAdapter(Context context) {
