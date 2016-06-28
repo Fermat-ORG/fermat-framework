@@ -122,7 +122,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
         frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
-       // frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
+        frequency.setBackgroundColor(Color.parseColor("#00000000"));
 
         try {
             ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
@@ -139,8 +139,8 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
                         frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString().toLowerCase());
-                        ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
-                        (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
+             //           ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
+               //         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
                         e.printStackTrace();
                     }
@@ -193,7 +193,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public void onBackPressed(){
         saveAndGoBack();
         changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
-        //super.onBackPressed();
+      //  super.onBackPressed();
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetIntraUserIdentityException {
