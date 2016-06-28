@@ -577,7 +577,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     }
 
     public final void handleNetworkClientActorListReceivedEvent(final UUID                    queryId      ,
-                                                                final ArrayList<ActorProfile> actorProfiles) throws CantReadRecordDataBaseException, RecordNotFoundException, CantUpdateRecordDataBaseException {
+                                                                final List<ActorProfile> actorProfiles) throws CantReadRecordDataBaseException, RecordNotFoundException, CantUpdateRecordDataBaseException {
 
 
         NetworkServiceQuery query = queriesDao.findById(queryId.toString());
@@ -595,7 +595,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      * @param actorProfiles
      */
     public void onNetworkServiceActorListReceived(final NetworkServiceQuery      query        ,
-                                                  final ArrayList<ActorProfile>  actorProfiles) {
+                                                  final List<ActorProfile>  actorProfiles) {
 
         FermatBundle bundle = new FermatBundle();
         bundle.put("actorProfiles", actorProfiles);
