@@ -240,7 +240,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                     if (pendingBlocks > 0) {
                                         //paint toolbar on red
                                         toolbarColor = Color.RED;
-                                       // if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                                       if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
                                             setUpBlockchainProgress(false);
                                     } else {
                                         toolbarColor = Color.parseColor("#12aca1");

@@ -354,7 +354,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         try {
             int id = item.getItemId();
 
-            if (id == 1) {
+            if (id == 2) {
                 setUpTutorial(true);
                 return true;
             }

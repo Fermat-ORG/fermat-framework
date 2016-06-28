@@ -26,7 +26,7 @@ dependencies {
     compile ('com.bitdubai.bch.api:fermat-bch-api:2'){
         dependencies{
             compile ('com.bitdubai.fermat.api:fermat-api:2.0.10')
-        }
+       }
     }
 }
 
