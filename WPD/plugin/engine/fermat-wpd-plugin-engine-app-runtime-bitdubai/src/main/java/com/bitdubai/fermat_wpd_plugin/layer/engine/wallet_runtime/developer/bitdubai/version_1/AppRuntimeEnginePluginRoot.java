@@ -5701,7 +5701,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setLabel("Send");
         optionMenuItem.setShowAsAction(2); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
-        runtimeActivity.setOptionsMenu(optionsMenu);
 
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(2);
@@ -5711,6 +5710,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Chunk Value");
