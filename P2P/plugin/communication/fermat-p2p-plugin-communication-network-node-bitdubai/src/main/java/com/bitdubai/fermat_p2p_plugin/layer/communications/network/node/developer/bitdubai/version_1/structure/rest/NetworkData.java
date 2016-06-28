@@ -151,7 +151,7 @@ public class NetworkData {
                 jsonObject.addProperty("location", gson.toJson(location));
             }
 
-            jsonObject.addProperty("os","Operative System, not being used right now");
+            jsonObject.addProperty("os","");
             jsonObject.addProperty("networkServices",gson.toJson(getNetworkServicesCount()));
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
@@ -188,8 +188,6 @@ public class NetworkData {
 
                 for(CheckedInClient CheckedInClient : listCheckedInClientS){
 
-                    JsonObject jsonObjectClientExtra = new JsonObject();
-
                     Location location = new NetworkNodeCommunicationDeviceLocation(
                                 CheckedInClient.getLatitude() ,
                                 CheckedInClient.getLongitude(),
@@ -200,13 +198,12 @@ public class NetworkData {
                                 LocationSource.UNKNOWN
                     );
 
-                    jsonObjectClientExtra.addProperty("location", gson.toJson(location));
-                    jsonObjectClientExtra.addProperty("networkServices",gson.toJson(getListOfNetworkServiceOfClientSpecific(CheckedInClient.getIdentityPublicKey())));
 
 
                     JsonObject jsonObjectClient = new JsonObject();
                     jsonObjectClient.addProperty("hash", CheckedInClient.getIdentityPublicKey());
-                    jsonObjectClient.addProperty("extra", gson.toJson(jsonObjectClientExtra));
+                    jsonObjectClient.addProperty("location", gson.toJson(location));
+                    jsonObjectClient.addProperty("networkServices",gson.toJson(getListOfNetworkServiceOfClientSpecific(CheckedInClient.getIdentityPublicKey())));
 
                     listOfClients.add(gson.toJson(jsonObjectClient));
 
