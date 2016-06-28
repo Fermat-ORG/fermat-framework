@@ -165,7 +165,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
      * @param discoveryQueryParameters
      * @return List<ActorProfile>
      */
-    private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
+    private ArrayList<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
 
         Map<String, ActorProfile> profileList = new HashMap<>();
 
@@ -292,7 +292,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
 
         try {
 
-            NodesCatalog nodesCatalog = daoFactory.getNodesCatalogDao().findById(publicKey);
+                                                                                                    NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(publicKey);
             return nodesCatalog.getIp()+":"+nodesCatalog.getDefaultPort();
 
         } catch (RecordNotFoundException exception) {
