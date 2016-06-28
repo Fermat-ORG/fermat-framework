@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Arrays;
-
 
 /**
  * The persistent class for the "ACTORS_CATALOG" database table.
@@ -26,7 +26,9 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	private Timestamp hostedTimestamp;
 
-	private NetworkNodeCommunicationDeviceLocation lastLocation;
+	private Timestamp lastUpdateTime;
+
+	private Location lastLocation;
 
 	private String name;
 
@@ -38,8 +40,18 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	public ActorsCatalog() {
 		super();
-		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
+		long currentMillis = System.currentTimeMillis();
+		this.hostedTimestamp = new Timestamp(currentMillis);
+		this.lastUpdateTime = new Timestamp(currentMillis);
         this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
+	}
+
+	public Timestamp getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(Timestamp lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
 	}
 
 	public String getActorType() {
@@ -119,11 +131,11 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
         return identityPublicKey;
     }
 
-	public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+	public Location getLastLocation() {
 		return lastLocation;
 	}
 
-	public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+	public void setLastLocation(Location lastLocation) {
 		this.lastLocation = lastLocation;
 	}
 

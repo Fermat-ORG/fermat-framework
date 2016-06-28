@@ -166,6 +166,10 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                 pair = deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
                 databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
                 break;
+            case ActorsCatalogTransaction.UPDATE_GEOLOCATION_TRANSACTION_TYPE :
+                pair = updateLocationActorsCatalog(actorsCatalogTransaction);
+                databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                break;
         }
 
         pair = insertActorsCatalogTransaction(actorsCatalogTransaction);
@@ -176,10 +180,28 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
     }
 
     /**
+     * Update a row into the data base
+     *
+     * @param actorsCatalogTransaction
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    private DatabaseTransactionStatementPair updateLocationActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
+
+        LOG.info("Executing method updateActorsCatalog");
+
+        /*
+         * Create statement.
+         */
+        return getDaoFactory().getActorsCatalogDao().createLocationUpdateTransactionStatementPair(actorsCatalogTransaction.getIdentityPublicKey(), actorsCatalogTransaction.getLastLocation(), actorsCatalogTransaction.getGenerationTime());
+    }
+
+    /**
      * Create a new row into the data base
      *
      * @param actorsCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
     private DatabaseTransactionStatementPair insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
 

@@ -18,7 +18,7 @@ public enum QueryStatus implements FermatEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     DONE              ("DO"),
-    PENDING           ("PE"),
+    REQUESTED         ("RQ"),
 
     ;
 
