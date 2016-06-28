@@ -156,13 +156,13 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     @Override
     public void onResume() {
         animationManager = new AnimationManager(rootView, emptyListViewsContainer);
-        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+        //getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         super.onResume();
     }
 
     @Override
     public void onStop() {
-        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+        //getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
         super.onStop();
     }
 
@@ -203,13 +203,13 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
             if (lstFermatWalletTransaction.isEmpty()) {
                 recyclerView.setVisibility(View.GONE);
                 emptyListViewsContainer = layout.findViewById(R.id.empty);
-                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                //FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
                 emptyListViewsContainer.setVisibility(View.VISIBLE);
             }
         }else{
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = layout.findViewById(R.id.empty);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+           // FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
@@ -296,7 +296,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
 
     @Override
     public void onItemClickListener(FermatWalletModuleTransaction data, int position) {
-        //TODO abrir actividad de detalle de contrato abierto
+
     }
 
     @Override
@@ -317,11 +317,11 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
                 if(lstFermatWalletTransaction.size() > 0)
                 {
                     recyclerView.setVisibility(View.VISIBLE);
-                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                    //FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
                 }
             }else {
                 recyclerView.setVisibility(View.GONE);
-                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                //FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
 
             }
         }
