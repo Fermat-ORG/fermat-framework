@@ -126,7 +126,8 @@ public abstract class AbstractPluginSubsystem {
 
     public final DeveloperPluginInterface getDeveloperByReference(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
         //todo: no encuentra al developer por esó está comentado y puesto en duro, hay que ver porqué el hashcode es distinto.
-        if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+        String pluginCode = pluginReference.getPlugin().getCode();
+        if (pluginCode.equals(Plugins.FERMAT_NETWORK.getCode()) || pluginCode.equals(Plugins.FERMAT_VAULT.getCode())) {
 //            if (developers.containsKey(pluginDeveloperReference)) {
 //                return developers.get(pluginDeveloperReference);
 //            } else {
@@ -145,13 +146,7 @@ public abstract class AbstractPluginSubsystem {
     public final void fillVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
         for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
             try {
-                ConcurrentHashMap concurrentHashMap = null;
-                if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
-                    concurrentHashMap = developer.getValue().listVersions();
-                } else {
-                    concurrentHashMap = developer.getValue().listVersions();
-                }
-                versions.putAll(concurrentHashMap);
+                versions.putAll(developer.getValue().listVersions());
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -162,13 +157,7 @@ public abstract class AbstractPluginSubsystem {
     public final void fillVersionsMati(final List<PluginVersionReference> versions) {
         for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
             try {
-                List<PluginVersionReference> concurrentHashMap = null;
-                if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
-                    concurrentHashMap = developer.getValue().listVersionsMati();
-                } else {
-                    concurrentHashMap = developer.getValue().listVersionsMati();
-                }
-                versions.addAll(concurrentHashMap);
+                versions.addAll(developer.getValue().listVersionsMati());
             }catch (Exception e){
                 e.printStackTrace();
             }
