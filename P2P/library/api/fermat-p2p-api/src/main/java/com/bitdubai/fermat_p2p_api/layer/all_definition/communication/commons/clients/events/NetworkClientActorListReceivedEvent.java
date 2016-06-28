@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
     /**
      * Represent the network service type.
      */
-    private List<ActorProfile> actorList;
+    private ArrayList<ActorProfile> actorList;
 
     /**
      * Represent the status
@@ -66,7 +67,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         this.networkServicePublicKey = networkServicePublicKey;
     }
 
-    public List<ActorProfile> getActorList() {
+    public ArrayList<ActorProfile> getActorList() {
         return actorList;
     }
 
@@ -74,7 +75,7 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         this.queryID = queryID;
     }
 
-    public void setActorList(List<ActorProfile> actorList) {
+    public void setActorList(ArrayList<ActorProfile> actorList) {
         this.actorList = actorList;
     }
 

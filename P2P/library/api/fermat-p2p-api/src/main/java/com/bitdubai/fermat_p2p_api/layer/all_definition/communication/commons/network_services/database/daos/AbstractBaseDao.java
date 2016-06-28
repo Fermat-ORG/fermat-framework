@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.AbstractBaseEntity;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantReadRecordDataBaseException;
@@ -33,10 +33,11 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class AbstractBaseDao {
+public abstract class AbstractBaseDao<T extends AbstractBaseEntity> {
 
-    private final Database dataBase ;
-    private final String   tableName;
+    private final Database dataBase   ;
+    private final String   tableName  ;
+    private final String   tableIdName;
 
     /**
      * Constructor with parameters
@@ -44,10 +45,13 @@ public abstract class AbstractBaseDao {
      * @param dataBase
      * @param tableName
      */
-    public AbstractBaseDao(final Database dataBase,
-                           final String tableName ) {
-        this.dataBase  = dataBase;
-        this.tableName = tableName;
+    public AbstractBaseDao(final Database dataBase   ,
+                           final String   tableName  ,
+                           final String   tableIdName) {
+
+        this.dataBase    = dataBase   ;
+        this.tableName   = tableName  ;
+        this.tableIdName = tableIdName;
     }
 
     /**
@@ -76,7 +80,7 @@ public abstract class AbstractBaseDao {
      * @throws CantReadRecordDataBaseException   if something goes wrong.
      * @throws RecordNotFoundException           if i can't find the record.
      */
-    public final NetworkServiceMessage findById(final String id) throws CantReadRecordDataBaseException, RecordNotFoundException {
+    public final T findById(final String id) throws CantReadRecordDataBaseException, RecordNotFoundException {
 
         if (id == null)
             throw new IllegalArgumentException("The id is required, can not be null.");
@@ -84,7 +88,7 @@ public abstract class AbstractBaseDao {
         try {
 
             final DatabaseTable table = getDatabaseTable();
-            table.addStringFilter("id", id, DatabaseFilterType.EQUAL);
+            table.addStringFilter(tableIdName, id, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             List<DatabaseTableRecord> records = table.getRecords();
@@ -110,7 +114,7 @@ public abstract class AbstractBaseDao {
      *
      * @throws CantReadRecordDataBaseException if something goes wrong.
      */
-    public final List<NetworkServiceMessage> findAll() throws CantReadRecordDataBaseException {
+    public final List<T> findAll() throws CantReadRecordDataBaseException {
 
         try {
             // load the data base to memory
@@ -119,7 +123,7 @@ public abstract class AbstractBaseDao {
 
             final List<DatabaseTableRecord> records = table.getRecords();
 
-            final List<NetworkServiceMessage> list = new ArrayList<>();
+            final List<T> list = new ArrayList<>();
 
             // Convert into entity objects and add to the list.
             for (DatabaseTableRecord record : records)
@@ -145,7 +149,7 @@ public abstract class AbstractBaseDao {
      * @throws CantReadRecordDataBaseException
      *
      */
-    public final List<NetworkServiceMessage> findAll(final String columnName , final String columnValue) throws CantReadRecordDataBaseException {
+    public final List<T> findAll(final String columnName , final String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null || columnName.isEmpty() || columnValue == null || columnValue.isEmpty())
             throw new IllegalArgumentException("The filter are required, can not be null or empty.");
@@ -160,7 +164,7 @@ public abstract class AbstractBaseDao {
 
             final List<DatabaseTableRecord> records = table.getRecords();
 
-            final List<NetworkServiceMessage> list = new ArrayList<>();
+            final List<T> list = new ArrayList<>();
 
             // Convert into entity objects and add to the list.
             for (DatabaseTableRecord record : records)
@@ -187,7 +191,7 @@ public abstract class AbstractBaseDao {
      * @throws CantReadRecordDataBaseException if something goes wrong.
      *
      */
-    public final List<NetworkServiceMessage> findAll(final Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public final List<T> findAll(final Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null || filters.isEmpty())
             throw new IllegalArgumentException("The filters are required, can not be null or empty.");
@@ -216,7 +220,7 @@ public abstract class AbstractBaseDao {
 
             final List<DatabaseTableRecord> records = table.getRecords();
 
-            final List<NetworkServiceMessage> list = new ArrayList<>();
+            final List<T> list = new ArrayList<>();
 
             // Convert into entity objects and add to the list.
             for (DatabaseTableRecord record : records)
@@ -240,7 +244,7 @@ public abstract class AbstractBaseDao {
      *
      * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    public final void create(final NetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
+    public final void create(final T entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null)
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -266,7 +270,7 @@ public abstract class AbstractBaseDao {
      * @throws CantUpdateRecordDataBaseException  if something goes wrong.
      * @throws RecordNotFoundException            if we can't find the record in db.
      */
-    public final void update(final NetworkServiceMessage entity) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+    public final void update(final T entity) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
 
         if (entity == null)
             throw new IllegalArgumentException("The entity is required, can not be null.");
@@ -275,7 +279,7 @@ public abstract class AbstractBaseDao {
 
             final DatabaseTable table = this.getDatabaseTable();
 
-            table.addUUIDFilter("id", entity.getId(), DatabaseFilterType.EQUAL);
+            table.addUUIDFilter(tableIdName, entity.getId(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -314,7 +318,7 @@ public abstract class AbstractBaseDao {
 
             final DatabaseTable table = this.getDatabaseTable();
 
-            table.addStringFilter("id", id, DatabaseFilterType.EQUAL);
+            table.addStringFilter(tableIdName, id, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -352,7 +356,7 @@ public abstract class AbstractBaseDao {
         try {
 
             final DatabaseTable table = getDatabaseTable();
-            table.addStringFilter("id", id, DatabaseFilterType.EQUAL);
+            table.addStringFilter(tableIdName, id, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             List<DatabaseTableRecord> records = table.getRecords();
@@ -372,7 +376,7 @@ public abstract class AbstractBaseDao {
      * @param record with values from the table
      * @return entity setters the values from table
      */
-    abstract protected NetworkServiceMessage getEntityFromDatabaseTableRecord(final DatabaseTableRecord record) throws InvalidParameterException;
+    abstract protected T getEntityFromDatabaseTableRecord(final DatabaseTableRecord record) throws InvalidParameterException;
 
     /**
      * Construct a DatabaseTableRecord whit the values of the a entity pass
@@ -382,5 +386,5 @@ public abstract class AbstractBaseDao {
      *
      * @return DatabaseTableRecord whit the values
      */
-    abstract protected DatabaseTableRecord getDatabaseTableRecordFromEntity(final NetworkServiceMessage entity);
+    abstract protected DatabaseTableRecord getDatabaseTableRecordFromEntity(final T entity);
 }

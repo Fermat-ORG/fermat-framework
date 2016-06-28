@@ -31,13 +31,14 @@ import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.com
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class IncomingMessagesDao extends AbstractBaseDao {
+public class IncomingMessagesDao extends AbstractBaseDao<NetworkServiceMessage> {
 
     public IncomingMessagesDao(final Database dataBase) {
 
         super(
-                dataBase                    ,
-                INCOMING_MESSAGES_TABLE_NAME
+                dataBase                        ,
+                INCOMING_MESSAGES_TABLE_NAME    ,
+                INCOMING_MESSAGES_ID_COLUMN_NAME
         );
     }
 

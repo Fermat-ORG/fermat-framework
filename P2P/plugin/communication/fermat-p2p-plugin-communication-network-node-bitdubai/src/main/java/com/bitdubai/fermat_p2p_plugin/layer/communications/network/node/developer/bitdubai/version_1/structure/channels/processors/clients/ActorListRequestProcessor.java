@@ -67,7 +67,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        LOG.info("Processing new package received "+packageReceived.getPackageType());
+        LOG.info("Processing new package received " + packageReceived.getPackageType());
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
@@ -87,7 +87,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
              */
             if (messageContent.getMessageContentType() == MessageContentType.JSON) {
 
-                List<ActorProfile> actorsList = filterActors(messageContent.getParameters(), messageContent.getClientPublicKey());
+                ArrayList<ActorProfile> actorsList = filterActors(messageContent.getParameters(), messageContent.getClientPublicKey());
 
                 /*
                  * If all ok, respond whit success message
@@ -167,7 +167,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
      */
     private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
 
-        List<ActorProfile> profileList = new ArrayList<>();
+        Map<String, ActorProfile> profileList = new HashMap<>();
 
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actorsList;
@@ -175,66 +175,84 @@ public class ActorListRequestProcessor extends PackageProcessor {
         int max    = 10;
         int offset =  0;
 
-        if( discoveryQueryParameters.getMax() != null &&
-                discoveryQueryParameters.getOffset() != null &&
-                discoveryQueryParameters.getMax() > 0 &&
-                discoveryQueryParameters.getOffset() >= 0) {
+        if (discoveryQueryParameters.getMax() != null && discoveryQueryParameters.getMax() > 0)
             max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+
+        if (discoveryQueryParameters.getOffset() != null && discoveryQueryParameters.getOffset() >= 0)
             offset = discoveryQueryParameters.getOffset();
-        }
 
-        if (discoveryQueryParameters.getLocation() != null)
-            actorsList = getDaoFactory().getActorsCatalogDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
-        else
-            actorsList = getDaoFactory().getActorsCatalogDao().findAll(filters, max, offset);
+        while (profileList.size() < max && getDaoFactory().getActorsCatalogDao().getAllCount(filters) > offset) {
 
-        List<ActorsCatalog> actors = filterActorsOnline(actorsList);
+            if (discoveryQueryParameters.getLocation() != null)
+                actorsList = getDaoFactory().getActorsCatalogDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
+            else
+                actorsList = getDaoFactory().getActorsCatalogDao().findAll(filters, max, offset);
 
-        for (ActorsCatalog actorsCatalog : actors) {
+            List<ActorsCatalog> actors = filterActorsOnline(actorsList);
 
-            if (clientIdentityPublicKey == null || actorsCatalog.getClientIdentityPublicKey() == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
-                ActorProfile actorProfile = new ActorProfile();
-                actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
-                actorProfile.setAlias(actorsCatalog.getAlias());
-                actorProfile.setName(actorsCatalog.getName());
-                actorProfile.setActorType(actorsCatalog.getActorType());
-                actorProfile.setPhoto(actorsCatalog.getPhoto());
-                actorProfile.setExtraData(actorsCatalog.getExtraData());
-                actorProfile.setLocation(actorsCatalog.getLastLocation());
+            for (ActorsCatalog actorsCatalog : actors) {
 
-                profileList.add(actorProfile);
+                if (clientIdentityPublicKey == null ||
+                        actorsCatalog.getClientIdentityPublicKey() == null ||
+                        !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
+
+                    profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecord(actorsCatalog));
+                }
             }
+
+            offset += max;
         }
 
-        return profileList;
+        return new ArrayList<>(profileList.values());
 
+    }
+
+    /*
+     * get ActorProfile From ActorsCatalog
+     */
+    private ActorProfile buildActorProfileFromActorCatalogRecord(ActorsCatalog actor){
+
+        ActorProfile actorProfile = new ActorProfile();
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+        actorProfile.setPhoto(actor.getPhoto());
+        actorProfile.setExtraData(actor.getExtraData());
+        actorProfile.setLocation(actor.getLastLocation());
+
+        return actorProfile;
     }
 
     /**
      * Construct data base filter from discovery query parameters
      *
      * @param discoveryQueryParameters
-     *
      * @return Map<String, Object> filters
      */
     private Map<String, Object> constructFiltersActorTable(DiscoveryQueryParameters discoveryQueryParameters){
 
         Map<String, Object> filters = new HashMap<>();
 
-        if (discoveryQueryParameters.getIdentityPublicKey() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, discoveryQueryParameters.getIdentityPublicKey());
+        if (discoveryQueryParameters.getIdentityPublicKey() != null){
+            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME, discoveryQueryParameters.getIdentityPublicKey());
+        }
 
-        if (discoveryQueryParameters.getName() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NAME_COLUMN_NAME, discoveryQueryParameters.getName());
+        if (discoveryQueryParameters.getName() != null){
+            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME, discoveryQueryParameters.getName());
+        }
 
-        if (discoveryQueryParameters.getAlias() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ALIAS_COLUMN_NAME, discoveryQueryParameters.getAlias());
+        if (discoveryQueryParameters.getAlias() != null){
+            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME, discoveryQueryParameters.getAlias());
+        }
 
-        if (discoveryQueryParameters.getActorType() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, discoveryQueryParameters.getActorType());
+        if (discoveryQueryParameters.getActorType() != null){
+            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME, discoveryQueryParameters.getActorType());
+        }
 
-        if (discoveryQueryParameters.getExtraData() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, discoveryQueryParameters.getExtraData());
+        if (discoveryQueryParameters.getExtraData() != null){
+            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME, discoveryQueryParameters.getExtraData());
+        }
 
         return filters;
     }
@@ -274,7 +292,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
 
         try {
 
-            NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(publicKey);
+            NodesCatalog nodesCatalog = daoFactory.getNodesCatalogDao().findById(publicKey);
             return nodesCatalog.getIp()+":"+nodesCatalog.getDefaultPort();
 
         } catch (RecordNotFoundException exception) {
