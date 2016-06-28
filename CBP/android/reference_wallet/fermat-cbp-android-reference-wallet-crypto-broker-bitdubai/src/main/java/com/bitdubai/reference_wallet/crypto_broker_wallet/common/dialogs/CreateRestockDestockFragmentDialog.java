@@ -37,6 +37,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 public class CreateRestockDestockFragmentDialog extends Dialog implements View.OnClickListener {
     private static final String RESTOCK_OPTION = "restock";
     private static final String DESTOCK_OPTION = "destock";
+    public static final String TRANSACTION_APPLIED = "transaction_applied";
 
     private Activity activity;
 
@@ -127,8 +128,10 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                     break;
             }
 
-            if (transactionApplied)
+            if (transactionApplied) {
+                session.setData(TRANSACTION_APPLIED, true);
                 dismiss();
+            }
 
         } catch (Exception e) {
             Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" + e.getMessage(), Toast.LENGTH_SHORT).show();
