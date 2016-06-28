@@ -82,8 +82,10 @@ public class FermatCryptoNetworkDatabaseDao {
         try {
             initializeDatabase();
         } catch (CantInitializeFermatCryptoNetworkDatabaseException e) {
+            System.out.println("CantInitializeFermatCryptoNetworkDatabaseException FermatCryṕtoNetworkDatabaseDAO, please check this");
             e.printStackTrace();
         } catch (Exception e){
+            System.out.println("Exception, method FermatCryptoNetworkDatabaseDao, FermatCryṕtoNetworkDatabaseDAO, please check this");
             e.printStackTrace();
         }
     }
@@ -102,7 +104,7 @@ public class FermatCryptoNetworkDatabaseDao {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
             if(database==null){
-                System.err.println("database null in FermatCryptoNetworkDatabaseDAO, please check this");
+                System.out.println("database null in FermatCryptoNetworkDatabaseDAO, please check this");
             }
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -113,7 +115,7 @@ public class FermatCryptoNetworkDatabaseDao {
             throw new CantInitializeFermatCryptoNetworkDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
-
+            System.out.println("DatabaseNotFoundException FermatCryṕtoNetworkDatabaseDAO, please check this");
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
@@ -126,12 +128,15 @@ public class FermatCryptoNetworkDatabaseDao {
                    */
                 database = FermatCryptoNetworkDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                System.out.println("CantCreateDatabaseException FermatCryṕtoNetworkDatabaseDAO, please check this");
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
                 throw new CantInitializeFermatCryptoNetworkDatabaseException(cantCreateDatabaseException.getMessage());
             }
         } catch (Exception e){
+
+            System.out.println("Exception FermatCryṕtoNetworkDatabaseDAO, please check this");
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
@@ -147,7 +152,11 @@ public class FermatCryptoNetworkDatabaseDao {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
+                System.out.println("CantCreateDatabaseException FermatCryṕtoNetworkDatabaseDAO, please check this");
                 throw new CantInitializeFermatCryptoNetworkDatabaseException(cantCreateDatabaseException.getMessage());
+            } catch (Exception e1){
+                System.out.println("another exception");
+                e1.printStackTrace();
             }
         }
     }

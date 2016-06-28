@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -469,18 +470,32 @@ public abstract class AbstractPlugin implements AbstractPluginInterface {
             }
             final Class<?> refManager = field.getType();
 
-            if(refManager.isAssignableFrom(abstractPlugin.getClass())) {
-                field.setAccessible(true);
-                field.set(this, refManager.cast(abstractPlugin));
+            boolean isAsignable = false;
+            if(Proxy.isProxyClass(abstractPlugin.getClass())){
+                for (Class<?> aClass : abstractPlugin.getClass().getInterfaces()) {
+                    if (refManager.isAssignableFrom(aClass)) {
+                        isAsignable = true;
+                        break;
+                    }
+                }
+            }else {
+                if (refManager.isAssignableFrom(abstractPlugin.getClass())) {
+                    isAsignable = true;
+                }
 
-                this.pluginNeededReferences.remove(pvr);
+                // assign
+                if (isAsignable) {
+                    field.setAccessible(true);
+                    field.set(this, refManager.cast(abstractPlugin));
 
-            } else {
-                throw new IncompatibleReferenceException(
-                        "Working plugin: "+this.getPluginVersionReference().toString3()+
-                                " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
-                        "Field is not assignable by the given reference (bad definition, different type expected). Check the expected plugin and the defined type."
-                );
+                    this.pluginNeededReferences.remove(pvr);
+                } else {
+                    throw new IncompatibleReferenceException(
+                            "Working plugin: " + this.getPluginVersionReference().toString3() +
+                                    " ------------ classExpected: " + refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
+                            "Field is not assignable by the given reference (bad definition, different type expected). Check the expected plugin and the defined type."
+                    );
+                }
             }
 
         } catch (final IllegalAccessException e) {

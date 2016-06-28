@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,9 +56,9 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
                 constructor = klass1.getDeclaredConstructor();
             }
             Object myClass = constructor.newInstance();
-            for (Method method : myClass.getClass().getMethods()) {
-                Log.i("App", method.getName());
-            }
+//            for (Method method : myClass.getClass().getMethods()) {
+//                Log.i("App", method.getName());
+//            }
             return myClass;
 
         } catch (ClassNotFoundException e) {

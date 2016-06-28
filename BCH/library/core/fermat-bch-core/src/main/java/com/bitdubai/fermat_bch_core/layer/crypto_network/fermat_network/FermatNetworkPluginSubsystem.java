@@ -33,11 +33,11 @@ public class FermatNetworkPluginSubsystem extends AbstractPluginSubsystem {
                         );
 
 
-                ClassLoader externalClassLoader = getFermatContext().getExternalLoader("bch");
+//                ClassLoader externalClassLoader = getFermatContext().getExternalLoader("bch");
 
-                Class interfaces = externalClassLoader.loadClass(FermatContext.class.getName());
-                Object externalFermatContext = getFermatContext().objectToProxyfactory(getFermatContext(), externalClassLoader, new Class[]{interfaces}, interfaces);
-                developerPluginInterfaceClass.setFermatContext(externalFermatContext);
+//                Class interfaces = externalClassLoader.loadClass(FermatContext.class.getName());
+//                Object externalFermatContext = getFermatContext().objectToProxyfactory(getFermatContext(), externalClassLoader, new Class[]{interfaces}, interfaces);
+                developerPluginInterfaceClass.setFermatContext(getFermatContext());
 
 //                ObjectHandler objectHandler = new ObjectHandler(o);
                 registerDeveloperMati(developerPluginInterfaceClass);

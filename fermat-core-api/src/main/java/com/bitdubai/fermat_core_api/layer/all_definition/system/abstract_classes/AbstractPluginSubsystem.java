@@ -88,8 +88,6 @@ public abstract class AbstractPluginSubsystem {
                 new Class[]{PluginDeveloperReferenceInterface.class},
                 PluginDeveloperReferenceInterface.class);
 
-//        PluginDeveloperReference pluginDeveloperReference = pluginDeveloper.getPluginDeveloperReference();
-
         pluginDeveloperReference.setPluginReference(this.pluginReference);
 
         try {

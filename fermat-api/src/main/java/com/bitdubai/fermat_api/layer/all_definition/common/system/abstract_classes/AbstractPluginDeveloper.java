@@ -112,11 +112,7 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
         try {
             if (versions.containsKey(pluginVersionReference)) {
                 AbstractPlugin abstractPlugin = versions.get(pluginVersionReference);
-                return fermatContext.objectToProxyfactory(
-                        abstractPlugin,
-                        interfaces.getClass().getClassLoader(),
-                        interfaces,
-                        interfaces[0]);
+                return abstractPlugin;
             } else {
                 AbstractPlugin abstractPlugin =versions.values().iterator().next();
                 return abstractPlugin;
@@ -177,6 +173,7 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
             e.printStackTrace();
         }
     }
+
 
     public abstract void start() throws CantStartPluginDeveloperException;
 
