@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.NumberInputFilter;
 
 import java.math.BigDecimal;
 
@@ -68,6 +70,8 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             setContentView(R.layout.cbw_create_stock_transaction_dialog);
 
             amountText = (FermatEditText) findViewById(R.id.cbw_ctd_amount);
+            amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
+
             final View restockBtn = findViewById(R.id.cbw_ctd_restock_transaction_btn);
             final View destockBtn = findViewById(R.id.cbw_ctd_destock_transaction_btn);
             final View cancelBtn = findViewById(R.id.cbw_ctd_cancel_btn);
