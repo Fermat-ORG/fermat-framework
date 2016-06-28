@@ -146,6 +146,10 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Cant start FermatCryptoNetworkEventsAgent agent.", null);
         }
 
+        System.out.println("***********************************\n");
+        System.out.println("Fermat network started\n");
+        System.out.println("***********************************\n");
+
         /**
          * nothing left to do.
          */
