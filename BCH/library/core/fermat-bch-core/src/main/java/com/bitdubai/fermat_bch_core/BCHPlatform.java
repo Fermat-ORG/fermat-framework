@@ -33,7 +33,7 @@ public class BCHPlatform extends AbstractPlatform {
             registerLayer(new CryptoModuleLayer() );
             registerLayer(new CryptoNetworkLayer(getFermatContext()));
             registerLayer(new CryptoRouterLayer() );
-            registerLayer(new CryptoVaultLayer()  );
+            registerLayer(new CryptoVaultLayer(getFermatContext())  );
             registerLayer(new MiddlewareLayer()   );
 
         } catch (CantRegisterLayerException e) {

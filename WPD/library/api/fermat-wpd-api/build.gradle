@@ -1,8 +1,33 @@
 apply plugin: 'java'
-
+apply plugin:  'maven'
+apply plugin: 'maven-publish'
 sourceCompatibility = 1.7
+
+group = "com.bitdubai.fermat.wpd.api"
+version = '1'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'wpd-api',
+                'Implementation-Version': '1'
+    }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-api')
+}
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            from components.java
+
+        }
+    }
+    repositories {
+        maven {
+            url "file:/${System.properties['user.home']}/artifacts"
+        }
+    }
 }
