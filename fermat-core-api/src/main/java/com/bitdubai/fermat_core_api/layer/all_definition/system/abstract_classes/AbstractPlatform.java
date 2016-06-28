@@ -171,8 +171,7 @@ public abstract class AbstractPlatform {
                                 pluginVersionReference.getLayers().getCode(),
                                 pluginVersionReference.getPlugins().getCode(),
                                 pluginVersionReference.getDeveloper().getCode(),
-                                pluginVersionReference.getVersion().toString(),
-                                new Class[]{AbstractPlugin.class}
+                                pluginVersionReference.getVersion().toString()
                         );
             } else
                 abstractPlugin = getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).getPluginByVersion(pluginVersionReference);
