@@ -1377,7 +1377,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                             Actors.INTRA_USER,
                             intraUserLoggedInPublicKey,
                             paymentRequest.getWalletPublicKey() ,
-                            CryptoCurrency.BITCOIN,
+                            CryptoCurrency.FERMAT,
                             paymentRequest.getNetworkType());
                 }
                 catch (Exception e1)

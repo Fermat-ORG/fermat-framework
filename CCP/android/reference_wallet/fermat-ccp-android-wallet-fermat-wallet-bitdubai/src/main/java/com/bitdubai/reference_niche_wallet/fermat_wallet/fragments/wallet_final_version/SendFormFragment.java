@@ -473,7 +473,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 Actors.INTRA_USER,
                                 fermatWallet.getSelectedActorIdentity().getPublicKey(),
                                 appSession.getAppPublicKey(),
-                                CryptoCurrency.BITCOIN,
+                                CryptoCurrency.FERMAT,
                                 blockchainNetworkType);
                     }else {
                         try {
@@ -495,7 +495,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 cryptoWalletWalletContact.getActorType(),
                                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                                 VaultType.CRYPTO_CURRENCY_VAULT,
-                                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                                 appSession.getAppPublicKey(),
                                 ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                 blockchainNetworkType
@@ -512,7 +512,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         cryptoWalletWalletContact.getActorType(),
                                         Platforms.CRYPTO_CURRENCY_PLATFORM,
                                         VaultType.CRYPTO_CURRENCY_VAULT,
-                                        CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                        CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                                         appSession.getAppPublicKey(),
                                         ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType
@@ -659,7 +659,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         cryptoWalletWalletContact.getActorType(),
                                         ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType,
-                                        CryptoCurrency.BITCOIN
+                                        CryptoCurrency.FERMAT
 
                                         // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                                 );
