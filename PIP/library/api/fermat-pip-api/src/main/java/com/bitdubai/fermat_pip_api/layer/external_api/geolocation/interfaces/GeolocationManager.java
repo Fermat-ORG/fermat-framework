@@ -19,6 +19,7 @@ public interface GeolocationManager<
         T extends Country,
         K extends CountryDependency,
         M extends City,
+        E extends ExtendedCity,
         G extends GeoRectangle,
         A extends Address> extends FermatManager {
 
@@ -27,6 +28,15 @@ public interface GeolocationManager<
      * @return
      */
     HashMap<String, T> getCountryList()
+            throws CantConnectWithExternalAPIException,
+            CantCreateBackupFileException,
+            CantCreateCountriesListException;
+
+    /**
+     * This method returns a list of Countries available in an external api by a given filter
+     * @return
+     */
+    HashMap<String, T> getCountryListByFilter(String filter)
             throws CantConnectWithExternalAPIException,
             CantCreateBackupFileException,
             CantCreateCountriesListException;
@@ -47,6 +57,22 @@ public interface GeolocationManager<
      * @return
      */
     List<M> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException;
+
+    /**
+     * This method returns the cities list filtered by a given filter.
+     * @param filter
+     * @return
+     * @throws CantGetCitiesListException
+     */
+    List<M> getCitiesByFilter(String filter) throws CantGetCitiesListException;
+
+    /**
+     * This method returns the extended cities list filtered by a given filter.
+     * @param filter
+     * @return
+     * @throws CantGetCitiesListException
+     */
+    List<E> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException;
 
     /**
      * This method returns the cities list by a given country code and dependency name
@@ -76,6 +102,16 @@ public interface GeolocationManager<
      * @throws CantCreateAddressException
      */
     A getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException;
+
+    /**
+     * This method returns an address by a given latitude and longitude.
+     * The address contains a GeoRectangle object.
+     * @param latitude
+     * @param longitude
+     * @return
+     * @throws CantCreateAddressException
+     */
+    A getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException;
 
     /**
      * This method returns a random geo location represented in a GeoRectangle object.

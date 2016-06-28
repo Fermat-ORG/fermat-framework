@@ -137,15 +137,14 @@ public class Profiles implements RestFulServices {
 
             try {
 
-                System.out.println("la identidad:"+actorsCatalog.getAlias()+" pertenece al nodo: "+actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()));
                 if(actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey())) {
-                    System.out.println("la identidad:"+actorsCatalog.getAlias()+" esta checkeada: "+daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()));
 
                     if (daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
                         actors.add(actorsCatalog);
 
-                } else if(isActorOnline(actorsCatalog))
+                } else if(isActorOnline(actorsCatalog)) {
                     actors.add(actorsCatalog);
+                }
 
             } catch (CantReadRecordDataBaseException e) {
                 e.printStackTrace();
@@ -165,7 +164,7 @@ public class Profiles implements RestFulServices {
      */
     private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
 
-        List<ActorProfile> profileList = new ArrayList<>();
+        Map<String, ActorProfile> profileList = new HashMap<>();
 
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actorsList;
@@ -173,39 +172,53 @@ public class Profiles implements RestFulServices {
         int max    = 10;
         int offset =  0;
 
-        if( discoveryQueryParameters.getMax() != null &&
-                discoveryQueryParameters.getOffset() != null &&
-                discoveryQueryParameters.getMax() > 0 &&
-                discoveryQueryParameters.getOffset() >= 0) {
+        if (discoveryQueryParameters.getMax() != null && discoveryQueryParameters.getMax() > 0)
             max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+
+        if (discoveryQueryParameters.getOffset() != null && discoveryQueryParameters.getOffset() >= 0)
             offset = discoveryQueryParameters.getOffset();
-        }
 
-        if (discoveryQueryParameters.getLocation() != null)
-            actorsList = getDaoFactory().getActorsCatalogDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
-        else
-            actorsList = getDaoFactory().getActorsCatalogDao().findAll(filters, max, offset);
+        while (profileList.size() < max && getDaoFactory().getActorsCatalogDao().getAllCount(filters) > offset) {
 
-        List<ActorsCatalog> actors = filterActorsOnline(actorsList);
+            if (discoveryQueryParameters.getLocation() != null)
+                actorsList = getDaoFactory().getActorsCatalogDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
+            else
+                actorsList = getDaoFactory().getActorsCatalogDao().findAll(filters, max, offset);
 
-        for (ActorsCatalog actorsCatalog : actors) {
+            List<ActorsCatalog> actors = filterActorsOnline(actorsList);
 
-            if (clientIdentityPublicKey == null || actorsCatalog.getClientIdentityPublicKey() == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
-                ActorProfile actorProfile = new ActorProfile();
-                actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
-                actorProfile.setAlias(actorsCatalog.getAlias());
-                actorProfile.setName(actorsCatalog.getName());
-                actorProfile.setActorType(actorsCatalog.getActorType());
-                actorProfile.setPhoto(actorsCatalog.getPhoto());
-                actorProfile.setExtraData(actorsCatalog.getExtraData());
-                actorProfile.setLocation(actorsCatalog.getLastLocation());
+            for (ActorsCatalog actorsCatalog : actors) {
 
-                profileList.add(actorProfile);
+                if (clientIdentityPublicKey == null ||
+                        actorsCatalog.getClientIdentityPublicKey() == null ||
+                        !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
+
+                    profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecord(actorsCatalog));
+                }
             }
+
+            offset += max;
         }
 
-        return profileList;
+        return new ArrayList<>(profileList.values());
 
+    }
+
+    /*
+     * get ActorProfile From ActorsCatalog
+     */
+    private ActorProfile buildActorProfileFromActorCatalogRecord(ActorsCatalog actor){
+
+        ActorProfile actorProfile = new ActorProfile();
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+        actorProfile.setPhoto(actor.getPhoto());
+        actorProfile.setExtraData(actor.getExtraData());
+        actorProfile.setLocation(actor.getLastLocation());
+
+        return actorProfile;
     }
 
     /**

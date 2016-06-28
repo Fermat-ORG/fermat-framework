@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -30,16 +32,27 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientCall;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServicePendingMessagesSupervisorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.daos.QueriesDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceQuery;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantInitializeNetworkServiceDatabaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.factories.NetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.enums.QueryStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.enums.QueryTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorFoundEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorListReceivedEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorUnreachableEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientCallConnectedEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionClosedEventHandler;
@@ -64,9 +77,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -123,6 +138,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      * Represents the dataBase
      */
     private Database networkServiceDatabase;
+
+    private QueriesDao queriesDao;
 
     /**
      * Represents the registered
@@ -200,6 +217,13 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              * Initialize the data base
              */
             initializeDataBase();
+
+            queriesDao = new QueriesDao(getDataBase());
+
+            /*
+             * Delete the history of queries of the network service each time we start it.
+             */
+            deleteQueriesHistory();
 
             /*
              * Initialize listeners
@@ -483,14 +507,27 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         eventManager.addListener(sentMessageDeliveredListener);
         listenersAdded.add(sentMessageDeliveredListener);
 
-            /*
-         * 8. Listen and handle Network Client Sent Message Delivered Event
+        /*
+         * 9. Listen and handle Network Client Actor Unreachable Event
          */
         FermatEventListener actorUnreachableListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_UNREACHABLE);
         actorUnreachableListener.setEventHandler(new NetworkClientActorUnreachableEventHandler(this));
         eventManager.addListener(actorUnreachableListener);
         listenersAdded.add(actorUnreachableListener);
 
+        /*
+         * 10. Listen and handle Network Client Actor List Received Event
+         */
+        FermatEventListener actorListReceivedListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_LIST_RECEIVED);
+        actorListReceivedListener.setEventHandler(new NetworkClientActorListReceivedEventHandler(this));
+        eventManager.addListener(actorListReceivedListener);
+        listenersAdded.add(actorListReceivedListener);
+
+    }
+
+    private void deleteQueriesHistory() throws CantDeleteRecordDataBaseException {
+
+        queriesDao.deleteAll();
     }
 
     public final void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
@@ -551,6 +588,34 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             e.printStackTrace();
         }
+
+    }
+
+    public final void handleNetworkClientActorListReceivedEvent(final UUID                    queryId      ,
+                                                                final ArrayList<ActorProfile> actorProfiles) throws CantReadRecordDataBaseException, RecordNotFoundException, CantUpdateRecordDataBaseException {
+
+
+        NetworkServiceQuery query = queriesDao.findById(queryId.toString());
+
+        queriesDao.markAsDone(query);
+
+        onNetworkServiceActorListReceived(query, actorProfiles);
+
+    }
+
+    /**
+     * By default it will broadcast the information in a fermat bundle, but it is overridable.
+     *
+     * @param query
+     * @param actorProfiles
+     */
+    public void onNetworkServiceActorListReceived(final NetworkServiceQuery      query        ,
+                                                  final ArrayList<ActorProfile>  actorProfiles) {
+
+        FermatBundle bundle = new FermatBundle();
+        bundle.put("actorProfiles", actorProfiles);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, bundle, query.getBroadcastCode());
 
     }
 
@@ -697,6 +762,41 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             System.out.println("Error sending message: " + e.getMessage());
             throw new CantSendMessageException(e, "destination: "+destination+" - message: "+messageContent, "Unhandled error trying to send a message.");
+        }
+    }
+
+    /**
+     * Method tha send a new Message
+     */
+    public UUID onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+                                           final String                   broadcastCode           ) throws CantRequestProfileListException {
+
+        try {
+
+            System.out.println("-------------- online actors discovery query requested: "+discoveryQueryParameters+" \n------------- " + new Timestamp(System.currentTimeMillis()));
+
+            UUID queryId = getConnection().onlineActorsDiscoveryQuery(discoveryQueryParameters, getPublicKey());
+
+            /*
+             * Create the query
+             */
+            NetworkServiceQuery networkServiceQuery = new NetworkServiceQuery(
+                    queryId,
+                    broadcastCode      ,
+                    discoveryQueryParameters,
+                    System.currentTimeMillis(),
+                    QueryTypes.ACTOR_LIST,
+                    QueryStatus.REQUESTED
+            );
+
+            queriesDao.create(networkServiceQuery);
+
+            return queryId;
+
+        }catch (Exception e){
+
+            System.out.println("Error sending query request: " + e.getMessage());
+            throw new CantRequestProfileListException(e, "discoveryQueryParameters: "+discoveryQueryParameters+" - broadcastCode: "+broadcastCode, "Unhandled error trying to send a query request.");
         }
     }
 

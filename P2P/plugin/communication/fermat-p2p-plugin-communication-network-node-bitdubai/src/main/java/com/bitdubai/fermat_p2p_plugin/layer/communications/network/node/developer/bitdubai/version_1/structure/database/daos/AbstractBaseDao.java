@@ -792,7 +792,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @return Timestamp/null
      */
     public Timestamp getTimestampFromLongValue(Long value){
-        if (value != null){
+        if (value != null && value != 0){
             return new Timestamp(value);
         }else {
             return null;
@@ -809,7 +809,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         if (timestamp != null){
             return timestamp.getTime();
         }else {
-            return null;
+            return Long.valueOf(0);
         }
     }
 

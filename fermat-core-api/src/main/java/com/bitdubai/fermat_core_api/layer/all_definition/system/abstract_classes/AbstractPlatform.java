@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -35,13 +36,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPlatform {
 
+    private FermatContext fermatContext;
+
     private Map<LayerReference, AbstractLayer> layers;
 
-    private final PlatformReference        platformReference;
+    private PlatformReference        platformReference;
 
     public AbstractPlatform(final PlatformReference platformReference) {
 
         this.layers            = new ConcurrentHashMap<>();
+        this.platformReference = platformReference;
+    }
+
+    public AbstractPlatform(final PlatformReference platformReference,
+                            final FermatContext fermatContext) {
+        this.fermatContext = fermatContext;
         this.platformReference = platformReference;
     }
 
@@ -56,6 +65,10 @@ public abstract class AbstractPlatform {
     protected final void registerLayer(final AbstractLayer abstractLayer) throws CantRegisterLayerException {
 
         LayerReference layerReference = abstractLayer.getLayerReference();
+
+        if (layerReference == null)
+            throw new CantRegisterLayerException("layerReference=null", "The layer does not contain a layer reference to recognize it.");
+
         layerReference.setPlatformReference(platformReference);
 
         try {

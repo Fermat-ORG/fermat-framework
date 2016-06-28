@@ -2,10 +2,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetNodeCatalogTransactionsMsjRequest;
@@ -16,6 +16,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import org.apache.commons.lang.ClassUtils;
@@ -145,36 +146,39 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
      * Process the transaction
      * @param nodesCatalogTransaction
      */
-    private void processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException {
+    private synchronized void processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method processTransaction");
 
-        // create transaction for
-        DatabaseTransaction databaseTransaction = getDaoFactory().getNodesCatalogDao().getNewTransaction();
-        DatabaseTransactionStatementPair pair;
+        if (!getDaoFactory().getNodesCatalogTransactionDao().exists(nodesCatalogTransaction.getId())) {
 
-        switch (nodesCatalogTransaction.getTransactionType()){
+            // create transaction for
+            DatabaseTransaction databaseTransaction = getDaoFactory().getNodesCatalogDao().getNewTransaction();
+            DatabaseTransactionStatementPair pair;
 
-            case NodesCatalogTransaction.ADD_TRANSACTION_TYPE :
-                pair = insertNodesCatalog(nodesCatalogTransaction);
-                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-                break;
+            switch (nodesCatalogTransaction.getTransactionType()) {
 
-            case NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE :
-                pair = updateNodesCatalog(nodesCatalogTransaction);
-                databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
-                break;
+                case NodesCatalogTransaction.ADD_TRANSACTION_TYPE:
+                    pair = insertNodesCatalog(nodesCatalogTransaction);
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+                    break;
 
-            case NodesCatalogTransaction.DELETE_TRANSACTION_TYPE :
-                pair = deleteNodesCatalog(nodesCatalogTransaction.getIdentityPublicKey());
-                databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
-                break;
+                case NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE:
+                    pair = updateNodesCatalog(nodesCatalogTransaction);
+                    databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+                    break;
+
+                case NodesCatalogTransaction.DELETE_TRANSACTION_TYPE:
+                    pair = deleteNodesCatalog(nodesCatalogTransaction.getIdentityPublicKey());
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                    break;
+            }
+
+            pair = insertNodesCatalogTransaction(nodesCatalogTransaction);
+            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+            databaseTransaction.execute();
         }
-
-        pair = insertNodesCatalogTransaction(nodesCatalogTransaction);
-        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-
-        databaseTransaction.execute();
 
     }
 

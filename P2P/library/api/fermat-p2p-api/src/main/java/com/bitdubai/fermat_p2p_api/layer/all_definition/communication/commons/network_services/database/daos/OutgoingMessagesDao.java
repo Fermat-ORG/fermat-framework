@@ -38,17 +38,18 @@ import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.com
  * <p/>
  * Created  by Leon Acosta - (laion.cj91@gmail.com) on 13/05/2016.
  *
- * @author lnacosta
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
-public class OutgoingMessagesDao extends AbstractBaseDao {
+public class OutgoingMessagesDao extends AbstractBaseDao<NetworkServiceMessage> {
 
     public OutgoingMessagesDao(final Database dataBase) {
 
         super(
-                dataBase                    ,
-                OUTGOING_MESSAGES_TABLE_NAME
+                dataBase                        ,
+                OUTGOING_MESSAGES_TABLE_NAME    ,
+                OUTGOING_MESSAGES_ID_COLUMN_NAME
         );
     }
 

@@ -27,6 +27,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateActorProfileMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateProfileGeolocationMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -156,6 +158,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.isExternalNode         = isExternalNode              ;
         this.pluginRoot             = pluginRoot                  ;
         this.nodesListPosition      = nodesListPosition           ;
+        this.nodeProfile            = nodeProfile                 ;
 
         this.tryToReconnect         = Boolean.TRUE                ;
 
@@ -437,7 +440,52 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
-    public void updateRegisteredProfile(final Profile profile) throws CantUpdateRegisteredProfileException {
+    public void updateRegisteredProfile(final Profile     profile,
+                                        final UpdateTypes type   ) throws CantUpdateRegisteredProfileException {
+
+        switch (type) {
+            case FULL:
+                fullUpdateRegisteredProfile(profile);
+                break;
+            case GEOLOCATION:
+                geolocationUpdateRegisteredProfile(profile);
+                break;
+        }
+    }
+
+    private void geolocationUpdateRegisteredProfile(Profile profile) throws CantUpdateRegisteredProfileException {
+
+        PackageType packageType = PackageType.UPDATE_PROFILE_GEOLOCATION_REQUEST;
+
+        PackageContent profileUpdateMsgRequest = new UpdateProfileGeolocationMsgRequest(
+                profile.getIdentityPublicKey(),
+                profile.getType(),
+                profile.getLocation()
+        );
+        profileUpdateMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+
+            sendPackage(profileUpdateMsgRequest, packageType);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantUpdateRegisteredProfileException fermatException = new CantUpdateRegisteredProfileException(
+                    cantSendPackageException,
+                    "profile:" + profile,
+                    "Cant send package."
+            );
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    private void fullUpdateRegisteredProfile(Profile profile) throws CantUpdateRegisteredProfileException {
 
         PackageContent profileUpdateMsgRequest;
 

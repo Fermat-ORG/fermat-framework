@@ -245,6 +245,7 @@ public class NetworkData {
                 for(CheckedInActor CheckedInActor :listOfCheckedInActor){
 
                     JsonObject jsonObjectActor = new JsonObject();
+                    jsonObjectActor.addProperty("hash",CheckedInActor.getIdentityPublicKey());
                     jsonObjectActor.addProperty("type",CheckedInActor.getActorType());
                     jsonObjectActor.addProperty("links",gson.toJson(new ArrayList<>()));
 
