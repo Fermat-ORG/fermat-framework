@@ -580,6 +580,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             if (id == 1)
                 showDialogHelp();
 
+           // if (id == 2)
+                //showDialogHelp();
+
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error",

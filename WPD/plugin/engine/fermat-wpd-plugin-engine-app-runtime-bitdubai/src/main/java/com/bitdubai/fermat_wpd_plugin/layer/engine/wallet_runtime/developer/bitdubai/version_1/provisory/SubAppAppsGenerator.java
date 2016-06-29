@@ -448,12 +448,19 @@ public class SubAppAppsGenerator {
             optionMenuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(optionMenuItem);
 
+            //Search optionMenu
+            optionMenuItem = new OptionMenuItem(2);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Geolocation");
+            optionMenuItem.setShowAsAction(2);
+            optionsMenu.addMenuItem(optionMenuItem);
+
 /*            runtimeOptionsMenu = new OptionsMenu();
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
+            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);*/
 
-            runtimeActivity.setOptionsMenu(runtimeOptionsMenu);*/
+            runtimeActivity.setOptionsMenu(optionsMenu);
 
             runtimeFragment = new FermatRuntimeFragment();
             runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());

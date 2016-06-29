@@ -90,9 +90,12 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
     @Override
     public int getResource(int id) {
-         if (id==1){
+         if (id==1)
             return R.drawable.help_icon;
-        }
+
+             if (id==2)
+                 return R.drawable.cht_id_geolocation_icon;
+
         return super.getResource(id);
     }
 }
