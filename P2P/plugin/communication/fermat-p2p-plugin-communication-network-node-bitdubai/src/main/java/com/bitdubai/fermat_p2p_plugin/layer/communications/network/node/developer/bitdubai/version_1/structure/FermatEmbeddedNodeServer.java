@@ -98,10 +98,10 @@ public class FermatEmbeddedNodeServer {
     public FermatEmbeddedNodeServer(){
        super();
 
-        LOG.info("Configure IP  : " + ConfigurationManager.getValue(ConfigurationManager.IP));
+        LOG.info("Configure INTERNAL_IP  : " + ConfigurationManager.getValue(ConfigurationManager.INTERNAL_IP));
         LOG.info("Configure PORT: " + ConfigurationManager.getValue(ConfigurationManager.PORT));
 
-       this.serverBuilder = Undertow.builder().addHttpListener(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)), ConfigurationManager.getValue(ConfigurationManager.IP));
+       this.serverBuilder = Undertow.builder().addHttpListener(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)), ConfigurationManager.getValue(ConfigurationManager.INTERNAL_IP));
        this.servletContainer = Servlets.defaultContainer();
     }
 
@@ -251,7 +251,7 @@ public class FermatEmbeddedNodeServer {
         server.start();
 
         LOG.info("***********************************************************");
-        LOG.info("NODE SERVER LISTENING   : " + ConfigurationManager.getValue(ConfigurationManager.IP) + " : " + ConfigurationManager.getValue(ConfigurationManager.PORT));
+        LOG.info("NODE SERVER LISTENING   : " + ConfigurationManager.getValue(ConfigurationManager.INTERNAL_IP) + " : " + ConfigurationManager.getValue(ConfigurationManager.PORT));
         LOG.info("***********************************************************");
 
     }
