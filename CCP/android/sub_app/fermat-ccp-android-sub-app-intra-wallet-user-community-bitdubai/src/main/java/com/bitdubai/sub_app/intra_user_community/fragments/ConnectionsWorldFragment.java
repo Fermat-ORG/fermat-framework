@@ -41,6 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
@@ -48,6 +49,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
@@ -67,10 +69,13 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Matias Furszyfer on 15/09/15.
  * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
+ * modified by Andres Abreu aabreu1 on 28/06/2016
  */
 
-public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>  implements
-        AdapterView.OnItemClickListener,
+public class ConnectionsWorldFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,
+        ResourceProviderManager>
+        implements AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
@@ -112,9 +117,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
+
     List<IntraUserInformation> userList = new ArrayList<>();
 
-
+    private DeviceLocation location = null;
+    private double distance = 0;
+    private
+    ChatActorCommunitySelectableIdentity identity;
 
     private ExecutorService _executor;
     /**
@@ -126,6 +135,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         return new ConnectionsWorldFragment();
     }
 
+    @Override
+    public void onMethodCallback(ExtendedCity city) {
+        location=new DeviceLocation();
+        location.setLatitude((double) city.getLatitude());
+        location.setLongitude((double) city.getLongitude());
+        distance=identity.getAccuracy();
+        location.setAccuracy((long) distance);
+        offset=0;
+        onRefresh();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
