@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +47,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
@@ -51,7 +56,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeProviderException;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsAdapter;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ViewPagerAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.BlockchainDownloadInfoDialog;
@@ -400,6 +407,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         txt_type_balance        = (TextView) header_layout.findViewById(R.id.txt_type_balance);
         txt_Date_time           = (TextView) header_layout.findViewById(R.id.txt_date_time);
         txt_rate_amount         = (TextView) header_layout.findViewById(R.id.txt_rate_amount);
+        ViewPager vpPager       = (ViewPager) header_layout.findViewById(R.id.vpPager);
+        TabLayout tabLayout     = (TabLayout) header_layout.findViewById(R.id.sliding_tabs);
 
         final String date;
         final String time;
@@ -409,7 +418,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         date = sdf1.format(System.currentTimeMillis());
         time = sdf2.format(System.currentTimeMillis());
 
-        txt_Date_time.setText(time+" | "+date);
+        txt_Date_time.setText(time + " | " + date);
 
         //Event Click For change the balance type
         txt_type_balance.setOnClickListener(new View.OnClickListener() {
@@ -445,6 +454,51 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 changeAmountType();
             }
         });
+
+       // moduleManager.getExchangeRateProviders()
+        List<ExchangeRateProvider> exchangeProviderList = new ArrayList<>();
+
+        try {
+
+            List<ExchangeRateProvider> ProviderList  = moduleManager.getExchangeRateProviders();
+
+            for (ExchangeRateProvider lst : ProviderList) {
+
+                String name = lst.getProviderName();
+                UUID id = lst.getProviderId();
+
+                if (id!=null || name!=null)
+                    exchangeProviderList.add(lst);
+                }
+
+        } catch (CantGetCurrencyExchangeProviderException e) {
+            e.printStackTrace();
+        }
+
+        FragmentStatePagerAdapter adapterViewPager;
+        adapterViewPager = new ViewPagerAdapter(getFragmentManager(),exchangeProviderList);
+        vpPager.setAdapter(adapterViewPager);
+
+
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        // Give the TabLayout the ViewPager
+        tabLayout.setupWithViewPager(vpPager);
 
 
 
