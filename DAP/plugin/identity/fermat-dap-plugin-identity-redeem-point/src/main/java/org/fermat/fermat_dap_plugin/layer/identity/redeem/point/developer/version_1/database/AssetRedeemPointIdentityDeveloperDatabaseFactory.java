@@ -122,6 +122,8 @@ public class AssetRedeemPointIdentityDeveloperDatabaseFactory {//implements Deal
         AssetUserColumns.add(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME);
         AssetUserColumns.add(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME);
         AssetUserColumns.add(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME);
+        AssetUserColumns.add(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ACCURACY_KEY_COLUMN);
+        AssetUserColumns.add(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN);
         /**
          * Table Asset User addition.
          */

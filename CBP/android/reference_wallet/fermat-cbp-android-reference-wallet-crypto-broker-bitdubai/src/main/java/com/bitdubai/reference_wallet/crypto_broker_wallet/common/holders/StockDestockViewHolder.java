@@ -18,53 +18,55 @@ import java.text.DecimalFormat;
  * Created by memo on 11/01/16.
  */
 public class StockDestockViewHolder extends FermatViewHolder {
-    private FermatTextView title;
-    private FermatTextView subTitle1;
-    private FermatTextView subTitle2;
+
+    //Constants
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
+    //UI
+    private FermatTextView walletNameTextView;
+    private FermatTextView amountTextView;
+
+    //Managers
     CryptoBrokerWalletModuleManager moduleManager;
+
 
     public StockDestockViewHolder(View itemView, CryptoBrokerWalletModuleManager moduleManager) {
         super(itemView);
-        title = (FermatTextView) itemView.findViewById(R.id.cbw_settings_title);
-        subTitle1 = (FermatTextView) itemView.findViewById(R.id.cbw_settings_sub_title1);
-        subTitle2 = (FermatTextView) itemView.findViewById(R.id.cbw_settings_sub_title2);
+
+        walletNameTextView = (FermatTextView) itemView.findViewById(R.id.cbw_settings_wallet_name);
+        amountTextView = (FermatTextView) itemView.findViewById(R.id.cbw_settings_amount);
         this.moduleManager = moduleManager;
     }
 
 
     public void bind(CryptoBrokerWalletAssociatedSetting data) {
-        System.out.println("data = " + data.getPlatform().getCode() + "    " + data.getWalletPublicKey() + "         " + data.getMerchandise().getCode());
-        subTitle1.setText(getPlatformTitle(data.getPlatform()));
-        title.setText(data.getMerchandise().getCode());
+        walletNameTextView.setText(getPlatformTitle(data.getPlatform()));
+
         try {
             if (data.getPlatform() == Platforms.BANKING_PLATFORM) {
-                //subTitle2.setText("balance: "+moduleManager.getAvailableBalance(data.getMerchandise(),"walletPublicKeyTest"));
-                subTitle2.setText("" + getDecimalFormat(moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount())));
+                amountTextView.setText(moneyFormat.format(moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount())) + " " + data.getMerchandise().getCode());
             }
             if (data.getPlatform() == Platforms.CASH_PLATFORM) {
-                subTitle2.setText("" + getDecimalFormat(moduleManager.getBalanceCashWallet(data.getWalletPublicKey())));
+                amountTextView.setText(moneyFormat.format((moduleManager.getBalanceCashWallet(data.getWalletPublicKey()))) + " " + data.getMerchandise().getCode());
             }
             if (data.getPlatform() == Platforms.CRYPTO_CURRENCY_PLATFORM) {
-                long balanceBitcoinWallet = moduleManager.getBalanceBitcoinWallet(data.getWalletPublicKey());
-                double availableBalance = BitcoinConverter.convert(balanceBitcoinWallet, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
-                subTitle2.setText("" + getDecimalFormat(new BigDecimal(availableBalance)));
-            }
+                long bitcoinWalletBalance = moduleManager.getBalanceBitcoinWallet(data.getWalletPublicKey());
+                double availableBalance = BitcoinConverter.convert(bitcoinWalletBalance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
+                amountTextView.setText(moneyFormat.format((new BigDecimal(availableBalance))) + " " + data.getMerchandise().getCode());
+            }
         } catch (Exception e) {
-            subTitle2.setText("balance: --");
+            amountTextView.setText("Balance: --");
         }
     }
 
     private String getPlatformTitle(Platforms platform) {
         if (platform.equals(Platforms.BANKING_PLATFORM))
-            return "Bank";
+            return "Bank Wallet";
         if (platform.equals(Platforms.CASH_PLATFORM))
-            return "Cash";
+            return "Cash Wallet";
 
-        return "Crypto";
+        return "Crypto Wallet";
     }
 
-    private String getDecimalFormat(BigDecimal value) {
-        return DecimalFormat.getInstance().format(value.doubleValue());
-    }
 }

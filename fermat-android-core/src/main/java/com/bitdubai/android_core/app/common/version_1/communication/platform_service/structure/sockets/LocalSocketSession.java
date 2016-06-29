@@ -68,8 +68,17 @@ public abstract class LocalSocketSession {
     }
 
     public void clear() throws IOException {
-        objectOutputStream.close();
-        localSocket.close();
+        try {
+            objectOutputStream.close();
+        }catch (Exception e){
+
+        }
+        try {
+            localSocket.close();
+        }catch (Exception e){
+
+        }
+
     }
 
     public void stopSender(){

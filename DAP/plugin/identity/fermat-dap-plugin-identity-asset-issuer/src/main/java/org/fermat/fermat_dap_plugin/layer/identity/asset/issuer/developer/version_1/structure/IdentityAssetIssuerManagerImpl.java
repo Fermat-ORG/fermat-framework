@@ -10,6 +10,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
@@ -92,7 +93,7 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
         }
     }
 
-    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException {
+    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetIssuerException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -100,9 +101,9 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getAssetIssuerIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
+            getAssetIssuerIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
 
-            IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuerImpl(alias, publicKey, privateKey, profileImage);
+            IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuerImpl(alias, publicKey, privateKey, profileImage, accuracy, frequency);
 
             registerIdentities();
 
@@ -116,9 +117,9 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
         }
     }
 
-    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
+    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetIssuerException {
         try {
-            getAssetIssuerIdentityDao().updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage);
+            getAssetIssuerIdentityDao().updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
 
             registerIdentities();
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
@@ -156,6 +157,16 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
             assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER ISSUER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
+    }
+
+    @Override
+    public int getAccuracyDataDefault() {
+        return 0;
+    }
+
+    @Override
+    public Frequency getFrequencyDataDefault() {
+        return Frequency.NORMAL;
     }
 
     public void registerIdentities() throws CantListAssetIssuerIdentitiesException {

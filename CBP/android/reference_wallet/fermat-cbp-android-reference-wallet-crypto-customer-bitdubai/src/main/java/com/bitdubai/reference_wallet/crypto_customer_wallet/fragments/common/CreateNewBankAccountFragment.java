@@ -174,17 +174,9 @@ public class CreateNewBankAccountFragment
 
         if (data.isAllDataFilled()) {
 
+            //Add new bank account to session and go back to Wizard page
             List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             bankAccounts.add(data);
-
-            if (moduleManager != null) {
-                for (BankAccountNumber bankAccount : bankAccounts) {
-                    try {
-                        moduleManager.createNewBankAccount(bankAccount.getAccount(), bankAccount.getCurrencyType());
-                    } catch (CantCreateBankAccountPurchaseException ignore) {
-                    }
-                }
-            }
 
             changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
 

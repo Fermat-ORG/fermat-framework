@@ -1,16 +1,21 @@
 package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.DeveloperPluginInterface;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.PluginDeveloperReferenceInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterDeveloperException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,9 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPluginSubsystem {
 
-    private final Map<PluginDeveloperReference, AbstractPluginDeveloper> developers;
+    private final Map<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developers;
 
     private final PluginReference pluginReference;
+    private FermatContext fermatContext;
 
     public AbstractPluginSubsystem(final PluginReference pluginReference) {
 
@@ -33,7 +39,13 @@ public abstract class AbstractPluginSubsystem {
         this.developers = new ConcurrentHashMap<>();
     }
 
-    public Collection<AbstractPluginDeveloper> getDevelopers() {
+    public AbstractPluginSubsystem(PluginReference pluginReference,FermatContext fermatContext) {
+        this.fermatContext = fermatContext;
+        this.pluginReference = pluginReference;
+        this.developers = new ConcurrentHashMap<>();
+    }
+
+    public Collection<DeveloperPluginInterface> getDevelopers() {
         return developers.values();
     }
 
@@ -45,9 +57,9 @@ public abstract class AbstractPluginSubsystem {
      *
      * @throws CantRegisterDeveloperException if something goes wrong.
      */
-    protected final void registerDeveloper(final AbstractPluginDeveloper pluginDeveloper) throws CantRegisterDeveloperException {
+    protected final void registerDeveloper(final DeveloperPluginInterface pluginDeveloper) throws CantRegisterDeveloperException {
 
-        PluginDeveloperReference pluginDeveloperReference = pluginDeveloper.getPluginDeveloperReference();
+        PluginDeveloperReferenceInterface pluginDeveloperReference = pluginDeveloper.getPluginDeveloperReference();
 
         pluginDeveloperReference.setPluginReference(this.pluginReference);
 
@@ -67,23 +79,101 @@ public abstract class AbstractPluginSubsystem {
 
             throw new CantRegisterDeveloperException(e, pluginDeveloperReference.toString(), "Error trying to start the developer.");
         }
-
     }
 
-    public final AbstractPluginDeveloper getDeveloperByReference(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
+    protected final void registerDeveloperMati(final DeveloperPluginInterface pluginDeveloper) throws CantRegisterDeveloperException {
 
-        if (developers.containsKey(pluginDeveloperReference)) {
-            return developers.get(pluginDeveloperReference);
-        } else {
+        PluginDeveloperReferenceInterface pluginDeveloperReference = (PluginDeveloperReferenceInterface) fermatContext.objectToProxyfactory(
+                pluginDeveloper.getPluginDeveloperReference(),
+                PluginDeveloperReferenceInterface.class.getClassLoader(),
+                new Class[]{PluginDeveloperReferenceInterface.class},
+                PluginDeveloperReferenceInterface.class);
 
-            throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
+        pluginDeveloperReference.setPluginReference(this.pluginReference);
+
+        try {
+
+            if(developers.containsKey(pluginDeveloperReference))
+                throw new CantRegisterDeveloperException(pluginDeveloperReference.toString(), "developer already exists for this plugin.");
+
+            pluginDeveloper.start();
+
+            developers.put(
+                    pluginDeveloperReference,
+                    pluginDeveloper
+            );
+
+        } catch (final CantStartPluginDeveloperException e) {
+
+            throw new CantRegisterDeveloperException(e, pluginDeveloperReference.toString(), "Error trying to start the developer.");
+        }
+    }
+
+    protected void registerDeveloperMati(String pluginName) throws CantRegisterDeveloperException {
+        DeveloperPluginInterface developerPluginInterfaceClass = (DeveloperPluginInterface) getFermatContext().loadProxyObject(
+                pluginName,
+                DeveloperPluginInterface.class.getClassLoader(),
+                AbstractPluginDeveloper.class.getInterfaces(),
+                DeveloperPluginInterface.class
+        );
+        developerPluginInterfaceClass.setFermatContext(getFermatContext());
+
+        registerDeveloperMati(developerPluginInterfaceClass);
+    }
+
+
+
+
+    public final DeveloperPluginInterface getDeveloperByReference(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
+        //todo: no encuentra al developer por esó está comentado y puesto en duro, hay que ver porqué el hashcode es distinto.
+        if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+//            if (developers.containsKey(pluginDeveloperReference)) {
+//                return developers.get(pluginDeveloperReference);
+//            } else {
+//                throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
+//            }
+            return developers.values().iterator().next();
+        }else {
+            if (developers.containsKey(pluginDeveloperReference)) {
+                return developers.get(pluginDeveloperReference);
+            } else {
+                throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
+            }
         }
     }
 
     public final void fillVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
+        for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
+            try {
+                ConcurrentHashMap concurrentHashMap = null;
+                if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+                    concurrentHashMap = developer.getValue().listVersions();
+                } else {
+                    concurrentHashMap = developer.getValue().listVersions();
+                }
+                versions.putAll(concurrentHashMap);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
 
-        for(ConcurrentHashMap.Entry<PluginDeveloperReference, AbstractPluginDeveloper> developer : developers.entrySet())
-            versions.putAll(developer.getValue().listVersions());
+    }
+
+    public final void fillVersionsMati(final List<PluginVersionReference> versions) {
+        for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
+            try {
+                List<PluginVersionReference> concurrentHashMap = null;
+                if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+                    concurrentHashMap = developer.getValue().listVersionsMati();
+                } else {
+                    concurrentHashMap = developer.getValue().listVersionsMati();
+                }
+                versions.addAll(concurrentHashMap);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public PluginReference getPluginReference() {
@@ -91,5 +181,10 @@ public abstract class AbstractPluginSubsystem {
     }
 
     public abstract void start() throws CantStartSubsystemException;
+
+    public FermatContext getFermatContext() {
+        return fermatContext;
+    }
+
 
 }

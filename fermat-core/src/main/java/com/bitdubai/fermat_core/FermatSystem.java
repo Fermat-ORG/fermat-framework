@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -25,10 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
-import com.bitdubai.fermat_art_core.ARTPlatform;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
-import com.bitdubai.fermat_bnk_core.BNKPlatform;
-import com.bitdubai.fermat_cbp_core.CBPPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_cer_core.CERPlatform;
 import com.bitdubai.fermat_cht_core.CHTPlatform;
@@ -37,13 +35,9 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantR
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
-import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
-import com.bitdubai.fermat_tky_core.TKYPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
-
-import org.fermat.fermat_dap_core.DAPPlatform;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -58,6 +52,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class FermatSystem {
 
     private static volatile FermatSystem INSTANCE = null;
+    private FermatContext fermatContext;
 
     private FermatSystemContext fermatSystemContext;
     private FermatAddonManager  fermatAddonManager ;
@@ -93,9 +88,9 @@ public final class FermatSystem {
     public void start(final Object           osContext  ,
                             final AbstractPlatform osaPlatform) throws CantStartSystemException {
 
-        this.fermatSystemContext = new FermatSystemContext(osContext);
+        this.fermatSystemContext = new FermatSystemContext(osContext,fermatContext);
         this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
-        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
+        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager,fermatContext);
 
         try {
 
@@ -107,18 +102,18 @@ public final class FermatSystem {
         }
 
         try {
-           // fermatSystemContext.registerPlatform(new ARTPlatform());
-            fermatSystemContext.registerPlatform(new BCHPlatform());
-            fermatSystemContext.registerPlatform(new BNKPlatform());
-           fermatSystemContext.registerPlatform(new CBPPlatform());
+            // fermatSystemContext.registerPlatform(new ARTPlatform());
+            fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
+//            fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
+//           fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new CERPlatform());
             fermatSystemContext.registerPlatform(new CHTPlatform());
-            fermatSystemContext.registerPlatform(new CSHPlatform());
-           // fermatSystemContext.registerPlatform(new DAPPlatform());
+//            fermatSystemContext.registerPlatform(new CSHPlatform());
+            // fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
-            fermatSystemContext.registerPlatform(new PIPPlatform());
-           // fermatSystemContext.registerPlatform(new TKYPlatform());
+            fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
+            // fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
 
         } catch(CantRegisterPlatformException e) {
@@ -487,5 +482,57 @@ public final class FermatSystem {
         }
 
         this.isStarted = true;
+    }
+
+    public final void startAllRegisteredPlatformsMati() throws CantStartAllRegisteredPlatformsException {
+        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
+        //map of pluginVersionReference and the plugin enum code
+        final List<PluginVersionReference> pluginList = this.fermatSystemContext.listPluginVersionsMati();
+        System.out.println("---------------------------------------------\n");
+        System.out.println("Starting addons");
+        System.out.println("---------------------------------------------\n");
+        for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
+            try {
+                fermatAddonManager.startAddonAndReferences(addon.getValue());
+            } catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
+
+        try {
+
+            List<AbstractPlugin> list = fermatSystemContext.getPlatform(new PlatformReference(Platforms.COMMUNICATION_PLATFORM)).getPlugins();
+            for (AbstractPlugin abstractPlugin : list) {
+                System.out.println("---------------------------------------------\n");
+                System.out.println("Cloud client starting");
+                System.out.println("---------------------------------------------\n");
+                fermatPluginManager.startPluginAndReferences(abstractPlugin);
+            }
+        } catch (PlatformNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantStartPluginException e) {
+            e.printStackTrace();
+        }
+
+        for (PluginVersionReference pluginVersionReference : pluginList) {
+            try {
+                fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+            } catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
+//        for(ConcurrentHashMap.Entry<PluginVersionReference, String> plugin : pluginList.entrySet()) {
+//            try {
+//                fermatPluginManager.startPluginAndReferences(plugin.getKey());
+//            } catch (Exception e) {
+//                System.err.println(e.toString());
+//            }
+//        }
+
+        this.isStarted = true;
+    }
+
+    public void setFermatContext(FermatContext fermatContext) {
+        this.fermatContext = fermatContext;
     }
 }
