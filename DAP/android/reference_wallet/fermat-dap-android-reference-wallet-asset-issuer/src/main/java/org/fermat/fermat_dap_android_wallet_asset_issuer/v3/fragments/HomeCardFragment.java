@@ -67,7 +67,7 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
     // Data
     private List<DigitalAsset> digitalAssets;
 
-    private android.support.v7.widget.Toolbar toolbar;
+    private Toolbar toolbar;
 
     //UI
     private View noAssetsView;
@@ -156,14 +156,10 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
             noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
             onRefresh();
-//            digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-//            appSession.setData("asset_data", digitalAssets);
-//            showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        onRefresh();
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -372,7 +368,7 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
             try {
                 digitalAssets = Data.getAllDigitalAssetsDateSorted(moduleManager);
 
-                appSession.setData("asset_data", digitalAssets);
+                //appSession.setData("asset_data", digitalAssets);
 
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
 
