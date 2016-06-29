@@ -44,12 +44,12 @@ public class AppFriendsListAdapter extends FermatAdapter<ArtCommunityInformation
                 } else {
                     bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.aac_profile_image);
                 }
-                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+              //  bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
                 holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }else{
                 Bitmap bitmap;
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.aac_profile_image);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+           //     bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
                 holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }
             Actors actorType = data.getActorType();
@@ -65,7 +65,7 @@ public class AppFriendsListAdapter extends FermatAdapter<ArtCommunityInformation
                     bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.aac_people);
                     break;
                 }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+         //   bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
             holder.actorIcon.setImageBitmap(bitmap);
         }
     }

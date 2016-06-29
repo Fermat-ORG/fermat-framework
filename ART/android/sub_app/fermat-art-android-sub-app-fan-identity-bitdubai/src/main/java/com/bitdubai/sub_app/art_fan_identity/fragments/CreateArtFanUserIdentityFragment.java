@@ -97,6 +97,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
+
+    private static final int MAX_ALIAS_CHARACTER = 40;
+
+
     private ArtFanUserIdentitySubAppSession artFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private FanIdentityManagerModule moduleManager;
@@ -344,7 +348,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
        // createButton.setText((!isUpdate) ? "Create" : "Update");
         createButton.setBackgroundResource((!isUpdate) ? R.drawable.button_save_inactive:R.drawable.button_save_active);
 
+
+
         mFanExternalUserName.requestFocus();
+
+
         List<String> arraySpinner = new ArrayList<>();
         arraySpinner.add("Select a Platform...");
         arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
@@ -411,6 +419,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         });
 
         mFanExternalUserName.addTextChangedListener(new TextWatcher() {
+
+            private boolean setTextFlag = true;
+            private Toast toastChar = null;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -418,6 +430,23 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+
+                if ( mFanExternalUserName.getText().length()>= MAX_ALIAS_CHARACTER) {
+                    //this to avoid toast accumulation
+                    if (toastChar != null) toastChar.cancel();
+                    toastChar = Toast.makeText(getActivity(), "Only "+MAX_ALIAS_CHARACTER+" chars allowed", Toast.LENGTH_SHORT);
+                    toastChar.show();
+                    // set the text to a string max length MAX_ALIAS_CHARACTER:
+                    if (setTextFlag) {
+                        setTextFlag = false;
+                        mFanExternalUserName.setText(s.subSequence(0, MAX_ALIAS_CHARACTER));
+                        mFanExternalUserName.setSelection(mFanExternalUserName.getText().length());
+                    } else {
+                        setTextFlag = true;
+                    }
+                }
 
             }
 
@@ -427,6 +456,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     TheresAlias = true;
                     CheckTheres();
                 }
+
 
             }
         });

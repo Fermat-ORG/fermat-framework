@@ -22,7 +22,7 @@
             android:background="@drawable/nopicture_image_center"
             android:layout_gravity="center_horizontal"
             tools:ignore="ContentDescription"
-            android:layout_marginTop="73dp"/>
+            android:layout_marginTop="20dp"/>
 
 <!--        <View
             android:id="@+id/circle_space"
@@ -158,7 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="22dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:text="External platform"
