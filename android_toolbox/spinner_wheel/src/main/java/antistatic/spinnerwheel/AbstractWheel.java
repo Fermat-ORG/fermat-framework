@@ -34,12 +34,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
-import antistatic.spinnerwheel.adapters.WheelViewAdapter;
+
+import com.customviews.spinner_wheel.R;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import com.customviews.spinner_wheel.R;
+import antistatic.spinnerwheel.adapters.WheelViewAdapter;
 
 /**
  * Abstract spinner spinnerwheel view.
