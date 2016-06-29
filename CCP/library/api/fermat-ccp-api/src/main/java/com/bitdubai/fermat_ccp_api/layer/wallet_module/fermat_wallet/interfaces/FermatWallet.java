@@ -55,7 +55,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.RequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.TransactionNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -80,22 +80,25 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
 
 
     /**
-     * Through the method <code>getCurrencyExchange</code> you can get the actual currency exchange rate
+     * Through the method <code>getCurrencyExchange</code> you can get the actual currency exchange rate by provider and fiat currency
      * @return
      * @throws CantGetMnemonicTextException
      */
-    ExchangeRate getCurrencyExchange(UUID rateProviderManagerId) throws CantGetCurrencyExchangeException;
+    ExchangeRate getCurrencyExchange(UUID rateProviderManagerId,FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeException;
 
     /**
-     * Through the method <code>getExchangeRateProviderManagers</code> you can get the list of exchange rate providers
-     * @return  List<ExchangeRateProvider> to dollar fiat currency
+
+
+     * Through the method <code>getExchangeRateProviders</code> you can get the list of exchange rate providers
+     * @return
      * @throws CantGetCurrencyExchangeProviderException
      */
-    List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
+    List<ExchangeRateProvider> getExchangeRateProviders() throws CantGetCurrencyExchangeProviderException;
 
     /**
-     * Through the method <code>getExchangeRateProviderManagers</code> you can get the list of exchange rate providers
-     * @return  List<ExchangeRateProvider> to espcific fiat currency
+
+     * Through the method <code>getExchangeRateProviders</code> you can get the list of exchange rate providers by fiat currency to fermat
+     * @return
      * @throws CantGetCurrencyExchangeProviderException
      */
     List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException;
