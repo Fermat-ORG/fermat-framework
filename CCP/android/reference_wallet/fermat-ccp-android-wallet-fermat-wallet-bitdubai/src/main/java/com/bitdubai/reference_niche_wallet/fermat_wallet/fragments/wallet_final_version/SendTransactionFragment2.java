@@ -477,7 +477,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         }
 
         FragmentStatePagerAdapter adapterViewPager;
-        adapterViewPager = new ViewPagerAdapter(getFragmentManager(),exchangeProviderList);
+        adapterViewPager = new ViewPagerAdapter(getFragmentManager(),exchangeProviderList,appSession);
         vpPager.setAdapter(adapterViewPager);
 
 

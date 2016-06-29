@@ -236,6 +236,31 @@ public class WalletUtils {
 
     }
 
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatAmountStringWithDecimalEntry(double amount,int maxDecimal, int minDecimal) {
+
+        //check if decimal are separated by ,(samsung)
+        String stringAmount = "";
+
+        String value = String.valueOf(amount).replace(",",".");
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(maxDecimal);
+        df.setMinimumFractionDigits(minDecimal);
+
+        stringAmount = df.format(Double.parseDouble(value));
+
+
+        return stringAmount.replace(",",".");
+
+    }
+
+
+
 
     public static String formatBalanceStringWithDecimalEntry(long amount,int maxDecimal, int minDecimal,int typeAmount) {
 

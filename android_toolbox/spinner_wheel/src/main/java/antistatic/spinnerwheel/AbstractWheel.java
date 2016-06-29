@@ -39,6 +39,8 @@ import antistatic.spinnerwheel.adapters.WheelViewAdapter;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.customviews.spinner_wheel.R;
+
 /**
  * Abstract spinner spinnerwheel view.
  * This class should be subclassed.
