@@ -24,6 +24,9 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
@@ -96,6 +99,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     private final UUID                                     pluginId                              ;
     private final PluginVersionReference                   pluginVersionReference                ;
     private final GeolocationManager                       geolocationManager                    ;
+    private final LocationManager                          locationManager                       ;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager,
                                      ChatActorConnectionManager chatActorConnectionManager,
@@ -103,7 +107,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                                      ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot,
                                      PluginFileSystem pluginFileSystem, UUID pluginId,
                                      PluginVersionReference pluginVersionReference,
-                                     GeolocationManager geolocationManager) {
+                                     GeolocationManager geolocationManager,
+                                     LocationManager locationManager) {
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
@@ -113,6 +118,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         this.pluginId = pluginId;
         this.pluginVersionReference= pluginVersionReference;
         this.geolocationManager = geolocationManager;
+        this.locationManager = locationManager;
     }
 
     @Override
@@ -489,6 +495,11 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
         return geolocationManager.getRandomGeoLocation();
+    }
+
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
     }
 
     @Override
