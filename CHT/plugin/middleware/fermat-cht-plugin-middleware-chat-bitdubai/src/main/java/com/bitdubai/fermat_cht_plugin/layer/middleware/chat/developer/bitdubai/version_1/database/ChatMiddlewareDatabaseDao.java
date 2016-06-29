@@ -841,6 +841,9 @@ public class ChatMiddlewareDatabaseDao {
             for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
                 despurifyMessage(message);
+                //code to decode apostrophe
+                String msgText = message.getMessage().replace("@alt+39#","'");
+                message.setMessage(msgText);
                 messages.add(message);
             }
 
@@ -892,6 +895,9 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             despurifyMessage(message);
+            //code to decode apostrophe
+            String msgText = message.getMessage().replace("@alt+39#","'");
+            message.setMessage(msgText);
             return message;
         }
         catch (Exception e) {
@@ -1014,6 +1020,11 @@ public class ChatMiddlewareDatabaseDao {
     {
         try
         {
+            //code to escape apostrophe symbol (')
+
+            String msgText = message.getMessage().replace("'", "@alt+39#");
+            message.setMessage(msgText);
+
             System.out.println("*** 12345 case 4:send msg in Dao layer" + new Timestamp(System.currentTimeMillis()));
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();

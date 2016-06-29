@@ -261,7 +261,6 @@ public class ChatListFragment
         chatSettings = null;
         try {
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
-            //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -271,7 +270,6 @@ public class ChatListFragment
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
                 chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
-                //chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -496,7 +494,7 @@ public class ChatListFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                @Override
                public boolean onQueryTextSubmit(String s) {
@@ -532,7 +530,7 @@ public class ChatListFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -542,6 +540,7 @@ public class ChatListFragment
                 @Override
                 public boolean onQueryTextChange(String s) {
                     if (s.equals(searchView.getQuery().toString())) {
+                        //getToolbar().setTitle("");
                         updatevalues();
                         adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
                         adapter.getFilter().filter(s);

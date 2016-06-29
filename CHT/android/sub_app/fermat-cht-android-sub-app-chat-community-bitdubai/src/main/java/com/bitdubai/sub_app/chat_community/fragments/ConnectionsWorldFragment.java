@@ -109,7 +109,6 @@ public class ConnectionsWorldFragment
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
-//    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
 //    private LocationManager locationManager;
     Location locationGPS;
 
@@ -549,7 +548,7 @@ public class ConnectionsWorldFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.description_search));
+            //searchView.setQueryHint(getResources().getString(R.string.description_search));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -581,7 +580,7 @@ public class ConnectionsWorldFragment
         final SearchAliasDialog.AdapterCallbackAlias ad = this;
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.description_search));
+            //searchView.setQueryHint(getResources().getString(R.string.description_search));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {

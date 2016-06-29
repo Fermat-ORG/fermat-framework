@@ -79,7 +79,7 @@ public class ContactsListFragment
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 8;
+    private static final int MAX = 1000;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
     private RecyclerView recyclerView;

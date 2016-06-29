@@ -266,10 +266,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-//        menu.add(0, MENU_GEOLOCATION_ACTION, 0, "geolocation").setIcon(R.drawable.cht_id_geoloication_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     public void setUpDialog() {
@@ -281,6 +277,22 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     .setIconRes(R.drawable.chat_identity_subapp)
                     .setBannerRes(R.drawable.banner_identity_chat)
                     .setIsCheckEnabled(false)
+                    .setTextFooter(R.string.cht_chat_footer).build();
+            pd.show();
+        } catch (Exception e) {
+            if(errorManager!=null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
+
+    public void turnOnGPS() {
+        try {
+            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setSubTitle(R.string.cht_chat_identity_subtitle)
+                    .setBody(R.string.cht_chat_identity_gps)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIconRes(R.drawable.chat_identity_subapp)
+                    .setBannerRes(R.drawable.banner_identity_chat)
                     .setTextFooter(R.string.cht_chat_footer).build();
             pd.show();
         } catch (Exception e) {

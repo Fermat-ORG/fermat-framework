@@ -186,7 +186,7 @@ public class ChatFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -215,7 +215,7 @@ public class ChatFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {

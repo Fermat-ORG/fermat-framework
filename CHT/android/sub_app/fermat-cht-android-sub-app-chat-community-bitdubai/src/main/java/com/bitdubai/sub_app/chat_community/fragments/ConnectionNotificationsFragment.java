@@ -71,7 +71,7 @@ public class ConnectionNotificationsFragment
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 20;
+    private static final int MAX = 1000;
     private ChatActorCommunitySelectableIdentity identity;
     protected final String TAG = "ConnectionNotificationsFragment";
 
