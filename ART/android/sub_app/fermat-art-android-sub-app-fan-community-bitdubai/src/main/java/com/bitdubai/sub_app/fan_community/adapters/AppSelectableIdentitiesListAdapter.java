@@ -56,7 +56,7 @@ public class AppSelectableIdentitiesListAdapter extends
                     bitmap = BitmapFactory.decodeResource(
                             context.getResources(), R.drawable.afc_profile_image);
                 }
-                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 75, 75, true);
                 holder.friendAvatar.setImageDrawable(
                         ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }else{
@@ -64,7 +64,7 @@ public class AppSelectableIdentitiesListAdapter extends
                 bitmap = BitmapFactory.decodeResource(
                         context.getResources(), R.drawable.afc_profile_image);
                 bitmap = Bitmap.createScaledBitmap
-                        (bitmap, 40, 40, true);
+                        (bitmap, 75, 75, true);
                 holder.friendAvatar.setImageDrawable(
                         ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }
