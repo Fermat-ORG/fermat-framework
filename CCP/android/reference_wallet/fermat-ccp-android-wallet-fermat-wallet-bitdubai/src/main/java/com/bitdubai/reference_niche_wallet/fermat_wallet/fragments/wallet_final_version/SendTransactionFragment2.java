@@ -37,6 +37,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 
+import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -638,7 +639,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == 2){
+            if(id == 1){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else{
@@ -657,8 +658,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        //RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
-       // recyclerView.addItemDecoration(itemDecoration);
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
+       recyclerView.addItemDecoration(itemDecoration);
 
         if(lstFermatWalletTransactions!=null) {
             if (lstFermatWalletTransactions.isEmpty()) {

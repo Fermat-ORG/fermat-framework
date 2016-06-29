@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
@@ -42,18 +43,28 @@ public class AssetIssuerIdentitySubAppModuleManager extends ModuleManagerImpl<Is
     }
 
     @Override
-    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException {
-        return identityAssetIssuerManager.createNewIdentityAssetIssuer(alias, profileImage);
+    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetIssuerException {
+        return identityAssetIssuerManager.createNewIdentityAssetIssuer(alias, profileImage, accuracy, frequency);
     }
 
     @Override
-    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
-        identityAssetIssuerManager.updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage);
+    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetIssuerException {
+        identityAssetIssuerManager.updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
     }
 
     @Override
     public boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException {
         return identityAssetIssuerManager.hasIntraIssuerIdentity();
+    }
+
+    @Override
+    public int getAccuracyDataDefault() {
+        return identityAssetIssuerManager.getAccuracyDataDefault();
+    }
+
+    @Override
+    public Frequency getFrequencyDataDefault() {
+        return identityAssetIssuerManager.getFrequencyDataDefault();
     }
 
     @Override
@@ -69,7 +80,11 @@ public class AssetIssuerIdentitySubAppModuleManager extends ModuleManagerImpl<Is
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
+        identityAssetIssuerManager.createNewIdentityAssetIssuer(
+                name,
+                profile_img,
+                identityAssetIssuerManager.getAccuracyDataDefault(),
+                identityAssetIssuerManager.getFrequencyDataDefault());
     }
 
     @Override

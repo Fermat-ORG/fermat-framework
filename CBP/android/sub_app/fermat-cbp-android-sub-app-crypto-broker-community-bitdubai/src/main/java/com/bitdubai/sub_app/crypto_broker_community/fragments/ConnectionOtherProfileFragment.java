@@ -28,8 +28,9 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
-import com.bitdubai.sub_app.crypto_broker_community.common.popups.DisconnectDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.DisconnectDialog;
+import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 
 /**
@@ -64,7 +65,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
         // setting up  module
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
+        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData("actor_selected");
 
     }
 
@@ -134,9 +135,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
                         cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setSubtitle("New Request");
+                connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", cryptoBrokerCommunityInformation.getAlias()));
                 connectDialog.setOnDismissListener(this);
                 connectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
@@ -149,7 +149,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                         cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
+                disconnectDialog.setSubtitle(cryptoBrokerCommunityInformation.getAlias());
                 disconnectDialog.setOnDismissListener(this);
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
@@ -165,7 +165,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
 //                        cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
 //                cancelDialog.setTitle("Cancel");
 //                cancelDialog.setDescription("Want to cancel connection with");
-//                cancelDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
 //                cancelDialog.setOnDismissListener(this);
 //                cancelDialog.show();
 //            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
@@ -179,18 +178,18 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
     public void onDismiss(DialogInterface dialog) {
         //Get connectionresult flag, and hide/show connect/disconnect buttons
         try {
-            int connectionresult = (int) appSession.getData("connectionresult");
-            appSession.removeData("connectionresult");
+            int connectionResult = (int) appSession.getData(FragmentsCommons.CONNECTION_RESULT);
+            appSession.removeData(FragmentsCommons.CONNECTION_RESULT);
 
-            if (connectionresult == 1) {
+            if (connectionResult == 1) {
                 disconnect.setVisibility(View.GONE);
                 connect.setVisibility(View.VISIBLE);
                 cancel.setVisibility(View.GONE);
-            } else if (connectionresult == 2) {
+            } else if (connectionResult == 2) {
                 disconnect.setVisibility(View.GONE);
                 connect.setVisibility(View.GONE);
                 cancel.setVisibility(View.VISIBLE);
-            } else if (connectionresult == 3) {
+            } else if (connectionResult == 3) {
                 disconnect.setVisibility(View.VISIBLE);
                 connect.setVisibility(View.GONE);
                 cancel.setVisibility(View.GONE);

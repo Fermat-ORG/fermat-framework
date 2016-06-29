@@ -32,18 +32,18 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
     }
 
     @Override
-    public List<CryptoBrokerCommunityInformation> getResult() throws CantGetCryptoBrokerSearchResult {
+    public List<CryptoBrokerCommunityInformation> getResult(Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult {
 
         try {
 
             CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResult();
+            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResult(max, offset);
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -54,17 +54,17 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
     }
 
     @Override
-    public List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoBrokerSearchResult {
+    public List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult {
         try {
 
             CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResult(publicKey, deviceLocation, distance, alias, offSet, max);
+            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResult(publicKey, deviceLocation, distance, alias, max, offset);
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -75,18 +75,18 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
     }
 
     @Override
-    public List<CryptoBrokerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoBrokerSearchResult {
+    public List<CryptoBrokerCommunityInformation> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult {
 
         try {
 
             CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResultLocation(deviceLocation);
+            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResultLocation(deviceLocation, max, offset);
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -97,18 +97,18 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
     }
 
     @Override
-    public List<CryptoBrokerCommunityInformation> getResultDistance(double distance) throws CantGetCryptoBrokerSearchResult {
+    public List<CryptoBrokerCommunityInformation> getResultDistance(double distance, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult {
 
         try {
 
             CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResultDistance(distance);
+            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResultDistance(distance, max, offset);
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -119,18 +119,18 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
     }
 
     @Override
-    public List<CryptoBrokerCommunityInformation> getResultAlias(String alias) throws CantGetCryptoBrokerSearchResult {
+    public List<CryptoBrokerCommunityInformation> getResultAlias(String alias, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult {
 
         try {
 
             CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResultAlias(alias);
+            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResultAlias(alias, max, offset);
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbed));
 
             return cryptoBrokerCommunityInformationList;
 

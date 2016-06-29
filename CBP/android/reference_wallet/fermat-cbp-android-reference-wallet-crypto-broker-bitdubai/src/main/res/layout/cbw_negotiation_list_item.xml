@@ -17,6 +17,7 @@
         android:layout_width="@dimen/cbw_image_width_and_height"
         android:layout_height="@dimen/cbw_image_width_and_height"
         android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:contentDescription="@string/identity_img"
         tools:src="@drawable/person"/>
 
@@ -27,6 +28,7 @@
         android:layout_below="@+id/cbw_merchandise_unit"
         android:layout_gravity="center_vertical"
         android:layout_toEndOf="@+id/cbw_customer_image"
+        android:layout_toRightOf="@+id/cbw_customer_image"
         android:singleLine="true"
         android:textColor="@color/cbw_third_line_item"
         android:textSize="@dimen/cbw_subtitle_text"
@@ -37,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/cbw_customer_name"
+        android:layout_alignLeft="@+id/cbw_customer_name"
         android:layout_below="@+id/cbw_customer_name"
         android:singleLine="true"
         android:textColor="@color/dark_grey"
@@ -49,11 +52,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_text"
+            android:layout_marginRight="@dimen/margin_text"
             android:paddingTop="4dp"
             android:singleLine="true"
             tools:text="Buying 400.21 USD"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/cbw_customer_image"
+            android:layout_toRightOf="@+id/cbw_customer_image"
             android:textColor="@color/cbw_first_line_item"
             android:textSize="@dimen/cbw_title_text_size"/>
 
@@ -63,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/cbw_buying_text"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:gravity="end"
         android:paddingTop="4dp"
         android:textColor="@color/waiting_for_text"
@@ -74,6 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/cbw_negotiation_status"
+        android:layout_alignRight="@+id/cbw_negotiation_status"
         android:layout_below="@+id/cbw_negotiation_status"
         android:textColor="@color/negotiation_date_text"
         android:textSize="@dimen/cbw_regular_text_size"
@@ -85,8 +92,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cbw_buying_text"
         android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
         android:layout_toEndOf="@+id/cbw_customer_image"
+        android:layout_toRightOf="@+id/cbw_customer_image"
         android:layout_toStartOf="@+id/cbw_negotiation_status"
+        android:layout_toLeftOf="@+id/cbw_negotiation_status"
         android:singleLine="true"
         android:textColor="@color/cbw_second_line_item"
         android:textSize="@dimen/cbw_title_text_size"
@@ -99,5 +109,6 @@
         android:indeterminate="true"
         android:layout_marginTop="8dp"
         android:layout_below="@+id/cbw_update_date"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 </RelativeLayout>

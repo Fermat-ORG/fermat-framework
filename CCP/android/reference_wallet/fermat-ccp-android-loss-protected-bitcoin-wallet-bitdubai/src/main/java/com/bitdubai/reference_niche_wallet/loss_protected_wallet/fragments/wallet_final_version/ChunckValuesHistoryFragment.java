@@ -295,7 +295,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -437,7 +437,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             int id = item.getItemId();
 
-            if(id == 2){
+            if(id == 1){
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
                 return true;
             }else {

@@ -9,7 +9,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum UserIdentityFragmentEnumType implements FermatFragmentsEnumType<UserIdentityFragmentEnumType> {
 
     DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT("DAPSAAUIMF"),
-    DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT("DAPSAAUICIF");
+    DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT("DAPSAAUICIF"),
+    DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_FRAGMENT("DSAAUIGF"),;
 
     private String key;
 

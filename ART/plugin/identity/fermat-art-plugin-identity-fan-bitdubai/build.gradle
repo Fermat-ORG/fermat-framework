@@ -1,8 +1,5 @@
 apply plugin: 'java'
 
 dependencies {
-    compile project(':fermat-api')
     compile project(':fermat-art-api')
-    //External platforms to connect
-    compile project(':fermat-tky-api')
 }

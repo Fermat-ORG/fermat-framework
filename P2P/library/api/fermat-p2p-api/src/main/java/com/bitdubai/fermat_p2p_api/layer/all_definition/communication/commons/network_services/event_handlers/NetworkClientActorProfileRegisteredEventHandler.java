@@ -47,7 +47,8 @@ public class NetworkClientActorProfileRegisteredEventHandler implements FermatEv
     public void handleEvent(NetworkClientProfileRegisteredEvent fermatEvent) throws FermatException {
 
         if (this.networkService.isStarted())
-            networkService.onActorRegistered(fermatEvent.getPublicKey());
+            if (fermatEvent.getStatus() == NetworkClientProfileRegisteredEvent.STATUS.SUCCESS)
+                networkService.onActorRegistered(fermatEvent.getPublicKey());
 
     }
 }

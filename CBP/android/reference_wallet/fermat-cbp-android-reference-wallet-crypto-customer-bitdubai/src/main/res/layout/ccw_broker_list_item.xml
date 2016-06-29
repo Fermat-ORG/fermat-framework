@@ -20,33 +20,44 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="4dp"
         android:layout_marginRight="4dp"
-        >
+        android:layout_marginEnd="4dp">
+
+        <!--<ImageView-->
+            <!--android:id="@+id/ccw_broker_image"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:contentDescription="@string/identity_img"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--tools:src="@drawable/ic_profile_male"/>-->
 
         <ImageView
             android:id="@+id/ccw_broker_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginEnd="10dp"
+            android:padding="20px"
+            android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:contentDescription="@string/identity_img"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/ic_profile_male"/>
+            android:src="@android:drawable/sym_def_app_icon"
+            tools:ignore="contentDescription"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_merchandise_to_sell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_marginTop="8dp"
             android:singleLine="true"
             android:textColor="#1A1516"
             android:textSize="17sp"
-            android:text="@string/ccw_selling_merchandise"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical|right"
-            android:layout_marginRight="4dp" />
+            android:layout_above="@+id/ccw_exchange_rate_text"
+            android:layout_toEndOf="@+id/ccw_broker_image"
+            android:layout_toRightOf="@+id/ccw_broker_image"
+            android:text="@string/ccw_selling_merchandise" />
 
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -58,18 +69,20 @@
             android:textColor="#1D77AA"
             android:textSize="18sp"
             tools:text="Nelson Ramirez"
-            android:layout_alignBottom="@+id/ccw_merchandise_to_sell"
-            android:layout_alignStart="@+id/ccw_exchange_rate_text"
-            android:gravity="center_vertical|left" />
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/ccw_broker_image"
+            android:layout_toRightOf="@+id/ccw_broker_image"
+            android:gravity="center_vertical|start" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_exchange_rate_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="EXCHANGE RATE"
+            android:text="@string/ccw_exchange_rate"
             android:textColor="#0D6DA3"
             android:layout_toEndOf="@+id/ccw_broker_image"
+            android:layout_toRightOf="@+id/ccw_broker_image"
             android:layout_above="@+id/ccw_broker_exchange_rates"
             android:layout_marginBottom="0dp"
             android:textStyle="bold" />
@@ -80,8 +93,9 @@
             android:background="#E3E3E3"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_below="@+id/ccw_merchandise_to_sell"
+            android:layout_below="@+id/ccw_broker_name"
             android:layout_toEndOf="@+id/ccw_broker_image"
+            android:layout_toRightOf="@+id/ccw_broker_image"
             android:layout_marginTop="3dp" />
 
         <android.support.v7.widget.RecyclerView
@@ -90,6 +104,7 @@
             android:layout_height="23dp"
             tools:listitem="@layout/ccw_broker_list_item_exchange_rate_subitem"
             android:layout_toEndOf="@+id/ccw_broker_image"
+            android:layout_toRightOf="@+id/ccw_broker_image"
             android:layout_alignBottom="@+id/ccw_broker_image"
             android:paddingBottom="3dp"
             />

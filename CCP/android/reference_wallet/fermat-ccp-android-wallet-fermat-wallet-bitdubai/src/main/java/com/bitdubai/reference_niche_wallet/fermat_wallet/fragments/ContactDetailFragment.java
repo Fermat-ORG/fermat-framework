@@ -309,8 +309,8 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
     private void setUpContact() {
 
         //if api 17 set address font size
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP)
-                text_view_address.setTextSize(12);
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
+                text_view_address.setTextSize(10);
 
         image_view_profile = (ImageView) mFragmentView.findViewById(R.id.image_view_profile);
         if (cryptoWalletWalletContact != null) {

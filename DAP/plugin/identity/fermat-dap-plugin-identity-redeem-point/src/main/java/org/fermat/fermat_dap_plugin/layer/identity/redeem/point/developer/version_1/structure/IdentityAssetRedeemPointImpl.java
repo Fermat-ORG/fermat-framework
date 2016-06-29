@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 
 import java.io.Serializable;
 
@@ -23,6 +24,8 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
     private String postalCode;
     private String streetName;
     private String houseNumber;
+    private int accuracy;
+    private Frequency frequency;
 
     @Override
     public String getContactInformation() {
@@ -73,7 +76,8 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
     public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage,
                                         String contactInformation,
                                         String countryName, String provinceName, String cityName,
-                                        String postalCode, String streetName, String houseNumber) {
+                                        String postalCode, String streetName, String houseNumber,
+                                        int accuracy, Frequency frequency) {
 
         this.alias = alias;
         this.publicKey = publicKey;
@@ -86,11 +90,14 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
         this.postalCode = postalCode;
         this.streetName = streetName;
         this.houseNumber = houseNumber;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
     }
 
     public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage, String contactInformation,
                                         String countryName, String provinceName, String cityName,
-                                        String postalCode, String streetName, String houseNumber) {
+                                        String postalCode, String streetName, String houseNumber,
+                                        int accuracy, Frequency frequency) {
 
         this.alias = alias;
         this.publicKey = publicKey;
@@ -102,7 +109,8 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
         this.postalCode = postalCode;
         this.streetName = streetName;
         this.houseNumber = houseNumber;
-
+        this.accuracy = accuracy;
+        this.frequency = frequency;
     }
 
     @Override
@@ -143,6 +151,15 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
             // throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
         }
         return null;
+    }
+    @Override
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    @Override
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     @Override

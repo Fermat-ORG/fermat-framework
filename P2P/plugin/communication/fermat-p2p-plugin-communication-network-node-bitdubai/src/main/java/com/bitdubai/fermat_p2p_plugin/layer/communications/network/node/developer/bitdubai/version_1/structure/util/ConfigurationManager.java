@@ -125,7 +125,7 @@ public class ConfigurationManager {
      * @return File
      * @throws IOException
      */
-    public static void create(String identityPublicKey) throws IOException, ConfigurationException {
+    public static void create(String identityPublicKey, Boolean seedNode) throws IOException, ConfigurationException {
 
         LOG.info("Creating new configuration file...");
 
@@ -157,7 +157,13 @@ public class ConfigurationManager {
         newConfigurationFile.addProperty(IDENTITY_PUBLIC_KEY, identityPublicKey);
 
         newConfigurationFile.getLayout().setComment(NODE_NAME, "\n# * NODE NAME");
-        newConfigurationFile.addProperty(NODE_NAME, "Fermat Node (" + InetAddress.getLocalHost().getHostName() + ")");
+
+        if (seedNode){
+            newConfigurationFile.addProperty(NODE_NAME, "Fermat Seed Node (" + InetAddress.getLocalHost().getHostName() + ")");
+        }else {
+            newConfigurationFile.addProperty(NODE_NAME, "Fermat Node (" + InetAddress.getLocalHost().getHostName() + ")");
+        }
+
 
         newConfigurationFile.getLayout().setComment(IP, "\n# * SERVER IP (Configure 0.0.0.0 to server listen to all network interfaces)");
         newConfigurationFile.addProperty(IP, FermatEmbeddedNodeServer.DEFAULT_IP);

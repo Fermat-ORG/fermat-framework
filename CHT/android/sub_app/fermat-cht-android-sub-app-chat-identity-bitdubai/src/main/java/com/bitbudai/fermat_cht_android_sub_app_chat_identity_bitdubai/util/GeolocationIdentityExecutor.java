@@ -76,8 +76,7 @@ public class GeolocationIdentityExecutor {
     public int execute() {
 
         try {
-            //TODO:Jose colocar el Location
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, country, state, city, identityConnectionState, accuracy, frecuency, null);
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, country, state, city, identityConnectionState, accuracy, frecuency);
         } catch (CantUpdateChatIdentityException e) {
 
         } catch (Exception e) {

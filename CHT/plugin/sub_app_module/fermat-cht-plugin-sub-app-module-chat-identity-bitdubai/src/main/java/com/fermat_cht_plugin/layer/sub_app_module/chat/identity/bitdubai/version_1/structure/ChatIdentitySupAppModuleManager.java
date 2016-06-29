@@ -53,8 +53,8 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
     }
 
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency, Location location) throws CantCreateNewChatIdentityException {
-        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city, connectionState, accurancy, frecuency, location);
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency) throws CantCreateNewChatIdentityException {
+        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city, connectionState, accurancy, frecuency);
     }
 
     /**
@@ -66,8 +66,8 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency, Location location) throws CantUpdateChatIdentityException {
-        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState, accurancy, frecuency, location);
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency) throws CantUpdateChatIdentityException {
+        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState, accurancy, frecuency);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available", 0, Frecuency.NONE, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available", 0, Frecuency.NONE);
     }
 
     @Override

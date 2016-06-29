@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bit
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
@@ -87,7 +87,7 @@ public final class ActorCustomerExtraDataEventActions {
 
                         if( !this.cryptoCustomerActorDao.existBrokerExtraData(broker.getPublicKey(), relationship.getCryptoCustomer()) ){
 
-                            ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage(), 0, Frecuency.NONE);
+                            ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage(), 0, Frequency.NONE);
 
                             this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
                         }
@@ -147,7 +147,7 @@ public final class ActorCustomerExtraDataEventActions {
             for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
 
                 Collection<QuotesExtraData> quotes = new ArrayList<>();
-                ActorIdentity identity = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null, 0, Frecuency.NONE);
+                ActorIdentity identity = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null, 0, Frequency.NONE);
 
                 for (CryptoBrokerQuote quo : extraDate.listInformation()) {
                     QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), quo.getMerchandise(), quo.getPaymentCurrency(), quo.getPrice(), AdapterPlatformsSupported.getPlatformsSupported(quo.getSupportedPlatforms()));

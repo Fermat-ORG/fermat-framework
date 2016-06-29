@@ -16,13 +16,13 @@ public interface CryptoCustomerCommunitySearch extends Serializable {
 
     void addAlias(String alias);
 
-    List<CryptoCustomerCommunityInformation> getResult() throws CantGetCryptoCustomerSearchResult;
+    List<CryptoCustomerCommunityInformation> getResult(Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult;
 
-    List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoCustomerSearchResult;
+    List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult;
 
-    List<CryptoCustomerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoCustomerSearchResult;
+    List<CryptoCustomerCommunityInformation> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult;
 
-    List<CryptoCustomerCommunityInformation> getResultDistance(double distance) throws CantGetCryptoCustomerSearchResult;
+    List<CryptoCustomerCommunityInformation> getResultDistance(double distance, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult;
 
-    List<CryptoCustomerCommunityInformation> getResultAlias(String alias) throws CantGetCryptoCustomerSearchResult;
+    List<CryptoCustomerCommunityInformation> getResultAlias(String alias, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult;
 }

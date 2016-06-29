@@ -39,15 +39,15 @@ public abstract class CryptoCustomerSearch {
      *
      * @throws CantListCryptoCustomersException  if something goes wrong.
      */
-    public abstract List<CryptoCustomerExposingData> getResult() throws CantListCryptoCustomersException;
+    public abstract List<CryptoCustomerExposingData> getResult(Integer max, Integer offSet) throws CantListCryptoCustomersException;
 
-    public abstract List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoCustomersException;
+    public abstract List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException;
 
-    public abstract List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoCustomersException;
+    public abstract List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offSet) throws CantListCryptoCustomersException;
 
-    public abstract List<CryptoCustomerExposingData> getResultDistance(double distance) throws CantListCryptoCustomersException;
+    public abstract List<CryptoCustomerExposingData> getResultDistance(double distance, Integer max, Integer offSet) throws CantListCryptoCustomersException;
 
-    public abstract List<CryptoCustomerExposingData> getResultAlias(String alias) throws CantListCryptoCustomersException;
+    public abstract List<CryptoCustomerExposingData> getResultAlias(String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,

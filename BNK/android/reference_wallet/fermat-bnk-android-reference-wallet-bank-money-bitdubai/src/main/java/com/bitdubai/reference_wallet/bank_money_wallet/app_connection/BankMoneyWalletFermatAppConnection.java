@@ -15,7 +15,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
+import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragmentFactory.BankMoneyWalletFragmentFactory;
+import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 /**
  * Created by memo on 22/12/15.
@@ -60,4 +62,23 @@ public class BankMoneyWalletFermatAppConnection extends AppConnections<Reference
         return null;
     }
 
+    @Override
+    public int getResource(int id) {
+        switch (id) {
+            case ReferenceWalletConstants.ADD_ACCOUNT_ACTION:
+                return R.drawable.bw_add_icon_action_bar;
+
+            case ReferenceWalletConstants.EDIT_ACCOUNT_ACTION:
+                return R.drawable.bw_ic_action_edit;
+
+            case ReferenceWalletConstants.SAVE_ACTION:
+                return R.drawable.bw_ic_action_edit;
+
+            case ReferenceWalletConstants.HELP_ACTION:
+                return R.drawable.bw_help_icon_action_bar;
+
+            default:
+                return 0;
+        }
+    }
 }

@@ -14,14 +14,14 @@ public interface CryptoBrokerCommunitySearch extends Serializable {
 
     void addAlias(String alias);
 
-    List<CryptoBrokerCommunityInformation> getResult() throws CantGetCryptoBrokerSearchResult;
+    List<CryptoBrokerCommunityInformation> getResult(Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult;
 
-    List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoBrokerSearchResult;
+    List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult;
 
-    List<CryptoBrokerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoBrokerSearchResult;
+    List<CryptoBrokerCommunityInformation> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult;
 
-    List<CryptoBrokerCommunityInformation> getResultDistance(double distance) throws CantGetCryptoBrokerSearchResult;
+    List<CryptoBrokerCommunityInformation> getResultDistance(double distance, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult;
 
-    List<CryptoBrokerCommunityInformation> getResultAlias(String alias) throws CantGetCryptoBrokerSearchResult;
+    List<CryptoBrokerCommunityInformation> getResultAlias(String alias, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult;
 
 }

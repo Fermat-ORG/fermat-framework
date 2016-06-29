@@ -114,13 +114,18 @@ public class AssetUserIdentityDeveloperDatabaseFactory {//implements DealsWithPl
          */
         List<String> AssetUserColumns = new ArrayList<String>();
 
-        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME);
-        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_COUNTRY_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_CITY_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_STATE_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ACCURACY_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_FREQUENCY_KEY_COLUMN);
         /**
          * Table Asset User addition.
          */
-        DeveloperDatabaseTable assetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME, AssetUserColumns);
+        DeveloperDatabaseTable assetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME, AssetUserColumns);
         tables.add(assetUserTable);
 
 
