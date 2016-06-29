@@ -22,7 +22,7 @@ public class ActorListMsgRespond extends MsgRespond {
     /**
      * Represent the profile list
      */
-    private ArrayList<ActorProfile> profileList;
+    private List<ActorProfile> profileList;
 
     /**
      * Represent the networkServicePublicKey
@@ -39,7 +39,7 @@ public class ActorListMsgRespond extends MsgRespond {
      */
     public ActorListMsgRespond(final STATUS                  status                 ,
                                final String                  details                ,
-                               final ArrayList<ActorProfile> profileList            ,
+                               final List<ActorProfile> profileList            ,
                                final String                  networkServicePublicKey,
                                final UUID                    queryId                ) {
 
@@ -58,7 +58,7 @@ public class ActorListMsgRespond extends MsgRespond {
      *
      * @return profileList
      */
-    public ArrayList<ActorProfile> getActors() {
+    public List<ActorProfile> getActors() {
         return profileList;
     }
 

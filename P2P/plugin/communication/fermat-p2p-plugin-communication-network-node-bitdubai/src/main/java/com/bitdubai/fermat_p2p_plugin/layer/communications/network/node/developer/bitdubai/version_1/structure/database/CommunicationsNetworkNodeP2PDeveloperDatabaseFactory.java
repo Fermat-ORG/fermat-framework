@@ -125,6 +125,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorcatalogColumns.add(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_LAST_UPDATE_TIME_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         /**
@@ -148,6 +149,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_CONNECTION_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
@@ -172,6 +174,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_CONNECTION_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
