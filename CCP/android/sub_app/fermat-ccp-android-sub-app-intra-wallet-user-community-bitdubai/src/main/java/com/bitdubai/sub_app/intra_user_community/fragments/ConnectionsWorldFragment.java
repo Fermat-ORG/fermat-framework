@@ -228,6 +228,7 @@ public class ConnectionsWorldFragment
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
             toolbar = getToolbar();
             toolbar.setTitle("Crypto wallet users");
+
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
@@ -530,7 +531,7 @@ public class ConnectionsWorldFragment
                   //  menu.findItem(R.id.action_search).setVisible(true);
                     toolbar = getToolbar();
                     toolbar.removeView(searchView);
-                    toolbar.setTitle("Cripto wallet users");
+                    toolbar.setTitle("Crypto wallet users");
                     onRefresh();
                 }
             });
@@ -602,7 +603,7 @@ public class ConnectionsWorldFragment
                        // menu.findItem(R.id.action_search).setVisible(true);
                         toolbar = getToolbar();
                         toolbar.removeView(searchView);
-                        toolbar.setTitle("Cripto wallet users");
+                        toolbar.setTitle("Crypto wallet users");
                         onRefresh();
                     }
                 }
