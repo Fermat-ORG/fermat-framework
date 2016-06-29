@@ -28,7 +28,7 @@ public interface PaintActivityFeatures {
 
     void cancelNotification(String appPublicKey);
 
-    void pushNotification(Notification notification);
+    void pushNotification(String appPublicKey,Notification notification);
 
     // TODO - This shouldn't be here
     void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback);

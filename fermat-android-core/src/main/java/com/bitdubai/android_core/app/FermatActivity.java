@@ -2159,8 +2159,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void pushNotification(Notification notification) {
-        ApplicationSession.getInstance().getNotificationService().pushNotification(notification);
+    public void pushNotification(String appPublicKey,Notification notification) {
+        ApplicationSession.getInstance().getNotificationService().pushNotification(appPublicKey,notification);
     }
 
     /**

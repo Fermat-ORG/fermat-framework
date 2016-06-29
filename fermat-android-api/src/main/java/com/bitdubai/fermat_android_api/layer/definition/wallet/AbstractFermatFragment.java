@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -553,12 +554,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     }
 
-    public void pushNotification(){
-
+    public void pushNotification(Notification notification){
+        getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(),notification);
     }
 
     public void cancelNotification(){
-
+        getPaintActivtyFeactures().cancelNotification(appSession.getAppPublicKey());
     }
 
 
