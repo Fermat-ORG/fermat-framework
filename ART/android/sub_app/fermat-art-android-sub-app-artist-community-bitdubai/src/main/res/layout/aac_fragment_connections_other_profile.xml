@@ -24,13 +24,13 @@
             tools:ignore="ContentDescription"
             android:layout_marginTop="73dp"/>
 
-        <View
+<!--        <View
             android:id="@+id/circle_space"
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="60dp"
-            android:background="@drawable/picture_frame" />
+            android:background="@drawable/picture_frame" />-->
 
 
     </FrameLayout>

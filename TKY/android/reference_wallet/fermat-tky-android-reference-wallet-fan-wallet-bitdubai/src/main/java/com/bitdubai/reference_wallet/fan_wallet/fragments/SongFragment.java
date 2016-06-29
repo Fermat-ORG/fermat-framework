@@ -72,8 +72,8 @@ public class SongFragment extends AbstractFermatFragment  {
 
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeContainer;
-    ImageView headerImage;
-    TextView headerText;
+ //   ImageView headerImage;
+ //   TextView headerText;
     ImageView backgroundImage;
     String TAG="SONGFRAGMENT";
     View view;
@@ -161,8 +161,8 @@ public class SongFragment extends AbstractFermatFragment  {
     }
 
     void initValues(){
-        headerImage.setPadding(0,0,0,0);
-        headerImage.setImageResource(R.drawable.tky_background_no_songs_found);
+    //    headerImage.setPadding(0,0,0,0);
+    //    headerImage.setImageResource(R.drawable.tky_background_no_songs_found);
         compareViewAndDatabase();
         syncTokenlyAndUpdateThreads(true);
 
@@ -253,8 +253,8 @@ public class SongFragment extends AbstractFermatFragment  {
             swipeContainer.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
 
-            headerImage=(ImageView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_image);
-            headerText=(TextView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_TextView);
+    //        headerImage=(ImageView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_image);
+   //         headerText=(TextView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_TextView);
             lManager = new LinearLayoutManager(view.getContext());
             recyclerView.setLayoutManager(lManager);
 
@@ -417,9 +417,9 @@ public class SongFragment extends AbstractFermatFragment  {
                 adapter.setFilter(items.get(i),true,i);
             }
         }
-        headerImage.setPadding(0,140,0,0);
-        headerImage.setImageBitmap(items.get(position).getImagen());
-        headerText.setText(items.get(position).getDescription());
+    //    headerImage.setPadding(0,140,0,0);
+    //    headerImage.setImageBitmap(items.get(position).getImagen());
+    //    headerText.setText(items.get(position).getDescription());
         items.get(position).setItemSelected(true);
         adapter.setFilter(items.get(position),true,position);
     }
@@ -513,8 +513,8 @@ public class SongFragment extends AbstractFermatFragment  {
                     String description=songOfBroadcast.getCopyright() + "\n" +
                             songOfBroadcast.getCredits()+"\n" +
                             songOfBroadcast.getReleaseDate();
-                    headerImage.setImageBitmap(albumArt);
-                    headerText.setText(description);
+          //          headerImage.setImageBitmap(albumArt);
+          //          headerText.setText(description);
 
                     items.add(new SongItems(albumArt, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(), song_Id, 0, false,description,false));
                     adapter.setFilter(new SongItems(albumArt,
@@ -537,9 +537,14 @@ public class SongFragment extends AbstractFermatFragment  {
         String databaseInfo;
         List<String> listComposerAndSongNameOnView=new ArrayList<>();
         List<WalletSong> songsInDatabase=new ArrayList<>();
+        List<WalletSong> songsInDatabaseDelete=new ArrayList<>();
 
         try {
             songsInDatabase = fanWalletModule.getAvailableSongs();
+            songsInDatabaseDelete=fanWalletModule.getDeletedSongs();
+            for(WalletSong walletSong:songsInDatabaseDelete){
+                songsInDatabase.add(walletSong);
+            }
         } catch (CantGetSongListException e) {
             e.printStackTrace();
         }
@@ -569,8 +574,8 @@ public class SongFragment extends AbstractFermatFragment  {
                      String description=   walletitems.getCopyright() + "\n" +
                              walletitems.getCredits()+"\n" +
                              walletitems.getReleaseDate();
-                    headerImage.setImageBitmap(albumArt);
-                        headerText.setText(description);
+          //          headerImage.setImageBitmap(albumArt);
+          //          headerText.setText(description);
 
                     items.add(new SongItems(albumArt, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false,description,false));
                     adapter.setFilter(new SongItems(albumArt,
@@ -866,9 +871,14 @@ public class SongFragment extends AbstractFermatFragment  {
         items.get(position).setStatus(SongStatus.CANCELLED.getFriendlyName());
         adapter.setFilter(items.get(position),true,position);
     }
-    // TODO: 04/04/16 what happen here?
+
     void downloadproblem(int position){
-        //TODO: to implement
+        System.out.println("TKY_DOWNLOAD_EXCEPTION_WHILE_DOWNLOAD: "+items.get(position).getSong_name());
+        Toast.makeText(
+                view.getContext(),
+                "Problem with Download of\n"+items.get(position).getSong_name(),
+                Toast.LENGTH_SHORT)
+                .show();
     }
 
     void playSong(){
@@ -1006,9 +1016,7 @@ public class SongFragment extends AbstractFermatFragment  {
 
         }
 
-        /**
-         * Se ejecuta después de "onPreExecute". Se puede llamar al hilo Principal con el método "publishProgress" que ejecuta el método "onProgressUpdate" en hilo Principal
-         */
+
         @Override
         protected Boolean doInBackground(Void... notUsingObject) {
 

@@ -31,7 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/warnning_circle"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:visibility="gone"
+            />
 
 
 
@@ -41,7 +43,8 @@
             android:id="@+id/circle_image"
             android:src="@drawable/art_picture_frame"
             android:layout_alignParentStart="false"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            />
 
         <ImageButton
             android:layout_width="wrap_content"

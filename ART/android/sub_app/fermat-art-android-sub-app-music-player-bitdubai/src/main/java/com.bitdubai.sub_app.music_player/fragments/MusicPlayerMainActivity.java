@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -439,7 +440,15 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
                 songPlayerThread = new ThreadSong(false);
-                songPlayerThread.execute();
+                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){ // Above Api Level 13
+                    songPlayerThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else{    // Below Api Level 13
+                    songPlayerThread.execute();
+                }
+
+
+
+
 
 
 

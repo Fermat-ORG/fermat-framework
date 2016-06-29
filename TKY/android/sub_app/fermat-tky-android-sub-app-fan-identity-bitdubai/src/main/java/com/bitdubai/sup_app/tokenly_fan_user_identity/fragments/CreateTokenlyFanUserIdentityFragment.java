@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,6 +66,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -79,9 +86,11 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
-
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
+    private static final int CONTEXT_MENU_DELETE = 3;
+    private static final int CONTEXT_MENU_TURN_RIGHT = 4;
+    private static final int CONTEXT_MENU_TURN_LEFT = 5;
     private TokenlyFanUserIdentitySubAppSession tokenlyFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private TokenlyFanIdentityManagerModule moduleManager;
@@ -99,6 +108,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private TokenlyFanPreferenceSettings tokenlyFanPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean contextMenuDelete = false;
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private ProgressDialog tokenlyRequestDialog;
@@ -229,6 +239,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    updateProfileImage = true;
                     buttonCam.setBackgroundResource(R.drawable.boton_editar);
                     createButton.setText("Save changes");
                 }
@@ -259,7 +270,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(fanImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             fanImageByteArray = toByteArray(bitmap);
             fanImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -526,17 +537,31 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    imageBitmap = (Bitmap) extras.get("data");
+                    Uri selectedImage2 = data.getData();
+                    if(selectedImage2==null){
+                        break;
+                    }
+                    File myFile = new File(selectedImage2.getPath());
+                    myFile.getAbsolutePath();
+                    Bundle extras2 = data.getExtras();
+                    Bitmap fixedBitmap = FixRotation(myFile, (Bitmap) extras2.get("data"));
+                    imageBitmap = fixedBitmap;
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                    fanImageByteArray = toByteArray(imageBitmap);
+                    updateProfileImage = true;
+                    Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(fanImage);
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
+                    String absolutePath = getRealPathFromURI(selectedImage);
+                    File uriFile = new File(absolutePath);
                     try {
                         if (isAttached) {
                             buttonCam.setBackgroundResource(R.drawable.boton_editar);
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            imageBitmap = FixRotation(uriFile, imageBitmap);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             fanImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
@@ -544,7 +569,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error loading picture", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the picture", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -555,13 +580,71 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
         }
     }
+
+
+
+    private Bitmap FixRotation(File myFile, Bitmap bitmap) {
+
+        Bitmap rotatedBitmap = null;
+
+        try {
+            ExifInterface exif = new ExifInterface(myFile.getPath());
+            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int rotationInDegrees = exifToDegrees(rotation);
+            Matrix matrix = new Matrix();
+            if (rotation != 0f) {
+                matrix.preRotate(rotationInDegrees);
+            }
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+
+        } catch (IOException ex) {
+            Log.e(TAG, "Failed to get Exif data", ex);
+        }
+
+        return rotatedBitmap;
+    }
+
+    private int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+
+    public String getRealPathFromURI(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = 0;
+        if(cursor != null){
+            column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);}
+
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
+    }
+
+
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Choose mode");
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        if (updateProfileImage) {
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "Turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "Turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
 
+        }
         super.onCreateContextMenu(menu, view, menuInfo);
     }
     @Override
@@ -576,9 +659,44 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     loadImageFromGallery();
                     contextMenuInUse = true;
                     return true;
+                case CONTEXT_MENU_DELETE:
+                    DeletePicture();
+                    contextMenuDelete = true;
+                    return true;
+                case CONTEXT_MENU_TURN_RIGHT:
+                    turnpicture(90f);
+                    return true;
+                case CONTEXT_MENU_TURN_LEFT:
+                    turnpicture(-90f);
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+
+    private void turnpicture(float rotationInDegrees) {
+        ImageView pictureView = fanImage;
+        Bitmap bitmap = ((RoundedBitmapDrawable)pictureView.getDrawable()).getBitmap();
+        Matrix matrix = new Matrix();
+        matrix.preRotate(rotationInDegrees);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        fanImage.setImageDrawable(
+                ImagesUtils.getRoundedBitmap(
+                        getResources(), rotatedBitmap));
+        fanImageByteArray = toByteArray(rotatedBitmap);
+        contextMenuInUse = false;
+    }
+
+    private void DeletePicture() {
+        fanImage.setImageDrawable(null);
+        fanImageByteArray = null;
+        buttonCam.setBackgroundResource(R.drawable.boton_cam);
+        updateProfileImage = false;
+
+
+
+
     }
 
     @Override
@@ -745,7 +863,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 fanExternalName,
                 fanPassword, identitySelected.getId(),
                 identitySelected.getPublicKey(),
-                identitySelected.getProfileImage(),
+                (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : fanImageByteArray,
                 externalPlatform);
     }
 
@@ -760,7 +878,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 fanPassword,
                 identitySelected.getId(),
                 identitySelected.getPublicKey(),
-                fanImageByteArray,
+                (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : fanImageByteArray,
                 externalPlatform);
     }
 
