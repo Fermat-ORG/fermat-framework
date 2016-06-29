@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -125,6 +127,8 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
             throws CantCreateAddressException;
 
     GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
+
+    Location getLocation() throws CantGetDeviceLocationException;
 
     List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException;
 
