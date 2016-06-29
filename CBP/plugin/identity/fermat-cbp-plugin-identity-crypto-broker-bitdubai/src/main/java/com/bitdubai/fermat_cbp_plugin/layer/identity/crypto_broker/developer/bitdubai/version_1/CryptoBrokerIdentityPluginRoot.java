@@ -151,8 +151,10 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
         try {
             CryptoBrokerIdentity broker = cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey);
             Location location = locationManager.getLocation();
+            long refreshInterval = 0;
+            refreshInterval = broker.getFrequency().getRefreshInterval();
             if( broker.isPublished() ){
-                cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile, location));
+                cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile, location, refreshInterval, accuracy));
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_broker_editado");
             }
         } catch (CantGetIdentityException e) {
@@ -248,15 +250,20 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     private void exposeIdentities() throws CantExposeActorIdentitiesException {
         try {
             Location location = locationManager.getLocation();
+            long refreshInterval = 0;
+
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
             for (final CryptoBrokerIdentity identity : listIdentitiesFromCurrentDeviceUser()) {
+                refreshInterval = identity.getFrequency().getRefreshInterval();
                 if (identity.isPublished()) {
                     cryptoBrokerExposingDataList.add(
                         new CryptoBrokerExposingData(
                             identity.getPublicKey()   ,
                             identity.getAlias()       ,
                             identity.getProfileImage(),
-                            location
+                            location,
+                            refreshInterval,
+                            identity.getAccuracy()
                         )
                     );
                 }
@@ -276,7 +283,9 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     private void exposeIdentity(final CryptoBrokerIdentity identity) throws CantExposeActorIdentityException {
         try {
             Location location = locationManager.getLocation();
-            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location));
+            long refreshInterval = 0;
+            refreshInterval = identity.getFrequency().getRefreshInterval();
+            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy()));
         } catch (final CantExposeIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");

@@ -173,8 +173,9 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
         try {
             CryptoCustomerIdentity customer = cryptoCustomerIdentityDatabaseDao.getIdentity(publicKey);
             Location location = locationManager.getLocation();
+            long refreshInterval = customer.getFrequency().getRefreshInterval();
             if( customer.isPublished() ){
-                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location));
+                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location, refreshInterval, customer.getAccuracy()));
             }
         } catch (CantGetIdentityException e) {
 
@@ -261,13 +262,16 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
             for (final CryptoCustomerIdentity identity : listAllCryptoCustomerFromCurrentDeviceUser()) {
 
+                long refreshInterval = identity.getFrequency().getRefreshInterval();
                 if (identity.isPublished()) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoCustomerExposingData(
                                     identity.getPublicKey()   ,
                                     identity.getAlias()       ,
                                     identity.getProfileImage(),
-                                    location
+                                    location,
+                                    refreshInterval,
+                                    identity.getAccuracy()
                             )
                     );
                 }
@@ -292,7 +296,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
         try {
             Location location = locationManager.getLocation();
-            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location));
+            long refreshInterval = identity.getFrequency().getRefreshInterval();
+            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy()));
 
         } catch (final CantExposeIdentityException e) {
 

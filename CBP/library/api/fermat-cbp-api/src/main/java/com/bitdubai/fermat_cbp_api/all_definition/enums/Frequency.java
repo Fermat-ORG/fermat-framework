@@ -8,25 +8,28 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Frequency implements FermatEnum {
     /**
-     * Definition types frequency
+     * Definition types frecuency
      */
-    LOW    ("LO"),
-    NORMAL ("NL"),
-    HIGH   ("HI"),
-    NONE   ("NN");
+    LOW    ("LO", 1000),
+    NORMAL ("NL", 2000),
+    HIGH   ("HI", 3000),
+    NONE   ("NN", 0);
 
     /**
      * Represent the code of the message status
      */
     private final String code;
 
+    private final int refreshInterval;
+
     /**
      * Constructor whit parameter
      *
      * @param code the valid code
      */
-    Frequency(String code) {
+    Frequency(String code, int refreshInterval) {
         this.code = code;
+        this.refreshInterval = refreshInterval;
     }
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
@@ -48,15 +51,27 @@ public enum Frequency implements FermatEnum {
     public static Frequency getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "LO":return LOW;
-            case "NL":return NORMAL;
-            case "HI":return HIGH;
-            case "NN":return NONE;
+            case "LO":
+                return Frequency.LOW;
+            case "NL":
+                return Frequency.NORMAL;
+            case "HI":
+                return Frequency.HIGH;
+            case "NN":
+                return Frequency.NONE;
         }
 
         /**
          * If we try to convert am invalid string.
          */
         throw new InvalidParameterException(code);
+    }
+
+    /**
+     * This method returns the  pre-defined refresh interval
+     * @return
+     */
+    public int getRefreshInterval(){
+        return this.refreshInterval;
     }
 }
