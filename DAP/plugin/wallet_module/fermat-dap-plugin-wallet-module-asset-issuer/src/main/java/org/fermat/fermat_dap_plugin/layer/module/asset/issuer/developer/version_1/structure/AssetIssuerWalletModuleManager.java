@@ -59,6 +59,7 @@ import org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.version_
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -448,6 +449,19 @@ public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssue
     }
 
     @Override
+    public Date assetLastTransaction(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException {
+        try {
+            return assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey, selectedNetwork).assetLastTransaction(assetPublicKey);
+        } catch (CantLoadWalletException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantLoadWalletException("Error load Wallet", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
+        } catch (CantGetTransactionsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantGetTransactionsException("Error loading transactions for display in wallet", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
+        }
+    }
+
+    @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             List<IdentityAssetIssuer> identities = this.getActiveIdentities();
@@ -461,7 +475,11 @@ public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssue
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
+        identityAssetIssuerManager.createNewIdentityAssetIssuer(
+                name,
+                profile_img,
+                identityAssetIssuerManager.getAccuracyDataDefault(),
+                identityAssetIssuerManager.getFrequencyDataDefault());
     }
 
     @Override

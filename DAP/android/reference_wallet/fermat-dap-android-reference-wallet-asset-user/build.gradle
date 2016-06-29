@@ -44,7 +44,6 @@ android {
 
 dependencies {
     compile project(':fermat-android-api')
-    compile project(':fermat-api')
     compile project(':fermat-dap-api')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])

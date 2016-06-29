@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
@@ -17,12 +18,18 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
     private final Actors actorType;
     private final String alias;
     private final byte[] image;
+    private long   accuracy;
+    private Frequency frequency;
 
-    CryptoBrokerCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image){
+    CryptoBrokerCommunitySelectableIdentityImpl(String publicKey, Actors actorType,
+                                                String alias, byte[] image,
+                                                long accuracy, Frequency frequency){
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
         this.image = image;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
     }
 
     CryptoBrokerCommunitySelectableIdentityImpl(final CryptoBrokerIdentity cryptoBrokerIdentity) {
@@ -31,6 +38,8 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
         this.publicKey = cryptoBrokerIdentity.getPublicKey()   ;
         this.actorType = Actors.CBP_CRYPTO_BROKER              ;
         this.image     = cryptoBrokerIdentity.getProfileImage();
+        this.accuracy = cryptoBrokerIdentity.getAccuracy();
+        this.frequency = cryptoBrokerIdentity.getFrequency();
     }
 
     CryptoBrokerCommunitySelectableIdentityImpl(final CryptoCustomerIdentity cryptoCustomerIdentity) {
@@ -39,6 +48,8 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
         this.publicKey = cryptoCustomerIdentity.getPublicKey()   ;
         this.actorType = Actors.CBP_CRYPTO_CUSTOMER              ;
         this.image     = cryptoCustomerIdentity.getProfileImage();
+        this.accuracy = cryptoCustomerIdentity.getAccuracy();
+        this.frequency = cryptoCustomerIdentity.getFrequency();
     }
 
     @Override
@@ -64,6 +75,14 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
         return this.image;
     }
 
+    public long getAccuracy() {
+        return accuracy;
+    }
+
+    public Frequency getFrequency() {
+        return frequency;
+    }
+
     @Override
     public String toString() {
         return "CryptoBrokerCommunitySelectableIdentityImpl{" +
@@ -71,6 +90,8 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
                 ", actorType=" + actorType +
                 ", alias='" + alias + '\'' +
                 ", image=" + (image != null) +
+                ", accuracy=" + accuracy +
+                ", frequency='" + (frequency != null) +
                 '}';
     }
 }

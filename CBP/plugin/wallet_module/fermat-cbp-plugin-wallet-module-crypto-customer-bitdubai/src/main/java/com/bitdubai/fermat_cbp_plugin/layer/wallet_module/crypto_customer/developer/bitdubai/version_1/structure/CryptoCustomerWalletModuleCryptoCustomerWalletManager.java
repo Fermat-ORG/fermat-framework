@@ -1326,7 +1326,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         final Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
 
         for (Clause item : negotiationClause) {
-            final ClauseInformation clauseInfo = new CryptoCustomerWalletModuleClauseInformation(item.getType(), item.getValue(), ClauseStatus.DRAFT);
+            final ClauseInformation clauseInfo = new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation(item.getType(), item.getValue(), ClauseStatus.DRAFT);
             clauses.put(item.getType(), clauseInfo);
         }
 

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -65,10 +66,12 @@ public class ConnectionsTabFragment
     private ErrorManager errorManager;
 
     private ArrayList<CryptoBrokerCommunityInformation> connectedActorList = new ArrayList<>();
+    private int offset;
 
     private ConnectionsListAdapter adapter;
-    ImageView noContacts;
-    private int offset;
+    private PresentationDialog helpDialog;
+    private ImageView noContacts;
+
 
     public static ConnectionsTabFragment newInstance() {
         return new ConnectionsTabFragment();
@@ -81,19 +84,14 @@ public class ConnectionsTabFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            setHasOptionsMenu(true);
 
-            //Get managers
-            moduleManager = appSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
-            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+        moduleManager = appSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-            loadingSettings();
+        loadSettings();
 
-        } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
-        }
+        onRefresh();
     }
 
     @Override
@@ -127,7 +125,7 @@ public class ConnectionsTabFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.cbc_fragment_conections_tab;
+        return R.layout.cbc_fragment_connections_tab;
     }
 
     @Override
@@ -197,8 +195,27 @@ public class ConnectionsTabFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //TODO: colocar aqui el codigo para mostrar el help dialog y el SearchView
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                if (helpDialog == null)
+                    helpDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.banner_crypto_broker)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
+                            .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                            .setIsCheckEnabled(true)
+                            .build();
+
+                helpDialog.show();
+                return true;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el SearchView
+                return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -296,7 +313,7 @@ public class ConnectionsTabFragment
     /**
      * Obtain Settings or create new Settings if first time opening subApp
      */
-    private void loadingSettings() {
+    private void loadSettings() {
         CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -338,7 +355,7 @@ public class ConnectionsTabFragment
     /**
      * Update the actor information and notify the adapter to show the updated info
      *
-     * @param position         the actor's position in the adapter
+     * @param position the actor's position in the adapter
      */
     private void updateSelectedActorInList(int position) {
         if (appSession.getData(FragmentsCommons.CONNECTION_RESULT) == null)

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ccc_background_tabs">
+
+    <ImageView
+        android:id="@+id/ccc_no_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ccc_no_notifications"
+        android:visibility="gone"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ccc_request_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingEnd="19dp"
+            android:paddingLeft="19dp"
+            android:paddingRight="19dp"
+            android:paddingStart="19dp"
+            android:visibility="visible"
+            tools:listitem="@layout/ccc_fragment_requests_tab_item"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</FrameLayout>

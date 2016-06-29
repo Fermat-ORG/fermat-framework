@@ -32,7 +32,7 @@
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/wallet_1"
+                android:src="@drawable/ic_profile_male"
                 android:textColor="@color/black_overlay"
                 android:textSize="13sp"
                 android:textStyle="bold"

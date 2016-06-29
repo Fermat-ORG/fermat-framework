@@ -38,7 +38,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:alpha="0.5"
-            android:background="@color/color_black"
+            android:background="@color/black"
             android:clickable="false">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

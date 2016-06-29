@@ -144,7 +144,7 @@ public class CryptoBrokerCommunityManager
             worldBroker = worldBrokerList.get(i);
             for (CryptoBrokerActorConnection connectedBroker : actorConnections) {
                 if (worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
+                    worldBrokerList.set(i, new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
             }
         }
         return worldBrokerList;
@@ -379,7 +379,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbac));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -415,7 +415,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbac));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -450,7 +450,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(cbac));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -576,12 +576,16 @@ public class CryptoBrokerCommunityManager
                 if (lastSelectedActorType == Actors.CBP_CRYPTO_BROKER) {
                     for (CryptoBrokerIdentity i : brokerIdentitiesInDevice) {
                         if (i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
+                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(),
+                                    Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage(),
+                                    i.getAccuracy(), i.getFrequency());
                     }
                 } else if (lastSelectedActorType == Actors.CBP_CRYPTO_CUSTOMER) {
                     for (CryptoCustomerIdentity i : customerIdentitiesInDevice) {
                         if (i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, i.getAlias(), i.getProfileImage());
+                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(),
+                                    Actors.CBP_CRYPTO_CUSTOMER, i.getAlias(), i.getProfileImage(),
+                                    i.getAccuracy(), i.getFrequency());
                     }
                 }
 

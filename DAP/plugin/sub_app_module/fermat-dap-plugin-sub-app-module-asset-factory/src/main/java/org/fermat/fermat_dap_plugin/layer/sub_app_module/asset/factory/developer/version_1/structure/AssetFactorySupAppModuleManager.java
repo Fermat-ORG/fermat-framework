@@ -171,7 +171,14 @@ public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFact
     }
 
     public List<AssetFactory> getAssetsFactoryByState(State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
+        try{
         return assetFactoryManager.getAssetFactoryByState(state, networkType);
+        }
+        catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public List<AssetFactory> getAssetsFactoryAll(BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
@@ -222,7 +229,11 @@ public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFact
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
+        identityAssetIssuerManager.createNewIdentityAssetIssuer(
+                name,
+                profile_img,
+                identityAssetIssuerManager.getAccuracyDataDefault(),
+                identityAssetIssuerManager.getFrequencyDataDefault());
     }
 
     @Override
