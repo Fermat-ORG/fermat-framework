@@ -50,7 +50,8 @@ import java.util.List;
 /**
  * Created by roy on 11/06/16.
  */
-public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     //ATTRIBUTES
     private EditText searchInput;
