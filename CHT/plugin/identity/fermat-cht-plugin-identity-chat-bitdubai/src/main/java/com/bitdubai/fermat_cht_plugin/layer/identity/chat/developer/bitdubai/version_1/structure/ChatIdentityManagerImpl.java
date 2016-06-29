@@ -195,7 +195,12 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     private void registerIdentitiesANS(String publicKey, boolean isIdentityNew, Location location) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
-            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity(),chatIdentity.getConnectionState(), location);
+            long refreshInterval = 0;
+            if (chatIdentity.getFrecuency() == Frecuency.HIGH) refreshInterval = 1000;
+            if (chatIdentity.getFrecuency() == Frecuency.LOW) refreshInterval = 2000;
+            if (chatIdentity.getFrecuency() == Frecuency.NORMAL) refreshInterval = 3000;
+            if (chatIdentity.getFrecuency() == Frecuency.NONE) refreshInterval = 0;
+            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity(),chatIdentity.getConnectionState(), location, refreshInterval, chatIdentity.getAccuracy());
             chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
 
             if (isIdentityNew)
