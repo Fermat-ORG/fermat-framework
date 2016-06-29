@@ -19,40 +19,77 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.4"
                     android:orientation="vertical"
                     android:background="#000000"
-                    android:gravity="center_horizontal|center_vertical">
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_alignParentTop="true">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txt_type_balance"
+                            android:text="@string/available_balance_text"
+                            android:textSize="16sp"
+                            android:textColor="#2FAEDC"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="center_horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/txt_balance_amount"
+                                android:textColor="#fff"
+                                android:textSize="36sp"
+                                android:text="000.00"
+                                android:gravity="center_horizontal" android:layout_marginRight="10dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/txt_type_balance_amount"
+                                android:text="FRMT"
+                                android:textSize="16sp"
+                                android:textColor="#2FAEDC"
+                                android:layout_marginLeft="5dp"
+                                android:layout_gravity="center_vertical"/>
+
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+
+
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/txt_type_balance_amount"
-                        android:text="FMTS"
+                        android:id="@+id/txt_date_time"
+                        android:text="00:00 A | Month 00, 0000 "
                         android:textSize="16sp"
-                        android:textColor="#787878"
-                        android:layout_marginLeft="5dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/txt_balance_amount"
                         android:textColor="#2FAEDC"
-                        android:textSize="36sp"
-                        android:text="0.00"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/txt_type_balance"
-                        android:text="@string/available_balance_text"
-                        android:textSize="16sp"
-                        android:textColor="#787878"/>
+                        android:layout_marginLeft="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true" />
 
 
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -70,16 +107,7 @@
                         android:orientation="vertical"
                         android:background="@drawable/background_white_gradient">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/txt_date_time"
-                            android:text="00:00 A | Month 00, 0000 "
-                            android:textSize="16sp"
-                            android:textColor="#2FAEDC"
-                            android:layout_marginLeft="5dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"/>
+
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -87,7 +115,7 @@
                             android:id="@+id/txt_rate_amount"
                             android:textColor="#787878"
                             android:textSize="36sp"
-                            android:text="0.00"
+                            android:text="000.00"
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"/>
 
@@ -96,15 +124,15 @@
                             android:layout_height="wrap_content"
                             android:text="Current Rate"
                             android:textSize="16sp"
-                            android:textColor="#2FAEDC"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"/>
+                            android:textColor="@color/wallet_factory_orange"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"/>
 
 
                         <Spinner
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true">
                         </Spinner>

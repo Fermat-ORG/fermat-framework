@@ -7,6 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_identity.fragments.CreateIntraUserIdentityFragment;
+import com.bitdubai.sub_app.intra_user_identity.fragments.GeolocationIntraUserIdentityFragment;
 import com.bitdubai.sub_app.intra_user_identity.fragments.IntraUserIdentityListFragment;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSessionReferenceApp;
 
@@ -26,6 +27,9 @@ public class IntraUserIdentityFragmentFactory extends FermatFragmentFactory<Intr
 
         if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT))
             return CreateIntraUserIdentityFragment.newInstance();
+
+        if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY))
+            return GeolocationIntraUserIdentityFragment.newInstance();
 
 
         throw createFragmentNotFoundException(fragments);

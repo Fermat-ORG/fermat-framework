@@ -346,9 +346,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, LossProtectedWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.loos_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //inflater.inflate(R.menu.home_menu, menu);
+
     }
 
     @Override
