@@ -209,6 +209,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
             toolbar = getToolbar();
             toolbar.setTitle("Crypto wallet users");
+
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
@@ -478,13 +479,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         try {
             int id = item.getItemId();
 
-            if (id == 1)
+            if (id == 3)
                 showDialogHelp();
 
            // if (id == 2)
                 //showDialogHelp();
 
-            if (id == 3)
+            if (id == 1)
                 searchIntraUsers();
 
         } catch (Exception e) {
@@ -511,7 +512,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                   //  menu.findItem(R.id.action_search).setVisible(true);
                     toolbar = getToolbar();
                     toolbar.removeView(searchView);
-                    toolbar.setTitle("Cripto wallet users");
+                    toolbar.setTitle("Crypto wallet users");
                     onRefresh();
                 }
             });
@@ -583,7 +584,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                        // menu.findItem(R.id.action_search).setVisible(true);
                         toolbar = getToolbar();
                         toolbar.removeView(searchView);
-                        toolbar.setTitle("Cripto wallet users");
+                        toolbar.setTitle("Crypto wallet users");
                         onRefresh();
                     }
                 }

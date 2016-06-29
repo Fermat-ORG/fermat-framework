@@ -24,11 +24,11 @@
 
 package antistatic.spinnerwheel;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.view.View;
 import android.widget.LinearLayout;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Recycle stored spinnerwheel items to reuse.
