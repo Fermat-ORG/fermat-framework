@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
@@ -51,8 +52,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.b
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerIdentityDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantListCryptoCustomerIdentitiesException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -67,28 +66,23 @@ import java.util.List;
 @PluginInfo(createdBy = "yalayn", maintainerMail = "y.alayn@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_CUSTOMER_IDENTITY)
 public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements CryptoCustomerIdentityManager, DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
-    private DeviceUserManager deviceUserManager;
+    DeviceUserManager deviceUserManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
-    private LocationManager locationManager;
+    LocationManager locationManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
+    PluginFileSystem pluginFileSystem;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM  , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER         )
-    private CryptoCustomerManager cryptoCustomerANSManager;
+    CryptoCustomerManager cryptoCustomerANSManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    private Broadcaster broadcaster;
-
-    private CryptoCustomerIdentityManager cryptoCustomerIdentityManagerImpl;
+    Broadcaster broadcaster;
 
 
     public CryptoCustomerIdentityPluginRoot() {
@@ -165,9 +159,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
     }
 
     @Override
-    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
-                                             long accuracy,
-                                             Frequency frequency) throws CantUpdateCustomerIdentityException {
+    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile, long accuracy, Frequency frequency) throws CantUpdateCustomerIdentityException {
         cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile, accuracy, frequency);
 
         try {
@@ -178,22 +170,20 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
                 cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location, refreshInterval, customer.getAccuracy()));
             }
         } catch (CantGetIdentityException e) {
-
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerIdentityException("CAN'T GET CRYPTO CUSTOMER IDENTITY", FermatException.wrapException(e), "", "");
 
         } catch (IdentityNotFoundException e) {
-
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerIdentityException("CRYPTO CUSTOMER IDENTITY NOT FOUND", FermatException.wrapException(e), "", "");
 
         } catch (CantExposeIdentityException e) {
-
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerIdentityException("CAN'T EXPOSE CRYPTO CUSTOMER IDENTITY", FermatException.wrapException(e), "", "");
 
         } catch (CantGetDeviceLocationException e) {
-            e.printStackTrace();
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerIdentityException("CAN'T GET THE DEVICE LOCATION", FermatException.wrapException(e), "", "");
         }
     }
 

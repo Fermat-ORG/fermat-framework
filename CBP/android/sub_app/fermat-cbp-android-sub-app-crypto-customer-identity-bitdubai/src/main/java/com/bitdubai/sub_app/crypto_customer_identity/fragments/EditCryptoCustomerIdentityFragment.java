@@ -1,10 +1,12 @@
 package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,6 +14,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
@@ -109,6 +113,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             appSession.removeData(FragmentsCommons.CUSTOMER_NAME);
         }
 
+        turnGPSOn();
     }
 
     @Override
@@ -333,5 +338,70 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private Frequency getFrequencyData() {
         return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
                 (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    }
+
+    public void turnGPSOn() {
+        final Activity activity = getActivity();
+
+        try {
+            if (!checkGPSFineLocation() || !checkGPSCoarseLocation()) { //if gps is disabled
+                if (Build.VERSION.SDK_INT < 23) {
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
+                } else {
+                    if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+                    if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        activity.requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
+                }
+            }
+        } catch (Exception e) {
+            try {
+                Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+                intent.putExtra("enabled", true);
+
+                if (Build.VERSION.SDK_INT < 23) {
+                    String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                    if (!provider.contains("gps")) { //if gps is disabled
+                        Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+
+                } else {
+                    String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                    if (!provider.contains("gps")) { //if gps is disabled
+                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+                }
+
+            } catch (Exception ex) {
+                if (Build.VERSION.SDK_INT < 23) {
+                    Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private boolean checkGPSCoarseLocation() {
+        String permission = "android.permission.ACCESS_COARSE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean checkGPSFineLocation() {
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }

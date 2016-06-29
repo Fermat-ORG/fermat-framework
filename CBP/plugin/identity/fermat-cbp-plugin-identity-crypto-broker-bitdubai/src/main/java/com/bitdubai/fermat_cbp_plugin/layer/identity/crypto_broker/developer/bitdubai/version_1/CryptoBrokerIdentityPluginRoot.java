@@ -143,16 +143,13 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     }
 
     @Override
-    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile,
-                                           long accuracy,
-                                           Frequency frequency) throws CantUpdateBrokerIdentityException {
+    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile, long accuracy, Frequency frequency) throws CantUpdateBrokerIdentityException {
         this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(alias, publicKey, imageProfile, accuracy, frequency);
 
         try {
             CryptoBrokerIdentity broker = cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey);
             Location location = locationManager.getLocation();
-            long refreshInterval = 0;
-            refreshInterval = broker.getFrequency().getRefreshInterval();
+            long refreshInterval = broker.getFrequency().getRefreshInterval();
             if( broker.isPublished() ){
                 cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile, location, refreshInterval, accuracy));
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_broker_editado");
