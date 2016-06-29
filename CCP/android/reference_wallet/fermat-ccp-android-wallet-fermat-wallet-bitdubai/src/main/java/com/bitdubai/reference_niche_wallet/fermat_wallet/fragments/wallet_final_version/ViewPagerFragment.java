@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import antistatic.spinnerwheel.AbstractWheel;
+
 /**
  * Created by root on 28/06/16.
  */
@@ -89,6 +91,8 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_pager, container, false);
         tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+
+        AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
 
         try {
             getAndShowMarketExchangeRateData(container);

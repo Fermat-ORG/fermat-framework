@@ -40,6 +40,7 @@ dependencies {
     compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
     compile project(':fermat_preference_settings')
+    compile project(':spinner_wheel')
 
     compile project(':fermat_navigator_drawer')
 
