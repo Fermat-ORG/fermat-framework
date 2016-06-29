@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -30,6 +29,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.deve
 
 import java.util.List;
 
+
 /**
  * Created by memo on 25/11/15.
  */
@@ -39,11 +39,8 @@ public class WithdrawBankMoneyTransactionPluginRoot extends AbstractPlugin imple
     @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET)
     BankMoneyWalletManager bankMoneyWalletManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    PluginDatabaseSystem pluginDatabaseSystem;
 
 
     WithdrawBankMoneyTransactionManager withdrawBankMoneyTransactionManager;
@@ -61,9 +58,9 @@ public class WithdrawBankMoneyTransactionPluginRoot extends AbstractPlugin imple
     public void start() throws CantStartPluginException {
         System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION");
         try {
-            this.withdrawBankMoneyTransactionManager = new WithdrawBankMoneyTransactionManager(pluginId,pluginDatabaseSystem,errorManager, bankMoneyWalletManager);
-        }catch (CantStartPluginException innerException){
-            throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Withdraw Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
+            this.withdrawBankMoneyTransactionManager = new WithdrawBankMoneyTransactionManager(pluginId, pluginDatabaseSystem, this, bankMoneyWalletManager);
+        } catch (CantStartPluginException innerException) {
+            throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Withdraw Bank Transaction  plugin - " + this.pluginId, "Cannot open or create the plugin database");
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -93,9 +90,9 @@ public class WithdrawBankMoneyTransactionPluginRoot extends AbstractPlugin imple
         try {
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch(CantInitializeWithdrawBankMoneyTransactionDatabaseException cantInitializeException) {
+        } catch (CantInitializeWithdrawBankMoneyTransactionDatabaseException cantInitializeException) {
             FermatException e = new CantInitializeWithdrawBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "WithdrawBankMoneyTransactionPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

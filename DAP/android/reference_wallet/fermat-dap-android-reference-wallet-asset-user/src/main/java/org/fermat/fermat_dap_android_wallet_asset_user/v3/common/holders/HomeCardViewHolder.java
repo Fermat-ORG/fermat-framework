@@ -81,8 +81,8 @@ public class HomeCardViewHolder extends FermatViewHolder {
         negotiationV3Asset = itemView.findViewById(R.id.negotiationV3Asset);
         negotiationAssetName = (FermatTextView) itemView.findViewById(R.id.negotiationAssetName);
         v3NegotiationAssetPrice = (FermatTextView) itemView.findViewById(R.id.v3NegotiationAssetPrice);
-        acceptNegotiationButton =  itemView.findViewById(R.id.v3AcceptNegotiationButton);
-        rejectNegotiationButton =  itemView.findViewById(R.id.v3RejectNegotiationButton);
+        acceptNegotiationButton = itemView.findViewById(R.id.v3AcceptNegotiationButton);
+        rejectNegotiationButton = itemView.findViewById(R.id.v3RejectNegotiationButton);
     }
 
     public void bind(final Asset asset, View.OnClickListener onClickListenerRedeem,
@@ -107,7 +107,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
         bitmapWorkerTask.execute(img);
 
 //  if negotiation
-        if(asset.getAssetUserNegotiation() != null){
+        if (asset.getAssetUserNegotiation() != null) {
 
             homeIssuerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
             cardActorName.setText(asset.getActorName());
@@ -122,7 +122,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
             rejectNegotiationButton.setOnClickListener(onClickListenerRejectNegotiation);
 
 
-        }else {
+        } else {
 
             int image = (asset.getStatus().equals(Asset.Status.CONFIRMED)) ? R.drawable.detail_check : R.drawable.detail_uncheck;
             cardConfirmedImage.setImageResource(image);
@@ -136,7 +136,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
         }
 
         int imageLocked = R.drawable.locked;
-        if (asset.getAssetUserWalletTransaction().isLocked()){
+        if (asset.getAssetUserWalletTransaction().isLocked()) {
             cardConfirmedImage.setImageResource(imageLocked);
             cardConfirmedText.setText(res.getString(R.string.card_locked));
             cardRedeemButton.setVisibility(View.GONE);
@@ -144,6 +144,10 @@ public class HomeCardViewHolder extends FermatViewHolder {
             cardAppropriateButton.setVisibility(View.GONE);
             cardSellButton.setVisibility(View.GONE);
         }
+
+        cardRedeemButton.setVisibility((asset.isRedeemable()) ? View.VISIBLE : View.INVISIBLE);
+        cardTransferButton.setVisibility((asset.isTransferable()) ? View.VISIBLE : View.INVISIBLE);
+        cardSellButton.setVisibility((asset.isSaleable()) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void initActions(Asset asset, View.OnClickListener onClickListenerRedeem,

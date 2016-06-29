@@ -4,12 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 
+import java.io.Serializable;
+
 /**
  * Created by mati on 2015.07.03..
  */
-public class Loggers {
+public class Loggers implements Serializable {
 
-    public static final int TYPE_PLUGIN=1;
+    public static final int TYPE_PLUGIN = 1;
 
     public String picture;
 

@@ -1,7 +1,7 @@
 /*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import BitcoinWalletManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -28,7 +28,7 @@ public class ConstructionTest {
     @Mock
     private ErrorManager mockErrorManager;
     @Mock
-    private BitcoinWalletManager mockBitcoinWalletManager;
+    private CryptoWalletManager mockBitcoinWalletManager;
     @Mock
     private IncomingExtraUserRegistry mockRegistry;
     @Mock

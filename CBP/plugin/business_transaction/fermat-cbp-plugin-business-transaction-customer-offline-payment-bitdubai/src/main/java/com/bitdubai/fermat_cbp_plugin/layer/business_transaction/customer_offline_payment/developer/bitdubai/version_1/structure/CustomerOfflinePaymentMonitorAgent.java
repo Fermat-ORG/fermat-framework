@@ -56,11 +56,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.Collection;
 import java.util.Date;
@@ -75,7 +73,6 @@ public class CustomerOfflinePaymentMonitorAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
@@ -84,7 +81,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
     Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
+    CustomerOfflinePaymentPluginRoot pluginRoot;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     TransactionTransmissionManager transactionTransmissionManager;
@@ -95,7 +92,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
     public CustomerOfflinePaymentMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
             LogManager logManager,
-            ErrorManager errorManager,
+            CustomerOfflinePaymentPluginRoot pluginRoot,
             EventManager eventManager,
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
@@ -104,7 +101,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
 
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
@@ -116,18 +113,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        monitorAgent = new MonitorAgent();
+        monitorAgent = new MonitorAgent(pluginRoot);
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
             this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
@@ -141,16 +137,11 @@ public class CustomerOfflinePaymentMonitorAgent implements
         try {
             this.agentThread.interrupt();
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
     }
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
 
     @Override
     public void setEventManager(EventManager eventManager) {
@@ -177,18 +168,17 @@ public class CustomerOfflinePaymentMonitorAgent implements
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable {
 
-        ErrorManager errorManager;
+        CustomerOfflinePaymentPluginRoot pluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
         CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
         boolean threadWorking;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public MonitorAgent(CustomerOfflinePaymentPluginRoot pluginRoot) {
+         this.pluginRoot = pluginRoot;   
         }
 
         @Override
@@ -218,8 +208,7 @@ public class CustomerOfflinePaymentMonitorAgent implements
                     doTheMainTask();
 
                 } catch (FermatException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }
@@ -233,20 +222,18 @@ public class CustomerOfflinePaymentMonitorAgent implements
                     database = factory.createDatabase(pluginId, CustomerOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
                 } catch (CantCreateDatabaseException exception) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                     throw new CantInitializeCBPAgent(exception, "Initialize Monitor Agent - trying to create the plugin database", "Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantInitializeCBPAgent(exception, "Initialize Monitor Agent - trying to open the plugin database", "Please, check the cause");
             }
         }
 
         private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException, CantSendContractNewStatusNotificationException {
             try {
-                customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+                customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
                 String contractHash;
 
                 // Check contract status to send.

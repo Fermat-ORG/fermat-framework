@@ -15,20 +15,20 @@
     <string name="paying_text">Paying: </string>
     <string name="buy_text_and_price">Buy: %1$s</string>
 
-    <string name="ccw_account_alias">Account Alias</string>
-    <string name="ccw_account_number">Account Number</string>
+    <string name="ccw_account_alias">Enter an account alias</string>
+    <string name="ccw_account_number">Enter an account number</string>
     <string name="ccw_action_filter">Filter</string>
     <string name="ccw_add_bank_account">+ Add Bank Account</string>
     <string name="ccw_add_location_warning_msg">Need to Add at least ONE Location</string>
     <string name="ccw_automatic_restock">Automatic Restock</string>
-    <string name="ccw_address_line_1">Address line 1</string>
-    <string name="ccw_address_line_2">Address line 2</string>
+    <string name="ccw_address_line_1">Enter an address</string>
+    <string name="ccw_address_line_2">Enter an address</string>
     <string name="ccw_add_location">+ Add a Location</string>
     <string name="ccw_add_your_bank_accounts">Add Your Bank Accounts</string>
     <string name="ccw_amount_to_buy">Amount to Buy</string>
     <string name="ccw_amount_title">Amount: </string>
     <string name="ccw_bank">Bank</string>
-    <string name="ccw_bank_name">Bank Name</string>
+    <string name="ccw_bank_name">Enter a bank name</string>
     <string name="ccw_bank_account_customer">Customer\'s Bank Account</string>
     <string name="ccw_bank_account_broker">Broker\'s Bank Account</string>
     <string name="ccw_bank_account_title">Bank Account:</string>
@@ -44,7 +44,7 @@
     <string name="ccw_date_to_delivery_broker">Broker\'s Delivery Date</string>
     <string name="ccw_date_to_delivery_customer">Customer\'s Delivery Date</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
-    <string name="ccw_city">City</string>
+    <string name="ccw_city">Enter a City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>
     <string name="ccw_contract_details_last_update_date">At Date: %1$s</string>
     <string name="ccw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
@@ -79,7 +79,7 @@
     <string name="ccw_no_selected_wallets">No Selected Wallets</string>
     <string name="ccw_open_negotiation_details_cancel_negotiation_menu_text">Cancel Negotiation</string>
     <string name="ccw_price">Price</string>
-    <string name="ccw_providers">Providers</string>
+    <string name="ccw_providers">Add Provider</string>
     <string name="ccw_save">Save</string>
     <string name="ccw_select_identity_warning_msg">Need to Select an Identity</string>
     <string name="ccw_selling_details">Selling %1$s %2$s</string>
@@ -93,7 +93,7 @@
     <string name="ccw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="ccw_settings_locations_title">Manage Your Locations</string>
     <string name="ccw_start_selling_details">Selling %1$s</string>
-    <string name="ccw_state_province">State/Province</string>
+    <string name="ccw_state_province">Enter a State/Province</string>
     <string name="ccw_unit_number">1</string>
     <string name="ccw_value">Value</string>
     <string name="ccw_wanted_to_buy">Wanted To Buy</string>
@@ -104,7 +104,7 @@
     <string name="ccw_wizard_earning_merchandise_description">You must select a Wallet or Wallets that will work as Merchandise</string>
     <string name="ccw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
     <string name="ccw_wizard_exchange_rate_providers_title">Bitcoin Wallet and Providers</string>
-    <string name="ccw_wizard_exchange_rate_providers_description">Select a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b> for your Wallet.</string>
+    <string name="ccw_wizard_exchange_rate_providers_description">Please, select a <b>Bitcoin Wallet</b></string>
     <string name="ccw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
     <string name="ccw_wizard_bitcoin_wallet_and_providers">Set a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b>.</string>
     <string name="ccw_select_your_bank_account">Your Bank Accounts</string>
@@ -117,7 +117,7 @@
     <string name="ccw_you_bought">You Bought</string>
     <string name="ccw_your_location">Your Locations</string>
     <string name="ccw_your_providers">Your Providers</string>
-    <string name="ccw_zip_postal_code">Zip/Postal Code</string>
+    <string name="ccw_zip_postal_code">Enter a Zip Code</string>
     <string name="contract_cancelled">Cancelled</string>
     <string name="contract_closed">Close</string>
     <string name="customer_locations_title">Customer Locations</string>
@@ -213,4 +213,6 @@
 
     <string name="ccw_insert_note">Insert Note</string>
     <string name="sending_to_the_broker">Sending to the Broker</string>
+    <string name="location">Location</string>
+    <string name="ccw_exchange_rate">EXCHANGE RATE</string>
 </resources>

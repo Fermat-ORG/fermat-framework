@@ -2,33 +2,26 @@ package org.fermat.fermat_dap_plugin.layer.sub_app_module.asset_user_identity.de
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.interfaces.AssetUserIdentityModuleManager;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
- *
  * Created by nerio on 14/5/2016.
  */
-public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<UserIdentitySettings> implements AssetUserIdentityModuleManager, Serializable {
+public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<UserIdentitySettings> implements AssetUserIdentityModuleManager {
 
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
@@ -38,8 +31,8 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
         super(pluginFileSystem, pluginId);
 
         this.identityAssetUserManager = identityAssetUserManager;
-        this.pluginFileSystem    = pluginFileSystem;
-        this.pluginId            = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -53,13 +46,13 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
     }
 
     @Override
-    public IdentityAssetUser createNewIdentityAssetUser(String alias,  byte[] profileImage) throws CantCreateNewIdentityAssetUserException {
-        return identityAssetUserManager.createNewIdentityAssetUser(alias, profileImage);
+    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetUserException {
+        return identityAssetUserManager.createNewIdentityAssetUser(alias, profileImage, accuracy, frequency);
     }
 
     @Override
-    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetUserException {
-        identityAssetUserManager.updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetUserException {
+        identityAssetUserManager.updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
     }
 
     @Override
@@ -80,7 +73,10 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetUserManager.createNewIdentityAssetUser(name, profile_img);
+        identityAssetUserManager.createNewIdentityAssetUser(name,
+                profile_img,
+                identityAssetUserManager.getAccuracyDataDefault(),
+                identityAssetUserManager.getFrequencyDataDefault());
     }
 
     @Override
@@ -91,5 +87,15 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public int getAccuracyDataDefault() {
+        return identityAssetUserManager.getAccuracyDataDefault();
+    }
+
+    @Override
+    public Frequency getFrequencyDataDefault() {
+        return identityAssetUserManager.getFrequencyDataDefault();
     }
 }

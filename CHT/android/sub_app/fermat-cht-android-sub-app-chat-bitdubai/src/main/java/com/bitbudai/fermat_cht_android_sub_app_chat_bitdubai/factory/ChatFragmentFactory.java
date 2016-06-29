@@ -3,7 +3,6 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatErrorReportFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatListFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ConnectionsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactEditFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
@@ -12,7 +11,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileLi
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardFirstStepBroadcastFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardScheduledTwoStepBroadcastFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardTwoStepBroadcastFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
@@ -26,7 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @version 1.0
  */
 
-public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubAppResourcesProviderManager, ChatFragmentsEnumType> {
+public class ChatFragmentFactory extends FermatFragmentFactory<ChatSessionReferenceApp, SubAppResourcesProviderManager, ChatFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(ChatFragmentsEnumType fragments) throws FragmentNotFoundException {
@@ -49,11 +48,6 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
             return ChatErrorReportFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT))
-        {
-            return ConnectionsListFragment.newInstance();
-        }
-
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT))
         {
             return ContactsListFragment.newInstance();
@@ -72,11 +66,6 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_EDIT_CONTACT_FRAGMENT))
         {
             return ContactEditFragment.newInstance();
-        }
-
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT))
-        {
-            return ConnectionsListFragment.newInstance();
         }
 
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT))

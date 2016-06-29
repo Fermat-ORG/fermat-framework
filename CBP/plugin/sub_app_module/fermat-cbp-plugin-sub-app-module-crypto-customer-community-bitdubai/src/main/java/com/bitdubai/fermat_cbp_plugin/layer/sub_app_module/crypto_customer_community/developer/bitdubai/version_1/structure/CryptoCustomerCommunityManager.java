@@ -7,13 +7,14 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDeny
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
@@ -24,7 +25,6 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantL
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
@@ -38,11 +38,25 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.CryptoCustomerCommunitySubAppModulePluginRoot;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,25 +71,26 @@ public class CryptoCustomerCommunityManager
     private final CryptoBrokerIdentityManager          cryptoBrokerIdentityManager              ;
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager     ;
     private final CryptoCustomerManager                cryptoCustomerActorNetworkServiceManager ;
-    private final ErrorManager                         errorManager                             ;
-    private final PluginVersionReference               pluginVersionReference                   ;
+
+    private final CryptoCustomerCommunitySubAppModulePluginRoot pluginRoot                      ;
+    private final GeolocationManager                   geolocationManager                       ;
 
     private       String                              subAppPublicKey                           ;
 
-    public CryptoCustomerCommunityManager(final CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
-                                          final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager,
-                                          final CryptoCustomerManager cryptoCustomerActorNetworkServiceManager,
-                                          final ErrorManager errorManager,
-                                          final PluginFileSystem pluginFileSystem,
-                                          final UUID pluginId,
-                                          final PluginVersionReference pluginVersionReference) {
+    public CryptoCustomerCommunityManager(CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
+                                          CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager,
+                                          CryptoCustomerManager cryptoCustomerActorNetworkServiceManager,
+                                          CryptoCustomerCommunitySubAppModulePluginRoot pluginRoot,
+                                          PluginFileSystem pluginFileSystem,
+                                          UUID pluginId,
+                                          final GeolocationManager geolocationManager ) {
         super(pluginFileSystem, pluginId);
 
         this.cryptoBrokerIdentityManager              = cryptoBrokerIdentityManager              ;
         this.cryptoCustomerActorConnectionManager     = cryptoCustomerActorConnectionManager     ;
         this.cryptoCustomerActorNetworkServiceManager = cryptoCustomerActorNetworkServiceManager ;
-        this.errorManager                             = errorManager                             ;
-        this.pluginVersionReference                   = pluginVersionReference                   ;
+        this.pluginRoot                               = pluginRoot                               ;
+        this.geolocationManager                       = geolocationManager                       ;
     }
 
 
@@ -87,9 +102,10 @@ public class CryptoCustomerCommunityManager
         List<CryptoCustomerActorConnection> actorConnections;
 
         try{
-            worldCustomerList = getCryptoCustomerSearch().getResult();
+            worldCustomerList = getCryptoCustomerSearch().getResult(max, offset);
         } catch (CantGetCryptoCustomerSearchResult e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoCustomersException(e, "", "Error in listWorldCryptoCustomers trying to list world customers");
         }
 
@@ -100,10 +116,10 @@ public class CryptoCustomerCommunityManager
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            actorConnections = search.getResult(max, offset);
 
         } catch (final CantListActorConnectionsException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoCustomersException(e, "", "Error trying to list actor connections.");
         }
 
@@ -137,11 +153,11 @@ public class CryptoCustomerCommunityManager
 
         } catch (final CantListCryptoBrokerIdentitiesException e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesToSelectException(e, "", "Error in DAO trying to list identities.");
         } catch (final Exception e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesToSelectException(e, "", "Unhandled Exception.");
         }
     }
@@ -161,7 +177,7 @@ public class CryptoCustomerCommunityManager
             try {
                 persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
@@ -212,15 +228,15 @@ public class CryptoCustomerCommunityManager
 
         } catch (final CantDisconnectFromActorException | UnexpectedConnectionStateException e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CryptoCustomerDisconnectingFailedException("", e, "", "Error trying to disconnect the actor connection.");
         } catch (final ActorConnectionNotFoundException e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CryptoCustomerDisconnectingFailedException("", e, "", "Connection request not found.");
         } catch (final Exception e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CryptoCustomerDisconnectingFailedException("", e, "", "Unhandled Exception.");
         }
     }
@@ -263,11 +279,11 @@ public class CryptoCustomerCommunityManager
 
         } catch (final CantListActorConnectionsException e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoCustomerListException("", e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoCustomerListException("", e, "", "Unhandled Exception.");
         }
     }
@@ -297,11 +313,11 @@ public class CryptoCustomerCommunityManager
 
         } catch (final CantListActorConnectionsException e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoCustomerListException("", e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
 
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoCustomerListException("", e, "", "Unhandled Exception.");
         }
     }
@@ -374,7 +390,7 @@ public class CryptoCustomerCommunityManager
         String createdPublicKey;
 
         try{
-            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
+            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frequency.NONE);
             createdPublicKey = createdIdentity.getPublicKey();
 
             new Thread() {
@@ -383,12 +399,13 @@ public class CryptoCustomerCommunityManager
                     try {
                         cryptoBrokerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
                     } catch(Exception e) {
-                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                        pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
                     }
                 }
             }.start();
         }catch(Exception e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
         }
 
@@ -406,7 +423,7 @@ public class CryptoCustomerCommunityManager
             try {
                 persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
@@ -420,5 +437,45 @@ public class CryptoCustomerCommunityManager
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
+        return geolocationManager.getCountryList();
+    }
+
+    @Override
+    public List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException {
+        return geolocationManager.getCountryDependencies(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException {
+        return geolocationManager.getCitiesByCountryCode(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException {
+        return geolocationManager.getCitiesByCountryCodeAndDependencyName(countryName, dependencyName);
+    }
+
+    @Override
+    public GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
+        return geolocationManager.getGeoRectangleByLocation(location);
+    }
+
+    @Override
+    public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
+        return geolocationManager.getAddressByCoordinate(latitude, longitude);
+    }
+
+    @Override
+    public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
+        return geolocationManager.getRandomGeoLocation();
+    }
+
+    @Override
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
+        return geolocationManager.getExtendedCitiesByFilter(filter);
     }
 }

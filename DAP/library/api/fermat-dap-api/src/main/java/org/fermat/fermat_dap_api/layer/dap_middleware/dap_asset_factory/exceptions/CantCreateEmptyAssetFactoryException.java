@@ -15,6 +15,7 @@ public class CantCreateEmptyAssetFactoryException extends FermatException {
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
     static final String DEFAULT_MESSAGE = "There was an error Create Empty Asset Factory.";
+
     public CantCreateEmptyAssetFactoryException(String message, Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }

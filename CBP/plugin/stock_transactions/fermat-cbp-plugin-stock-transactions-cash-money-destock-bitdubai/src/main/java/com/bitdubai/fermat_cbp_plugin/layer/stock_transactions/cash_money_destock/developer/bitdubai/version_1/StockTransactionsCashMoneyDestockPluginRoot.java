@@ -35,8 +35,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.events.StockTransactionsCashMoneyDestockMonitorAgent;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
 
@@ -59,9 +58,6 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -74,7 +70,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
     @Override
     public void start() throws CantStartPluginException {
-        stockTransactionCashMoneyDestockManager = new StockTransactionCashMoneyDestockManager(pluginDatabaseSystem, pluginId, errorManager);
+        stockTransactionCashMoneyDestockManager = new StockTransactionCashMoneyDestockManager(pluginDatabaseSystem, pluginId, this);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
 
@@ -88,7 +84,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
                 StockTransactionsCashMoneyDestockDatabaseFactory stockTransactionsCashMoneyDestockDatabaseFactory = new StockTransactionsCashMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCashMoneyDestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
             } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException ) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
@@ -127,7 +123,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
             businessTransactionBankMoneyDestockDeveloperFactory.initializeDatabase();
             developerDatabaseTableRecordList = businessTransactionBankMoneyDestockDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeCashMoneyDestockDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
     }
@@ -142,7 +138,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
     private void startMonitorAgent() throws CantStartAgentException {
         if (stockTransactionsCashMoneyDestockMonitorAgent == null) {
             stockTransactionsCashMoneyDestockMonitorAgent = new StockTransactionsCashMoneyDestockMonitorAgent(
-                    errorManager,
+                    this,
                     cryptoBrokerWalletManager,
                     cashUnholdTransactionManager,
                     pluginDatabaseSystem,

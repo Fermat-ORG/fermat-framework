@@ -108,7 +108,6 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-
             table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_FIRST_KEY_COLUMN);
 
             try {
@@ -145,7 +144,6 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-
             table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_FIRST_KEY_COLUMN);
             table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME);
 
@@ -162,8 +160,7 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", "There is a problem with the ownerId of the database.");
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", exception.getMessage());
         }
 

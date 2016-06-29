@@ -9,8 +9,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.ContactIndexStrucs;
 
 import java.util.ArrayList;
@@ -77,8 +77,8 @@ public class IndexBarView extends View {
             String section = null;
             if(object instanceof String){
                 section = (String) listItems.get(secIndex);
-            }else if( object instanceof CryptoWalletWalletContact){
-                section = ((CryptoWalletWalletContact) listItems.get(secIndex)).getActorName();
+            }else if( object instanceof FermatWalletWalletContact){
+                section = ((FermatWalletWalletContact) listItems.get(secIndex)).getActorName();
             }else{
                 section = "algo malo pasó";
             }

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -11,18 +11,26 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
-import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.*;
-import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankAccountNumberImpl;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.WalletBankMoneyPluginRoot;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddBankMoneyException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddCreditException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddDebitException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetAccountsException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetBankMoneyTotalBalanceException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetCurrentBalanceException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyWalletDatabaseException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.classes.BankAccountNumberImpl;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankMoneyTransactionRecordImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +38,7 @@ import java.util.UUID;
 
 /**
  * Created by yordin on 01/10/15.
+ * Modified by abicelis on 17/05/2016
  */
 public class BankMoneyWalletDao {
 
@@ -43,22 +52,13 @@ public class BankMoneyWalletDao {
      */
     Database database;
     UUID pluginId;
-    ErrorManager errorManager;
+    WalletBankMoneyPluginRoot pluginRoot;
     String publicKey;
 
-    public BankMoneyWalletDao(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-
-    public BankMoneyWalletDao(Database database) {
-        this.database = database;
-    }
-
-    public BankMoneyWalletDao(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, String publicKey) {
+    public BankMoneyWalletDao(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, WalletBankMoneyPluginRoot pluginRoot, String publicKey) {
         this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.publicKey = publicKey;
     }
 
@@ -71,22 +71,22 @@ public class BankMoneyWalletDao {
             try {
                 this.database = factory.createDatabase(this.pluginId, this.pluginId.toString());
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, f);
+                pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, f);
                 throw new CantInitializeBankMoneyWalletDatabaseException("Database could not be opened", f, "Database Name: " + pluginId.toString(), "");
             }
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeBankMoneyWalletDatabaseException("Database could not be opened", e, "Database Name: " + pluginId.toString(), "");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeBankMoneyWalletDatabaseException("Database could not be opened", e, "Database Name: " + pluginId.toString(), "");
         }
     }
 
     public void addBankMoneyTransaction(BankMoneyTransactionRecord bankMoneyTransactionRecord,
                                         BalanceType balanceType,
-                                        long runingBookBalance,
-                                        long runingAvalibleBalance
+                                        BigDecimal runingBookBalance,
+                                        BigDecimal runingAvalibleBalance
     ) throws CantAddBankMoneyException {
         try {
             DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
@@ -95,15 +95,15 @@ public class BankMoneyWalletDao {
             record.setUUIDValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME, bankMoneyTransactionRecord.getBankTransactionId());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, bankMoneyTransactionRecord.getTransactionType().getCode());
-            record.setDoubleValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_AMOUNT_COLUMN_NAME, bankMoneyTransactionRecord.getAmount());
+            record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_AMOUNT_COLUMN_NAME, bankMoneyTransactionRecord.getAmount().toPlainString());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_CURRENCY_TYPE_COLUMN_NAME, bankMoneyTransactionRecord.getCurrencyType().getCode());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_OPERATION_TYPE_COLUMN_NAME, bankMoneyTransactionRecord.getBankOperationType().getCode());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_DOCUMENT_REFERENCE_COLUMN_NAME, bankMoneyTransactionRecord.getBankDocumentReference());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN_NAME, bankMoneyTransactionRecord.getBankName());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, bankMoneyTransactionRecord.getBankAccountNumber());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_TYPE_COLUMN_NAME, bankMoneyTransactionRecord.getBankAccountType().getCode());
-            record.setLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME, runingBookBalance);
-            record.setLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, runingAvalibleBalance);
+            record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME, runingBookBalance.toPlainString());
+            record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, runingAvalibleBalance.toPlainString());
             record.setLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TIMESTAMP_COLUMN_NAME, bankMoneyTransactionRecord.getTimestamp());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_MEMO_COLUMN_NAME, bankMoneyTransactionRecord.getMemo());
             record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_STATUS_COLUMN_NAME, bankMoneyTransactionRecord.getStatus().getCode());
@@ -111,15 +111,15 @@ public class BankMoneyWalletDao {
             table.insertRecord(record);
             database.closeDatabase();
         } catch (CantInsertRecordException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddBankMoneyException(CantAddBankMoneyException.DEFAULT_MESSAGE, e, "Cant Add Bank Money Exception", "Cant Insert Record Exception");
         }
     }
 
-    public void updateBalance(String account, float amount, BalanceType balanceType) {
+    public void updateBalance(String account, BigDecimal amount, BalanceType balanceType) {
         try {
-            float bookBalance = 0;
-            float availableBalance = 0;
+            BigDecimal bookBalance;
+            BigDecimal availableBalance;
             DatabaseTableRecord record;
             DatabaseTable table;
             List<DatabaseTableRecord> records;
@@ -128,172 +128,171 @@ public class BankMoneyWalletDao {
             table.loadToMemory();
             records = table.getRecords();
             record = records.get(0);
-            bookBalance = record.getFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME);
-            availableBalance = record.getFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME);
+            bookBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));
+            availableBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME));
             if (BalanceType.BOOK == balanceType) {
-                bookBalance = bookBalance + amount;
+                bookBalance = bookBalance.add(amount);
             }
             if (BalanceType.AVAILABLE == balanceType) {
-                availableBalance = availableBalance + amount;
+                availableBalance = availableBalance.add(amount);
             }
-            record.setFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, bookBalance);
-            record.setFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, availableBalance);
+            record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, bookBalance.toPlainString());
+            record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, availableBalance.toPlainString());
             table.updateRecord(record);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
     public void addDebit(BankMoneyTransactionRecord bankMoneyTransactionRecord, BalanceType balanceType) throws CantAddDebitException {
         try {
-            double availableAmount;
-            double bookAmount;
-            long runningAvailableBalance = 0;
-            long runningBookBalance = 0;
+            BigDecimal availableAmount;
+            BigDecimal bookAmount;
+            BigDecimal runningAvailableBalance;
+            BigDecimal runningBookBalance;
 
             if (balanceType == BalanceType.AVAILABLE) {
                 availableAmount = bankMoneyTransactionRecord.getAmount();
                 runningBookBalance = getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber());
-                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-availableAmount));
+                runningAvailableBalance = (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()).subtract(availableAmount));
+
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
-                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount() * (-1), BalanceType.AVAILABLE);
+                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount().negate(), BalanceType.AVAILABLE);
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
                 runningAvailableBalance = getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber());
-                runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-bookAmount));
+                runningBookBalance = getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()).subtract(bookAmount);
+
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
-                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount() * (-1), BalanceType.BOOK);
+                updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount().negate(), BalanceType.BOOK);
             }
         } catch (CantAddBankMoneyException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE, e, "Cant Add Debit Exception", "Cant Add Bank Money Exception");
         }
     }
 
     public void addCredit(BankMoneyTransactionRecord bankMoneyTransactionRecord, BalanceType balanceType) throws CantAddCreditException {
         try {
-            double availableAmount;
-            double bookAmount;
-            long runningAvailableBalance = 0;
-            long runningBookBalance = 0;
+            BigDecimal availableAmount;
+            BigDecimal bookAmount;
+            BigDecimal runningAvailableBalance;
+            BigDecimal runningBookBalance;
 
             if (balanceType == BalanceType.AVAILABLE) {
                 availableAmount = bankMoneyTransactionRecord.getAmount();
                 runningBookBalance = getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber());
-                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + availableAmount);
+                runningAvailableBalance = getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()).add(availableAmount);
+
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount(), BalanceType.AVAILABLE);
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
                 runningAvailableBalance = getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber());
-                runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + bookAmount);
+                runningBookBalance = getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()).add(bookAmount);
+
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount(), BalanceType.BOOK);
             }
         } catch (CantAddBankMoneyException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE, e, "Cant Add Credit Exception", "Cant Add Bank Money Exception");
         }
     }
 
-    public void makeHold(BankMoneyTransactionRecord bankMoneyTransactionRecord, BalanceType balanceType) throws CantMakeHoldException {
-        try {
-            double availableAmount;
-            double bookAmount;
-            long runningAvailableBalance = 0;
-            long runningBookBalance = 0;
 
-            if (balanceType == BalanceType.AVAILABLE) {
-                availableAmount = bankMoneyTransactionRecord.getAmount();
-                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-availableAmount));
-                addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
+    //TODO: abicelis asks.. is this needed? wtf is this?
+//    public void makeHold(BankMoneyTransactionRecord bankMoneyTransactionRecord, BalanceType balanceType) throws CantMakeHoldException {
+//        try {
+//            double availableAmount;
+//            double bookAmount;
+//            long runningAvailableBalance = 0;
+//            long runningBookBalance = 0;
+//
+//            if (balanceType == BalanceType.AVAILABLE) {
+//                availableAmount = bankMoneyTransactionRecord.getAmount();
+//                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-availableAmount));
+//                addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
+//            }
+//            if (balanceType == BalanceType.BOOK) {
+//                throw new CantMakeHoldException(CantMakeHoldException.DEFAULT_MESSAGE, new Exception(), "Can't make hold exception", null);
+//            }
+//        } catch (CantAddBankMoneyException e) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            throw new CantMakeHoldException(CantMakeHoldException.DEFAULT_MESSAGE, e, "Can't make hold exception", null);
+//        }
+//    }
+//
+//    public void makeUnhold(BankMoneyTransactionRecord bankMoneyTransactionRecord, BalanceType balanceType) throws CantMakeUnholdException {
+//        try {
+//            double unholdAmount;
+//            double bookAmount;
+//            long runningAvailableBalance = 0;
+//            long runningBookBalance = 0;
+//
+//            if (balanceType == BalanceType.AVAILABLE) {
+//                unholdAmount = bankMoneyTransactionRecord.getAmount();
+//                runningAvailableBalance = (long) (getHeldFunds(bankMoneyTransactionRecord.getBankAccountNumber()) + (-unholdAmount));
+//                addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
+//
+//            }
+//            if (balanceType == BalanceType.BOOK) {
+//                throw new CantMakeUnholdException(CantMakeUnholdException.DEFAULT_MESSAGE, new Exception(), "Can't make hold exception", null);
+//            }
+//        } catch (CantAddBankMoneyException e) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            throw new CantMakeUnholdException(CantMakeUnholdException.DEFAULT_MESSAGE, e, "Can't make unhold exception", null);
+//        }
+//    }
 
-            }
-            if (balanceType == BalanceType.BOOK) {
-                throw new CantMakeHoldException(CantMakeHoldException.DEFAULT_MESSAGE, new Exception(), "Can't make hold exception", null);
-            }
-        } catch (CantAddBankMoneyException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantMakeHoldException(CantMakeHoldException.DEFAULT_MESSAGE, e, "Can't make hold exception", null);
-        }
-    }
-
-    public void makeUnhold(BankMoneyTransactionRecord bankMoneyTransactionRecord, BalanceType balanceType) throws CantMakeUnholdException {
-        try {
-            double unholdAmount;
-            double bookAmount;
-            long runningAvailableBalance = 0;
-            long runningBookBalance = 0;
-
-            if (balanceType == BalanceType.AVAILABLE) {
-                unholdAmount = bankMoneyTransactionRecord.getAmount();
-                runningAvailableBalance = (long) (getHeldFunds(bankMoneyTransactionRecord.getBankAccountNumber()) + (-unholdAmount));
-                addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
-
-            }
-            if (balanceType == BalanceType.BOOK) {
-                throw new CantMakeUnholdException(CantMakeUnholdException.DEFAULT_MESSAGE, new Exception(), "Can't make hold exception", null);
-            }
-        } catch (CantAddBankMoneyException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantMakeUnholdException(CantMakeUnholdException.DEFAULT_MESSAGE, e, "Can't make unhold exception", null);
-        }
-    }
-
-    public long getAvailableBalance(String accountNumber) {
-        long availableBalance = 0;
-        /*for (DatabaseTableRecord record : getBankMoneyTransactionList(accountNumber,BalanceType.AVAILABLE)) {
-            availableBalance = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
-            availableBalance += availableBalance;
-        }*/
+    public BigDecimal getAvailableBalance(String accountNumber) {
+        BigDecimal availableBalance = BigDecimal.ZERO;
         List<DatabaseTableRecord> records;
         DatabaseTableRecord record;
-        records = getBankMoneyTransactionList(accountNumber, BalanceType.AVAILABLE);
-        record = records.get(0);
-        availableBalance = (long) record.getFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME);
+        records = getBankMoneyTransactionList(accountNumber);
+
+        if(!records.isEmpty()){
+            record = records.get(0);
+            availableBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME));
+        }
+
         return availableBalance;
     }
 
-    public long getBookBalance(String accountNumber) {
-        long bookBalance = 0;
-        /*for (DatabaseTableRecord record : getBankMoneyTransactionList(accountNumber,BalanceType.BOOK)) {
-            bookBalance = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
-            bookBalance += bookBalance;
-        }*/
+    public BigDecimal getBookBalance(String accountNumber) {
+        BigDecimal bookBalance;
         List<DatabaseTableRecord> records;
         DatabaseTableRecord record;
-        records = getBankMoneyTransactionList(accountNumber, BalanceType.AVAILABLE);
+        records = getBankMoneyTransactionList(accountNumber);
         record = records.get(0);
-        bookBalance = (long) record.getFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME);
+        bookBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));
         return bookBalance;
     }
 
-    public long getHeldFunds(String account) {
-        long heldFunds = 0;
+    public BigDecimal getHeldFunds(String account) {
+        BigDecimal heldFunds = new BigDecimal(0);
         try {
             for (BankMoneyTransactionRecord record : getTransactions(TransactionType.HOLD, account)) {
-                heldFunds = record.getRunningAvailableBalance();
-                heldFunds += heldFunds;
+                heldFunds.add(record.getRunningAvailableBalance());
             }
         } catch (CantGetTransactionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return heldFunds;
     }
 
-    private List<DatabaseTableRecord> getBankMoneyTransactionList(String accountNumber, BalanceType balanceType) {
+    private List<DatabaseTableRecord> getBankMoneyTransactionList(String accountNumber) {
         DatabaseTable totalBalancesTable = null;
         try {
 
             totalBalancesTable = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
             totalBalancesTable.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, accountNumber, DatabaseFilterType.EQUAL);
-            //totalBalancesTable.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME,balanceType.getCode(),DatabaseFilterType.EQUAL);
             totalBalancesTable.loadToMemory();
 
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return totalBalancesTable.getRecords();
     }
@@ -304,11 +303,11 @@ public class BankMoneyWalletDao {
      * @throws CantGetCurrentBalanceException
      * @throws CantGetBankMoneyTotalBalanceException
      */
-    public double getCurrentBalance(BalanceType balanceType) throws CantGetCurrentBalanceException, CantGetBankMoneyTotalBalanceException {
+    public BigDecimal getCurrentBalance(BalanceType balanceType) throws CantGetCurrentBalanceException, CantGetBankMoneyTotalBalanceException {
         if (balanceType == BalanceType.AVAILABLE)
-            return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME));
+            return new BigDecimal(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME));
         else
-            return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));
+            return new BigDecimal(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));
     }
 
     public void addNewAccount(BankAccountNumber bankAccountNumber) throws CantInsertRecordException {
@@ -319,9 +318,46 @@ public class BankMoneyWalletDao {
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME, bankAccountNumber.getCurrencyType().getCode());
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME, bankAccountNumber.getAlias());
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME, bankAccountNumber.getAccountType().getCode());
-        record.setLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-        record.setLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, 0);
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, "0");
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, "0");
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME, bankAccountNumber.getAccountImageId());
         table.insertRecord(record);
+    }
+
+
+    public void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantUpdateRecordException {
+
+        DatabaseTable table;
+        try {
+
+            //Modify the accounts table
+            table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
+            table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, originalAccountNumber, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, newAccountNumber);
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME, newAlias);
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME, newImageId);
+                table.updateRecord(record);
+            }
+
+            //Modify the transactions table
+            table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
+            table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, originalAccountNumber, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, newAccountNumber);
+                table.updateRecord(record);
+            }
+
+        } catch (Exception e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+
+
+
     }
 
     /**
@@ -334,7 +370,7 @@ public class BankMoneyWalletDao {
             balancesTable.loadToMemory();
             return balancesTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetBankMoneyTotalBalanceException(CantGetBankMoneyTotalBalanceException.DEFAULT_MESSAGE, e, "Cant Get Bank Money Total Balance Exception ", "Cant Load Table To Memory Exception");
         }
     }
@@ -342,11 +378,11 @@ public class BankMoneyWalletDao {
     public List<BankAccountNumber> getAccounts() throws CantGetAccountsException {
         DatabaseTable table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
         table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-        System.out.println("BNK-account");
+
         try {
             table.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAccountsException(CantGetAccountsException.DEFAULT_MESSAGE, e, "Cant Get Transactions Exception", "Cant Load Table To Memory Exception");
         }
         return constructBankAccountNumberList(table.getRecords());
@@ -364,7 +400,7 @@ public class BankMoneyWalletDao {
             table.loadToMemory();
             return createTransactionList(table.getRecords());
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Cant Get Transactions Exception", "Cant Load Table To Memory Exception");
         }
     }
@@ -384,7 +420,7 @@ public class BankMoneyWalletDao {
             table.loadToMemory();
             return createTransactionList(table.getRecords());
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Cant Get Transactions Exception", "Cant Load Table To Memory Exception");
         }
     }
@@ -404,15 +440,15 @@ public class BankMoneyWalletDao {
         UUID bankTransactionId = record.getUUIDValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME);
         String balanceType = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME);
         String transactionType = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME);
-        float amount = record.getFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_AMOUNT_COLUMN_NAME);
+        BigDecimal amount = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_AMOUNT_COLUMN_NAME));
         String cashCurrencyType = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_CURRENCY_TYPE_COLUMN_NAME);
         String bankOperationType = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_OPERATION_TYPE_COLUMN_NAME);
         String bankDocumentReference = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_DOCUMENT_REFERENCE_COLUMN_NAME);
         String bankName = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN_NAME);
         String bankNumber = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
         String bankAccountType = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_TYPE_COLUMN_NAME);
-        long runningBookBalance = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
-        long runningAvailableBalance = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        BigDecimal runningBookBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME));
+        BigDecimal runningAvailableBalance = new BigDecimal(record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME));
         long timeStamp = record.getLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_TIMESTAMP_COLUMN_NAME);
         String memo = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_MEMO_COLUMN_NAME);
         String status = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_STATUS_COLUMN_NAME);
@@ -448,20 +484,18 @@ public class BankMoneyWalletDao {
     private BankAccountNumber constructBankAccountNumber(DatabaseTableRecord record) {
         String alias = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME);
         String account = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
-        System.out.println(" BNK-ACCOUNT   alias = " + alias + " account =" + account);
+        String imageId = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME);
+
         BankAccountNumberImpl bankAccountNumber = null;
         try {
             String accountType = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME);
-            System.out.println("account type = " + accountType);
             String currencyType = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME);
-            System.out.println("currency type = " + currencyType);
             BankAccountType bankAccountType = BankAccountType.getByCode(accountType);
             FiatCurrency currency = FiatCurrency.getByCode(currencyType);
-            System.out.println("BNK-ACCOUNT = [" + account + "] alias = [" + alias + "] account type = [" + bankAccountType.getCode() + "]");
-            bankAccountNumber = new BankAccountNumberImpl(alias, account, currency, bankAccountType,getBankName());
+            bankAccountNumber = new BankAccountNumberImpl(alias, account, currency, bankAccountType,getBankName(), imageId);
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             System.out.println("error seteando fiatcurrency " + e.getMessage());
         }
         return bankAccountNumber;
@@ -482,7 +516,7 @@ public class BankMoneyWalletDao {
         try {
             return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return null;
         }
     }

@@ -19,8 +19,11 @@
     <string name="connection_request_send">Connection request sent</string>
     <string name="before_action_user">Asset Issuer or Asset User Identities must be created before action.</string>
 
+    <string name="dap_community_user_search">Search</string>
+    <string name="action_community_user_search_hint">User Name</string>
+
     <!--Dialog Help - Init-->
-    <string name="dap_user_community_welcome_subTitle">Welcome to the Asset User Community.</string>
+    <string name="dap_user_community_welcome_subTitle">Asset User Community.</string>
     <string name="dap_user_community_welcome_body">This application will help you discover and connect to Asset Users registered in our network.!\n\nIf you are identified as an Asset Issuer, you will need to connect to Assets Users in order to be able to deliver them your assets.\n\nSelect any available Asset User and click connect to start the process. If your network speed is low, you may have to retry several times.</string>
     <!--Dialog Help - End-->
 

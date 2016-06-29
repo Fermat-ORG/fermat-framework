@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 12/11/15.
  */
-public class AssetAppropriationVault extends AbstractDigitalAssetVault{
+public class AssetAppropriationVault extends AbstractDigitalAssetVault {
 
     //VARIABLE DECLARATION
 

@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -25,16 +26,19 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.Rede
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nerio on 13/10/15.
  */
-public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings> {
+public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<RedeemPointSettings,
+        ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings>, Serializable {
 
 //    List<ActorAssetIssuer> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException;
 //    List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 
-    List<RedeemPointActorRecord> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
+    List<RedeemPointActorRecord> getAllActorAssetRedeemPointRegistered(int max, int offset) throws CantGetAssetRedeemPointActorsException;
 
     List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException;
 

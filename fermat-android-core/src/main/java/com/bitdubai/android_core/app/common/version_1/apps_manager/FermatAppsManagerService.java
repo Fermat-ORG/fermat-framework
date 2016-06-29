@@ -14,8 +14,10 @@ import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
 import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.ComboType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -135,20 +137,29 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     }
 
     @Override
-    public FermatSession getAppsSession(String appPublicKey) {
+    public FermatSession getAppsSession(String appPublicKey,boolean isForSubSession) {
+        return getAppSession(appPublicKey, isForSubSession);
+    }
+
+    public FermatSession getAppsSession(String appPublicKey){
+        return getAppSession(appPublicKey,false);
+    }
+
+    private FermatSession getAppSession(String appPublicKey,boolean isForSubSession) {
         try {
-            if (fermatSessionManager.isSessionOpen(appPublicKey)) {
+            if (fermatSessionManager.isSessionOpen(appPublicKey) && !isForSubSession) {
 //                orderStackWithThisPkLast(appPublicKey);
                 recents.reOrder(appPublicKey);
                 return fermatSessionManager.getAppsSession(appPublicKey);
             } else {
-                FermatAppType fermatAppType = appsInstalledInDevice.get(appPublicKey);
-                if(fermatAppType==null) Log.e(TAG,"App with publicKey: "+appPublicKey+ " is not loaded in memory");
+//                FermatAppType fermatAppType = appsInstalledInDevice.get(appPublicKey);
+//                if(fermatAppType==null) Log.e(TAG,"App with publicKey: "+appPublicKey+ " is not loaded in memory");
                 return openApp(
-                        selectAppManager(fermatAppType).getApp(appPublicKey),
+                        getApp(appPublicKey),
                         FermatAppConnectionManager.getFermatAppConnection(
                                 appPublicKey,ApplicationSession.getInstance().getApplicationContext()
-                        )
+                        ),
+                        isForSubSession
                 );
             }
 
@@ -160,48 +171,86 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
 
     private void orderStackWithThisPkLast(String publicKey){
-//        RecentApp recentApp = recentsAppsStack.get(publicKey);
-//        recentsAppsStack.remove(publicKey);
-//        for(RecentApp r : recentsAppsStack.values()){
-//            r.setTaskStackPosition(r.getTaskStackPosition()-1);
-//        }
-//        recentApp.setTaskStackPosition(recentsAppsStack.size());
-//        recentsAppsStack.put(publicKey,recentApp);
         recents.reOrder(publicKey);
     }
 
     @Override
-    public FermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection) {
+    public FermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection) throws CantOpenSessionException {
+        return openFermatApp(fermatApp,fermatAppConnection,false);
+    }
+
+    public FermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection,boolean isForSubSession) throws CantOpenSessionException {
+        return openFermatApp(fermatApp,fermatAppConnection,isForSubSession);
+    }
+
+    private FermatSession openFermatApp(FermatApp fermatApp, AppConnections fermatAppConnection,boolean isForSubSession) throws CantOpenSessionException {
         if(fermatApp!=null) {
-            if (recents.containsKey(fermatApp.getAppPublicKey())) {
-//            recentsAppsStack.get(fermatApp.getAppPublicKey()).setTaskStackPosition(recentsAppsStack.size());
-//                orderStackWithThisPkLast(fermatApp.getAppPublicKey());
-                recents.reOrder(fermatApp.getAppPublicKey());
-            } else {
-                recents.push(new RecentApp(fermatApp.getAppPublicKey(), fermatApp, 0));
+            if(!isForSubSession) {
+                if (recents.containsKey(fermatApp.getAppPublicKey())) {
+                    recents.reOrder(fermatApp.getAppPublicKey());
+                } else {
+                    recents.push(new RecentApp(fermatApp.getAppPublicKey(), fermatApp, 0));
+                }
             }
-            return openSession(fermatApp, fermatAppConnection);
+            return openSession(fermatApp, fermatAppConnection,isForSubSession);
         }
         return null;
     }
 
-    private FermatSession openSession(FermatApp fermatApp,AppConnections fermatAppConnection){
-        FermatSession fermatSession = null;
+    private FermatSession openSession(FermatApp fermatApp,AppConnections fermatAppConnection, boolean isForSubSession) throws CantOpenSessionException {
+        FermatSession referenceAppFermatSession = null;
         if(fermatSessionManager.isSessionOpen(fermatApp.getAppPublicKey())){
-            fermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
+            referenceAppFermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
         }else {
-            ModuleManager moduleManager = null;
-            try {
-                moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
-            } catch (CantCreateProxyException e) {
-                e.printStackTrace();
+            PluginVersionReference[] pluginVersionReferences = null;
+            if(fermatAppConnection!=null) pluginVersionReferences = fermatAppConnection.getPluginVersionReference(); else Log.e(TAG,"AppConnection null, App: "+fermatApp.getAppPublicKey());
+            FermatStructure fermatStructure = getAppStructure(fermatApp.getAppPublicKey());
+            switch (fermatStructure.getAppStructureType()){
+                case REFERENCE:
+                    try {
+                        if(pluginVersionReferences==null) throw new CantOpenSessionException("","PluginVersionReference null in app: "+fermatApp.getAppPublicKey());
+                        if(pluginVersionReferences.length!=1) throw new CantOpenSessionException("","ReferenceApp can't have more than one module to assign, check your AppConnections getPluginVersionReference method");
+                        ModuleManager moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference()[0]);
+                        referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager,isForSubSession);
+                    } catch (CantCreateProxyException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case COMBO_TYPE_1:
+                    try {
+                        ModuleManager[] moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
+                        referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(),moduleManager,isForSubSession);
+                    } catch (CantCreateProxyException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case COMBO_TYPE_2:
+                    try {
+                        //ModuleManager[] moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
+                        //getApp()
+                        ComboType2FermatSession comboType2FermatSession = fermatSessionManager.openComboAppType2Session(fermatApp, FermatSystemUtils.getErrorManager(),isForSubSession);
+                        for(String key:fermatStructure.getAppsKeyConsumed()){
+                            FermatSession fermatSession = getAppsSession(key,true);
+                            comboType2FermatSession.addSession(key,fermatSession);
+                        }
+                        referenceAppFermatSession = comboType2FermatSession;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                case COMBO_TYPE_3:
+
+                case NICHE:
+                    break;
+                default:
+                    throw new CantOpenSessionException("","AppStructure desconocida");
             }
-            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
-//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
         }
-        fermatAppConnection.setFullyLoadedSession(fermatSession);
-        return fermatSession;
+        if(fermatAppConnection!=null)fermatAppConnection.setFullyLoadedSession(referenceAppFermatSession);
+        return referenceAppFermatSession;
     }
+
 
     /**
      * aca no solo la obtengo si no que la tengo que poner arriba del stack de apps
@@ -215,9 +264,8 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
             fermatApp = recents.getApp(publicKey).getFermatApp();
         }else{
             fermatApp = selectAppManager(fermatAppType).getApp(publicKey);
-            openApp(fermatApp,FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(),ApplicationSession.getInstance().getApplicationContext()));
+            //openApp(fermatApp,FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(),ApplicationSession.getInstance().getApplicationContext()));
         }
-
         orderStackWithThisPkLast(publicKey);
         return fermatApp;
     }

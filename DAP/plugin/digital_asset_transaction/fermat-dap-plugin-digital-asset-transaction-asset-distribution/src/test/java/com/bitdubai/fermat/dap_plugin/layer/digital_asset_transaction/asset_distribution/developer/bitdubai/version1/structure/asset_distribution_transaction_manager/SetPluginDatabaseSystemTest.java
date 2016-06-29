@@ -45,20 +45,20 @@ public class SetPluginDatabaseSystemTest {
     }
 
 
-   @Test
+    @Test
     public void setPluginDatabaseSystemThrowsCantSetObjectExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setPluginDatabaseSystemThrowsCantSetObjectExceptionTest()");
 
-       try {
-           mockAssetDistributionTransactionManager.setPluginDatabaseSystem(null);
-           fail("The method didn't throw when I expected it to");
-       }catch (Exception ex) {
-           Assert.assertTrue(ex instanceof CantSetObjectException);
-       }
+        try {
+            mockAssetDistributionTransactionManager.setPluginDatabaseSystem(null);
+            fail("The method didn't throw when I expected it to");
+        } catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSetObjectException);
+        }
     }
 
     @Test
-    public void setPluginDatabaseSystemNoExceptionTest() throws CantSetObjectException{
+    public void setPluginDatabaseSystemNoExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setPluginDatabaseSystemNoExceptionTest()");
         mockAssetDistributionTransactionManager.setPluginDatabaseSystem(pluginDatabaseSystem);
     }

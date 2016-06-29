@@ -13,11 +13,11 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantMakeHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.HoldBankMoneyTransactionPluginRoot;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.database.HoldBankMoneyTransactionDao;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantCreateHoldTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.io.Serializable;
@@ -30,19 +30,19 @@ import java.util.UUID;
  */
 public class HoldBankMoneyTransactionManager implements HoldManager, Serializable {
 
-    private final ErrorManager errorManager;
+    private final HoldBankMoneyTransactionPluginRoot pluginRoot;
     HoldBankMoneyTransactionDao holdBankMoneyTransactionDao;
 
-    public HoldBankMoneyTransactionManager(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) throws CantStartPluginException  {
-        this.errorManager = errorManager;
-        holdBankMoneyTransactionDao = new HoldBankMoneyTransactionDao(pluginDatabaseSystem,pluginId,errorManager);
+    public HoldBankMoneyTransactionManager(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, HoldBankMoneyTransactionPluginRoot pluginRoot) throws CantStartPluginException  {
+        this.pluginRoot = pluginRoot;
+        holdBankMoneyTransactionDao = new HoldBankMoneyTransactionDao(pluginDatabaseSystem,pluginId,pluginRoot);
         try{
             holdBankMoneyTransactionDao.initialize();
         } catch (CantInitializeHoldBankMoneyTransactionDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
@@ -71,7 +71,7 @@ public class HoldBankMoneyTransactionManager implements HoldManager, Serializabl
         try{
             return holdBankMoneyTransactionDao.createHoldTransaction(parameters);
         }catch (CantCreateHoldTransactionException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantMakeHoldTransactionException(CantMakeHoldTransactionException.DEFAULT_MESSAGE,e,null,null);
         }
     }

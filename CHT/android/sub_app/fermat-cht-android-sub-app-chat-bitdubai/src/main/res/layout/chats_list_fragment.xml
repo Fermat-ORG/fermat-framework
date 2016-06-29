@@ -55,11 +55,12 @@
             android:id="@+id/nodata"
             android:layout_width="180dp"
             android:layout_height="180dp"
-            android:src="@drawable/icon_no_chats"
+            android:src="@drawable/cht_icon_no_message"
             android:gravity="center"
             android:layout_gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="130dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +70,30 @@
             android:textStyle="normal"
             android:textSize="12pt"
             android:layout_below="@+id/nodata"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please, tap on contacts and select"
+            android:id="@+id/nochatssubtitle"
+            android:textColor="#D1D3D4"
+            android:textStyle="normal"
+            android:textSize="8pt"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/nodatalabel"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="a friend to start a P2P Chat."
+            android:id="@+id/nochatssubtitle1"
+            android:textColor="#D1D3D4"
+            android:textStyle="normal"
+            android:textSize="8pt"
+            android:layout_below="@+id/nochatssubtitle"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
     <!--  <TextView android:id="@+id/text"
           android:gravity="center"

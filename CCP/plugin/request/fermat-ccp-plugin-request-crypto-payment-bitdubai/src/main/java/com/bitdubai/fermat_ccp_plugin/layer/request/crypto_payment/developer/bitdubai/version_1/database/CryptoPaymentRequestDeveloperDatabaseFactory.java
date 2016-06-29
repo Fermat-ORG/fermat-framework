@@ -106,7 +106,8 @@ public class CryptoPaymentRequestDeveloperDatabaseFactory {
         cryptoAddressRequestColumns.add(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME               );
         cryptoAddressRequestColumns.add(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME              );
         cryptoAddressRequestColumns.add(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME       );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME       );
+
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_TYPE_COLUMN_NAME       );
 
         /**
          * Table Crypto Address Request addition.

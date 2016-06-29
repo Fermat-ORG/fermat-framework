@@ -7,7 +7,7 @@ public class CantGetDigitalAssetFromLocalStorageException extends org.fermat.fer
     public static final String DEFAULT_MESSAGE = "There was an error getting a Digital Asset from local storage.";
 
     public CantGetDigitalAssetFromLocalStorageException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantGetDigitalAssetFromLocalStorageException() {

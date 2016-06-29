@@ -11,15 +11,15 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/18/16.
  */
-public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    public static final int TYPE_PRESENTATION =1;
-    public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
+    public static final int TYPE_PRESENTATION = 1;
+    public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES = 2;
 
     private final Activity activity;
     private final int type;
@@ -29,7 +29,7 @@ public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySession,
     private ImageView welcomeAppImage;
 
 
-    public AssetFactoryWelcomeDialog(Activity activity, AssetFactorySession fermatSession, SubAppResourcesProviderManager resources, int type, boolean checkButton) {
+    public AssetFactoryWelcomeDialog(Activity activity, AssetFactorySessionReferenceApp fermatSession, SubAppResourcesProviderManager resources, int type, boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;
@@ -49,7 +49,7 @@ public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySession,
 
     @Override
     protected int setLayoutId() {
-        switch (type){
+        switch (type) {
             case TYPE_PRESENTATION:
                 return 0;//R.layout.presentation_wallet;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
@@ -82,7 +82,7 @@ public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySession,
 //        }
     }
 
-    private void saveSettings(){
+    private void saveSettings() {
 //        if(type!=TYPE_PRESENTATION)
 //            if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
 //                if(checkbox_not_show.isChecked()){

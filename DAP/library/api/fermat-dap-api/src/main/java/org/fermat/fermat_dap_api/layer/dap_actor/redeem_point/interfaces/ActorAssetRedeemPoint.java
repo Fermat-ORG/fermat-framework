@@ -38,6 +38,7 @@ public interface ActorAssetRedeemPoint extends DAPActor, Serializable {
      * @return the Connection state
      */
     DAPConnectionState getDapConnectionState();
+
     /**
      * The method <code>getLocation</code> gives us the Location of the represented
      * Redeem Point
@@ -61,6 +62,7 @@ public interface ActorAssetRedeemPoint extends DAPActor, Serializable {
      * @return the Location Longitude
      */
     Double getLocationLongitude();
+
     /**
      * Metodo {@code getAddress()}:
      * devuelve la direccion en el que esta ubicado un redeem point, a diferencia del metodo

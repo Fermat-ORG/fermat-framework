@@ -33,7 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app_artist_community.commons.popups.AcceptDialog;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 import com.bitdubai.sub_app_artist_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<ArtistSubAppSession, SubAppResourcesProviderManager>
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ArtistCommunityInformation>, AcceptDialog.OnDismissListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";

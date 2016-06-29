@@ -7,28 +7,30 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.header.CryptoCustomerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.notifications.CryptoCustomerNotificationPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_BROKER_ACK_PAYMENT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_BROKER_SUBMITED_MERCHANDISE;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_COMPLETED_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEW_CONTRACT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION;
 
 
 /**
@@ -36,7 +38,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
  *
  * @since 2015.12.17
  */
-public class CryptoCustomerWalletFermatAppConnection extends AppConnections<CryptoCustomerWalletSession> {
+public class CryptoCustomerWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>> {
 
     public CryptoCustomerWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -48,19 +50,19 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.CRYPTO_CUSTOMER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
-    protected AbstractFermatSession getSession() {
-        return new CryptoCustomerWalletSession();
+    protected ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> getSession() {
+        return getFullyLoadedSession();
     }
 
 
@@ -100,6 +102,16 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
                 return new CryptoCustomerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
             default:
                 return super.getNotificationPainter(code);
+        }
+    }
+
+    @Override
+    public int getResource(int id) {
+        switch (id) {
+            case FragmentsCommons.CONTRACT_HISTORY_FILTER_OPTION_MENU_ID:
+                return R.drawable.ccw_action_filters;
+            default:
+                return 0;
         }
     }
 }

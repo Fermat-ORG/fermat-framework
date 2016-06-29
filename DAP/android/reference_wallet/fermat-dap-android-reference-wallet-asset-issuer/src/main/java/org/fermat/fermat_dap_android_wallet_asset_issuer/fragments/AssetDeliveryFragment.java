@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
@@ -34,13 +35,13 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Group;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -54,11 +55,10 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/15/15.
  */
-public class AssetDeliveryFragment extends AbstractFermatFragment {
+public class AssetDeliveryFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     private Activity activity;
     private static final int MAX_ASSET_QUANTITY = 200;
-    private AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -79,8 +79,6 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     int selectedGroupsCount;
     int selectedUsersInGroupsCount;
 
-//    SettingsManager<AssetIssuerSettings> settingsManager;
-
     public AssetDeliveryFragment() {
 
     }
@@ -94,11 +92,9 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerSession = (AssetIssuerSession) appSession;
-        moduleManager = assetIssuerSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         moduleManager.clearDeliverList();
         activity = getActivity();
 
@@ -177,7 +173,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             public void onClick(View v) {
                 if (assetsToDeliverEditText.getText().length() == 0) {
                     Toast.makeText(activity, R.string.dap_issuer_wallet_validate_assets_to_deliver, Toast.LENGTH_SHORT).show();
-                } else if (Integer.parseInt(assetsToDeliverEditText.getText().toString()) > MAX_ASSET_QUANTITY){
+                } else if (Integer.parseInt(assetsToDeliverEditText.getText().toString()) > MAX_ASSET_QUANTITY) {
                     Toast.makeText(activity, R.string.dap_issuer_wallet_validate_assets_to_deliver_greater + MAX_ASSET_QUANTITY, Toast.LENGTH_SHORT).show();
                 } else if (digitalAsset.getAvailableBalanceQuantity() == 0) {
                     Toast.makeText(activity, R.string.dap_issuer_wallet_validate_no_available_assets, Toast.LENGTH_SHORT).show();
@@ -243,7 +239,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         } else if (selectedUsersCount > 0) {
             message = selectedUsersCount + ((selectedUsersCount == 1) ? " user" : " users") + " selected";
         } else if (selectedGroupsCount > 0) {
-            message = selectedGroupsCount  + ((selectedGroupsCount == 1) ? " group" : " groups") + " selected";
+            message = selectedGroupsCount + ((selectedGroupsCount == 1) ? " group" : " groups") + " selected";
         }
         selectedUsersText.setText(message);
     }
@@ -255,7 +251,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -266,8 +262,8 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -275,11 +271,11 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

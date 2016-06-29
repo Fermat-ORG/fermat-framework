@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -22,14 +23,18 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nerio on 13/10/15.
  */
-public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings> {
+public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<AssetIssuerSettings>, Serializable {
 
-    List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException;
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
+    List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered(int max, int offset) throws CantGetAssetIssuerActorsException;
 
     List<ActorAssetIssuer> getAllActorAssetIssuerConnected() throws CantGetAssetIssuerActorsException;
 

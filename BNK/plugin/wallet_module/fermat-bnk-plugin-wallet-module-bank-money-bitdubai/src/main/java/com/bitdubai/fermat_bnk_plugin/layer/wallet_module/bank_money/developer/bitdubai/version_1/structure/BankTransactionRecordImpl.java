@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 
+import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -16,13 +17,13 @@ import java.util.UUID;
  */
 public class BankTransactionRecordImpl implements BankMoneyTransactionRecord, Serializable {
 
-    private float amount;
+    private BigDecimal amount;
     private String memo;
     private long timestamp;
     private TransactionType transactionType;
     private BankTransactionStatus bankTransactionStatus;
 
-    public BankTransactionRecordImpl(float amount, String memo, long timestamp,TransactionType transactionType,BankTransactionStatus bankTransactionStatus) {
+    public BankTransactionRecordImpl(BigDecimal amount, String memo, long timestamp,TransactionType transactionType,BankTransactionStatus bankTransactionStatus) {
         this.amount = amount;
         this.memo = memo;
         this.timestamp = timestamp;
@@ -51,7 +52,7 @@ public class BankTransactionRecordImpl implements BankMoneyTransactionRecord, Se
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return this.amount;
     }
 
@@ -91,13 +92,13 @@ public class BankTransactionRecordImpl implements BankMoneyTransactionRecord, Se
     }
 
     @Override
-    public long getRunningBookBalance() {
-        return 0;
+    public BigDecimal getRunningBookBalance() {
+        return new BigDecimal(0);
     }
 
     @Override
-    public long getRunningAvailableBalance() {
-        return 0;
+    public BigDecimal getRunningAvailableBalance() {
+        return new BigDecimal(0);
     }
 
     @Override

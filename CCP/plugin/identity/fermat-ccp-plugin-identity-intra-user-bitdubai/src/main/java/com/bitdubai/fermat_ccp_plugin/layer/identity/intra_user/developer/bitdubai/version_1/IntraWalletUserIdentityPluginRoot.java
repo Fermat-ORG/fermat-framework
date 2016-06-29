@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -30,6 +29,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
@@ -152,7 +152,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
      * @throws CantCreateNewIntraWalletUserException
      */
     @Override
-    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws CantCreateNewIntraWalletUserException {
+    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -160,9 +160,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias,phrase, publicKey, privateKey, loggedUser, profileImage);
+            intraWalletUserIdentityDao.createNewUser(alias, phrase, publicKey, privateKey, loggedUser, profileImage, accuracy, frecuency);
 
-            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage);
+            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, accuracy, frecuency);
+
 
             //registerIdentities();
             //registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
@@ -178,7 +179,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
-    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage) throws CantCreateNewIntraWalletUserException {
+    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage, Long accuracy, Frecuency frecuency ) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -186,9 +187,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage);
-
-            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage);
+            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage, accuracy, frecuency );
+            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage, accuracy, frecuency);
 
             registerIdentities();
 
@@ -235,7 +235,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     private void updateIdentity(String publicKey,String alias,String phrase,byte[] img){
-        intraActorManager.updateActor(intraActorManager.contructIdentity(publicKey,alias,phrase,Actors.INTRA_USER,img));
+        intraActorManager.updateActor(intraActorManager.buildIdentity(publicKey, alias, phrase, Actors.INTRA_USER, img));
     }
 
     @Override
@@ -297,9 +297,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             List<IntraWalletUserIdentity> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             List<Actor> lstActors = new ArrayList<Actor>();
             for(IntraWalletUserIdentity user : lstIntraWalletUSer){
-                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(),Actors.INTRA_USER,user.getImage()));
+                lstActors.add(intraActorManager.buildIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(), Actors.INTRA_USER, user.getImage()));
             }
-            intraActorManager.registrateActors(lstActors);
+            intraActorManager.registerActors(lstActors);
         } catch (CantListIntraWalletUserIdentitiesException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -308,7 +308,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     public void registerIdentity(IntraWalletUserIdentity intraWalletUserIdentity){
-        intraActorManager.registrateActor(intraActorManager.contructIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage()));
+        intraActorManager.registerActor(intraActorManager.buildIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage()));
 
     }
 
@@ -333,11 +333,11 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
 
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraWalletUserIdentityPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity");
+        returnedClasses.add("IntraWalletUserIdentityPluginRoot");
+//        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao");
+//        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDatabaseConstants");
+//        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDatabaseFactory");
+//        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity");
 
         return returnedClasses;
     }

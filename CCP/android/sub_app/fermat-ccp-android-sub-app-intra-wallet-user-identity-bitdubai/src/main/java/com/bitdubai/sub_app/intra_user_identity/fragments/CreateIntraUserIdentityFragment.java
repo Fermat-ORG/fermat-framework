@@ -27,22 +27,25 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
-import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
@@ -57,7 +60,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<IntraUserIdentitySubAppSession,ResourceProviderManager> {
+public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserIdentityModuleManager>,ResourceProviderManager> {
 
 
     private static final String TAG = "CreateIdentity";
@@ -85,6 +88,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
     IntraUserIdentitySettings intraUserIdentitySettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private IntraUserIdentityModuleManager moduleManager;
 
     ExecutorService executorService;
 
@@ -100,17 +104,19 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
         try {
 
             errorManager = appSession.getErrorManager();
-            setHasOptionsMenu(true);
+
+            moduleManager = appSession.getModuleManager();
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
 
                     try {
                         if (appSession.getAppPublicKey()!= null){
-                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }else{
                             //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings("123456789");
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings("123456789");
                         }
 
                     } catch (Exception e) {
@@ -170,7 +176,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
                     }
                 }
             }
-        }, 5000);
+        }, 1000);
 
 
         return rootLayout;
@@ -410,7 +416,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerPhraseText, brokerImageByteArray);
 
         if (dataIsValid) {
-            if (appSession.getModuleManager() != null) {
+            if (moduleManager != null) {
                 try {
                     if (!isUpdate) {
                         final String finalBrokerPhraseText = brokerPhraseText;
@@ -418,7 +424,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
                             @Override
                             public void run() {
                                 try {
-                                    appSession.getModuleManager().createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+
+                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)0, Frecuency.NORMAL);
+
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
                                     e.printStackTrace();
@@ -433,9 +441,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray);
+
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)0,Frecuency.NORMAL);
+
                                     else
-                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage());
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)0,Frecuency.NORMAL);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
@@ -459,7 +469,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,70,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
@@ -501,7 +511,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
      */
     private byte[] toByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 
@@ -518,9 +528,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
         super.onCreateOptionsMenu(menu, inflater);
         //inflater.inflate(R.menu.menu_main, menu);
 
-        try {
+      /*  try {
             menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+
 
             final MenuItem action_help = menu.findItem(R.id.action_help);
             menu.findItem(R.id.action_help).setVisible(true);
@@ -534,7 +546,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
 
         } catch (Exception e) {
 
-        }
+        }*/
 
     }
 
@@ -547,6 +559,13 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
             if (id == 99)
                 showDialog();
 
+            if (id == 2)
+                if(identitySelected!=null)
+                    changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+                else
+                    showDialog();
+
+
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -555,4 +574,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

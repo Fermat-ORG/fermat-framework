@@ -18,14 +18,15 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by frank on 12/9/15.
  */
-public class Data {
+public class Data implements Serializable {
     public static List<DigitalAsset> getAllDigitalAssets(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
         List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
@@ -38,7 +39,7 @@ public class Data {
             digitalAsset.setAvailableBalanceQuantity(asset.getQuantityAvailableBalance());
             digitalAsset.setBookBalanceQuantity(asset.getQuantityBookBalance());
             digitalAsset.setAvailableBalance(asset.getAvailableBalance());
-            digitalAsset.setExpDate((Timestamp) asset.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+            digitalAsset.setExpDate((Date) asset.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
             digitalAsset.setLockedAssets(asset.getLockedAssets());
             digitalAsset.setDigitalAsset(asset.getDigitalAsset());
             digitalAssets.add(digitalAsset);
@@ -64,7 +65,7 @@ public class Data {
                 digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
                 digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
                 digitalAsset.setAvailableBalance(balance.getAvailableBalance());
-                Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                Date expirationDate = (Date) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
                 digitalAsset.setExpDate(expirationDate);
                 digitalAsset.setLockedAssets(balance.getLockedAssets());
                 digitalAsset.setDigitalAsset(balance.getDigitalAsset());
@@ -118,7 +119,7 @@ public class Data {
 
     public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getDigitalAsset().getGenesisAddress());
+        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.getTransactionsForDisplay(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset.getDigitalAsset().getGenesisAddress());
         DAPActor dapActor;
         for (AssetUserWalletTransaction assetUserWalletTransaction :
                 assetUserWalletTransactions) {
@@ -138,7 +139,7 @@ public class Data {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
 
-        for (AssetNegotiation asset : assetNegotiations){
+        for (AssetNegotiation asset : assetNegotiations) {
             digitalAsset = new DigitalAsset();
             digitalAsset.setAssetPublicKey(asset.getAssetToOffer().getPublicKey());
             digitalAsset.setName(asset.getAssetToOffer().getName());
@@ -150,12 +151,12 @@ public class Data {
             userAssetNegotiation.setQuantityToBuy(asset.getQuantityToBuy());
 
             digitalAsset.setUserAssetNegotiation(userAssetNegotiation);
-            digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+            digitalAsset.setExpDate((Date) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
             digitalAsset.setDigitalAsset(asset.getAssetToOffer());
             digitalAssets.add(digitalAsset);
 
             List<Resource> resources = asset.getAssetToOffer().getResources();
-            if(resources != null && !resources.isEmpty()){
+            if (resources != null && !resources.isEmpty()) {
                 digitalAsset.setImage(resources.get(0).getResourceBinayData());
             }
         }

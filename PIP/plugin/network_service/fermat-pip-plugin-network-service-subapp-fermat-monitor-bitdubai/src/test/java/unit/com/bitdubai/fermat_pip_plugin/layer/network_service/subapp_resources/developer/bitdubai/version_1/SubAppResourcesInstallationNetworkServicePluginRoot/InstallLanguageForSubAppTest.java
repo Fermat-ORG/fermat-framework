@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -18,9 +19,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantInstallSubAppLanguageException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
@@ -143,6 +143,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
         setUpDataBase();
     }
+
     public void setUpDataBase() throws Exception {
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
@@ -168,6 +169,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
         when(databaseTableRecordList.get(anyInt())).thenReturn(mockDatabaseTableRecord);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(anyString());
     }
+
     @Test
     public void testInstallLanguageForSubApp_ThrowsCantInstallSubAppLanguageException() throws Exception {
         subAppResourcesNetworkServicePluginRoot.start();
@@ -181,6 +183,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
         System.out.println(CatchException.<Exception>caughtException());
         assertThat(CatchException.<Exception>caughtException()).isNull();
     }
+
     @Test
     public void testInstallLanguageForSubApp_FileNotFoundThrowsCantInstallSubAppLanguageException() throws Exception {
         subAppResourcesNetworkServicePluginRoot.start();

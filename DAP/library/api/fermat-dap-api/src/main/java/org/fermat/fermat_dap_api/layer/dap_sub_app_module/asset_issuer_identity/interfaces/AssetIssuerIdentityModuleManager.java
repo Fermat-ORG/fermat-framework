@@ -4,12 +4,12 @@ import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
 
 import java.io.Serializable;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface AssetIssuerIdentityModuleManager extends ModuleManager, ModuleSettingsImpl<IssuerIdentitySettings>, Serializable {
+public interface AssetIssuerIdentityModuleManager extends ModuleManager<IssuerIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<IssuerIdentitySettings>, Serializable {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -45,7 +45,7 @@ public interface AssetIssuerIdentityModuleManager extends ModuleManager, ModuleS
      * @return the intra user created
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException if something goes wrong.
      */
-    IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException;
+    IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetIssuerException;
 
     /**
      * The method <code>updateIdentityAssetIssuer</code> change a identity information data
@@ -55,7 +55,7 @@ public interface AssetIssuerIdentityModuleManager extends ModuleManager, ModuleS
      * @param profileImage
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException
      */
-    void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException;
+    void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetIssuerException;
 
     /**
      * The method <code>hasIntraIssuerIdentity</code> returns if has a intra user identity created
@@ -64,4 +64,8 @@ public interface AssetIssuerIdentityModuleManager extends ModuleManager, ModuleS
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException
      */
     boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException;
+
+    int getAccuracyDataDefault();
+
+    Frequency getFrequencyDataDefault();
 }

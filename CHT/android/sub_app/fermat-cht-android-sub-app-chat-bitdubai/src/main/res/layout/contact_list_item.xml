@@ -14,7 +14,7 @@
         android:layout_width="?android:attr/listPreferredItemHeight"
         android:scaleType="centerCrop"
         android:padding="10dp"
-        android:src="@drawable/cht_profile_list_icon"
+        android:src="@drawable/cht_center_profile_icon_center"
        />
 
     <!-- Use standard android.R class text2 id instead of app specific id. This is just useful for
@@ -52,9 +52,11 @@
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:singleLine="true"
+        android:text="lo que sea"
         android:ellipsize="marquee"
         android:textColor="@color/black"
         android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"
         />
 
 </RelativeLayout>

@@ -1,17 +1,17 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
         <android.support.v7.widget.RecyclerView
             android:id="@+id/messagesContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_above="@+id/inputContainer"
             android:layout_alignParentTop="true"
             android:divider="@null"
             android:dividerHeight="0dp"
-            android:layout_marginBottom="60dp"
             android:paddingTop="10dp"
             />
         <LinearLayout
@@ -39,6 +39,7 @@
                 android:layout_alignBottom="@+id/chatSendButton"
                 android:layout_alignParentLeft="true"
                 android:layout_toStartOf="@+id/chatSendButton"
+                android:layout_toLeftOf="@+id/chatSendButton"
                 android:scrollbars="vertical"
                 android:fadeScrollbars="false"
                 android:layout_weight="1"
@@ -70,4 +71,4 @@
                 android:layout_alignParentRight="true"
                 />
         </LinearLayout>
-</FrameLayout>
+</RelativeLayout>

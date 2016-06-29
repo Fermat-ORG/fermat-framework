@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -57,7 +58,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletAssociatedSettingImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletProviderSettingImpl;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -83,9 +84,6 @@ import java.util.regex.Pattern;
 public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> implements LogManagerForDevelopers {
 
     private CryptoBrokerWalletModuleManager moduleManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     LogManager logManager;
@@ -139,7 +137,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     CustomerBrokerUpdateManager customerBrokerUpdateManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_BROKER_ACTOR)
     CryptoBrokerActorManager cryptoBrokerActorManager;
@@ -189,7 +187,28 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("CryptoBrokerWalletModulePluginRoot");
+//        returnedClasses.add("SingleValueStepImp");
+//        returnedClasses.add("NegotiationBankAccountImpl");
+//        returnedClasses.add("ExchangeRateStepImp");
+//        returnedClasses.add("CustomerBrokerSaleNegotiationImpl");
+//        returnedClasses.add("CurrencyPairImpl");
+//        returnedClasses.add("CryptoBrokerWalletSettingSpreadImpl");
+//        returnedClasses.add("CryptoBrokerWalletProviderSettingImpl");
+//        returnedClasses.add("CryptoBrokerWalletModuleIndexInfoSummary");
+//        returnedClasses.add("CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation");
+//        returnedClasses.add("CryptoBrokerWalletModuleCryptoBrokerWalletManager");
+//        returnedClasses.add("CryptoBrokerWalletModuleContractBasicInformation");
+//        returnedClasses.add("CryptoBrokerWalletModuleClauseInformation");
+//        returnedClasses.add("CryptoBrokerWalletAssociatedSettingImpl");
+//        returnedClasses.add("CryptoBrokerWalletActorIdentity");
+//        returnedClasses.add("ClauseImpl");
+//        returnedClasses.add("CBPInstalledWalletImpl");
+//        returnedClasses.add("BankAccountNumberImpl");
+//        returnedClasses.add("AmountToSellStepImp");
+
+        return returnedClasses;
     }
 
     @Override
@@ -255,7 +274,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     currencyExchangeProviderFilterManager,
                     cryptoBrokerIdentityManager,
                     customerBrokerUpdateManager,
-                    bitcoinWalletManager,
+                    cryptoWalletManager,
                     cryptoBrokerActorManager,
                     customerOnlinePaymentManager,
                     customerOfflinePaymentManager,
@@ -408,7 +427,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
             }
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

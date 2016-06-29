@@ -35,7 +35,7 @@ public class IncomingIntraUserTransactionDatabaseConstants {
     static final String INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME    = "protocol_status";
     static final String INCOMING_INTRA_USER_REGISTRY_TRANSACTION_STATUS_COLUMN_NAME = "transaction_status";
     static final String INCOMING_INTRA_USER_REGISTRY_TIMESTAMP_COLUMN_NAME          = "timestamp";
-    static final String INCOMING_INTRA_USER_REGISTRY_NETWORK_TYPE = "BlockchainNetworkType";
+    static final String INCOMING_INTRA_USER_REGISTRY_NETWORK_TYPE                   = "BlockchainNetworkType";
 
 
 

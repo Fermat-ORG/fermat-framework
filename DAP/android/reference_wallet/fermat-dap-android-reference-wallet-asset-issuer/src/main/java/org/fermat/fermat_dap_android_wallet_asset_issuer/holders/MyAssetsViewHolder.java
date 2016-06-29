@@ -70,7 +70,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
             pendingText.setVisibility(View.VISIBLE);
         }
 
-        btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
+        btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         expDateText.setText(digitalAsset.getFormattedExpDate());
     }
 

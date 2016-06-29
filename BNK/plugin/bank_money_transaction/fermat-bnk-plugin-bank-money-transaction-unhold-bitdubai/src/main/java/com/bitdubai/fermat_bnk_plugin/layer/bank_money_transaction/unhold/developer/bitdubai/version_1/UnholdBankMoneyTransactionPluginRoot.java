@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -28,9 +27,10 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.develo
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnholdBankMoneyTransactionManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnholdBankMoneyTransactionProcessorAgent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
+
 
 
 /**
@@ -44,9 +44,6 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -70,13 +67,13 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
     public void start() throws CantStartPluginException {
         System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_UNHOLD_BANK_MONEY_TRANSACTION");
         try {
-            unholdTransactionManager = new UnholdBankMoneyTransactionManager(pluginDatabaseSystem, pluginId, errorManager);
+            unholdTransactionManager = new UnholdBankMoneyTransactionManager(pluginDatabaseSystem, pluginId, this);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
-        processorAgent = new UnholdBankMoneyTransactionProcessorAgent(errorManager, unholdTransactionManager, bankMoneyWalletManager);
+        processorAgent = new UnholdBankMoneyTransactionProcessorAgent(this, unholdTransactionManager, bankMoneyWalletManager);
         processorAgent.start();
         //test();
         serviceStatus = ServiceStatus.STARTED;
@@ -110,7 +107,7 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeUnholdBankMoneyTransactionDatabaseException cantInitializeException) {
             FermatException e = new CantInitializeUnholdBankMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "UnholdBankMoneyTransactionPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

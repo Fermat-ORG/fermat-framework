@@ -14,10 +14,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -43,7 +44,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      private ErrorManager errorManager;
      private SettingsManager<ChatSettings> settingsManager;
      private ChatPreferenceSettings chatSettings;
-     private ChatSession chatSession;
+     private ChatSessionReferenceApp chatSession;
      private ChatManager chatManager;
      public static WizardFirstStepBroadcastFragment newInstance() {
         return new WizardFirstStepBroadcastFragment();
@@ -52,9 +53,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
  @Override
      public void onCreate(Bundle savedInstanceState) {
      super.onCreate(savedInstanceState);
-     chatSession=((ChatSession) appSession);
+     chatSession=((ChatSessionReferenceApp) appSession);
      chatManager= chatSession.getModuleManager();
-     ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
+     ChatManager moduleManager = ((ChatSessionReferenceApp) appSession).getModuleManager();
      //TODO:Revisar esto
 //         try {
 //             walletManager = moduleManager;
@@ -68,6 +69,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      chatSettings = null;
      try {
          chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+         //chatSettings = (ChatPreferenceSettings) moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+         //chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
      } catch (Exception e) {
          chatSettings = null;
      }
@@ -142,7 +145,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 
      public void ShowDialogWelcome(){
          try {
-             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                      .setBody(R.string.cht_chat_body_broadcast_step_one)
                      .setSubTitle(R.string.cht_chat_subtitle_broadcast_step_one)
                      .setTextFooter(R.string.cht_chat_footer_broadcast_step_one)
@@ -159,7 +162,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      @Override
      public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
          menu.clear();
-         menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+         menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.cht_help_icon)
                  .setVisible(true)
                  .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
      }

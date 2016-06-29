@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -44,7 +44,7 @@ import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionCo
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/1/16.
  */
-public class DetailFragment extends AbstractFermatFragment<AssetUserSession, ResourceProviderManager> {
+public class DetailFragment extends AbstractFermatFragment<AssetUserSessionReferenceApp, ResourceProviderManager> {
     //DATA
     private Asset asset;
     private DataManager dataManager;
@@ -67,7 +67,8 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
     private SettingsManager<AssetUserSettings> settingsManager;
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-    public DetailFragment() {}
+    public DetailFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,7 +148,7 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
                 .setIcon(R.drawable.ic_transfer)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_ASSET_APPROPRIATE, 0, res.getString(R.string.dap_user_wallet_action_appropriate))
-                .setIcon(R.drawable.ic_appropriate)
+                .setIcon(R.drawable.ic_appropriate_user_wallet)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, IC_ACTION_USER_ITEM_SELL, 0, res.getString(R.string.dap_user_wallet_action_sell))
                 .setIcon(R.drawable.ic_sell)

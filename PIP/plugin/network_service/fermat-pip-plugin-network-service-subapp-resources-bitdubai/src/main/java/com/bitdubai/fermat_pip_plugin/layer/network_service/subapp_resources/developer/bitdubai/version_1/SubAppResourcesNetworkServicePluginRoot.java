@@ -3,6 +3,7 @@ package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.de
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -42,8 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.except
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantUninstallCompleteSubAppException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantUninstallSubAppLanguageException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantUninstallSubAppSkinException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
@@ -82,21 +82,21 @@ import java.util.UUID;
  * <p/>
  * It will also serve other peers with these resources when needed.
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer on 17/02/15.
  */
 public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin implements SubAppResourcesInstalationManager, SubAppResourcesProviderManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM      , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM      , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API   , layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API   , layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     /**
@@ -154,7 +154,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             this.gitHubConnection = new GitHubConnection();
             return this.gitHubConnection;
 
-        }  catch (GitHubNotAuthorizedException e) {
+        } catch (GitHubNotAuthorizedException e) {
 
             throw new CantGetGitHubConnectionException(e, null, "Error in github authentication");
         } catch (GitHubRepositoryNotFoundException e) {
@@ -242,12 +242,12 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         // this will be use when the repository be open source
         //String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
-        String linkToRepo = "seed-resources/subApp_resources/" + developer+ "/"+ subAppType+"/";
+        String linkToRepo = "seed-resources/subApp_resources/" + developer + "/" + subAppType + "/";
 
         String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
 
-        String localStoragePath=this.LOCAL_STORAGE_PATH + developer  + "/" + subAppType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localStoragePath = this.LOCAL_STORAGE_PATH + developer + "/" + subAppType + "/" + "skins/" + skinName + "/" + screenSize + "/";
 
         Skin skin;
 
@@ -258,8 +258,8 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
         try {
 
-            String linkToSkinFile= linkToResources + screenSize +"/";
-            skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath,subAppPublickey);
+            String linkToSkinFile = linkToResources + screenSize + "/";
+            skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath, subAppPublickey);
 
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
@@ -274,7 +274,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
              */
 
             String linkToNavigationStructure = linkToRepo + "navigation_structure/" + skin.getNavigationStructureCompatibility() + "/";
-            downloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath,subAppPublickey);
+            downloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath, subAppPublickey);
 
             /**
              *  download resources
@@ -286,21 +286,21 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath + "languages/", screenSize,subAppPublickey);
+            downloadLanguageFromRepo(linkToLanguage, skin.getId(), languageName, localStoragePath + "languages/", screenSize, subAppPublickey);
 
         } catch (CantDonwloadNavigationStructure e) {
-            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES",e,"Error download navigation structure","");
+            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES", e, "Error download navigation structure", "");
 
         } catch (CantDownloadResourceFromRepo e) {
-            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES",e,"Error download Resource fro repo","");
+            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES", e, "Error download Resource fro repo", "");
         } catch (CantDownloadLanguageFromRepo e) {
-            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES",e,"Error download language from repo","");
+            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES", e, "Error download language from repo", "");
 
         } catch (CantCreateRepositoryException e) {
-            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES",e,"Error created repository on database","");
+            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES", e, "Error created repository on database", "");
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
-            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
+            throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES", cantCheckResourcesException, "Error in skin.mxl file", "");
         }
 
         //installSkinResource("null");
@@ -323,12 +323,12 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                                      String navigationStructureVersion,
                                      String subAppPublicKey) throws CantInstallSubAppSkinException {
         try {
-            String linkToRepo = "seed-resources/subApp_resources/" + developer  + "/" + subAppType + "/";
+            String linkToRepo = "seed-resources/subApp_resources/" + developer + "/" + subAppType + "/";
 
             String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
 
-            String localStoragePath = this.LOCAL_STORAGE_PATH + developer +  "/" + subAppType + "/" + "skins/" + skinName + "/" + screenSize + "/";
+            String localStoragePath = this.LOCAL_STORAGE_PATH + developer + "/" + subAppType + "/" + "skins/" + skinName + "/" + screenSize + "/";
 
             Skin skin;
 
@@ -344,7 +344,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
 
-           // SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO = new SubAppResourcesInstallationNetworkServiceDAO(pluginDatabaseSystem);
+            // SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO = new SubAppResourcesInstallationNetworkServiceDAO(pluginDatabaseSystem);
 
 
             subAppResourcesDAO.createRepository(repository, skin.getId());
@@ -366,6 +366,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
         }
     }
+
     /**
      * @param subAppType
      * @param developer
@@ -401,12 +402,9 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
         walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);*/
-        }
-        catch(CantDownloadLanguageFromRepo e) {
+        } catch (CantDownloadLanguageFromRepo e) {
             throw new CantInstallSubAppLanguageException("CAN'T INSTALL WALLET LANGUAGE:", e, "Error download language ", "");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new CantInstallSubAppLanguageException("CAN'T INSTALL WALLET LANGUAGE:", e, "unknown Error ", "");
         }
 
@@ -430,10 +428,9 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
                                         String screenSize,
                                         String navigationStructureVersion,
                                         boolean isLastWallet,
-                                        String subAppPublicKey)  throws CantUninstallCompleteSubAppException {
-        try
-        {
-            if(isLastWallet){
+                                        String subAppPublicKey) throws CantUninstallCompleteSubAppException {
+        try {
+            if (isLastWallet) {
 
                 UninstallSubApp(subAppType, developer, subAppName, skinId, screenSize, navigationStructureVersion, isLastWallet);
 
@@ -447,24 +444,20 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) fermatEvent;
             walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
             eventManager.raiseEvent(fermatEvent);*/
-        }
-        catch(CantUninstallSubApp e) {
+        } catch (CantUninstallSubApp e) {
             throw new CantUninstallCompleteSubAppException("CAN'T UNINSTALL COMPLETE WALLET:", e, "Error delete subApp resource ", "");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new CantUninstallCompleteSubAppException("CAN'T UNINSTALL COMPLETE WALLET:", e, "unknown Error ", "");
         }
     }
 
     /**
-     *
      * @param skinId
      * @param subAppPublicKey
      * @throws CantUninstallSubAppSkinException
      */
     @Override
-    public void uninstallSkinForSubApp(UUID skinId,String subAppPublicKey) throws CantUninstallSubAppSkinException {
+    public void uninstallSkinForSubApp(UUID skinId, String subAppPublicKey) throws CantUninstallSubAppSkinException {
         try {
 
 
@@ -483,17 +476,17 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             subAppResourcesDAO.delete(skinId, repository.getSkinName());
 
-            deleteResources(repository.getPath(),skin.getResources(),skinId);
+            deleteResources(repository.getPath(), skin.getResources(), skinId);
 
         } catch (CantGetRepositoryPathRecordException e) {
 
-            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN",e,"Error get skin on data base","");
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", e, "Error get skin on data base", "");
 
-        }catch (CantDeleteRepositoryException cantCheckResourcesException){
+        } catch (CantDeleteRepositoryException cantCheckResourcesException) {
 
-            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN",cantCheckResourcesException,"Error delete repository exception","");
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", cantCheckResourcesException, "Error delete repository exception", "");
 
-        }  catch (CantDeleteResourcesFromDisk cantDownloadResourceFromRepo) {
+        } catch (CantDeleteResourcesFromDisk cantDownloadResourceFromRepo) {
 
             throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", cantDownloadResourceFromRepo, "Error delete resources", "");
         } catch (IOException e) {
@@ -511,13 +504,12 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
     /**
-     *
      * @param skinId
      * @param languageName
      * @param subAppPublicKey
      */
     @Override
-    public void uninstallLanguageForSubApp(UUID skinId, String languageName,  String subAppPublicKey) throws CantUninstallSubAppLanguageException {
+    public void uninstallLanguageForSubApp(UUID skinId, String languageName, String subAppPublicKey) throws CantUninstallSubAppLanguageException {
         try {
 
             //get repo from table
@@ -540,18 +532,13 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
         walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);*/
-        }
-        catch(CantGetRepositoryPathRecordException e) {
+        } catch (CantGetRepositoryPathRecordException e) {
             throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "Error get repository on database ", "");
-        }
-        catch(CantCreateFileException e) {
+        } catch (CantCreateFileException e) {
             throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "Error delete language file ", "");
-        }
-        catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "Error language file not found ", "");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "unknown Error ", "");
         }
     }
@@ -562,7 +549,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
      * @return
      */
     @Override
-    public InstalationProgress getInstallationProgress(){
+    public InstalationProgress getInstallationProgress() {
         return instalationProgress;
     }
 
@@ -585,6 +572,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
     /**
      * This method let us get an skin file referenced by its id
+     *
      * @param skinId
      * @param walletPublicKey
      * @return
@@ -592,7 +580,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
      * @throws CantGetResourcesException
      */
     @Override
-    public Skin getSkinFile( UUID skinId,String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
+    public Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
         String content = "";
         try {
             //get repo from table
@@ -600,9 +588,9 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //get image from disk
             PluginTextFile layoutFile;
 
-            String reponame = repository.getPath() + walletPublicKey +"/";
+            String reponame = repository.getPath() + walletPublicKey + "/";
 
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, skinId.toString() + "_" + repository.getSkinName() , FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, skinId.toString() + "_" + repository.getSkinName(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
 
@@ -635,7 +623,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
      * @throws CantGetLanguageFileException
      */
     @Override
-    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException {
+    public String getLanguageFile(UUID skinId, String walletPublicKey, String fileName) throws CantGetLanguageFileException {
         try {
             //get repo from table
             Repository repository = subAppResourcesDAO.getRepository(skinId);
@@ -659,7 +647,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
         } catch (CantGetRepositoryPathRecordException e) {
 
-                throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error get repository from database ", "");
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error get repository from database ", "");
 
         } catch (CantCreateFileException e) {
             /**
@@ -679,7 +667,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
      * @throws CantGetResourcesException
      */
     @Override
-    public byte[] getImageResource(String imageName, UUID skinId,String walletPublicKey) throws CantGetImageResourceException {
+    public byte[] getImageResource(String imageName, UUID skinId, String walletPublicKey) throws CantGetImageResourceException {
         try {
 
             //get repo from table
@@ -688,20 +676,20 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             PluginBinaryFile imageFile;
             // String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + imageName + "/" + screenSize + "/";
 
-            String filename= skinId.toString()+"_"+imageName;
+            String filename = skinId.toString() + "_" + imageName;
 
-            String path = repository.getPath()+"skins/"+repository.getSkinName()+"/";
+            String path = repository.getPath() + "skins/" + repository.getSkinName() + "/";
 
             imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             return imageFile.getContent();
 
         } catch (FileNotFoundException e) {
-            throw new CantGetImageResourceException("CAN'T GET IMAGE RESOURCES:", e, "File Not Found image "+ imageName, "");
+            throw new CantGetImageResourceException("CAN'T GET IMAGE RESOURCES:", e, "File Not Found image " + imageName, "");
         } catch (CantCreateFileException e) {
-            throw new CantGetImageResourceException("CAN'T GET IMAGE RESOURCES:", e, "cant created image "+ imageName, "");
+            throw new CantGetImageResourceException("CAN'T GET IMAGE RESOURCES:", e, "cant created image " + imageName, "");
         } catch (Exception e) {
-            throw new CantGetImageResourceException("CAN'T GET IMAGE RESOURCES:", e, "unknown error image "+ imageName, "");
+            throw new CantGetImageResourceException("CAN'T GET IMAGE RESOURCES:", e, "unknown error image " + imageName, "");
         }
 
     }
@@ -754,7 +742,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
      * @throws CantGetResourcesException
      */
     @Override
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String subAppType) throws CantGetResourcesException {
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId, String subAppType) throws CantGetResourcesException {
 
 
         String content = "";
@@ -764,7 +752,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             //String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + layoutName + "/" + screenSize + "/";
 
-            String reponame = repository.getPath()+"skins/"+repository.getSkinName()+"/";
+            String reponame = repository.getPath() + "skins/" + repository.getSkinName() + "/";
 
             String filename = skinId.toString() + "_" + layoutName;
 
@@ -797,15 +785,14 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
 
-
     /**
-     *   Private instances methods declarations.
+     * Private instances methods declarations.
      */
 
 
-    private void UninstallSubApp(String subAppType,String developer,String skinName,UUID skinId, String screenSize,String navigationStructureVersion,boolean isLastSubApp) throws CantUninstallSubApp {
+    private void UninstallSubApp(String subAppType, String developer, String skinName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastSubApp) throws CantUninstallSubApp {
 
-        String linkToRepo = REPOSITORY_LINK +  subAppType + "/" + developer + "/";
+        String linkToRepo = REPOSITORY_LINK + subAppType + "/" + developer + "/";
 
 
         String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
@@ -821,14 +808,13 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             subAppResourcesDAO.delete(skin.getId(), linkToRepo);
 
 
-
             String linkToNavigationStructure = linkToRepo + "/versions/" + skin.getNavigationStructureCompatibility() + "/";
 
             /**
              *  delete navigation structure portrait
              */
 
-            String navigationStructureName="navigation_structure.xml";
+            String navigationStructureName = "navigation_structure.xml";
             deleteXML(navigationStructureName, skinId, linkToNavigationStructure);
 
 
@@ -865,9 +851,8 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
 
-    private void downloadResourcesFromRepo(String linkToRepo, Skin skin, String localStoragePath,String screenSize,String subAppType) throws  CantDownloadResourceFromRepo{
-        try
-        {
+    private void downloadResourcesFromRepo(String linkToRepo, Skin skin, String localStoragePath, String screenSize, String subAppType) throws CantDownloadResourceFromRepo {
+        try {
             /**
              * download portrait resources
              */
@@ -879,7 +864,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             /**
              * download portrait layouts
              */
-            String linkToPortraitLayouts = linkToRepo +screenSize+ "/portrait/layouts/";
+            String linkToPortraitLayouts = linkToRepo + screenSize + "/portrait/layouts/";
             downloadLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId(), localStoragePath, subAppType);
 
             /**
@@ -895,27 +880,22 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
             eventManager.raiseEvent(platformEvent);
             */
-        }
-        catch(CantDownloadResource e)
-        {
+        } catch (CantDownloadResource e) {
             throw new CantDownloadResourceFromRepo("CAN'T DOWNLOAD RESOURCES FROM REPO", e, "Error downloadImages", "");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new CantDownloadResourceFromRepo("CAN'T DOWNLOAD RESOURCES FROM REPO", e, "", "");
         }
 
     }
 
-    private void downloadLanguageFromRepo(String linkToLanguage, UUID skinId,String languageName, String localStoragePath,String screenSize,String subAppType) throws CantDownloadLanguageFromRepo {
+    private void downloadLanguageFromRepo(String linkToLanguage, UUID skinId, String languageName, String localStoragePath, String screenSize, String subAppType) throws CantDownloadLanguageFromRepo {
 
-        try
-        {
+        try {
             /**
              * download language
              */
-            String linkToLanguageRepo = linkToLanguage+languageName+".xml";
-            downloadLanguage(linkToLanguageRepo, languageName, skinId, localStoragePath,subAppType);
+            String linkToLanguageRepo = linkToLanguage + languageName + ".xml";
+            downloadLanguage(linkToLanguageRepo, languageName, skinId, localStoragePath, subAppType);
 
 
             //TODO: raise a event
@@ -925,18 +905,15 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         eventManager.raiseEvent(platformEvent);
         */
 
-        }
-        catch(CantDownloadLanguage e) {
+        } catch (CantDownloadLanguage e) {
             throw new CantDownloadLanguageFromRepo("CAN'T DOWNLOAD LANGUAGE FROM REPO", e, "Cant Save language", "");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new CantDownloadLanguageFromRepo("CAN'T DOWNLOAD LANGUAGE FROM REPO", e, "Generic error", "");
         }
 
     }
 
-    private void downloadResources(String link, Map<String, Resource> resourceMap, UUID skinId,String localStoragePath) throws CantDownloadResource {
+    private void downloadResources(String link, Map<String, Resource> resourceMap, UUID skinId, String localStoragePath) throws CantDownloadResource {
         try {
             for (Map.Entry<String, Resource> entry : resourceMap.entrySet()) {
 
@@ -977,6 +954,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             throw new CantDownloadResource("CAN'T DOWNLOAD RESOURCES", e, "Error downloading resources.", "Unhandled Exception.");
         }
     }
+
     private void deleteResources(String link, Map<String, Resource> resourceMap, UUID skinId) throws CantDeleteResourcesFromDisk {
         try {
             for (Map.Entry<String, Resource> entry : resourceMap.entrySet()) {
@@ -1003,7 +981,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
 
-    private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId,String localStoragePath,String subAppType) throws CantDownloadLayouts {
+    private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId, String localStoragePath, String subAppType) throws CantDownloadLayouts {
         try {
             for (Map.Entry<String, Layout> entry : resourceMap.entrySet()) {
 
@@ -1042,25 +1020,24 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     /**
      * Through the method <code>downloadLanguage</code> TODO COMPLETE
      *
-     * @param link TODO COMPLETE
+     * @param link             TODO COMPLETE
      * @param languageName
      * @param skinId
      * @param localStoragePath
      * @param subAppType
-     *
      * @throws CantDownloadLanguage if something goes wrong.
      */
-    private void downloadLanguage(final String link            ,
-                                  final String languageName    ,
-                                  final UUID   skinId          ,
+    private void downloadLanguage(final String link,
+                                  final String languageName,
+                                  final UUID skinId,
                                   final String localStoragePath,
-                                  final String subAppType      ) throws CantDownloadLanguage {
+                                  final String subAppType) throws CantDownloadLanguage {
 
         try {
 
             String languageXML = getGitHubConnection().getFile(link);
 
-            recordXML(languageXML, languageName, skinId, localStoragePath,subAppType);
+            recordXML(languageXML, languageName, skinId, localStoragePath, subAppType);
 
         } catch (MalformedURLException e) {
 
@@ -1097,21 +1074,21 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
     }
 
-    private void downloadNavigationStructure(String link, UUID skinId,String localStoragePath,String walletPublicKey) throws CantDonwloadNavigationStructure {
+    private void downloadNavigationStructure(String link, UUID skinId, String localStoragePath, String walletPublicKey) throws CantDonwloadNavigationStructure {
         try {
 
 
             /**
              *  Download portrait navigation structure
              */
-            String navigationStructureName="navigation_structure.xml";
+            String navigationStructureName = "navigation_structure.xml";
             //this will be use when the main repository be open source
             //String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
 
             // this is used because we have a private main repository
             String navigationStructureXML = getGitHubConnection().getFile(link + navigationStructureName);
 
-            recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath,walletPublicKey);
+            recordXML(navigationStructureXML, navigationStructureName, skinId, localStoragePath, walletPublicKey);
 
             //TODO: este evento tiene que ser creado igual que se encuentra pero para el subAppRuntime
 
@@ -1128,8 +1105,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         } catch (CantCheckResourcesException e) {
             throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error save navigation Structure ", "");
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error get navigation Structure for github ", "");
 
         } catch (CantGetGitHubConnectionException e) {
@@ -1141,7 +1117,6 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error downloading navigation structure.", "Unhandled Exception.");
         }
     }
-
 
 
     private void recordImageResource(byte[] image, String name, UUID skinId, String reponame) throws CantCheckResourcesException {
@@ -1156,26 +1131,23 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             imageFile.setContent(image);
 
             imageFile.persistToMedia();
-        }
-        catch (CantPersistFileException cantPersistFileException) {
+        } catch (CantPersistFileException cantPersistFileException) {
             throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file ", "");
 
-        }
-
-        catch (CantCreateFileException cantPersistFileException) {
+        } catch (CantCreateFileException cantPersistFileException) {
             throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file ", "");
         }
 
 
     }
 
-    private void recordXML(String xml, String name, UUID skinId, String reponame,String publicKey) throws CantCheckResourcesException {
+    private void recordXML(String xml, String name, UUID skinId, String reponame, String publicKey) throws CantCheckResourcesException {
         try {
             PluginTextFile layoutFile;
 
             String filename = skinId.toString() + "_" + name;
 
-            reponame+=publicKey+"";
+            reponame += publicKey + "";
 
             layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             layoutFile.setContent(xml);
@@ -1192,8 +1164,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
 
-
-    private void deleteXML( String name, UUID skinId, String reponame) throws CantDeleteXml {
+    private void deleteXML(String name, UUID skinId, String reponame) throws CantDeleteXml {
 
         String filename = skinId.toString() + "_" + name;
 
@@ -1228,8 +1199,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
 
-
-    private Skin checkAndInstallSkinResources(String linkToSkin,String localStoragePath,String walletPublicKey) throws CantCheckResourcesException {
+    private Skin checkAndInstallSkinResources(String linkToSkin, String localStoragePath, String walletPublicKey) throws CantCheckResourcesException {
         String repoManifest = "";
         String skinFilename = "skin.xml";
         try {
@@ -1244,8 +1214,8 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             Skin skin = new Skin();
             Object object;
-            object=XMLParser.parseXML(repoManifest, skin);
-            skin= (Skin) object;
+            object = XMLParser.parseXML(repoManifest, skin);
+            skin = (Skin) object;
             //skin = (Skin) XMLParser.parseXML(repoManifest, skin);
 
             /**
@@ -1274,7 +1244,7 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
         }
     }
 
-    private void addProgress(InstalationProgress instalationProgress){
+    private void addProgress(InstalationProgress instalationProgress) {
         this.instalationProgress = instalationProgress;
     }
 }

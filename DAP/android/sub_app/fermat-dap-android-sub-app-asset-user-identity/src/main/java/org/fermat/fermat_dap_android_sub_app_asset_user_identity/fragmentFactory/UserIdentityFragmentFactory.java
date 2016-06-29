@@ -4,16 +4,17 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.CreateUserIdentityFragment;
+import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.GeolocationUserIdentityFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.IdentityListFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIdentitySubAppSession;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSession, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
+public class UserIdentityFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession, ResourceProviderManager, UserIdentityFragmentEnumType> {
 
 
     @Override
@@ -24,6 +25,9 @@ public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdent
 
         if (fragments.equals(UserIdentityFragmentEnumType.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT))
             return CreateUserIdentityFragment.newInstance();
+
+        if (fragments.equals(UserIdentityFragmentEnumType.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_FRAGMENT))
+            return GeolocationUserIdentityFragment.newInstance();
 
 
         throw createFragmentNotFoundException(fragments);

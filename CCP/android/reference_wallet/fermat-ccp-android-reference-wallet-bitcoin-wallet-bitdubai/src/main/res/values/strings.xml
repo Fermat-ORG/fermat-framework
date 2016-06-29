@@ -29,8 +29,8 @@
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
     <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
-    <string name="add_fermat_user_text">Add Fermat Contact</string>no_id_Users_of_other_text_Fermat_wallets
-    <string name="add_extra_user_text">Add External Contact</string>
+    <string name="add_fermat_user_text">Fermat Contact</string>
+    <string name="add_extra_user_text">External Contact</string>
     <!-- create_contact_dialog.xml -->
     <string name="create_external_contact_text">Create External Contact</string>
     <string name="set_name_text">Type name</string>
@@ -77,9 +77,17 @@
     <!-- pending_request_row.xml -->
     <string name="balance_amount_25_btc_text">25 btc</string>
     <string name="refuse_text">Refuse</string>
+
+    <!-- dialog_blockchain_download.xml-->
+    <string name="advertisement_text">Advertisement!</string>
+    <string name="the_process_of_downloading_text">The process of downloading blocks \nfrom the Blockchain is in progress.\n  As this occurs, the action bar is shown in red.</string>
+
     <!-- presentation_bitcoin_wallet_without_identities.xml -->
     <string name="welcome_text">Welcome!</string>
-    <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple bitcoin only wallet. It\'s main features are:</string>
+    <string name="this_is_a_simple_bitcoin_only_wallet_text">This is a simple bitcoin only wallet.\nIt\'s main features are:</string>
+
+    <!-- contacts_tutorial_part1_v2.xml -->
+    <string name="in_this_wallet_you_can_have_text">In this wallet you can have two different types of contacts:</string>
 
     <string name="close_text">Close</string>
     <!-- presentation_wallet.xml -->

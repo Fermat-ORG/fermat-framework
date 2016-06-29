@@ -9,7 +9,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum RedeemPointIdentityFragmentEnumType implements FermatFragmentsEnumType<RedeemPointIdentityFragmentEnumType> {
 
     DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT("DAPSARPIMF"),
-    DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT("DAPSARPICIF");
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT("DAPSARPICIF"),
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_FRAGMENT("DAPSARPIGF"),
+
+    ;
 
     private String key;
 

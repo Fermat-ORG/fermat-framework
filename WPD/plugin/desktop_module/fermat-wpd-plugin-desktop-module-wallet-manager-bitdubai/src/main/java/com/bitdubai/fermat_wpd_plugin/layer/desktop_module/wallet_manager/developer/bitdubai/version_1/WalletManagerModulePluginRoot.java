@@ -7,11 +7,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -57,13 +59,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.CantPersistWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.NewWalletCreationFailedException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletRemovalFailedException;
@@ -105,7 +110,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         WalletManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
@@ -128,6 +133,9 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.LOSS_PROTECTED_WALLET)
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
 //    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK   , plugin = Plugins.BITCOIN_NETWORK)
 //    private BitcoinNetworkManager bitcoinNetworkManager;
 
@@ -138,6 +146,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     String deviceUserPublicKey = "walletDevice";
     String walletPublicKey = "reference_wallet";
     String lossProtectedwalletPublicKey = "loss_protected_wallet";
+    String fermatWalletPublicKey = "fermat_wallet";
 
     List<InstalledWallet> userWallets;
 
@@ -168,6 +177,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         //TODO: Verificar si este bloque de codigo es necesario que quede aca
         boolean existWallet = false;
         boolean existWalletLoss = false;
+        boolean existFermatWallet = false;
         try {
 
             //load user's wallets ids
@@ -181,6 +191,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                     existWallet = true;
                 if (mapEntry.getValue().toString().equals(lossProtectedwalletPublicKey))
                     existWalletLoss = true;
+                if (mapEntry.getValue().toString().equals(fermatWalletPublicKey))
+                    existFermatWallet = true;
             }
 
 
@@ -189,7 +201,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
                 try {
 
-                    bitcoinWalletManager.createWallet(walletPublicKey);
+                    cryptoWalletManager.createWallet(walletPublicKey);
                     walletIds.put(UUID.randomUUID().toString(), walletPublicKey);
 
 
@@ -197,6 +209,30 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
                     try {
                         this.persistWallet(walletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
+
+            if (!existFermatWallet) {
+                //Create new Fermat Wallet
+
+                try {
+
+                    cryptoWalletManager.createWallet(fermatWalletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), fermatWalletPublicKey);
+
+
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(fermatWalletPublicKey);
                     } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
 
@@ -374,6 +410,20 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         return lstInstalledWallet;
     }
 
+    @Override
+    public List<String> getMnemonicCode() throws Exception {
+        try {
+            return cryptoVaultManager.getMnemonicCode();
+        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            throw new Exception(cantLoadExistingVaultSeed);
+        }
+    }
+
+    @Override
+    public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,blockchainNetworkType);
+    }
+
     /**
      * This method removes a wallet created by a user. <p>
      * Note that this won't uninstall the wallet type. It is used to delete a copy of a wallet created
@@ -461,7 +511,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
          * I will generate the file content.
          */
 
-        //fileContent+= deviceUserPublicKey + "," + walletId + ";";
+        fileContent+= deviceUserPublicKey + "," + walletId + ";";
 
         StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
 
@@ -469,7 +519,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
             stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
-            iterator.remove();
+            //iterator.remove();
         }
 
 
@@ -494,7 +544,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage);
+            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage,Long.parseLong("0"), Frecuency.NONE);
 
         }
         catch( CantCreateNewIntraWalletUserException e)
@@ -670,12 +720,12 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletType.REFERENCE,
                         new ArrayList<InstalledSkin>(),
                         new ArrayList<InstalledLanguage>(),
-                        "reference_wallet_icon",
+                        "fermat_wallet_icon",
                         "Fermat Wallet",
                         WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.ALPHA);
+                        AppsStatus.DEV);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
@@ -827,10 +877,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
-
-
+        returnedClasses.add("WalletManagerModulePluginRoot");
+//        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
         /**
          * I return the values.
          */
@@ -902,6 +950,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     }
 
     @Override
+    @moduleManagerInterfacea(moduleManager = WalletManagerModule.class)
     public ModuleManager<DesktopManagerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         return this;
     }

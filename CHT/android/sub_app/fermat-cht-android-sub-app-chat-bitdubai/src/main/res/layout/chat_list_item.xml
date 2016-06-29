@@ -14,12 +14,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:background="@drawable/burble_green_shadow"
-            android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:paddingRight="20dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp">
+            android:background="@drawable/cht_burble_green"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtMessage"
@@ -27,6 +23,9 @@
                 android:layout_height="wrap_content"
                 android:maxWidth="240dp"
                 android:textColor="@color/black"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="5dp"
                 android:text="ghghghgh" />
            <!-- <RelativeLayout
                 android:id="@+id/container"
@@ -42,10 +41,13 @@
                 >
                 <TextView
                     android:id="@+id/txtInfo"
-                    android:paddingRight="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#666666"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="7dp"
+                    android:paddingRight="20dp"
                     android:textSize="9sp"
                     />
 
@@ -53,6 +55,9 @@
                     android:id="@+id/tick_status_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="7dp"
+                    android:paddingRight="20dp"
                     />
 
             </LinearLayout>

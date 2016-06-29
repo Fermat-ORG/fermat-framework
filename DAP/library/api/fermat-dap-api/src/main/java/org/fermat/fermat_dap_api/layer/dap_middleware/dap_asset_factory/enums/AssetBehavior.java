@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by franklin on 17/09/15.
  */
 public enum AssetBehavior {
-    REGENERATION_ASSET ("REGA"),
-    RECUPERATION_BITCOINS ("RECA");
+    REGENERATION_ASSET("REGA"),
+    RECUPERATION_BITCOINS("RECA");
 
     private String code;
 
@@ -15,9 +15,11 @@ public enum AssetBehavior {
         this.code = code;
     }
 
-    public String getCode() { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
-    public static AssetBehavior getByCode(String code)throws InvalidParameterException {
+    public static AssetBehavior getByCode(String code) throws InvalidParameterException {
         switch (code) {
             case "REGA":
                 return AssetBehavior.REGENERATION_ASSET;

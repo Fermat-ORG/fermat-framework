@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
@@ -114,6 +116,18 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
         entityRecord.setStringValue(OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME, entity.isBetweenActors().toString());
 
         return entityRecord;
+    }
+
+    public void markAsDelivered(NetworkServiceMessage fermatMessage) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+
+        if (fermatMessage == null) {
+            throw new IllegalArgumentException("The fermatMessage is required, can not be null");
+        }
+
+        fermatMessage.setDeliveryTimestamp(new Timestamp(System.currentTimeMillis()));
+        fermatMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
+        update(fermatMessage);
+
     }
 
     /**

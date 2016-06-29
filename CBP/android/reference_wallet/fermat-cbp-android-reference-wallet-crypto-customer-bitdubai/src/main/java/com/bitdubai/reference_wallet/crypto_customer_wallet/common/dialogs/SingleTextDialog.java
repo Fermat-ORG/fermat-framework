@@ -5,19 +5,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 
 /**
  * Created by Yordin Alayn on 16.02.16.
  */
-public class SingleTextDialog extends FermatDialog<CryptoCustomerWalletSession, ResourceProviderManager>
+public class SingleTextDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements View.OnClickListener {
 
     private FermatEditText editTextView;
@@ -32,7 +33,7 @@ public class SingleTextDialog extends FermatDialog<CryptoCustomerWalletSession, 
     }
 
 
-    public SingleTextDialog(Activity activity, CryptoCustomerWalletSession fermatSession, ResourceProviderManager resources) {
+    public SingleTextDialog(Activity activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
 
         hintStringResource = R.string.hint;

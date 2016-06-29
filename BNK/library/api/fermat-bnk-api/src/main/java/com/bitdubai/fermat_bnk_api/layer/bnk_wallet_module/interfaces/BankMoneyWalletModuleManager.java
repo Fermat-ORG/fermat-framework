@@ -8,12 +8,14 @@ import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTra
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exceptions.CantMakeWithdrawTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantEditAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -25,11 +27,11 @@ public interface BankMoneyWalletModuleManager extends ModuleManager<BankMoneyWal
 
     List<BankAccountNumber> getAccounts() throws CantLoadBankMoneyWalletException;
 
-    void addNewAccount(BankAccountType bankAccountType, String alias, String account, FiatCurrency fiatCurrency);
+    void addNewAccount(BankAccountType bankAccountType, String alias, String account, FiatCurrency fiatCurrency, String selectedImageId);
 
     List<BankMoneyTransactionRecord> getTransactions(String account) throws CantLoadBankMoneyWalletException;
 
-    List<BankMoneyTransactionRecord> getPendingTransactions();
+    List<BankMoneyTransactionRecord> getPendingTransactions(String account);
 
     void makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException;
 
@@ -39,13 +41,15 @@ public interface BankMoneyWalletModuleManager extends ModuleManager<BankMoneyWal
 
     void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters);
 
-    float getBookBalance(String account);
+    BigDecimal getBookBalance(String account);
 
-    float getAvailableBalance(String account);
+    BigDecimal getAvailableBalance(String account);
 
     void createBankName(String bankName);
 
     String getBankName();
 
     void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction);
+
+    void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException;
 }

@@ -35,7 +35,7 @@
                         android:layout_weight="0.4"
                         android:layout_height="wrap_content"
                         android:text="0.00 BTC"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="#333333"
                         android:id="@+id/transaction_amount"/>
 

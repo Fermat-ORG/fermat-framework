@@ -9,8 +9,9 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.AppManagerMiddlewareInstalledSkin</code>
  * is the implementation of InstalledSkin.
  * <p/>
- *
+ * <p/>
  * Created by Natalia on 21/07/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -24,7 +25,7 @@ public class AppManagerMiddlewareInstalledSkin implements InstalledSkin {
     /**
      * Constructor
      */
-    public AppManagerMiddlewareInstalledSkin(UUID id,String alias,String preview, Version version){
+    public AppManagerMiddlewareInstalledSkin(UUID id, String alias, String preview, Version version) {
         this.alias = alias;
         this.preview = preview;
         this.id = id;
@@ -37,7 +38,6 @@ public class AppManagerMiddlewareInstalledSkin implements InstalledSkin {
 
     /**
      * This method gives us the name (alias) of an skin
-     *
      */
     @Override
     public String getAlias() {
@@ -46,25 +46,22 @@ public class AppManagerMiddlewareInstalledSkin implements InstalledSkin {
 
     /**
      * This method gives us the identifier of an skin
-     *
      */
-     @Override
+    @Override
     public String getPreview() {
         return this.preview;
     }
 
     /**
      * This method gives us the name of the preview image of the skin
-     *
      */
-      @Override
+    @Override
     public Version getVersion() {
         return version;
     }
 
     /**
      * This method gives us the version of the skin
-     *
      */
     @Override
     public UUID getId() {

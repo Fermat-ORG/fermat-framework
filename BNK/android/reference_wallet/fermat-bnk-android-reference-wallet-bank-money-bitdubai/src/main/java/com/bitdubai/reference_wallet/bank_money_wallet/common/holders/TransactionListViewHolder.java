@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.common.holders;
 
+import android.content.res.Resources;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,14 +24,8 @@ import java.util.Date;
  */
 public class TransactionListViewHolder extends FermatViewHolder {
 
+    private Resources res;
     private View itemView;
-    /*private FermatTextView transaction;
-    private FermatTextView transactionAmount;
-    private FermatTextView currency;
-    private FermatTextView transactionType;
-    private FermatTextView transactionTimestamp;
-    private FermatTextView memo;*/
-
 
     public ImageView depositImage;
     public FermatTextView depositText;
@@ -42,6 +38,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
     public FermatTextView withdrawalAmount;
     public FermatTextView withdrawalDate;
     public FermatTextView withdrawalMemo;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
 
 
     private ProgressBar progressBar;
@@ -49,11 +46,8 @@ public class TransactionListViewHolder extends FermatViewHolder {
     public TransactionListViewHolder(View itemView) {
         super(itemView);
         this.itemView = itemView;
-        /*transactionAmount = (FermatTextView) itemView.findViewById(R.id.transaction_amount);
-        currency = (FermatTextView) itemView.findViewById(R.id.transaction_currency);
-        transactionType = (FermatTextView) itemView.findViewById(R.id.transaction_type);
-        transactionTimestamp = (FermatTextView) itemView.findViewById(R.id.transaction_timestamp);
-        memo = (FermatTextView) itemView.findViewById(R.id.memo);*/
+        res = itemView.getResources();
+
         depositImage = (ImageView) itemView.findViewById(R.id.imageView_deposit);
         depositText = (FermatTextView) itemView.findViewById(R.id.textView_deposit);
         depositAmount = (FermatTextView) itemView.findViewById(R.id.textView_deposit_amount);
@@ -72,43 +66,56 @@ public class TransactionListViewHolder extends FermatViewHolder {
     public void bind(BankMoneyTransactionRecord itemInfo){
 
         resetVisibility();
+        long timestamp;
 
         if(itemInfo.getStatus()== BankTransactionStatus.PENDING){
             progressBar.setVisibility(View.VISIBLE);
+            progressBar.setIndeterminate(false);
+            progressBar.setMax(15);
+            int timeDiff = (int) (new Date().getTime()/1000 - itemInfo.getTimestamp());
+            progressBar.setProgress(timeDiff);
+            progressBar.getProgressDrawable().setColorFilter(
+                    getTransactionTypeColorProgressBar(itemInfo.getTransactionType()),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
+            timestamp = itemInfo.getTimestamp() * 1000;
+
+            depositDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
         }else{
             progressBar.setVisibility(View.GONE);
+            timestamp = itemInfo.getTimestamp();
+
         }
 
         if(itemInfo.getTransactionType() == TransactionType.CREDIT) {
 
             depositItemsVisible();
             depositText.setText("DEPOSIT");
-            depositAmount.setText(String.valueOf(itemInfo.getAmount()));
-            depositDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
+            depositAmount.setText(moneyFormat.format(itemInfo.getAmount()));
+            depositDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             depositMemo.setText(itemInfo.getMemo());
         }
         if(itemInfo.getTransactionType() == TransactionType.UNHOLD) {
 
             depositItemsVisible();
             depositText.setText("UNHOLD");
-            depositAmount.setText(String.valueOf(itemInfo.getAmount()));
-            depositDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
+            depositAmount.setText(moneyFormat.format(itemInfo.getAmount()));
+            depositDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             depositMemo.setText(itemInfo.getMemo());
         }
         if(itemInfo.getTransactionType() == TransactionType.HOLD) {
 
             withdrawalItemsVisible();
             withdrawalText.setText("HOLD");
-            withdrawalAmount.setText(String.valueOf(itemInfo.getAmount()));
-            withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
+            withdrawalAmount.setText(moneyFormat.format(itemInfo.getAmount()));
+            withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             withdrawalMemo.setText(itemInfo.getMemo());
         }
         if(itemInfo.getTransactionType() == TransactionType.DEBIT) {
 
             withdrawalItemsVisible();
             withdrawalText.setText("WITHDRAWAL");
-            withdrawalAmount.setText(String.valueOf(itemInfo.getAmount()));
-            withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
+            withdrawalAmount.setText(moneyFormat.format(itemInfo.getAmount()));
+            withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(timestamp).toString());
             withdrawalMemo.setText(itemInfo.getMemo());
         }
     }
@@ -146,5 +153,13 @@ public class TransactionListViewHolder extends FermatViewHolder {
         withdrawalAmount.setVisibility(View.VISIBLE);
         withdrawalMemo.setVisibility(View.VISIBLE);
         withdrawalDate.setVisibility(View.VISIBLE);
+    }
+
+    private int getTransactionTypeColorProgressBar(TransactionType transactionType) {
+        if (transactionType == TransactionType.DEBIT)
+            return res.getColor(R.color.bnk_transaction_withdrawal_color);
+        else if (transactionType == TransactionType.CREDIT)
+            return res.getColor(R.color.bnk_transaction_deposit_color);
+        else return -1;
     }
 }

@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.TransferIntraWalletUsersManager;
@@ -39,8 +39,7 @@ import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWall
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.structure.TransferIntraWalletUsersModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +61,7 @@ public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
 
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.LOSS_PROTECTED_WALLET)
     private BitcoinLossProtectedWalletManager bitcoinLossWalletManager;
@@ -90,7 +89,7 @@ public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
         transferIntraWalletUsersDao = new TransferIntraWalletUsersDao(getErrorManager(),pluginDatabaseSystem);
         try {
             transferIntraWalletUsersDao.initialize(pluginId);
-            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,getErrorManager(), transferIntraWalletUsersDao);
+            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager, cryptoWalletManager,getErrorManager(), transferIntraWalletUsersDao);
    } catch (CantInitializeOutgoingIntraActorDaoException e) {
             e.printStackTrace();
         }

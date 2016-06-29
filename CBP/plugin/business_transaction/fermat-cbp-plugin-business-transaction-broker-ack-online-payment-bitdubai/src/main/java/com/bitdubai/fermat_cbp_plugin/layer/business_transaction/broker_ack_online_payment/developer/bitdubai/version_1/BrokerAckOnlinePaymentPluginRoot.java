@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -48,11 +49,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onli
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,9 +67,6 @@ import java.util.regex.Pattern;
 public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -110,6 +106,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
      * Represents the database
      */
     Database database;
+
     public BrokerAckOnlinePaymentPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -119,7 +116,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.BrokerAckOnlinePaymentPluginRoot");
+        returnedClasses.add("BrokerAckOnlinePaymentPluginRoot");
+
         return returnedClasses;
     }
 
@@ -135,7 +133,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                 }
             }
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
@@ -161,8 +159,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -190,8 +187,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                this.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -221,20 +217,21 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Initialize Dao
              */
-            BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao=
-                    new BrokerAckOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,
+            BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao =
+                    new BrokerAckOnlinePaymentBusinessTransactionDao(
+                            pluginDatabaseSystem,
                             pluginId,
                             database,
-                            errorManager);
+                            this);
             /**
              * Init Monitor Agent
              */
-        //TODO: the following line is only for testing, please comment it when the testing finish
+            //TODO: the following line is only for testing, please comment it when the testing finish
             //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
-            BrokerAckOnlinePaymentMonitorAgent brokerAckOnlinePaymentMonitorAgent=new BrokerAckOnlinePaymentMonitorAgent(
+            BrokerAckOnlinePaymentMonitorAgent brokerAckOnlinePaymentMonitorAgent = new BrokerAckOnlinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     transactionTransmissionManager,
@@ -246,21 +243,19 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init event recorder service.
              */
-            BrokerAckOnlinePaymentRecorderService brokerAckOnlinePaymentRecorderService=
-                    new BrokerAckOnlinePaymentRecorderService(
+            BrokerAckOnlinePaymentRecorderService brokerAckOnlinePaymentRecorderService = new BrokerAckOnlinePaymentRecorderService(
                             brokerAckOnlinePaymentBusinessTransactionDao,
                             eventManager,
-                            errorManager);
+                            this);
 
             brokerAckOnlinePaymentRecorderService.start();
 
             /**
              * Initialize plugin manager
              */
-            this.brokerAckOnlinePaymentTransactionManager=new
-                    BrokerAckOnlinePaymentTransactionManager(
+            this.brokerAckOnlinePaymentTransactionManager = new BrokerAckOnlinePaymentTransactionManager(
                     brokerAckOnlinePaymentBusinessTransactionDao,
-                    errorManager);
+                    this);
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker Ack Online Payment Starting");
@@ -286,7 +281,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                     FermatException.wrapException(exception),
                     "Starting Broker Ack Online Payment Plugin",
                     "Cannot initialize the plugin recorder service");
-        }catch (Exception exception){
+        } catch (Exception exception) {
             throw new CantStartPluginException(FermatException.wrapException(exception),
                     "Starting Broker Ack Online Payment Plugin",
                     "Unexpected error");
@@ -296,28 +291,28 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public void pause() {
 
-        try{
+        try {
             this.serviceStatus = ServiceStatus.PAUSED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void resume() {
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STARTED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
     }
@@ -356,8 +351,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void testAck(){
-        try{
+    private void testAck() {
+        try {
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
             IncomingMoneyNotificationEvent incomingMoneyNotificationEvent = (IncomingMoneyNotificationEvent) fermatEvent;
             incomingMoneyNotificationEvent.setSource(EventSource.OUTGOING_INTRA_USER);
@@ -367,22 +362,22 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             incomingMoneyNotificationEvent.setCryptoCurrency(CryptoCurrency.BITCOIN);
             incomingMoneyNotificationEvent.setWalletPublicKey("TestWalletPublicKey");
             eventManager.raiseEvent(incomingMoneyNotificationEvent);
-            System.out.println("Event raised:\n"+incomingMoneyNotificationEvent.toString());
-        } catch(Exception e){
-            System.out.println("Exception in Broker Ack Online Payment Test: "+e);
+            System.out.println("Event raised:\n" + incomingMoneyNotificationEvent.toString());
+        } catch (Exception e) {
+            System.out.println("Exception in Broker Ack Online Payment Test: " + e);
             e.printStackTrace();
         }
     }
 
-    private void raiseNewContractEventTest(){
-        try{
+    private void raiseNewContractEventTest() {
+        try {
             FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType.NEW_CONTRACT_OPENED);
             NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
             newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
             newContractOpened.setContractHash("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
             eventManager.raiseEvent(newContractOpened);
-        } catch(Exception e){
-            System.out.println("Exception in Broker Ack Online Payment Test: "+e);
+        } catch (Exception e) {
+            System.out.println("Exception in Broker Ack Online Payment Test: " + e);
         }
     }
 

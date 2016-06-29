@@ -33,6 +33,32 @@
         android:paddingTop="50dp"
         >
 
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Currency"
+            android:textColor="#7A7A7A"
+            android:paddingTop="20dp"
+            android:paddingBottom="1dp"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cbp_bank_account_currency"
+            android:text="Bank"
+            android:theme="@style/Base.TextAppearance.AppCompat.Button"
+            android:textColor="#000000"
+            android:backgroundTint="#a5a5a5"
+            android:backgroundTintMode="add"
+            android:background="#c2c2c2"
+            android:foregroundTint="#000000"
+            android:foregroundTintMode="add"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +70,7 @@
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/idcbp_bank_account_type"
+            android:id="@+id/cbp_bank_account_type"
             android:text="Account Type"
             android:theme="@style/Base.TextAppearance.AppCompat.Button"
             android:textColor="#000000"
@@ -68,18 +94,41 @@
             />
 
 
-        <EditText
-            android:id="@+id/idcbp_bank_account_bank_name"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Bank name"
-            android:textColorHint="#9a9a9c"
-            android:paddingLeft="15dp"
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            />
+            android:orientation="horizontal"
+            >
+
+            <EditText
+                android:id="@+id/cbp_bank_account_bank_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/cbp_bank_account_bank_name_count"
+                android:hint="Bank name"
+                android:textColorHint="#9a9a9c"
+                android:maxLength="10"
+                android:paddingLeft="15dp"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbp_bank_account_bank_name_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="10"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+
 
 
 
@@ -91,18 +140,42 @@
             android:paddingTop="20dp"
             android:paddingBottom="1dp"
             />
-        <EditText
-            android:id="@+id/idcbp_bank_account_alias"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Alias"
-            android:textColorHint="#9a9a9c"
-            android:paddingLeft="15dp"
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            />
+            android:orientation="horizontal"
+            >
+
+            <EditText
+                android:id="@+id/cbp_bank_account_alias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/cbp_bank_account_alias_count"
+                android:maxLength="10"
+                android:hint="Alias"
+                android:textColorHint="#9a9a9c"
+                android:paddingLeft="15dp"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbp_bank_account_alias_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="10"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -111,42 +184,41 @@
             android:textColor="#7A7A7A"
             android:paddingTop="20dp"
             android:paddingBottom="1dp"/>
-        <EditText
-            android:id="@+id/idcbp_bank_account_number"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Account Number"
-            android:textColorHint="#9a9a9c"
-            android:paddingLeft="15dp"
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            />
+            android:orientation="horizontal"
+            >
+
+            <EditText
+                android:id="@+id/cbp_bank_account_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/cbp_bank_account_number_count"
+                android:hint="Account Number"
+                android:maxLength="25"
+                android:textColorHint="#9a9a9c"
+                android:paddingLeft="15dp"
+                android:textColor="#000"
+                android:textSize="12sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                />
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Currency"
-            android:textColor="#7A7A7A"
-            android:paddingTop="20dp"
-            android:paddingBottom="1dp"/>
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/idcbp_bank_account_currency"
-            android:text="Bank"
-            android:theme="@style/Base.TextAppearance.AppCompat.Button"
-            android:textColor="#000000"
-            android:backgroundTint="#a5a5a5"
-            android:backgroundTintMode="add"
-            android:background="#c2c2c2"
-            android:foregroundTint="#000000"
-            android:foregroundTintMode="add"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            />
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbp_bank_account_number_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="10"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
 
 
 

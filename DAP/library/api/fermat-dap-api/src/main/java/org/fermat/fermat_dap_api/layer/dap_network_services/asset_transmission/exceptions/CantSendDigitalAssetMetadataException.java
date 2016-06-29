@@ -5,7 +5,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 /**
  * Created by root on 06/10/15.
  */
-public class CantSendDigitalAssetMetadataException  extends DAPException {
+public class CantSendDigitalAssetMetadataException extends DAPException {
 
 
     public static final String DEFAULT_MESSAGE = "CAN'T SEND DIGITAL ASSET METADATA";
@@ -13,6 +13,7 @@ public class CantSendDigitalAssetMetadataException  extends DAPException {
     public CantSendDigitalAssetMetadataException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
     public CantSendDigitalAssetMetadataException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

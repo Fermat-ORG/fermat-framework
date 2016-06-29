@@ -11,27 +11,32 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restoc
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by franklin on 11/12/15.
  */
 public class StockTransactionBankMoneyRestockFactory {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
+    private BusinessTransactionBankMoneyRestockDatabaseDao dao;
+
     /**
      * Constructor with params.
      *
-     * @param pluginDatabaseSystem  database system reference.
-     * @param pluginId              of this module.
+     * @param pluginDatabaseSystem database system reference.
+     * @param pluginId             of this module.
      */
     public StockTransactionBankMoneyRestockFactory(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                   final UUID pluginId            ) {
+                                                   final UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
     private BusinessTransactionBankMoneyRestockDatabaseDao getStockTransactionBankMoneyRestockDao() {
+        if (dao == null)
+            dao = new BusinessTransactionBankMoneyRestockDatabaseDao(pluginDatabaseSystem, pluginId);
 
-        return new BusinessTransactionBankMoneyRestockDatabaseDao(pluginDatabaseSystem, pluginId);
+        return dao;
     }
 
     public void saveBankMoneyRestockTransactionData(BankMoneyTransaction bankMoneyTransaction) throws DatabaseOperationException, MissingBankMoneyRestockDataException {

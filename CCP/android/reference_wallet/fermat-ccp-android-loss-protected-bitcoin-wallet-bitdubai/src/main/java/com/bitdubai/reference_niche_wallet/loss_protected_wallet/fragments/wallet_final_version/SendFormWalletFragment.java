@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -52,7 +54,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
@@ -65,7 +67,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 /**
  * Created by Joaquin Carrasquero on 16/03/16.
  */
-public class SendFormWalletFragment extends AbstractFermatFragment<LossProtectedWalletSession, ResourceProviderManager> implements View.OnClickListener {
+public class SendFormWalletFragment extends AbstractFermatFragment<ReferenceAppFermatSession<LossProtectedWallet>, ResourceProviderManager> implements View.OnClickListener {
 
 
     /**
@@ -481,7 +483,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         } else if (id == R.id.btn_expand_send_form) {
             Object[] objects = new Object[1];
             objects[0] = walletContact;
-            changeApp(appSession.getCommunityConnection(), objects);
+            //changeApp(appSession.getCommunityConnection(), objects);
         }
 
 
@@ -557,7 +559,8 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                             actor,
                                             ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                            blockchainNetworkType
+                                            blockchainNetworkType,
+                                            CryptoCurrency.BITCOIN
 
                                            );
                                     Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();

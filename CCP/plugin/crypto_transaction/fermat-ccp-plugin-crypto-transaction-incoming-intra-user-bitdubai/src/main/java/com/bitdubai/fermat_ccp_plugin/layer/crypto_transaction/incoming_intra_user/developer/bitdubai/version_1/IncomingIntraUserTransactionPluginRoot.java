@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.incoming_intra_user.IncomingIntraUserManager;
@@ -43,9 +43,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_us
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserRelayAgent;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -178,7 +177,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         }
 
         try {
-            this.relayAgent = new IncomingIntraUserRelayAgent(getErrorManager(), this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoTransmissionNetworkServiceManager,broadcaster,lossProtectedWalletManager);
+            this.relayAgent = new IncomingIntraUserRelayAgent(getErrorManager(), this.eventManager, this.cryptoWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoTransmissionNetworkServiceManager,broadcaster,lossProtectedWalletManager);
             this.relayAgent.start();
         } catch (CantStartIncomingIntraUserRelayAgentException e) {
             this.eventRecorderService.stop();

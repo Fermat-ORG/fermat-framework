@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+
 
 /**
  * This class represents the Contract Basic information persisted in Business Transactions plugins database.
@@ -29,6 +31,8 @@ public class BusinessTransactionRecord {
     private long cryptoAmount;
 
     private CryptoStatus cryptoStatus;
+
+    private CryptoCurrency cryptoCurrency;
 
     private String customerPublicKey;
 
@@ -60,138 +64,119 @@ public class BusinessTransactionRecord {
     //Getters
 
     /**
-     * This method returns the broker public key.
-     * @return
+     * @return the broker public key.
      */
     public String getBrokerPublicKey() {
         return brokerPublicKey;
     }
 
     /**
-     * This method returns the CBP Wallet Public Key.
-     * @return
+     * @return the CBP Wallet Public Key.
      */
-    public String getCBPWalletPublicKey(){
+    public String getCBPWalletPublicKey() {
         return cbpWalletPublicKey;
     }
 
     /**
-     * This method returns the contract hash/Id.
-     * @return
+     * @return the contract hash/Id.
      */
     public String getContractHash() {
         return contractHash;
     }
 
     /**
-     * This method returns the ContractTransactionStatus.
-     * @return
+     * @return the ContractTransactionStatus.
      */
     public ContractTransactionStatus getContractTransactionStatus() {
         return contractTransactionStatus;
     }
 
     /**
-     * This method returns the Crypto Address.
-     * @return
+     * @return the Crypto Address.
      */
     public CryptoAddress getCryptoAddress() {
         return cryptoAddress;
     }
 
     /**
-     * This method returns the crypto amount.
-     * @return
+     * @return the crypto amount.
      */
     public long getCryptoAmount() {
         return cryptoAmount;
     }
 
     /**
-     * This method return the CryptoStatus.
-     * @return
+     * @return the CryptoStatus.
      */
     public CryptoStatus getCryptoStatus() {
         return cryptoStatus;
     }
 
     /**
-     * This method returns the FiatCurrency.
-     * @return
+     * @return the FiatCurrency.
      */
     public FiatCurrency getFiatCurrency() {
         return fiatCurrency;
     }
 
     /**
-     * This method returns the customer public key.
-     * @return
+     * @return the customer public key.
      */
     public String getCustomerPublicKey() {
         return customerPublicKey;
     }
 
     /**
-     * This method returns the payment amount
-     * @return
+     * @return the payment amount
      */
     public long getPaymentAmount() {
         return paymentAmount;
     }
 
     /**
-     * This method returns the MoneyType.
-     * @return
+     * @return the MoneyType.
      */
     public MoneyType getPaymentType() {
         return paymentType;
     }
 
     /**
-     * This method returns the reference price.
-     * @return
+     * @return the reference price.
      */
     public BigDecimal getPriceReference() {
         return priceReference;
     }
 
     /**
-     * This method returns the creation timestamp.
-     * @return
+     * @return the creation timestamp.
      */
     public long getTimestamp() {
         return timestamp;
     }
 
     /**
-     * This method set the transaction hash
-     * @return
+     * @return the transaction hash
      */
     public String getTransactionHash() {
         return transactionHash;
     }
 
     /**
-     * This method returns the transaction id.
-     * @return
+     * @return the transaction id.
      */
     public String getTransactionId() {
         return transactionId;
     }
 
     /**
-     * This method returns the external wallet public key.
-     * We can define external as a wallet from another platform different from CBP.
-     * @return
+     * @return the external wallet public key. We can define external as a wallet from another platform different from CBP.
      */
     public String getExternalWalletPublicKey() {
         return externalWalletPublicKey;
     }
 
     /**
-     * This method returns the external transaction id.
-     * We can define external as a Transaction Id from another platform different from CBP.
-     * @return
+     * @return the external transaction id. We can define external as a Transaction Id from another platform different from CBP.
      */
     public UUID getExternalTransactionId() {
         return externalTransactionId;
@@ -201,7 +186,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the broker public key.
-     * @param brokerPublicKey
+     *
+     * @param brokerPublicKey the broker public key.
      */
     public void setBrokerPublicKey(String brokerPublicKey) {
         this.brokerPublicKey = brokerPublicKey;
@@ -209,15 +195,17 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the cbp wallet public key.
-     * @param cbpWalletPublicKey
+     *
+     * @param cbpWalletPublicKey the cbp wallet public key.
      */
-    public void setCBPWalletPublicKey(String cbpWalletPublicKey){
+    public void setCBPWalletPublicKey(String cbpWalletPublicKey) {
         this.cbpWalletPublicKey = cbpWalletPublicKey;
     }
 
     /**
      * This method sets the contract hash/Id.
-     * @param contractHash
+     *
+     * @param contractHash the contract hash/Id.
      */
     public void setContractHash(String contractHash) {
         this.contractHash = contractHash;
@@ -225,7 +213,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the ContractTransactionStatus.
-     * @param contractTransactionStatus
+     *
+     * @param contractTransactionStatus the ContractTransactionStatus.
      */
     public void setContractTransactionStatus(ContractTransactionStatus contractTransactionStatus) {
         this.contractTransactionStatus = contractTransactionStatus;
@@ -233,7 +222,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the CryptoAddress.
-     * @param cryptoAddress
+     *
+     * @param cryptoAddress the CryptoAddress.
      */
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
         this.cryptoAddress = cryptoAddress;
@@ -241,7 +231,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the crypto amount.
-     * @param cryptoAmount
+     *
+     * @param cryptoAmount the crypto amount.
      */
     public void setCryptoAmount(long cryptoAmount) {
         this.cryptoAmount = cryptoAmount;
@@ -249,7 +240,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the CryptoStatus.
-     * @param cryptoStatus
+     *
+     * @param cryptoStatus the CryptoStatus.
      */
     public void setCryptoStatus(CryptoStatus cryptoStatus) {
         this.cryptoStatus = cryptoStatus;
@@ -257,7 +249,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the currency type.
-     * @param currencyType
+     *
+     * @param currencyType the currency type.
      */
     public void setFiatCurrency(FiatCurrency currencyType) {
         this.fiatCurrency = currencyType;
@@ -265,7 +258,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the customer public key.
-     * @param customerPublicKey
+     *
+     * @param customerPublicKey the customer public key.
      */
     public void setCustomerPublicKey(String customerPublicKey) {
         this.customerPublicKey = customerPublicKey;
@@ -273,7 +267,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the payment amount.
-     * @param paymentAmount
+     *
+     * @param paymentAmount the payment amount.
      */
     public void setPaymentAmount(long paymentAmount) {
         this.paymentAmount = paymentAmount;
@@ -281,7 +276,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the payment type.
-     * @param paymentType
+     *
+     * @param paymentType the payment type.
      */
     public void setPaymentType(MoneyType paymentType) {
         this.paymentType = paymentType;
@@ -289,7 +285,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the reference price.
-     * @param priceReference
+     *
+     * @param priceReference the reference price.
      */
     public void setPriceReference(BigDecimal priceReference) {
         this.priceReference = priceReference;
@@ -297,7 +294,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the transaction timestamp.
-     * @param timestamp
+     *
+     * @param timestamp the transaction timestamp.
      */
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
@@ -305,7 +303,8 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the transaction hash
-     * @param transactionHash
+     *
+     * @param transactionHash the transaction hash
      */
     public void setTransactionHash(String transactionHash) {
         this.transactionHash = transactionHash;
@@ -313,33 +312,33 @@ public class BusinessTransactionRecord {
 
     /**
      * This method set the transaction Id.
-     * @param transactionId
+     *
+     * @param transactionId transaction Id.
      */
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
 
     /**
-     * This method sets the external wallet public key.
-     * We can define external as a wallet from another platform different from CBP.
-     * @param externalWalletPublicKey
+     * This method sets the external wallet public key. We can define external as a wallet from another platform different from CBP.
+     *
+     * @param externalWalletPublicKey the external wallet public key.
      */
     public void setExternalWalletPublicKey(String externalWalletPublicKey) {
         this.externalWalletPublicKey = externalWalletPublicKey;
     }
 
     /**
-     * This method sets the external transaction id.
-     * We can define external as a Transaction Id from another platform different from CBP.
-     * @param externalTransactionId
+     * This method sets the external transaction id. We can define external as a Transaction Id from another platform different from CBP.
+     *
+     * @param externalTransactionId the external transaction id.
      */
     public void setExternalTransactionId(UUID externalTransactionId) {
         this.externalTransactionId = externalTransactionId;
     }
 
     /**
-     * This method returns the actor public key.
-     * @return
+     * @return the actor public key.
      */
     public String getActorPublicKey() {
         return actorPublicKey;
@@ -347,15 +346,15 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the actor public key.
-     * @param actorPublicKey
+     *
+     * @param actorPublicKey the actor public key.
      */
     public void setActorPublicKey(String actorPublicKey) {
         this.actorPublicKey = actorPublicKey;
     }
 
     /**
-     * This method returns the BlockchainNetworkType.
-     * @return
+     * @return the BlockchainNetworkType.
      */
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
@@ -363,25 +362,29 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the BlockchainNetworkType.
-     * @param blockchainNetworkType
+     *
+     * @param blockchainNetworkType the Blockchain Network Type.
      */
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
         this.blockchainNetworkType = blockchainNetworkType;
     }
+
     /**
-     * This method returns the customerAlias.
-     * @param
+     * @return returns the Customer Alias.
      */
     public String getCustomerAlias() {
         return customerAlias;
     }
+
     /**
-     * This method sets the customerAlias.
-     * @param customerAlias
+     * This method sets the customer Alias.
+     *
+     * @param customerAlias the customer Alias.
      */
     public void setCustomerAlias(String customerAlias) {
         this.customerAlias = customerAlias;
     }
+
     @Override
     public String toString() {
         return "BusinessTransactionRecord{" +
@@ -406,5 +409,13 @@ public class BusinessTransactionRecord {
                 ", paymentType=" + paymentType +
                 ", actorPublicKey='" + actorPublicKey + '\'' +
                 '}';
+    }
+
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
+    }
+
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
     }
 }

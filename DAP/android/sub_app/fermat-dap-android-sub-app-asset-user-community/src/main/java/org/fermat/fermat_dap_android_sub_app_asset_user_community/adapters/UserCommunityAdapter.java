@@ -3,20 +3,30 @@ package org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-import com.squareup.picasso.Picasso;
 
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.filters.UserCommunityAdapterFilter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
+public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> implements Filterable {
+
+    List<ProgressTask> taskList = new ArrayList<>();
 
     private AdapterChangeListener<Actor> adapterChangeListener;
 
@@ -49,7 +59,7 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                 holder.connect.setVisibility(View.GONE);
                 //holder.crypto.setText("CryptoAddress: YES");
             } else {
-                switch (data.getDapConnectionState()){
+                switch (data.getDapConnectionState()) {
                     case CONNECTING:
                     case PENDING_LOCALLY:
                     case PENDING_REMOTELY:
@@ -106,16 +116,55 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
 
             byte[] profileImage = data.getProfileImage();
 
-
-            if (profileImage != null) {
-                if (profileImage.length > 0) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-                    holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.asset_user_comunity).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.asset_user_comunity).into(holder.thumbnail);
-
+            if (profileImage != null && profileImage.length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
+                holder.thumbnail.setImageBitmap(bitmap);
+            } else {
+                holder.thumbnail.setVisibility(View.GONE);
+                ProgressTask progressTask = new ProgressTask(holder.progressBar, holder.thumbnail);
+                progressTask.execute();
+                taskList.add(progressTask);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private class ProgressTask extends AsyncTask<Void, Void, Void> {
+
+        WeakReference<ProgressBar> weakReference;
+        WeakReference<ImageView> imageViewWeakReference;
+
+        public ProgressTask(ProgressBar progressBar, ImageView imageView) {
+            weakReference = new WeakReference<ProgressBar>(progressBar);
+            imageViewWeakReference = new WeakReference<ImageView>(imageView);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            weakReference.get().setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+//            try {
+//                TimeUnit.SECONDS.sleep(7);
+//            } catch (InterruptedException e) {
+//
+//            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (weakReference.get() != null) {
+                weakReference.get().setVisibility(View.GONE);
+                weakReference.clear();
+            }
+            if (imageViewWeakReference.get() != null) {
+                FermatAnimationsUtils.showEmpty(context, true, imageViewWeakReference.get());
+            }
         }
     }
 
@@ -131,5 +180,20 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
         if (dataSet != null)
             return dataSet.size();
         return 0;
+    }
+
+    protected void onChangeDataSet() {
+        for (ProgressTask progressTask : taskList) {
+            try {
+                progressTask.cancel(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new UserCommunityAdapterFilter(this.dataSet, this);
     }
 }

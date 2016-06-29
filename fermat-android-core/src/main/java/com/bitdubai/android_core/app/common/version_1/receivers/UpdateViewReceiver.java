@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.common.version_1.adapters.FermatScreenAdapter;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
-import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by mati on 2016.05.03..
@@ -38,11 +39,12 @@ public class UpdateViewReceiver extends BroadcastReceiver {
 
     private void updateView(FermatBundle bundle) {
         if(weakReference.get() instanceof FermatActivity) {
-            TabsPagerAdapter adapter = ((FermatActivity)weakReference.get()).getAdapter();
+            FermatScreenAdapter adapter = weakReference.get().getAdapter();
             if (adapter != null) {
-                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+                List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
+                for (AbstractFermatFragmentInterface fragment : list) {
                     fragment.onUpdateView(bundle);
-                    fragment.onUpdateViewUIThred(bundle);
+                    fragment.onUpdateViewOnUIThread(bundle);
                 }
             }
         }
@@ -50,11 +52,12 @@ public class UpdateViewReceiver extends BroadcastReceiver {
 
     private void updateView(String code){
         if(weakReference.get() instanceof FermatActivity) {
-            TabsPagerAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
+            FermatScreenAdapter adapter = weakReference.get().getAdapter();
             if (adapter != null) {
-                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+                List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
+                for (AbstractFermatFragmentInterface fragment : list) {
                     fragment.onUpdateView(code);
-                    fragment.onUpdateViewUIThred(code);
+                    fragment.onUpdateViewOnUIThread(code);
                 }
             }
         }
@@ -63,12 +66,12 @@ public class UpdateViewReceiver extends BroadcastReceiver {
     //TODO: esto va a ser del codigo de la app, el paquete del intent
     private void updateView(String appCode,String code){
         if(weakReference.get() instanceof FermatActivity) {
-            TabsPagerAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
+            FermatScreenAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
             if (adapter != null) {
-                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
-                    fragment.onUpdateViewHandler(appCode, code);
+                List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
+                for (AbstractFermatFragmentInterface fragment : list) {
                     fragment.onUpdateView(code);
-                    fragment.onUpdateViewUIThred(code);
+                    fragment.onUpdateViewOnUIThread(code);
                 }
             }
         }

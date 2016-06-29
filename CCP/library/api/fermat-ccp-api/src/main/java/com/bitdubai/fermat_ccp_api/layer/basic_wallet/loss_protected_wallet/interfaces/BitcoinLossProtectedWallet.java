@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>BitcoinWalletWallet</code>
+ * The interface <code>CryptoWalletWallet</code>
  * haves all consumable methods from a bitcoin wallet.
  *
  * Created by eze on 2015.06.17..
@@ -22,12 +22,12 @@ import java.util.UUID;
 public interface BitcoinLossProtectedWallet {
 
     /**
-     * Throw the method <code>getBalance</code> you can get an instance of BitcoinWalletBalance that allows you
+     * Throw the method <code>getBalance</code> you can get an instance of CryptoWalletBalance that allows you
      * to do all possible actions over the balance of the requested type.
      *
      * @param balanceType type of balance that you need.
      *
-     * @return an instance of BitcoinWalletBalance.
+     * @return an instance of CryptoWalletBalance.
      */
     BitcoinLossProtectedWalletBalance getBalance(BalanceType balanceType);
 
@@ -121,7 +121,7 @@ public interface BitcoinLossProtectedWallet {
      * @param actorPublicKey public key of the actor from which we need the transaction
      * @param balanceType    type of balance that you're trying to get
      *
-     * @return an instance of BitcoinWalletTransactionSummary
+     * @return an instance of CryptoWalletTransactionSummary
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException if something goes wrong.
      */

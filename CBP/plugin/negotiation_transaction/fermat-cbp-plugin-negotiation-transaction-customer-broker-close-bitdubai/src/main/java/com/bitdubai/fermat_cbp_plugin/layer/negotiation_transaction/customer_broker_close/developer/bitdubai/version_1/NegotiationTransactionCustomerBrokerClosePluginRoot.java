@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -45,8 +45,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
@@ -62,9 +61,6 @@ import java.util.regex.Pattern;
 public class NegotiationTransactionCustomerBrokerClosePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers{
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,        layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -149,16 +145,15 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                      cryptoAddressBookManager,
                      cryptoVaultManager,
                      walletManagerManager,
-                     errorManager,
-                     getPluginVersionReference(),intraWalletUserIdentityManager
+                     this,
+                     intraWalletUserIdentityManager
              );
 
              //Init event recorder service.
              customerBrokerCloseServiceEventHandler = new CustomerBrokerCloseServiceEventHandler(
                      customerBrokerCloseNegotiationTransactionDatabaseDao,
                      eventManager,
-                     errorManager,
-                     getPluginVersionReference()
+                     this
              );
              customerBrokerCloseServiceEventHandler.start();
 
@@ -166,7 +161,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
              customerBrokerCloseAgent = new CustomerBrokerCloseAgent(
                      pluginDatabaseSystem,
                      logManager,
-                     errorManager,
+                     this,
                      eventManager,
                      pluginId,
                      negotiationTransmissionManager,
@@ -177,7 +172,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                      cryptoAddressBookManager,
                      cryptoVaultManager,
                      walletManagerManager,
-                     getPluginVersionReference(),intraWalletUserIdentityManager
+                     intraWalletUserIdentityManager
              );
              customerBrokerCloseAgent.start();
 
@@ -185,13 +180,13 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
              this.serviceStatus = ServiceStatus.STARTED;
 
          } catch (CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException e){
-             errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
              throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker Close PluginRoot - Database","Unexpected Exception");
          } catch (CantStartServiceException e){
-             errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
              throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker Close PluginRoot - EventHandler","Unexpected Exception");
          } catch (Exception e) {
-             errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
              throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker Close PluginRoot","Unexpected Exception");
          }
      }
@@ -243,7 +238,8 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerClosePluginRoot");
+        returnedClasses.add("NegotiationTransactionCustomerBrokerClosePluginRoot");
+
         return returnedClasses;
     }
 
@@ -284,17 +280,17 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                 CustomerBrokerCloseNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerCloseNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
                 dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,f);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,z);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
             }
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }

@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.DigitalAssetCryptoTransactionFactory;
@@ -34,7 +34,7 @@ public class IssuePendingDigitalAssetsTest {
     CryptoVaultManager cryptoVaultManager;
 
     @Mock
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -58,7 +58,6 @@ public class IssuePendingDigitalAssetsTest {
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
 
 
-
     String publicKey = "publicKey";
 
     @Before
@@ -66,7 +65,7 @@ public class IssuePendingDigitalAssetsTest {
         pluginId = UUID.randomUUID();
         assetIssuingTransactionManager = new AssetIssuingTransactionManager(pluginId,
                 cryptoVaultManager,
-                bitcoinWalletManager,
+                cryptoWalletManager,
                 pluginDatabaseSystem,
                 pluginFileSystem,
                 errorManager,
@@ -79,7 +78,7 @@ public class IssuePendingDigitalAssetsTest {
     }
 
     private void setUpMockitoRules() throws Exception {
-        MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager , digitalAssetCryptoTransactionFactory);
+        MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager, digitalAssetCryptoTransactionFactory);
         doNothing().when(digitalAssetCryptoTransactionFactory).issuePendingDigitalAssets(publicKey);
     }
 

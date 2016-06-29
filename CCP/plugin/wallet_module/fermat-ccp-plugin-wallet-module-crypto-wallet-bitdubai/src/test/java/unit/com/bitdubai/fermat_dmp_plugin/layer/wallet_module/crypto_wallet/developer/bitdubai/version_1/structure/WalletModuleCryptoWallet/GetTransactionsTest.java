@@ -3,14 +3,14 @@
 //import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 //<<<<<<< HEAD:CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/wallet_module/crypto_wallet/developer/bitdubai/version_1/structure/WalletModuleCryptoWallet/GetTransactionsTest.java
 //import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantLoadWalletException;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+//import CryptoWalletWallet;
+//import CryptoWalletManager;
 //import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 //import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 //=======
 //import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+//import CryptoWalletWallet;
+//import CryptoWalletManager;
 //import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 //import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.exceptions.CantListTransactionsException;
 //>>>>>>> 193a4ce563d3916b505332563ad81fe262f074f2:CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/wallet_module/crypto_wallet/developer/bitdubai/version_1/structure/WalletModuleCryptoWallet/GetTransactionsTest.java
@@ -56,11 +56,11 @@
 //     * DealsWithBitcoinWallet interface Mocked
 //     */
 //    @Mock
-//    BitcoinWalletManager bitcoinWalletManager;
+//    CryptoWalletManager bitcoinWalletManager;
 //
 //
 //    @Mock
-//    BitcoinWalletWallet bitcoinWalletWallet;
+//    CryptoWalletWallet bitcoinWalletWallet;
 //
 //    String walletPublicKey;
 //

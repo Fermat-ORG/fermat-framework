@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.developerUtils;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -27,14 +25,14 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.developerUtilsSubAppResourcesNetworkServiceDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 03/08/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 
-public class SubAppResourcesNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class SubAppResourcesNetworkServiceDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -101,8 +99,7 @@ public class SubAppResourcesNetworkServiceDeveloperDatabaseFactory implements De
                    */
                 throw new CantInitializeNetworkServicesSubAppResourcesDatabaseException(cantCreateDatabaseException.getMessage());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
@@ -126,22 +123,21 @@ public class SubAppResourcesNetworkServiceDeveloperDatabaseFactory implements De
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
-           /**
-            * Table Repositories columns.
-            */
-           List<String> repositoriesColumns = new ArrayList<String>();
+        /**
+         * Table Repositories columns.
+         */
+        List<String> repositoriesColumns = new ArrayList<String>();
 
-              repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME);
-              repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME);
-              repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME);
-              repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME);
-              repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
-           /**
-            * Table Repositories addition.
-            */
-                   DeveloperDatabaseTable repositoriesTable = developerObjectFactory.getNewDeveloperDatabaseTable(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_TABLE_NAME, repositoriesColumns);
-                   tables.add(repositoriesTable);
-
+        repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME);
+        repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME);
+        repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME);
+        repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME);
+        repositoriesColumns.add(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
+        /**
+         * Table Repositories addition.
+         */
+        DeveloperDatabaseTable repositoriesTable = developerObjectFactory.getNewDeveloperDatabaseTable(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_TABLE_NAME, repositoriesColumns);
+        tables.add(repositoriesTable);
 
 
         return tables;
@@ -160,12 +156,12 @@ public class SubAppResourcesNetworkServiceDeveloperDatabaseFactory implements De
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -185,7 +181,7 @@ public class SubAppResourcesNetworkServiceDeveloperDatabaseFactory implements De
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }
@@ -193,13 +189,13 @@ public class SubAppResourcesNetworkServiceDeveloperDatabaseFactory implements De
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

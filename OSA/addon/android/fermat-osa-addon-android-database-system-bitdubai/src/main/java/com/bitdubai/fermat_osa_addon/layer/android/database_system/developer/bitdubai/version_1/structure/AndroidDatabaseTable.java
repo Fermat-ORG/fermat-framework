@@ -19,7 +19,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +52,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
     private List<DataBaseTableOrder> tableOrder;
+    private List<AndroidDatabaseTableNearbyLocationOrder> tableNearbyLocationOrders;
     private String top = "";
     private String offset = "";
     private DatabaseTableFilterGroup tableFilterGroup;
@@ -184,6 +187,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
+    @Override
+    public void deleteAllRecord() throws CantDeleteRecordException {
+
+    }
+
     /**
      * <p>This method inserts a new record in the database
      *
@@ -222,6 +230,23 @@ public class AndroidDatabaseTable implements DatabaseTable {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
             if (database != null) database.close();
+        }
+    }
+
+    @Override
+    public void truncate() throws CantTruncateTableException {
+
+        try (SQLiteDatabase database = this.database.getWritableDatabase()) {
+
+            database.execSQL("DELETE FROM " + tableName);
+
+        } catch (Exception exception) {
+
+            throw new CantTruncateTableException(
+                    exception,
+                    null,
+                    "Check the cause for this error"
+            );
         }
     }
 
@@ -436,6 +461,28 @@ public class AndroidDatabaseTable implements DatabaseTable {
         DataBaseTableOrder order = new AndroidDatabaseTableOrder(columnName, direction);
 
         this.tableOrder.add(order);
+    }
+
+    // TODO implement in android version
+    @Override
+    public void addNearbyLocationOrder(final String              latitudeField ,
+                                       final String              longitudeField,
+                                       final Location            point         ,
+                                       final DatabaseFilterOrder direction     ,
+                                       final String              distanceField ) {
+
+        if (tableNearbyLocationOrders == null)
+            tableNearbyLocationOrders = new ArrayList<>();
+
+        tableNearbyLocationOrders.add(
+                new AndroidDatabaseTableNearbyLocationOrder(
+                        latitudeField ,
+                        longitudeField,
+                        point         ,
+                        direction     ,
+                        distanceField
+                )
+        );
     }
 
     /**

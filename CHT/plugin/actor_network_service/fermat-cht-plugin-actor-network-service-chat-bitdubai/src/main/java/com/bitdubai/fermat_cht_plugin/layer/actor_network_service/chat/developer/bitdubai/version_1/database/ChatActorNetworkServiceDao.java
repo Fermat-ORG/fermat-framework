@@ -216,7 +216,7 @@ public class ChatActorNetworkServiceDao {
         }
     }
 
-  
+
         public final List<ChatConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
@@ -368,15 +368,33 @@ public class ChatActorNetworkServiceDao {
 
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
+            DatabaseTableFilter filter = addressExchangeRequestTable.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chatActor.getConnectionId().toString());
+            filter.setColumn(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME);
+
             entityRecord = buildConnectionNewDatabaseRecord(entityRecord, connectionNew);
 
-            addressExchangeRequestTable.insertRecord(entityRecord);
+            if(isNewRecord(addressExchangeRequestTable,filter))
+                addressExchangeRequestTable.insertRecord(entityRecord);
+            else
+                addressExchangeRequestTable.updateRecord(entityRecord);
 
         } catch (final CantInsertRecordException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantRequestConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
+    }
+
+    private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.loadToMemory();
+        return table.getRecords().isEmpty();
     }
 
 

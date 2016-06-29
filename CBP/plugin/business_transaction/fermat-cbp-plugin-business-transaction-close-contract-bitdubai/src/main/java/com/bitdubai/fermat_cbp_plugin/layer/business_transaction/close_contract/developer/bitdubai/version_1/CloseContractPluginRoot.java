@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -46,9 +47,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.exceptions.CantInitializeCloseContractBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.structure.CloseContractMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.structure.CloseContractTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,9 +62,6 @@ import java.util.regex.Pattern;
 public class CloseContractPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -132,9 +128,11 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
              * Initialize Dao
              */
             CloseContractBusinessTransactionDao closeContractBusinessTransactionDao =
-                    new CloseContractBusinessTransactionDao(pluginDatabaseSystem,
+                    new CloseContractBusinessTransactionDao(
+                            pluginDatabaseSystem,
                             pluginId,
-                            database,errorManager);
+                            database,
+                            this);
 
             /**
              * Init event recorder service.
@@ -150,7 +148,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             CloseContractMonitorAgent openContractMonitorAgent = new CloseContractMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     transactionTransmissionManager,
@@ -172,14 +170,12 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantInitializeDatabaseException exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
+            reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
 
 
             throw new CantStartPluginException(
-
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting close contract plugin",
@@ -188,10 +184,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
 
         } catch (CantInitializeCloseContractBusinessTransactionDatabaseException exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
 
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -200,37 +193,27 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                     "Unexpected Exception");
         } catch (CantStartServiceException exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
 
             throw new CantStartPluginException(
-
-
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting close contract plugin",
                     "Cannot start recorder service");
+
         } catch (CantSetObjectException exception) {
 
-            errorManager.reportUnexpectedPluginException(
-
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
 
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting close contract plugin",
                     "Cannot set an object");
+
         } catch (CantStartAgentException exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
 
 
             throw new CantStartPluginException(
@@ -240,10 +223,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                     "Cannot start the monitor agent");
         } catch (Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
 
 
             throw new CantStartPluginException(
@@ -289,8 +269,8 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
              * The database exists but cannot be open. I can not handle this situation.
              */
 
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
+            reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -319,10 +299,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        cantOpenDatabaseException);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
@@ -333,7 +310,8 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.CloseContractPluginRoot");
+        returnedClasses.add("CloseContractPluginRoot");
+
         return returnedClasses;
     }
 
@@ -393,13 +371,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                 }
             }
         }catch (Exception exception){
-
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-
-
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
     }
 

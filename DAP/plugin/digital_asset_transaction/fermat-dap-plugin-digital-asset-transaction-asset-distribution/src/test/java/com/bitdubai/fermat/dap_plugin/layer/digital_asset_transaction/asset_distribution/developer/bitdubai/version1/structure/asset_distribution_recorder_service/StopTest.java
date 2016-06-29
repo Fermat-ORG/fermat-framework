@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
@@ -35,13 +35,13 @@ public class StopTest {
     @Mock
     private FermatEventListener fermatEventListener1;
     @Mock
-    private  FermatEventListener fermatEventListener2;
+    private FermatEventListener fermatEventListener2;
     @Mock
     private FermatEventListener fermatEventListener3;
     @Mock
-    private  FermatEventListener fermatEventListener4;
+    private FermatEventListener fermatEventListener4;
     @Mock
-    private  FermatEventListener fermatEventListener5;
+    private FermatEventListener fermatEventListener5;
     @Mock
     private ErrorManager errorManager;
     private UUID pluginId;
@@ -59,17 +59,18 @@ public class StopTest {
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         setUpMockitoRules();
     }
+
     private void setUpMockitoRules() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener1);
-        when(eventManager.getNewListener( EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener2);
+        when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener2);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener3);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener4);
         when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(fermatEventListener5);
     }
 
     @Test
-    public void stopRecordServiceSucces () throws CantStartServiceException {
+    public void stopRecordServiceSucces() throws CantStartServiceException {
         assetDistributionRecorderService.start();
         assetDistributionRecorderService.stop();
         ServiceStatus serviceStatus = assetDistributionRecorderService.getStatus();

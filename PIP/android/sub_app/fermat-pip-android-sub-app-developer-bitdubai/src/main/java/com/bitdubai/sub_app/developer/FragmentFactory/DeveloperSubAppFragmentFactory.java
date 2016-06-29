@@ -12,21 +12,21 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
-import com.bitdubai.sub_app.developer.preference_settings.DeveloperPreferenceSettings;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<DeveloperSubAppSession, SubAppResourcesProviderManager, DeveloperFragmentsEnumType> {
+public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<DeveloperSubAppSessionReferenceApp, SubAppResourcesProviderManager, DeveloperFragmentsEnumType> {
 
-    public DeveloperSubAppFragmentFactory(){}
+    public DeveloperSubAppFragmentFactory() {
+    }
 
     @Override
     public AbstractFermatFragment getFermatFragment(DeveloperFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        switch (fragments){
+        switch (fragments) {
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT:
                 return DatabaseToolsDatabaseListFragment.newInstance();
 
@@ -52,7 +52,7 @@ public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<Develo
                 return LogToolsFragmentLevel3.newInstance();
 
             default:
-                throw new FragmentNotFoundException("Fragment not found",new Exception(),fragments.getKey(),"Swith failed");
+                throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");
         }
     }
 

@@ -2,10 +2,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import javax.websocket.Session;
 
@@ -24,7 +24,7 @@ public abstract class PackageProcessor {
     /**
      * Represent the webSocketChannelServerEndpoint instance with the processor are register
      */
-    private CommunicationsNetworkClientChannel channel;
+    private NetworkClientCommunicationChannel channel;
 
     /**
      * Represent the packageType
@@ -39,7 +39,7 @@ public abstract class PackageProcessor {
      * @param channel
      * @param packageType
      */
-    public PackageProcessor(final CommunicationsNetworkClientChannel channel    ,
+    public PackageProcessor(final NetworkClientCommunicationChannel channel    ,
                             final PackageType                        packageType) {
 
         this.channel     = channel;
@@ -51,7 +51,7 @@ public abstract class PackageProcessor {
      *
      * @return communicationsNetworkClientChannel
      */
-    public CommunicationsNetworkClientChannel getChannel() {
+    public NetworkClientCommunicationChannel getChannel() {
         return channel;
     }
 

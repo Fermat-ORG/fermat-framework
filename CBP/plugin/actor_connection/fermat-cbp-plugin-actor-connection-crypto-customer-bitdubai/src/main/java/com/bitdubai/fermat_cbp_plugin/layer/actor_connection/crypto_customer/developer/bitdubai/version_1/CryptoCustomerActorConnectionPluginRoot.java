@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -30,9 +31,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.dev
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +48,6 @@ import java.util.List;
  */
 @PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_CUSTOMER)
 public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
-
-
-    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons .ERROR_MANAGER         )
-    private ErrorManager errorManager;
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons .EVENT_MANAGER         )
     private EventManager eventManager;
@@ -100,7 +95,7 @@ public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin impl
             final ActorConnectionEventActions eventActions = new ActorConnectionEventActions(
                     cryptoBrokerManagerNetworkService,
                     dao,
-                    errorManager,
+                    this,
                     broadcaster,
                     this.getPluginVersionReference()
             );
@@ -118,7 +113,7 @@ public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin impl
             fermatManager = new ActorConnectionManager(
                     cryptoBrokerManagerNetworkService,
                     dao,
-                    errorManager,
+                    this,
                     this.getPluginVersionReference()
             );
 
@@ -126,8 +121,7 @@ public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin impl
 
         } catch (final CantInitializeActorConnectionDatabaseException cantInitializeActorConnectionDatabaseException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference()                           ,
+            reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantInitializeActorConnectionDatabaseException
             );

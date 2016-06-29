@@ -41,7 +41,7 @@ public class NegotiationRecord {
         return new Date(startTime);
     }
 
-    public boolean isExpired(){
+    public boolean isExpired() {
         return new Date().after(new Date(startTime + AssetSellerDigitalAssetTransactionPluginRoot.SELL_TIMEOUT));
     }
 

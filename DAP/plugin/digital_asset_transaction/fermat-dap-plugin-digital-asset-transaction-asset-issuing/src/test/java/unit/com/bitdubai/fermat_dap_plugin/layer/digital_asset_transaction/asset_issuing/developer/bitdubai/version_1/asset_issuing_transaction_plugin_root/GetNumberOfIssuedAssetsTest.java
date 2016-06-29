@@ -17,15 +17,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
@@ -95,13 +95,13 @@ public class GetNumberOfIssuedAssetsTest {
     CryptoVaultManager cryptoVaultManager;
 
     @Mock
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     @Mock
-    BitcoinWalletWallet bitcoinWalletWallet;
+    CryptoWalletWallet cryptoWalletWallet;
 
     @Mock
-    BitcoinWalletBalance bitcoinWalletBalance;
+    CryptoWalletBalance cryptoWalletBalance;
 
     @Mock
     BitcoinNetworkManager bitcoinNetworkManager;
@@ -177,7 +177,7 @@ public class GetNumberOfIssuedAssetsTest {
         assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
         assetIssuingPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
         assetIssuingPluginRoot.setCryptoVaultManager(cryptoVaultManager);
-        assetIssuingPluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
+        assetIssuingPluginRoot.setBitcoinWalletManager(cryptoWalletManager);
         assetIssuingPluginRoot.setAssetVaultManager(assetVaultManager);
         assetIssuingPluginRoot.setCryptoAddressBookManager(cryptoAddressBookManager);
         assetIssuingPluginRoot.setOutgoingIntraActorManager(outgoingIntraActorManager);
@@ -222,9 +222,9 @@ public class GetNumberOfIssuedAssetsTest {
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener4);
 
         when(pluginFileSystem.createTextFile(this.pluginId, "digital-asset-issuing/publicKey", "name.xml", FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT)).thenReturn(pluginTextFile);
-        when(bitcoinWalletManager.loadWallet(this.walletPublicKey)).thenReturn(bitcoinWalletWallet);
-        when(bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE)).thenReturn(bitcoinWalletBalance);
-        when(bitcoinWalletBalance.getBalance()).thenReturn(bitcoinWalletAvailableBalance);
+        when(cryptoWalletManager.loadWallet(this.walletPublicKey)).thenReturn(cryptoWalletWallet);
+        when(cryptoWalletWallet.getBalance(BalanceType.AVAILABLE)).thenReturn(cryptoWalletBalance);
+        when(cryptoWalletBalance.getBalance()).thenReturn(bitcoinWalletAvailableBalance);
         when(assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType)).thenReturn(cryptoAddress);
 //        doNothing().when(assetIssuingPluginRoot).issueAssets(digitalAsset, 1, walletPublicKey, blockchainNetworkType);
     }

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wizard_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageButton
+                android:id="@+id/wizardPropertiesStep1Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_multimedia_on"
+                android:background="@null"
+                android:layout_marginLeft="7dp"/>
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Multimedia"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardPropertiesStep1Image"/>
+
+            <View
+                android:id="@+id/wizardTopLine1"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_on"
+                android:layout_toRightOf="@+id/wizardPropertiesStep1Image"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"/>
+
+            <ImageButton
+                android:id="@+id/wizardPropertiesStep2Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_properties_on"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine1"/>
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asset\nProperties"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardPropertiesStep1Image"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/text1"
+                android:layout_marginLeft="38dp"/>
+
+            <View
+                android:id="@+id/wizardTopLine2"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_off"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/wizardPropertiesStep2Image"/>
+
+            <ImageButton
+                android:id="@+id/wizardPropertiesStep3Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_crypto_off"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine2"/>
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crypto\ncurrency"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardPropertiesStep2Image"
+                android:layout_toRightOf="@+id/text2"
+                android:gravity="center"
+                android:layout_marginLeft="45dp"/>
+
+            <View
+                android:id="@+id/wizardTopLine3"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_off"
+                android:layout_toRightOf="@+id/wizardPropertiesStep3Image"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"/>
+
+            <ImageButton
+                android:id="@+id/wizardPropertiesStep4Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_verify_off"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verify\nasset"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardPropertiesStep4Image"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/text3"
+                android:layout_marginLeft="56dp"/>
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/wizardVerifyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/wizard_background">
+
+        <RelativeLayout
+            android:id="@+id/wizardVerifyAssetNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp">
+
+            <TextView
+                android:id="@+id/wizardCryptoValueLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/wizard_label_1"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/wizardCryptoValueEditText"
+                android:layout_width="312dp"
+                android:layout_height="33dp"
+                android:maxLength="24"
+                android:layout_below="@+id/wizardCryptoValueLabel"
+                android:background="@color/wizard_properties_edit_background"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/wizard_properties_edit_text"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/wizardCryptoValueEditCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/24"
+                android:layout_below="@+id/wizardCryptoValueEditText"
+                android:textSize="10sp"
+                android:textColor="@color/wizard_label_2"
+                android:layout_marginTop="2dp"/>
+
+            <TextView
+                android:id="@+id/wizardPropertiesFeeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/wizard_label_1"
+                android:layout_below="@+id/wizardCryptoValueEditText"
+                android:layout_marginTop="17dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/wizardPropertiesAssetDescEditText"
+                android:inputType="textMultiLine"
+                android:maxLength="160"
+                android:maxLines="5"
+                android:gravity="top|left"
+                android:scrollbars="vertical"
+                android:layout_width="312dp"
+                android:layout_height="98dp"
+                android:layout_below="@+id/wizardPropertiesFeeLabel"
+                android:layout_marginTop="5dp"
+                android:background="@color/wizard_properties_edit_background"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/wizard_properties_edit_text"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/wizardPropertiesAssetDescEditCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/160"
+                android:layout_below="@+id/wizardPropertiesAssetDescEditText"
+                android:textSize="10sp"
+                android:textColor="@color/wizard_label_2"
+                android:layout_marginTop="2dp"/>
+
+            <LinearLayout
+                android:id="@+id/wizardPropertiesChecksLayout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:layout_below="@+id/wizardPropertiesAssetDescEditText"
+                android:layout_marginTop="23dp"
+                android:layout_centerHorizontal="true">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
+                    android:id="@+id/wizardVerifyRedeemableCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/check"
+                    android:layout_weight="1.0"/>
+
+                <TextView
+                    android:id="@+id/wizardVerifyRedeemableLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Redeemable"
+                    android:textColor="@color/wizard_label_3"
+                    android:textSize="12sp"
+                    android:layout_toRightOf="@+id/wizardVerifyRedeemableCheck"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="3.0"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
+                    android:id="@+id/wizardVerifyTransfereableCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/wizardVerifyRedeemableLabel"
+                    android:button="@drawable/check"
+                    android:layout_marginLeft="27dp"
+                    android:layout_weight="1.0"/>
+
+                <TextView
+                    android:id="@+id/wizardVerifyTransfereableLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Transferable"
+                    android:textColor="@color/wizard_label_1"
+                    android:textSize="12sp"
+                    android:layout_toRightOf="@+id/wizardVerifyTransfereableCheck"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="3.0"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
+                    android:id="@+id/wizardVerifyExchangeableCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/wizardVerifyTransfereableLabel"
+                    android:button="@drawable/check"
+                    android:layout_marginLeft="27dp"
+                    android:layout_weight="1.0"
+                    android:checked="true"/>
+
+                <TextView
+                    android:id="@+id/wizardVerifyExchangeableLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Exchangeable"
+                    android:textColor="@color/wizard_label_3"
+                    android:textSize="12sp"
+                    android:layout_toRightOf="@+id/wizardVerifyExchangeableCheck"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="3.0"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/wizardPropertiesQuantityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expiration Date"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/wizard_label_1"
+                android:layout_below="@+id/wizardPropertiesChecksLayout"
+                android:layout_marginTop="15dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/wizardPropertiesQuantityEditText"
+                android:layout_width="150dp"
+                android:layout_height="33dp"
+                android:layout_below="@+id/wizardPropertiesQuantityLabel"
+                android:layout_marginTop="5dp"
+                android:editable="false"
+                android:background="@color/wizard_properties_edit_background"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/wizard_properties_edit_text"/>
+
+            <ImageButton
+                android:id="@+id/wizardPropertiesDateButton"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/calendar"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardPropertiesQuantityEditText"
+                android:layout_below="@+id/wizardPropertiesQuantityLabel"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"/>
+
+            <ImageButton
+                android:id="@+id/wizardPropertiesEraseDateButton"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/x_icon_blue"
+                android:scaleType="fitCenter"
+                android:background="@null"
+
+                android:layout_below="@+id/wizardPropertiesQuantityLabel"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="120dp"
+                android:visibility="gone"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/wizardPropertiesButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:visibility="visible">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/wizardVerifyBackButton"
+                android:layout_width="157dp"
+                android:layout_height="35dp"
+                android:text="Back"
+                android:textSize="14sp"
+                android:background="@color/wizard_multimedia_wiz_button_1"
+                android:textColor="@color/wizard_multimedia_button_text"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/wizardVerifyFinishButton"
+                android:layout_width="157dp"
+                android:layout_height="35dp"
+                android:text="Next"
+                android:textSize="14sp"
+                android:background="@color/wizard_multimedia_wiz_button_2"
+                android:textColor="@color/wizard_multimedia_button_text"/>
+
+        </LinearLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/wizardPropertiesSaveButton"
+            android:layout_width="314dp"
+            android:layout_height="35dp"
+            android:visibility="invisible"
+            android:text="Save"
+            android:textSize="14sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/wizard_multimedia_wiz_button_1"
+            android:textColor="@color/wizard_multimedia_button_text"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

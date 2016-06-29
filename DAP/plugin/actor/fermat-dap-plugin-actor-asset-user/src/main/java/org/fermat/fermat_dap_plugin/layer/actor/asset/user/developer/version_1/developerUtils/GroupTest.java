@@ -14,33 +14,31 @@ import java.util.List;
 public class GroupTest {
     private static List<ActorAssetUserGroup> groupList;
     private static List<ActorAssetUserGroupMember> groupMemberList;
-    public static List<ActorAssetUserGroup> getGroupList(){
+
+    public static List<ActorAssetUserGroup> getGroupList() {
         groupList = new ArrayList<ActorAssetUserGroup>();
-        for(int i = 0; i< 10;i++)
-        {
+        for (int i = 0; i < 10; i++) {
             MockGroup group = new MockGroup();
-            group.setGroupId(i+"");
+            group.setGroupId(i + "");
             group.setGroupName("Grupo " + i + 1);
             groupList.add(group);
         }
         return groupList;
     }
 
-    public static List<ActorAssetUserGroupMember> getGroupMemberList(){
+    public static List<ActorAssetUserGroupMember> getGroupMemberList() {
         groupMemberList = new ArrayList<ActorAssetUserGroupMember>();
-        for(int i = 0; i< 3;i++)
-        {
+        for (int i = 0; i < 3; i++) {
             MockGroupMember groupMember = new MockGroupMember();
             groupMember.setGroupId(groupList.get(0).getGroupId());
-            groupMember.setActorPublicKey("publicKey "+i);
+            groupMember.setActorPublicKey("publicKey " + i);
             groupMemberList.add(groupMember);
         }
 
-        for(int i = 2; i< 6;i++)
-        {
+        for (int i = 2; i < 6; i++) {
             MockGroupMember groupMember = new MockGroupMember();
             groupMember.setGroupId(groupList.get(1).getGroupId());
-            groupMember.setActorPublicKey("publicKey "+i);
+            groupMember.setActorPublicKey("publicKey " + i);
             groupMemberList.add(groupMember);
         }
         return groupMemberList;

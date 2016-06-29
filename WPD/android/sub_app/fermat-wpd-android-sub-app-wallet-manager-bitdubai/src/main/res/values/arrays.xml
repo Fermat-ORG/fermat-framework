@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="seed_export_import_array">
+        <item>Bitcoin</item>
+        <item>Fermat</item>
+    </string-array>
+</resources>

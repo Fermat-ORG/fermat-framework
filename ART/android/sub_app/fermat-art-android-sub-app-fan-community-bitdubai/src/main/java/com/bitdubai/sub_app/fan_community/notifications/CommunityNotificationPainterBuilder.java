@@ -2,13 +2,14 @@ package com.bitdubai.sub_app.fan_community.notifications;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.sub_app.fan_community.R;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 import java.util.List;
 
@@ -17,11 +18,11 @@ import java.util.List;
  */
 public class CommunityNotificationPainterBuilder {
     public static NotificationPainter getNotification(
-            final String code, AbstractFermatSession session) {
+            final String code, AbstractReferenceAppFermatSession session) {
         NotificationPainter notification = null;
         int lastListIndex;
         if(session!=null){
-            FanCommunitySubAppSession fanSubAppSession = (FanCommunitySubAppSession) session;
+            FanCommunitySubAppSessionReferenceApp fanSubAppSession = (FanCommunitySubAppSessionReferenceApp) session;
             FanCommunityModuleManager moduleManager = fanSubAppSession.getModuleManager();
             try{
                 FanActorConnectionNotificationType notificationType = FanActorConnectionNotificationType.getByCode(code);

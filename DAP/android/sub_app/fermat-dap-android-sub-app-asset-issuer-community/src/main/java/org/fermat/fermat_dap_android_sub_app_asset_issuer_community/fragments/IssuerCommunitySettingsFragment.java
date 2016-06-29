@@ -14,35 +14,33 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.settings.AssetIssuerSubAppSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 
 import static android.widget.Toast.makeText;
+
 /**
- *Jinmy Bohorquez 02/26/2016
+ * Jinmy Bohorquez 02/26/2016
  */
-public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
+public class IssuerCommunitySettingsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager> {
 
     private View rootView;
-    private AssetIssuerCommunitySubAppSession  session;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private AssetIssuerCommunitySubAppModuleManager moduleManager;
-    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
     private ErrorManager errorManager;
     AssetIssuerSubAppSettings settings = null;
-
 
     public static IssuerCommunitySettingsFragment newInstance() {
         return new IssuerCommunitySettingsFragment();
@@ -53,12 +51,10 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
-        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
     }
 
     @Nullable
@@ -72,7 +68,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_issuer_community_opps_system_error, Toast.LENGTH_SHORT).show();
-            session.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
@@ -85,8 +81,8 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, R.string.help)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, R.string.help)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -130,7 +126,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
             toolbar.setTitleTextColor(Color.WHITE);
-            Drawable drawable = null;
+            FermatDrawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors, null);
                 toolbar.setElevation(0);

@@ -2,12 +2,13 @@ package org.fermat.fermat_dap_android_wallet_asset_user.v2.models;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/30/16.
  */
-public class AssetUserNegotiation {
+public class AssetUserNegotiation implements Serializable {
     private AssetNegotiation assetNegotiation;
 
     private UUID id;

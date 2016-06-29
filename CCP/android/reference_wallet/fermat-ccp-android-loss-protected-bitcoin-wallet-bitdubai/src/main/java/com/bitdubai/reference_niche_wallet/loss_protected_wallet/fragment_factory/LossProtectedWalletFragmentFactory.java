@@ -3,6 +3,8 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_facto
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactsFragment;
@@ -19,13 +21,13 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionHistoryFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<LossProtectedWalletSession,WalletResourcesProviderManager,LossProtectedFragmentsEnumType>  {
+public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<LossProtectedWallet>,WalletResourcesProviderManager,LossProtectedFragmentsEnumType>  {
 
 
     @Override

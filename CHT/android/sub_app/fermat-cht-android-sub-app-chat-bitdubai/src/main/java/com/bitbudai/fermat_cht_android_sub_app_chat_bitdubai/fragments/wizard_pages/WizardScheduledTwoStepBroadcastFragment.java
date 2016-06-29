@@ -12,12 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.DialogGetDatePicker;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.DialogGetTimePicker;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -50,7 +51,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     private ChatPreferenceSettings chatSettings;
     ArrayList<String> datelist = new ArrayList<String>();
     ArrayList<String> timelist = new ArrayList<String>();
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private ChatManager chatManager;
 
     public static WizardTwoStepBroadcastFragment newInstance() {
@@ -61,9 +62,9 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        chatSession=((ChatSession) appSession);
+        chatSession=((ChatSessionReferenceApp) appSession);
         chatManager= chatSession.getModuleManager();
-        ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
+        ChatManager moduleManager = ((ChatSessionReferenceApp) appSession).getModuleManager();
         //TODO:Revisar esto
 //        try {
 //            walletManager = moduleManager.getChatManager();
@@ -75,6 +76,8 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
         chatSettings = null;
         try {
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = (ChatPreferenceSettings) moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -157,7 +160,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
 
     public void ShowDialogWelcome(){
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setBody(R.string.cht_chat_body_broadcast_step_one)
                     .setSubTitle(R.string.cht_chat_subtitle_broadcast_step_one)
                     .setTextFooter(R.string.cht_chat_footer_broadcast_step_one)

@@ -1,7 +1,6 @@
 package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -10,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 
 import java.util.UUID;
 
@@ -55,6 +53,13 @@ public class AssetUserIdentityDatabaseFactory implements DealsWithPluginDatabase
             table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, true);
             table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
             table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_COUNTRY_KEY_COLUMN, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_CITY_KEY_COLUMN, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_STATE_KEY_COLUMN, DatabaseDataType.STRING, 100, false);
+
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ACCURACY_KEY_COLUMN, DatabaseDataType.INTEGER, 20, false);
+            table.addColumn(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_FREQUENCY_KEY_COLUMN, DatabaseDataType.STRING, 20, false);
 
             table.addIndex(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_FIRST_KEY_COLUMN);
 

@@ -66,7 +66,7 @@ public class MainFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-//            manager = ((AssetUserSession) appSession).getWalletManager();
+//            manager = ((AssetUserSessionReferenceApp) appSession).getWalletManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

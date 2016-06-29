@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -22,11 +24,12 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorDisconnectingFailedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 /**
  * DisconectDialog
@@ -35,7 +38,9 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
  * @version 1.0
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class DisconnectDialog
+        extends FermatDialog<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     /**
      * UI components
@@ -50,10 +55,10 @@ public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubApp
     private CharSequence   title       ;
 
     private final ChatActorCommunityInformation chatUserInformation;
-    private final ChatActorCommunitySelectableIdentity identity            ;
+    private final ChatActorCommunitySelectableIdentity identity;
 
-    public DisconnectDialog(final Activity activity,
-                            final ChatUserSubAppSession chatUserSubAppSession,
+    public DisconnectDialog(final Context activity,
+                            final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                             final SubAppResourcesProviderManager subAppResources,
                             final ChatActorCommunityInformation chatUserInformation,
                             final ChatActorCommunitySelectableIdentity identity) {
@@ -61,7 +66,7 @@ public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubApp
         super(activity, chatUserSubAppSession, subAppResources);
 
         this.chatUserInformation = chatUserInformation;
-        this.identity             = identity            ;
+        this.identity = identity;
     }
 
 
@@ -79,7 +84,7 @@ public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubApp
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
+//        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
 
     }

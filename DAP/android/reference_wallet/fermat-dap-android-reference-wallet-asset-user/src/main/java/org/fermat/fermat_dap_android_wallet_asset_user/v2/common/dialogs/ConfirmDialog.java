@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.Window;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -12,11 +12,11 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/3/16.
  */
-public class ConfirmDialog extends FermatDialog<FermatSession, ResourceProviderManager> implements
+public class ConfirmDialog extends FermatDialog<ReferenceAppFermatSession, ResourceProviderManager> implements
         View.OnClickListener {
 
-    public ConfirmDialog(Context activity, FermatSession fermatSession, ResourceProviderManager resources) {
-        super(activity, fermatSession, resources);
+    public ConfirmDialog(Context activity, ReferenceAppFermatSession referenceAppFermatSession, ResourceProviderManager resources) {
+        super(activity, referenceAppFermatSession, resources);
     }
 
     @Override

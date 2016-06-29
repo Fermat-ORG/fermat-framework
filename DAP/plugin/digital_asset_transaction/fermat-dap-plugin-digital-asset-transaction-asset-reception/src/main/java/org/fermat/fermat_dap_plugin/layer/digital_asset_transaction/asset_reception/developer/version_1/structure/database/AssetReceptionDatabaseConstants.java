@@ -18,8 +18,8 @@ public class AssetReceptionDatabaseConstants {
     public static final String ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME = "reception_status";
     public static final String ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ASSET_RECEPTION_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
-    public static final String ASSET_RECEPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME ="actor_issuer_bitcoin_address";
-    public static final String ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME="reception_id";
+    public static final String ASSET_RECEPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME = "actor_issuer_bitcoin_address";
+    public static final String ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME = "reception_id";
 
     public static final String ASSET_RECEPTION_FIRST_KEY_COLUMN = "genesis_transaction";
 
@@ -39,13 +39,13 @@ public class AssetReceptionDatabaseConstants {
     /**
      * receiving Asset database table definition
      */
-    public static final String ASSET_RECEPTION_RECEIVING_TABLE_NAME="receiving";
+    public static final String ASSET_RECEPTION_RECEIVING_TABLE_NAME = "receiving";
 
-    public static final String ASSET_RECEPTION_RECEIVING_MESSAGE_ID_COLUMN_NAME="message_id";
-    public static final String ASSET_RECEPTION_RECEIVING_GENESIS_TRANSACTION_COLUMN_NAME="receiving_genesis_transaction";
-    public static final String ASSET_RECEPTION_RECEIVING_MESSAGE_TYPE_COLUMN_NAME="message_type";
-    public static final String ASSET_RECEPTION_RECEIVING_TIMESTAMP_COLUMN_NAME="receiving_timestamp";
-    public static final String ASSET_RECEPTION_RECEIVING_EVENT_ID_COLUMN_NAME="receiving_event_id";
+    public static final String ASSET_RECEPTION_RECEIVING_MESSAGE_ID_COLUMN_NAME = "message_id";
+    public static final String ASSET_RECEPTION_RECEIVING_GENESIS_TRANSACTION_COLUMN_NAME = "receiving_genesis_transaction";
+    public static final String ASSET_RECEPTION_RECEIVING_MESSAGE_TYPE_COLUMN_NAME = "message_type";
+    public static final String ASSET_RECEPTION_RECEIVING_TIMESTAMP_COLUMN_NAME = "receiving_timestamp";
+    public static final String ASSET_RECEPTION_RECEIVING_EVENT_ID_COLUMN_NAME = "receiving_event_id";
 
-    public static final String ASSET_RECEPTION_RECEIVING_TABLE_FIRST_KEY_COLUMN="message_id";
+    public static final String ASSET_RECEPTION_RECEIVING_TABLE_FIRST_KEY_COLUMN = "message_id";
 }

@@ -1,11 +1,11 @@
-//package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
+//package com.bitdubai.reference_niche_wallet.fermat_wallet.common.CustomView;
 //
 //import android.app.Activity;
 //import android.content.Context;
 //import android.content.res.Resources;
 //import android.graphics.Bitmap;
 //import android.graphics.BitmapFactory;
-//import android.graphics.drawable.Drawable;
+//import android.graphics.drawable.FermatDrawable;
 //import android.util.AttributeSet;
 //import android.view.LayoutInflater;
 //import android.view.View;
@@ -15,10 +15,10 @@
 //import android.widget.LinearLayout;
 //import android.widget.TextView;
 //
-//import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+//import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 //import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-//import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
-//import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
+//import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.RoundedDrawable;
+//import com.bitdubai.reference_niche_wallet.fermat_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 //
 //import java.util.ArrayList;
 //import java.util.List;
@@ -186,10 +186,10 @@
 //            //imageView_transaction.setImageDrawable();
 ////            imageView_transaction.setImageResource(
 ////                    resources.getIdentifier(
-////                            "com.bitdubai.reference_niche_wallet.bitcoin_wallet:drawable/" + customComponentsObjects.getImageUrl()
+////                            "com.bitdubai.reference_niche_wallet.fermat_wallet:drawable/" + customComponentsObjects.getImageUrl()
 ////                            , null, null));
 ////            byte[] image = customComponentsObjects.getImage();
-////            Drawable drawableImage = null;
+////            FermatDrawable drawableImage = null;
 ////            if(image!=null){
 ////                drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
 ////            }else{
@@ -242,7 +242,7 @@
 //        txtViewDetailTransaction.setText(transactionInScreen.getDetail());
 //        byte[] image = transactionInScreen.getImage();
 //        Bitmap imageBitmap = null;
-//            Drawable drawableImage = null;
+//            FermatDrawable drawableImage = null;
 //            if(image!=null){
 //                imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
 //                imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);

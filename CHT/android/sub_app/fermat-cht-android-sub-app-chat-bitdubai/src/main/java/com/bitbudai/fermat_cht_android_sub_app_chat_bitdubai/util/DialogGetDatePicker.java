@@ -21,8 +21,8 @@ import java.util.Date;
  */
 public class DialogGetDatePicker extends FermatDialog {
     String formatedDate;
-    public DialogGetDatePicker(Context activity, FermatSession fermatSession, ResourceProviderManager resources) {
-        super(activity, fermatSession, resources);
+    public DialogGetDatePicker(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
+        super(activity, referenceAppFermatSession, resources);
     }
 
     @Override

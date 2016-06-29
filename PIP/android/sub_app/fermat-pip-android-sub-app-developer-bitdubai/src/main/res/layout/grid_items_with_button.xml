@@ -2,54 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/shape"
+        android:paddingBottom="5dp"
         android:paddingLeft="7dp"
         android:paddingRight="7dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
+        android:paddingTop="5dp">
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-           android:id="@+id/wallet_3"
+            android:id="@+id/wallet_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingBottom="7dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="7dp">
+
             <ImageView
                 android:id="@+id/image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:textColor="@color/black_overlay"
-                android:textStyle="bold"
-                android:textSize="13sp"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
-                android:src="@drawable/wallet_1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_column="2"
-                android:layout_gravity="center"/>
-            <TextView android:text="App Name"
-                android:layout_width="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_height="wrap_content"
+                android:src="@drawable/wallet_1" />
+
+            <TextView
                 android:id="@+id/company_text_view"
-                android:layout_below="@+id/image_view"
-                android:layout_centerHorizontal="true"
-                android:layout_column="2"
-
-                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/image_view"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:text="Apple Orange"
                 android:textColor="@color/black_overlay"
-                android:textStyle="bold"
-                android:layout_weight="0.7"
                 android:textSize="13sp"
-                android:layout_centerVertical="true"
-
-                />
-
+                android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

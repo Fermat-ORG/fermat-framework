@@ -1,9 +1,9 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +13,14 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 
-/**
- */
-public class SubActionButton extends LinearLayout {
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 
+/**
+ * Modified by
+ * @author Clelia López
+ */
+public class SubActionButton
+        extends LinearLayout {
 
     FrameLayout frameLayout;
     TextView textView;
@@ -25,64 +29,83 @@ public class SubActionButton extends LinearLayout {
     public static final int THEME_LIGHTER = 2;
     public static final int THEME_DARKER = 3;
 
-    public SubActionButton(Context context, LayoutParams layoutParams, int theme, Drawable backgroundDrawable, View contentView, LayoutParams contentParams,String text) {
+
+    public SubActionButton(Context context) {
         super(context);
-        //setLayoutParams(layoutParams);
-        frameLayout = new FrameLayout(context);
-        LinearLayout.LayoutParams layoutParams1 = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.rightMargin = 42;
-        setLayoutParams(layoutParams1);
-        setPadding(0, 0, 100, 0);
-        //frameLayout.setLayoutParams(layoutParams1);
-        //frameLayout.setPadding(0,0,30,0);
+    }
 
-        LinearLayout.LayoutParams lps2 = new LinearLayout.LayoutParams(150,150);
-        lps2.rightMargin = 40;
-        frameLayout.setLayoutParams(lps2);
+    public SubActionButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
+    public SubActionButton(Context context, int theme, Drawable backgroundDrawable, int size,
+           int paddingLeft, int paddingRight, int paddingTop, int paddingBottom, String text,
+           int textColor, int textBackgroundColor, Drawable textBackgroundDrawable) {
+        super(context);
+
+        // TextView set up
         textView = new TextView(context);
         textView.setText(text);
-        textView.setGravity(Gravity.CENTER_VERTICAL);
-        textView.setTextColor(Color.DKGRAY);
-        LinearLayout.LayoutParams lps_text = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lps_text.topMargin = 22;
-        textView.setLayoutParams(lps_text);
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextColor(textColor);
+        if(textBackgroundColor != -1)
+            textView.setBackgroundColor(textBackgroundColor);
+        if(textBackgroundDrawable != null)
+            textView.setBackground(textBackgroundDrawable);
+        int left = FermatScreenCalculator.getPx(context, 5);
+        int down = FermatScreenCalculator.getPx(context, 2);
+        LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        textView.setPadding(left, 0, left, down);
+        textView.setLayoutParams(textViewParams);
+
+        // Button set up
+        if(backgroundDrawable == null) {
+            switch (theme) {
+                case THEME_LIGHT:
+                    backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.button_sub_action_selector);
+                    break;
+                case THEME_DARK:
+                    backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.button_sub_action_dark_selector);
+                    break;
+                case THEME_LIGHTER:
+                    backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.button_action_selector);
+                    break;
+                case THEME_DARKER:
+                    backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.button_action_dark_selector);
+                    break;
+                default:
+                    throw new RuntimeException("Unknown SubActionButton theme: " + theme);
+            }
+        } else
+            backgroundDrawable = backgroundDrawable.mutate().getConstantState().newDrawable();
+
+        FrameLayout.LayoutParams params;
+        if(size != -1) {
+            size = FermatScreenCalculator.getPx(context, size);
+            params = new FrameLayout.LayoutParams(size, size);
+        } else
+            params = new FrameLayout.LayoutParams(60, 60);
+        frameLayout = new FrameLayout(context);
+        frameLayout.setBackground(backgroundDrawable);
+        frameLayout.setLayoutParams(params);
+
+        // View set up
+        LinearLayout.LayoutParams containerParams = new LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setLayoutParams(containerParams);
+        setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
 
         setOrientation(HORIZONTAL);
         addView(textView);
         addView(frameLayout);
-        // If no custom backgroundDrawable is specified, use the background drawable of the theme.
-        if(backgroundDrawable == null) {
-            if(theme == THEME_LIGHT) {
-                backgroundDrawable = context.getResources().getDrawable(R.drawable.button_sub_action_selector);
-            }
-            else if(theme == THEME_DARK) {
-                backgroundDrawable = context.getResources().getDrawable(R.drawable.button_sub_action_dark_selector);
-            }
-            else if(theme == THEME_LIGHTER) {
-                backgroundDrawable = context.getResources().getDrawable(R.drawable.button_action_selector);
-            }
-            else if(theme == THEME_DARKER) {
-                backgroundDrawable = context.getResources().getDrawable(R.drawable.button_action_dark_selector);
-            }
-            else {
-                throw new RuntimeException("Unknown SubActionButton theme: " + theme);
-            }
-        }
-        else {
-            backgroundDrawable = backgroundDrawable.mutate().getConstantState().newDrawable();
-        }
-        frameLayout.setBackground(backgroundDrawable);
-//        if(contentView != null) {
-//            setContentView(contentView, contentParams);
-//        }
         setClickable(true);
     }
 
     /**
      * Sets a content view with custom LayoutParams that will be displayed inside this SubActionButton.
-     * @param contentView
-     * @param params
+     * @param contentView -
+     * @param params -
      */
     public void setContentView(View contentView, LayoutParams params) {
         if(params == null) {
@@ -97,19 +120,10 @@ public class SubActionButton extends LinearLayout {
 
     /**
      * Sets a content view with default LayoutParams
-     * @param contentView
+     * @param contentView -
      */
     public void setContentView(View contentView) {
         setContentView(contentView, null);
-    }
-
-    private void setBackgroundResource(Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            setBackground(drawable);
-        }
-        else {
-            setBackgroundDrawable(drawable);
-        }
     }
 
     /**
@@ -118,27 +132,21 @@ public class SubActionButton extends LinearLayout {
     public static class Builder {
 
         private Context context;
-        private LayoutParams layoutParams;
         private int theme;
         private Drawable backgroundDrawable;
-        private View contentView;
-        private LayoutParams contentParams;
         private String text;
+        private int textColor;
+        private int textBackgroundColor = -1;
+        private Drawable textBackgroundDrawable = null;
+        private int size = -1;
+        private int paddingLeft = 0;
+        private int paddingRight = 0;
+        private int paddingTop = 0;
+        private int paddingBottom = 0;
+
 
         public Builder(Context context) {
             this.context = context;
-
-            // Default SubActionButton settings
-            int size = context.getResources().getDimensionPixelSize(R.dimen.sub_action_button_size);
-            LayoutParams params = new LayoutParams(size, size, Gravity.TOP | Gravity.LEFT);
-            setLayoutParams(params);
-            setTheme(SubActionButton.THEME_LIGHT);
-
-        }
-
-        public Builder setLayoutParams(LayoutParams params) {
-            this.layoutParams = params;
-            return this;
         }
 
         public Builder setTheme(int theme) {
@@ -151,30 +159,50 @@ public class SubActionButton extends LinearLayout {
             return this;
         }
 
-        public Builder setContentView(View contentView) {
-            this.contentView = contentView;
-            return this;
-        }
-
-        public Builder setContentView(View contentView, LayoutParams contentParams) {
-            this.contentView = contentView;
-            this.contentParams = contentParams;
-            return this;
-        }
-
         public Builder setText(String text){
             this.text = text;
             return this;
         }
 
+        public Builder setTextColor(int color) {
+            this.textColor = color;
+            return this;
+        }
+
+        public Builder setTextBackgroundColor(int color) {
+            this.textBackgroundColor = color;
+            return this;
+        }
+
+        public Builder setTextBackgroundDrawable(Drawable drawable) {
+            this.textBackgroundDrawable = drawable;
+            return this;
+        }
+
+        /**
+         * Set size dimension (width == height)
+         * @param size - size in DP
+         */
+        public Builder setSize(int size) {
+            this.size = size;
+            return this;
+        }
+
+        /**
+         * Set padding in pixels
+         */
+        public Builder setPadding(int left, int top, int right, int bottom) {
+            this.paddingLeft = left;
+            this.paddingTop = top;
+            this.paddingRight = right;
+            this.paddingBottom = bottom;
+            return this;
+        }
+
         public SubActionButton build() {
-            return new SubActionButton(context,
-                    layoutParams,
-                    theme,
-                    backgroundDrawable,
-                    contentView,
-                    contentParams,
-                    text);
+            return new SubActionButton(context, theme, backgroundDrawable, size, paddingLeft,
+                    paddingRight, paddingTop, paddingBottom, text, textColor, textBackgroundColor,
+                    textBackgroundDrawable);
         }
     }
 }

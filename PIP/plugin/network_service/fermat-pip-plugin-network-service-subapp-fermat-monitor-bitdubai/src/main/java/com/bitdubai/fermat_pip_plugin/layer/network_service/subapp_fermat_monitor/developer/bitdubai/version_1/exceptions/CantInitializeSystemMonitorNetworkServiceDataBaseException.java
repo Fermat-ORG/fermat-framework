@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
+
 /**
  * The Class <code>package com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.exceptions.CantInitializeSystemMonitorNetworkServiceDataBaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Miguel Celedon - (miguelceledon@outlook.com) on 14/03/16.
  *
  * @version 1.0

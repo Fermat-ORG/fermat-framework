@@ -2,6 +2,10 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -11,9 +15,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -22,10 +28,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +39,20 @@ import java.util.List;
  * Modified by abicelis on 06/04/16
  */
 
-public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener{
+public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener{
 
     //Constants
     public static final int BANK_DIALOG = 1;
     public static final int CASH_DIALOG = 2;
     private static final String TAG = "InputDialogCBP";
 
+    private static int MAX_LENGHT_BANK_NAME = 15;
+    private static int MAX_LENGHT_BANK_ALIAS = 10;
+    private static int MAX_LENGHT_BANK_ACCOUNT = 25;
+
+
 
     //Managers
-    private CryptoBrokerWalletSession walletSession;
-    private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     CryptoBrokerWalletModuleManager walletManager;
 
@@ -55,6 +61,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     FermatTextView buttonActionBank, buttonActionCash;
     EditText bankAccountNumber, bankAccountAlias, bankAccountBankName;
     Spinner bankAccountTypeSpinner, bankAccountCurrencySpinner, cashCurrencySpinner;
+    FermatTextView bankNameCount, accountNumberCount, accountAliasCount;
 
     //Data
     int dialogType;
@@ -69,9 +76,24 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     List<String> bankAccountTypesFriendly =  new ArrayList<>();
     List<String> bankAccountTypes =  new ArrayList<>();
 
+    private final TextWatcher bankNameTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
+    private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
+    private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
-    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletModuleManager WalletManager, int dialogType) {
-        super(activity, fermatSession, resources);
+    public InputDialogCBP(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletModuleManager WalletManager, int dialogType) {
+        super(activity, referenceAppFermatSession, resources);
         this.activity = activity;
         this.walletManager = WalletManager;
         this.dialogType = dialogType;
@@ -81,8 +103,6 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            walletSession = ((CryptoBrokerWalletSession) getSession());
-            moduleManager = walletSession.getModuleManager();
             errorManager = getSession().getErrorManager();
 
         } catch (Exception e) {
@@ -103,13 +123,34 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
         if(dialogType == BANK_DIALOG) {
 
             //Set up Views
-            bankAccountTypeSpinner = (Spinner) findViewById(R.id.idcbp_bank_account_type);
-            bankAccountBankName = (EditText) findViewById(R.id.idcbp_bank_account_bank_name);
-            bankAccountAlias = (EditText) findViewById(R.id.idcbp_bank_account_alias);
-            bankAccountNumber = (EditText) findViewById(R.id.idcbp_bank_account_number);
-            bankAccountCurrencySpinner = (Spinner) findViewById(R.id.idcbp_bank_account_currency);
+            bankAccountTypeSpinner = (Spinner) findViewById(R.id.cbp_bank_account_type);
+            bankAccountBankName = (EditText) findViewById(R.id.cbp_bank_account_bank_name);
+            bankAccountAlias = (EditText) findViewById(R.id.cbp_bank_account_alias);
+            bankAccountNumber = (EditText) findViewById(R.id.cbp_bank_account_number);
+            bankNameCount = (FermatTextView) findViewById(R.id.cbp_bank_account_bank_name_count);
+            accountAliasCount = (FermatTextView) findViewById(R.id.cbp_bank_account_alias_count);
+            accountNumberCount = (FermatTextView) findViewById(R.id.cbp_bank_account_number_count);
+
+            bankAccountCurrencySpinner = (Spinner) findViewById(R.id.cbp_bank_account_currency);
             buttonActionBank = (FermatTextView) findViewById(R.id.idcbp_button_action_bank);
             buttonActionBank.setOnClickListener(this);
+
+
+            //Allow only numbers and dashes, limit max length, add textWatchers
+            bankAccountBankName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_NAME)});
+            bankAccountBankName.addTextChangedListener(bankNameTextWatcher);
+
+            bankAccountNumber.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+            bankAccountNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ACCOUNT)});
+            bankAccountNumber.addTextChangedListener(accountNumberTextWatcher);
+
+            bankAccountAlias.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ALIAS)});
+            bankAccountAlias.addTextChangedListener(accountAliasTextWatcher);
+
+            bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME));
+            accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT));
+            accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS));
+
 
             //Get fermat BankAccountTypes
             for (BankAccountType b : BankAccountType.values()) {
@@ -118,8 +159,8 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             }
 
             //Set up bankAccountType Spinner
-            ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item, bankAccountTypesFriendly);
-            bankAccountTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(),R.layout.cbw_simple_spinner_item, bankAccountTypesFriendly);
+            bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown_item);
 
             bankAccountTypeSpinner.setAdapter(bankAccountTypeAdapter);
             bankAccountTypeSpinner.setBackgroundColor(0);
@@ -136,8 +177,8 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
 
 
             //Set up currency Spinner
-            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
-            currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
+            currencyAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown_item);
 
             bankAccountCurrencySpinner.setAdapter(currencyAdapter);
             bankAccountCurrencySpinner.setBackgroundColor(0);
@@ -150,7 +191,8 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
 
 
@@ -164,8 +206,9 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             buttonActionCash.setOnClickListener(this);
 
             //Set up currency Spinner
-            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
-            currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
+            currencyAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown_item);
+//            currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             cashCurrencySpinner.setAdapter(currencyAdapter);
             cashCurrencySpinner.setBackgroundColor(0);
             cashCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

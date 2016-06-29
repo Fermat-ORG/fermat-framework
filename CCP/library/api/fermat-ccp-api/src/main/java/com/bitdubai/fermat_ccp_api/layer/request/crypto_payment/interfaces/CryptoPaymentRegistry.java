@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
@@ -51,7 +52,8 @@ public interface CryptoPaymentRegistry {
                                       String                description      ,
                                       long                  amount           ,
                                       BlockchainNetworkType networkType      ,
-                                      ReferenceWallet       referenceWallet) throws CantGenerateCryptoPaymentRequestException;
+                                      ReferenceWallet       referenceWallet,
+                                      CryptoCurrency cryptoCurrency) throws CantGenerateCryptoPaymentRequestException;
 
     /**
      * Throw the method <code>refuseRequest</code> you can refuse a request.

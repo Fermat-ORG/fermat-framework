@@ -8,6 +8,8 @@ import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 
+import java.math.BigDecimal;
+
 /**
  * Created by memo on 23/11/15.
  */
@@ -23,7 +25,7 @@ public class BankMoneyWalletBalanceImpl implements BankMoneyWalletBalance{
     }
 
     @Override
-    public double getBalance(String accountNumber) throws CantCalculateBalanceException {
+    public BigDecimal getBalance(String accountNumber) throws CantCalculateBalanceException {
         switch (balanceType){
             case AVAILABLE: return bankMoneyWalletDao.getAvailableBalance(accountNumber);
             case BOOK: return bankMoneyWalletDao.getBookBalance(accountNumber);

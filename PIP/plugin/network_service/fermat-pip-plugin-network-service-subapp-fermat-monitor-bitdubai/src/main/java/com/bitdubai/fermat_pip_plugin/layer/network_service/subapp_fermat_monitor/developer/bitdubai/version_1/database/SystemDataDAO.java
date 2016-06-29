@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database;
 
 
-
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -34,6 +33,7 @@ public class SystemDataDAO {
 
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
+
     /**
      * Constructor with parameters
      *
@@ -345,7 +345,7 @@ public class SystemDataDAO {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-           // DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            // DatabaseTransactionFailedException DatabaseTransactionFailedException = new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
         } catch (InvalidParameterException e) {
             e.printStackTrace();
@@ -469,7 +469,7 @@ public class SystemDataDAO {
                 record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_OS_COLUMN_NAME)
         );
 
-       return systemData;
+        return systemData;
     }
 
     /**
@@ -490,7 +490,7 @@ public class SystemDataDAO {
     }
 
     private void setValuesToRecord(DatabaseTableRecord entityRecord, SystemData systemData) {
-        
+
         entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, systemData.systemID);
         entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NODE_TYPE_COLUMN_NAME, systemData.nodeType);
         entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_HARDWARE_COLUMN_NAME, systemData.hardware);

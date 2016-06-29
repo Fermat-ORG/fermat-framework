@@ -14,6 +14,14 @@ configurations {
     deployerJars
 }
 
+sourceSets {
+	main {
+		java {
+			exclude 'javax/websocket/**'
+		}
+	}
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'fermat-p2p-plugin-communication-network-client-bitdubai',
@@ -33,7 +41,7 @@ repositories {
 }
 
 dependencies {
-	compile project (':fermat-api')
+
 	compile project(':fermat-p2p-api')
 	compile 'com.google.code.gson:gson:2.4'
 	compile 'org.slf4j:slf4j-log4j12:1.7.13'
@@ -41,7 +49,9 @@ dependencies {
 	compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
 	compile 'org.springframework.android:spring-android-core:1.0.1.RELEASE'
 
-	compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12')
+	compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12'){
+		exclude group:'javax.websocket', module:'javax.websocket-api'
+	}
 
 	testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'

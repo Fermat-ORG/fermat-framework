@@ -5,7 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 
 import java.util.List;
 
@@ -13,13 +13,14 @@ import java.util.List;
  * WizardPageAdapter
  *
  * @author Francisco Vasquez
+ * @author Matias Furszyfer
  * @version 1.0
  */
-public class WizardPageAdapter extends FragmentStatePagerAdapter implements FermatUIAdapter{
+public class WizardPageAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F>{
 
-    private List<AbstractFermatFragment> fragments;
+    private List<F> fragments;
 
-    public WizardPageAdapter(FragmentManager fm, List<AbstractFermatFragment> fragments) {
+    public WizardPageAdapter(FragmentManager fm, List<F> fragments) {
         super(fm);
         this.fragments = fragments;
     }
@@ -36,7 +37,7 @@ public class WizardPageAdapter extends FragmentStatePagerAdapter implements Ferm
 
 
     @Override
-    public List<AbstractFermatFragment> getLstCurrentFragments() {
+    public List<F> getLstCurrentFragments() {
         return fragments;
     }
 }

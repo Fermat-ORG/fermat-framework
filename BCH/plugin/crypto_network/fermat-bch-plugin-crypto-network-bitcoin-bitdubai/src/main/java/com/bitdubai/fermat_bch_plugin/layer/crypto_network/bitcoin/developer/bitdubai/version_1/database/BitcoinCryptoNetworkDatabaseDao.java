@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
@@ -29,7 +28,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
@@ -234,19 +234,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
         switch (cryptoTransaction.getCryptoStatus()){
             case ON_BLOCKCHAIN:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 break;
             case IRREVERSIBLE:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingOBCCryptoTransaction = CryptoTransaction.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingOBCCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingOBCCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     saveNewTransaction(missingOBCCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingOBCCryptoTransaction));
                 }
@@ -868,7 +868,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             /**
              * I will form the address from the public key and the network so I can insert it.
              */
-            NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+            NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
             Address address = null;
             try {
                 address = new Address(networkParameters, key.toAddress(networkParameters).toString());

@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -11,8 +12,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocatio
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleClauseInformation;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.classes.CryptoBrokerWalletModuleClauseInformation;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ final public class NegotiationWrapper {
      * @param negotiationInfo the {@link CustomerBrokerNegotiationInformation} object to wrap
      * @param appSession      the session with the Module Manager and Error Manager in case of need to add missing clauses
      */
-    public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, CryptoBrokerWalletSession appSession) {
+    public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> appSession) {
         this.negotiationInfo = negotiationInfo;
         confirmedClauses = new HashSet<>();
 
@@ -170,8 +170,9 @@ final public class NegotiationWrapper {
      */
     public void addClause(final ClauseType clauseType, final String value) {
         final String clauseValue = (value != null) ? value : "";
-        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
-        negotiationInfo.getClauses().put(clauseType, clauseInformation);
+        //todo: ver esto, core comentado
+//        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
+//        negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
     /**
@@ -182,11 +183,12 @@ final public class NegotiationWrapper {
      */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
         final ClauseStatus clauseStatus = clause.getValue().equals(value) && clause.getStatus() == DRAFT ? ACCEPTED : CHANGED;
+        //todo: ver esto, core comentado
 
-        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
-        clauseInformation.setStatus(clauseStatus);
-        clauseInformation.setValue(value);
-
-        negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
+//        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
+//        clauseInformation.setStatus(clauseStatus);
+//        clauseInformation.setValue(value);
+//
+//        negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
     }
 }

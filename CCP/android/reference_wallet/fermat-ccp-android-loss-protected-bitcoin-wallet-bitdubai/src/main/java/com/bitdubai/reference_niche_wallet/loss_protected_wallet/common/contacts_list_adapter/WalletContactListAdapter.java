@@ -43,7 +43,7 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.loss_contact_list_main_row, null);
+            v = vi.inflate(R.layout.loss_fragment_contacts_list_item, null);
         }
         if(position>=1){
             v.findViewById(R.id.separator_line).setVisibility(View.VISIBLE);
@@ -54,18 +54,28 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         if (contact != null) {
             TextView contact_name = (TextView) v.findViewById(R.id.contact_name);
             contact_name.setText(contact.name);
+
+
             ImageView contact_profile_image = (ImageView) v.findViewById(R.id.contact_profile_image);
             try {
+
                 if (contact.profileImage != null) {
+
                     if (contact.profileImage.length > 0) {
                         contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), contact.profileImage));
-                    } else
-                    Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
-                } else
-                    Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
-               }catch (Exception e){
+                    } else Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
+
+                } else Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
+
+                if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP){
+                    contact_name.setTextSize(14);
+                    contact_profile_image.setMaxHeight(40);
+                    contact_profile_image.setMaxWidth(40);
+                }
+
+            }catch (Exception e){
                 Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
-        }
+            }
         }
         return v;
     }
@@ -74,13 +84,9 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         return filteredData.size();
     }
 
-    public WalletContact getItem(int position) {
-        return filteredData.get(position);
-    }
+    public WalletContact getItem(int position) { return filteredData.get(position); }
 
-    public long getItemId(int position) {
-        return position;
-    }
+    public long getItemId(int position) { return position; }
 
     @Override
     public Filter getFilter() {

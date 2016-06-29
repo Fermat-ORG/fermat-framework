@@ -23,8 +23,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.dev
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +33,6 @@ import java.util.List;
  */
 @PluginInfo(createdBy = "vlzangel", maintainerMail = "vlzangel91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
 public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
-    private DeviceUserManager deviceUserManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -66,7 +58,7 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
                 this.customerBrokerSaleNegotiationDao = new CustomerBrokerSaleNegotiationDao(pluginDatabaseSystem, pluginId);
                 this.customerBrokerSaleNegotiationDao.initializeDatabase();
             } catch (CantInitializeCustomerBrokerSaleNegotiationDatabaseException e) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException();
             }
         }
@@ -75,8 +67,7 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
     public FermatManager getManager() {
         return new CustomerBrokerSaleManager(
             this.customerBrokerSaleNegotiationDao,
-            this.errorManager,
-            this.getPluginVersionReference()
+            this
         );
     }
 
@@ -103,7 +94,7 @@ public class CustomerBrokerSaleNegotiationPluginRoot extends AbstractPlugin impl
                 dbFactory.initializeDatabase();
                 return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
             } catch (CantInitializeCustomerBrokerSaleNegotiationDatabaseException e) {
-                this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
             return new ArrayList<>();
         }

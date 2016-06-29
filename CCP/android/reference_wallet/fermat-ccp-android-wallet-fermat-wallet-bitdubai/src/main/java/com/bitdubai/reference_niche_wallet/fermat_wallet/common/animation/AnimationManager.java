@@ -67,22 +67,27 @@ public class AnimationManager
     private void moveViewToScreenCenter(View view) {
         ObjectAnimator animator;
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        rootView.getDisplay().getMetrics(displayMetrics);
-        float density = displayMetrics.density;
-        if (Build.VERSION.SDK_INT > 17 && view != null) {
-            animator = ObjectAnimator.ofFloat(view,  View.TRANSLATION_Y,  0, -getCentreY() - navigationBarHeight/density);
-            animator.setInterpolator(new AccelerateInterpolator());
-            animator.setDuration(700);
-            animator.start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            rootView.getDisplay().getMetrics(displayMetrics);
+            float density = displayMetrics.density;
+            if (Build.VERSION.SDK_INT > 17 && view != null) {
+                animator = ObjectAnimator.ofFloat(view,  View.TRANSLATION_Y,  0, -getCentreY() - navigationBarHeight/density);
+                animator.setInterpolator(new AccelerateInterpolator());
+                animator.setDuration(700);
+                animator.start();
+            }
         }
     }
 
     public float getCentreY() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        rootView.getDisplay().getMetrics(displayMetrics);
-        float density = displayMetrics.density;
-        float screenHeight = displayMetrics.heightPixels;
-        float balanceHeight = density * 330;
-        return (screenHeight - balanceHeight)/2;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            rootView.getDisplay().getMetrics(displayMetrics);
+            float density = displayMetrics.density;
+            float screenHeight = displayMetrics.heightPixels;
+            float balanceHeight = density * 330;
+            return (screenHeight - balanceHeight) / 2;
+        }
+        return 0;
     }
 }

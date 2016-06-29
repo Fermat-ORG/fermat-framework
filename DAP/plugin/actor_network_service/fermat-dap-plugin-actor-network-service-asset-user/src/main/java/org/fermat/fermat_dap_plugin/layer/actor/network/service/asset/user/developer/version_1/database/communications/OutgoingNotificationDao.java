@@ -66,20 +66,20 @@ public class OutgoingNotificationDao {
     }
 
     public ActorAssetNetworkServiceRecord createNotification(UUID notificationId,
-                                                            String senderPublicKey,
-                                                            Actors senderType,
-                                                            String destinationPublicKey,
-                                                            String senderAlias,
+                                                             String senderPublicKey,
+                                                             Actors senderType,
+                                                             String destinationPublicKey,
+                                                             String senderAlias,
 //                                                            String senderPhrase,
-                                                            byte[] senderProfileImage,
-                                                            Actors destinationType,
-                                                            AssetNotificationDescriptor assetNotificationDescriptor,
-                                                            long timestamp,
-                                                            ActorAssetProtocolState actorAssetProtocolState,
-                                                            boolean flagRea,
-                                                            int sentCount,
-                                                            BlockchainNetworkType blockchainNetworkType,
-                                                            UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
+                                                             byte[] senderProfileImage,
+                                                             Actors destinationType,
+                                                             AssetNotificationDescriptor assetNotificationDescriptor,
+                                                             long timestamp,
+                                                             ActorAssetProtocolState actorAssetProtocolState,
+                                                             boolean flagRea,
+                                                             int sentCount,
+                                                             BlockchainNetworkType blockchainNetworkType,
+                                                             UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
 
         try {
             ActorAssetNetworkServiceRecord connectionRequestRecord = null;
@@ -152,7 +152,7 @@ public class OutgoingNotificationDao {
                 List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
                 if (!records.isEmpty())
-                    return buildAssetUserNetworkServiceRecord(records.get(records.size()-1));
+                    return buildAssetUserNetworkServiceRecord(records.get(records.size() - 1));
                 else
                     throw new CantGetActorAssetNotificationException("", null, "RequestID: " + notificationId, "Can not find an actor aset user request with the given request id.");
             } catch (CantLoadTableToMemoryException exception) {
@@ -198,14 +198,14 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = actorRequestTable.getRecords();
 
             if (!records.isEmpty())
-                return buildAssetUserNetworkServiceRecord(records.get(records.size()-1)).getActorSenderType();
-            else{
+                return buildAssetUserNetworkServiceRecord(records.get(records.size() - 1)).getActorSenderType();
+            else {
                 actorRequestTable.clearAllFilters();
                 actorRequestTable.addStringFilter(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, actorPublicKeySender, DatabaseFilterType.EQUAL);
                 actorRequestTable.loadToMemory();
                 List<DatabaseTableRecord> records1 = actorRequestTable.getRecords();
                 if (!records1.isEmpty())
-                    return buildAssetUserNetworkServiceRecord(records1.get(records.size()-1)).getActorDestinationType();
+                    return buildAssetUserNetworkServiceRecord(records1.get(records.size() - 1)).getActorDestinationType();
                 else
                     throw new CantGetPendingRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
             }
@@ -228,14 +228,14 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = actorToRequestTable.getRecords();
 
             if (!records.isEmpty())
-                return buildAssetUserNetworkServiceRecord(records.get(records.size()-1)).getActorDestinationType();
-            else{
+                return buildAssetUserNetworkServiceRecord(records.get(records.size() - 1)).getActorDestinationType();
+            else {
                 actorToRequestTable.clearAllFilters();
                 actorToRequestTable.addStringFilter(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, actorPublicKeyDestination, DatabaseFilterType.EQUAL);
                 actorToRequestTable.loadToMemory();
                 List<DatabaseTableRecord> records1 = actorToRequestTable.getRecords();
                 if (!records1.isEmpty())
-                    return buildAssetUserNetworkServiceRecord(records1.get(records.size()-1)).getActorSenderType();
+                    return buildAssetUserNetworkServiceRecord(records1.get(records.size() - 1)).getActorSenderType();
                 else
                     throw new CantGetPendingRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
             }
@@ -271,7 +271,7 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(records.size()-1);
+                DatabaseTableRecord record = records.get(records.size() - 1);
                 record.setStringValue(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, assetNotificationDescriptor.getCode());
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
@@ -305,7 +305,7 @@ public class OutgoingNotificationDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(records.size()-1);
+                DatabaseTableRecord record = records.get(records.size() - 1);
                 record.setStringValue(AssetUserNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorAssetProtocolState.getCode());
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
@@ -399,7 +399,7 @@ public class OutgoingNotificationDao {
     }
 
     public List<ActorAssetNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorAssetProtocolState actorAssetProtocolState,
-                                                                                  final AssetNotificationDescriptor assetNotificationDescriptor)
+                                                                                   final AssetNotificationDescriptor assetNotificationDescriptor)
             throws CantGetActorAssetNotificationException {
 
         if (actorAssetProtocolState == null)

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wall
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.CantSendTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.TransferIntraWalletUsersNotEnoughFundsException;
@@ -23,7 +24,8 @@ public interface TransferIntraWalletUsers extends Serializable {
               ReferenceWallet reference_wallet_receiving,
               String wallet_public_key_sending,
               String wallet_public_key_receiving,
-              BlockchainNetworkType blockchainNetworkType) throws CantSendTransactionException, TransferIntraWalletUsersNotEnoughFundsException;
+              BlockchainNetworkType blockchainNetworkType,
+              CryptoCurrency cryptoCurrency) throws CantSendTransactionException, TransferIntraWalletUsersNotEnoughFundsException;
 
 
 }

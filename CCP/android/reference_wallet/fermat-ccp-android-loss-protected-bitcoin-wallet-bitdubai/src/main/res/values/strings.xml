@@ -12,7 +12,7 @@
     <string name="notes">user notes</string>
     <string name="txt_time_date_text">03 Feb 2014</string>
     <string name="from">From Given Actor</string>
-    <!-- connection_with_community_dialog.xml -->
+    <!-- loss_connection_with_community_dialogialog.xml -->
     <string name="new_user_text">New User</string>
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
@@ -32,8 +32,8 @@
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
     <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
-    <string name="add_fermat_user_text">Add Fermat Contact</string>no_id_Users_of_other_text_Fermat_wallets
-    <string name="add_extra_user_text">Add External Contact</string>
+    <string name="add_fermat_user_text">Fermat Conact</string>
+    <string name="add_extra_user_text">External Contact</string>
     <!-- loss_create_contact_dialog.xml -->
     <string name="create_external_contact_text">Create External Contact</string>
     <string name="set_name_text">Type name</string>

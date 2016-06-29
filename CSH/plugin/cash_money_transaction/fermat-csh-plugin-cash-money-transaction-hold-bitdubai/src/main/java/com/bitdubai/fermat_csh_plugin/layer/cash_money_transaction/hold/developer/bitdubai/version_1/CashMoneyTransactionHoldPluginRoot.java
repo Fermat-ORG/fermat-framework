@@ -34,8 +34,7 @@ import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.develope
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure.CashMoneyTransactionHoldManager;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure.CashMoneyTransactionHoldProcessorAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -54,9 +53,6 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -126,14 +122,14 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
         System.out.println("CASHHOLD - PluginRoot START");
 
         try {
-            holdTransactionManager = new CashMoneyTransactionHoldManager(cashMoneyWalletManager, pluginDatabaseSystem, pluginId, errorManager);
+            holdTransactionManager = new CashMoneyTransactionHoldManager(cashMoneyWalletManager, pluginDatabaseSystem, pluginId, this);
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
-        processorAgent = new CashMoneyTransactionHoldProcessorAgent(errorManager, holdTransactionManager, cashMoneyWalletManager);
+        processorAgent = new CashMoneyTransactionHoldProcessorAgent(this, holdTransactionManager, cashMoneyWalletManager);
         processorAgent.start();
 
         serviceStatus = ServiceStatus.STARTED;
@@ -174,7 +170,7 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeHoldCashMoneyTransactionDatabaseException cantInitializeException) {
             FermatException e = new CantInitializeHoldCashMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionHoldPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

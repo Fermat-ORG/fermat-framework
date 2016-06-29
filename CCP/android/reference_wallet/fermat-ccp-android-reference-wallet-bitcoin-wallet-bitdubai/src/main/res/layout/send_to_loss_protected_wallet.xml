@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transacion_form"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/color_white">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/send_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
+        android:background="@color/color_white"
         android:orientation="horizontal"
         android:paddingLeft="16dip"
         android:paddingRight="16dip">
@@ -107,6 +107,7 @@
                         android:textColorHint="#9a9a9c"
                         android:textSize="16sp"
                         android:textStyle="normal"
+                        android:maxLength="12"
                         />
 
                     <Spinner
@@ -164,7 +165,7 @@
                         android:textColorHint="#9a9a9c"
                         android:textSize="16sp"
                         android:textStyle="normal"
-                        android:maxLength="35" />
+                        android:maxLength="25" />
                 </LinearLayout>
 
                 <View

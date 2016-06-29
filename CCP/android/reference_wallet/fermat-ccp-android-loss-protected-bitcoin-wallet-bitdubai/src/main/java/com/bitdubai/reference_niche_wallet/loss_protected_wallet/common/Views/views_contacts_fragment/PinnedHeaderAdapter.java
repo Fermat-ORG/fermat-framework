@@ -19,14 +19,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.HeaderTypes;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -56,6 +61,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     private String constrainStr = null;
     // posiscionamiento de los contactos
     private Map<Integer,LossProtectedWalletContact> contactPositionItem;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;
 
     /**
      * @param context          Context
@@ -65,11 +71,12 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
      * @param contactsFragment ContactsFragment who is calling
      */
     public PinnedHeaderAdapter(Context context, ArrayList<Object> listItems, ArrayList<Integer> listSectionPos,
-                               String constrainStr, FermatListViewFragment contactsFragment,ErrorManager errorManager) {
+                               String constrainStr, FermatListViewFragment contactsFragment,ErrorManager errorManager,ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession) {
         this.mContext = context;
         this.mListItems = listItems;
         this.mListSectionPos = listSectionPos;
         this.contactsFragment = contactsFragment;
+        this.lossWalletSession = referenceWalletSession;
 
         this.errorManager = errorManager;
         if (constrainStr != null) {
@@ -135,7 +142,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        LossProtectedWalletContact walletContact = null;
+        final LossProtectedWalletContact walletContact;
         String text = "";
 
         mListSectionPos = mListSectionPos;
@@ -149,6 +156,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                     case TYPE_ITEM:
                         convertView = mLayoutInflater.inflate(R.layout.loss_row_view, null);
                         holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
+                        holder.imagePlus=(ImageView) convertView.findViewById(R.id.row_plus);
                         walletContact = (LossProtectedWalletContact) mListItems.get(position);
                         //guardo el contacto
                         contactPositionItem.put(position, walletContact);
@@ -163,17 +171,40 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                             Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
                         }
                         text = walletContact.getActorName();
+
+                      /*  holder.imagePlus.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+
+
+                                    lossWalletSession.setData(SessionConstant.CONTACT_ACCOUNT_NAME,  walletContact.getActorName());
+
+                                     lossWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT,walletContact);
+
+                                   // changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY, lossWalletSession.getAppPublicKey());
+
+                                } catch (Exception ex) {
+                                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
+                                    WalletUtils.showMessage(mContext, "Unexpected error getting Contact Detalil - " + ex.getMessage());
+                                }
+                            }
+                        });*/
+
+                        convertView.setTag(holder);
                           break;
                     case TYPE_SECTION:
-                        convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
-                        text = (String) mListItems.get(position);
+                       //convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                       // text = (String) mListItems.get(position);
+                        //
+
+                        //convertView.setTag(holder);
                         break;
                 }
 
-                holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-                holder.textView.setTypeface(tf);
+            holder.textView = (TextView) convertView.findViewById(R.id.row_title);
+            holder.textView.setTypeface(tf);
 
-                convertView.setTag(holder);
             if (text.equals("")) {
                 Object o = mListItems.get(0);
                 if (o instanceof LossProtectedWalletContact) {
@@ -296,5 +327,6 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     public static class ViewHolder {
         public TextView textView;
         public ImageView imageView;
+        public ImageView imagePlus;
     }
 }

@@ -237,6 +237,13 @@ public interface CryptoBrokerWalletModuleManager
             throws CantListWalletsException;
 
     /**
+     * This method list all wallet installed in device, start the transaction
+     */
+//    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()
+    List<CBPInstalledWallet> getCbpInstallWallets()
+            throws CantListWalletsException;
+
+    /**
      * @return
      *
      * @throws CantNewEmptyCryptoBrokerWalletSettingException
@@ -679,9 +686,9 @@ public interface CryptoBrokerWalletModuleManager
     /**
      * Returns the Balance this BankMoneyWalletBalance belongs to. (Can be available or book)
      *
-     * @return A double, containing the balance.
+     * @return A BigDecimal, containing the balance.
      */
-    double getBalanceBankWallet(String walletPublicKey, String accountNumber)
+    BigDecimal getBalanceBankWallet(String walletPublicKey, String accountNumber)
             throws CantCalculateBalanceException, CantLoadBankMoneyWalletException;
 
     /**

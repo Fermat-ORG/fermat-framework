@@ -34,7 +34,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.custom_anim.Fx;
-import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
+import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSessionReferenceApp;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.google.zxing.WriterException;
 
@@ -60,7 +60,7 @@ public  class ReceiveFragment extends AbstractFermatFragment {
     private String[][] transactions_amounts;
     private String[][] transactions_whens;
 
-    ReferenceWalletSession referenceWalletSession;
+    ReferenceWalletSessionReferenceApp referenceWalletSession;
 
     /**
      * Wallet contact Adapter
@@ -92,7 +92,7 @@ public  class ReceiveFragment extends AbstractFermatFragment {
 
     public static ReceiveFragment newInstance(int position) {
         ReceiveFragment f = new ReceiveFragment();
-        f.setReferenceWalletSession((ReferenceWalletSession) f.appSession);
+        f.setReferenceWalletSession((ReferenceWalletSessionReferenceApp) f.appSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -344,7 +344,7 @@ public  class ReceiveFragment extends AbstractFermatFragment {
 //        }
 //    }
 
-    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
+    public void setReferenceWalletSession(ReferenceWalletSessionReferenceApp referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
 

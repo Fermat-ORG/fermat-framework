@@ -125,16 +125,50 @@ public class WalletUtils {
      * @return
      */
     public static String formatAmountStringWithDecimalEntry(double amount,int maxDecimal, int minDecimal) {
+
+        //check if decimal are separated by ,(samsung)
         String stringAmount = "";
 
+        String value = String.valueOf(amount).replace(",",".");
 
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(maxDecimal);
-        df.setMinimumFractionDigits(minDecimal);
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(maxDecimal);
+            df.setMinimumFractionDigits(minDecimal);
 
-        stringAmount =df.format(amount);//+ " BTC";
+           stringAmount = df.format(Double.parseDouble(value));
 
-        return stringAmount;
+
+        return stringAmount.replace(",",".");
+
+    }
+
+
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatBalanceStringWithDecimalEntry(long amount,int maxDecimal, int minDecimal,int typeAmount) {
+
+        String stringAmount = "";
+        //check if decimal are separated by ,(samsung)
+        String value = String.valueOf(amount).replace(",",".");
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(maxDecimal);
+            df.setMinimumFractionDigits(minDecimal);
+            String BTCFormat = "";
+
+            BTCFormat = df.format(Long.parseLong(value) / 100000000.0); //
+
+            stringAmount = BTCFormat ;//+ " BTC";
+        }else if(typeAmount== ShowMoneyType.BITS.getCode()){
+            stringAmount = String.valueOf(Long.parseLong(value) / 100);
+        }
+        showMoneyType=!showMoneyType;
+
+        return stringAmount.replace(",",".");
+
     }
     /**
      *  Formationg Amount no decimal

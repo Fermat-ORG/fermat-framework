@@ -54,7 +54,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
+import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSessionReferenceApp;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
@@ -82,7 +82,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 
-public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistIdentitySubAppSession, SubAppResourcesProviderManager> {
+public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> {
 
 
     private static final String TAG = "CreateArtArtistIdentity";
@@ -102,7 +102,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private static final int CONTEXT_MENU_TURN_LEFT = 5;
 
 
-    private ArtistIdentitySubAppSession artistIdentitySubAppSession;
+    private ArtistIdentitySubAppSessionReferenceApp artistIdentitySubAppSession;
     private byte[] artistImageByteArray;
     private ArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;

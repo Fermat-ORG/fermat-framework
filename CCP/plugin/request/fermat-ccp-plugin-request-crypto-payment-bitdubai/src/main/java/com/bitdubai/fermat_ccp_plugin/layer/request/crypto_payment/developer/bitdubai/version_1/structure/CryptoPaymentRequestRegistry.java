@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -96,7 +97,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                              String                description      ,
                                              long                  amount           ,
                                              BlockchainNetworkType networkType      ,
-                                             ReferenceWallet       referenceWallet
+                                             ReferenceWallet       referenceWallet,
+                                             CryptoCurrency         cryptoCurrency
                                              ) throws CantGenerateCryptoPaymentRequestException {
 
 
@@ -134,7 +136,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     type,
                     state,
                     networkType,
-                    referenceWallet
+                    referenceWallet,
+                    cryptoCurrency
             );
 
             // if i can save it, i send it to the network service.
@@ -153,7 +156,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     startTimeStamp,
                     networkType,
                     referenceWallet,
-                    walletPublicKey
+                    walletPublicKey,
+                    cryptoCurrency
             );
 
             System.out.println("********** Crypto Payment Request -> generating request. SENT - WAITING RECEPTION CONFIRMATION -> OK.");
@@ -188,7 +192,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                                               long                  startTimeStamp   ,
                                                               BlockchainNetworkType networkType,
                                                               ReferenceWallet       referenceWallet,
-                                                              String walletPublicKey) throws CantSendRequestException                     ,
+                                                              String walletPublicKey,
+                                                              CryptoCurrency cryptoCurrency) throws CantSendRequestException                     ,
                                                                                                               CantChangeCryptoPaymentRequestStateException ,
                                                                                                               CryptoPaymentRequestNotFoundException        {
 
@@ -206,7 +211,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                 startTimeStamp,
                 networkType,
                 referenceWallet,
-                walletPublicKey
+                walletPublicKey,
+                cryptoCurrency
         );
 
         // change the state to waiting reception confirmation
@@ -346,7 +352,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     cryptoPayment.getIdentityType(),
                     cryptoPayment.getActorType(),
                     cryptoPayment.getReferenceWallet(),
-                    cryptoPayment.getNetworkType()
+                    cryptoPayment.getNetworkType(),
+                    cryptoPayment.getCryptoCurrency()
             );
 
             cryptoPaymentRequestDao.changeState(
@@ -588,7 +595,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                     cryptoPayment.getStartTimeStamp(),
                                     cryptoPayment.getNetworkType(),
                                     cryptoPayment.getReferenceWallet(),
-                                    cryptoPayment.getWalletPublicKey()
+                                    cryptoPayment.getWalletPublicKey(),
+                                    cryptoPayment.getCryptoCurrency()
                             );
 
                         } catch(CantSendRequestException                     |

@@ -204,7 +204,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:orientation="horizontal"
-            android:visibility="invisible">
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/csh_transaction_detail_delete_btn"

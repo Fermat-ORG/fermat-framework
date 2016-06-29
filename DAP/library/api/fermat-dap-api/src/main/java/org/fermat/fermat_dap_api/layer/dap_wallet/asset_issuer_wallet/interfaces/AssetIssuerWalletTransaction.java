@@ -2,10 +2,12 @@ package org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interface
 
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 
+import java.io.Serializable;
+
 /**
  * Created by franklin on 24/09/15.
  */
-public interface AssetIssuerWalletTransaction {
+public interface AssetIssuerWalletTransaction extends Serializable {
     String getAssetPublicKey();
 
     String getTransactionId();

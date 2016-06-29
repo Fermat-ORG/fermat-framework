@@ -7,8 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -20,7 +19,7 @@ import java.util.UUID;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 11/07/15.
  * @version 1.0
  */
-public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransaction,Serializable {
+public class CryptoWalletWalletModuleTransaction implements com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction,Serializable {
 
     private final UUID                     contactId;
     private final Actor                    involvedActor;
@@ -44,7 +43,7 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
 
-    public CryptoWalletWalletModuleTransaction(final BitcoinWalletTransaction bitcoinWalletTransaction,
+    public CryptoWalletWalletModuleTransaction(final CryptoWalletTransaction cryptoWalletTransaction,
                                                final UUID                     contactId,
                                                final Actor                    involvedActor) {
 
@@ -52,23 +51,23 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
         this.involvedActor = involvedActor;
 
         // bitcoin wallet transaction fields
-        this.transactionId = bitcoinWalletTransaction.getTransactionId();
-        this.transactionHash = bitcoinWalletTransaction.getTransactionHash();
-        this.transactionType = bitcoinWalletTransaction.getTransactionType();
-        this.addressFrom = bitcoinWalletTransaction.getAddressFrom();
-        this.addressTo = bitcoinWalletTransaction.getAddressTo();
-        this.actorFromPublicKey = bitcoinWalletTransaction.getActorFromPublicKey();
-        this.actorToPublicKey = bitcoinWalletTransaction.getActorToPublicKey();
-        this.actorFromType = bitcoinWalletTransaction.getActorFromType();
-        this.actorToType = bitcoinWalletTransaction.getActorToType();
-        this.balanceType = bitcoinWalletTransaction.getBalanceType();
-        this.amount = bitcoinWalletTransaction.getAmount();
-        this.runningBookBalance = bitcoinWalletTransaction.getRunningBookBalance();
-        this.runningAvailableBalance = bitcoinWalletTransaction.getRunningAvailableBalance();
-        this.timeStamp = bitcoinWalletTransaction.getTimestamp();
-        this.memo = bitcoinWalletTransaction.getMemo();
-        this.blockchainNetworkType = bitcoinWalletTransaction.getBlockchainNetworkType();
-        this.transactionState = bitcoinWalletTransaction.getTransactionState();
+        this.transactionId = cryptoWalletTransaction.getTransactionId();
+        this.transactionHash = cryptoWalletTransaction.getTransactionHash();
+        this.transactionType = cryptoWalletTransaction.getTransactionType();
+        this.addressFrom = cryptoWalletTransaction.getAddressFrom();
+        this.addressTo = cryptoWalletTransaction.getAddressTo();
+        this.actorFromPublicKey = cryptoWalletTransaction.getActorFromPublicKey();
+        this.actorToPublicKey = cryptoWalletTransaction.getActorToPublicKey();
+        this.actorFromType = cryptoWalletTransaction.getActorFromType();
+        this.actorToType = cryptoWalletTransaction.getActorToType();
+        this.balanceType = cryptoWalletTransaction.getBalanceType();
+        this.amount = cryptoWalletTransaction.getAmount();
+        this.runningBookBalance = cryptoWalletTransaction.getRunningBookBalance();
+        this.runningAvailableBalance = cryptoWalletTransaction.getRunningAvailableBalance();
+        this.timeStamp = cryptoWalletTransaction.getTimestamp();
+        this.memo = cryptoWalletTransaction.getMemo();
+        this.blockchainNetworkType = cryptoWalletTransaction.getBlockchainNetworkType();
+        this.transactionState = cryptoWalletTransaction.getTransactionState();
     }
 
     @Override

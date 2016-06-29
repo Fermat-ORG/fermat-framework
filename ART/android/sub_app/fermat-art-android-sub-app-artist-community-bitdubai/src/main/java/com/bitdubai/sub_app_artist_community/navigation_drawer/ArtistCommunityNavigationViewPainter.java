@@ -13,7 +13,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.artist_community.R;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -24,10 +24,10 @@ public class ArtistCommunityNavigationViewPainter implements NavigationViewPaint
 
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation actorIdentity;
-    ArtistSubAppSession subAppSession;
+    ArtistSubAppSessionReferenceApp subAppSession;
     private ArtistCommunitySubAppModuleManager moduleManager;
 
-    public ArtistCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation actorIdentity, ArtistSubAppSession subAppSession) {
+    public ArtistCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation actorIdentity, ArtistSubAppSessionReferenceApp subAppSession) {
         this.activity = new WeakReference<Context>(activity);
         this.actorIdentity = actorIdentity;
         this.subAppSession = subAppSession;

@@ -11,8 +11,10 @@ import org.fermat.fermat_dap_core.layer.actor_network_service.ActorNetworkServic
 import org.fermat.fermat_dap_core.layer.digital_asset_transaction.DigitalAssetTransactionLayer;
 import org.fermat.fermat_dap_core.layer.funds_transaction.FundsTransactionLayer;
 import org.fermat.fermat_dap_core.layer.identity.IdentityLayer;
+import org.fermat.fermat_dap_core.layer.metadata.MetadataLayer;
 import org.fermat.fermat_dap_core.layer.middleware.MiddlewareLayer;
 import org.fermat.fermat_dap_core.layer.network_service.NetworkServiceLayer;
+import org.fermat.fermat_dap_core.layer.offer.OfferLayer;
 import org.fermat.fermat_dap_core.layer.sub_app_module.SubAppModuleLayer;
 import org.fermat.fermat_dap_core.layer.wallet.WalletLayer;
 import org.fermat.fermat_dap_core.layer.wallet_module.WalletModuleLayer;
@@ -34,16 +36,26 @@ public final class DAPPlatform extends AbstractPlatform {
 
         try {
 
-            registerLayer(new ActorLayer()                  );
-            registerLayer(new ActorNetworkServiceLayer()    );
+            registerLayer(new ActorLayer());
+            registerLayer(new ActorNetworkServiceLayer());
+//            registerLayer(new BusinessTransactionLayer());
+//            registerLayer(new CryptoTransactionLayer());
             registerLayer(new DigitalAssetTransactionLayer());
-            registerLayer(new FundsTransactionLayer()       );
-            registerLayer(new IdentityLayer()               );
-            registerLayer(new MiddlewareLayer()             );
-            registerLayer(new NetworkServiceLayer()         );
-            registerLayer(new SubAppModuleLayer()           );
-            registerLayer(new WalletLayer()                 );
-            registerLayer(new WalletModuleLayer()           );
+            registerLayer(new FundsTransactionLayer());
+            registerLayer(new IdentityLayer());
+            registerLayer(new MetadataLayer());
+//            registerLayer(new MetadataTransactionLayer());
+            registerLayer(new MiddlewareLayer());
+            registerLayer(new NetworkServiceLayer());
+            registerLayer(new OfferLayer());
+//            registerLayer(new OfferTransactionLayer());
+//            registerLayer(new StatisticAggregatorLayer());
+//            registerLayer(new StatisticCollectorLayer());
+            registerLayer(new SubAppModuleLayer());
+//            registerLayer(new SwapTransactionLayer());
+//            registerLayer(new UserLevelBusinessTransactionLayer());
+            registerLayer(new WalletLayer());
+            registerLayer(new WalletModuleLayer());
 
         } catch (CantRegisterLayerException e) {
 

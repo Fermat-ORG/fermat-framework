@@ -39,7 +39,7 @@ import com.bitdubai.sub_app_artist_community.commons.popups.AcceptDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.CancelDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.DisconnectDialog;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +48,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment<ArtistSubAppSession, SubAppResourcesProviderManager>
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements Dialog.OnDismissListener, Button.OnClickListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";

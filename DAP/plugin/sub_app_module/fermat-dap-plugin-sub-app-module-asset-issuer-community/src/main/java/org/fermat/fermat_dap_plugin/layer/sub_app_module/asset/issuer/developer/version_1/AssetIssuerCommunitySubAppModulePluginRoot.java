@@ -14,17 +14,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
@@ -32,8 +29,10 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.in
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.exceptions.CantGetSupAppIssuerModuleException;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.version_1.structure.AssetIssuerCommunitySupAppModuleManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,8 +88,8 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractModule<A
     private Broadcaster broadcaster;
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-    private SettingsManager<AssetIssuerSettings> settingsManager;
-    AssetIssuerCommunitySupAppModuleManager assetIssuerCommunitySupAppModuleManager;
+
+    AssetIssuerCommunitySubAppModuleManager assetIssuerCommunitySupAppModuleManager;
     BlockchainNetworkType blockchainNetworkType;
 
     private String appPublicKey;
@@ -154,7 +153,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractModule<A
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetIssuerCommunitySupAppModuleManager.class)
-    public ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetIssuerCommunitySubAppModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetIssuerCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Sup AppModule instantiation started...", null, null);
 

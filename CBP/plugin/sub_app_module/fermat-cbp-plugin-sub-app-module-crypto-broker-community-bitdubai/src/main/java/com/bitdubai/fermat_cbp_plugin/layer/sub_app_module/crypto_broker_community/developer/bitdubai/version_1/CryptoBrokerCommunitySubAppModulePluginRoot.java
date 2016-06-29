@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 
 /**
@@ -31,10 +32,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_communi
 @PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_BROKER_COMMUNITY)
 public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER)
@@ -48,6 +46,9 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_BROKER)
     private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
+
+    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .GEOLOCATION)
+    private GeolocationManager geolocationManager;
 
     CryptoBrokerCommunityManager moduleManager;
 
@@ -63,10 +64,10 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
                     cryptoBrokerActorConnectionManager,
                     cryptoBrokerNetworkServiceManager,
                     cryptoCustomerIdentityManager,
-                    errorManager,
+                    this,
                     pluginFileSystem,
                     pluginId,
-                    this.getPluginVersionReference());
+                    geolocationManager);
 
         return moduleManager;
     }

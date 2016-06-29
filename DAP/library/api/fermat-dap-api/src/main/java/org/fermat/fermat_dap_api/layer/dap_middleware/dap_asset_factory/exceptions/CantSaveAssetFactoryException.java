@@ -17,6 +17,6 @@ public class CantSaveAssetFactoryException extends FermatException {
     static final String DEFAULT_MESSAGE = "There was an error Save Asset Factory.";
 
     public CantSaveAssetFactoryException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

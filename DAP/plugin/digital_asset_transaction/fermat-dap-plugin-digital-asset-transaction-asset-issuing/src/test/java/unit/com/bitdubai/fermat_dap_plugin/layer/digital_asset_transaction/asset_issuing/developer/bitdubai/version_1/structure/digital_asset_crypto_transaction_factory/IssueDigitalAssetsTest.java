@@ -10,9 +10,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -53,7 +53,7 @@ public class IssueDigitalAssetsTest {
     CryptoVaultManager cryptoVaultManager;
 
     @Mock
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -98,7 +98,7 @@ public class IssueDigitalAssetsTest {
     BlockchainNetworkType blockchainNetworkType;
 
     @Mock
-    BitcoinWalletBalance bitcoinWalletBalance;
+    CryptoWalletBalance cryptoWalletBalance;
 
     @Mock
     CryptoAddress genesisAddress;
@@ -119,7 +119,7 @@ public class IssueDigitalAssetsTest {
         pluginId = UUID.randomUUID();
         digitalAssetCryptoTransactionFactory = new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
-                this.bitcoinWalletManager,
+                this.cryptoWalletManager,
                 this.pluginDatabaseSystem,
                 this.pluginFileSystem,
                 this.assetVaultManager,
@@ -148,7 +148,7 @@ public class IssueDigitalAssetsTest {
         blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "digitalAsset").set(digitalAssetCryptoTransactionFactory, digitalAsset);
-        MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "bitcoinWalletBalance").set(digitalAssetCryptoTransactionFactory, bitcoinWalletBalance);
+        MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "cryptoWalletBalance").set(digitalAssetCryptoTransactionFactory, cryptoWalletBalance);
 
         mockitoRules();
     }

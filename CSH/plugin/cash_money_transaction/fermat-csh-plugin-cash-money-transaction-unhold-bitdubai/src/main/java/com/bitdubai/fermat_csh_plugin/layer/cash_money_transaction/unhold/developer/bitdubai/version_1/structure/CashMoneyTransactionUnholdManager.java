@@ -11,6 +11,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.inter
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.CashMoneyTransactionUnholdPluginRoot;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.database.UnholdCashMoneyTransactionDao;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdCashMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantUpdateUnholdTransactionException;
@@ -26,23 +27,23 @@ import java.util.UUID;
 public class CashMoneyTransactionUnholdManager implements CashUnholdTransactionManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private final ErrorManager errorManager;
+    private final CashMoneyTransactionUnholdPluginRoot pluginRoot;
     private final CashMoneyWalletManager cashMoneyWalletManager;
 
     private UnholdCashMoneyTransactionDao dao;
 
     public CashMoneyTransactionUnholdManager(final CashMoneyWalletManager cashMoneyWalletManager, final PluginDatabaseSystem pluginDatabaseSystem,
-                                             final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException {
+                                             final UUID pluginId, final CashMoneyTransactionUnholdPluginRoot pluginRoot) throws CantStartPluginException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.cashMoneyWalletManager = cashMoneyWalletManager;
 
-        this.dao = new UnholdCashMoneyTransactionDao(pluginDatabaseSystem, pluginId, errorManager);
+        this.dao = new UnholdCashMoneyTransactionDao(pluginDatabaseSystem, pluginId, pluginRoot);
         try {
             dao.initialize();
         } catch (CantInitializeUnholdCashMoneyTransactionDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD);
         } catch (Exception e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);

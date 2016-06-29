@@ -8,7 +8,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.Ev
 public class IncomingCryptoTransactionsWaitingTransferenceEvent extends AbstractFermatEvent {
 
 
-    public IncomingCryptoTransactionsWaitingTransferenceEvent(EventType eventType){
+    public IncomingCryptoTransactionsWaitingTransferenceEvent(EventType eventType) {
         super(eventType);
     }
 }

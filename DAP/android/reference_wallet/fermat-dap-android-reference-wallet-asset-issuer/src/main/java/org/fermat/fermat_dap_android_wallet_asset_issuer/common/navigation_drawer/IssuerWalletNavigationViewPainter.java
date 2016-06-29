@@ -6,12 +6,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 import java.lang.ref.WeakReference;
 
@@ -20,19 +24,26 @@ import java.lang.ref.WeakReference;
  */
 public class IssuerWalletNavigationViewPainter implements NavigationViewPainter {
 
-    private WeakReference<Context> activity;
-    private final ActiveActorIdentityInformation identityAssetIssuer;
+    private static final String TAG = "IssuerNavigationView";
 
-    public IssuerWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation identityAssetIssuer) {
-        this.activity = new WeakReference<Context>(activity);
-        this.identityAssetIssuer = identityAssetIssuer;
+    private WeakReference<Context> activity;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession;
+
+    public IssuerWalletNavigationViewPainter(Context activity,
+                                             ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession,
+                                             FermatApplicationCaller applicationsHelper) {
+
+        this.activity = new WeakReference<>(activity);
+        this.assetIssuerSession = assetIssuerSession;
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), assetIssuerSession, applicationsHelper.get());
         } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
         }
@@ -52,7 +63,12 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
 //        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_issuer_wallet_bottom, base, true);
-        return null;
+
+        //DAP V2
+        //return null;
+
+        //DAP V3
+        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_v3_navigation_drawer_issuer_wallet_bottom, base, true);
     }
 
 //    @Override

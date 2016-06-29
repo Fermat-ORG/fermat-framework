@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1.structure.EventManagerPlatformServiceManager</code>
  * implements EventManager interface and provides all the necessary methods to manage events.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public final class EventManagerPlatformServiceManager implements EventManager {
@@ -102,17 +102,17 @@ public final class EventManagerPlatformServiceManager implements EventManager {
 
     @SuppressWarnings("unchecked")
     private void execute(final FermatEventListener fermatEventListener,
-                         final FermatEvent         fermatEvent        ) {
+                         final FermatEvent fermatEvent) {
 
         executorService.submit(new
 
-            Runnable() {
-                @Override
-                public void run () {
+                                       Runnable() {
+                                           @Override
+                                           public void run() {
 
-                    fermatEventListener.raiseEvent(fermatEvent);
-                }
-            }
+                                               fermatEventListener.raiseEvent(fermatEvent);
+                                           }
+                                       }
 
         );
     }

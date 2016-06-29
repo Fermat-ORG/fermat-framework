@@ -1,20 +1,19 @@
 package org.fermat.fermat_dap_android_wallet_asset_user.models;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Jinmy Bohorquez on 23/02/16.
  */
-public class UserAssetNegotiation {
+public class UserAssetNegotiation implements Serializable {
 
     private UUID negotiationId;
     private long totalAmmount;
     private long ammountPerUnit;
     private int quantityToBuy;
 
-
-
-    public UserAssetNegotiation(){
+    public UserAssetNegotiation() {
     }
 
 
@@ -23,7 +22,7 @@ public class UserAssetNegotiation {
         this.ammountPerUnit = ammountPerUnit;
         this.quantityToBuy = quantityToBuy;
         //this.digitalAssetPublicKey = digitalAssetPublicKey;
-        
+
     }
 
     public UserAssetNegotiation(long ammountPerUnit, int quantityToBuy) {

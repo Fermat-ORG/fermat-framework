@@ -22,4 +22,8 @@ public class CantStopAgentException extends FermatException {
         this(DEFAULT_MESSAGE, null, null, null);
     }
 
+    public CantStopAgentException(String message) {
+        this(DEFAULT_MESSAGE, null, null, message);
+    }
+
 }

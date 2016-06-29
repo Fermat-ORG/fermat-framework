@@ -43,6 +43,8 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     private String         deviceUserPublicKey;
     private Platforms      platforms;
 
+    private CryptoCurrency currency;
+
     private List<InstalledSkin>     skinsId;
     private List<InstalledLanguage> languagesId;
     private BlockchainNetworkType blockchainNetworkType;
@@ -112,6 +114,44 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         this.platforms = platforms;
         this.blockchainNetworkType = blockchainNetworkType;
     }
+
+
+    public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
+                                                  List<InstalledSkin> skinsId,
+                                                  List<InstalledLanguage> languajesId,
+                                                  String walletIcon, String walletName,
+                                                  String publicKey,
+                                                  String walletPlatformIdentifier,
+                                                  Version version,
+                                                  WalletType walletType,
+                                                  String screenSize,
+                                                  String navigationStructureVersion,
+                                                  UUID walletCatalogId,
+                                                  String walletDeveloper,
+                                                  String deviceUserPublicKey,Platforms platforms,
+                                                  BlockchainNetworkType blockchainNetworkType,
+                                                  CryptoCurrency currency)
+    {
+        this.walletCategory = walletCategory;
+        this.skinsId = skinsId;
+        this.languagesId = languajesId;
+        this.walletIcon = walletIcon;
+        this.walletName = walletName;
+        this.publicKey = publicKey;
+        this.walletPlatformIdentifier = walletPlatformIdentifier;
+        this.version = version;
+        this.walletType = walletType;
+        this.screenSize = screenSize;
+        this.navigationStructureVersion = navigationStructureVersion;
+        this.walletCatalogId = walletCatalogId;
+        this.walletDeveloper =  walletDeveloper;
+        this.deviceUserPublicKey = deviceUserPublicKey;
+        this.platforms = platforms;
+        this.blockchainNetworkType = blockchainNetworkType;
+        this.currency = currency;
+
+    }
+
     /**
      * InstalledWallet Interface implementation.
      */
@@ -254,6 +294,9 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     @Override
     public CryptoCurrency getCryptoCurrency() {
         // TODO NOW IS BY DEFECT
+        if(this.currency!=null){
+            return this.currency;
+        }
         return CryptoCurrency.BITCOIN;
     }
 

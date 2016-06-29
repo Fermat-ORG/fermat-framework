@@ -6,6 +6,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -22,7 +23,7 @@ public class BankTransactionImpl implements BankTransaction {
 
     private String publicKeyActor;
 
-    private float amount;
+    private BigDecimal amount;
 
     private String accountNumber;
 
@@ -38,7 +39,7 @@ public class BankTransactionImpl implements BankTransaction {
 
     private BankTransactionStatus status;
 
-    public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, String publicKeyActor, float amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp,BankTransactionStatus status) {
+    public BankTransactionImpl(UUID transactionId, String publicKeyPlugin, String publicKeyWallet, String publicKeyActor, BigDecimal amount, String accountNumber, FiatCurrency fiatCurrency, String memo, BankOperationType bankOperationType, TransactionType transactionType, long timestamp,BankTransactionStatus status) {
         this.transactionId = transactionId;
         this.publicKeyPlugin = publicKeyPlugin;
         this.publicKeyWallet = publicKeyWallet;
@@ -74,7 +75,7 @@ public class BankTransactionImpl implements BankTransaction {
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

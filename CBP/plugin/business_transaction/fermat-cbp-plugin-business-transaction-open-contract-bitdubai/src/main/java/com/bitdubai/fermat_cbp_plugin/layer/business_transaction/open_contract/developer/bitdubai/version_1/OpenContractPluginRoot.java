@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -53,9 +54,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.d
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantInitializeOpenContractBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,10 +66,7 @@ import java.util.regex.Pattern;
 @PluginInfo(createdBy = "darkestpriest", maintainerMail = "darkpriestrelative@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.OPEN_CONTRACT)
 public class OpenContractPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        LogManagerForDevelopers{
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
+        LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -102,7 +98,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
      */
     private Database database;
 
-    private OpenContractBusinessTransactionDeveloperDatabaseFactory openContractBusinessTransactionDeveloperDatabaseFactory;
+    private OpenContractBusinessTransactionDeveloperDatabaseFactory databaseFactory;
 
     private OpenContractTransactionManager openContractTransactionManager;
 
@@ -132,10 +128,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantOpenDatabaseException);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -161,10 +154,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        cantOpenDatabaseException);
+                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
@@ -175,14 +165,15 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot");
+        returnedClasses.add("OpenContractPluginRoot");
+
         return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
 
-        try{
+        try {
         /*
          * I will check the current values and update the LogLevel in those which is different
          */
@@ -198,11 +189,8 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     OpenContractPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
-        }catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
@@ -212,136 +200,92 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try {
 
-            /**
-             * Initialize database
-             */
-            //System.out.println("OPEN_CONTRACT DB");
+            // Initialize database
             initializeDb();
 
-            /*
-             * Initialize Developer Database Factory
-             */
-            //System.out.println("OPEN_CONTRACT Facti");
-            openContractBusinessTransactionDeveloperDatabaseFactory = new
-                    OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
-                    pluginId);
-            openContractBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
+            // Initialize Developer Database Factory
+            databaseFactory = new OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            databaseFactory.initializeDatabase();
 
-            /**
-             * Initialize Dao
-             */
-            OpenContractBusinessTransactionDao openContractBusinessTransactionDao=
-                    new OpenContractBusinessTransactionDao(pluginDatabaseSystem,
-                            pluginId,
-                            database,
-                            errorManager);
-            openContractBusinessTransactionDao.initialize();
-            /**
-             * Initialize manager
-             */
-            //System.out.println("OPEN_CONTRACT Man");
-            openContractTransactionManager=new OpenContractTransactionManager(
+            // Initialize Dao
+            OpenContractBusinessTransactionDao dao = new OpenContractBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, this);
+            dao.initialize();
+
+            // Initialize manager
+            openContractTransactionManager = new OpenContractTransactionManager(
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
-                    //customerBrokerPurchaseNegotiationManager,
-                    //customerBrokerSaleNegotiationManager,
-                    //fiatIndexManager,
                     transactionTransmissionManager,
-                    openContractBusinessTransactionDao,
-                    this.errorManager);
+                    dao,
+                    this);
 
-            /**
-             * Init event recorder service.
-             */
-            OpenContractRecorderService openContractRecorderService=new OpenContractRecorderService(
-                    openContractBusinessTransactionDao,
-                    eventManager,
-                    errorManager);
-            openContractRecorderService.start();
+            // Init event recorder service.
+            OpenContractRecorderService recorderService = new OpenContractRecorderService(dao, eventManager, this);
+            recorderService.start();
 
             /**
              * Init developer database factory
              */
-            openContractBusinessTransactionDeveloperDatabaseFactory=
-                    new OpenContractBusinessTransactionDeveloperDatabaseFactory(
-                            pluginDatabaseSystem,
-                            pluginId);
-            openContractBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
+            databaseFactory = new OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            databaseFactory.initializeDatabase();
             /**
              * Init monitor Agent
              */
-            OpenContractMonitorAgent openContractMonitorAgent=new OpenContractMonitorAgent(
+            OpenContractMonitorAgent monitorAgent = new OpenContractMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager);
-            openContractMonitorAgent.start();
+            monitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
-            //System.out.println("Starting Open Contract Business Transaction");
-            //launchNotificationTest();
-            //This method is only for testing
-            //openPurchaseContractTest();
-            //openSaleContractTest();
+
         } catch (CantInitializeDatabaseException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting open contract plugin",
                     "Cannot initialize plugin database");
+
         } catch (CantInitializeOpenContractBusinessTransactionDatabaseException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting open contract plugin",
                     "Unexpected Exception");
+
         } catch (CantStartServiceException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting open contract plugin",
                     "Cannot start recorder service");
+
         } catch (CantSetObjectException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting open contract plugin",
                     "Cannot set an object");
+
         } catch (CantStartAgentException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting open contract plugin",
                     "Cannot start the monitor agent");
+
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
@@ -352,30 +296,28 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     @Override
     public void pause() {
-
-        try{
+        try {
             this.serviceStatus = ServiceStatus.PAUSED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void resume() {
-
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STARTED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
@@ -386,47 +328,43 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return openContractBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return databaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return openContractBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return databaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return openContractBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return databaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     public static LogLevel getLogLevelByClass(String className) {
-        try{
-            /**
-             * sometimes the classname may be passed dynamically with an $moretext
-             * I need to ignore whats after this.
-             */
+        try {
+            /* sometimes the classname may be passed dynamically with an $moretext
+             * I need to ignore whats after this. */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return OpenContractPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
-            /**
-             * If I couldn't get the correct logging level, then I will set it to minimal.
-             */
+        } catch (Exception e) {
+            // If I couldn't get the correct logging level, then I will set it to minimal.
             return DEFAULT_LOG_LEVEL;
         }
     }
 
-    private void launchNotificationTest(){
+    private void launchNotificationTest() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
         IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
         incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
         eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
     }
 
-    private void openPurchaseContractTest(){
-        CustomerBrokerPurchaseNegotiation negotiationMock=new PurchaseNegotiationOfflineMock();
+    private void openPurchaseContractTest() {
+        CustomerBrokerPurchaseNegotiation negotiationMock = new PurchaseNegotiationOfflineMock();
         //FiatIndex fiatIndex=new FiatIndexMock();
         try {
-            openContractTransactionManager.openPurchaseContract(negotiationMock,1);
+            openContractTransactionManager.openPurchaseContract(negotiationMock, 1);
         } catch (CantOpenContractException e) {
             System.out.println("OPEN CONTRACT TEST EXCEPTION:");
             e.printStackTrace();
@@ -434,11 +372,11 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     }
 
-    private void openSaleContractTest(){
-        CustomerBrokerSaleNegotiation negotiationMock=new SaleNegotiationOfflineMock();
+    private void openSaleContractTest() {
+        CustomerBrokerSaleNegotiation negotiationMock = new SaleNegotiationOfflineMock();
         //FiatIndex fiatIndex=new FiatIndexMock();
         try {
-            openContractTransactionManager.openSaleContract(negotiationMock,1);
+            openContractTransactionManager.openSaleContract(negotiationMock, 1);
         } catch (CantOpenContractException e) {
             System.out.println("OPEN CONTRACT TEST EXCEPTION:");
             e.printStackTrace();

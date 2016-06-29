@@ -7,6 +7,12 @@
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="green">#8bba9e</color>
 
+    <color name="teal_400">#26a69a</color>
+    <color name="green_presentation">#00a99d</color>
+    <color name="grey_light">#dad9d9</color>
+    <color name="grey_900">#1d1d26</color>
+    <color name="grey_600">#757575</color>
+    <color name="red_900">#b71c1c</color>
 
     <color name="color_black">#000000</color>
     <color name="color_white">#FFFFFF</color>

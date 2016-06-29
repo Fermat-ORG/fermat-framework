@@ -14,32 +14,32 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
 import static android.widget.Toast.makeText;
+
 /**
- *Jinmy Bohorquez 02/26/2016
+ * Jinmy Bohorquez 02/26/2016
  */
-public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
+public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager> {
 
     private View rootView;
-    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private RedeemPointCommunitySubAppModuleManager moduleManager;
     RedeemPointSettings settings = null;
-//    SettingsManager<RedeemPointSettings> settingsManager;
     private ErrorManager errorManager;
 
 
@@ -52,8 +52,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
-        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -83,8 +82,8 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
     private void setUpSettings(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner_redeem_point)
+                    .setBannerRes(R.drawable.banner_redeem_point_community)
                     .setIconRes(R.drawable.reddem_point_community)
                     .setVIewColor(R.color.dap_community_redeem_view_color)
                     .setTitleTextColor(R.color.dap_community_redeem_view_color)
@@ -128,7 +127,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
             toolbar.setTitleTextColor(Color.WHITE);
-            Drawable drawable = null;
+            FermatDrawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors, null);
                 toolbar.setElevation(0);

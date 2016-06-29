@@ -74,8 +74,8 @@ public class EuropeanCentralBankProviderDatabaseFactory implements DealsWithPlug
              */
             table = databaseFactory.newTableFactory(ownerId, EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_TABLE_NAME);
 
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_ID_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.TRUE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_NAME_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
 
             table.addIndex(EuropeanCentralBankProviderDatabaseConstants.PROVIDER_INFO_FIRST_KEY_COLUMN);
 
@@ -89,12 +89,12 @@ public class EuropeanCentralBankProviderDatabaseFactory implements DealsWithPlug
              */
             table = databaseFactory.newTableFactory(ownerId, EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME);
 
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_ID_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.TRUE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(EuropeanCentralBankProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_FIRST_KEY_COLUMN);
 
@@ -108,12 +108,12 @@ public class EuropeanCentralBankProviderDatabaseFactory implements DealsWithPlug
              */
             table = databaseFactory.newTableFactory(ownerId, EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME);
 
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_ID_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.TRUE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FROM_CURRENCY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TO_CURRENCY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_SALE_PRICE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_PURCHASE_PRICE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TIMESTAMP_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(EuropeanCentralBankProviderDatabaseConstants.DAILY_EXCHANGE_RATES_FIRST_KEY_COLUMN);
 

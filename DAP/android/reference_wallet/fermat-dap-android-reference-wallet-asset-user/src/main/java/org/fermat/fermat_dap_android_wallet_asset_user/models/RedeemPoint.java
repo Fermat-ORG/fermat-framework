@@ -3,10 +3,12 @@ package org.fermat.fermat_dap_android_wallet_asset_user.models;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
+import java.io.Serializable;
+
 /**
  * Created by frank on 12/30/15.
  */
-public class RedeemPoint {
+public class RedeemPoint implements Serializable {
     private String name;
     private byte[] image;
     private String address;
@@ -39,17 +41,17 @@ public class RedeemPoint {
 
     private void formatAddress(Address add) {
         String addressStr = null;
-        if(!add.getCityName().isEmpty())
+        if (!add.getCityName().isEmpty())
             addressStr = add.getCityName();
-        if(!add.getCountryName().isEmpty())
+        if (!add.getCountryName().isEmpty())
             addressStr = addressStr + ", " + add.getCountryName();
-        if(!add.getHouseNumber().isEmpty())
+        if (!add.getHouseNumber().isEmpty())
             addressStr = addressStr + ", " + add.getHouseNumber();
-        if(!add.getPostalCode().isEmpty())
+        if (!add.getPostalCode().isEmpty())
             addressStr = addressStr + ", " + add.getPostalCode();
-        if(!add.getProvinceName().isEmpty())
+        if (!add.getProvinceName().isEmpty())
             addressStr = addressStr + ", " + add.getProvinceName();
-        if(!add.getStreetName().isEmpty())
+        if (!add.getStreetName().isEmpty())
             addressStr = addressStr + ", " + add.getStreetName();
 
 /*                        String addressStr = add.getCityName()
@@ -61,6 +63,7 @@ public class RedeemPoint {
                 */
         setAddress(addressStr);
     }
+
     public String getName() {
         return name;
     }

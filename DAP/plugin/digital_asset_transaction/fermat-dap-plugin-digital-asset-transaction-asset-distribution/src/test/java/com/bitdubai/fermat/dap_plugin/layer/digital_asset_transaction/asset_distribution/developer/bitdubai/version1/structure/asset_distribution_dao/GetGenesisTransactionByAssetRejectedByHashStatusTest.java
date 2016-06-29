@@ -41,7 +41,7 @@ public class GetGenesisTransactionByAssetRejectedByHashStatusTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -51,13 +51,13 @@ public class GetGenesisTransactionByAssetRejectedByHashStatusTest {
         setUpGeneralMockitoRules();
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void getGenesisTransactionByAssetRejectedByHashStatusTest () throws CantCheckAssetDistributionProgressException {
+    public void getGenesisTransactionByAssetRejectedByHashStatusTest() throws CantCheckAssetDistributionProgressException {
         List<String> list = mockAssetDistributionDao.getGenesisTransactionByAssetRejectedByHashStatus();
         Assert.assertNotNull(list);
     }
@@ -68,7 +68,7 @@ public class GetGenesisTransactionByAssetRejectedByHashStatusTest {
         try {
             mockAssetDistributionDao.getGenesisTransactionByAssetRejectedByHashStatus();
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
         }
     }

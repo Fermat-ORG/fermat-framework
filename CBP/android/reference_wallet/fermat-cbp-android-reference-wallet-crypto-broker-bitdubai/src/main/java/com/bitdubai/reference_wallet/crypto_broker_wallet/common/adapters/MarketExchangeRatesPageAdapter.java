@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,9 +24,9 @@ public class MarketExchangeRatesPageAdapter extends FragmentStatePagerAdapter {
 
     private final List<IndexInfoSummary> summaryList;
     private final Activity activity;
-    private CryptoBrokerWalletSession session;
+    private ReferenceAppFermatSession session;
 
-    public MarketExchangeRatesPageAdapter(Activity activity, CryptoBrokerWalletSession session, Collection<IndexInfoSummary> summaryList) {
+    public MarketExchangeRatesPageAdapter(Activity activity, ReferenceAppFermatSession session, Collection<IndexInfoSummary> summaryList) {
         super(activity.getFragmentManager());
 
         this.activity = activity;

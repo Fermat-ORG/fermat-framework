@@ -5,9 +5,6 @@ sourceCompatibility = 1.7
 dependencies {
 
     compile project(':fermat-dap-api')
-    compile project(':fermat-api')
     compile project(':fermat-p2p-api')
     compile project(':fermat-pip-api')
-
-    compile 'com.google.android:android:4.1.1.4'
 }

@@ -2,22 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_no_logging"
+    <item
+        android:id="@+id/menu_no_logging"
         android:title="No logging"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
-    <item android:id="@+id/menu_minimal"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_minimal"
         android:title="Minimal logging"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
-    <item android:id="@+id/menu_moderate"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_moderate"
         android:title="Moderate logging"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
-    <item android:id="@+id/menu_aggresive"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_aggresive"
         android:title="Aggresive logging"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
 
 </menu>

@@ -1,8 +1,12 @@
 package com.bitdubai.android_core.app.common.version_1.settings_slider;
 
-import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.util.List;
 
@@ -13,29 +17,36 @@ public class SettingsSlider {
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private Activity activity;
+    private FermatActivity activity;
     private List<SettingsItem> lstItems;
     private SettingsAdapter adapter;
+    private View txt_more_settings;
 
-    public SettingsSlider(Activity activity,List<SettingsItem> lstItems) {
+    public SettingsSlider(FermatActivity activity,List<SettingsItem> lstItems) {
         this.activity = activity;
         this.lstItems = lstItems;
         setUp();
     }
 
     private void setUp() {
-        recyclerView = (RecyclerView) activity.findViewById(com.bitdubai.fermat.R.id.settings_recycler_view);
+        txt_more_settings = activity.findViewById(R.id.more_settings);
+        recyclerView = (RecyclerView) activity.findViewById(R.id.settings_recycler_view);
         if(recyclerView!=null) {
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(activity);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
-
             recyclerView.setLayoutManager(layoutManager);
             adapter = new SettingsAdapter(activity, lstItems, null);;
             recyclerView.setAdapter(adapter);
             recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(4,20));
         }
+
+        txt_more_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.changeActivity(Activities.DESKTOP_MORE_SETTINGS.getCode(),null,null);
+            }
+        });
     }
 
     public void setClickCallback(SettingsCallback<SettingsItem> settingsCallback) {

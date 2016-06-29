@@ -11,7 +11,7 @@
         android:scaleType="centerCrop"
         android:padding="10dp"
         style="@style/quickContactBadgeStyle"
-        android:src="@drawable/cht_profile_list_icon"/>
+        android:src="@drawable/cht_center_profile_icon_center"/>
 
     <TextView android:id="@+id/text1"
         android:paddingLeft="1dp"

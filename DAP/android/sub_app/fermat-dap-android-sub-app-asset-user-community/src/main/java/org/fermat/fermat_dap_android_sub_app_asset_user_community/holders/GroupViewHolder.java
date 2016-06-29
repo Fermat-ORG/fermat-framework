@@ -12,7 +12,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
  */
 public class GroupViewHolder extends FermatViewHolder {
 
-    
+
     public SquareImageView thumbnail;
     public FermatTextView groupName;
     public FermatTextView groupMembers;
@@ -27,7 +27,7 @@ public class GroupViewHolder extends FermatViewHolder {
         thumbnail = (SquareImageView) itemView.findViewById(R.id.group_image);
         groupName = (FermatTextView) itemView.findViewById(R.id.group_name);
         groupMembers = (FermatTextView) itemView.findViewById(R.id.group_members);
-        
+
 
     }
 }

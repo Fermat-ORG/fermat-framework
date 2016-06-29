@@ -89,7 +89,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
             }
 
-        //TODO Ver porque se cae cuando el contacto tiene algunos bytes
+
         try {
             if (photo != null) {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
@@ -109,6 +109,11 @@ public class GrouperViewHolder extends ParentViewHolder {
             Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
 
         }
+
+
+
+
+
 
         txt_contactName.setText(contactName);
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");

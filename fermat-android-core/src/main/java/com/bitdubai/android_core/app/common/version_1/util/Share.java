@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.support.v4.app.ShareCompat;
 
 /**
- * Created by mati on 2016.02.29..
+ * Created by MAtias Furszyfer on 2016.02.29..
  */
 public class Share {
 

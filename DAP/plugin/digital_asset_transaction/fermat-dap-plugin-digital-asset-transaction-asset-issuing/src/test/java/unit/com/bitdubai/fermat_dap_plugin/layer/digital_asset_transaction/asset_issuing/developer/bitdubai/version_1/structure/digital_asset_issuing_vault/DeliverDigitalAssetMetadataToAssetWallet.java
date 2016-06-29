@@ -76,10 +76,10 @@ public class DeliverDigitalAssetMetadataToAssetWallet {
         assetBalanceType = AssetBalanceType.AVAILABLE;
         balanceType = BalanceType.AVAILABLE;
         internalId = "internalId";
-        LOCAL_STORAGE_PATH="digital-asset-swap/";
+        LOCAL_STORAGE_PATH = "digital-asset-swap/";
         digitalAssetMetadataFileName = internalId + ".xml";
-        FILE_PRIVACY=FilePrivacy.PUBLIC;
-        FILE_LIFE_SPAN=FileLifeSpan.PERMANENT;
+        FILE_PRIVACY = FilePrivacy.PUBLIC;
+        FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
         walletPublicKey = "walletPublicKeyTest";
 
         mockitoRules();

@@ -45,19 +45,19 @@ public class SetActorAssetIssuerManagerTest {
                 pluginFileSystem);
     }
 
-   @Test
+    @Test
     public void setActorAssetIssuerManagerThrowsCantSetObjectExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setActorAssetIssuerManagerThrowsCantSetObjectExceptionTest()");
-       try {
-           mockAssetDistributionTransactionManager.setActorAssetIssuerManager(null);
-           fail("The method didn't throw when I expected it to");
-       }catch (Exception ex) {
-           Assert.assertTrue(ex instanceof CantSetObjectException);
-       }
+        try {
+            mockAssetDistributionTransactionManager.setActorAssetIssuerManager(null);
+            fail("The method didn't throw when I expected it to");
+        } catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSetObjectException);
+        }
     }
 
     @Test
-    public void setActorAssetIssuerManagerTest() throws CantSetObjectException{
+    public void setActorAssetIssuerManagerTest() throws CantSetObjectException {
         System.out.println("Probando metodo setActorAssetIssuerManagerNoExceptionTest()");
         mockAssetDistributionTransactionManager.setActorAssetIssuerManager(actorAssetIssuerManager);
     }

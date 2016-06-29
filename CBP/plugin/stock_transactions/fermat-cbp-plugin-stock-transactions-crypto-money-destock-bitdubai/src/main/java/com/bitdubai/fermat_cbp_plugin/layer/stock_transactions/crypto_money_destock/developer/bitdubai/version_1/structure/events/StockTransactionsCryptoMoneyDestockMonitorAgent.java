@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
@@ -15,6 +14,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.StockTransactionsCryptoMoneyDestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyDestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.utils.CryptoTransactionParametersWrapper;
@@ -22,7 +22,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_dest
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransactionManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.Date;
 import java.util.Objects;
@@ -41,7 +40,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final StockTransactionsCryptoMoneyDestockPluginRoot pluginRoot;
     private final StockTransactionCryptoMoneyDestockManager stockTransactionCryptoMoneyDestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CryptoHoldTransactionManager cryptoHoldTransactionManager;
@@ -50,14 +49,14 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
 
     public final int SLEEP_TIME = 5000;
 
-    public StockTransactionsCryptoMoneyDestockMonitorAgent(ErrorManager errorManager,
+    public StockTransactionsCryptoMoneyDestockMonitorAgent(StockTransactionsCryptoMoneyDestockPluginRoot pluginRoot,
                                                            StockTransactionCryptoMoneyDestockManager stockTransactionCryptoMoneyDestockManager,
                                                            CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                            CryptoHoldTransactionManager cryptoHoldTransactionManager,
                                                            PluginDatabaseSystem pluginDatabaseSystem,
                                                            UUID pluginId) {
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.stockTransactionCryptoMoneyDestockManager = stockTransactionCryptoMoneyDestockManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cryptoHoldTransactionManager = cryptoHoldTransactionManager;
@@ -209,8 +208,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
                             stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
 
                         } catch (FermatException e) {
-                            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK,
-                                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                         }
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
@@ -268,8 +266,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
                 }
             }
         } catch (FermatException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

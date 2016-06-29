@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -25,7 +26,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsOverviewAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -39,7 +39,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, WalletResourcesProviderManager> {
+public class EarningsDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, WalletResourcesProviderManager> {
 
     // Constants
     private static final String TAG = "EarningsDetailsFrag";
@@ -49,7 +49,7 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
     private TimeFrequency frequency;
     private List<EarningsDetailData> data;
 
-    public static EarningsDetailsFragment newInstance(CryptoBrokerWalletSession session) {
+    public static EarningsDetailsFragment newInstance(ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session) {
         final EarningsDetailsFragment earningsDetailsFragment = new EarningsDetailsFragment();
         earningsDetailsFragment.appSession = session;
 

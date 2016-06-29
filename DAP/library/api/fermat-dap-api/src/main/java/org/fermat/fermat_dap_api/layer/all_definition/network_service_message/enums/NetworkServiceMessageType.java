@@ -8,10 +8,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum NetworkServiceMessageType implements FermatEnum {
 
-    ACCEPT       ("ACPT"),
-    DENY         ("DENY"),
-    REQUEST      ("RQST"),
-    ;
+    ACCEPT("ACPT"),
+    DENY("DENY"),
+    REQUEST("RQST"),;
 
     private String code;
 

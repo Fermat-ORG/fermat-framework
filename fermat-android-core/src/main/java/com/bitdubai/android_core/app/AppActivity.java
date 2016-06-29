@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboAppType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -175,10 +177,10 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 fermatStructure = fermatAppsManager.getLastAppStructure();
             }
             Activity activity = (fermatStructure != null) ? fermatStructure.getLastActivity() : null;
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = (activity != null) ? activity.getLastFragment() : null;
+            FermatFragment fragment = (activity != null) ? activity.getLastFragment() : null;
             if (fragment != null) frgBackType = fragment.getBack();
             if (frgBackType != null) {
-                changeFragment(fermatStructure.getPublicKey(), frgBackType);
+                changeFragment(fermatStructure.getPublicKey(), fragment);
             } else if (((activity != null) ? activity.getBackActivity() : null) != null && activity.getBackAppPublicKey() != null) {
                 if (activityBackCode != null) {
                     changeActivity(activity.getBackActivity().getCode(), activity.getBackAppPublicKey());
@@ -237,13 +239,13 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     /**
      * Method that loads the UI
      */
-    protected void loadUI(final FermatSession fermatSession) {
+    protected void loadUI(final FermatSession session) {
         try {
-            if(fermatSession!=null) {
+            if(session !=null) {
 //                Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
-                FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(fermatSession.getAppPublicKey());
+                FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(session.getAppPublicKey());
 //                Log.i("APP ACTIVITY loadUI", "Get App Structure " + System.currentTimeMillis());
-                final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
+                final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, session);
 //                Log.i("APP ACTIVITY loadUI", "getFermatAppConnection " + System.currentTimeMillis());
                 FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
 //                Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
@@ -261,11 +263,17 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 //                    Log.i("APP ACTIVITY loadUI", "initialisePaging " + System.currentTimeMillis());
                 }
                 if (activity.getTabStrip() != null) {
-                    setPagerTabs(activity.getTabStrip(), fermatSession, fermatFragmentFactory);
+                    setPagerTabs(activity.getTabStrip(),session);
 //                    Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
                 }
                 if (activity.getFragments().size() == 1) {
-                    setOneFragmentInScreen(fermatFragmentFactory, fermatSession, appStructure);
+                    FermatFragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
+                    FermatSession fermatSubSession = null;
+                    if (runtimeFragment.getOwner()!=null){
+                        fermatSubSession = ((ComboAppType2FermatSession)session).getFermatSession(runtimeFragment.getOwner().getOwnerAppPublicKey(),FermatSession.class);
+                        fermatFragmentFactory = FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getOwner().getOwnerAppPublicKey(), this, fermatSubSession).getFragmentFactory();
+                    }
+                    setOneFragmentInScreen(fermatFragmentFactory,(fermatSubSession!=null)?fermatSubSession:session, runtimeFragment);
 //                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }
 //                Log.i("APP ACTIVITY loadUI", " TERMINA " + System.currentTimeMillis());
@@ -312,10 +320,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
             }catch (Exception e){
                 e.printStackTrace();
-//                Log.e(TAG, "changeActivity error, Avisarle a Mati con este log:");
-//                Log.e(TAG,"FermatStructure PK: "+fermatStructure.getPublicKey());
-//                Log.e(TAG,"lastActivity: "+lastActivity);
-//                Log.e(TAG,"nextActivity code: "+activityName);
                 try {
                     //TODO: this is only because i am tired, remember to delete this.
                     fermatStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(appBackPublicKey);
@@ -327,17 +331,21 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             if (nextActivity != null) {
                 if (!nextActivity.equals(lastActivity)) {
                     resetThisActivity();
-                    Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
-                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
+                    //Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
+                    //intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
                     //recreate();
                     //startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     //finish();
                     //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             }else{
-                Log.e(TAG, "nextActivity null, activity code: " + activityName + "fermat structure: " + fermatStructure.getPublicKey());
+                Log.e(TAG, "nextActivity null, activity code: " + activityName +
+                        ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey()+
+                        " \n Extra info: \n LastActivity: "+lastActivity+" FermatStructure: "+fermatStructure +" AppBackPublicKey: "+appBackPublicKey);
+                Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
+                handleExceptionAndRestart();
             }
         } catch (Exception e) {
             if(activityName.equals("develop_mode"))
@@ -384,19 +392,23 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         }
     }
 
-    public void changeFragment(String appPublicKey, String fragmentType) {
+    public void changeFragment(String appPublicKey, FermatFragment fermatFragment) {
         try {
-            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fragmentType);
-            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appPublicKey,this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
+            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fermatFragment.getType());
+            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getOwner().getOwnerAppPublicKey(),this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
             FermatFragmentFactory fragmentFactory = fermatAppConnection.getFragmentFactory();
-            Fragment fragment = fragmentFactory.getFragment(fragmentType,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources());
+            Fragment fragment = fragmentFactory.getFragment(fermatFragment.getType(),ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources(),fermatFragment);
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            FT.replace(R.id.fragment_container2, fragment);
+//            FT.replace(R.id.fragment_container2, fragment);
+            Fragment fragmentToReplace = getAdapter().getItem(0);
+            FT.replace(((ViewGroup)fragmentToReplace.getView().getParent()).getId(), fragment);
             FT.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeFragment"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            handleExceptionAndRestart();
         }
     }
 
@@ -433,9 +445,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-
-        //outState.putSerializable(INSTALLED_WALLET, lastWallet);
-        //outState.putString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, lastWallet.getWalletPublicKey());
         super.onSaveInstanceState(outState, outPersistentState);
 
     }
@@ -471,8 +480,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     @Override
     public void setTabCustomImageView(int position,View view) {
         TabLayout.Tab tab = tabLayout.getTabAt(position);
-//        ImageView imageView = new ImageView(this);
-//        imageView.setImageDrawable(new BadgeDrawable.BadgeDrawableBuilder(this).setCount().setPosition(BadgeDrawable.Position.CENTER).build());
         if(tab!=null) tab.setCustomView(view);
     }
 

@@ -31,9 +31,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CustomerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory implements
-        DealsWithPluginDatabaseSystem,
-        DealsWithPluginIdentity {
+public class CustomerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -181,12 +179,12 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDeveloperDatabaseFa
         database.closeDatabase();
         return returnedRecords;
     }
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

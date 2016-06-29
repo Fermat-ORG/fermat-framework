@@ -22,23 +22,38 @@
         app:typeface="ROBOTO_REGULAR"
         tools:text="Title"/>
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-        android:id="@+id/ccw_text_dialog_edit_text"
-        android:layout_width="328dp"
-        android:layout_height="100dp"
-        android:inputType="text"
-        android:ems="50"
-        android:layout_weight="2.18"
-        android:layout_marginBottom="26dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="26dp"
-        android:singleLine="true"
-        android:textColor="#1d1d26"
-        android:textColorHint="#9a9a9c"
-        android:textSize="16sp"
-        app:typeface="ROBOTO_REGULAR"
-        tools:hint="Cancellation Reason"/>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/ccw_text_dialog_edit_text"
+            android:layout_width="328dp"
+            android:layout_height="100dp"
+            android:inputType="text"
+            android:ems="50"
+            android:layout_weight="2.18"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="26dp"
+            android:singleLine="true"
+            android:textColor="#1d1d26"
+            android:textColorHint="#9a9a9c"
+            android:textSize="16sp"
+            app:typeface="ROBOTO_REGULAR"
+            tools:hint="Cancellation Reason"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccw_text_dialog_edit_text_count"
+            android:layout_width="328dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginBottom="14dp"
+            android:text="100"
+            android:textColor="#bbb"
+            android:textSize="12dp"
+            android:textColorHint="#9a9a9c"
+            android:gravity="right"
+            android:visibility="visible"/>
 
     <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
         android:id="@+id/ccw_text_dialog_edit_text"

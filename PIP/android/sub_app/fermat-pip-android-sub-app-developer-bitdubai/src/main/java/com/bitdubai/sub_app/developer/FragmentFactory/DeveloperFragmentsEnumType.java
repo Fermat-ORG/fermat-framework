@@ -16,8 +16,7 @@ public enum DeveloperFragmentsEnumType implements FermatFragmentsEnumType<Develo
     CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT("CWDTLF"),
     CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT("CWDTLL1F"),
     CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT("CWDTLL2F"),
-    CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT("CWDTLL3F"),
-    ;
+    CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT("CWDTLL3F"),;
 
 
     private String key;
@@ -27,11 +26,13 @@ public enum DeveloperFragmentsEnumType implements FermatFragmentsEnumType<Develo
     }
 
     @Override
-    public String getKey()   { return this.key; }
+    public String getKey() {
+        return this.key;
+    }
 
 
     @Override
-    public String toString(){
+    public String toString() {
         return key;
     }
 

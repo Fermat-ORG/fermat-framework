@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:drawableRight="@drawable/ic_action_search"
+                android:drawableRight="@drawable/cht_ic_action_search"
                 android:id="@+id/SearchFilterAddContacts"
                 android:layout_gravity="center_horizontal" />
 

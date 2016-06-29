@@ -313,7 +313,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         try{
-            returnedClasses.add("com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.TokenlyWalletPluginRoot.java");
+            returnedClasses.add("TokenlyWalletPluginRoot");
             return returnedClasses;
         } catch (Exception exception){
             errorManager.reportUnexpectedPluginException(

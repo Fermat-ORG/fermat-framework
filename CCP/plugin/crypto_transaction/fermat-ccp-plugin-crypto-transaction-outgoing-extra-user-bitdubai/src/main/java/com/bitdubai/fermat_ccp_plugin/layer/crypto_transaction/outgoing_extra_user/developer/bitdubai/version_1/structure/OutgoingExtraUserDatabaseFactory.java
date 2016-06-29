@@ -56,6 +56,7 @@ public class OutgoingExtraUserDatabaseFactory implements DealsWithPluginDatabase
             outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
             outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, false);
             outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10, false);
+            outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENCY_TYPE, DatabaseDataType.STRING, 10, false);
 
             databaseFactory.createTable(ownerId, outgoinExtraUserTable);
 

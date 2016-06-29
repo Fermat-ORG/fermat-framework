@@ -13,25 +13,27 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.IdentitiesAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity>
+public class WizardPageSetIdentityFragment extends FermatWalletListFragment<CryptoBrokerIdentity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<CryptoBrokerIdentity>, DialogInterface.OnDismissListener {
 
     private List<CryptoBrokerIdentity> identities;
@@ -59,7 +61,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         //Obtain walletSettings or create new wallet settings if first time opening wallet
@@ -81,7 +83,6 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         }
 
         identities = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-
     }
 
     public static AbstractFermatFragment newInstance() {
@@ -131,7 +132,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                     walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
 
                 } catch (Exception ex) {
-                    Object data = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
+                    Object data = appSession.getData(FragmentsCommons.CONFIGURED_DATA);
                     walletConfigured = (data != null);
 
                     if (errorManager != null)
@@ -154,11 +155,12 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
                             .setBody(R.string.cbw_crypto_broker_wallet_identity_body)
                             .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_footer)
+                            .setIsCheckEnabled(true)
                             .build();
 
                     boolean showDialog;
                     try {
-                        CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+                        CryptoBrokerWalletModuleManager moduleManager = appSession.getModuleManager();
                         showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
                         if (showDialog) {
                             presentationDialog.show();
@@ -213,12 +215,13 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         .setSubTitle(R.string.cbw_crypto_broker_wallet_identity_2_subTitle)// + identities)
                         .setBody(R.string.cbw_crypto_broker_wallet_identity_2_body)
                         .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_2_footer)
+                        .setIsCheckEnabled(true)
                         .build();
                 presentationDialog.setOnDismissListener(this);
 
                 boolean showDialog;
                 try {
-                    CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+                    CryptoBrokerWalletModuleManager moduleManager = appSession.getModuleManager();
                     showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
                     if (showDialog) {
                         presentationDialog.show();

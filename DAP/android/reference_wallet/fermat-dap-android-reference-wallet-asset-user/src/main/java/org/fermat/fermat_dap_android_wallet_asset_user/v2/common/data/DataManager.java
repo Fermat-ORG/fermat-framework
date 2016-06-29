@@ -15,8 +15,8 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAsse
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -75,14 +75,14 @@ public class DataManager implements Serializable {
         List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<Asset> assets = new ArrayList<>();
         try {
-            AssetUserWallet userWallet = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY);
-            if (assetUserWalletBalances != null && userWallet != null) {
+            if (assetUserWalletBalances != null) {
                 for (AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
                     List<CryptoAddress> addresses = assetUserWalletList.getAddresses();
                     for (int i = 0; i < assetUserWalletList.getQuantityBookBalance(); i++) {
                         try {
                             CryptoAddress address = addresses.get(i);
-                            assets.add(new Asset(assetUserWalletList, userWallet.getAllTransactions(address), address));
+                            List<AssetUserWalletTransaction> transactionsByAddress = moduleManager.getAllTransactionByCryptoAddress(WalletUtilities.WALLET_PUBLIC_KEY, address);
+                            assets.add(new Asset(assetUserWalletList, transactionsByAddress, address));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

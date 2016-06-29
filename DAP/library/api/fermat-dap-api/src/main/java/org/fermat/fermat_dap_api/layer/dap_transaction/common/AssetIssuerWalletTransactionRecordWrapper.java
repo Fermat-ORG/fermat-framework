@@ -71,7 +71,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements org.fermat.fer
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0  ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getGenesisTransaction();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.timeStamp = System.currentTimeMillis();

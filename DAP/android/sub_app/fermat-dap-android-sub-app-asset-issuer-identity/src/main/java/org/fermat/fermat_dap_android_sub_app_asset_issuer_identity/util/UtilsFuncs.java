@@ -14,7 +14,7 @@ public class UtilsFuncs {
         int targetWidth = 50, targetHeight = 50;
 
         Bitmap targetBitmap = null;
-        if(srcBitmap!=null) {
+        if (srcBitmap != null) {
 
             targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
 

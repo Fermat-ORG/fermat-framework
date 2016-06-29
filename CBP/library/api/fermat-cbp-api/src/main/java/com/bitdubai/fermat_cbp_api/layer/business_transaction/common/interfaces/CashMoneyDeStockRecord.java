@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 
+import java.math.BigDecimal;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 22/12/15.
@@ -20,7 +22,7 @@ public class CashMoneyDeStockRecord extends AbstractDeStockRecord {
         this.cbpWalletPublicKey = businessTransactionRecord.getCBPWalletPublicKey();
         this.cshWalletPublicKey = businessTransactionRecord.getExternalWalletPublicKey();
         cashReference = businessTransactionRecord.getFiatCurrency().getCode();
-        this.amount = parseLongToBigDecimal(businessTransactionRecord.getPaymentAmount());
+        this.amount = BigDecimal.valueOf(businessTransactionRecord.getPaymentAmount());
         this.memo = generateMemo(businessTransactionRecord.getContractHash());
         this.priceReference = businessTransactionRecord.getPriceReference();
         this.originTransaction = OriginTransaction.SALE;

@@ -9,8 +9,8 @@
 include ':fermat-osa-android-core'
 project(':fermat-osa-android-core').projectDir = new File('OSA/library/core/fermat-osa-android-core')
 
-include ':fermat-osa-api'
-project(':fermat-osa-api').projectDir = new File('OSA/library/api/fermat-osa-api')
+//include ':fermat-osa-api'
+//project(':fermat-osa-api').projectDir = new File('OSA/library/api/fermat-osa-api')
 
 include ':fermat-osa-addon-android-database-system-bitdubai'
 project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
@@ -18,6 +18,9 @@ project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new F
 
 include ':fermat-osa-addon-android-hardware'
 project(':fermat-osa-addon-android-hardware').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-hardware')
+
+include ':fermat-osa-addon-android-loader'
+project(':fermat-osa-addon-android-loader').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-loader')
 
 
 // Milestone 1 project:
@@ -42,8 +45,8 @@ project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new F
 include ':fermat-osa-addon-android-broadcaster-system-bitdubai'
 project(':fermat-osa-addon-android-broadcaster-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-broadcaster-system-bitdubai')
 
-include ':bitcoin_exchange_widget'
-project(':bitcoin_exchange_widget').projectDir = new File('OSA/addon/android/widgets/bitcoin_exchange_widget')
+//include ':bitcoin_exchange_widget'
+//project(':bitcoin_exchange_widget').projectDir = new File('OSA/addon/android/widgets/bitcoin_exchange_widget')
 
 /*
  * linux osa core and addons
@@ -62,5 +65,4 @@ project(':fermat-osa-addon-linux-device-location-bitdubai').projectDir = new Fil
 
 include ':fermat-osa-addon-linux-broadcaster-system'
 project(':fermat-osa-addon-linux-broadcaster-system').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-broadcaster-system')
-
 */

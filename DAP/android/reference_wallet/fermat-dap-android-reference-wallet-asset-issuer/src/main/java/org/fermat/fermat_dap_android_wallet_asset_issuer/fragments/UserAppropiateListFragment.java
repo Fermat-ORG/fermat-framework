@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -30,13 +31,13 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.UserAppropiateListAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.UserAppropiate;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -52,7 +53,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Jinmy on 01/06/16.
  */
-public class UserAppropiateListFragment extends FermatWalletListFragment<UserAppropiate> {
+public class UserAppropiateListFragment extends FermatWalletListFragment<UserAppropiate, ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "UserAppropiateListFragment";
@@ -60,12 +61,9 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetIssuerSession assetIssuerSession;
     // Data
     private List<UserAppropiate> users;
     private DigitalAsset digitalAsset;
-
-//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     //UI
     private View noUsersView;
@@ -84,9 +82,8 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
         setHasOptionsMenu(true);
 
         try {
-            assetIssuerSession = ((AssetIssuerSession) appSession);
             errorManager = appSession.getErrorManager();
-            moduleManager = assetIssuerSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -213,7 +210,7 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -224,8 +221,8 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -233,11 +230,11 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -321,7 +318,8 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
         List<UserAppropiate> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+                if (digitalAsset == null)
+                    digitalAsset = (DigitalAsset) appSession.getData("asset_data");
                 users = Data.getUserAppropiateList(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset, moduleManager);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

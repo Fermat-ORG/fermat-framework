@@ -10,8 +10,10 @@ import android.view.inputmethod.InputMethodManager;
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.android_core.app.common.version_1.adapters.FermatUIAdapter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by mati on 2016.03.28..
@@ -57,8 +59,11 @@ public class FermatActionBarDrawerEventListener extends ActionBarDrawerToggle {
         FermatUIAdapter fermatUIAdapter = activityWeakReference.get().getAdapter();
         if(fermatUIAdapter!=null){
             if(!fermatUIAdapter.getLstCurrentFragments().isEmpty()){
-                for (AbstractFermatFragment abstractFermatFragment : fermatUIAdapter.getLstCurrentFragments()) {
-                    abstractFermatFragment.onDrawerOpen();
+                List<AbstractFermatFragmentInterface> list = fermatUIAdapter.getLstCurrentFragments();
+                for (AbstractFermatFragmentInterface abstractFermatFragment : list) {
+                    if(abstractFermatFragment instanceof AbstractFermatFragment){
+                        ((AbstractFermatFragment) abstractFermatFragment).onDrawerOpen();
+                    }
                 }
             }
         }
@@ -70,8 +75,11 @@ public class FermatActionBarDrawerEventListener extends ActionBarDrawerToggle {
         FermatUIAdapter fermatUIAdapter = activityWeakReference.get().getAdapter();
         if(fermatUIAdapter!=null){
             if(!fermatUIAdapter.getLstCurrentFragments().isEmpty()){
-                for (AbstractFermatFragment abstractFermatFragment : fermatUIAdapter.getLstCurrentFragments()) {
-                    abstractFermatFragment.onDrawerClose();
+                List<AbstractFermatFragmentInterface> list = fermatUIAdapter.getLstCurrentFragments();
+                for (AbstractFermatFragmentInterface abstractFermatFragment : list) {
+                    if(abstractFermatFragment instanceof AbstractFermatFragment){
+                        ((AbstractFermatFragment) abstractFermatFragment).onDrawerClose();
+                    }
                 }
             }
         }

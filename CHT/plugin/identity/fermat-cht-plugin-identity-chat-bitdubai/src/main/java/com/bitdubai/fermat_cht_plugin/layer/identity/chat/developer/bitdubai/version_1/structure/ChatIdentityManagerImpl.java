@@ -7,7 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListIdentitiesException;
@@ -36,6 +40,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 30/03/16.
  * Edited by Miguel Rincon on 19/04/2016
+ * Updated by Miguel Rincon on 19/04/2016
  */
 public class ChatIdentityManagerImpl implements ChatIdentityManager {
 
@@ -45,6 +50,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     private ChatManager chatManager;
     private boolean isIdentityNew = true;
     private ChatIdentityPluginRoot chatIdentityPluginRoot;
+    LocationManager locationManager;
 
     /**
      * Represents the DeviceUserManager
@@ -62,13 +68,15 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
                                                    final ChatIdentityPluginRoot chatIdentityPluginRoot,
                                                    final DeviceUserManager deviceUserManager,
                                                    final PluginFileSystem pluginFileSystem,
-                                                   final ChatManager chatManager ) {
+                                                   final ChatManager chatManager,
+                                                   final LocationManager locationManager) {
         this.pluginDatabaseSystem  = pluginDatabaseSystem   ;
         this.pluginId              = pluginId               ;
         this.chatIdentityPluginRoot = chatIdentityPluginRoot;
         this.deviceUserManager     = deviceUserManager      ;
         this.pluginFileSystem      = pluginFileSystem       ;
         this.chatManager           = chatManager            ;
+        this.locationManager       = locationManager        ;
     }
 
     private ChatIdentityDatabaseDao chatIdentityDao(){
@@ -127,12 +135,13 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewChatIdentityException {
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantCreateNewChatIdentityException {
         try {
+            Location location = locationManager.getLocation();
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
-            chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage, country, state, city, connectionState);
-            registerIdentitiesANS(keyPair.getPublicKey(), true);
+            chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage, country, state, city, connectionState, accuracy, frecuency );
+            registerIdentitiesANS(keyPair.getPublicKey(), true, location);
         } catch (CantCreateNewDeveloperException e) {
             chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -140,6 +149,8 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
         } catch (IdentityNotFoundException e) {
             chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantPublishIdentityException e) {
+            chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+        } catch (CantGetDeviceLocationException e) {
             chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
@@ -153,15 +164,18 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantUpdateChatIdentityException {
         try {
-            chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState);
-            registerIdentitiesANS(identityPublicKey, false);
+            chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState, accuracy, frecuency);
+            Location location = locationManager.getLocation();
+            registerIdentitiesANS(identityPublicKey, false, location);
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
             chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (IdentityNotFoundException e) {
             chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantPublishIdentityException e) {
+            chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+        } catch (CantGetDeviceLocationException e) {
             chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
@@ -174,14 +188,14 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws IdentityNotFoundException
      */
     @Override
-    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        registerIdentitiesANS(publicKey, true);
+    public void publishIdentity(String publicKey, Location location) throws CantPublishIdentityException, IdentityNotFoundException {
+        registerIdentitiesANS(publicKey, true, location);
     }
 
-    private void registerIdentitiesANS(String publicKey, boolean isIdentityNew) throws CantPublishIdentityException, IdentityNotFoundException {
+    private void registerIdentitiesANS(String publicKey, boolean isIdentityNew, Location location) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
-            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity());
+            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity(),chatIdentity.getConnectionState(), location);
             chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
 
             if (isIdentityNew)

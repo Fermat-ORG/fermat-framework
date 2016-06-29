@@ -5,6 +5,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -22,7 +23,7 @@ public interface BankTransaction {
     String getPublicKeyActor();
 
 
-    float getAmount();
+    BigDecimal getAmount();
 
 
     String getAccountNumber();

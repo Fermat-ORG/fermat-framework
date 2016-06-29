@@ -43,6 +43,7 @@ public class SetAssetDistributionDatabaseDaoTest {
     @Mock
     private PluginFileSystem pluginFileSystem;
     private Database mockDatabase = Mockito.mock(Database.class);
+
     @Before
     public void init() throws Exception {
         mockAssetDistributionTransactionManager = new AssetDistributionTransactionManager(assetVaultManager, errorManager, UUID.randomUUID(), pluginDatabaseSystem,
@@ -60,13 +61,13 @@ public class SetAssetDistributionDatabaseDaoTest {
         try {
             mockAssetDistributionTransactionManager.setAssetDistributionDatabaseDao(null);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSetObjectException);
         }
     }
 
     @Test
-    public void setAssetDistributionDatabaseDaoNoExceptionTest() throws CantSetObjectException{
+    public void setAssetDistributionDatabaseDaoNoExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setAssetDistributionDatabaseDaoNoExceptionTest()");
         mockAssetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDatabaseDao);
     }

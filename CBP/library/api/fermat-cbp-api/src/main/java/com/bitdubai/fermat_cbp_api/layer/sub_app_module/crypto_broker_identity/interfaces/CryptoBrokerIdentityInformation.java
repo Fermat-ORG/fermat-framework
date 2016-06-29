@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces;
 
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 
 import java.io.Serializable;
 
@@ -20,6 +20,10 @@ public interface CryptoBrokerIdentityInformation extends Serializable {
     byte[] getProfileImage();
 
     boolean isPublished();
+
+    long getAccuracy();
+
+    Frequency getFrequency();
 
 }
 

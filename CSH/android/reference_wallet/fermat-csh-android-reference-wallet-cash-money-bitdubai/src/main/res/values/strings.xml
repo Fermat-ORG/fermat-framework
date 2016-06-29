@@ -28,5 +28,8 @@
     <string name="csh_ctd_memo_tag" translatable="false">MEMO</string>
     <string name="csh_ctd_memo_hint" translatable="false">Enter a memo</string>
 
+    <!-- Home tutorial presentation dialog -->
+    <string name="csh_home_tut_present_dialog_sub_title">This wallet is meant to help you manage your cash.\nWith it you can:</string>
+    <string name="csh_home_tut_present_dialog_body">* See your balances.\n* Deposit funds into wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history.</string>
 
 </resources>

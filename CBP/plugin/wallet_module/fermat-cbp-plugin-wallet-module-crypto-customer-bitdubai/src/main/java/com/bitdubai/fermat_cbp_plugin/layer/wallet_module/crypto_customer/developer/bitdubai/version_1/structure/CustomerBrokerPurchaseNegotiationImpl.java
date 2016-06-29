@@ -11,7 +11,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -187,10 +186,10 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     }
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo){
-        dataHasChanged = dataHasChanged || !Objects.equals(cancelReason, negotiationInfo.getCancelReason());
+        dataHasChanged = dataHasChanged || !negotiationInfo.getCancelReason().equals(cancelReason);
         cancelReason = negotiationInfo.getCancelReason();
 
-        dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
+        dataHasChanged = dataHasChanged || !negotiationInfo.getMemo().equals(memo);
         memo = negotiationInfo.getMemo();
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();

@@ -497,17 +497,13 @@ public class AssetIssuerActorDao implements Serializable {
         try {
             List<ActorAssetIssuer> list = getAllAssetIssuerActorRegistered();
 
-            for (ActorAssetIssuer registeredIssuer : list)
-            {
-                if (notInNetworkService(registeredIssuer, onlineIssuersInNetworkService))
-                {
+            for (ActorAssetIssuer registeredIssuer : list) {
+                if (notInNetworkService(registeredIssuer, onlineIssuersInNetworkService)) {
                     if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE))
                         updateAssetIssuerDAPConnectionStateActorNetworkService(registeredIssuer, DAPConnectionState.CONNECTED_OFFLINE);
                     else if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE))
                         updateAssetIssuerDAPConnectionStateActorNetworkService(registeredIssuer, DAPConnectionState.REGISTERED_OFFLINE);
-                }
-                else
-                {
+                } else {
                     if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
                         updateAssetIssuerDAPConnectionStateActorNetworkService(registeredIssuer, DAPConnectionState.CONNECTED_ONLINE);
                     else if (registeredIssuer.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
@@ -884,11 +880,11 @@ public class AssetIssuerActorDao implements Serializable {
     }
 
     public void createNewAssetIssuerRequestRegistered(String actorAssetIssuerLogged,
-                                                    String actorAssetIssuerPublicKey,
-                                                    String actorAssetIssuerName,
-                                                    byte[] profileImage,
-                                                    DAPConnectionState  dapConnectionState,
-                                                    Actors actorsType) throws CantAddPendingActorAssetException {
+                                                      String actorAssetIssuerPublicKey,
+                                                      String actorAssetIssuerName,
+                                                      byte[] profileImage,
+                                                      DAPConnectionState dapConnectionState,
+                                                      Actors actorsType) throws CantAddPendingActorAssetException {
         try {
             /**
              * if Asset Issuer exist on table
@@ -957,9 +953,9 @@ public class AssetIssuerActorDao implements Serializable {
         }
     }
 
-    public void updateRegisteredConnectionState(final String             actorAssetIssuerLoggedInPublicKey,
-                                                final String             actorAssetIssuerToAddPublicKey,
-                                                final DAPConnectionState dapConnectionState       ) throws CantUpdateActorAssetIssuerException {
+    public void updateRegisteredConnectionState(final String actorAssetIssuerLoggedInPublicKey,
+                                                final String actorAssetIssuerToAddPublicKey,
+                                                final DAPConnectionState dapConnectionState) throws CantUpdateActorAssetIssuerException {
 
         try {
 
@@ -993,9 +989,9 @@ public class AssetIssuerActorDao implements Serializable {
     }
 
     public List<DAPActor> getAllWaitingActorAssetIssuer(final String actorAssetSelectedPublicKey,
-                                                                final DAPConnectionState dapConnectionState,
-                                                                final int max,
-                                                                final int offset) throws CantGetAssetUserActorsException {
+                                                        final DAPConnectionState dapConnectionState,
+                                                        final int max,
+                                                        final int offset) throws CantGetAssetUserActorsException {
 
         // Setup method.
         List<ActorAssetIssuer> list = new ArrayList<>(); // Actor Issuer.
@@ -1020,7 +1016,7 @@ public class AssetIssuerActorDao implements Serializable {
             this.addRecordsTableRegisteredToList(list, table.getRecords());
 
             for (ActorAssetIssuer record : list) {
-                dapActors.add((new AssetIssuerActorRecord(record.getActorPublicKey(),record.getName(),record.getProfileImage(),record.getLocation())));
+                dapActors.add((new AssetIssuerActorRecord(record.getActorPublicKey(), record.getName(), record.getProfileImage(), record.getLocation())));
             }
 
         } catch (CantLoadTableToMemoryException e) {
@@ -1060,6 +1056,7 @@ public class AssetIssuerActorDao implements Serializable {
             throw new CantGetAssetUserActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET ISSUER", "Cant get ACTOR ASSET ISSUER, unknown failure.");
         }
     }
+
     /**
      * Private Methods
      */
@@ -1246,7 +1243,7 @@ public class AssetIssuerActorDao implements Serializable {
                     record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME),
                     record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME),
                     getAssetIssuerProfileImagePrivateKey(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME))
-                    );
+            );
         }
         return actorAssetIssuer;
     }
@@ -1256,16 +1253,16 @@ public class AssetIssuerActorDao implements Serializable {
         for (DatabaseTableRecord record : records) {
 
             list.add(new AssetIssuerActorRecord(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
-                    record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME),
-                    DAPConnectionState.getByCode(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
-                    record.getDoubleValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME),
-                    record.getDoubleValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
-                    record.getLongValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
-                    record.getLongValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
-                    Actors.getByCode(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TYPE_COLUMN_NAME)),
-                    record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME),
-                    record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME),
-                    getAssetIssuerProfileImagePrivateKey(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)))
+                            record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME),
+                            DAPConnectionState.getByCode(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
+                            record.getDoubleValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME),
+                            record.getDoubleValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
+                            record.getLongValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
+                            record.getLongValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
+                            Actors.getByCode(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TYPE_COLUMN_NAME)),
+                            record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME),
+                            record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME),
+                            getAssetIssuerProfileImagePrivateKey(record.getStringValue(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.database.AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)))
             );
         }
     }

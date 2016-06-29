@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,8 +24,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
@@ -34,7 +31,7 @@ import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClickEven
 import com.bitdubai.sub_app.music_player.R;
 import com.bitdubai.sub_app.music_player.common.adapters.MusicPlayerAdapter;
 import com.bitdubai.sub_app.music_player.common.models.MusicPlayerItems;
-import com.bitdubai.sub_app.music_player.session.MusicPlayerSession;
+import com.bitdubai.sub_app.music_player.session.MusicPlayerSessionReferenceApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,7 +48,7 @@ import java.util.Map;
 public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
     //FermatManager
-    private MusicPlayerSession musicPlayerSession;
+    private MusicPlayerSessionReferenceApp musicPlayerSession;
     private MusicPlayerModuleManager musicPlayermoduleManager;
     private MusicPlayerPreferenceSettings musicPlayerSettings;
     private ErrorManager errorManager;
@@ -88,7 +85,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         super.onCreate(savedInstanceState);
         try {
-            musicPlayerSession = ((MusicPlayerSession) appSession);
+            musicPlayerSession = ((MusicPlayerSessionReferenceApp) appSession);
             musicPlayermoduleManager = musicPlayerSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START MUSIC PLAYER");

@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -25,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetUserIdentityDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -48,16 +46,6 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
      */
     public AssetUserIdentityDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
@@ -126,15 +114,19 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
          */
         List<String> AssetUserColumns = new ArrayList<String>();
 
-        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME);
-        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_COUNTRY_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_CITY_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_STATE_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ACCURACY_KEY_COLUMN);
+        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_FREQUENCY_KEY_COLUMN);
         /**
          * Table Asset User addition.
          */
-        DeveloperDatabaseTable assetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME, AssetUserColumns);
+        DeveloperDatabaseTable assetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME, AssetUserColumns);
         tables.add(assetUserTable);
-
 
 
         return tables;
@@ -152,12 +144,12 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -177,7 +169,7 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

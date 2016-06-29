@@ -14,7 +14,8 @@
     <string name="no_assets_issuer_message">Don\'t worry, as an Asset Issuer you are able to create them using the Asset Factory. All the assets you published there, will be stored at this wallet.</string>
     <string name="no_assets_user">No Assets?</string>
     <string name="no_assets_user_message">Don\'t worry, as an Asset User you are able to receive assets from many Asset Owners. You are already eligible to receive them and store them at this wallet.</string>
-    <string name="no_assets_redeem_point">No Assets?</string>
+    <string name="no_assets_redeem_point">No Assets</string>
+    <string name="no_history">There is no accepted assets in this Redeem Point</string>
     <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
     <string name="no_users">No Users</string>
     <string name="no_transactions">No Transactions</string>
@@ -42,7 +43,7 @@
     <!-- -->
 
     <!--Dialog Help - Init-->
-    <string name="dap_redeem_wallet_welcome_subTitle">Welcome to the RedeemPoint Wallet.</string>
+    <string name="dap_redeem_wallet_welcome_subTitle">RedeemPoint Wallet.</string>
     <string name="dap_redeem_wallet_welcome_body">From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.</string>
     <string name="dap_redeem_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as a Redeem Point. You will be able to edit this information at the Redeem Point Identity application.</string>
     <string name="dap_redeem_wallet_welcome_name_left">Redeem Point</string>

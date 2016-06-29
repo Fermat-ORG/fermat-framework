@@ -38,7 +38,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletInstalledEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
@@ -313,6 +313,27 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
+                "fermat_wallet_icon", // ICOIN
+                "Fermat Wallet", // WALLET NAME
+                WalletsPublicKeys.CCP_FERMAT_WALLET.getCode(), // PUBLIC KEY
+                ReferenceWallet.BASIC_WALLET_FERMAT_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+                new Version(1, 0, 0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
+                "",
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+        );
+        lstInstalledWallet.add(installedWallet);
+
+
+        installedWallet = new WalletManagerMiddlewareInstalledWallet(
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon", // ICOIN
                 "Banking wallet", // WALLET NAME
                 WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), // PUBLIC KEY
@@ -448,6 +469,8 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
         lstInstalledWallet.add(installedWallet);
+
+
 
         return lstInstalledWallet;
     }

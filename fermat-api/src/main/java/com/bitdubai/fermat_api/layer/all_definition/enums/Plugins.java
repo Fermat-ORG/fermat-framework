@@ -17,7 +17,7 @@ public enum Plugins implements FermatPluginsEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BITDUBAI_BITCOIN_CRYPTO_NETWORK             ("BBTCCNET"     ),
-
+    BITDUBAI_FERMAT_CRYPTO_NETWORK             ("BFERCNET"     ),
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL    ("BWSCCLIENTCH" ),
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
 
@@ -176,6 +176,7 @@ public enum Plugins implements FermatPluginsEnum {
     DOLARTODAY("BCERPDT")               ,
     ELCRONISTA("BCERPEC")               ,
     EUROPEAN_CENTRAL_BANK("BCERPECB")   ,
+    FERMAT_EXCHANGE("BCERPFE")           ,
     LANACION("BCERPLN")                 ,
     YAHOO("BCERPYH")                    ,
     // End CER Plugins
@@ -183,20 +184,32 @@ public enum Plugins implements FermatPluginsEnum {
     // Init new Plugins
 
     ASSET_APPROPRIATION         ("ASAP"),
+    ASSET_BREAK("ASB"),
     ASSET_BUYER                 ("ASBU"),
     ASSET_DIRECT_SELL           ("ASDS"),
     ASSET_DISTRIBUTION          ("ASD"),
     ASSET_FACTORY               ("ASF"),
+    ASSET_FIXED_BITCOIN_DIRECT_PRIVATE_SELL("AFBDPS"),
+    ASSET_FOR_BITCOIN("AFB"),
+    ASSET_GENERAL("AGE"),
+    ASSET_HOLD("ASH"),
+    ASSET_INCOMING("AIN"),
     ASSET_ISSUER                ("ASI"),
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
     ASSET_ISSUING               ("ASIS"),
+    ASSET_OUTGOING("AOT"),
     ASSET_RECEPTION             ("ASR"),
+    ASSET_REDEMPTION("ARE"),
     ASSET_SELLER                ("ASSE"),
+    ASSET_SPECIFIC("ASP"),
+    ASSET_SWAP("ASW"),
     ASSET_TRANSFER              ("ASTT"),
     ASSET_TRANSMISSION          ("AST"),
+    ASSET_UNHOLD("AUH"),
     ASSET_USER                  ("ASU"),
     ASSET_USER_COMMUNITY        ("ASUC"),
     BITCOIN_ASSET_VAULT         ("BAV"),
+    BITCOIN_FOR_ASSET("BFA"),
     BITCOIN_NETWORK             ("BN"),
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
@@ -219,10 +232,14 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
     CRYPTO_LOSS_PROTECTED_WALLET("CLPW"),
+    DIGITAL_ASSET("DIA"),
+    CRYPTO_FERMAT_WALLET        ("CFW"),
     DESKTOP_RUNTIME             ("DER"),
     DEVELOPER                   ("DEV"),
     DEVICE_USER                 ("DU"),
     EXTRA_WALLET_USER           ("EWU"),
+    FERMAT_NETWORK              ("FNW"),
+    FERMAT_VAULT                ("FERV"),
     INCOMING_CRYPTO             ("IC"),
     INCOMING_EXTRA_USER         ("IEU"),
     INCOMING_INTRA_USER         ("IIU"),
@@ -327,7 +344,9 @@ public enum Plugins implements FermatPluginsEnum {
     TOKENLY_WALLET                      ("TWALLET"),
 
     //Init PIP
-    PIP_FERMAT_MONITOR                  ("PFM");
+    PIP_FERMAT_MONITOR                  ("PFM"),
+    GEOLOCATION                         ("GLT")
+    ;
     //End PIP
 
     // End  new Plugins

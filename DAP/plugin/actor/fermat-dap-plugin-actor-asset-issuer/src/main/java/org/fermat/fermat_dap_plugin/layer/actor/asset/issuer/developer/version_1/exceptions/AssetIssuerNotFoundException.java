@@ -20,7 +20,7 @@ public class AssetIssuerNotFoundException extends FermatException {
 
     private static String DEFAULT_MESSAGE = "The provided AssetIssuer's public key wasn't found in the database.";
 
-    public AssetIssuerNotFoundException(String context){
+    public AssetIssuerNotFoundException(String context) {
         super(DEFAULT_MESSAGE, null, context, null);
     }
 

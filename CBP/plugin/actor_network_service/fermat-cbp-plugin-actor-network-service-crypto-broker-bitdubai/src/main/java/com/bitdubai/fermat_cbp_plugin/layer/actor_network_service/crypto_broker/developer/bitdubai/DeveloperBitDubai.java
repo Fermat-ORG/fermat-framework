@@ -8,7 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRootTest;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRoot;
+
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.DeveloperBitDubai</code>
@@ -27,7 +28,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
         try {
 
-            this.registerVersion(new CryptoBrokerActorNetworkServicePluginRootTest());
+            this.registerVersion(new CryptoBrokerActorNetworkServicePluginRoot());
 
         } catch (CantRegisterVersionException e) {
 

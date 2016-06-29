@@ -1,13 +1,11 @@
 package com.bitdubai.fermat_android_api.ui.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
@@ -37,7 +35,7 @@ public abstract class FermatWizardPageFragment extends AbstractFermatFragment
     /**
      * Platform
      */
-    protected SubAppsSession subAppsSession;
+    protected FermatSession subAppsSession;
     protected SubAppSettings subAppSettings;
     protected SubAppResourcesProviderManager subAppResourcesProviderManager;
 
@@ -68,7 +66,7 @@ public abstract class FermatWizardPageFragment extends AbstractFermatFragment
      *
      * @param subAppsSession SubAppSession object
      */
-    public void setSubAppsSession(SubAppsSession subAppsSession) {
+    public void setSubAppsSession(FermatSession subAppsSession) {
         this.subAppsSession = subAppsSession;
     }
 

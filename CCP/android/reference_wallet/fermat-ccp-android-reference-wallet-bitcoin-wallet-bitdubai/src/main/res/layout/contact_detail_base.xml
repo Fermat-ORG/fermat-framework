@@ -126,7 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="normal"
                     android:textColor="#4f4f4f"
                     android:textColorHint="#4f4f4f"
@@ -142,13 +142,21 @@
                     android:background="@null"/>
 
                 <ImageView
-                    android:layout_width="38dp"
+                    android:layout_width="30dp"
                     android:padding="3dp"
                     android:layout_height="32dp"
-                    android:layout_weight="0.7"
+
                     android:visibility="visible"
                     android:id="@+id/img_update"
                     android:src="@drawable/ic_contact_update"/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:padding="3dp"
+                    android:layout_height="32dp"
+
+                    android:visibility="visible"
+                    android:id="@+id/img_copy"
+                    android:src="@drawable/copytoclipb_icon"/>
             </LinearLayout>
 
             <View

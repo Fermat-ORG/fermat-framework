@@ -24,13 +24,12 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanListException;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.fan_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ import java.util.List;
  */
 public class ConnectionsListFragment extends
         AbstractFermatFragment<
-                FanCommunitySubAppSession,
+                FanCommunitySubAppSessionReferenceApp,
                 SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ArtCommunityInformation> {

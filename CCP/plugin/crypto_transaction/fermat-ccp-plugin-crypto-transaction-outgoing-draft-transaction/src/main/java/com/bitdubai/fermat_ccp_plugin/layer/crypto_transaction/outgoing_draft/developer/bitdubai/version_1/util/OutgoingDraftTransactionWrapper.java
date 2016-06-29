@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.d
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
@@ -25,11 +26,14 @@ public class OutgoingDraftTransactionWrapper {
     private String memo;
     private long timestamp;
     private String txHash;
+    private  CryptoCurrency cryptoCurrency;
 
     public OutgoingDraftTransactionWrapper() {
     }
 
-    public OutgoingDraftTransactionWrapper(UUID requestId, String walletPublicKey, long valueToSend, CryptoAddress addressTo, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType, String actorFromPublicKey, String actorToPublicKey, Actors actorFromType, Actors actorToType, String memo, long timestamp, String txHash) {
+    public OutgoingDraftTransactionWrapper(UUID requestId, String walletPublicKey, long valueToSend, CryptoAddress addressTo, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType, String actorFromPublicKey, String actorToPublicKey, Actors actorFromType, Actors actorToType, String memo, long timestamp,
+                                           String txHash,
+                                           CryptoCurrency cryptoCurrency) {
         this.requestId = requestId;
         this.walletPublicKey = walletPublicKey;
         this.valueToSend = valueToSend;
@@ -43,6 +47,7 @@ public class OutgoingDraftTransactionWrapper {
         this.memo = memo;
         this.timestamp = timestamp;
         this.txHash = txHash;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     public long getValueToSend() {
@@ -95,5 +100,9 @@ public class OutgoingDraftTransactionWrapper {
 
     public String getTxHash() {
         return txHash;
+    }
+
+    public CryptoCurrency getCryptoCurrency(){
+        return this.cryptoCurrency;
     }
 }

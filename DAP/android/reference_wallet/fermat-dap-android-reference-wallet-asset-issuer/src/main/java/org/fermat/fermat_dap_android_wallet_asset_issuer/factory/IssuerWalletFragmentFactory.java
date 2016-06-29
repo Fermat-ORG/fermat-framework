@@ -6,22 +6,21 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
-import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.AssetDeliveryFragment;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.AssetDeliverySelectGroupsFragment;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.AssetDeliverySelectUsersFragment;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.AssetDetailTransactionsFragment;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.MainActivityFragment;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.MyAssetsActivityFragment;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.SettingsAssetIssuerFragment;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.SettingsAssetIssuerNetworkFragment;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.SettingsAssetIssuerNotificationFragment;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.UserAppropiateListFragment;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.UserDeliveryListFragment;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.fragments.UserRedeemedListFragment;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.fragments.DeliverGroupFragment;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.fragments.DeliverUserFragment;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.fragments.HomeCardFragment;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.fragments.StatsFragment;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.fragments.TransactionsFragment;
 
 
-public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssuerSession,WalletResourcesProviderManager, WalletAssetIssuerFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
+public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssuerSessionReferenceApp, WalletResourcesProviderManager, WalletAssetIssuerFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
 
 
     @Override
@@ -35,7 +34,7 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
 
             switch (fragment) {
                 case DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY:
-                    currentFragment = new MyAssetsActivityFragment();
+                    currentFragment = new HomeCardFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY:
                     currentFragment = new SettingsAssetIssuerFragment();
@@ -53,25 +52,25 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
 //                    currentFragment = new IssuerStadisticsActivityFragment();
 //                    break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DETAIL:
-                    currentFragment = new AssetDetailTransactionsFragment();
+                    currentFragment = new TransactionsFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST:
-                    currentFragment = new UserDeliveryListFragment();
+                    currentFragment = new StatsFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST:
                     currentFragment = new UserRedeemedListFragment();
                     break;
-                case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY:
-                    currentFragment = new AssetDeliveryFragment();
-                    break;
+//                case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY:
+//                    currentFragment = new DeliverUserFragment();
+//                    break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_USERS:
-                    currentFragment = new AssetDeliverySelectUsersFragment();
+                    currentFragment = new DeliverUserFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST:
                     currentFragment = new UserAppropiateListFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_GROUPS:
-                    currentFragment = new AssetDeliverySelectGroupsFragment();
+                    currentFragment = new DeliverGroupFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TABS:
                     currentFragment = new MainActivityFragment();
@@ -79,7 +78,7 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return currentFragment;

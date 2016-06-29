@@ -10,7 +10,7 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_use
 import org.junit.Before;
 import org.mockito.Mock;
 
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import CryptoWalletManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import ErrorManager;
@@ -30,7 +30,7 @@ import static org.mockito.Matchers.any;
 public class getTransactionManagerTest {
 
     @Mock
-    private BitcoinWalletManager mockBitcoinWalletManager;
+    private CryptoWalletManager mockBitcoinWalletManager;
     @Mock
     private CryptoVaultManager mockCryptoVaultManager;
     @Mock

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -44,9 +45,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,9 +61,6 @@ import java.util.regex.Pattern;
 public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -117,7 +113,8 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot");
+        returnedClasses.add("CustomerOfflinePaymentPluginRoot");
+
         return returnedClasses;
     }
 
@@ -133,10 +130,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                 }
             }
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
     }
 
@@ -160,84 +154,70 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Initialize Dao
              */
-            CustomerOfflinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
-                    new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
-                            pluginId,
-                            database,
-                            errorManager);
+            CustomerOfflinePaymentBusinessTransactionDao dao = new CustomerOfflinePaymentBusinessTransactionDao(
+                    pluginDatabaseSystem, pluginId, database, this);
 
             /**
              * Init the plugin manager
              */
-        //TODO: only for testing
-            //customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
-            this.customerOfflinePaymentTransactionManager=new CustomerOfflinePaymentTransactionManager(
-                    this.customerBrokerContractPurchaseManager,
-                    customerOnlinePaymentBusinessTransactionDao,
-                    this.errorManager);
+            customerOfflinePaymentTransactionManager = new CustomerOfflinePaymentTransactionManager(customerBrokerContractPurchaseManager, dao, this);
 
             /**
              * Init event recorder service.
              */
-            CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService=new CustomerOfflinePaymentRecorderService(
-                    customerOnlinePaymentBusinessTransactionDao,
-                    eventManager,errorManager);
-            customerOfflinePaymentRecorderService.start();
+            CustomerOfflinePaymentRecorderService recorderService = new CustomerOfflinePaymentRecorderService(dao, eventManager, this);
+            recorderService.start();
 
             /**
              * Init monitor Agent
              */
-            CustomerOfflinePaymentMonitorAgent customerOnlinePaymentMonitorAgent=new CustomerOfflinePaymentMonitorAgent(
+            CustomerOfflinePaymentMonitorAgent monitorAgent = new CustomerOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager,customerBrokerSaleNegotiationManager);
-            customerOnlinePaymentMonitorAgent.start();
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager);
+
+            monitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
-            //System.out.println("Customer offline payment starting");
-            //testPayment();
+
         } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the plugin database factory");
+
         } catch (CantInitializeDatabaseException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the database plugin");
+
         } catch (CantStartAgentException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the plugin monitor agent");
+
         } catch (CantStartServiceException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Cannot initialize the plugin recorder service");
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantStartPluginException(FermatException.wrapException(exception),
+
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
                     "Starting Customer Offline Payment Plugin",
                     "Unexpected error");
         }
@@ -245,30 +225,28 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public void pause() {
-
-        try{
+        try {
             this.serviceStatus = ServiceStatus.PAUSED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void resume() {
-
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STARTED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
@@ -325,13 +303,8 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantOpenDatabaseException);
+            /* The database exists but cannot be open. I can not handle this situation. */
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -357,10 +330,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        cantOpenDatabaseException);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
@@ -368,10 +338,10 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     }
 
-    private void testPayment(){
-        try{
+    private void testPayment() {
+        try {
             this.customerOfflinePaymentTransactionManager.sendPayment("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Customer Offline Payment TEST EXCEPTION:");
             e.printStackTrace();
         }

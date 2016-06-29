@@ -57,6 +57,7 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.InformationRequestNotFoundException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

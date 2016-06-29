@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,14 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
@@ -26,11 +33,8 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
-import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AppFriendsListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +42,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 04/02/2016.
  */
-public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
+public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
@@ -55,7 +59,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustom
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationArrayList;
-
+    TextView noDatalabel;
+    ImageView noData;
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
     }
@@ -81,12 +86,19 @@ public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustom
             adapter = new AppFriendsListAdapter(getActivity(), cryptoCustomerCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
+            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
+            noData=(ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+            rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
+            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             onRefresh();
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
@@ -168,15 +180,30 @@ public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustom
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+        if (show/* &&
+                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
+            noData.setAnimation(anim);
+            //emptyView.setBackgroundResource(R.drawable.cht_comm_background);
+            noDatalabel.setAnimation(anim);
+            noData.setVisibility(View.VISIBLE);
+            noDatalabel.setVisibility(View.VISIBLE);
+            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
+            noData.setAnimation(anim);
+            emptyView.setBackgroundResource(0);
+            noDatalabel.setAnimation(anim);
+            noData.setVisibility(View.GONE);
+            noDatalabel.setVisibility(View.GONE);
+            rootView.setBackgroundResource(0);
+            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+            emptyView.setBackground(bgcolor);
+            rootView.setBackground(bgcolor);
         }
     }
 

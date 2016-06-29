@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/color_white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4.5dp"
+        android:background="#DC5A0F"
+        android:fitsSystemWindows="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="2dp"
+        android:paddingEnd="1dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingStart="1dp"
+        android:paddingTop="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_title"
+                    android:text="Spending Details"
+                    android:paddingLeft="5dp"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#073487"
+                    app:typeface="CAVIAR_DREAMS_BOLD"
+                    android:gravity="left"
+                    android:layout_gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0.4"
+                    android:src="@drawable/lpw_icon"
+                    android:paddingBottom="2dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#073487"
+                android:layout_marginBottom="12dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+
+               <TextView
+                   android:id="@+id/date"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Date:DD/MM/YY"
+                   android:textSize="14sp"
+                   android:focusable="false"
+                   android:focusableInTouchMode="false"
+                   android:textColor="@color/black"
+                   />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/earnOrLostImage"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        />
+
+                   <TextView
+                       android:id="@+id/amount"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="U$D 0.00"
+                       android:textSize="14sp"
+                       android:textColor="@color/black"
+                       android:focusable="false"
+                       android:focusableInTouchMode="false"
+                       />
+
+                </LinearLayout>
+           </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#073487"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+
+            <Button
+                android:id="@+id/accept_btn"
+                android:layout_width="150dp"
+                android:background="#DC5A0F"
+                android:text="Close"
+                android:textColor="#FFFFFF"
+                android:layout_height="40dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

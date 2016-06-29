@@ -1,24 +1,25 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.common.custom_view;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 
 import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
+ * Modified by Joaquin Carrasquero on 2016.05.26
  */
 
 public class ListComponent implements CustomComponentsObjects{
 
     private  String titleTransaction="";
     private  String detailTransaction="";
-    private CryptoWalletTransaction cryptoWalletTransaction;
+    private FermatWalletModuleTransaction fermatWalletTransaction;
 
-    public ListComponent(CryptoWalletTransaction cryptoWalletTransaction) {
+    public ListComponent(FermatWalletModuleTransaction fermatWalletTransaction) {
         //this.titleTransaction = cryptoWalletTransaction.;
-        this.cryptoWalletTransaction = cryptoWalletTransaction;
+        this.fermatWalletTransaction = fermatWalletTransaction;
         generateTitle();
         generateDetailTransaction();
 
@@ -26,12 +27,12 @@ public class ListComponent implements CustomComponentsObjects{
 
     private void generateTitle(){
         try {
-            if (cryptoWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
-                titleTransaction += "Receive from " + cryptoWalletTransaction.getInvolvedActor().getName();
-            } else if (cryptoWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)) {
-                titleTransaction += "Send from " + cryptoWalletTransaction.getInvolvedActor().getName();
+            if (fermatWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
+                titleTransaction += "Receive from " + fermatWalletTransaction.getInvolvedActor().getName();
+            } else if (fermatWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)) {
+                titleTransaction += "Send from " + fermatWalletTransaction.getInvolvedActor().getName();
             }
-            titleTransaction+= " "+formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode());
+            titleTransaction+= " "+formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -39,7 +40,7 @@ public class ListComponent implements CustomComponentsObjects{
 
     private void generateDetailTransaction(){
         try {
-        String textBody = cryptoWalletTransaction.getMemo();
+        String textBody = fermatWalletTransaction.getMemo();
         if(textBody.length() != 0){
             detailTransaction+= textBody;
         }else{
@@ -83,6 +84,6 @@ public class ListComponent implements CustomComponentsObjects{
     }
 
     public byte[] getImage() {
-        return cryptoWalletTransaction.getInvolvedActor().getPhoto();
+        return fermatWalletTransaction.getInvolvedActor().getPhoto();
     }
 }

@@ -9,6 +9,6 @@ public class CantGetActorAssetIssuerException extends DAPException {
     public static final String DEFAULT_MESSAGE = "There was an error getting Actor Asset Issuer.";
 
     public CantGetActorAssetIssuerException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

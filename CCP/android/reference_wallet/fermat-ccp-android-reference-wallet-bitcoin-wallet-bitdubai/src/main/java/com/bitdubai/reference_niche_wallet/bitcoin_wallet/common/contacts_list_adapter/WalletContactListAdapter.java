@@ -65,6 +65,15 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
                 } else
                     Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
                     //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.ic_profile_male));
+
+                if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP){
+                    contact_name.setTextSize(14);
+                    contact_profile_image.setMaxHeight(40);
+                    contact_profile_image.setMaxWidth(40);
+
+                }
+
+
             }catch (Exception e){
                 Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
                 //contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), R.drawable.ic_profile_male));

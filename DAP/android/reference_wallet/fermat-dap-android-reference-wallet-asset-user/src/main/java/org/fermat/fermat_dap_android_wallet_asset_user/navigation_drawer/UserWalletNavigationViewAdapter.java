@@ -34,9 +34,38 @@ public class UserWalletNavigationViewAdapter extends FermatAdapter<MenuItem, Use
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.dap_navigation_drawer_user_wallet_navigation_row;
+        //DAP V2
+        //return R.layout.dap_navigation_drawer_user_wallet_navigation_row;
+
+        //DAP V3
+        return R.layout.dap_v3_navigation_drawer_user_wallet_navigation_row;
     }
 
+    //DAP V2
+//    @Override
+//    protected void bindHolder(UserWalletNavigationItemMenuViewHolder holder, MenuItem data, int position) {
+//        try {
+//
+//            holder.getLabel().setText(data.getLabel());
+//
+//            if (data.isSelected())
+//                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+//
+//                switch (position) {
+//                    case 0:
+//                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_active : R.drawable.ic_nav_home_normal).into(holder.getIcon());
+//                        break;
+//                    case 1:
+//                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_settings_normal : R.drawable.ic_nav_settings_normal).into(holder.getIcon());
+//                        break;
+//                }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    //DAP V2
     @Override
     protected void bindHolder(UserWalletNavigationItemMenuViewHolder holder, MenuItem data, int position) {
         try {
@@ -46,14 +75,14 @@ public class UserWalletNavigationViewAdapter extends FermatAdapter<MenuItem, Use
             if (data.isSelected())
                 holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
 
-                switch (position) {
-                    case 0:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_active : R.drawable.ic_nav_home_normal).into(holder.getIcon());
-                        break;
-                    case 1:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_settings_normal : R.drawable.ic_nav_settings_normal).into(holder.getIcon());
-                        break;
-                }
+            switch (position) {
+                case 0:
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.icono_home : R.drawable.icono_home).into(holder.getIcon());
+                    break;
+                case 1:
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.icono_settings : R.drawable.icono_settings).into(holder.getIcon());
+                    break;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

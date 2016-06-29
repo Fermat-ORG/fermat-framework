@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -26,12 +26,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.google.zxing.WriterException;
 
 /**
@@ -48,14 +48,14 @@ public class ReceiveFragmentDialog extends Dialog implements
     public Dialog d;
 
 
-    SettingsManager<BitcoinWalletSettings> settingsManager;
+    SettingsManager<FermatWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
     /**
-     *  Deals with crypto wallet interface
+     *  Deals with fermat wallet interface
      */
 
-    private CryptoWallet cryptoWallet;
+    private FermatWallet fermatWallet;
 
     /**
      * Deals with error manager interface
@@ -66,7 +66,7 @@ public class ReceiveFragmentDialog extends Dialog implements
     /**
      *  Contact member
      */
-    private CryptoWalletWalletContact walletContact;
+    private FermatWalletWalletContact walletContact;
     private String user_address_wallet = "";
 
     /**
@@ -94,15 +94,15 @@ public class ReceiveFragmentDialog extends Dialog implements
     /**
      *
      * @param a
-     * @param cryptoWallet
+     * @param fermatWallet
      */
 
 
-    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,CryptoWalletWalletContact walletContact,String identityPublicKey,String walletPublcKey, BlockchainNetworkType blockchainNetworkType) {
+    public ReceiveFragmentDialog(Activity a,FermatWallet fermatWallet,ErrorManager errorManager,FermatWalletWalletContact walletContact,String identityPublicKey,String walletPublcKey, BlockchainNetworkType blockchainNetworkType) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
-        this.cryptoWallet=cryptoWallet;
+        this.fermatWallet=fermatWallet;
         this.walletContact=walletContact;
         this.errorManager=errorManager;
         this.identityPublicKey = identityPublicKey;
@@ -141,7 +141,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+            CryptoAddress cryptoAddress = fermatWallet.requestAddressToKnownUser(
                     identityPublicKey,
                     Actors.INTRA_USER,
                     actorPublicKey,
@@ -154,7 +154,7 @@ public class ReceiveFragmentDialog extends Dialog implements
                     blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();
-        } catch (CantRequestCryptoAddressException e) {
+        } catch (CantRequestFermatAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 

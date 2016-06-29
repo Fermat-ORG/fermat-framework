@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CryptoCustomerIdentityDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class CryptoCustomerIdentityDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -123,6 +123,8 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory implements DealsWith
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME);
+        cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME);
+        cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME);
 
         /**
          * Table Crypto Customer addition.
@@ -178,13 +180,13 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory implements DealsWith
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

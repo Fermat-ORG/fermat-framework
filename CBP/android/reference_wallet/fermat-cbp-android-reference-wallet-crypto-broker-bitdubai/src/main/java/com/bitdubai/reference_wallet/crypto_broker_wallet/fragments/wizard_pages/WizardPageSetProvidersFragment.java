@@ -9,11 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
@@ -32,7 +33,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,8 +44,8 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetProvidersFragment extends AbstractFermatFragment
-        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyPairAndProvider>, AdapterView.OnItemSelectedListener {
+public class WizardPageSetProvidersFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyPairAndProvider> {
 
     // Constants
     private static final String TAG = "WizardPageSetEarning";
@@ -77,7 +77,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         currencies = getCurrenciesList();
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Delete potential previous configurations made by this wizard page
@@ -115,14 +115,6 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_spinner_item, getFormattedCurrencies(currencies));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-//        final Spinner currencyFromSpinner = (Spinner) layout.findViewById(R.id.currency_from_spinner);
-//        currencyFromSpinner.setOnItemSelectedListener(this);
-//        currencyFromSpinner.setAdapter(adapter);
-
-//        final Spinner currencyToSpinner = (Spinner) layout.findViewById(R.id.currency_to_spinner);
-//        currencyToSpinner.setOnItemSelectedListener(this);
-//        currencyToSpinner.setAdapter(adapter);
-
         final View selectProvidersButton = layout.findViewById(R.id.cbw_select_providers_button);
         selectProvidersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,33 +132,19 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         });
 
         if(!hideHelperDialogs) {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)
                     .setIconRes(R.drawable.crypto_broker)
                     .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_providers_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                    .setIsCheckEnabled(true)
                     .build();
             presentationDialog.show();
         }
 
         return layout;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        if (parent.getId() == R.id.currency_from_spinner) {
-//            currencyFrom = currencies.get(position);
-//
-//        } else if (parent.getId() == R.id.currency_to_spinner) {
-//            currencyTo = currencies.get(position);
-//        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 
     private void showProvidersDialog() {

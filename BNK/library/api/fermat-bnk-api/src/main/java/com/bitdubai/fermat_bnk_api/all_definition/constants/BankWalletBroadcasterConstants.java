@@ -6,5 +6,6 @@ package com.bitdubai.fermat_bnk_api.all_definition.constants;
 public class BankWalletBroadcasterConstants {
 
     public static final String BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW = "BNKRWUTV";
+    public static final String BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_ERROR = "BNKRWUTVE";
 
 }

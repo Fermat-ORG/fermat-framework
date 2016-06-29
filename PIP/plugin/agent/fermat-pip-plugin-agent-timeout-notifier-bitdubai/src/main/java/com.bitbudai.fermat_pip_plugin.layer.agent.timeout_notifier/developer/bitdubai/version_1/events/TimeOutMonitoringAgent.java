@@ -4,6 +4,8 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -13,9 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.MaxTimeOutNotificationReachedEvent;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.TimeOutReachedEvent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,6 +41,7 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
 
     /**
      * constructor
+     *
      * @param errorManager
      * @param dao
      * @param eventManager
@@ -70,19 +71,19 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
     @Override
     public void stop() {
         monitoringAgent.setExecutionFlag(false);
-        while (monitoringAgent.getAgentStatus() != AgentStatus.STOPPED){
+        while (monitoringAgent.getAgentStatus() != AgentStatus.STOPPED) {
             //wait until is stopped.
         }
         monitorThread.interrupt();
         this.agentStatus = AgentStatus.STOPPED;
     }
 
-    public AgentStatus getAgentStatus(){
+    public AgentStatus getAgentStatus() {
         return this.agentStatus;
     }
 
 
-    private class MonitoringAgent implements Runnable{
+    private class MonitoringAgent implements Runnable {
         /**
          * private class variables
          */
@@ -113,7 +114,7 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
         public void run() {
             this.agentStatus = AgentStatus.STARTED;
 
-            while (getExecutionFlag()){
+            while (getExecutionFlag()) {
                 doTheMainTask();
 
                 try {
@@ -129,16 +130,16 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
 
         private void doTheMainTask() {
             try {
-                List<TimeOutNotifierAgent> timeOutManagerList =  dao.getPendingNotification();
-                for (TimeOutNotifierAgent timeOutNotifierAgent : timeOutManagerList){
-                    if (timeOutNotifierAgent.getEpochEndTime() > System.currentTimeMillis()){
+                List<TimeOutNotifierAgent> timeOutManagerList = dao.getPendingNotification();
+                for (TimeOutNotifierAgent timeOutNotifierAgent : timeOutManagerList) {
+                    if (timeOutNotifierAgent.getEpochEndTime() > System.currentTimeMillis()) {
                         int numNotifications = dao.updateMonitorEventData(timeOutNotifierAgent.getUUID());
 
                         raiseEvent(EventType.TIMEOUT_REACHED, timeOutNotifierAgent, numNotifications);
                         System.out.println("***TimeOutNotifier*** Event Raised for agent " + timeOutNotifierAgent.toString());
 
 
-                        if (numNotifications > MAX_TIME_OUT_NOTIFICATIONS){
+                        if (numNotifications > MAX_TIME_OUT_NOTIFICATIONS) {
                             raiseEvent(EventType.MAX_TIMEOUT_NOTIFICATION_REACHED, timeOutNotifierAgent, numNotifications);
                             System.out.println("***TimeOutNotifier*** Max Event Raised Notification reached");
                         }
@@ -151,7 +152,7 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
         }
 
         private void raiseEvent(EventType eventType, TimeOutNotifierAgent timeOutNotifierAgent, int amountRaises) {
-            switch (eventType){
+            switch (eventType) {
                 case TIMEOUT_REACHED:
                     TimeOutReachedEvent event = new TimeOutReachedEvent();
                     event.setTimeOutAgent(timeOutNotifierAgent);

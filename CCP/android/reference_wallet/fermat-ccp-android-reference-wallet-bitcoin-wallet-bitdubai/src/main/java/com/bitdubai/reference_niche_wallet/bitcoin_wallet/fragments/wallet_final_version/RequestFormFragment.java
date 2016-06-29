@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +25,17 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -48,6 +53,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
@@ -67,12 +74,14 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_a
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -81,7 +90,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Matias Furszyfer on 2015.11.05..
  */
 
-public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletSession, ResourceProviderManager> implements View.OnClickListener {
+public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoWallet>, ResourceProviderManager> implements View.OnClickListener {
 
     private AndroidCoreManager androidCoreManager;
     /**
@@ -113,7 +122,9 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     private BitcoinConverter bitcoinConverter;
     private ImageView spinnerArrow;
     BlockchainNetworkType blockchainNetworkType;
+    private ExecutorService _executor;
 
+    private List<WalletContact> walletContactList = new ArrayList<>();
 
     public static RequestFormFragment newInstance() {
         return new RequestFormFragment();
@@ -125,6 +136,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
         setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
 
+            _executor = Executors.newFixedThreadPool(2);
             bitcoinConverter = new BitcoinConverter();
             cryptoWallet = appSession.getModuleManager();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -173,7 +185,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             } else {
@@ -183,6 +195,14 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                 setUpUIData();
 
             }
+
+            _executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    setUpContactAddapter();
+
+                }
+            });
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -326,121 +346,146 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     }
 
     private void setUpContactAddapter() {
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
 
-        contactName.setAdapter(contactsAdapter);
-        //autocompleteContacts.setTypeface(tf);
-        contactName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                walletContact = (WalletContact) arg0.getItemAtPosition(position);
-
-                //add connection like a wallet contact
-                try {
-                    if (walletContact.isConnection) {
-                        cryptoWalletWalletContact = cryptoWallet.convertConnectionToContact(
-                                walletContact.name,
-                                Actors.INTRA_USER,
-                                walletContact.actorPublicKey,
-                                walletContact.profileImage,
-                                Actors.INTRA_USER,
-                                appSession.getIntraUserModuleManager().getPublicKey(),
-                                appSession.getAppPublicKey(),
-                                CryptoCurrency.BITCOIN,
-                                blockchainNetworkType);
-
-                    } else {
-                        try {
-                            cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId, appSession.getIntraUserModuleManager().getPublicKey());
-                        } catch (CantFindWalletContactException e) {
-                            e.printStackTrace();
-                        } catch (WalletContactNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (cryptoWalletWalletContact != null) {
-                        walletContact.name = cryptoWalletWalletContact.getActorName();
-                        walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
-                            cryptoWallet.requestAddressToKnownUser(
-                                    appSession.getIntraUserModuleManager().getPublicKey(),
-                                    Actors.INTRA_USER,
-                                    cryptoWalletWalletContact.getActorPublicKey(),
-                                    cryptoWalletWalletContact.getActorType(),
-                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                    VaultType.CRYPTO_CURRENCY_VAULT,
-                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                                    appSession.getAppPublicKey(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                    blockchainNetworkType
-                            );
-                        }
-                    } else {
-                        if (cryptoWalletWalletContact != null)
-                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
-                    }
-                    if (cryptoWalletWalletContact != null) {
-                        walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                        walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                        walletContact.isConnection = cryptoWalletWalletContact.isConnection();
-                    }
-                    setUpUIData();
-
-                } catch (
-                        CantCreateWalletContactException e
-                        )
-
-                {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
-
-                } catch (
-                        ContactNameAlreadyExistsException e
-                        )
-
-                {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
-
-                } catch (
-                        CantGetCryptoWalletException e
-                        )
-
-                {
-                    e.printStackTrace();
-                } catch (
-                        CantListCryptoWalletIntraUserIdentityException e
-                        )
-
-                {
-                    e.printStackTrace();
-                } catch (
-                        CantRequestCryptoAddressException e
-                        )
-
-                {
+            protected Object doInBackground()  {
+                try{
+                    walletContactList =   getWalletContactList();
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
+                return walletContactList;
             }
-        });
+        };
 
-
-        contactName.addTextChangedListener(new TextWatcher() {
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+                    contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
 
-            }
+                    contactName.setAdapter(contactsAdapter);
+                    //autocompleteContacts.setTypeface(tf);
+                    contactName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                            walletContact = (WalletContact) arg0.getItemAtPosition(position);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+                            //add connection like a wallet contact
+                            try {
+                                if (walletContact.isConnection) {
+                                    cryptoWalletWalletContact = cryptoWallet.convertConnectionToContact(
+                                            walletContact.name,
+                                            Actors.INTRA_USER,
+                                            walletContact.actorPublicKey,
+                                            walletContact.profileImage,
+                                            Actors.INTRA_USER,
+                                            cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                            appSession.getAppPublicKey(),
+                                            CryptoCurrency.BITCOIN,
+                                            blockchainNetworkType);
 
-            @Override
-            public void afterTextChanged(Editable editable) {
+                                } else {
+                                    try {
+                                        cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId, appSession.getModuleManager().getActiveIdentities().get(0).getPublicKey());
+                                    } catch (CantFindWalletContactException e) {
+                                        e.printStackTrace();
+                                    } catch (WalletContactNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if (cryptoWalletWalletContact != null) {
+                                    walletContact.name = cryptoWalletWalletContact.getActorName();
+                                    walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
+                                    if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
+                                        cryptoWallet.requestAddressToKnownUser(
+                                                cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                                Actors.INTRA_USER,
+                                                cryptoWalletWalletContact.getActorPublicKey(),
+                                                cryptoWalletWalletContact.getActorType(),
+                                                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                                VaultType.CRYPTO_CURRENCY_VAULT,
+                                                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                                appSession.getAppPublicKey(),
+                                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                                blockchainNetworkType
+                                        );
+                                    }
+                                } else {
+                                    if (cryptoWalletWalletContact != null)
+                                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                                }
+                                if (cryptoWalletWalletContact != null) {
+                                    walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                                    walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                                    walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+                                }
+                                setUpUIData();
+
+                            } catch (
+                                    CantCreateWalletContactException e
+                                    )
+
+                            {
+                                appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
+
+
+                            } catch (
+                                    CantRequestCryptoAddressException e
+                                    )
+
+                            {
+                                e.printStackTrace();
+                            } catch (ContactNameAlreadyExistsException e) {
+                                e.printStackTrace();
+                            } catch (CantGetSelectedActorIdentityException e) {
+                                e.printStackTrace();
+                            } catch (ActorIdentityNotSelectedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
+                    contactName.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
 //                    linear_address.setVisibility(activeAddress ? View.VISIBLE : View.GONE);
 //                    // if (!editTextAddress.getText().equals("")) linear_address.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                ErrorManager errorManager = appSession.getErrorManager();
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                else
+                    Log.e("getWalletContactList", ex.getMessage(), ex);
+
             }
         });
+
+        fermatWorker.execute();
+
+
+
     }
 
     private void setUpActions() {
@@ -485,7 +530,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     //It will work for your need. I just putted that line for your understanding only
                     //You can use own requirement here also.
 
-                    if (!connectionDialogIsShow) {
+                    /*if (!connectionDialogIsShow) {
                         ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appSession.getResourceProviderManager());
                         connectionWithCommunityDialog.show();
                         connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -496,7 +541,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                             }
                         });
                         connectionDialogIsShow = true;
-                    }
+                    }*/
                     return true;
                 }
                 return false;
@@ -531,7 +576,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
     private void setUpUIData() {
         if(cryptoWalletWalletContact==null) {
-            cryptoWalletWalletContact = appSession.getLastContactSelected();
+            cryptoWalletWalletContact = (CryptoWalletWalletContact) appSession.getData("LastContactSelected");
         }
         if (cryptoWalletWalletContact != null) {
             isFragmentFromDetail = true;
@@ -618,7 +663,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     if(operator.compareTo(minSatoshis) == 1 )
                     {
 
-                           String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
+                           String identityPublicKey = cryptoWallet.getSelectedActorIdentity().getPublicKey();
 
                            CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
                                    identityPublicKey,
@@ -642,7 +687,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                    notes,
                                    operator.longValueExact(),
                                    blockchainNetworkType,
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   CryptoCurrency.BITCOIN
 
                            );
                            Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
@@ -674,7 +720,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(appSession.getAppPublicKey(), appSession.getIntraUserModuleManager().getPublicKey());
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(appSession.getAppPublicKey(), cryptoWallet.getSelectedActorIdentity().getPublicKey());
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";
@@ -685,9 +731,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
         } catch (CantGetAllWalletContactsException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
-        } catch (CantGetCryptoWalletException e) {
+
+        } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+        } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
         return contacts;

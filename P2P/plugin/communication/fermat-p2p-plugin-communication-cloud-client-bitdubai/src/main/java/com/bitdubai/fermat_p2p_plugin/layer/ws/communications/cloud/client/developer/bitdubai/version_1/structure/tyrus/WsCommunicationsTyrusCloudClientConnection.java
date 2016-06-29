@@ -41,7 +41,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ServerHandshakeRespondTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn.WsCommunicationTyrusVPNClientManagerAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.ServerConf;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -667,9 +667,14 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             parameters.add(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsTyrusCloudClientChannel.getIdentityPublicKey());
             parameters.add(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.set("Connection", "Close");
+            requestHeaders.setAccept(Collections.singletonList(new org.springframework.http.MediaType("application", "json")));
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity(parameters, requestHeaders);
+
             // Create a new RestTemplate instance
             RestTemplate restTemplate = new RestTemplate(true);
-            String respond = restTemplate.postForObject("http://" + getServerIp() + ":" + getServerPort() + "/fermat/api/components/registered", parameters, String.class);
+            String respond = restTemplate.postForObject("http://" + getServerIp() + ":" + getServerPort() + "/fermat/api/components/registered", request, String.class);
 
             /*
              * if respond have the result list

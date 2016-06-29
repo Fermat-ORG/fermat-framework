@@ -9,13 +9,13 @@ import java.util.UUID;
  */
 public class NetworkServiceMessageRequest extends NetworkServiceMessage {
 
-    private final UUID   requestId                  ;
-    private final Actors identityTypeRequesting     ;
-    private final Actors identityTypeResponding     ;
+    private final UUID requestId;
+    private final Actors identityTypeRequesting;
+    private final Actors identityTypeResponding;
     private final String identityPublicKeyRequesting;
     private final String identityPublicKeyResponding;
 
-    public NetworkServiceMessageRequest(final UUID   requestId,
+    public NetworkServiceMessageRequest(final UUID requestId,
                                         final Actors identityTypeRequesting,
                                         final Actors identityTypeResponding,
                                         final String identityPublicKeyRequesting,
@@ -23,9 +23,9 @@ public class NetworkServiceMessageRequest extends NetworkServiceMessage {
 
         super(org.fermat.fermat_dap_api.layer.all_definition.network_service_message.enums.NetworkServiceMessageType.REQUEST);
 
-        this.requestId                   = requestId                  ;
-        this.identityTypeRequesting      = identityTypeRequesting     ;
-        this.identityTypeResponding      = identityTypeResponding     ;
+        this.requestId = requestId;
+        this.identityTypeRequesting = identityTypeRequesting;
+        this.identityTypeResponding = identityTypeResponding;
         this.identityPublicKeyRequesting = identityPublicKeyRequesting;
         this.identityPublicKeyResponding = identityPublicKeyResponding;
     }

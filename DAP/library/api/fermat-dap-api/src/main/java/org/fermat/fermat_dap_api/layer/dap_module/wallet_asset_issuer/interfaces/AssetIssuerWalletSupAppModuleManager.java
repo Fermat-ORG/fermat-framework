@@ -2,10 +2,10 @@ package org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interface
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
@@ -26,17 +26,20 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnou
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings> {
+public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings>, Serializable {
 
     //TODO DOCUMENT ALL THESE METHODS WHEN THEY'RE IMPLEMENTED.
 
@@ -84,7 +87,7 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<Asse
 
     AssetFactory getAssetFactory(final String Key) throws CantGetAssetFactoryException, CantCreateFileException;
 
-    PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
+    byte[] getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException, CantGetResourcesException;
 
     List<AssetStatistic> getWalletStatisticsByAssetAndStatus(String walletPublicKey, String assetName, AssetCurrentStatus assetCurrentStatus) throws CantLoadWalletException, CantGetAssetStatisticException;
 
@@ -93,4 +96,8 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<Asse
     void changeNetworkType(BlockchainNetworkType networkType);
 
     BlockchainNetworkType getSelectedNetwork();
+
+    List<AssetIssuerWalletTransaction> getTransactionsForDisplay(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException;
+
+    Date assetLastTransaction(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException;
 }

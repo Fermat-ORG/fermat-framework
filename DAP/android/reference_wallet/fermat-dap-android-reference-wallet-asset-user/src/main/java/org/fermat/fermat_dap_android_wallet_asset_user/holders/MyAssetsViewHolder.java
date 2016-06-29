@@ -77,7 +77,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
 
         nameText.setText(digitalAsset.getName());
 
-        if(digitalAsset.getUserAssetNegotiation() != null){
+        if (digitalAsset.getUserAssetNegotiation() != null) {
             normalAssetLayout.setVisibility(View.GONE);
             negotiationAssetLayout.setVisibility(View.VISIBLE);
 
@@ -94,12 +94,12 @@ public class MyAssetsViewHolder extends FermatViewHolder {
             btcText.setVisibility(View.GONE);*/
 
 
-        }else {
-    //        if (digitalAsset.getImage() != null) {
-    //            image.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
-    //        } else {
-    //            image.setImageDrawable(res.getDrawable(R.drawable.img_asset_without_image));
-    //        }
+        } else {
+            //        if (digitalAsset.getImage() != null) {
+            //            image.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
+            //        } else {
+            //            image.setImageDrawable(res.getDrawable(R.drawable.img_asset_without_image));
+            //        }
 
             long available = digitalAsset.getAvailableBalanceQuantity();
             long book = digitalAsset.getBookBalanceQuantity();
@@ -116,11 +116,11 @@ public class MyAssetsViewHolder extends FermatViewHolder {
             btcText.setText(String.format("%s BTC", digitalAsset.getFormattedAvailableBalanceBitcoin()));
             expDateText.setText(digitalAsset.getFormattedExpDate());
 
-            if (digitalAsset.getLockedAssets() > 0){
+            if (digitalAsset.getLockedAssets() > 0) {
                 assetUserLockedAssets.setVisibility(View.VISIBLE);
                 assetUserLockedAssets.setText((digitalAsset.getLockedAssets() == 1) ?
-                        digitalAsset.getLockedAssets() +" Locked Asset" : digitalAsset.getLockedAssets() +" Locked Assets");
-            }else{
+                        digitalAsset.getLockedAssets() + " Locked Asset" : digitalAsset.getLockedAssets() + " Locked Assets");
+            } else {
                 assetUserLockedAssets.setVisibility(View.GONE);
             }
 

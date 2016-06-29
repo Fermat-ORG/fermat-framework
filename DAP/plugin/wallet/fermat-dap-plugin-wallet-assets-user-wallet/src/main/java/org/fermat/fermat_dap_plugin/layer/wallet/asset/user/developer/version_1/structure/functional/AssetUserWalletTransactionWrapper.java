@@ -5,10 +5,12 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.A
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
+import java.io.Serializable;
+
 /**
  * Created by franklin on 08/10/15.
  */
-public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransaction {
+public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransaction, Serializable {
     private final String transactionId;
     private final String transactionHash;
     private final String assetPublicKey;

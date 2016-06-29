@@ -45,7 +45,6 @@ public class sendPaymentTest {
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,
                 customerOnlinePaymentBusinessTransactionDao,
-                transactionTransmissionManager,
                 customerBrokerPurchaseNegotiationManager,
                 errorManager);
         setUpGeneralMockitoRules();
@@ -61,24 +60,23 @@ public class sendPaymentTest {
 
     @Test
     public void sendPaymentTest_Should() throws Exception{
-        customerOnlinePaymentTransactionManager.sendPayment("walletPublicKey", "contractHash");
+        customerOnlinePaymentTransactionManager.sendPayment("walletPublicKey", "contractHash", paymentCurrency);
     }
 
     //This Test Catch ObjectNotSetException
     @Test(expected = CantSendPaymentException.class)
     public void sendPaymentTest_Should_() throws Exception{
 
-        customerOnlinePaymentTransactionManager.sendPayment(null, "contractHash");
+        customerOnlinePaymentTransactionManager.sendPayment(null, "contractHash", paymentCurrency);
     }
     //This Test Catch Generic Exception
     @Test(expected = CantSendPaymentException.class)
     public void sendPaymentTest_Should_Throw_CantSendPaymentException() throws Exception{
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(null,
                 customerOnlinePaymentBusinessTransactionDao,
-                transactionTransmissionManager,
                 customerBrokerPurchaseNegotiationManager,
                 errorManager);
-        customerOnlinePaymentTransactionManager.sendPayment("","");
+        customerOnlinePaymentTransactionManager.sendPayment("","", paymentCurrency);
     }
 
 }

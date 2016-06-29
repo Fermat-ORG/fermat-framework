@@ -80,12 +80,15 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         String marketExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue());
         String suggestedMaxExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue() * (1+(spread/100)));
 
+        String suggestedRateCurrencyStr = "";
+        if (suggestedRate != null)
+            suggestedRateCurrencyStr = suggestedRate.getFiatCurrency().getCode();
 
         if (marketRateList != null) {
             markerRateReference.setText(String.format("1 %1$s / %2$s %3$s",
                     currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
             exchangeRateReferenceValue.setText(String.format("Min: %1$s %3$s    Max: %2$s %3$s",
-                    marketExchangeRateStr, suggestedMaxExchangeRateStr, suggestedRate.getFiatCurrency().getCode()));
+                    marketExchangeRateStr, suggestedMaxExchangeRateStr, suggestedRateCurrencyStr));
         }
         else {
             markerRateReference.setText("Can't get Market Exchange Rate");

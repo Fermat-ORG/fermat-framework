@@ -41,7 +41,7 @@ public class IsPendingNetworkLayerEventsTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -51,13 +51,13 @@ public class IsPendingNetworkLayerEventsTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void isPendingNetworkLayerEventsTest () throws CantExecuteQueryException {
+    public void isPendingNetworkLayerEventsTest() throws CantExecuteQueryException {
         boolean isPending = mockAssetDistributionDao.isPendingNetworkLayerEvents();
         Assert.assertTrue(isPending);
     }
@@ -69,7 +69,7 @@ public class IsPendingNetworkLayerEventsTest {
         try {
             mockAssetDistributionDao.isPendingNetworkLayerEvents();
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantExecuteQueryException);
         }
     }

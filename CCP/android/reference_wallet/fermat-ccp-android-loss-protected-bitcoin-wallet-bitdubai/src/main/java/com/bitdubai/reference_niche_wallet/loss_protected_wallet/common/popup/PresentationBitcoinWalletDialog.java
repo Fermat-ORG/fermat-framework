@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -23,7 +24,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +32,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by mati on 2015.11.27..
  */
-public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedWalletSession,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFermatSession,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
@@ -68,6 +69,9 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
     private Button btn_right;
     private FermatButton btn_dismiss;
 
+    ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
+    LossProtectedWallet lossProtectedWalletManager;
+
     /**
      * Constructor using Session and Resources
      *
@@ -75,11 +79,13 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationBitcoinWalletDialog(Activity activity, LossProtectedWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+    public PresentationBitcoinWalletDialog(Activity activity, ReferenceAppFermatSession<LossProtectedWallet> fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;
         this.checkButton = checkButton;
+        this.lossProtectedWalletSession = fermatSession;
+         lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
     }
 
     @Override
@@ -144,7 +150,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
 
         if(id == R.id.btn_left){
             try {
-                getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
+                lossProtectedWalletManager.createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
@@ -154,7 +160,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
         }
         else if(id == R.id.btn_right){
             try {
-                final LossProtectedWallet cryptoWallet = getSession().getModuleManager();
+                final LossProtectedWallet cryptoWallet = lossProtectedWalletSession.getModuleManager();
                 //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
@@ -183,7 +189,6 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
         if(checkbox_not_show.isChecked()){
 
-            LossProtectedWallet lossProtectedWalletManager = getSession().getModuleManager();
             LossProtectedWalletSettings lossProtectedWalletSettings = null;
             try {
 
@@ -205,7 +210,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         //bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 

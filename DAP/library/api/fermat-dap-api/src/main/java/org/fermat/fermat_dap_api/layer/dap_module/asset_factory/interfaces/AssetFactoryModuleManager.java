@@ -3,10 +3,10 @@ package org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -32,7 +32,8 @@ import java.util.List;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetFactoryModuleManager extends ModuleManager, ModuleSettingsImpl<AssetFactorySettings>, Serializable {
+public interface AssetFactoryModuleManager extends ModuleManager<AssetFactorySettings, ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<AssetFactorySettings>, Serializable {
     //Implementa solo los metodos que utiliza la sup app
     IdentityAssetIssuer getLoggedIdentityAssetIssuer();
 
@@ -73,6 +74,8 @@ public interface AssetFactoryModuleManager extends ModuleManager, ModuleSettings
      */
     List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException;
 
+    List<AssetFactory> getAssetsFactoryByState(State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException;
+
     /**
      * This method returns the information stored about the all Asset Factory
      */
@@ -81,7 +84,7 @@ public interface AssetFactoryModuleManager extends ModuleManager, ModuleSettings
     /**
      * This method returns the resource of an asset factory object
      */
-    PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
+    byte[] getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException, CantGetResourcesException;
 
     /**
      * TThis method list all wallet installed in device, start the transaction

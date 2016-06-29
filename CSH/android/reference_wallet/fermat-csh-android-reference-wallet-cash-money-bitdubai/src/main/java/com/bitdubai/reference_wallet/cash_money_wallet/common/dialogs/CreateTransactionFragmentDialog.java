@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -12,8 +14,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
@@ -23,7 +27,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.NumberInputFilter;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -37,12 +40,13 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
     public Activity activity;
     public Dialog d;
+    private static int MAX_LENGHT_MEMO = 100;
 
     /**
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private CashMoneyWalletSession cashMoneyWalletSession;
+    private ReferenceAppFermatSession<CashMoneyWalletModuleManager> cashMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
     BigDecimal optionalAmount;
@@ -55,11 +59,21 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     LinearLayout dialogTitleLayout;
     EditText amountText;
     AutoCompleteTextView memoText;
+    FermatTextView memoTextCount;
     FermatTextView applyBtn;
     FermatTextView cancelBtn;
 
+    private final TextWatcher memoTextWatcher = new TextWatcher() {
 
-    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            memoTextCount.setText(String.valueOf(MAX_LENGHT_MEMO - s.length()));
+        }
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    };
+
+    public CreateTransactionFragmentDialog(Activity a, ReferenceAppFermatSession<CashMoneyWalletModuleManager> cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -91,6 +105,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             //dialogTitleImg = (FermatTextView) findViewById(R.id.csh_ctd_title_img);
             amountText = (EditText) findViewById(R.id.csh_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.csh_ctd_memo);
+            memoTextCount = (FermatTextView) findViewById(R.id.csh_ctd_memo_count);
             applyBtn = (FermatTextView) findViewById(R.id.csh_ctd_apply_transaction_btn);
             cancelBtn = (FermatTextView) findViewById(R.id.csh_ctd_cancel_transaction_btn);
 
@@ -101,7 +116,10 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dialogTitle.setText(getTransactionTitleText());
             applyBtn.setText(getTransactionButtonText());
 
-            amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
+            amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
+            memoText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_MEMO)});
+            memoText.addTextChangedListener(memoTextWatcher);
+            memoTextCount.setText(String.valueOf(MAX_LENGHT_MEMO));
 
             cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);

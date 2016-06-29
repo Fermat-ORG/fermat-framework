@@ -15,7 +15,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.R;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 import java.util.UUID;
 
@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 public class AcceptDialog extends
         FermatDialog<
-                FanCommunitySubAppSession,
+                FanCommunitySubAppSessionReferenceApp,
                 SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
@@ -45,7 +45,7 @@ public class AcceptDialog extends
 
     public AcceptDialog(
             Activity a,
-            FanCommunitySubAppSession fanCommunitySubAppSession,
+            FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
             SubAppResourcesProviderManager subAppResources,
             LinkedFanIdentity fanInformation,
             FanCommunitySelectableIdentity identity) {
@@ -57,7 +57,7 @@ public class AcceptDialog extends
 
     public AcceptDialog(
             Activity a,
-            FanCommunitySubAppSession fanCommunitySubAppSession,
+            FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
             SubAppResourcesProviderManager subAppResources,
             UUID connectionId,
             String alias,

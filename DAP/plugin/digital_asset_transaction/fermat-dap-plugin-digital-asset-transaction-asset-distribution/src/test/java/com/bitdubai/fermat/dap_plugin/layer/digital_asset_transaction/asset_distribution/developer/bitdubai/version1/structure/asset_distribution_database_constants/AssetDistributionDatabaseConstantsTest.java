@@ -8,7 +8,7 @@ import org.junit.Test;
  */
 public class AssetDistributionDatabaseConstantsTest {
     @Test
-    public void assetDistributionDatabaseConstantsTest(){
+    public void assetDistributionDatabaseConstantsTest() {
         new AssetDistributionDatabaseConstants();
     }
 }

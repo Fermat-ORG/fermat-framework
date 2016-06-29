@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/asset_user_comunity" />
+            android:src="@drawable/asset_user_comunity"
+            android:visibility="visible"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/community_name"
@@ -36,6 +37,18 @@
             android:textSize="16sp"
             app:typeface="ROBOTO_REGULAR"
             tools:ignore="HardcodedText" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:paddingRight="9dp"
+            android:indeterminateDrawable="@drawable/circle_progress" >
+        </ProgressBar>
 
         <CheckBox
             android:id="@+id/connect"
@@ -103,5 +116,4 @@
         android:textSize="10sp"
         android:visibility="gone"
         tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
-
 </LinearLayout>

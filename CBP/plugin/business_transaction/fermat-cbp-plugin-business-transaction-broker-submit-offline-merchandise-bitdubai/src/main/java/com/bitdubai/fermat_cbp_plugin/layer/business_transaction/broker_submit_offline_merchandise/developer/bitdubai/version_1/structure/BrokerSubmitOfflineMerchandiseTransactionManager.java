@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -31,16 +30,17 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.exceptions.CantGetBrokerMerchandiseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
 
 
 /**
@@ -72,19 +72,19 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
     /**
      * Represents the error manager
      */
-    ErrorManager errorManager;
+    BrokerSubmitOfflineMerchandisePluginRoot pluginRoot;
 
     public BrokerSubmitOfflineMerchandiseTransactionManager(BrokerSubmitOfflineMerchandiseBusinessTransactionDao dao,
                                                             CustomerBrokerContractSaleManager saleContractManager,
                                                             CustomerBrokerSaleNegotiationManager saleNegotiationManager,
                                                             CryptoBrokerWalletManager cryptoBrokerWalletManager,
-                                                            ErrorManager errorManager) {
+                                                            BrokerSubmitOfflineMerchandisePluginRoot pluginRoot) {
 
         this.dao = dao;
         this.saleContractManager = saleContractManager;
         this.saleNegotiationManager = saleNegotiationManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
 
     }
 
@@ -159,26 +159,22 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             submitMerchandise(referencePrice, cbpWalletPublicKey, offlineWalletPublicKey, contractHash, moneyType, merchandiseCurrency);
 
         } catch (CryptoBrokerWalletNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the crypto broker wallet");
 
         } catch (CantGetCryptoBrokerWalletSettingException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Creating Broker Submit Online Merchandise Business Transaction",
                     "Cannot get the Crypto Wallet Setting");
 
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Creating Broker Submit Online Merchandise Business Transaction",
                     "Invalid input to this manager");
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Unexpected Result", "Check the cause");
         }
     }
@@ -203,28 +199,23 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             System.out.println("SUBMIT_OFFLINE_MERCHANDISE_MANAGER - persistContractInDatabase(...) called");
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Creating Broker Submit Offline Merchandise Business Transaction",
                     "Cannot get the CustomerBrokerContractSale");
         } catch (CantGetListSaleNegotiationsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Creating Broker Submit Offline Merchandise Business Transaction",
                     "Cannot get the CustomerBrokerSaleNegotiation list");
         } catch (CantInsertRecordException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Creating Broker Submit Offline Merchandise Business Transaction",
                     "Cannot insert the record in database");
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Creating Broker Submit Offline Merchandise Business Transaction",
                     "Invalid input to this manager");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSubmitMerchandiseException(e, "Unexpected Result", "Check the cause");
         }
     }
@@ -351,13 +342,11 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             return dao.getContractTransactionStatus(contractHash);
 
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException("Cannot check a null contractHash/Id");
 
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected Result", "Check the cause");
         }
     }
@@ -378,13 +367,11 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             return dao.getCompletionDateByContractHash(contractHash);
 
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCompletionDateException(e, "Getting completion date", "Unexpected exception from database");
 
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCompletionDateException(e, "Getting completion date", "The contract hash argument is null");
         }
     }

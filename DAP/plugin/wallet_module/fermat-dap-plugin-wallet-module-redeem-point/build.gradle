@@ -12,7 +12,6 @@ repositories {
 }
 
 dependencies {
-    compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile project(':fermat-bch-api')
     compile project(':fermat-dap-api')

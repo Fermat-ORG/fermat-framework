@@ -17,7 +17,7 @@
     <string name="dap_other_profile_last_connection_date">Last Connection Date</string>
 
     <!--Dialog Help - Init-->
-    <string name="dap_issuer_community_welcome_subTitle">Welcome to the Asset Issuer Community.</string>
+    <string name="dap_issuer_community_welcome_subTitle">Asset Issuer Community.</string>
     <string name="dap_issuer_community_welcome_body">This application will help you discover and connect to Asset Issuers registered in our network.!\n\nIf you are identified as a Redeem Point, you will need to connect to Assets Issuers in order to get approval to redeem assets created by that Asset Issuer.\n\nSelect any available Asset Issuer and click connect to start the process. If your network speed is low, you may have to retry several times.</string>
     <!--Dialog Help - End-->
 
@@ -25,6 +25,9 @@
     <string name="dap_issuer_community_settings_notification_subTitle">Welcome to the settings notification screen.</string>
     <string name="dap_issuer_community_settings_notification_body">Here you can edit your notification settings configurations.</string>
     <!--Dialog Settings Notifications Help - End-->
+
+    <string name="dap_community_issuer_search">Search</string>
+    <string name="action_community_issuer_search_hint">Issuer Name</string>
 
     <string name="dap_issuer_community_opps_system_error">Oooops! recovering from system error</string>
     <string name="dap_issuer_community_system_error">Issuer Community system error</string>

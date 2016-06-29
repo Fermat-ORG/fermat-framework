@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
@@ -37,15 +38,18 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotUpdateNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
@@ -54,7 +58,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextV
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -74,7 +78,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.DRAF
  * A simple {@link Fragment} subclass.
  * Modified by Yordin Alayn 22.01.16
  */
-public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "OpenNegotiationFrag";
@@ -93,8 +97,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
     private ArrayList<MoneyType> receptionMethods;
-    private List<BankAccountNumber> bankAccountList;
-    private List<String> locationList;
+    private List<BankAccountNumber> bankAccountList = new ArrayList<>();;
+    private List<String> locationList = new ArrayList<>();;
 
 
     public static OpenNegotiationDetailsFragment newInstance() {
@@ -112,22 +116,36 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             errorManager = appSession.getErrorManager();
             clausesTemp = new HashMap<>();
 
-            Object data = appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
-            if (data == null) {
-                bankAccountList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
+            //Try to load appSession BANK_ACCOUNT_LIST data
+            Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
+            if(data == null) {
+            if(bankAccountList == null) {
+                //Get saved locations from settings
+                bankAccountList = moduleManager.getListOfBankAccounts();
+            }
+//                Save locations to appSession BANK_ACCOUNT_LIST data
+                appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
             } else {
-//                bankAccountList = (List<String>) data;
                 bankAccountList = (List<BankAccountNumber>) data;
             }
 
-            data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
+
+            //Try to load appSession LOCATION_LIST data
+            data = appSession.getData(FragmentsCommons.LOCATION_LIST);
             if (data == null) {
-                locationList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+
+                //Get saved locations from settings
+                Collection<NegotiationLocations> listAux = moduleManager.getAllLocations(NegotiationType.PURCHASE);
+                for (NegotiationLocations locationAux : listAux) {
+                    locationList.add(locationAux.getLocation());
+                }
+
+//                //Save locations to appSession LOCATION_LIST data
+                appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
+
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -161,12 +179,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.ccw_open_negotiation_details_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.ccw_action_cancel_negotiation) {
+        if (item.getItemId() == FragmentsCommons.CANCEL_NEGOTIATION_OPTION_MENU_ID) {
 
             SingleTextDialog singleTextDialog = new SingleTextDialog(getActivity(), appSession, appResourcesProviderManager);
 
@@ -299,6 +316,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
         dialog.configure(R.string.notes, R.string.ccw_insert_note);
         dialog.setTextFreeInputType(true);
+        dialog.setTextCount(200);
         dialog.setEditTextValue(negotiationInfo.getMemo());
         dialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
@@ -335,7 +353,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         long timeInMillisVal = System.currentTimeMillis();
         String timeInMillisStr = String.valueOf(timeInMillisVal);
 
-        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSession.NEGOTIATION_DATA);
+        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
         ActorIdentity broker = negotiationInfo.getBroker();
         Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
@@ -407,7 +425,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             adapter.setClauseListener(this);
         }
 
-        adapter.setMarketRateList(appSession.getActualExchangeRates());
+        adapter.setMarketRateList(getActualExchangeRates());
 
         recyclerView.setAdapter(adapter);
     }
@@ -947,6 +965,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
                     String bankAccount = "INSERT BANK ACCOUNT IN WALLET SETTINGS.";
+
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
 //                    bankAccount = bankAccountList.get(0).getAccount();
@@ -959,6 +978,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
                     String infoDelivery = "INSERT LOCATION IN WALLET SETTINGS.";
+
                     if (locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);
@@ -1047,5 +1067,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     private String getDecimalFormat(BigDecimal value) {
         return DecimalFormat.getInstance().format(value.doubleValue());
+    }
+
+    private List<IndexInfoSummary> getActualExchangeRates() {
+        Object data = appSession.getData(FragmentsCommons.EXCHANGE_RATES);
+        return (data != null) ? (List<IndexInfoSummary>) data : null;
     }
 }

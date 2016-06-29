@@ -42,17 +42,21 @@ public class UserAssetCommunityHeaderFactory extends UserAbstractCommunityHeader
 //        txt_balance_amount.setOnClickListener(onClickListener);
 //        txt_amount_type.setOnClickListener(onClickListener);
     }
-//
+
+    //
     @Override
     public String setParentBackgroundColor() {
         return "#06356f";
     }
-//
+
+    //
     @Override
-    public int setLayoutId() { return 0;
+    public int setLayoutId() {
+        return 0;
 //        return R.layout.donut_header;
     }
-//
+
+    //
     @Override
     protected UserAssetCommunityHeaderCLickListener setOnClickListener() {
         return new UserAssetCommunityHeaderCLickListener();

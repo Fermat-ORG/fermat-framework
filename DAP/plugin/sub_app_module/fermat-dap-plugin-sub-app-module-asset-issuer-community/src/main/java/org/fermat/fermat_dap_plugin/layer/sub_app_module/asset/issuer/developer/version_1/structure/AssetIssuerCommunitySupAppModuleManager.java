@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
@@ -52,10 +52,12 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.version_1.AssetIssuerCommunitySubAppModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nerio on 13/10/15.
@@ -66,20 +68,20 @@ import java.util.UUID;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_ISSUER)
-public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager {
+public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager, Serializable {
 
-//    private final PluginFileSystem                              pluginFileSystem;
+    //    private final PluginFileSystem                              pluginFileSystem;
 //    private final UUID                                          pluginId;
-    private final LogManager                                    logManager;
-    private final ErrorManager                                  errorManager;
-    private final EventManager                                  eventManager;
-    private final Broadcaster                                   broadcaster;
-    private final AssetIssuerCommunitySubAppModulePluginRoot    assetIssuerCommunitySubAppModulePluginRoot;
-    private final IdentityAssetIssuerManager                    identityAssetIssuerManager;
-    private final ActorAssetIssuerManager                       actorAssetIssuerManager;
-    private final ActorAssetRedeemPointManager                  actorAssetRedeemPointManager;
-    private final AssetRedeemPointWalletManager                 assetRedeemPointWalletManager;
-    private final AssetIssuerActorNetworkServiceManager         assetIssuerActorNetworkServiceManager;
+    private final LogManager logManager;
+    private final ErrorManager errorManager;
+    private final EventManager eventManager;
+    private final Broadcaster broadcaster;
+    private final AssetIssuerCommunitySubAppModulePluginRoot assetIssuerCommunitySubAppModulePluginRoot;
+    private final IdentityAssetIssuerManager identityAssetIssuerManager;
+    private final ActorAssetIssuerManager actorAssetIssuerManager;
+    private final ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+    private final AssetRedeemPointWalletManager assetRedeemPointWalletManager;
+    private final AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
 
     BlockchainNetworkType blockchainNetworkType;
     String appPublicKey;
@@ -114,12 +116,13 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
     }
 
     @Override
-    public List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException {
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
+    public List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered(int max, int offset) throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list = null;
         List<AssetIssuerActorRecord> assetIssuerActorRecords = null;
 
         try {
-            list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
+            list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered(max, offset);
             if (list != null && list.size() > 0)
                 actorAssetIssuerManager.createActorAssetIssuerRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetIssuerRegisteredException e) {
@@ -266,9 +269,7 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
                         System.out.println("The actor asset Issuer is connected");
                     }
                 }
-            }
-            else
-            {
+            } else {
                 throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users. No identity", null);
             }
         } catch (CantAskConnectionActorAssetException e) {
@@ -335,10 +336,10 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
 
         } catch (CantCancelConnectionActorAssetException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" +  actorAssetToCancel.getActorPublicKey(), e, "", "");
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" + actorAssetToCancel.getActorPublicKey(), e, "", "");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" +  actorAssetToCancel.getActorPublicKey(), FermatException.wrapException(e), "", "unknown exception");
+            throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION - KEY:" + actorAssetToCancel.getActorPublicKey(), FermatException.wrapException(e), "", "unknown exception");
         }
     }
 
@@ -355,21 +356,21 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
 
             //TODO Mejorar Implementacion para tener informacion mas completa
             for (DAPActor record : dapActor) {
-                actorAssetIssuers.add((new AssetIssuerActorRecord (
+                actorAssetIssuers.add((new AssetIssuerActorRecord(
                         record.getActorPublicKey(),
                         record.getName(),
                         null,
                         (double) 0,
                         (double) 0,
-                        (long)  0,
-                        (long)  0,
+                        (long) 0,
+                        (long) 0,
                         record.getType(),
                         null,
                         null,
                         record.getProfileImage())));
             }
 
-            return  actorAssetIssuers;
+            return actorAssetIssuers;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET ISSUER WAITING YOUR ACCEPTANCE", e, "", "");
@@ -392,21 +393,21 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
 
             //TODO Mejorar Implementacion para tener informacion mas completa
             for (DAPActor record : dapActor) {
-                actorAssetIssuers.add((new AssetIssuerActorRecord (
+                actorAssetIssuers.add((new AssetIssuerActorRecord(
                         record.getActorPublicKey(),
                         record.getName(),
                         null,
                         (double) 0,
                         (double) 0,
-                        (long)  0,
-                        (long)  0,
+                        (long) 0,
+                        (long) 0,
                         record.getType(),
                         null,
                         null,
                         record.getProfileImage())));
             }
 
-            return  actorAssetIssuers;
+            return actorAssetIssuers;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET ISSUER WAITING THEIR ACCEPTANCE", e, "", "Error on ACTOR ASSET ISSUER Manager");
@@ -467,7 +468,11 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
+        identityAssetIssuerManager.createNewIdentityAssetIssuer(
+                name,
+                profile_img,
+                identityAssetIssuerManager.getAccuracyDataDefault(),
+                identityAssetIssuerManager.getFrequencyDataDefault());
     }
 
     @Override

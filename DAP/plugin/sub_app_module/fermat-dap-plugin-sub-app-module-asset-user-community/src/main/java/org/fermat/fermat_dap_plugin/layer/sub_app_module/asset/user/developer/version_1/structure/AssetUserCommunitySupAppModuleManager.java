@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -17,7 +18,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -52,9 +53,7 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -66,6 +65,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nerio on 13/10/15.
@@ -76,9 +76,9 @@ import java.util.UUID;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_USER)
-public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<AssetUserSettings> implements AssetUserCommunitySubAppModuleManager {
+public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<AssetUserSettings> implements AssetUserCommunitySubAppModuleManager, Serializable {
 
-//    private final PluginFileSystem pluginFileSystem;
+    //    private final PluginFileSystem pluginFileSystem;
 //    private final UUID pluginId;
     private final LogManager logManager;
     private final ErrorManager errorManager;
@@ -136,12 +136,13 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
     }
 
     @Override
-    public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
+    public List<AssetUserActorRecord> getAllActorAssetUserRegistered(int max, int offset) throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list = null;
         List<AssetUserActorRecord> assetUserActorRecords = null;
 
         try {
-            list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+            list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered(max, offset);
             if (list != null && list.size() > 0)
                 actorAssetUserManager.createActorAssetUserRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetUserRegisteredException e) {
@@ -209,8 +210,8 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
     }
 
     @Override
-    public List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId) throws CantGetAssetUserActorsException {
-        List<AssetUserActorRecord> allUserRegistered = this.getAllActorAssetUserRegistered();
+    public List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId, int max, int offset) throws CantGetAssetUserActorsException {
+        List<AssetUserActorRecord> allUserRegistered = this.getAllActorAssetUserRegistered(max, offset);
         List<ActorAssetUser> allUserRegisteredInGroup = this.getListActorAssetUserByGroups(groupId);
         List<AssetUserActorRecord> allUserRegisteredFiltered = new ArrayList<>();
         for (AssetUserActorRecord record : allUserRegistered) {
@@ -420,7 +421,7 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
                         }
                     }
                 } else {
-                    throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
+                    throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to Actors.", null);
                 }
             }
         } catch (CantAskConnectionActorAssetException e) {
@@ -648,7 +649,10 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetUserManager.createNewIdentityAssetUser(name, profile_img);
+        identityAssetUserManager.createNewIdentityAssetUser(name,
+                profile_img,
+                identityAssetUserManager.getAccuracyDataDefault(),
+                identityAssetUserManager.getFrequencyDataDefault());
     }
 
     @Override

@@ -105,7 +105,8 @@ public class CryptoPaymentRequestDao {
                                              CryptoPaymentType     type             ,
                                              CryptoPaymentState    state            ,
                                              BlockchainNetworkType networkType     ,
-                                             ReferenceWallet        referenceWallet) throws CantGenerateCryptoPaymentRequestException {
+                                             ReferenceWallet        referenceWallet,
+                                             CryptoCurrency cryptoCurrency) throws CantGenerateCryptoPaymentRequestException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
@@ -127,8 +128,8 @@ public class CryptoPaymentRequestDao {
                     type             ,
                     state            ,
                     networkType      ,
-                    referenceWallet
-            );
+                    referenceWallet,
+                    cryptoCurrency);
 
             cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
 
@@ -469,6 +470,7 @@ public class CryptoPaymentRequestDao {
         record.setLongValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME, cryptoPaymentRequestRecord.getStartTimeStamp());
         record.setLongValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_END_TIME_STAMP_COLUMN_NAME, cryptoPaymentRequestRecord.getEndTimeStamp());
         record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getReferenceWallet().getCode());
+        record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getCryptoCurrency().getCode());
 
         return record;
     }
@@ -492,6 +494,7 @@ public class CryptoPaymentRequestDao {
         long   startTimeStamp       = record.getLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   );
         long   endTimeStamp         = record.getLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_END_TIME_STAMP_COLUMN_NAME     );
         String referenceWallet      = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME);
+        CryptoCurrency cryptoCurrency  = CryptoCurrency.getByCode(record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_TYPE_COLUMN_NAME));
 
         CryptoAddress cryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.getByCode(cryptoCurrencyString));
 
@@ -517,8 +520,8 @@ public class CryptoPaymentRequestDao {
                 type             ,
                 state            ,
                 networkType      ,
-                ReferenceWallet.getByCode(referenceWallet)
-        );
+                ReferenceWallet.getByCode(referenceWallet),
+                cryptoCurrency);
     }
 
 }

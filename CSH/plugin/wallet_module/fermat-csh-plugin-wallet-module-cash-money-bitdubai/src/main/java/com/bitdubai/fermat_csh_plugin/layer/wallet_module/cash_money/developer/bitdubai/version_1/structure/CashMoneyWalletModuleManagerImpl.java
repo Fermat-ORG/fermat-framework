@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -31,11 +29,15 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTr
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
+import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.CashMoneyWalletModulePluginRoot;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -44,8 +46,7 @@ import java.util.UUID;
 public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMoneyWalletPreferenceSettings>
         implements CashMoneyWalletModuleManager, Serializable {
 
-
-    private final ErrorManager errorManager;
+    private final CashMoneyWalletModulePluginRoot pluginRoot;
     private final CashMoneyWalletManager cashMoneyWalletManager;
     private final CashDepositTransactionManager cashDepositTransactionManager;
     private final CashWithdrawalTransactionManager cashWithdrawalTransactionManager;
@@ -54,11 +55,11 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
 
 
     public CashMoneyWalletModuleManagerImpl(final CashMoneyWalletManager cashMoneyWalletManager, final UUID pluginId, final PluginFileSystem pluginFileSystem,
-                                           final ErrorManager errorManager, final CashDepositTransactionManager cashDepositTransactionManager,
+                                           final CashMoneyWalletModulePluginRoot pluginRoot, final CashDepositTransactionManager cashDepositTransactionManager,
                                             final CashWithdrawalTransactionManager cashWithdrawalTransactionManager, final Broadcaster broadcaster) {
         super(pluginFileSystem, pluginId);
-
-        this.errorManager = errorManager;
+        
+        this.pluginRoot = pluginRoot;
         this.cashMoneyWalletManager = cashMoneyWalletManager;
         this.cashDepositTransactionManager = cashDepositTransactionManager;
         this.cashWithdrawalTransactionManager = cashWithdrawalTransactionManager;
@@ -78,7 +79,7 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
         try{
             wallet = cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey);
         } catch (CantLoadCashMoneyWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletBalancesException(CantGetCashMoneyWalletBalancesException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot load cash money wallet");
         }
 
@@ -86,7 +87,7 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
             availableBalance = wallet.getAvailableBalance().getBalance();
             bookBalance = wallet.getBookBalance().getBalance();
         } catch(CantGetCashMoneyWalletBalanceException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletBalancesException(CantGetCashMoneyWalletBalancesException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot get cash money wallet balances");
 
         }
@@ -100,14 +101,14 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
         try{
             wallet = cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey);
         } catch (CantLoadCashMoneyWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletCurrencyException(CantGetCashMoneyWalletCurrencyException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot load cash money wallet");
         }
 
         try {
             return wallet.getCurrency();
         } catch(CantGetCashMoneyWalletCurrencyException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletCurrencyException(CantGetCashMoneyWalletCurrencyException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot get cash money wallet currency");
 
         }
@@ -138,10 +139,13 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
     public List<CashMoneyWalletTransaction> getPendingTransactions() {
 
         List<CashMoneyWalletTransaction> transactionList = new ArrayList<>();
-        for(CashTransactionParameters tp : agent.getQueuedTransactions()) {
+
+        for(Map.Entry<Long, CashTransactionParameters> transaction : agent.getQueuedTransactions().entrySet()) {
+            CashTransactionParameters tp = transaction.getValue();
             transactionList.add(new CashMoneyWalletTransactionImpl(tp.getTransactionId(), tp.getPublicKeyWallet(), tp.getPublicKeyActor(), tp.getPublicKeyPlugin(),
-                    tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), System.currentTimeMillis()/1000L, true));
+                    tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), transaction.getKey(), true));
         }
+        Collections.reverse(transactionList);
         return transactionList;
     }
 
@@ -151,14 +155,14 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
         try{
             wallet = cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey);
         } catch (CantLoadCashMoneyWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot load cash money wallet");
         }
 
         try {
             return wallet.getTransactions(transactionTypes, balanceTypes, max, offset);
         } catch(CantGetCashMoneyWalletTransactionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot get cash money wallet currency");
 
         }
@@ -170,7 +174,7 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
         try{
             wallet = cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey);
         } catch (CantLoadCashMoneyWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletTransactionsException(CantGetCashMoneyWalletTransactionsException.DEFAULT_MESSAGE, e, "CashMoneyWalletModulePluginRoot", "Cannot load cash money wallet");
         }
 

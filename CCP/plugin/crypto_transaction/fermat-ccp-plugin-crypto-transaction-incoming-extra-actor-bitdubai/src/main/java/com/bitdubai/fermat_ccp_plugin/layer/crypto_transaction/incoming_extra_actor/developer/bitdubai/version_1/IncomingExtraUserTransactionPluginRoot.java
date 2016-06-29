@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.incoming_extra_actor.IncomingExtraUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.developerUtils.IncomingExtraUserDeveloperDatabaseFactory;
@@ -44,9 +44,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +77,7 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         IncomingExtraUserManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
@@ -206,7 +205,7 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         /**
          * I will start the Relay Agent.
          */
-        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager,getErrorManager(), eventManager,this.registry, this.cryptoAddressBookManager, this.broadcaster,lossProtectedWalletManager);
+        this.relay = new IncomingExtraUserRelayAgent(this.cryptoWalletManager,getErrorManager(), eventManager,this.registry, this.cryptoAddressBookManager, this.broadcaster,lossProtectedWalletManager);
         try {
             this.relay.start();
         }

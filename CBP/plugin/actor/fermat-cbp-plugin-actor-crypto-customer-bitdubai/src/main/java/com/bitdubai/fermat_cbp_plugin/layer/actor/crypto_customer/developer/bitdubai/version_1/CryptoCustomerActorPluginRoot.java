@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -34,9 +35,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.ActorCustomerExtraDataEventActions;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerExtraDataUpdateAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CustomerActorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +47,6 @@ import java.util.List;
  */
 @PluginInfo(createdBy = "yalayn", maintainerMail = "y.alayn@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_CUSTOMER_ACTOR)
 public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
-
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -70,7 +65,8 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
 
     private List<FermatEventListener> listenersAdded  = new ArrayList<>();
     private CryptoCustomerActorDao cryptoCustomerActorDao;
-    private CryptoBrokerExtraDataUpdateAgent agente;
+
+    private CryptoBrokerExtraDataUpdateAgent agent;
 
     public CryptoCustomerActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -91,7 +87,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                     this.cryptoCustomerActorDao = new CryptoCustomerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
                     this.cryptoCustomerActorDao.initializeDatabase();
 
-                    fermatManager = new CustomerActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager, errorManager, getPluginVersionReference());
+                    fermatManager = new CustomerActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager, this);
 
                     ActorCustomerExtraDataEventActions handlerAction = new ActorCustomerExtraDataEventActions(cryptoBrokerANSManager, cryptoCustomerActorDao, cryptoBrokerActorConnectionManager);
 
@@ -108,12 +104,12 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                     listenersAdded.add(fermatEventListener);
 
 
-                    agente = new CryptoBrokerExtraDataUpdateAgent(cryptoBrokerANSManager, cryptoCustomerActorDao, errorManager, getPluginVersionReference());
-                    agente.start();
+                    agent = new CryptoBrokerExtraDataUpdateAgent(cryptoBrokerANSManager, cryptoCustomerActorDao, this, getPluginVersionReference());
+                    agent.start();
                     this.serviceStatus = ServiceStatus.STARTED;
 
                 } catch (CantStartAgentException | CantInitializeCryptoCustomerActorDatabaseException e) {
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                     throw new CantStartPluginException(e, this.getPluginVersionReference());
                 }
 
@@ -134,12 +130,8 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                 }
                 listenersAdded.clear();
 
-                agente.stop();
+                agent.stop();
             }
-
-    /*
-            DatabaseManagerForDevelopers Interface implementation.
-        */
 
             @Override
             public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -160,7 +152,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                     dbFactory.initializeDatabase();
                     return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
                 } catch (CantInitializeCryptoCustomerActorDatabaseException e) {
-                    this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
                 return new ArrayList<>();
             }

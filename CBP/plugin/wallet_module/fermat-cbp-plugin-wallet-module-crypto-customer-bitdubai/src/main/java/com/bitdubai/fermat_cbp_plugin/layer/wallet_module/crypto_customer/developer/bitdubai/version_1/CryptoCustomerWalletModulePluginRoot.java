@@ -33,9 +33,8 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleCryptoCustomerWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 
@@ -51,9 +50,6 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     WalletManagerManager walletManagerManager;
@@ -110,7 +106,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
     CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
 
     private CryptoCustomerWalletModuleManager walletManager;
@@ -145,9 +141,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
                     brokerAckOfflinePaymentManager,
                     brokerSubmitOnlineMerchandiseManager,
                     brokerSubmitOfflineMerchandiseManager,
-                    bitcoinWalletManager,
-                    errorManager,
-                    getPluginVersionReference(),
+                    cryptoWalletManager,
+                    this,
                     pluginFileSystem,
                     pluginId
             );

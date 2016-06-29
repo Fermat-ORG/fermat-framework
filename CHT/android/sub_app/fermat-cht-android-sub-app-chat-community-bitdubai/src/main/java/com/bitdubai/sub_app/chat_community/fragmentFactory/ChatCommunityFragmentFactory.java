@@ -8,7 +8,7 @@ import com.bitdubai.sub_app.chat_community.fragments.ConnectionNotificationsFrag
 import com.bitdubai.sub_app.chat_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.chat_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.chat_community.fragments.ContactsListFragment;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 
 /**
@@ -18,7 +18,7 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
  * @version 1.0
  */
 
-public class ChatCommunityFragmentFactory extends FermatFragmentFactory<ChatUserSubAppSession,SubAppResourcesProviderManager,ChatCommunityFragmentsEnumType> {
+public class ChatCommunityFragmentFactory extends FermatFragmentFactory<ChatUserSubAppSessionReferenceApp,SubAppResourcesProviderManager,ChatCommunityFragmentsEnumType> {
 
 
     @Override

@@ -6,16 +6,19 @@ import android.view.View;
 import android.view.Window;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 
 
 /**
  * Created by mati on 2015.11.17..
  */
-public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWalletSession,WalletResourcesProviderManager> implements View.OnClickListener {
+public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceAppFermatSession<LossProtectedWallet>,WalletResourcesProviderManager> implements View.OnClickListener {
 
 
     private final Activity activity;
@@ -29,7 +32,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWal
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public ConnectionWithCommunityDialog(Activity activity, LossProtectedWalletSession fermatSession, WalletResourcesProviderManager resources) {
+    public ConnectionWithCommunityDialog(Activity activity, ReferenceAppFermatSession<LossProtectedWallet> fermatSession, WalletResourcesProviderManager resources) {
         super(activity, fermatSession, resources);
         this.activity = activity;
     }
@@ -47,7 +50,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWal
 
     @Override
     protected int setLayoutId() {
-        return R.layout.connection_with_community_dialog;
+        return R.layout.loss_connection_with_community_dialog;
     }
 
     @Override
@@ -62,7 +65,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWal
         if(id == R.id.search_contact_btn){
             try {
                 Object[] object = new Object[2];
-                changeApp(getSession().getCommunityConnection(), object);
+                changeApp(SubAppsPublicKeys.CCP_COMMUNITY.getCode(), object);
             } catch (Exception e) {
                 e.printStackTrace();
             }

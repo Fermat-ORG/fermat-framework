@@ -54,7 +54,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/txt_balance_amount"
                     android:textSize="20sp"
-                    android:text="14.5201"
+                    android:text="0.00"
                     android:textColor="#fff" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

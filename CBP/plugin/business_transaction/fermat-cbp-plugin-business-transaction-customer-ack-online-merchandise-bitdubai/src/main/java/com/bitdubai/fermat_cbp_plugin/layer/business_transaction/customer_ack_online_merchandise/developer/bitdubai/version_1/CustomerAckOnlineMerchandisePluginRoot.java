@@ -35,9 +35,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -51,11 +48,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,13 +58,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN;
+
+
 @PluginInfo(createdBy = "darkestpriest", maintainerMail = "darkpriestrelative@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE)
 public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -119,7 +115,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.CustomerAckOnlineMerchandisePluginRoot");
+        returnedClasses.add("CustomerAckOnlineMerchandisePluginRoot");
+
         return returnedClasses;
     }
 
@@ -135,7 +132,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                 }
             }
         } catch (Exception exception) {
-             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
@@ -161,10 +158,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantOpenDatabaseException);
+            this.reportError(DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -190,10 +184,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        cantOpenDatabaseException);
+                this.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
@@ -221,31 +212,28 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             /**
              * Initialize Dao
              */
-            CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao=
-                    new CustomerAckOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
+            CustomerAckOnlineMerchandiseBusinessTransactionDao dao =
+                    new CustomerAckOnlineMerchandiseBusinessTransactionDao(
+                            pluginDatabaseSystem,
                             pluginId,
                             database,
-                            errorManager);
+                            this);
 
             /**
              * Init event recorder service.
              */
-            CustomerAckOnlineMerchandiseRecorderService customerAckOnlineMerchandiseRecorderService=
-                    new CustomerAckOnlineMerchandiseRecorderService(
-                            customerAckOnlineMerchandiseBusinessTransactionDao,
-                            eventManager,
-                            errorManager);
+            CustomerAckOnlineMerchandiseRecorderService recorderService = new CustomerAckOnlineMerchandiseRecorderService(dao, eventManager, this);
 
-            customerAckOnlineMerchandiseRecorderService.start();
+            recorderService.start();
 
             /**
              * Init monitor Agent
              */
 
-            CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent=new CustomerAckOnlineMerchandiseMonitorAgent(
+            CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent = new CustomerAckOnlineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     transactionTransmissionManager,
@@ -257,56 +245,41 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             /**
              * Initialize plugin manager
              */
-            this.customerAckOnlineMerchandiseTransactionManager = new CustomerAckOnlineMerchandiseTransactionManager(
-                    customerAckOnlineMerchandiseBusinessTransactionDao,
-                    errorManager);
+            this.customerAckOnlineMerchandiseTransactionManager = new CustomerAckOnlineMerchandiseTransactionManager(dao, this);
             this.serviceStatus = ServiceStatus.STARTED;
-            //System.out.println("Customer Ack Online Merchandise Starting");
-            //Test methods
-            //raiseNewContractEventTest();
-            //testAck();
+
         } catch (CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the plugin database factory");
+
         } catch (CantInitializeDatabaseException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the database plugin");
+
         } catch (CantStartAgentException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the plugin monitor agent");
+
         } catch (CantStartServiceException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            this.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the plugin recorder service");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantStartPluginException(FermatException.wrapException(exception),
+
+        } catch (Exception exception) {
+            this.reportError(DISABLES_THIS_PLUGIN, exception);
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Unexpected error");
         }
@@ -314,30 +287,29 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
 
     @Override
     public void pause() {
-
-        try{
+        try {
             this.serviceStatus = ServiceStatus.PAUSED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void resume() {
 
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STARTED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
@@ -371,8 +343,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
         }
     }
 
-    private void testAck(){
-        try{
+    private void testAck() {
+        try {
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
             IncomingMoneyNotificationEvent incomingMoneyNotificationEvent = (IncomingMoneyNotificationEvent) fermatEvent;
             incomingMoneyNotificationEvent.setSource(EventSource.OUTGOING_INTRA_USER);
@@ -383,22 +355,22 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             incomingMoneyNotificationEvent.setIntraUserIdentityPublicKey("BrokerPublicKey");
             incomingMoneyNotificationEvent.setWalletPublicKey("TestWalletPublicKey");
             eventManager.raiseEvent(incomingMoneyNotificationEvent);
-            System.out.println("Event raised:\n"+incomingMoneyNotificationEvent.toString());
-        } catch(Exception e){
-            System.out.println("Exception in Broker Ack Online Merchandise Test: "+e);
+            System.out.println("Event raised:\n" + incomingMoneyNotificationEvent.toString());
+        } catch (Exception e) {
+            System.out.println("Exception in Broker Ack Online Merchandise Test: " + e);
             e.printStackTrace();
         }
     }
 
-    private void raiseNewContractEventTest(){
-        try{
+    private void raiseNewContractEventTest() {
+        try {
             FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType.BROKER_ACK_PAYMENT_CONFIRMED);
             BrokerAckPaymentConfirmed brokerAckPaymentConfirmed = (BrokerAckPaymentConfirmed) fermatEvent;
             brokerAckPaymentConfirmed.setSource(EventSource.BROKER_ACK_ONLINE_PAYMENT);
             brokerAckPaymentConfirmed.setContractHash("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
             eventManager.raiseEvent(brokerAckPaymentConfirmed);
-        } catch(Exception e){
-            System.out.println("Exception in Broker Ack Online Merchandise Test: "+e);
+        } catch (Exception e) {
+            System.out.println("Exception in Broker Ack Online Merchandise Test: " + e);
         }
     }
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <color name="background_tab_pressed">#6633B5E5</color>
-    <color name="black_overlay">#66000000</color>
-    <color name="wallet_factory_orange">#ff9900</color>
-
-</resources>

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_a
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 
@@ -35,6 +36,8 @@ private long amount;
 private long timestamp;
 
 private String memo;
+
+    private CryptoCurrency cryptoCurrency;
 
 private BlockchainNetworkType blockchainNetworkType;
 
@@ -109,6 +112,15 @@ private BlockchainNetworkType blockchainNetworkType;
 
         @Override
         public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
+    }
 
     @Override
     public long getExchangRate() {

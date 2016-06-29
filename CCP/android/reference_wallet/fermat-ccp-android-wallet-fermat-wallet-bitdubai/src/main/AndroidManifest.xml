@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bitdubai.android_fermat_ccp_wallet_bitcoin" >
+    package="com.bitdubai.android_fermat_ccp_wallet_fermat" >
     <!-- using camera to scan -->
 
     <uses-permission android:name="android.permission.CAMERA"/>

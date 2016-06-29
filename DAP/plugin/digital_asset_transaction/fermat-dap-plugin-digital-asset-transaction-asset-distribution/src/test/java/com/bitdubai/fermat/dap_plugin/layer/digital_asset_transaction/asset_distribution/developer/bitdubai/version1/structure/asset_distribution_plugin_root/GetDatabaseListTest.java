@@ -14,10 +14,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
@@ -54,7 +54,7 @@ public class GetDatabaseListTest {
     private ErrorManager errorManager;
 
     @Mock
-    private  LogManager logManager;
+    private LogManager logManager;
 
     @Mock
     private EventManager eventManager;
@@ -62,13 +62,13 @@ public class GetDatabaseListTest {
     @Mock
     private FermatEventListener fermatEventListener1;
     @Mock
-    private  FermatEventListener fermatEventListener2;
+    private FermatEventListener fermatEventListener2;
     @Mock
     private FermatEventListener fermatEventListener3;
     @Mock
-    private  FermatEventListener fermatEventListener4;
+    private FermatEventListener fermatEventListener4;
     @Mock
-    private  FermatEventListener fermatEventListener5;
+    private FermatEventListener fermatEventListener5;
 
     @Mock
     private PluginFileSystem pluginFileSystem;
@@ -86,7 +86,7 @@ public class GetDatabaseListTest {
     private CryptoVaultManager cryptoVaultManager;
 
     @Mock
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
     @Mock
     private BitcoinNetworkManager bitcoinNetworkManager;
@@ -143,7 +143,7 @@ public class GetDatabaseListTest {
         when(deviceUser.getPublicKey()).thenReturn("myPublicKey");
         when(deviceUserManager.getLoggedInDeviceUser()).thenReturn(deviceUser);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener1);
-        when(eventManager.getNewListener( EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener2);
+        when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener2);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener3);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener4);
         when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(fermatEventListener5);

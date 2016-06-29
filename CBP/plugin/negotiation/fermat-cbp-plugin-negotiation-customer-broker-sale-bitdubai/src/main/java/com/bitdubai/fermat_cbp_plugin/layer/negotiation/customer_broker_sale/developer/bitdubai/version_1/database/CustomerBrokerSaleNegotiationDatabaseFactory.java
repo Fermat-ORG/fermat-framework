@@ -74,15 +74,15 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 64, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 64, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CANCEL_REASON_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.TEXT, 1, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_MEMO_COLUMN_NAME, DatabaseDataType.TEXT, 300, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CANCEL_REASON_COLUMN_NAME, DatabaseDataType.TEXT, 300, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_LAST_NEGOTIATION_UPDATE_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_FIRST_KEY_COLUMN);
@@ -97,12 +97,12 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME, DatabaseDataType.TEXT, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME, DatabaseDataType.TEXT, 64, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME, DatabaseDataType.INTEGER, 20, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_FIRST_KEY_COLUMN);
@@ -119,9 +119,9 @@ public class CustomerBrokerSaleNegotiationDatabaseFactory implements DealsWithPl
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
-            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_URI_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_COLUMN_NAME, DatabaseDataType.TEXT, 300, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_URI_COLUMN_NAME, DatabaseDataType.TEXT, 200, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_FIRST_KEY_COLUMN);
 

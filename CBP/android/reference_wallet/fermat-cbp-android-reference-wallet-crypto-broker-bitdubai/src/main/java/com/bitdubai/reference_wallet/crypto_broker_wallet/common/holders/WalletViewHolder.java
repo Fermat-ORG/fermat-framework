@@ -1,20 +1,18 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 
-import android.app.AlertDialog;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CBPInstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
+
 
 /**
  * Created by nelson on 28/12/15.
  */
-public class WalletViewHolder extends SingleDeletableItemViewHolder<InstalledWallet> {
+//public class WalletViewHolder extends SingleDeletableItemViewHolder<InstalledWallet> {
+public class WalletViewHolder extends SingleDeletableItemViewHolder<CBPInstalledWallet> {
     private FermatTextView title;
     private FermatTextView subTitle;
 
@@ -27,8 +25,9 @@ public class WalletViewHolder extends SingleDeletableItemViewHolder<InstalledWal
     }
 
     @Override
-    public void bind(InstalledWallet data) {
-        subTitle.setText(data.getWalletName());
+//    public void bind(InstalledWallet data) {
+    public void bind(CBPInstalledWallet data) {
+        subTitle.setText(data.getWalletName()+" ( "+data.getCurrency().getCode()+" )");
         title.setText(getPlatformTitle(data.getPlatform()).toUpperCase());
     }
 

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -29,11 +30,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.ContractPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.ContractSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.ContractPurchaseRecord;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.ContractSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
@@ -46,11 +47,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.CloseContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.CloseContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.CloseContractBusinessTransactionDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.Date;
 import java.util.List;
@@ -64,7 +62,6 @@ public class CloseContractMonitorAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
@@ -73,7 +70,7 @@ public class CloseContractMonitorAgent implements
     Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
+    CloseContractPluginRoot pluginRoot;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     TransactionTransmissionManager transactionTransmissionManager;
@@ -82,7 +79,7 @@ public class CloseContractMonitorAgent implements
 
     public CloseContractMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                      LogManager logManager,
-                                     ErrorManager errorManager,
+                                     CloseContractPluginRoot pluginRoot,
                                      EventManager eventManager,
                                      UUID pluginId,
                                      TransactionTransmissionManager transactionTransmissionManager,
@@ -90,7 +87,7 @@ public class CloseContractMonitorAgent implements
                                      CustomerBrokerContractSaleManager customerBrokerContractSaleManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
@@ -101,17 +98,14 @@ public class CloseContractMonitorAgent implements
     @Override
     public void start() throws CantStartAgentException {
 
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("Close contract monitor agent starting");
-        monitorAgent = new MonitorAgent();
+        monitorAgent = new MonitorAgent(pluginRoot);
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
             this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         this.agentThread = new Thread(monitorAgent, this.getClass().getSimpleName());
@@ -122,11 +116,6 @@ public class CloseContractMonitorAgent implements
     @Override
     public void stop() {
         this.agentThread.interrupt();
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -153,18 +142,17 @@ public class CloseContractMonitorAgent implements
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable {
 
-        ErrorManager errorManager;
+        CloseContractPluginRoot pluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
         CloseContractBusinessTransactionDao closeContractBusinessTransactionDao;
         boolean threadWorking;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public MonitorAgent(CloseContractPluginRoot pluginRoot) {
+            this.pluginRoot = pluginRoot;
         }
 
         @Override
@@ -188,10 +176,7 @@ public class CloseContractMonitorAgent implements
                 } catch (InterruptedException interruptedException) {
 
 
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CLOSE_CONTRACT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                            interruptedException);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, interruptedException);
                     return;
                 }
 
@@ -203,10 +188,7 @@ public class CloseContractMonitorAgent implements
                     logManager.log(CloseContractPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CLOSE_CONTRACT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                            e);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
 
             }
@@ -218,10 +200,7 @@ public class CloseContractMonitorAgent implements
                 database = this.pluginDatabaseSystem.openDatabase(pluginId, CloseContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
             } catch (DatabaseNotFoundException databaseNotFoundException) {
 
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CLOSE_CONTRACT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        databaseNotFoundException);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseNotFoundException);
 
                 CloseContractBusinessTransactionDatabaseFactory closeContractBusinessTransactionDatabaseFactory =
                         new CloseContractBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
@@ -230,15 +209,13 @@ public class CloseContractMonitorAgent implements
                             CloseContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
                 } catch (CantCreateDatabaseException exception) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
-                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                     throw new CantInitializeCBPAgent(exception, "Initialize Monitor Agent - trying to create the plugin database",
                             "Please, check the cause");
                 }
 
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantInitializeCBPAgent(exception, "Initialize Monitor Agent - trying to open the plugin database",
                         "Please, check the cause");
             }
@@ -246,7 +223,7 @@ public class CloseContractMonitorAgent implements
 
         private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException {
             try {
-                closeContractBusinessTransactionDao = new CloseContractBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+                closeContractBusinessTransactionDao = new CloseContractBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
 
                 checkCloseContractsToSend();
 

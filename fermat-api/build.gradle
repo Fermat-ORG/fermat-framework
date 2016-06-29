@@ -1,26 +1,45 @@
+//buildscript {
+//    repositories {
+//        maven {
+//            url 'http://52.34.0.33:8081/artifactory/plugins-release'
+//            credentials {
+//                username = "fermat"
+//                password = "fermat"
+//            }
+//            name = "maven-main-cache"
+//        }
+//    }
+//    dependencies {
+//        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.0.1"
+//    }
+//}
+
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'findbugs'
-apply plugin: 'checkstyle'
-apply plugin: 'pmd'
-apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+//apply plugin: 'findbugs'
+//apply plugin: 'checkstyle'
+//apply plugin: 'pmd'
+//apply plugin: 'eclipse'
+//apply plugin: 'maven-publish'
+//apply plugin: "com.jfrog.artifactory"
 
 
 group = "com.bitdubai.fermat.api"
-
+version = '2.0.10'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-version = '2.0.1'
 
-configurations {
-    deployerJars
-}
+
+//configurations {
+//    deployerJars
+//}
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'fermat-api',
-                   'Implementation-Version': '2.0.1'
+                   'Implementation-Version': '2.0.10'
     }
 }
 
@@ -28,60 +47,124 @@ repositories {
     mavenCentral ()
 }
 
-pmd {
-	toolVersion = '5.1.3'
-}
+//pmd {
+//	toolVersion = '5.1.3'
+//}
 
 dependencies {
     compile 'org.kohsuke:github-api:1.69'
-    compile 'com.carrotsearch:java-sizeof:0.0.5'
-    compile 'org.bouncycastle:bcprov-jdk15on:1.52'
-    compile('org.bitcoinj:bitcoinj-core:0.13.2') {
-        exclude module: 'scrypt'
-    }
+//    compile 'com.carrotsearch:java-sizeof:0.0.5'
+//    compile 'org.bouncycastle:bcprov-jdk15on:1.52'
     compile('com.thoughtworks.xstream:xstream:1.4.7') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
-    compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
+//    compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
     compile 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
 
-    compile 'com.madgag.spongycastle:core:1.54.0.0'
-    compile 'com.madgag.spongycastle:prov:1.54.0.0'
-    compile 'com.madgag.spongycastle:pkix:1.54.0.0'
+
+    compile('org.bitcoinj:bitcoinj-core:0.13.3') {
+        exclude module: 'scrypt'
+    }
+
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+    compile 'org.apache.commons:commons-collections4:4.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
+//    compile 'com.madgag.spongycastle:core:1.54.0.0'
+//    compile 'com.madgag.spongycastle:prov:1.54.0.0'
+//    compile 'com.madgag.spongycastle:pkix:1.54.0.0'
 
     testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
-    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
+//    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
 }
 
-test {
-    systemProperties 'property': 'value'
+//test {
+//    systemProperties 'property': 'value'
+//}
+
+task apiFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
+//uploadArchives {
+//
+//    repositories {
+//
+//        flatDir {
+//
+//            dirs 'repos'
+//        }
+//
+//	mavenDeployer {
+//            configuration = configurations.deployerJars
+//            repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
+//                authentication(userName: 'raul-pena', password: 'bAvE19G77_')
+//            }
+//        }
+//    }
+//}
 
-uploadArchives {
-                
+//tasks.withType(FindBugs) {
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//    }
+//}
+
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            // telling gradle to publish project's jar archive (2)
+            from components.java
+
+            // telling gradle to publish README file (2)
+//            artifact ('README.txt') {
+//                classifier = 'README'
+//                extension  = 'txt'app-debug.apk
+//            }
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
     repositories {
-   
-        flatDir {
-            
-            dirs 'repos'
-        }
+        maven {
+            //url "file:/${project.projectDir}/artifacts",
+            url "file:/${System.properties['user.home']}/artifacts"
 
-	mavenDeployer {
-            configuration = configurations.deployerJars
-            repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
-                authentication(userName: 'raul-pena', password: 'bAvE19G77_')
-            }
         }
     }
 }
 
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
+//artifactory {
+//    contextUrl = "http://52.34.0.33:8081/artifactory/"
+//    publish {
+//        repository {
+//            repoKey = 'libs-snapshot-local'
+//            username = "fermat"
+//            password = "fermat"
+//            maven = true
+//
+//        }
+//        defaults {
+//            publications ('mavenJava')
+//        }
+//    }
+//}
+//
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//        }
+//    }
+//}

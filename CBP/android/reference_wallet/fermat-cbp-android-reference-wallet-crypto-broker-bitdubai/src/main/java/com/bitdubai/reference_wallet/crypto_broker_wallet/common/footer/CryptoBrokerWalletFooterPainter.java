@@ -13,17 +13,17 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockBarChartPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.StockStatisticsData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.lang.ref.WeakReference;
@@ -41,11 +41,11 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
 
     private final List<StockStatisticsData> data;
     private final WeakReference<Context> activity;
-    private final CryptoBrokerWalletSession session;
+    private final ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private FermatTextView stockCurrency;
     private FermatTextView stockQuantity;
 
-    public CryptoBrokerWalletFooterPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
+    public CryptoBrokerWalletFooterPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> fullyLoadedSession) {
         this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 

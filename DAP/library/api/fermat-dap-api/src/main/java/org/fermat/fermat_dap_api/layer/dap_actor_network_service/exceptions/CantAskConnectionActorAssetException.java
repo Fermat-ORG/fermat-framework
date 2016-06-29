@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantAskConnectionActorAssetException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "CAN'T ASK AN ACTOR ASSET FOR ACCEPTANCE EXCEPTION.";
+
     public CantAskConnectionActorAssetException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

@@ -9,10 +9,12 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+
 
 /**
  * Created by mati on 2015.11.25..
@@ -23,7 +25,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     /**
      * Plaform reference
      */
-    private LossProtectedWalletSession referenceWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession;
     private IntraUserModuleManager intraUserModuleManager;
 
     /**
@@ -40,7 +42,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (LossProtectedWalletSession) appSession;
+            referenceWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
 
         } catch (Exception e){
             e.printStackTrace();

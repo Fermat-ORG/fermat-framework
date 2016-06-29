@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
@@ -73,7 +73,7 @@ public class StartTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(pluginDatabaseSystem.createDatabase(pluginId, userPublicKey)).thenReturn(database);
         when(database.getDatabaseFactory()).thenReturn(databaseFactory);
         when(databaseFactory.newTableFactory(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(table);

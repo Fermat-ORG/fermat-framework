@@ -44,8 +44,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,29 +60,26 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem                    pluginDatabaseSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
+    private LogManager                              logManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
+    private EventManager                            eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION,         plugin = Plugins.NEGOTIATION_PURCHASE)
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION,         plugin = Plugins.NEGOTIATION_SALE)
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    private CustomerBrokerSaleNegotiationManager    customerBrokerSaleNegotiationManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE,     plugin = Plugins.NEGOTIATION_TRANSMISSION)
-    private NegotiationTransmissionManager negotiationTransmissionManager;
+    private NegotiationTransmissionManager          negotiationTransmissionManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    private Broadcaster broadcaster;
+    private Broadcaster                             broadcaster;
 
     /*Represent the dataBase*/
     private Database                                                        dataBase;
@@ -144,8 +140,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     customerBrokerNewNegotiationTransactionDatabaseDao,
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerSaleNegotiationManager,
-                    errorManager,
-                    this.getPluginVersionReference()
+                    this
             );
 
             //Init event recorder service.
@@ -156,7 +151,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             customerBrokerNewAgent = new CustomerBrokerNewAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     negotiationTransmissionManager,
@@ -164,8 +159,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     customerBrokerSaleNegotiation,
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerSaleNegotiationManager,
-                    broadcaster,
-                    this.getPluginVersionReference()
+                    broadcaster
             );
             customerBrokerNewAgent.start();
 
@@ -174,10 +168,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e){
-            errorManager.reportUnexpectedPluginException(getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot - Database","Unexpected Exception");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(e),"Error Starting Customer Broker New PluginRoot","Unexpected Exception");
         }
     }
@@ -225,7 +219,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerNewPluginRoot");
+        returnedClasses.add("NegotiationTransactionCustomerBrokerNewPluginRoot");
+
         return returnedClasses;
     }
 
@@ -264,7 +259,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
 
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "There is a problem and i cannot create the database.");
         }*/
 
@@ -279,17 +274,17 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //                dataBase = databaseFactory.createDatabase(pluginId, pluginId.toString());
                 dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,f);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, f);
                 throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,z);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, z);
                 throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
             }
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
 

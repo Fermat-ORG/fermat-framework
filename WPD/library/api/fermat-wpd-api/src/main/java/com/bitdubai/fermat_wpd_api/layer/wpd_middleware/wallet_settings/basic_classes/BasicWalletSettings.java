@@ -7,6 +7,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -20,7 +21,7 @@ import java.util.UUID;
  * @author lnacosta
  * @version 1.0.0
  */
-public class BasicWalletSettings implements WalletSettings {
+public class BasicWalletSettings implements WalletSettings, Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
 

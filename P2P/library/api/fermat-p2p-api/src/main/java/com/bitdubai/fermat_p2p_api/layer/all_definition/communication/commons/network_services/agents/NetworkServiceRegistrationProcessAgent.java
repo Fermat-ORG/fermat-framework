@@ -71,8 +71,8 @@ public final class NetworkServiceRegistrationProcessAgent {
 
             try{
 
-                System.out.println(networkServiceRoot.getProfile().getNetworkServiceType() + " networkServiceRoot.isRegistered() " + networkServiceRoot.isRegistered()
-                             + " networkServiceRoot.getConnection().isRegistered() " + networkServiceRoot.getConnection().isRegistered());
+//                System.out.println(networkServiceRoot.getProfile().getNetworkServiceType() + " networkServiceRoot.isRegistered() " + networkServiceRoot.isRegistered()
+//                             + " networkServiceRoot.getConnection().isRegistered() " + networkServiceRoot.getConnection().isRegistered());
 
                 if (networkServiceRoot.getConnection().isRegistered() && !networkServiceRoot.isRegistered()){
 
@@ -112,9 +112,11 @@ public final class NetworkServiceRegistrationProcessAgent {
     }
 
     public void start() {
-        this.active = Boolean.TRUE;
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(toRegistration);
+        if (!getActive()) {
+            this.active = Boolean.TRUE;
+            executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(toRegistration);
+        }
     }
 
     /*

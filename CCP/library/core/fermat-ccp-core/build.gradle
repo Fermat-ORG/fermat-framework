@@ -25,7 +25,7 @@ dependencies {
     compile project(':fermat-ccp-plugin-actor-extra-user-bitdubai')
     compile project(':fermat-ccp-plugin-actor-intra-user-bitdubai')
 
-    compile project(':fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
+    compile project(':fermat-ccp-plugin-basic-wallet-crypto-wallet-bitdubai')
     compile project(':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai')
 
     compile project(':fermat-ccp-plugin-identity-intra-user-bitdubai')
@@ -55,9 +55,11 @@ dependencies {
 
     compile project(':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai')
 
-    compile project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai')
+    compile project(':fermat-ccp-plugin-wallet-module-fermat-wallet-bitdubai')
 
     compile project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai')
+
+
     // todo create this plugin in ccp
     compile project(':fermat-wpd-plugin-middleware-wallet-manager-bitdubai')
     compile project(':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai')

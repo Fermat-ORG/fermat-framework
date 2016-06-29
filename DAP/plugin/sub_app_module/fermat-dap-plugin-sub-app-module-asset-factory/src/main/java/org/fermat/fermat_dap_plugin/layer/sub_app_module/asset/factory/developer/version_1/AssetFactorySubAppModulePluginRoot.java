@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -16,18 +15,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
+import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.version_1.structure.AssetFactorySupAppModuleManager;
 
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
     IdentityAssetIssuerManager identityAssetIssuerManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
@@ -78,7 +77,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
 
     // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
 
-    private AssetFactorySupAppModuleManager assetFactorySupAppModuleManager;
+    private AssetFactoryModuleManager assetFactorySupAppModuleManager;
 
     public AssetFactorySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -225,7 +224,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetFactorySupAppModuleManager.class)
-    public ModuleManager<AssetFactorySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetFactoryModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetFactorySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Module instantiation started...", null, null);
 
@@ -233,7 +232,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
                 assetFactorySupAppModuleManager = new AssetFactorySupAppModuleManager(
                         assetFactoryManager,
                         identityAssetIssuerManager,
-                        bitcoinWalletManager,
+                        cryptoWalletManager,
                         errorManager,
                         eventManager,
                         broadcaster,

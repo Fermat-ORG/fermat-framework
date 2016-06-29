@@ -11,11 +11,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.fan_wallet.R;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 
 
 /**
@@ -24,7 +22,7 @@ import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 public class FanWalletMainActivity extends AbstractFermatFragment  {
 
     //FermatManager
-    private FanWalletSession fanwalletSession;
+    private FanWalletSessionReferenceApp fanwalletSession;
     private FanWalletPreferenceSettings  fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -36,7 +34,7 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         super.onCreate(savedInstanceState);
 
         try {
-            fanwalletSession = ((FanWalletSession) appSession);
+            fanwalletSession = ((FanWalletSessionReferenceApp) appSession);
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FAN WALLET");
 

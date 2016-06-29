@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -23,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetIssuerIdentityDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -46,16 +44,6 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
      */
     public AssetIssuerIdentityDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
@@ -127,12 +115,17 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
         AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME);
         AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_COUNTRY_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_CITY_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_STATE_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN);
         /**
          * Table Asset Issuer addition.
          */
         DeveloperDatabaseTable assetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME, AssetIssuerColumns);
         tables.add(assetIssuerTable);
-
 
 
         return tables;
@@ -150,12 +143,12 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -175,7 +168,7 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

@@ -15,8 +15,10 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.enums.ActorConnectionNotificationType;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantConfirmException;
@@ -29,8 +31,7 @@ import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitd
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.exceptions.CantHandleUpdateEventException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -98,7 +99,7 @@ public class ActorConnectionEventActions {
                     case ACCEPT:
                         this.handleAcceptConnection(request.getRequestId());
                         //TODO: IMPLEMENT BROADCASTER
-//                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(), CryptoBrokerActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
 
                         break;
                    /* case CANCEL:
@@ -141,7 +142,16 @@ public class ActorConnectionEventActions {
                     request.getDestinationPublicKey(),
                     Actors.CHAT
             );
-            final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+
+            ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, request.getSenderPublicKey());
+            ConnectionState connectionState = null;
+            if(oldActorConnection!=null)
+                connectionState = oldActorConnection.getConnectionState();
+//
+            if(connectionState != null && connectionState.equals(ConnectionState.CONNECTED))
+                return;
+//            else
+                connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
                     request.getRequestId(),
@@ -151,13 +161,13 @@ public class ActorConnectionEventActions {
                     request.getSenderImage(),
                     connectionState,
                     request.getSentTime(),
-                    request.getSentTime()
+                    request.getSentTime(),
+                    ""
             );
 
             switch (request.getSenderActorType()) {
                 case CHAT:
-
-                    dao.registerChatActorConnection(actorConnection);
+                    dao.registerChatActorConnection(actorConnection,oldActorConnection);
 
                     chatNetworkService.confirm(request.getRequestId());
                     break;
@@ -166,7 +176,7 @@ public class ActorConnectionEventActions {
             }
 
             //TODO: IMPLEMENT BROADCASTER
-//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(), CryptoBrokerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {

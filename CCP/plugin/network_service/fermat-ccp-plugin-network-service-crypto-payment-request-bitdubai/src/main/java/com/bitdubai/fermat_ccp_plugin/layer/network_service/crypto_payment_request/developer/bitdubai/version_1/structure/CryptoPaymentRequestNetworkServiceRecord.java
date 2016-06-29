@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
@@ -36,6 +37,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     private final int sentNumber;
     private final String messageType;
     private final String walletPublicKey;
+    private final CryptoCurrency cryptoCurrency;
 
     public CryptoPaymentRequestNetworkServiceRecord(final UUID requestId,
                                                     final String identityPublicKey,
@@ -53,7 +55,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
                                                     final ReferenceWallet referenceWallet,
                                                     final int sentNumber,
                                                     final String messageType,
-                                                    final String walletPublicKey) {
+                                                    final String walletPublicKey, CryptoCurrency cryptoCurrency) {
 
         this.requestId = requestId;
         this.identityPublicKey = identityPublicKey;
@@ -72,6 +74,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
         this.sentNumber = sentNumber;
         this.messageType = messageType;
         this.walletPublicKey = walletPublicKey;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
@@ -157,6 +160,11 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     @Override
     public String getWalletPublicKey() {
         return walletPublicKey;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
     }
 
 

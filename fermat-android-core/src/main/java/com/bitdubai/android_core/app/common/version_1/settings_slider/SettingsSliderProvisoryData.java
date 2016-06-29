@@ -67,9 +67,9 @@ public class SettingsSliderProvisoryData {
 
             SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS, R.drawable.recent_buttom_hdpi, "Recents Apps", "");
 
-            SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP, R.drawable.help_buttom_hdpi, "Welcome Help", "");
+            SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP, R.drawable.help_buttom_hdpi, "Help Screen", "");
 
-            SettingsItem settingErrorReport = new SettingsItem(SettingsType.REPORT, R.drawable.icon_suport, "Report ", "");
+//            SettingsItem settingErrorReport = new SettingsItem(SettingsType.REPORT, R.drawable.icon_suport, "Export/Import key", "");
 
 
             list.add(settingsItemFermatNetwork);
@@ -78,7 +78,7 @@ public class SettingsSliderProvisoryData {
             list.add(settingsItemSettings);
             list.add(settingsItemRecents);
             list.add(settingsHelp);
-            list.add(settingErrorReport);
+//            list.add(settingErrorReport);
 
         }catch (Exception e){
             e.printStackTrace();

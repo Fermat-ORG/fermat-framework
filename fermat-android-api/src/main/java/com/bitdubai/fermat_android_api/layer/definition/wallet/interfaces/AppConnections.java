@@ -1,15 +1,12 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import android.content.Context;
+import android.view.View;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import java.lang.ref.WeakReference;
 
@@ -25,18 +22,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         this.activity = new WeakReference<>(activity);
     }
 
-    public abstract PluginVersionReference getPluginVersionReference();
-
-    public FermatSession buildSession(FermatApp fermatApp,ModuleManager manager,ErrorManager errorManager){
-        AbstractFermatSession session = getSession();
-        session.setErrorManager(errorManager);
-        session.setModuleManager(manager);
-        session.setFermatApp(fermatApp);
-        session.setPublicKey(fermatApp.getAppPublicKey());
-        return session;
-    }
-
-    protected abstract AbstractFermatSession getSession();
+    public abstract PluginVersionReference[] getPluginVersionReference();
 
     public Context getContext() {
         return activity.get();
@@ -63,6 +49,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
     }
 
 
+    protected  FermatSession getSession(){return null;};
 
 
     public void changeApp(String appPublicKey) throws Exception {
@@ -74,6 +61,38 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
     }
 
     public FermatApplicationCaller getApplicationManager(){
-        return ((FermatApplicationSession)activity.get()).getApplicationManager();
+        return ((FermatApplicationSession)(activity.get()).getApplicationContext()).getApplicationManager();
+    }
+
+
+    public void clear() {
+        activity.clear();
+    }
+
+    public void setContext(Context context) {
+        this.activity = new WeakReference<Context>(context);
+    }
+
+
+    /**
+     *  Method to share resources with other apps
+     * @param id
+     * @return
+     */
+
+    public int getResource(int id) {
+        return 0;
+    }
+
+
+    /**
+     *  Method to share Views with other apps
+     *
+     * @param activity
+     * @param resourceId
+     * @return
+     */
+    public View getSharedView(Context activity, int resourceId) {
+        return null;
     }
 }

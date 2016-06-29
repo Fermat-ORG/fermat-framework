@@ -1,10 +1,56 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
+group = "com.bitdubai.bch.api"
+version = '2'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'bch-api',
+                'Implementation-Version': '1'
+    }
+}
+
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile('org.bitcoinj:bitcoinj-core:0.13.3')
-    compile project(':fermat-api')
-    compile 'org.scala-lang:scala-library:2.11.1'
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':fermat-api') }
+
+task bchApiFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            // telling gradle to publish project's jar archive (2)
+            from components.java
+
+            // telling gradle to publish README file (2)
+//            artifact ('README.txt') {
+//                classifier = 'README'
+//                extension  = 'txt'
+//            }
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
+    repositories {
+        maven {
+//            url "file:/${project.projectDir}/artifacts"
+            url "file:/${System.properties['user.home']}/artifacts"
+        }
+    }
+//    compile 'com.google.code.findbugs:jsr305:3.0.1'
+//    compile 'com.google.guava:guava:19.0'
+//    compile 'org.bitcoinj:bitcoinj-core:0.13.6'
+
 }

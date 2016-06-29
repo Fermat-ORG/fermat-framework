@@ -46,9 +46,11 @@ public interface DigitalAssetMetadataTransaction {
 
     /**
      * The platform component that this event is destinated for.
+     *
      * @return {@link PlatformComponentType}
      */
     PlatformComponentType getReceiverType();
+
     /**
      * Get the Sender Id
      *
@@ -58,9 +60,11 @@ public interface DigitalAssetMetadataTransaction {
 
     /**
      * The platform component that send this event.
+     *
      * @return {@link PlatformComponentType}
      */
     PlatformComponentType getSenderType();
+
     /**
      * Get the GenesisTransaction
      *
@@ -73,10 +77,11 @@ public interface DigitalAssetMetadataTransaction {
      *
      * @return DigitalAssetMetadataTransactionType
      */
-    DigitalAssetMetadataTransactionType getType() ;
+    DigitalAssetMetadataTransactionType getType();
 
     /**
      * Get the Timestamp
+     *
      * @return Long
      */
     Long getTimestamp();

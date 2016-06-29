@@ -1,25 +1,25 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformServiceManager</code>
  * implements platform info manager interface and contains all the methods that provides platform information.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public final class PlatformInfoPlatformServiceManager implements PlatformInfoManager {
 
     private final AddonVersionReference addonVersionReference;
-    private final ErrorManager          errorManager         ;
-    private final PlatformFileSystem    platformFileSystem   ;
+    private final ErrorManager errorManager;
+    private final PlatformFileSystem platformFileSystem;
 
 
     /**
@@ -28,12 +28,12 @@ public final class PlatformInfoPlatformServiceManager implements PlatformInfoMan
     private PlatformInfoPlatformService platformInfoPlatformService;
 
     public PlatformInfoPlatformServiceManager(final AddonVersionReference addonVersionReference,
-                                              final ErrorManager          errorManager         ,
-                                              final PlatformFileSystem    platformFileSystem   ) {
+                                              final ErrorManager errorManager,
+                                              final PlatformFileSystem platformFileSystem) {
 
         this.addonVersionReference = addonVersionReference;
-        this.errorManager          = errorManager         ;
-        this.platformFileSystem    = platformFileSystem   ;
+        this.errorManager = errorManager;
+        this.platformFileSystem = platformFileSystem;
     }
 
 

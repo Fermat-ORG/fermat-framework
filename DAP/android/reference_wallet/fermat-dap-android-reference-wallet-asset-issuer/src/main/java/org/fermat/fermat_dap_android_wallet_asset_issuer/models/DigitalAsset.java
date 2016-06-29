@@ -6,7 +6,6 @@ import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +23,7 @@ public class DigitalAsset implements Serializable {
     private Long availableBalanceQuantity;
     private Long bookBalanceQuantity;
     private Long availableBalance;
-    private Timestamp expDate;
+    private Date expDate;
     private String walletPublicKey;
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
@@ -33,6 +32,7 @@ public class DigitalAsset implements Serializable {
     private int redeemed;
     private int appropriated;
     private int unused;
+    private Date lastTransactionDate;
 
     public DigitalAsset() {
     }
@@ -136,7 +136,7 @@ public class DigitalAsset implements Serializable {
         return DAPStandardFormats.DATE_FORMAT.format(expDate);
     }
 
-    public void setExpDate(Timestamp expDate) {
+    public void setExpDate(Date expDate) {
         this.expDate = expDate;
     }
 
@@ -170,5 +170,13 @@ public class DigitalAsset implements Serializable {
 
     public void setUnused(int unused) {
         this.unused = unused;
+    }
+
+    public Date getLastTransactionDate() {
+        return lastTransactionDate;
+    }
+
+    public void setLastTransactionDate(Date lastTransactionDate) {
+        this.lastTransactionDate = lastTransactionDate;
     }
 }

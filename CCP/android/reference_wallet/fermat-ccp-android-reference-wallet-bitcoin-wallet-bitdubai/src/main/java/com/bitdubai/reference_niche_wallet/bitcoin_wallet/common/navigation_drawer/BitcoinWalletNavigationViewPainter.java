@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 
 import java.lang.ref.WeakReference;
@@ -20,19 +22,24 @@ import java.lang.ref.WeakReference;
  */
 public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
-    private final ActiveActorIdentityInformation intraUserLoginIdentity;
+    //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    public BitcoinWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
+    private ReferenceAppFermatSession referenceWalletSession;
+
+    public BitcoinWalletNavigationViewPainter(Context activity, ReferenceAppFermatSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+
         this.activity = new WeakReference<Context>(activity);
-        this.intraUserLoginIdentity = intraUserLoginIdentity;
+        this.referenceWalletSession = referenceWalletSession;
+        this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),referenceWalletSession,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

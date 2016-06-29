@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 
+import java.math.BigDecimal;
+
+
 /**
  * This class represents the fields necessary to create a Crypto Money DeStock Transaction
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 21/12/15.
@@ -17,16 +20,14 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
     private BlockchainNetworkType blockchainNetworkType;
 
     public CryptoMoneyDeStockRecord(
-            BusinessTransactionRecord businessTransactionRecord){
+            BusinessTransactionRecord businessTransactionRecord) {
 
         this.publicKeyActor = businessTransactionRecord.getBrokerPublicKey();
-        //For this version, the crypto currency is set to BITCOIN
-        this.cryptoCurrency = CryptoCurrency.BITCOIN;
+        this.cryptoCurrency = businessTransactionRecord.getCryptoCurrency();
         this.cbpWalletPublicKey = businessTransactionRecord.getCBPWalletPublicKey();
         this.cryptoWalletPublicKey = businessTransactionRecord.getExternalWalletPublicKey();
-        this.amount = parseLongToBigDecimal(
-                businessTransactionRecord.getCryptoAmount());
-        this.memo=generateMemo(businessTransactionRecord.getContractHash());
+        this.amount = BigDecimal.valueOf(businessTransactionRecord.getCryptoAmount());
+        this.memo = generateMemo(businessTransactionRecord.getContractHash());
         this.priceReference = businessTransactionRecord.getPriceReference();
         this.originTransaction = OriginTransaction.SALE;
         this.blockchainNetworkType = businessTransactionRecord.getBlockchainNetworkType();

@@ -2,9 +2,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 
 import org.bitcoinj.core.BlockChain;
@@ -19,8 +17,6 @@ import org.bitcoinj.store.MemoryBlockStore;
 import org.bitcoinj.store.SPVBlockStore;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -29,8 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import javax.print.attribute.standard.DateTimeAtCompleted;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkBlockChain</code>
@@ -68,7 +62,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
         this.context = context;
         this.networkParameters= this.context.getParams();
 
-        this.BLOCKCHAIN_NETWORK_TYPE = BitcoinNetworkSelector.getBlockchainNetworkType(this.networkParameters);
+        this.BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkSelector.getBlockchainNetworkType(this.networkParameters);
         this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();
         this.BLOCKCHAIN_FILENAME = "bitcoin_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
         this.CHECKPOINT_FILENAME = "checkpoints-" + BLOCKCHAIN_NETWORK_TYPE.getCode();
@@ -139,10 +133,10 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
             if (firstTime){
                 switch (BLOCKCHAIN_NETWORK_TYPE){
                     case TEST_NET:
-                        loadCheckpoint("2016-05-11 02:52:07");
+                        loadCheckpoint("2016-05-29 15:22:16");
                         break;
                     case PRODUCTION:
-                        loadCheckpoint("2016-04-27 00:00:01");
+                        loadCheckpoint("2016-05-29 15:29:57");
                         break;
                 }
             }

@@ -26,7 +26,7 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
     AssetUserActorPluginRoot assetActorUserPluginRoot;
     CryptoAddressesManager cryptoAddressesNetworkServiceManager;
 
-    public CryptoAddressRequestedEventHandler(AssetUserActorPluginRoot assetActorUserPluginRoot, CryptoAddressesManager cryptoAddressesNetworkServiceManager){
+    public CryptoAddressRequestedEventHandler(AssetUserActorPluginRoot assetActorUserPluginRoot, CryptoAddressesManager cryptoAddressesNetworkServiceManager) {
         this.assetActorUserPluginRoot = assetActorUserPluginRoot;
         this.cryptoAddressesNetworkServiceManager = cryptoAddressesNetworkServiceManager;
     }
@@ -42,7 +42,7 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
 
                 for (final CryptoAddressRequest request : list) {
                     if (request.getIdentityTypeResponding().equals(Actors.DAP_ASSET_USER)) {
-                        if(request.getCryptoAddress()!=null) {
+                        if (request.getCryptoAddress() != null) {
                             if (request.getCryptoAddress().getAddress() != null) {
                                 assetActorUserPluginRoot.handleCryptoAddressesNewsEvent();
                             }

@@ -29,7 +29,7 @@ public class WalletModuleLayer extends AbstractLayer {
             registerPlugin(new AssetUserPluginSubsystem());
             registerPlugin(new RedeemPointPluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

@@ -85,13 +85,14 @@ public class OutgoingExtraUserDao {
                                        Actors deliveredByActorType,
                                        String deliveredToActorPublicKey,
                                        Actors deliveredToActorType,
-                                       BlockchainNetworkType blockchainNetworkType) throws CantInsertRecordException {
+                                       BlockchainNetworkType blockchainNetworkType,
+                                       CryptoCurrency cryptoCurrency) throws CantInsertRecordException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
             DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
 
-            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType,blockchainNetworkType);
+            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType,blockchainNetworkType,cryptoCurrency);
 
             transactionTable.insertRecord(recordToInsert);
             database.closeDatabase();
@@ -215,7 +216,8 @@ public class OutgoingExtraUserDao {
                                  Actors deliveredByActorType,
                                  String deliveredToActorPublicKey,
                                  Actors deliveredToActorType,
-                                 BlockchainNetworkType blockchainNetworkType) {
+                                 BlockchainNetworkType blockchainNetworkType,
+                                 CryptoCurrency cryptoCurrency) {
 
         UUID transactionId = UUID.randomUUID();
 
@@ -245,6 +247,7 @@ public class OutgoingExtraUserDao {
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME, deliveredToActorPublicKey);
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, deliveredToActorType.getCode());
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode() );
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENCY_TYPE, cryptoCurrency.getCode() );
 
     }
 
@@ -346,6 +349,9 @@ public class OutgoingExtraUserDao {
         String actorToPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
         BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_RUNNING_NETWORK_TYPE));
 
+        CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENCY_TYPE));
+
+
         return new TransactionWrapper(
                 transactionId     ,
                 actorFromPublicKey,
@@ -361,8 +367,8 @@ public class OutgoingExtraUserDao {
                 walletPublicKey   ,
                 state             ,
                 cryptoStatus,
-                blockchainNetworkType
-        );
+                blockchainNetworkType,
+                cryptoCurrency);
     }
 
     // Apply convertToBT to all the elements in a list

@@ -14,21 +14,23 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.interfaces.RecreateView;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.ref.WeakReference;
 
 /**
  * PresentationChatCommunityDialog
@@ -37,7 +39,8 @@ import java.io.ByteArrayOutputStream;
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubAppSession,
+public class PresentationChatCommunityDialog
+        extends FermatDialog<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>,
         SubAppResourcesProviderManager> implements View.OnClickListener {
 
 
@@ -53,9 +56,11 @@ public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubApp
     private FrameLayout container_john_doe;
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
-    private ChatUserSubAppSession chatUserSubAppSession;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private RecreateView recreateView;
+    private int identityOrChat;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     /**
      * Constructor using Session and Resources
@@ -64,17 +69,21 @@ public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubApp
      * @param resources     parent class of WalletResources and SubAppResources
      */
     public PresentationChatCommunityDialog(final Activity activity,
-                                                final ChatUserSubAppSession fermatSession,
+                                                final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> fermatSession,
                                                 final SubAppResourcesProviderManager resources,
                                                 final ChatActorCommunitySubAppModuleManager moduleManager,
-                                                final int type) {
+                                                final int type/*,
+                                           final FermatApplicationCaller applicationsHelper,
+                                           final int identityOrChat*/) {
 
         super(activity, fermatSession, resources);
 
         this.activity = activity;
         this.type = type;
         this.moduleManager = moduleManager;
-        this.chatUserSubAppSession = fermatSession;
+        this.chatUserSubAppSession = fermatSession;/*
+        this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
+        this.identityOrChat = identityOrChat;*/
     }
 
     @Override
@@ -158,6 +167,18 @@ public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubApp
             }
             saveSettings();
             dismiss();
+            try {
+                switch (identityOrChat) {
+                    case 1://identity
+                        //applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                        break;
+                    case 2://CHAT
+                        //applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

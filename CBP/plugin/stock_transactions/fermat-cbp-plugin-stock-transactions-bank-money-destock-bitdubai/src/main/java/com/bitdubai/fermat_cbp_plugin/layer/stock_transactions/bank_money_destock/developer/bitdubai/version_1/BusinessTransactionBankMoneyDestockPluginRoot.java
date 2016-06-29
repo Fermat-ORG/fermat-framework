@@ -35,8 +35,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyDestockMonitorAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
 
@@ -59,9 +58,6 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -74,7 +70,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
     @Override
     public void start() throws CantStartPluginException {
-        stockTransactionBankMoneyDestockManager = new StockTransactionBankMoneyDestockManager(pluginDatabaseSystem, pluginId, errorManager);
+        stockTransactionBankMoneyDestockManager = new StockTransactionBankMoneyDestockManager(pluginDatabaseSystem, pluginId, this);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
 
@@ -90,10 +86,10 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
                 BusinessTransactionBankMoneyDestockDatabaseFactory businessTransactionBankMoneyDestockDatabaseFactory = new BusinessTransactionBankMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
                 businessTransactionBankMoneyDestockDatabaseFactory.createDatabase(this.pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
             } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
             }
         }
@@ -130,7 +126,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
             businessTransactionBankMoneyDestockDeveloperFactory.initializeDatabase();
             developerDatabaseTableRecordList = businessTransactionBankMoneyDestockDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeBankMoneyDestockDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
     }
@@ -145,7 +141,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
     private void startMonitorAgent() throws CantStartAgentException {
         if (businessTransactionBankMoneyDestockMonitorAgent == null) {
             businessTransactionBankMoneyDestockMonitorAgent = new BusinessTransactionBankMoneyDestockMonitorAgent(
-                    errorManager,
+                    this,
                     stockTransactionBankMoneyDestockManager,
                     cryptoBrokerWalletManager,
                     unHoldManager,

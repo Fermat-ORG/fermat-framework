@@ -13,11 +13,11 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantMakeUnholdTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.UnholdBankMoneyTransactionPluginRoot;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.database.UnholdBankMoneyTransactionDao;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantCreateUnholdTransactionException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantUpdateUnholdTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.io.Serializable;
@@ -30,19 +30,19 @@ import java.util.UUID;
  */
 public class UnholdBankMoneyTransactionManager implements UnholdManager, Serializable {
 
-    private final ErrorManager errorManager;
+    private final UnholdBankMoneyTransactionPluginRoot pluginRoot;
     UnholdBankMoneyTransactionDao unholdBankMoneyTransactionDao;
 
-    public UnholdBankMoneyTransactionManager(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) throws CantStartPluginException {
-        this.errorManager = errorManager;
-        unholdBankMoneyTransactionDao = new UnholdBankMoneyTransactionDao(pluginDatabaseSystem, pluginId, errorManager);
+    public UnholdBankMoneyTransactionManager(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, UnholdBankMoneyTransactionPluginRoot pluginRoot) throws CantStartPluginException {
+        this.pluginRoot = pluginRoot;
+        unholdBankMoneyTransactionDao = new UnholdBankMoneyTransactionDao(pluginDatabaseSystem, pluginId, pluginRoot);
         try {
             unholdBankMoneyTransactionDao.initialize();
         } catch (CantInitializeUnholdBankMoneyTransactionDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
@@ -70,7 +70,7 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager, Seriali
         try{
             return unholdBankMoneyTransactionDao.createUnholdTransaction(parameters);
         }catch (CantCreateUnholdTransactionException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantMakeUnholdTransactionException(CantMakeUnholdTransactionException.DEFAULT_MESSAGE,e,null,null);
         }
 

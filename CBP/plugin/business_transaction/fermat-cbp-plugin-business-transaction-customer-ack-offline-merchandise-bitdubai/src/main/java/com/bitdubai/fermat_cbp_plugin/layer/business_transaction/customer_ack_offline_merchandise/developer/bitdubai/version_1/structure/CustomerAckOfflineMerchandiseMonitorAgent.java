@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -59,11 +60,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_of
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.database.CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.Collection;
 import java.util.Date;
@@ -77,7 +75,6 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
@@ -86,7 +83,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
     Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
+    CustomerAckOfflineMerchandisePluginRoot pluginRoot;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     TransactionTransmissionManager transactionTransmissionManager;
@@ -97,7 +94,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
     public CustomerAckOfflineMerchandiseMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
             LogManager logManager,
-            ErrorManager errorManager,
+            CustomerAckOfflineMerchandisePluginRoot pluginRoot,
             EventManager eventManager,
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
@@ -105,7 +102,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager)  {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginId = pluginId;
         this.logManager=logManager;
         this.transactionTransmissionManager=transactionTransmissionManager;
@@ -119,21 +116,19 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
 
         //Logger LOG = Logger.getGlobal();
         //LOG.info("Customer online payment monitor agent starting");
-        monitorAgent = new MonitorAgent();
+        monitorAgent = new MonitorAgent(pluginRoot);
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
             this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
@@ -148,16 +143,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
         try{
             this.agentThread.interrupt();
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
     }
 
     @Override
@@ -184,19 +174,19 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable{
 
-        ErrorManager errorManager;
+        CustomerAckOfflineMerchandisePluginRoot pluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
         CustomerAckOfflineMerchandiseBusinessTransactionDao customerAckOfflineMerchandiseBusinessTransactionDao;
         boolean threadWorking;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public MonitorAgent(CustomerAckOfflineMerchandisePluginRoot pluginRoot) {
+            this.pluginRoot = pluginRoot;
         }
+
 
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
@@ -227,8 +217,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                     logManager.log(CustomerAckOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    pluginRoot.reportError(
+                            
                             UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                             e);
                 }
@@ -252,8 +242,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                     database = customerAckOfflineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(pluginId,
                             CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    pluginRoot.reportError(
+                            
                             UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                             cantCreateDatabaseException);
                     throw new CantInitializeCBPAgent(cantCreateDatabaseException,
@@ -261,8 +251,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                             "Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                pluginRoot.reportError(
+                        
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         exception);
                 throw new CantInitializeCBPAgent(exception,
@@ -281,7 +271,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                         pluginDatabaseSystem,
                         pluginId,
                         database,
-                        errorManager);
+                        pluginRoot);
 
                 String contractHash;
 

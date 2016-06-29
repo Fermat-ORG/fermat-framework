@@ -20,7 +20,7 @@ public class DeveloperDatabaseFactory {
     String pluginId;
     List<String> walletsIssuer;
 
-    public DeveloperDatabaseFactory (String pluginId, List<String> walletsIssuer){
+    public DeveloperDatabaseFactory(String pluginId, List<String> walletsIssuer) {
         this.pluginId = pluginId;
         this.walletsIssuer = walletsIssuer;
     }
@@ -31,7 +31,7 @@ public class DeveloperDatabaseFactory {
          * Remember that a database name in this plug-in is the internal wallet id.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        for(String databaseName : this.walletsIssuer)
+        for (String databaseName : this.walletsIssuer)
             databases.add(developerObjectFactory.getNewDeveloperDatabase(databaseName, this.pluginId));
         return databases;
     }
@@ -67,7 +67,7 @@ public class DeveloperDatabaseFactory {
         /**
          * assetIssuerWalletColumns table
          */
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME, assetWalletIssuerColumns);
+        DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME, assetWalletIssuerColumns);
         tables.add(cryptoTransactionsTable);
 
         /**
@@ -85,7 +85,7 @@ public class DeveloperDatabaseFactory {
         /**
          * AssetIssuerWalletTotalBalanceColumns table
          */
-        DeveloperDatabaseTable  assetIssuerWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_NAME, assetIssuerWalletTotalBalancesColumns);
+        DeveloperDatabaseTable assetIssuerWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_NAME, assetIssuerWalletTotalBalancesColumns);
         tables.add(assetIssuerWalletWalletTotalBalances);
 
         /**
@@ -113,7 +113,7 @@ public class DeveloperDatabaseFactory {
         return tables;
     }
 
-    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,  Database database, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -125,12 +125,12 @@ public class DeveloperDatabaseFactory {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -150,7 +150,7 @@ public class DeveloperDatabaseFactory {
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

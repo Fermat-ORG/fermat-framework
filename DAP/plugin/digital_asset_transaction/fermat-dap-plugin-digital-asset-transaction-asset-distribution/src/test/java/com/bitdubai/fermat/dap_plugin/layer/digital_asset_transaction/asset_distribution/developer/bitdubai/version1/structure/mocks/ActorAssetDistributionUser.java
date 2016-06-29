@@ -24,13 +24,14 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     public String getPublicLinkedIdentity() {
         return new ECCKeyPair().getPublicKey();
     }
+
     @Override
     public String getActorPublicKey() {
         return this.actorPublicKey;
     }
 
-    public void setActorPublicKey(String actorPublicKey){
-        this.actorPublicKey=actorPublicKey;
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
     }
 
     @Override
@@ -38,8 +39,8 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         return this.name;
     }
 
-    public void setName(String name){
-        this.name=name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -57,11 +58,11 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         return DAPConnectionState.CONNECTED_ONLINE;
     }
 
-    public void setRegistrationDate(long registrationDate){
+    public void setRegistrationDate(long registrationDate) {
         this.registrationDate = registrationDate;
     }
 
-    public void setLastConnectionDate(long lastConnectionDate){
+    public void setLastConnectionDate(long lastConnectionDate) {
         this.lastConnectionDate = lastConnectionDate;
     }
 
@@ -70,10 +71,9 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
         return this.profileImage;
     }
 
-    public void setProfileImage(byte[] profileImage){
-        this.profileImage=profileImage;
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
     }
-
 
 
     /**
@@ -142,8 +142,7 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     }
 
 
-
-    public void setActorAssetUser(ActorAssetUser actorAssetUser){
+    public void setActorAssetUser(ActorAssetUser actorAssetUser) {
         setRegistrationDate(actorAssetUser.getRegistrationDate());
         setLastConnectionDate(actorAssetUser.getLastConnectionDate());
         setName(actorAssetUser.getName());

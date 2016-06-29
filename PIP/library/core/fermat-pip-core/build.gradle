@@ -3,19 +3,71 @@ apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'gradle-one-jar'
 
 sourceCompatibility = 1.7
 version = '1.0'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+        classpath fileTree(dir: 'libs', include: '*.jar')
+
+    }
+}
+
+
+ext.sharedManifest = manifest {
+    attributes 'One-Jar-URL-Factory': 'com.simontuffs.onejar.JarClassLoader$FileURLFactory'
+}
+
+
+// Create a list of subprojects that you wish to include in the jar.
+//def mainProjects = [':fermat-api',':fermat-core-api']
+//task oneJar( type: Jar , dependsOn: mainProjects.collect{ it+":compileJava"}) {
+//    baseName = 'name of jar'
+//    from files(mainProjects.collect{ project(it).sourceSets.main.output })
+//}
+
+task matiJar(type: OneJar) {
+
+    manifest = project.manifest {
+        from sharedManifest
+    }
+    mainClass = 'com.bitdubai.fermat_pip_core.PIPPlatform'
+    println(getRootDir())
+//    rootDir = "../../"
+//    mainClassName = 'com.bitdubai.fermat_pip_core.PIPPlatform'
+    archiveName = project.name + '-with-dependencies-' + version + ".jar"
+    additionalDir = file('src/main/resources/pip-one-jar.properties')
+
+}
 
 repositories {
     mavenCentral()
 }
 
+//create a single Jar with all dependencies
+task pipFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'com.bitdubai.fermat_pip_core.PIPPlatform'
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
 
-    compile project(':fermat-api')
-    compile project(':fermat-core-api')
 
+    compile project(':fermat-core-api')
+    compile project(':fermat-api')
     compile project(':fermat-pip-addon-user-device-user-bitdubai')
 
     compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
@@ -27,11 +79,13 @@ dependencies {
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
 
     compile project(':fermat-pip-plugin-module-developer-bitdubai')
-    compile project(':fermat-pip-plugin-module-notification-bitdubai')
+  //  compile project(':fermat-pip-plugin-module-notification-bitdubai')
     compile project(':fermat-pip-plugin-android-core-module-developer-bitdubai')
 
     compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
     compile project(':fermat-pip-plugin-network-service-subapp-fermat-monitor-bitdubai')
+
+    compile project(':fermat-pip-plugin-external-api-geolocation')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
@@ -59,6 +113,3 @@ task testCoverage(dependsOn: jacocoTestReport) << {
     println jacocoHtmlReport
 }
 
-jacocoTestReport.dependsOn clean, test
-jacocoTestReport.mustRunAfter test
-test.mustRunAfter clean

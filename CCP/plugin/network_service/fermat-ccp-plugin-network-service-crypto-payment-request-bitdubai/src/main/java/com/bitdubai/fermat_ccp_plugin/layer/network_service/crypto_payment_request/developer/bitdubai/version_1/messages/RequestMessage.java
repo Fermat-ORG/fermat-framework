@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
@@ -30,22 +31,23 @@ public class RequestMessage extends NetworkServiceMessage {
     private final BlockchainNetworkType networkType      ;
     private final ReferenceWallet      referenceWallet;
     private final String        walletPublicKey;
+    private final CryptoCurrency cryptoCurrency;
 
-    public RequestMessage(final UUID                  requestId        ,
-                          final String                identityPublicKey,
-                          final Actors                identityType     ,
-                          final String                actorPublicKey   ,
-                          final Actors                actorType        ,
-                          final String                description      ,
-                          final CryptoAddress         cryptoAddress    ,
-                          final long                  amount           ,
-                          final long                  startTimeStamp   ,
-                          final RequestAction         action           ,
-                          final BlockchainNetworkType networkType     ,
-                          final ReferenceWallet      referenceWallet,
+    public RequestMessage(final UUID requestId,
+                          final String identityPublicKey,
+                          final Actors identityType,
+                          final String actorPublicKey,
+                          final Actors actorType,
+                          final String description,
+                          final CryptoAddress cryptoAddress,
+                          final long amount,
+                          final long startTimeStamp,
+                          final RequestAction action,
+                          final BlockchainNetworkType networkType,
+                          final ReferenceWallet referenceWallet,
                           String identitySender,
                           String actorDestination,
-                          final String        walletPublicKey) {
+                          final String walletPublicKey, CryptoCurrency cryptoCurrency) {
 
         super(MessageTypes.REQUEST,identitySender,actorDestination);
 
@@ -62,6 +64,7 @@ public class RequestMessage extends NetworkServiceMessage {
         this.networkType       = networkType      ;
         this.referenceWallet   = referenceWallet    ;
         this.walletPublicKey = walletPublicKey;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     public UUID getRequestId() {
@@ -114,6 +117,10 @@ public class RequestMessage extends NetworkServiceMessage {
 
     public String getWalletPublicKey() {
         return walletPublicKey;
+    }
+
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
     }
 
     @Override

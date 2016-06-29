@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 /**
@@ -36,7 +37,17 @@ public class AbstractDesktopFragment<S extends FermatSession,R extends ResourceP
         throw new Exception("big problem occur");
     }
 
+    /**
+     * This method is called when the fragment is on user's focus
+     */
+    @Override
+    public void onFragmentFocus() {
+
+    }
 
 
+    @Override
+    public void onUpdateViewOnUIThread(FermatBundle code) {
 
+    }
 }

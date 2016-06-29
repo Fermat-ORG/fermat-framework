@@ -25,7 +25,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
@@ -47,6 +47,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.IssuingRecord;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
     private final OutgoingIntraActorManager outgoingIntraActorManager;
     private final ActorAssetIssuerManager actorAssetIssuerManager;
     private final AssetVaultManager assetVaultManager;
-    private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final AssetIssuerWalletManager assetIssuerWalletManager;
@@ -86,7 +87,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
 
     //CONSTRUCTORS
 
-    public AssetIssuingMonitorAgent(IncomingCryptoManager incomingCryptoManager, ErrorManager errorManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingIntraActorManager outgoingIntraActorManager, ActorAssetIssuerManager actorAssetIssuerManager, AssetVaultManager assetVaultManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, AssetIssuerWalletManager assetIssuerWalletManager, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao) {
+    public AssetIssuingMonitorAgent(IncomingCryptoManager incomingCryptoManager, ErrorManager errorManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingIntraActorManager outgoingIntraActorManager, ActorAssetIssuerManager actorAssetIssuerManager, AssetVaultManager assetVaultManager, CryptoWalletManager cryptoWalletManager, CryptoAddressBookManager cryptoAddressBookManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, AssetIssuerWalletManager assetIssuerWalletManager, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao) {
         this.incomingCryptoManager = incomingCryptoManager;
         this.protocolManager = incomingCryptoManager.getTransactionManager();
         this.errorManager = errorManager;
@@ -94,7 +95,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
         this.outgoingIntraActorManager = outgoingIntraActorManager;
         this.actorAssetIssuerManager = actorAssetIssuerManager;
         this.assetVaultManager = assetVaultManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
         this.assetIssuerWalletManager = assetIssuerWalletManager;
@@ -326,7 +327,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                     outOfKeys = true;
                     return;
                 } else {
-                    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory assetMetadataFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory(record, assetVaultManager, issuer, intraActor, dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, bitcoinWalletManager);
+                    AssetMetadataFactory assetMetadataFactory = new AssetMetadataFactory(record, assetVaultManager, issuer, intraActor, dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, cryptoWalletManager);
                     Future<Boolean> result = executor.submit(assetMetadataFactory);
                 }
             }

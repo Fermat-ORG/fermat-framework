@@ -3,6 +3,7 @@ package org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  * <p/>
  * This class is a wrapper for all the statistic fields that stores the redeem point.
  */
-public interface RedeemPointStatistic {
+public interface RedeemPointStatistic extends Serializable {
 
     /**
      * An unique identifier for every statistic entry. Created because an user can

@@ -10,8 +10,7 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.i
  */
 public class UserCommunityBuildNotificationPainter {
 
-    public static NotificationPainter getNotification(AssetUserCommunitySubAppModuleManager manager,String code,String subAppPublicKey)
-    {
+    public static NotificationPainter getNotification(AssetUserCommunitySubAppModuleManager manager, String code, String subAppPublicKey) {
         NotificationPainter notification = null;
 
         try {
@@ -32,26 +31,26 @@ public class UserCommunityBuildNotificationPainter {
 //                        notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","");
 //                    }
 //                    break;
-                switch (notificationType) {
-                    case "CONNECTION-REQUEST":
-                        if (manager != null) {
-                            //find last notification by sender actor public key
-                            ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
-                            notification = new UserAssetCommunityNotificationPainter("New Connection Request", "Was Received From: " + senderActor.getName(), "", "");
-                        } else {
-                            notification = new UserAssetCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
-                        }
-                        break;
-                    case "CRYPTO-REQUEST":
-                        if (manager != null) {
-                            //find last notification by sender actor public key
+            switch (notificationType) {
+                case "CONNECTION-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new UserAssetCommunityNotificationPainter("New Connection Request", "Was Received From: " + senderActor.getName(), "", "");
+                    } else {
+                        notification = new UserAssetCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
+                    }
+                    break;
+                case "CRYPTO-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
 //                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
-                            notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
-                        } else {
-                            notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: "+ senderActorPublicKey, "", "");
-                        }
-                        break;
-                }
+                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
+                    } else {
+                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: " + senderActorPublicKey, "", "");
+                    }
+                    break;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

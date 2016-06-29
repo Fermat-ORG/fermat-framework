@@ -1,11 +1,5 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -25,14 +19,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantSelectRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 
 import org.apache.commons.lang.StringUtils;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This class define methods to execute query and transactions on database
@@ -48,9 +48,13 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * database Interface member variables.
      */
-    private final String path        ;
-    private final String databaseName;
+    private String path        ;
+    private String databaseName;
     private       UUID   ownerId     ;
+
+
+    public AndroidDatabase() {
+    }
 
     /**
      * <p>Plugin implementation constructor
@@ -117,7 +121,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      */
     @Override
     public DatabaseTransaction newTransaction() {
-        return new AndroidDatabaseTransaction();
+        return new AndroidDatabaseTransaction(this);
     }
 
     /**

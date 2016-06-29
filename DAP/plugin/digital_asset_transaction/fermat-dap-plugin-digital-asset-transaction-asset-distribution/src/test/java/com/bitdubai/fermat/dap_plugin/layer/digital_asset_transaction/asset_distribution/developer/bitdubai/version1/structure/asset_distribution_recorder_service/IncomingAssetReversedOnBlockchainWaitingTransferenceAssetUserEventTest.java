@@ -2,7 +2,7 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
@@ -25,6 +25,7 @@ public class IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventT
 
     private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
     IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent event;
+
     @Before
     public void init() throws Exception {
         event = new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent();
@@ -34,7 +35,7 @@ public class IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventT
     }
 
     @Test
-    public void incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventTest () throws CantSaveEventException {
+    public void incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventTest() throws CantSaveEventException {
         assetDistributionRecorderService.incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEvent(event);
     }
 

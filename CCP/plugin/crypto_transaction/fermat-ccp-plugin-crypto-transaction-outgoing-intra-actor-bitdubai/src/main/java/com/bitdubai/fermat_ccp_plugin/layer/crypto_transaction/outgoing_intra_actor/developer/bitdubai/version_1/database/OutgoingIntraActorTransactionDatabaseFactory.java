@@ -94,6 +94,7 @@ public class OutgoingIntraActorTransactionDatabaseFactory implements DealsWithPl
             table.addColumn(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_SAME_DEVICE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_TYPE, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_FIRST_KEY_COLUMN);
 

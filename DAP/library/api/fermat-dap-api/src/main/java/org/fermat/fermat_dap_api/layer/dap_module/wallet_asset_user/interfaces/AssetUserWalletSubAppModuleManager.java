@@ -1,12 +1,13 @@
 package org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
@@ -35,9 +36,12 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExe
 import org.fermat.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,7 +49,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings> {
+public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings>, Serializable {
     /**
      * (non-Javadoc)
      *
@@ -71,7 +75,7 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
 
     AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException, CantCreateFileException;
 
-    PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
+    byte[] getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException, CantGetResourcesException;
 
     void changeNetworkType(BlockchainNetworkType networkType);
 
@@ -137,6 +141,7 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
 
     /**
      * This method get the available balance of bitcoin wallet
+     *
      * @param walletPublicKey
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException
@@ -147,4 +152,9 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
     List<InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetAssetNegotiationsException;
+
+    List<AssetUserWalletTransaction> getAllTransactionByCryptoAddress(String walletPublicKey, CryptoAddress address) throws CantLoadWalletException, CantGetTransactionsException;
+
+    List<AssetUserWalletTransaction> getTransactionsForDisplay(String walletPublicKey, CryptoAddress cryptoAddress) throws CantLoadWalletException, CantGetTransactionsException;
+
 }

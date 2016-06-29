@@ -4,8 +4,8 @@ import android.net.LocalSocket;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.BufferChannelAIDL;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.sockets.LocalSocketSession;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.sockets.LocalSocketSession;
 
 import java.io.Serializable;
 
@@ -21,6 +21,7 @@ public class LocalClientSocketSession extends LocalSocketSession {
         super(pkIdentity,localSocket);
         this.bufferChannelAIDL = bufferChannelAIDL;
     }
+
 
 
     @Override

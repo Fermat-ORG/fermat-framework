@@ -11,7 +11,7 @@ import java.util.UUID;
  * is the agent that is started for each subscription from another plugin. When a request comes to start an agent
  * this class on a new thread monitor and notifies once the time out happens.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Acosta Rodrigo - (acosta_rodrigo@hotmail.com) on 28/03/16.
  *
  * @version 1.0
@@ -55,7 +55,6 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
 
     /**
      * Getters
-
      */
 
     @Override

@@ -7,9 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
 import java.lang.ref.WeakReference;
 
@@ -18,25 +22,30 @@ import java.lang.ref.WeakReference;
  */
 public class RedeemPointCommunityNavigationViewPainter implements NavigationViewPainter {
 
-    private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation activeIdentity;
+    private static final String TAG = "Red-ComunNavigationView";
 
-    public RedeemPointCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation activeIdentity) {
-        this.activity = new WeakReference<Context>(activity);
-        this.activeIdentity = activeIdentity;
+    private WeakReference<Context> activity;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager> assetRedeemPointCommunitySubAppSession;
+
+    public RedeemPointCommunityNavigationViewPainter(Context activity,
+                                                     ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager> assetRedeemPointCommunitySubAppSession,
+                                                     FermatApplicationCaller applicationsHelper) {
+
+        this.activity = new WeakReference<>(activity);
+        this.assetRedeemPointCommunitySubAppSession = assetRedeemPointCommunitySubAppSession;
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-//        try {
-//            return RedeemPointCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
-//        } catch (CantGetIdentityAssetUserException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-        return null;
+        try {
+            return RedeemPointCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), assetRedeemPointCommunitySubAppSession, applicationsHelper.get());
+        } catch (CantGetIdentityRedeemPointException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

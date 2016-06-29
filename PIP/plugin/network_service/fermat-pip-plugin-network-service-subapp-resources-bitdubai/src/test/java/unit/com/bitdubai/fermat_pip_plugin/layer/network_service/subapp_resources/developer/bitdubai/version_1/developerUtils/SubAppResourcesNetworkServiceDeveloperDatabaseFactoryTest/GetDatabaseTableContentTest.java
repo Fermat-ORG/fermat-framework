@@ -63,11 +63,11 @@ public class GetDatabaseTableContentTest {
         subAppResourcesNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
     }
+
     @Test
     public void getDatabaseTableContentTest() {
 
         assertThat(subAppResourcesNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable)).isInstanceOf(List.class);
-
 
 
     }

@@ -66,20 +66,20 @@ public class IncomingNotificationDao {
     }
 
     public ActorAssetNetworkServiceRecord createNotification(final UUID notificationId,
-                                                            final String senderPublicKey,
-                                                            final Actors senderType,
-                                                            final String destinationPublicKey,
-                                                            final String senderAlias,
-                                                            final String senderPhrase,
-                                                            final byte[] senderProfileImage,
-                                                            final Actors destinationType,
-                                                            final AssetNotificationDescriptor assetNotificationDescriptor,
-                                                            final long timestamp,
-                                                            final ActorAssetProtocolState actorAssetProtocolState,
-                                                            final boolean flagRead,
-                                                            int sentCount,
-                                                            BlockchainNetworkType blockchainNetworkType,
-                                                            UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
+                                                             final String senderPublicKey,
+                                                             final Actors senderType,
+                                                             final String destinationPublicKey,
+                                                             final String senderAlias,
+                                                             final String senderPhrase,
+                                                             final byte[] senderProfileImage,
+                                                             final Actors destinationType,
+                                                             final AssetNotificationDescriptor assetNotificationDescriptor,
+                                                             final long timestamp,
+                                                             final ActorAssetProtocolState actorAssetProtocolState,
+                                                             final boolean flagRead,
+                                                             int sentCount,
+                                                             BlockchainNetworkType blockchainNetworkType,
+                                                             UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
 
         try {
 
@@ -368,8 +368,8 @@ public class IncomingNotificationDao {
     }
 
     public ActorAssetNetworkServiceRecord changeActorAssetNotificationDescriptor(final String senderPublicKey,
-                                                                                final AssetNotificationDescriptor assetNotificationDescriptor,
-                                                                                final ActorAssetProtocolState actorAssetProtocolState)
+                                                                                 final AssetNotificationDescriptor assetNotificationDescriptor,
+                                                                                 final ActorAssetProtocolState actorAssetProtocolState)
             throws CantUpdateRecordDataBaseException, CantUpdateRecordException, CantGetActorAssetNotificationException {
 
         if (senderPublicKey == null)
@@ -389,7 +389,7 @@ public class IncomingNotificationDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
-                DatabaseTableRecord record = records.get(records.size()-1);
+                DatabaseTableRecord record = records.get(records.size() - 1);
 
                 record.setStringValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, assetNotificationDescriptor.getCode());
                 record.setStringValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorAssetProtocolState.getCode());
@@ -444,7 +444,7 @@ public class IncomingNotificationDao {
     }
 
     public List<ActorAssetNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorAssetProtocolState actorAssetProtocolState,
-                                                                                  final AssetNotificationDescriptor assetNotificationDescriptor)
+                                                                                   final AssetNotificationDescriptor assetNotificationDescriptor)
             throws CantGetActorAssetNotificationException {
 
         if (actorAssetProtocolState == null)
@@ -489,7 +489,7 @@ public class IncomingNotificationDao {
             dbRecord.setStringValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, record.getActorSenderType().getCode());
             dbRecord.setStringValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, record.getActorSenderPublicKey());
             dbRecord.setStringValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, record.getActorDestinationPublicKey());
-            dbRecord.setLongValue  (AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
+            dbRecord.setLongValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
             dbRecord.setStringValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, record.getActorAssetProtocolState().getCode());
             dbRecord.setStringValue(AssetRedeemNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(record.isFlagRead()));
 

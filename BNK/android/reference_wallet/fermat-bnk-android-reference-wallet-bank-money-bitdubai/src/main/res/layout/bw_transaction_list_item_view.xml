@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout_deposit"
     android:layout_width="wrap_content"
     android:layout_height="80dp"
@@ -11,16 +10,19 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingStart="16dp"
-    android:paddingTop="8dp"
+    android:paddingTop="0dp"
     android:layout_marginBottom="5dp"
     android:visibility="visible">
 
     <ProgressBar
         android:id="@+id/bw_transaction_progress_bar"
-        android:layout_width="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="-5dp"
         android:indeterminate="true"
-        style="@android:style/Widget.ProgressBar.Inverse"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
     <ImageView
@@ -81,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
         android:layout_toEndOf="@+id/imageView_deposit"
         android:layout_toRightOf="@+id/imageView_deposit"
         android:ellipsize="end"
@@ -149,6 +152,8 @@
         android:id="@+id/textView_withdrawal_memo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/imageView_withdrawal"
         android:layout_toRightOf="@+id/imageView_withdrawal"

@@ -13,13 +13,15 @@ public class BankAccountNumberImpl implements BankAccountNumber {
     private String          alias;
     private String          account;
     private FiatCurrency    currencyType;
+    private String          imageId;
 
-    public BankAccountNumberImpl(String bankName, BankAccountType bankAccountType, String alias, String account, FiatCurrency currencyType){
+    public BankAccountNumberImpl(String bankName, BankAccountType bankAccountType, String alias, String account, FiatCurrency currencyType, String imageId){
         this.bankName        = bankName;
         this.bankAccountType = bankAccountType;
         this.alias           = alias;
         this.account         = account;
         this.currencyType    = currencyType;
+        this.imageId    = imageId;
     }
 
     public BankAccountNumberImpl(){}
@@ -47,5 +49,10 @@ public class BankAccountNumberImpl implements BankAccountNumber {
     @Override
     public FiatCurrency getCurrencyType() {
         return currencyType;
+    }
+
+    @Override
+    public String getAccountImageId() {
+        return imageId;
     }
 }

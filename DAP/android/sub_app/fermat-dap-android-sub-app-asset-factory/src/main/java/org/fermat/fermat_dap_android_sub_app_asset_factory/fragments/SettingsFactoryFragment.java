@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
@@ -23,10 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 
 import static android.widget.Toast.makeText;
@@ -34,18 +34,14 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 01/02/16.
  */
-public class SettingsFactoryFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>, ResourceProviderManager> implements View.OnClickListener {
 
     private View rootView;
-
     private FermatTextView networkAction;
     private FermatTextView notificationAction;
-
     // Fermat Managers
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySession assetFactorySession;
     private ErrorManager errorManager;
-//    SettingsManager<AssetFactorySettings> settingsManager;
 
     public static SettingsFactoryFragment newInstance() {
         return new SettingsFactoryFragment();
@@ -56,8 +52,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetFactorySession = ((AssetFactorySession) appSession);
-        moduleManager = assetFactorySession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
 //            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -76,7 +71,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
             setUpUI();
             setUpActions();
             setUpUIData();
-            configureToolbar();
+//            configureToolbar();
 
             return rootView;
         } catch (Exception e) {
@@ -125,18 +120,29 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
+//        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetFactory.IC_ACTION_SETTINGS) {
-                setUpFactorySettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                //case IC_ACTION_SETTINGS:
+                case 2:
+                    setUpFactorySettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
+//                case 1:
+//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+//                    break;
             }
+
+//            if (id == SessionConstantsAssetFactory.IC_ACTION_SETTINGS) {
+//                setUpFactorySettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -166,13 +172,14 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
     }
 
     private void configureToolbar() {
-        Toolbar toolbar = getPaintActivtyFeactures().getToolbar();
+        Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.redeem_home_bar_color));
             toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#1d1d25"));
+                window.setStatusBarColor(getResources().getColor(R.color.redeem_home_bar_color));
             }
         }
     }

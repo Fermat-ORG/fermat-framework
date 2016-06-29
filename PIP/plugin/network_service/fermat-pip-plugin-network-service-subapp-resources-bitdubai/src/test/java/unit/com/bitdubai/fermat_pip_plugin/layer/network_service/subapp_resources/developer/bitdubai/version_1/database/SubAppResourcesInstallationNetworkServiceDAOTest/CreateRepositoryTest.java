@@ -94,7 +94,7 @@ public class CreateRepositoryTest {
     @Test
     public void createRepositoryTest_CreateOk_ThrowsCantCreateRepositoryException() throws Exception {
 
-        catchException(subAppResourcesInstallationNetworkServiceDAO).createRepository(repository,skinId);
+        catchException(subAppResourcesInstallationNetworkServiceDAO).createRepository(repository, skinId);
         //repository = subAppResourcesInstallationNetworkServiceDAO.getRepository(skinId);
         System.out.println(repository);
         assertThat(CatchException.<Exception>caughtException()).isNull();

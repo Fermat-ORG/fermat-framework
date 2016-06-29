@@ -21,47 +21,49 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.AppManagerMiddlewareInstalledWallet</code>
  * is the implementation of InstalledWallet.
  * <p/>
- *
+ * <p/>
  * Created by Natalia on 21/07/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */
 
 public class AppManagerMiddlewareInstalledWallet implements InstalledWallet, Serializable {
 
-    private String         publicKey;
-    private UUID           walletCatalogId;
+    private String publicKey;
+    private UUID walletCatalogId;
     private WalletCategory walletCategory;
-    private WalletType     walletType;
-    private String         walletName;
-    private String         walletIcon;
-    private String         walletPlatformIdentifier;
-    private Version        version;
-    private String         screenSize;
-    private String         navigationStructureVersion;
-    private String         walletDeveloper;
-    private String         deviceUserPublicKey;
-    private Platforms      platforms;
+    private WalletType walletType;
+    private String walletName;
+    private String walletIcon;
+    private String walletPlatformIdentifier;
+    private Version version;
+    private String screenSize;
+    private String navigationStructureVersion;
+    private String walletDeveloper;
+    private String deviceUserPublicKey;
+    private Platforms platforms;
 
-    private List<InstalledSkin>     skinsId;
+    private CryptoCurrency currency;      // TODO: temporal Fermat Wallet
+
+    private List<InstalledSkin> skinsId;
     private List<InstalledLanguage> languagesId;
     private BlockchainNetworkType blockchainNetworkType;
 
     public AppManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
-                                                  List<InstalledSkin> skinsId,
-                                                  List<InstalledLanguage> languajesId,
-                                                  String walletIcon, String walletName,
-                                                  String publicKey,
-                                                  String walletPlatformIdentifier,
-                                                  Version version,
-                                                  WalletType walletType,
-                                                  String screenSize,
-                                                  String navigationStructureVersion,
-                                                  UUID walletCatalogId,
-                                                  String walletDeveloper,
-                                                  String deviceUserPublicKey,
-                                                  BlockchainNetworkType blockchainNetworkType)
-    {
+                                               List<InstalledSkin> skinsId,
+                                               List<InstalledLanguage> languajesId,
+                                               String walletIcon, String walletName,
+                                               String publicKey,
+                                               String walletPlatformIdentifier,
+                                               Version version,
+                                               WalletType walletType,
+                                               String screenSize,
+                                               String navigationStructureVersion,
+                                               UUID walletCatalogId,
+                                               String walletDeveloper,
+                                               String deviceUserPublicKey,
+                                               BlockchainNetworkType blockchainNetworkType) {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
         this.languagesId = languajesId;
@@ -74,27 +76,26 @@ public class AppManagerMiddlewareInstalledWallet implements InstalledWallet, Ser
         this.screenSize = screenSize;
         this.navigationStructureVersion = navigationStructureVersion;
         this.walletCatalogId = walletCatalogId;
-        this.walletDeveloper =  walletDeveloper;
+        this.walletDeveloper = walletDeveloper;
         this.deviceUserPublicKey = deviceUserPublicKey;
         this.blockchainNetworkType = blockchainNetworkType;
     }
 
 
     public AppManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
-                                                  List<InstalledSkin> skinsId,
-                                                  List<InstalledLanguage> languajesId,
-                                                  String walletIcon, String walletName,
-                                                  String publicKey,
-                                                  String walletPlatformIdentifier,
-                                                  Version version,
-                                                  WalletType walletType,
-                                                  String screenSize,
-                                                  String navigationStructureVersion,
-                                                  UUID walletCatalogId,
-                                                  String walletDeveloper,
-                                                  String deviceUserPublicKey,Platforms platforms,
-                                                  BlockchainNetworkType blockchainNetworkType)
-    {
+                                               List<InstalledSkin> skinsId,
+                                               List<InstalledLanguage> languajesId,
+                                               String walletIcon, String walletName,
+                                               String publicKey,
+                                               String walletPlatformIdentifier,
+                                               Version version,
+                                               WalletType walletType,
+                                               String screenSize,
+                                               String navigationStructureVersion,
+                                               UUID walletCatalogId,
+                                               String walletDeveloper,
+                                               String deviceUserPublicKey, Platforms platforms,
+                                               BlockchainNetworkType blockchainNetworkType) {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
         this.languagesId = languajesId;
@@ -107,119 +108,144 @@ public class AppManagerMiddlewareInstalledWallet implements InstalledWallet, Ser
         this.screenSize = screenSize;
         this.navigationStructureVersion = navigationStructureVersion;
         this.walletCatalogId = walletCatalogId;
-        this.walletDeveloper =  walletDeveloper;
+        this.walletDeveloper = walletDeveloper;
         this.deviceUserPublicKey = deviceUserPublicKey;
         this.platforms = platforms;
         this.blockchainNetworkType = blockchainNetworkType;
     }
+
+    // TODO: temporal Fermat Wallet
+    public AppManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
+                                               List<InstalledSkin> skinsId,
+                                               List<InstalledLanguage> languajesId,
+                                               String walletIcon,
+                                               String walletName,
+                                               String publicKey,
+                                               String walletPlatformIdentifier,
+                                               Version version,
+                                               WalletType walletType,
+                                               String screenSize,
+                                               String navigationStructureVersion,
+                                               UUID walletCatalogId,
+                                               String walletDeveloper,
+                                               String deviceUserPublicKey, Platforms platforms,
+                                               BlockchainNetworkType blockchainNetworkType,
+                                               CryptoCurrency currency) {
+        this.walletCategory = walletCategory;
+        this.skinsId = skinsId;
+        this.languagesId = languajesId;
+        this.walletIcon = walletIcon;
+        this.walletName = walletName;
+        this.publicKey = publicKey;
+        this.walletPlatformIdentifier = walletPlatformIdentifier;
+        this.version = version;
+        this.walletType = walletType;
+        this.screenSize = screenSize;
+        this.navigationStructureVersion = navigationStructureVersion;
+        this.walletCatalogId = walletCatalogId;
+        this.walletDeveloper = walletDeveloper;
+        this.deviceUserPublicKey = deviceUserPublicKey;
+        this.platforms = platforms;
+        this.blockchainNetworkType = blockchainNetworkType;
+        this.currency = currency;
+    }
+
     /**
      * InstalledWallet Interface implementation.
      */
 
     /**
      * This method gives us the list of all the languages installed for this wallet
-     *
      */
     @Override
-    public List<InstalledLanguage> getLanguagesId(){
+    public List<InstalledLanguage> getLanguagesId() {
         return languagesId;
     }
 
     /**
      * This method gives us the list of all the skins installed for this wallet
-     *
-       */
+     */
     @Override
-    public List<InstalledSkin> getSkinsId(){
+    public List<InstalledSkin> getSkinsId() {
         return skinsId;
     }
 
     /**
      * This method tell us the category of the wallet
-     *
-      */
+     */
     @Override
-    public WalletCategory getWalletCategory(){
+    public WalletCategory getWalletCategory() {
         return walletCategory;
     }
 
     /**
      * This method gives us the wallet Type for this wallet
-     *
      */
     @Override
-    public WalletType getWalletType(){
-            return this.walletType;
+    public WalletType getWalletType() {
+        return this.walletType;
     }
 
     /**
      * This method gives us the screen Size for this wallet
-     *
      */
     @Override
-    public String getWalletScreenSize(){
+    public String getWalletScreenSize() {
         return this.screenSize;
     }
 
     /**
      * This method gives us the navigation structure version for this wallet
-     *
      */
     @Override
-    public String getWalletNavigationStructureVersion(){
+    public String getWalletNavigationStructureVersion() {
         return this.navigationStructureVersion;
     }
 
     /**
      * This method gives us a codification of the wallet identifier (the identifier is an enum that
      * registers the wallet)
-     *
      */
     @Override
-    public String getWalletPlatformIdentifier(){
+    public String getWalletPlatformIdentifier() {
         return walletPlatformIdentifier;
     }
 
     /**
      * This method gives us the name of the wallet icon used to identify the image in the wallet resources plug-in
-     *
      */
     @Override
-    public String getWalletIcon(){
+    public String getWalletIcon() {
         return walletIcon;
     }
 
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
      * the wallet
-     *
-    */
+     */
     @Override
-    public String getWalletPublicKey(){
+    public String getWalletPublicKey() {
         return publicKey;
     }
 
     /**
      * This method gives us the wallet name
-     *
      */
     @Override
-    public String getWalletName(){
+    public String getWalletName() {
         return walletName;
     }
 
     /**
      * This method gives us the version of the wallet
-     *
-      */
+     */
     @Override
-    public Version getWalletVersion(){
+    public Version getWalletVersion() {
         return version;
     }
 
     /**
      * This method gives us the catalog id for this wallet
-     *
      */
     @Override
     public UUID getWalletCatalogId() {
@@ -227,19 +253,19 @@ public class AppManagerMiddlewareInstalledWallet implements InstalledWallet, Ser
     }
 
     @Override
-    public String getWalletDeveloperName(){
+    public String getWalletDeveloperName() {
         return this.walletDeveloper;
     }
 
     @Override
-    public String getWalletDeviceUserPublicKey(){
+    public String getWalletDeviceUserPublicKey() {
         return this.deviceUserPublicKey;
     }
 
     @Override
     public Platforms getPlatform() {
         // TODO NOW IS BY DEFECT
-        if(this.platforms!=null){
+        if (this.platforms != null) {
             return this.platforms;
         }
         return Platforms.CRYPTO_CURRENCY_PLATFORM;
@@ -254,6 +280,12 @@ public class AppManagerMiddlewareInstalledWallet implements InstalledWallet, Ser
     @Override
     public CryptoCurrency getCryptoCurrency() {
         // TODO NOW IS BY DEFECT
+
+        // TODO: temporal Fermat Wallet
+
+        if (this.currency != null) {
+            return this.currency;
+        }
         return CryptoCurrency.BITCOIN;
     }
 

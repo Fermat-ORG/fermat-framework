@@ -24,7 +24,7 @@ public class ClientConnectionLooseNotificationHandler implements FermatEventHand
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        ClientConnectionLooseNotificationEvent clientConnectionLooseNotificationEvent =(ClientConnectionLooseNotificationEvent) fermatEvent;
+        ClientConnectionLooseNotificationEvent clientConnectionLooseNotificationEvent = (ClientConnectionLooseNotificationEvent) fermatEvent;
 
         //TODO: falta ver si le seteo la activity (enum de las activities) o/y si le setio la public Key de la wallet
 
@@ -39,7 +39,7 @@ public class ClientConnectionLooseNotificationHandler implements FermatEventHand
 
         }
 
-            //this.notificationManager.recordNavigationStructure(xmlText,link,filename,skinId);
+        //this.notificationManager.recordNavigationStructure(xmlText,link,filename,skinId);
 
     }
 }

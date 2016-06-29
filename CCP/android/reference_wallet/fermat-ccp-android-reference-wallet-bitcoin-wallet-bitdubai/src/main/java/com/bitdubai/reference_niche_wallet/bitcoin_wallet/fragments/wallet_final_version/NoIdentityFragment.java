@@ -9,10 +9,12 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 
 /**
  * Created by mati on 2015.11.25..
@@ -23,7 +25,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     /**
      * Plaform reference
      */
-    private ReferenceWalletSession referenceWalletSession;
+    private ReferenceAppFermatSession referenceWalletSession;
     private IntraUserModuleManager intraUserModuleManager;
 
     /**
@@ -39,12 +41,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            referenceWalletSession = (ReferenceWalletSession) appSession;
 
-        } catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     @Nullable
@@ -57,7 +54,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
             return rootView;
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
@@ -70,7 +67,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    //changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY, ((ReferenceWalletSession)appSession).getIdentityConnection(), object);
+                    changeApp(SubAppsPublicKeys.CCP_IDENTITY.getCode(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

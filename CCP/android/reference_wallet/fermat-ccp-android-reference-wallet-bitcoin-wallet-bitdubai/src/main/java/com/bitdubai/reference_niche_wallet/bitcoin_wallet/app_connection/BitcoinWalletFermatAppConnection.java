@@ -2,13 +2,15 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -25,10 +27,10 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWalletSession>{
 
-    private CryptoWallet moduleManager = null;
-    private ReferenceWalletSession referenceWalletSession;
+public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoWallet>> {
+
+    ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
 
     public BitcoinWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -40,27 +42,25 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.CRYPTO_WALLET,
                 Developers.BITDUBAI,
                 new Version()
-            );
+        )};
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AbstractReferenceAppFermatSession getSession() {
         return new ReferenceWalletSession();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-       // return new BitcoinWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new BitcoinWalletNavigationViewPainter(getContext(),null);
+        return new BitcoinWalletNavigationViewPainter(getContext(), this.getFullyLoadedSession(), getApplicationManager()); //getApplicationManager()
     }
 
     @Override
@@ -74,31 +74,47 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
-     try
-        {
-           boolean enabledNotification = true;
+    public NotificationPainter getNotificationPainter(String code) {
+        try {
+            boolean enabledNotification = true;
             this.referenceWalletSession = this.getFullyLoadedSession();
-            if(referenceWalletSession!=  null) {
+            if (referenceWalletSession != null) {
                 if (referenceWalletSession.getModuleManager() != null) {
-                    moduleManager = referenceWalletSession.getModuleManager();
+//                    moduleManager = referenceWalletSession.getModuleManager();
                     enabledNotification = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
                 }
 
-
                 if (enabledNotification)
-                    return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(),Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return BitcoinWalletBuildNotificationPainter.getNotification(referenceWalletSession.getModuleManager(), code, referenceWalletSession.getAppPublicKey(), Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
-                    return new BitcoinWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
-
-            }
-            else
+                    return new BitcoinWalletNotificationPainter("", "", "", "", false, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+            } else
                 return null;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+        switch (id){
+            case 1:
+
+                break;
+            case 2:
+                resId = R.drawable.ic_menu_help_icon;
+                break;
+            case 4:
+                resId = R.drawable.ic_actionbar_send;
+                break;
+            case 3:
+
+                break;
+
+        }
+        return resId;
     }
 }

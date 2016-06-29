@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.provisory;
 
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ComboAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -113,6 +114,11 @@ public class SubAppManagerProvisory implements SubAppManager {
                 Platforms.ART_PLATFORM,
                 AppsStatus.DEV);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+
+        //Combo chat
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Combo Chat", ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode(), "chat_sub_app", new Version(1, 0, 0),Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+
 
         //TODO - Add Others SubApps
 

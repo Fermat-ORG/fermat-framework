@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificatio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
 import java.util.List;
 import java.util.UUID;

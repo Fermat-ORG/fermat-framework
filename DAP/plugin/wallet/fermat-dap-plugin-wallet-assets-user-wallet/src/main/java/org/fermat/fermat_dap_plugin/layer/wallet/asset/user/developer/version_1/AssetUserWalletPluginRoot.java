@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -44,7 +43,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.DeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.exceptions.CantDeliveryDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletImpl;
 
 import java.util.ArrayList;
@@ -249,22 +247,6 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-//        if (selectedNetwork == null) {
-//            try {
-//                if (settings == null) {
-//                    settingsManager = getSettingsManager();
-//                }
-//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_ISSUER_WALLET.getCode());
-//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-//            } catch (CantGetSettingsException exception) {
-//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-//                exception.printStackTrace();
-//            } catch (SettingsNotFoundException e) {
-//                //TODO: Only enter while the Active Actor Wallet is not open.
-//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-////                e.printStackTrace();
-//            }
-//        }
         return selectedNetwork;
     }
 }

@@ -16,9 +16,6 @@
             />
         <!--
             style="@style/ContactListView" -->
-
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -26,15 +23,15 @@
                 android:id="@+id/nodata"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
-                android:src="@drawable/icon_no_contacts"
+                android:src="@drawable/cht_icon_no_contacts"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_marginTop="130dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="No contacts"
                 android:id="@+id/nodatalabel"
                 android:textColor="#D1D3D4"
@@ -42,6 +39,40 @@
                 android:textSize="12pt"
                 android:layout_below="@+id/nodata"
                 android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To add contacts, go to P2P Chat"
+                android:id="@+id/nochatssubtitle"
+                android:textColor="#D1D3D4"
+                android:textStyle="normal"
+                android:textSize="8pt"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/nodatalabel"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Community and send a connection"
+                android:id="@+id/nochatssubtitle1"
+                android:textColor="#D1D3D4"
+                android:textStyle="normal"
+                android:textSize="8pt"
+                android:layout_below="@+id/nochatssubtitle"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="request to a friend."
+                android:id="@+id/nochatssubtitle2"
+                android:textColor="#D1D3D4"
+                android:textStyle="normal"
+                android:textSize="8pt"
+                android:layout_below="@+id/nochatssubtitle1"
+                android:layout_centerHorizontal="true"/>
         </RelativeLayout>
 
         <!-- <TextView android:id="@+id/text"

@@ -23,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Acosta Rodrigo - (acosta_rodrigo@hotmail.com) on 28/03/16.
  *
  * @version 1.0
@@ -160,7 +160,6 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
         tables.add(event_monitorTable);
 
 
-
         return tables;
     }
 
@@ -177,12 +176,12 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -202,7 +201,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

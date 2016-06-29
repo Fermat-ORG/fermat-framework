@@ -33,7 +33,8 @@ public class CreateGroupFragmentDialog extends Dialog implements
     Button cancel_btn;
     AutoCompleteTextView group_name;
 
-    public CreateGroupFragmentDialog(Activity a, AssetUserCommunitySubAppModuleManager manager, Group group) {
+    public CreateGroupFragmentDialog(Activity a,
+                                     AssetUserCommunitySubAppModuleManager manager, Group group) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;

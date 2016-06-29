@@ -6,6 +6,8 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 
 import java.io.Serializable;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+
 /**
  * Created by Nerio on 07/09/15.
  * Modified by Franklin 03/11/2015
@@ -22,11 +24,12 @@ public interface RedeemPointIdentity extends ActiveActorIdentityInformation, Ser
 
     /**
      * This method let an intra user sign a message with his unique private key
+     *
      * @param message the message to sign
      * @return the signature
      * @throws CantSingMessageException
      */
-    String createMessageSignature(String message) ;
+    String createMessageSignature(String message);
 
     String getContactInformation();
 
@@ -41,4 +44,8 @@ public interface RedeemPointIdentity extends ActiveActorIdentityInformation, Ser
     String getStreetName();
 
     String getHouseNumber();
+
+    int getAccuracy();
+
+    Frequency getFrequency();
 }

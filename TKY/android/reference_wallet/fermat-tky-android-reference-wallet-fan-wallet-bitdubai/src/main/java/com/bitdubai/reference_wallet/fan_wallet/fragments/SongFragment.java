@@ -29,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -51,7 +50,7 @@ import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModul
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.fan_wallet.util.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ import java.util.UUID;
  */
 public class SongFragment extends AbstractFermatFragment  {
     //FermatManager
-    private FanWalletSession fanwalletSession;
+    private FanWalletSessionReferenceApp fanwalletSession;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
     private FanWalletModule fanWalletModule;
@@ -115,7 +114,7 @@ public class SongFragment extends AbstractFermatFragment  {
 
         try {
 
-            fanwalletSession = ((FanWalletSession) appSession);
+            fanwalletSession = ((FanWalletSessionReferenceApp) appSession);
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START SONG");
 

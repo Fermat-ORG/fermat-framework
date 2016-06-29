@@ -22,8 +22,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -31,6 +32,8 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
@@ -46,33 +49,37 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantFindWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetFermatWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListFermatWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.ContactNameAlreadyExistsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.showMessage;
@@ -80,14 +87,14 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 /**
  * Created by Matias Furszyfer on 2015.11.05..
  */
+public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFermatSession<FermatWallet>, ResourceProviderManager> implements View.OnClickListener {
 
-public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletSession, ResourceProviderManager> implements View.OnClickListener {
 
     private AndroidCoreManager androidCoreManager;
     /**
      * Plaform reference
      */
-    private CryptoWallet cryptoWallet;
+    private FermatWallet fermatWallet;
 
     /**
      * UI
@@ -102,7 +109,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     /**
      * User selected
      */
-    private CryptoWalletWalletContact cryptoWalletWalletContact;
+    private FermatWalletWalletContact cryptoWalletWalletContact;
     private boolean isFragmentFromDetail;
     private boolean connectionDialogIsShow;
     private boolean onFocus;
@@ -113,7 +120,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     private BitcoinConverter bitcoinConverter;
     private ImageView spinnerArrow;
     BlockchainNetworkType blockchainNetworkType;
-
+    private ExecutorService _executor;
 
     public static RequestFormFragment newInstance() {
         return new RequestFormFragment();
@@ -122,27 +129,28 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
 
+            _executor = Executors.newFixedThreadPool(2);
             bitcoinConverter = new BitcoinConverter();
-            cryptoWallet = appSession.getModuleManager();
+            fermatWallet = appSession.getModuleManager();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-            BitcoinWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            FermatWalletSettings fermatWalletSettings = null;
+            fermatWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
 
-            if(bitcoinWalletSettings != null) {
+            if(fermatWalletSettings != null) {
 
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                if (fermatWalletSettings.getBlockchainNetworkType() == null) {
+                    fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), fermatWalletSettings);
 
             }
 
             blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+           // System.out.println("Network Type" + blockchainNetworkType);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -157,7 +165,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.request_form_base, container, false);
+            rootView = inflater.inflate(R.layout.fermat_wallet_request_form_base, container, false);
             NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {
@@ -173,7 +181,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             } else {
@@ -183,6 +191,19 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                 setUpUIData();
 
             }
+
+            _executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    setUpContactAddapter();
+
+                }
+            });
+
+            //(Hide keyboard)
+            final InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(contactName.getWindowToken(), 0);
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -226,11 +247,11 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
-        imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
-        send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+       send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
+        list.add("FTMS");
         list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
@@ -249,7 +270,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                     switch (position) {
                         case 0:
-                            text = "[btc]";
+                            text = "[ftms]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
                             } else if (txtType.equals("[satoshis]")) {
@@ -260,6 +281,17 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                             break;
                         case 1:
+                            text = "[btc]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+
+                            break;
+                        case 2:
                             text = "[bits]";
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
@@ -270,7 +302,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                             }
 
                             break;
-                        case 2:
+                        case 3:
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
@@ -338,20 +370,20 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                 //add connection like a wallet contact
                 try {
                     if (walletContact.isConnection) {
-                        cryptoWalletWalletContact = cryptoWallet.convertConnectionToContact(
+                        cryptoWalletWalletContact = fermatWallet.convertConnectionToContact(
                                 walletContact.name,
                                 Actors.INTRA_USER,
                                 walletContact.actorPublicKey,
                                 walletContact.profileImage,
                                 Actors.INTRA_USER,
-                                appSession.getIntraUserModuleManager().getPublicKey(),
+                                fermatWallet.getSelectedActorIdentity().getPublicKey(),
                                 appSession.getAppPublicKey(),
                                 CryptoCurrency.BITCOIN,
                                 blockchainNetworkType);
 
                     } else {
                         try {
-                            cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId, appSession.getIntraUserModuleManager().getPublicKey());
+                            cryptoWalletWalletContact = fermatWallet.findWalletContactById(walletContact.contactId, fermatWallet.getSelectedActorIdentity().getPublicKey());
                         } catch (CantFindWalletContactException e) {
                             e.printStackTrace();
                         } catch (WalletContactNotFoundException e) {
@@ -362,8 +394,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         walletContact.name = cryptoWalletWalletContact.getActorName();
                         walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
                         if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
-                            cryptoWallet.requestAddressToKnownUser(
-                                    appSession.getIntraUserModuleManager().getPublicKey(),
+                            fermatWallet.requestAddressToKnownUser(
+                                    fermatWallet.getSelectedActorIdentity().getPublicKey(),
                                     Actors.INTRA_USER,
                                     cryptoWalletWalletContact.getActorPublicKey(),
                                     cryptoWalletWalletContact.getActorType(),
@@ -371,7 +403,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                     VaultType.CRYPTO_CURRENCY_VAULT,
                                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                     appSession.getAppPublicKey(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                     blockchainNetworkType
                             );
                         }
@@ -402,23 +434,16 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
 
+
                 } catch (
-                        CantGetCryptoWalletException e
+                        CantRequestFermatAddressException e
                         )
 
                 {
                     e.printStackTrace();
-                } catch (
-                        CantListCryptoWalletIntraUserIdentityException e
-                        )
-
-                {
+                } catch (CantGetSelectedActorIdentityException e) {
                     e.printStackTrace();
-                } catch (
-                        CantRequestCryptoAddressException e
-                        )
-
-                {
+                } catch (ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
             }
@@ -447,11 +472,11 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
         /**
          * Listeners
          */
-        imageView_contact.setOnClickListener(this);
-        send_button.setOnClickListener(this);
-        rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
-        /**
+        send_button.setOnClickListener(this);
+
+        send_button.setOnClickListener(this);
+      /**
          *  Amount observer
          */
         editTextAmount.addTextChangedListener(new TextWatcher() {
@@ -486,7 +511,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     //You can use own requirement here also.
 
                     if (!connectionDialogIsShow) {
-                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appSession.getResourceProviderManager());
+                        ConnectionWithCommunityDialog connectionWithCommunityDialog = null;
+
+                            connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appResourcesProviderManager);
+
                         connectionWithCommunityDialog.show();
                         connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -531,25 +559,21 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
     private void setUpUIData() {
         if(cryptoWalletWalletContact==null) {
-            cryptoWalletWalletContact = appSession.getLastContactSelected();
+            cryptoWalletWalletContact = (FermatWalletWalletContact) appSession.getData(SessionConstant.LAST_SELECTED_CONTACT);
         }
         if (cryptoWalletWalletContact != null) {
-            isFragmentFromDetail = true;
-            try {
-                if (cryptoWalletWalletContact.getProfilePicture() != null) {
-                    imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
 
-                } else
-                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            } catch (Exception e) {
-                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            }
+            isFragmentFromDetail = true;
+
+
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
-            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-            Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-        }
+            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+
+         }
+
+
     }
 
 
@@ -600,7 +624,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
 
-                    String notes = null;
+                    String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
                       notes = txt_notes.getText().toString();
                     }
@@ -610,7 +634,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         newAmount = amount;
                     } else if (txtType.equals("[bits]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                    }else if (txtType.equals("[ftms]")) {
+                        newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                     }
+
 
 
                     BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
@@ -618,9 +645,9 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                     if(operator.compareTo(minSatoshis) == 1 )
                     {
 
-                           String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
+                           String identityPublicKey = fermatWallet.getSelectedActorIdentity().getPublicKey();
 
-                           CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+                           CryptoAddress cryptoAddress = fermatWallet.requestAddressToKnownUser(
                                    identityPublicKey,
                                    Actors.INTRA_USER,
                                    cryptoWalletWalletContact.getActorPublicKey(),
@@ -629,10 +656,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                    VaultType.CRYPTO_CURRENCY_VAULT,
                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                    appSession.getAppPublicKey(),
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    blockchainNetworkType
                            );
-                           cryptoWallet.sendCryptoPaymentRequest(
+                           fermatWallet.sendCryptoPaymentRequest(
                                    cryptoWalletWalletContact.getWalletPublicKey(),
                                    identityPublicKey,
                                    Actors.INTRA_USER,
@@ -642,13 +669,14 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                    notes,
                                    operator.longValueExact(),
                                    blockchainNetworkType,
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                   ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
+                                   CryptoCurrency.BITCOIN
 
                            );
                            Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
                            if (isFragmentFromDetail) onBack(null);
                            else
-                               onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                               onBack(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
                        Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
                     }
@@ -674,8 +702,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(appSession.getAppPublicKey(), appSession.getIntraUserModuleManager().getPublicKey());
-            for (CryptoWalletWalletContact wcr : walletContactRecords) {
+            List<FermatWalletWalletContact> walletContactRecords = fermatWallet.listAllActorContactsAndConnections(appSession.getAppPublicKey(), fermatWallet.getSelectedActorIdentity().getPublicKey());
+            for (FermatWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";
                 if (wcr.getReceivedCryptoAddress().get(blockchainNetworkType) != null)
@@ -683,11 +711,12 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
-        } catch (CantGetCryptoWalletException e) {
+
+        } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+        } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
         return contacts;

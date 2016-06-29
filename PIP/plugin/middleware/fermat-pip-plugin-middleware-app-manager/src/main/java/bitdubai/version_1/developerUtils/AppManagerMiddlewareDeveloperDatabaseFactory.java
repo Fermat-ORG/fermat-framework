@@ -23,7 +23,7 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
     String pluginId;
     List<String> walletsIds;
 
-    public AppManagerMiddlewareDeveloperDatabaseFactory (String pluginId){
+    public AppManagerMiddlewareDeveloperDatabaseFactory(String pluginId) {
         this.pluginId = pluginId;
 
     }
@@ -65,7 +65,7 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
         /**
          * Wallets table
          */
-        DeveloperDatabaseTable  WalletTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableColumns);
+        DeveloperDatabaseTable WalletTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableColumns);
         tables.add(WalletTable);
 
 
@@ -82,7 +82,7 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
         /**
          * language table
          */
-        DeveloperDatabaseTable  languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableLanguageColumns);
+        DeveloperDatabaseTable languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableLanguageColumns);
         tables.add(languageTable);
 
         /**
@@ -100,7 +100,7 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
          * Skin table
          */
 
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME, AppManagerMiddlewareTableSkinColumns);
+        DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME, AppManagerMiddlewareTableSkinColumns);
         tables.add(cryptoTransactionsTable);
 
 
@@ -108,7 +108,7 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
     }
 
 
-    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,  Database database, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -120,12 +120,12 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -145,7 +145,7 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

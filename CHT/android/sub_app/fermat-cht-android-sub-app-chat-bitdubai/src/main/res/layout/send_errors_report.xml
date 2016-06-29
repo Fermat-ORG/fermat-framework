@@ -62,14 +62,26 @@
             <Button
                 android:id="@+id/okButton"
                 android:layout_height="wrap_content"
-                android:background="@drawable/cht_ok_buttom"
+                android:background="#3d3d3d"
+                android:text="OK"
+                android:textAlignment="center"
+                android:paddingTop="@dimen/margin_15dp"
+                android:paddingBottom="@dimen/margin_15dp"
+                android:paddingLeft="@dimen/margin_60dp"
+                android:paddingRight="@dimen/margin_60dp"
                 android:layout_width="wrap_content"
                 android:layout_alignParentStart="true"/>
 
             <Button
                 android:id="@+id/cancelButton"
                 android:layout_height="wrap_content"
-                android:background="@drawable/cht_cancel_buttom"
+                android:background="#3d3d3d"
+                android:text="Cancel"
+                android:textAlignment="center"
+                android:paddingTop="@dimen/margin_15dp"
+                android:paddingBottom="@dimen/margin_15dp"
+                android:paddingLeft="@dimen/margin_50dp"
+                android:paddingRight="@dimen/margin_50dp"
                 android:layout_width="wrap_content"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>

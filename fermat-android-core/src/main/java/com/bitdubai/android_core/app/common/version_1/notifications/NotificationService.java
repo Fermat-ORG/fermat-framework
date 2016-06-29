@@ -13,11 +13,10 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.bitdubai.android_core.app.AppActivity;
 import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -30,6 +29,7 @@ import java.util.Random;
  * Created by Matias Furszyfer on 2016.03.01..
  */
 public class NotificationService extends Service {
+
     public static String LOG_TAG = "NotificationService";
     private final IBinder mBinder = new LocalBinder();
     // map from AppPublicKey to notificationId
@@ -93,27 +93,25 @@ public class NotificationService extends Service {
                     RemoteViews remoteViews = notificationPainter.getNotificationView(code);
                     Intent intent = new Intent();
                     intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.setAction("org.fermat.APP_LAUNCHER");
-                    //Intent intent = new Intent(this,AppActivity.class);
-                    //intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     PendingIntent pi = PendingIntent
-                            .getActivity(this, 0, intent, 0);
+                            .getBroadcast(this, 0, intent, 0);
                     if (remoteViews != null) {
-                        builder = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_logo_310_x_310).setTicker("ticker")
+                        builder = new Notification.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setTicker("ticker")
                                 .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
                                 .setAutoCancel(true)
                                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                                 .setLights(Color.YELLOW, 3000, 3000)
+                                .setContentIntent(pi)
                                 .setContent(remoteViews)
                                 .setWhen(System.currentTimeMillis());
                     } else {
                         builder = new Notification.Builder(this)
                                 .setTicker(notificationPainter.getNotificationTitle())
-                                .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
+                                .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.mipmap.ic_launcher : notificationPainter.getIcon())
                                 .setContentTitle(notificationPainter.getNotificationTitle())
                                 .setContentText(notificationPainter.getNotificationTextBody())
                                 .setContentIntent(pi)
@@ -121,32 +119,30 @@ public class NotificationService extends Service {
                                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                                 .setLights(Color.YELLOW, 3000, 3000);
                     }
-//                    NotificationManager notificationManager = (NotificationManager)
-//                            getSystemService(NOTIFICATION_SERVICE);
-//                    notificationManager.notify(0, builder.build());
+                    Log.i(LOG_TAG,"Launcher: "+publicKey);
                 }
-
-
             }else{
-                Intent intent = new Intent(this,AppActivity.class);
+                Intent intent = new Intent();
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setAction("org.fermat.APP_LAUNCHER");
+                //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
-                        .getActivity(this, 0, intent, 0);
+                        .getBroadcast(this, 0, intent, 0);
                 builder = new Notification.Builder(this)
                         .setTicker("Something arrive")
-                        .setSmallIcon(R.drawable.fermat_logo_310_x_310)
+                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Fermat: new notification")
                         .setAutoCancel(true)
                         .setContentIntent(pi)
                         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.YELLOW, 3000, 3000);
+                Log.i(LOG_TAG,"Launcher: "+publicKey);
             }
 
         } else {
             builder = new Notification.Builder(this)
                     .setTicker("Something arrive")
-                    .setSmallIcon(R.drawable.fermat_logo_310_x_310)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("Fermat: new notification")
                     .setAutoCancel(true)
                     .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})

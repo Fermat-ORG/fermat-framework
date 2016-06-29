@@ -45,7 +45,7 @@ import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModul
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.FollowingAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ import java.util.regex.Matcher;
 public class FollowingFragment extends AbstractFermatFragment implements SearchView.OnQueryTextListener {
 
     //FermatManager
-    private FanWalletSession fanwalletSession;
+    private FanWalletSessionReferenceApp fanwalletSession;
     private FanWalletModule fanWalletModuleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
@@ -94,7 +94,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
 
         try {
-            fanwalletSession = ((FanWalletSession) appSession);
+            fanwalletSession = ((FanWalletSessionReferenceApp) appSession);
             fanWalletModuleManager =  fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FOLLOWING");
@@ -135,7 +135,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
    /*     for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item2 = menu.getItem(i);
 
-            Drawable drawable = item2.getIcon();
+            FermatDrawable drawable = item2.getIcon();
             if (drawable != null) {
                 // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
                 drawable.mutate();
@@ -150,7 +150,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item2 = menu.getItem(i);
 
-            Drawable drawable = item2.getIcon();
+            FermatDrawable drawable = item2.getIcon();
             if (drawable != null) {
                 // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
                 drawable.mutate();
@@ -250,9 +250,9 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
 
-/*    private Drawable getColoredArrow() {
-        Drawable arrowDrawable = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        Drawable wrapped = DrawableCompat.wrap(arrowDrawable);
+/*    private FermatDrawable getColoredArrow() {
+        FermatDrawable arrowDrawable = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        FermatDrawable wrapped = DrawableCompat.wrap(arrowDrawable);
 
         if (arrowDrawable != null && wrapped != null) {
             // This should avoid tinting all the arrows

@@ -15,14 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileListFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 
@@ -43,7 +43,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
     private FermatSession appSession;
     private ErrorManager errorManager;
     private ChatModuleManager moduleManager;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private ProfileListFragment profilesListFragment;
     private Context context;
     private Context mContext;
@@ -55,7 +55,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
 
     public ProfileListAdapter(Context context, ArrayList profileinfo, ArrayList profileicon, ArrayList profileid,
                               ChatManager chatManager, ChatModuleManager moduleManager,
-                              ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
+                              ErrorManager errorManager, ChatSessionReferenceApp chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.profile_list_item, profileinfo);
         //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.profileinfo = profileinfo;
@@ -93,7 +93,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
                 public void onClick(View v) {
                     try {
                         //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                            appSession.setData(ChatSession.PROFILE_DATA, null);//chatManager.getChatUserIdentity(profileid.get(pos)));
+                            appSession.setData(ChatSessionReferenceApp.PROFILE_DATA, null);//chatManager.getChatUserIdentity(profileid.get(pos)));
                             mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
                         //} catch (CantGetChatUserIdentityException e) {
                         //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

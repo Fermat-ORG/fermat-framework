@@ -48,6 +48,7 @@
                 android:layout_weight="20"
                 android:id="@+id/container_main">
 
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -178,7 +179,7 @@
             android:layout_height="match_parent"
             android:id="@+id/background_shadow_container"
             android:background="#8859595B"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
 
         <include layout="@layout/reveal_botom_new"

@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_android_wallet_asset_issuer.fragments;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -32,12 +32,12 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -51,20 +51,16 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IssuerHistoryActivityFragment extends FermatWalletListFragment<DigitalAsset>
+public class IssuerHistoryActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
     private static final String TAG = "IssuerHistoryActivityFragment";
-
     // Fermat Managers
-    AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
     // Data
     private List<DigitalAsset> digitalAssets;
-
     //UI
     private View noAssetsView;
 
@@ -79,12 +75,10 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerSession = ((AssetIssuerSession) appSession);
         errorManager = appSession.getErrorManager();
+        moduleManager = appSession.getModuleManager();
 
-        moduleManager = assetIssuerSession.getModuleManager();
-
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
 
     @Override
@@ -132,7 +126,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -143,8 +137,8 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -152,11 +146,11 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -183,7 +177,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_HISTORY, 0, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

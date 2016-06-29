@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +36,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -49,12 +51,14 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
-import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.adapters.FermatScreenAdapter;
+import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter2;
 import com.bitdubai.android_core.app.common.version_1.base_structure.config.FermatActivityConfiguration;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
+import com.bitdubai.android_core.app.common.version_1.builders.nav_menu.NavMenuBasicAdapter;
+import com.bitdubai.android_core.app.common.version_1.builders.option_menu.OptionMenuFrameworkHelper;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
@@ -67,6 +71,7 @@ import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.LogReader;
 import com.bitdubai.android_core.app.common.version_1.util.MainLayoutHelper;
+import com.bitdubai.android_core.app.common.version_1.util.ResourceLocationSearcherHelper;
 import com.bitdubai.android_core.app.common.version_1.util.SharedMemory;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
@@ -82,9 +87,13 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboAppType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FrameworkHelpers;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -100,17 +109,27 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_menu.FermatBasicNavigationMenu;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
@@ -118,7 +137,6 @@ import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment_factory.DesktopFragmentsEnumType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,14 +148,12 @@ import java.util.concurrent.Executors;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static java.lang.System.gc;
 
 /**
  * Created by Matias Furszyfer
- * Update by Miguel Payarez on 2016.04.08
  */
 
 public abstract class FermatActivity extends AppCompatActivity implements
@@ -145,18 +161,19 @@ public abstract class FermatActivity extends AppCompatActivity implements
         PaintActivityFeatures,
         NavigationView.OnNavigationItemSelectedListener,
         FermatStates,
+        FrameworkHelpers,
         FermatActivityManager,
         FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>{
 
 
     private static final String TAG = "fermat-core";
-    private MainMenu mainMenu;
+    private OptionsMenu optionsMenu;
 
     /**
      * Screen adapters
      */
-    protected TabsPagerAdapter adapter;
-    private ScreenPagerAdapter screenPagerAdapter;
+    private FermatScreenAdapter adapter;
+//    private ScreenPagerAdapter<?> screenPagerAdapter;
 
     /**
      * WizardTypes
@@ -211,12 +228,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     UpdateViewReceiver updateViewReceiver;
 
-    /**
-     * Flag used when an object not arrived yet and the activity want to paint something with it.
-     * For example: when a profile in other thread take long that the activity paint the navigation view.
-     */
-    private boolean refreshWhenObjectsArrive;
-
 
     /**
      * Called when the activity is first created
@@ -241,8 +252,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
 
-//        broadcastManager = new BroadcastManager(this);
-//        AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         if(!AndroidCoreUtils.getInstance().isStarted())
             AndroidCoreUtils.getInstance().setStarted(true);
         runtimeStructureManager = new RuntimeStructureManager(this);
@@ -251,6 +260,99 @@ public abstract class FermatActivity extends AppCompatActivity implements
         IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
         registerReceiver(updateViewReceiver, intentFilter);
 
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        try {
+            menu.clear();
+            if (optionsMenu != null) {
+                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
+                loadMenu(menu,optionsMenuItems);
+//                for (int i=0;i< optionsMenuItems.size();i++) {
+//                    OptionMenuItem menuItem = optionsMenuItems.get(i);
+//                    int id = menuItem.getId();
+//                    int groupId = menuItem.getGroupId();
+//                    int order = menuItem.getOrder();
+//                    int showAsAction = menuItem.getShowAsAction();
+//                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+//                    FermatDrawable icon = menuItem.getFermatDrawable();
+//                    if(icon!=null) {
+//                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
+//                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//
+//                    }
+//                    if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
+//                    int actionViewClass = menuItem.getActionViewClass();
+//                    if(actionViewClass!=-1){
+//                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
+//                    }
+//                    if(menuItem.getOptionMenuPressEvent()!=null){
+//                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
+//                        if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
+//                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                                @Override
+//                                public boolean onMenuItemClick(MenuItem item) {
+//                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
+//                                    //return true because i want to cancell the rest of the callback if this is an activity change
+//                                    return true;
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
+            }
+            return true;
+
+
+        } catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//            makeText(getApplicationContext(), "Oooops! recovering from system error",
+//                    LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    private void loadMenu(Menu menu,List<OptionMenuItem> menuItemList){
+        for (int i=0;i< menuItemList.size();i++) {
+            OptionMenuItem menuItem = menuItemList.get(i);
+            int id = menuItem.getId();
+            int groupId = menuItem.getGroupId();
+            int order = menuItem.getOrder();
+            int showAsAction = menuItem.getShowAsAction();
+            MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+            FermatDrawable icon = menuItem.getFermatDrawable();
+            if(icon!=null) {
+                int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
+                item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            }
+            if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
+            int actionViewClass = menuItem.getActionViewClass();
+            if(actionViewClass!=-1){
+                item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
+            }
+            if(menuItem.hasSubMenu()){
+                SubMenu subMenu = item.getSubMenu();
+                List<OptionMenuItem> subMenuItemList = menuItem.getSubMenuOptionList();
+                loadMenu(subMenu, subMenuItemList);
+            }
+            item.setVisible(menuItem.isVisible());
+            if(menuItem.getOptionMenuPressEvent()!=null){
+                final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
+                if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
+                    item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
+                            //return true because i want to cancell the rest of the callback if this is an activity change
+                            return true;
+                        }
+                    });
+                }
+            }
+        }
     }
 
     /**
@@ -265,21 +367,40 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         try {
             menu.clear();
-            //mainMenu = getActivityUsedType().getMainMenu();
-            if (mainMenu != null) {
-                for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem : mainMenu.getMenuItems()) {
-                    MenuItem item = menu.add(menuItem.getLabel());
+            if (optionsMenu != null) {
+                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
+                for (int i=0;i< optionsMenuItems.size();i++) {
+                    OptionMenuItem menuItem = optionsMenuItems.get(i);
+                    int id = menuItem.getId();
+                    int groupId = menuItem.getGroupId();
+                    int order = menuItem.getOrder();
+                    int showAsAction = menuItem.getShowAsAction();
+                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                    FermatDrawable icon = menuItem.getFermatDrawable();
+                    if(icon!=null) {
+                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
+                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-//                item.setOnMenuItemClickListener (new ActionMenuView.OnMenuItemClickListener(){
-//                    @Override
-//                    public boolean onMenuItemClick (MenuItem item){
-//
-//                        return true;
-//                    }
-//                });
+                    }
+                    if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
+                    int actionViewClass = menuItem.getActionViewClass();
+                    if(actionViewClass!=-1){
+                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
+                    }
+                    if(menuItem.getOptionMenuPressEvent()!=null){
+                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
+                        if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
+                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
+                                    //return true because i want to cancell the rest of the callback if this is an activity change
+                                    return true;
+                                }
+                            });
+                        }
+                    }
                 }
-                //getMenuInflater().inflate(R.menu.wallet_store_activity_wallet_menu, menu);
-
             }
             return true;
 
@@ -291,8 +412,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        return super.onCreateOptionsMenu(menu);
-
+        return true;
     }
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
@@ -301,12 +421,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void onStop() {
         try {
             super.onStop();
-//            try{
-//                AndroidCoreUtils.getInstance().clear();
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//
+
+            if(updateViewReceiver!=null){
+                try {
+                    unregisterReceiver(updateViewReceiver);
+                    updateViewReceiver.clear();
+                }catch (Exception e){
+                    //nothing
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -318,21 +441,20 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     protected void loadBasicUI(Activity activity, final AppConnections appConnections) {
         // rendering UI components
+        if(activity==null) Log.e(TAG,"Error, runtime activity is null, please check your app in the AppRuntime.");
         try {
            // Log.i("FERMAT ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
             TabStrip tabs = activity.getTabStrip();
             TitleBar titleBar = activity.getTitleBar();
-            MainMenu mainMenu = activity.getMainMenu();
+            OptionsMenu optionsMenu = activity.getOptionsMenu();
 
             SideMenu sideMenu = activity.getSideMenu();
-
-
 
             setMainLayout(sideMenu, activity.getHeader());
            // Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
 
-            setMainMenu(mainMenu);
-           // Log.i("FERMAT ACTIVITY loadUI", "setMainMenu " + System.currentTimeMillis());
+            setOptionsMenu(optionsMenu);
+           // Log.i("FERMAT ACTIVITY loadUI", "setOptionsMenu " + System.currentTimeMillis());
 
             paintTabs(tabs, activity);
             //Log.i("FERMAT ACTIVITY loadUI", " paintTabs " + System.currentTimeMillis());
@@ -343,7 +465,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             paintTitleBar(titleBar, activity);
             //Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
-//            if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
             paintSideMenu(activity, sideMenu, appConnections);
             //Log.i("FERMAT ACTIVITY loadUI", " paintSideMenu " + System.currentTimeMillis());
             paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());
@@ -363,6 +484,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 setWizards(activity.getWizards());
 
            // Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
+
+            invalidateOptionsMenu();
 
            // Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
@@ -406,7 +529,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
     }
 
-    private void paintSideMenu(Activity activity, SideMenu sideMenu,AppConnections appConnections) {
+    private <T extends FermatSideMenu> void paintSideMenu(Activity activity, T sideMenu,AppConnections appConnections) {
         try {
             if (sideMenu != null) {
                 String backgroundColor = sideMenu.getBackgroudColor();
@@ -419,36 +542,42 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 }
 
                 final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                if(viewPainter!=null) {
-                    /**
-                     * Set header
-                     */
-                    FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter);
-                    /**
-                     * Set adapter
-                     */
-                    FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-                    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = sideMenu.getMenuItems();
-                    SideMenuBuilder.setAdapter(
-                            navigation_recycler_view,
-                            mAdapter,
-                            viewPainter.addItemDecoration(),
-                            lstItems,
-                            this,
-                            activity.getActivityType()
-                    );
-                    /**
-                     * Body
-                     */
-                    RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
-                    SideMenuBuilder.setBody(navigation_view_footer,sideMenu.hasFooter(),viewPainter,getLayoutInflater());
-                    /**
-                     * Background color
-                     */
-                    final RelativeLayout navigation_view_body_container = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
-                    SideMenuBuilder.setBackground(navigation_view_body_container, viewPainter, getResources());
-            }
+                /**
+                 * Set header
+                 */
+                FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter);
+                /**
+                 * Set adapter
+                 */
+                List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = sideMenu.getMenuItems();
+                //todo: mejorar esto
+                FermatAdapter mAdapter = (viewPainter!=null)?viewPainter.addNavigationViewAdapter():new NavMenuBasicAdapter(this,lstItems,((FermatBasicNavigationMenu)sideMenu).getBody());
+                SideMenuBuilder.setAdapter(
+                        navigation_recycler_view,
+                        mAdapter,
+                        (viewPainter!=null)?viewPainter.addItemDecoration():null,
+                        (viewPainter!=null)?lstItems:((FermatBasicNavigationMenu)sideMenu).getBody().getMenuItems(),
+                        this,
+                        activity.getActivityType()
+                );
+                /**
+                 * Body
+                 */
+                RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
+                SideMenuBuilder.setBody(navigation_view_footer,sideMenu.hasFooter(),viewPainter,getLayoutInflater());
+                /**
+                 * Background color
+                 */
+                final RelativeLayout navigation_view_body_container = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
+                SideMenuBuilder.setBackground(navigation_view_body_container, viewPainter, getResources());
 
+                /**
+                 * Background drawable
+                 */
+                if (sideMenu.getBackgroundDrawable()!=null){
+                    FermatDrawable backgroundDrawableColor = sideMenu.getBackgroundDrawable();
+                    navigationView.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(this,backgroundDrawableColor.getId(), backgroundDrawableColor.getSourceLocation(),backgroundDrawableColor.getOwner().getOwnerAppPublicKey()));
+                }
             } else {
                 mDrawerLayout.setEnabled(false);
                 //test
@@ -460,8 +589,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
     }
 
-    private void setMainMenu(MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
+    private void setOptionsMenu(OptionsMenu optionsMenu) {
+        this.optionsMenu = optionsMenu;
     }
 
     /**
@@ -474,9 +603,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
                 mToolbar.setTitleTextColor(Color.TRANSPARENT);
                 Typeface typeface = null;
-                if(titleBar.getFont()!=null)
-                typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/"+titleBar.getFont());
-
+                try {
+                    if (titleBar.getFont() != null)
+                        typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/" + titleBar.getFont());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 String title = titleBar.getLabel();
 
                 if(titleBar.isTitleTextStatic()){
@@ -528,6 +660,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 }
 
 
+                if(titleBar.getBackgroundDrawable()!=null){
+                    FermatDrawable backgroundDrawable = titleBar.getBackgroundDrawable();
+                    mToolbar.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(this,backgroundDrawable.getId(),backgroundDrawable.getSourceLocation(),backgroundDrawable.getOwner().getOwnerAppPublicKey()));
+                }
 
 
                 setActionBarProperties(title, activity);
@@ -548,20 +684,54 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
     private void paintToolbarIcon(TitleBar titleBar) {
-        if (titleBar.getIconName() != null) {
-            mToolbar.setNavigationIcon(R.drawable.ic_action_back);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Check if no view has focus:
-                    View view = getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if(titleBar.getNavItem()!=null){
+            final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = titleBar.getNavItem();
+            FermatDrawable leftIconFermatDrawable = menuItem.getFermatDrawable();
+            int resId = ResourceLocationSearcherHelper.obtainRes(
+                    this,
+                    leftIconFermatDrawable.getId(),
+                    leftIconFermatDrawable.getSourceLocation(),
+                    leftIconFermatDrawable.getOwner().getOwnerAppPublicKey()
+            );
+            mToolbar.setNavigationIcon(resId);
+            if(menuItem.getAppLinkPublicKey().equals("back")){
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
                     }
-                    onBackPressed();
-                }
-            });
+                });
+            }else if(menuItem.getAppLinkPublicKey().equals("nav_menu")) {
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //this is for open the nav menu
+                    }
+                });
+            }else {
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        changeActivity(menuItem.getLinkToActivity().getCode(),null,null);
+                    }
+                });
+            }
+        }else {
+            if (titleBar.getIconName() != null) {
+                mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Check if no view has focus:
+                        View view = getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+                        onBackPressed();
+                    }
+                });
+            }
         }
         byte[] toolbarIcon = titleBar.getNavigationIcon();
         if (toolbarIcon != null)
@@ -591,9 +761,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 //
-//            Drawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
-//            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
-//            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+//            FermatDrawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
+//            FermatDrawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
+//            LayerDrawable ld = new LayerDrawable(new FermatDrawable[]{colorDrawable, bottomDrawable});
 //
 //            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
 //                //ld.setCallback(drawableCallback);
@@ -606,74 +776,197 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
     /**
-     * Method used from app to paint tabs
+     * Tabs
      */
-    protected void setPagerTabs(TabStrip tabStrip, FermatSession fermatSession,FermatFragmentFactory fermatFragmentFactory) {
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+    protected void setPagerTabs(TabStrip tabStrip,FermatSession session){
+        int tabsSize = tabStrip.getTabs().size();
+        List<Tab> tabs = tabStrip.getTabs();
+        Fragment[] fragments = new Fragment[tabsSize];
+        String[] tabTitles = new String[tabsSize];
+        FermatFragment[] fermatFragments = new FermatFragment[tabsSize];
+        FermatDrawable[] tabsDrawables = new FermatDrawable[tabsSize];
+        try {
+            for (int i=0;i<tabs.size();i++) {
+                Tab tab = tabs.get(i);
+                FermatFragment fragment = tab.getFragment();
+                fermatFragments[i] = fragment;
+                //optionMenu
+                if(fragment.getOptionsMenu()!=null)addOptionMenuItems(fragment.getOptionsMenu());
+                Owner owner = fragment.getOwner();
+                if(owner==null) throw new NullPointerException("Owner null on fragment: "+fragment.getType()+" in app: "+session.getAppPublicKey()+", Please check your App structure");
+                String appPublicKey = owner.getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
+                AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
+                if (session instanceof ComboAppType2FermatSession) {
+                    session = ((ComboAppType2FermatSession) session).getFermatSession(appPublicKey, FermatSession.class);
+                }
+                try {
+                    fragments[i] = appConnections.getFragmentFactory().getFragment(fragment.getType(),session,null,fragment);
+                } catch (FragmentNotFoundException e) {
+                   throw new InvalidParameterException(e,"Fragment not found: "+fragment.getType()+" with owner: "+fragment.getOwner(),"Framework building tabs");
+                }
+                tabTitles[i] = tab.getLabel();
+                tabsDrawables[i] = tab.getDrawable();
+            }
+            tabLayout.setVisibility(View.VISIBLE);
+            pagertabs = (ViewPager) findViewById(R.id.pager);
+            pagertabs.setVisibility(View.VISIBLE);
+            adapter = new TabsPagerAdapter2(getFragmentManager(),tabTitles,fragments);
+            pagertabs.setAdapter(adapter);
+            if(tabStrip.isHasIcon()){
+                for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                    byte[] image = tabStrip.getTabs().get(i).getIcon();
+                    tabLayout.getTabAt(i).setIcon(new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(image,0, image.length)));
+                }
+                for (int i=0;i<tabsSize;i++) {
+                    FermatDrawable tabDrawables = tabsDrawables[i];
+                    if(tabDrawables!=null){
+                        tabLayout.getTabAt(i).setIcon(ResourceLocationSearcherHelper.obtainRes(this,tabDrawables.getId(),tabDrawables.getSourceLocation(),tabDrawables.getOwner().getOwnerAppPublicKey()));
+                    }
+                }
+            }
+            final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                    .getDisplayMetrics());
+            pagertabs.setPageMargin(pageMargin);
+            adapter.setStartFragmentPosition(tabStrip.getStartItem());
+            pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
+            tabLayout.setupWithViewPager(pagertabs);
+
+            // fragment focus
+            pagertabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    adapter.onFragmentFocus(position);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+        } catch (InvalidParameterException e) {
+            Log.e(TAG, "Invalid parameter, please check your runtime");
+            e.printStackTrace();
+            handleExceptionAndRestart();
+        } catch (Exception e){
+            Log.e(TAG,e.getMessage());
+            handleExceptionAndRestart();
+        }
+    }
+
+    /**
+     *  Print tabs and return a FermatFragment array to be painted
+     *
+     * @param tabStrip
+     * @return
+     */
+    //todo: use this improved method
+    private FermatFragment[] setTabs(TabStrip tabStrip){
+        List<Tab> tabs = tabStrip.getTabs();
+        FermatFragment[] fragments = new FermatFragment[tabStrip.getTabs().size()];
+        String[] tabTitles = new String[tabStrip.getTabs().size()];
+        for (int i=0;i<tabs.size();i++) {
+            Tab tab = tabs.get(i);
+            fragments[i] = tab.getFragment();
+            //optionMenu
+            tabTitles[i] = tab.getLabel();
+        }
         tabLayout.setVisibility(View.VISIBLE);
-        pagertabs = (ViewPager) findViewById(R.id.pager);
-        pagertabs.setVisibility(View.VISIBLE);
-        adapter = new TabsPagerAdapter(getFragmentManager(),
-                getApplicationContext(),
-                fermatFragmentFactory,
-                tabStrip,
-                fermatSession,
-                getAppResources());
-        pagertabs.setAdapter(adapter);
         if(tabStrip.isHasIcon()){
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 byte[] image = tabStrip.getTabs().get(i).getIcon();
                 tabLayout.getTabAt(i).setIcon(new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(image,0, image.length)));
             }
         }
-        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                .getDisplayMetrics());
-        pagertabs.setPageMargin(pageMargin);
-        pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
         tabLayout.setupWithViewPager(pagertabs);
-    }
+        pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
+        // fragment focus
+        pagertabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-
-    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession fermatSession,FermatStructure fermatStructure) {
-
-        try {
-            String fragment = fermatStructure.getLastActivity().getLastFragment().getType();
-
-            if (fermatFragmentFactory != null) {
-
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-                tabLayout.setVisibility(View.GONE);
-
-                pagertabs = (ViewPager) findViewById(R.id.pager);
-                pagertabs.setVisibility(View.VISIBLE);
-
-
-                adapter = new TabsPagerAdapter(getFragmentManager(),
-                        getApplicationContext(),
-                        fermatFragmentFactory,
-                        fragment,
-                        fermatSession,
-                        getAppResources());
-                pagertabs.setAdapter(adapter);
-
-
-                //pagertabs.setCurrentItem();
-                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                        .getDisplayMetrics());
-                pagertabs.setPageMargin(pageMargin);
-                //pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
-
-
-                //tabLayout.setupWithViewPager(pagertabs);
-                //pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
             }
 
+            @Override
+            public void onPageSelected(int position) {
+                adapter.onFragmentFocus(position);
+            }
 
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        return fragments;
+    }
+    //todo: use this improved method
+    private void paintBodyFragments(FermatFragment[] fermatFragments,FermatSession session){
+        Fragment[] fragments = new Fragment[fermatFragments.length];
+        for (int i=0;i<fermatFragments.length;i++) {
+            try {
+                FermatFragment fragment = fermatFragments[i];
+                //optionMenu
+                if (fragment.getOptionsMenu() != null)
+                    addOptionMenuItems(fragment.getOptionsMenu());
+                String appPublicKey = fragment.getOwner().getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
+                AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
+                if (session instanceof ComboAppType2FermatSession) {
+                    session = ((ComboAppType2FermatSession) session).getFermatSession(appPublicKey, FermatSession.class);
+                }
+                try {
+                    fragments[i] = appConnections.getFragmentFactory().getFragment(fragment.getType(), session, null,fragment);
+                } catch (FragmentNotFoundException e) {
+                    throw new InvalidParameterException(e, "Fragment not found: " + fragment.getType() + " with owner: " + fragment.getOwner(), "Framework building tabs");
+                }
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+        }
+        pagertabs = (ViewPager) findViewById(R.id.pager);
+        pagertabs.setVisibility(View.VISIBLE);
+        //todo: descomentar y ver que onda
+        //adapter = new TabsPagerAdapter2(getFragmentManager(),fragments);
+        pagertabs.setAdapter(adapter);
+        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+        pagertabs.setPageMargin(pageMargin);
+
+    }
+
+    /**
+     *  One Fragment screen
+     *
+     * @param fermatFragmentFactory
+     * @param referenceAppFermatSession
+     * @param runtimeFragment
+     */
+    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession referenceAppFermatSession, FermatFragment runtimeFragment) {
+        try {
+            String fragment = runtimeFragment.getType();
+            if(runtimeFragment.getOptionsMenu()!=null)addOptionMenuItems(runtimeFragment.getOptionsMenu());
+            if (fermatFragmentFactory != null) {
+                tabLayout.setVisibility(View.GONE);
+                pagertabs = (ViewPager) findViewById(R.id.pager);
+                pagertabs.setVisibility(View.VISIBLE);
+                adapter = new TabsPagerAdapter2(
+                        getFragmentManager(),
+                        null,
+                        new Fragment[]{fermatFragmentFactory.getFragment(fragment,referenceAppFermatSession,null,runtimeFragment)});
+                pagertabs.setAdapter(adapter);
+                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+                pagertabs.setPageMargin(pageMargin);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             handleExceptionAndRestart();
         }
+    }
 
+    protected void addOptionMenuItems(OptionsMenu optionsMenu) {
+        optionsMenu.addMenuItems(optionsMenu.getMenuItems());
     }
 
     /**
@@ -752,7 +1045,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     collapsingToolbarLayout.setLayoutParams(params);
                 }
 
-                if(header.getStartCollapse()){
+                if(header.getStartCollapsed()){
                     appBarLayout.setExpanded(false);
                 }
 
@@ -825,26 +1118,16 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Dispatch onResume() to fragments.  Note that for better inter-operation
-     * with older versions of the platform, at the point of this call the
-     * fragments attached to the activity are <em>not</em> resumed.  This means
-     * that in some cases the previous state may still be saved, not allowing
-     * fragment transactions that modify the state.  To correctly interact
-     * with fragments in their proper state, you should instead override
-     * {@link #onResumeFragments()}.
-     */
+
     @Override
     protected void onResume() {
+        if(updateViewReceiver==null){
+            updateViewReceiver = new UpdateViewReceiver(this);
+            IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
+            registerReceiver(updateViewReceiver, intentFilter);
+        }
         super.onResume();
-//        try {
-//            if(broadcastManager!=null)broadcastManager.resume(this);
-//            else broadcastManager = new BroadcastManager(this);
-//            AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
     }
 
 
@@ -853,41 +1136,43 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @param activity
      */
     protected void paintTabs(TabStrip tabs, Activity activity) {
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        if(tabLayout!=null){
+            if (tabs == null )
+                tabLayout.setVisibility(View.GONE);
+            else {
+                Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf");
+                for (int position = 0; position < tabLayout.getTabCount(); position++) {
+                    ((TextView) tabLayout.getTabAt(position).getCustomView()).setTypeface(tf);
+                }
+                tabLayout.setVisibility(View.VISIBLE);
+                if (tabs.getTabsColor() != null) {
+                    tabLayout.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
+                }
+                if (tabs.getTabsTextColor() != null) {
+                    if (tabs.getSelectedTabTextColor() != null) {
+                        tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.parseColor(activity.getTabStrip().getSelectedTabTextColor()));
+                    } else {
+                        tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.WHITE);
+                    }
 
-        if (tabs == null)
-            tabLayout.setVisibility(View.GONE);
-        else {
-            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf");
-            for (int position = 0; position < tabLayout.getTabCount(); position++) {
-                ((TextView) tabLayout.getTabAt(position).getCustomView()).setTypeface(tf);
-            }
-            tabLayout.setVisibility(View.VISIBLE);
-            if (tabs.getTabsColor() != null) {
-                tabLayout.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
-            }
-            if (tabs.getTabsTextColor() != null) {
-                if(tabs.getSelectedTabTextColor()!=null){
-                    tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.parseColor(activity.getTabStrip().getSelectedTabTextColor()));
-                }else{
-                    tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.WHITE);
+                }
+                if (tabs.getTabsIndicateColor() != null) {
+                    tabLayout.setSelectedTabIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
+                }
+                if (tabs.getIndicatorHeight() != -1) {
+                    tabLayout.setSelectedTabIndicatorHeight(tabs.getIndicatorHeight());
+                }
+                if (tabs.isReduceTabHeight()) {
+                    float heightDp = getResources().getDisplayMetrics().heightPixels * 0.32F;
+                    CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+                    //  System.out.println("TOOLBARTAMANO:"+heightDp);
+                    lp.height = (int) heightDp;
                 }
 
             }
-            if (tabs.getTabsIndicateColor() != null) {
-                tabLayout.setSelectedTabIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
-            }
-            if (tabs.getIndicatorHeight() != -1) {
-                tabLayout.setSelectedTabIndicatorHeight(tabs.getIndicatorHeight());
-            }
-            if(tabs.isReduceTabHeight()){
-                float heightDp = getResources().getDisplayMetrics().heightPixels *0.32F;
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
-              //  System.out.println("TOOLBARTAMANO:"+heightDp);
-                lp.height = (int)heightDp;
-            }
-
-
+        }else{
+            Log.e(TAG, "TablLayout null");
         }
     }
 
@@ -977,7 +1262,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     MainLayoutHelper.setTranslucentStatusBar(getWindow(),0);
                     gc();
                     //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
-                    //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
+                    //window.setBackgroundDrawable(FermatDrawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -1024,7 +1309,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                     gc();
                     //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
-                    //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
+                    //window.setBackgroundDrawable(FermatDrawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -1053,7 +1338,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
             System.gc();
 
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+            //TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
             if (tabLayout != null) {
                 tabLayout.removeAllTabs();
                 tabLayout.removeAllViews();
@@ -1065,9 +1350,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mRevealView.removeAllViews();
                 mRevealView.setVisibility(View.GONE);
             }
-
-            refreshWhenObjectsArrive = false;
-
             removecallbacks();
             onRestart();
         } catch (Exception e) {
@@ -1081,8 +1363,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void removecallbacks() {
         try {
 
-            if(adapter!=null) adapter.destroyCurrentFragments();
-            this.adapter = null;
+            if(adapter!=null) {
+                adapter.destroyCurrentFragments();
+                this.adapter = null;
+            }
+
             paintStatusBar(null);
             if (navigation_recycler_view != null) {
                 navigation_recycler_view.removeAllViews();
@@ -1095,7 +1380,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             }
 
-            List<AbstractFermatFragment> fragments = new Vector<AbstractFermatFragment>();
+            Fragment[] fragments = null;
 
             elementsWithAnimation = new ArrayList<>();
             if(bottomNavigation!=null) {
@@ -1103,7 +1388,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 bottomNavigation = null;
             }
 
-            this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
+            if(pagertabs!=null) {
+                pagertabs.removeAllViews();
+                pagertabs=null;
+            }
+
+
+//            this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
             System.gc();
             closeContextMenu();
@@ -1133,11 +1424,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void initialisePaging() {
 
         try {
-            List<AbstractFermatFragment> fragments = new Vector<>();
+            List<Fragment> fragments = new Vector<>();
+
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
-            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[3];
-
+            Fragment[] fragmentsArray = new AbstractFermatFragment[3];
 
             for (DesktopObject desktopObject : desktopRuntimeManager.listDesktops().values()) {
                 //TODO: este switch se cambiara por un FragmentFactory en algún momento al igual que el Activity factory
@@ -1151,20 +1442,26 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                         //String type = desktopObject.getLastActivity().getLastFragment().getType();
 
-                        String type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_MAIN.getKey()).getType();
+                        FermatFragment fermatFragment = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_MAIN.getKey());
+                        String type = fermatFragment.getType();
 
                         fragmentsArray[1] = appConnections.getFragmentFactory().getFragment(
                                 type,
                                 createOrOpenApp(getDesktopManager()),
-                                null
+                                null,
+                                fermatFragment
                         );
 
-                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_P2P_MAIN.getKey()).getType();
+                        fermatFragment = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_P2P_MAIN.getKey());
+                        type = fermatFragment.getType();
+
+
 
                         fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
                                 type,
                                 createOrOpenApp(getDesktopManager()),
-                                null
+                                null,
+                                fermatFragment
                         );
 
 //                        type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_SOCIAL_MAIN.getKey()).getType();
@@ -1179,12 +1476,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     case "WPD":
                             DesktopSubAppFragment subAppDesktopFragment = DesktopSubAppFragment.newInstance();
                             fragmentsArray[2] =  subAppDesktopFragment;
+
+//                            fermatFragment = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_TOOLS.getKey());
                         break;
 
                 }
             }
-            fragments = Arrays.asList(fragmentsArray);
-            screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
+            adapter = new TabsPagerAdapter2(getFragmentManager(), fragmentsArray);
 
             pagertabs = (ViewPager) super.findViewById(R.id.pager);
             pagertabs.setVisibility(View.VISIBLE);
@@ -1220,7 +1518,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                 }
             });
-            pagertabs.setAdapter(this.screenPagerAdapter);
+            pagertabs.setAdapter(this.adapter);
 
             for(int childPos = 0 ; childPos < radioGroup.getChildCount();childPos++){
                 final int finalChildPos = childPos;
@@ -1234,8 +1532,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             if (pagertabs.getBackground() == null) {
                 if(ApplicationSession.applicationState==ApplicationSession.STATE_STARTED) {
-                    //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
-                    //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
+                    //FermatDrawable d = FermatDrawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                    //getWindow().setBackgroundDrawable(FermatDrawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
                     //pager.setBackground(d);
                     //getWindow().addFlags(WindowManager.LayoutParams.);
                     if (Build.VERSION.SDK_INT > 20) {
@@ -1319,7 +1617,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @param fermatApp
      * @return
      */
-    private FermatSession createOrOpenApp(FermatApp fermatApp){
+    private FermatSession createOrOpenApp(FermatApp fermatApp) throws Exception {
         FermatSession fermatSession = null;
         FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
         if(fermatAppsManager.isAppOpen(fermatApp.getAppPublicKey())){
@@ -1327,6 +1625,25 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }else{
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
             fermatSession = fermatAppsManager.openApp(fermatApp,fermatAppConnection);
+        }
+        return fermatSession;
+    }
+
+    /**
+     *  Method used to get a Session
+     *
+     * @param appPublicKey
+     * @return
+     * @throws Exception
+     */
+    protected FermatSession createOrOpenSession(String appPublicKey) throws Exception {
+        FermatSession fermatSession = null;
+        FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
+        if(fermatAppsManager.isAppOpen(appPublicKey)){
+            fermatSession = fermatAppsManager.getAppsSession(appPublicKey);
+        }else{
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
+            fermatSession = fermatAppsManager.openApp(fermatAppsManager.getApp(appPublicKey),fermatAppConnection);
         }
         return fermatSession;
     }
@@ -1400,7 +1717,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 unregisterReceiver(updateViewReceiver);
                 updateViewReceiver.clear();
             }catch (Exception e){
-                e.printStackTrace();
+                //nothing
             }
             executor.shutdownNow();
             super.onDestroy();
@@ -1437,8 +1754,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
                     final Activity activity = fermatStructure.getLastActivity();
-                    FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
-                    final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), fermatSession);
+                    FermatSession session = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+                    final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), session);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1458,43 +1775,40 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     protected void refreshSideMenu(final AppConnections appConnections){
         try {
-            if(refreshWhenObjectsArrive) {
-                if (!(this instanceof DesktopActivity)) {
-                    final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-                    final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                    if (viewPainter != null) {
-                        final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-                        Activity activity = fermatStructure.getLastActivity();
-                        if (activity != null) {
-                            SideMenu sideMenu = activity.getSideMenu();
-                            List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
-                            if (sideMenu != null) lstItems = sideMenu.getMenuItems();
-                            final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems != null) ? lstItems : new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter);
-                                    try {
-                                        SideMenuBuilder.setAdapter(
-                                                navigation_recycler_view,
-                                                mAdapter,
-                                                viewPainter.addItemDecoration(),
-                                                finalLstItems,
-                                                FermatActivity.this,
-                                                fermatStructure.getLastActivity().getActivityType()
-                                        );
-                                    } catch (InvalidParameterException e) {
-                                        e.printStackTrace();
-                                    }
+            if (!(this instanceof DesktopActivity)) {
+                final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                if (viewPainter != null) {
+                    final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+                    Activity activity = fermatStructure.getLastActivity();
+                    if (activity != null) {
+                        SideMenu sideMenu = activity.getSideMenu();
+                        List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
+                        if (sideMenu != null) lstItems = sideMenu.getMenuItems();
+                        final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems != null) ? lstItems : new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter);
+                                try {
+                                    SideMenuBuilder.setAdapter(
+                                            navigation_recycler_view,
+                                            mAdapter,
+                                            viewPainter.addItemDecoration(),
+                                            finalLstItems,
+                                            FermatActivity.this,
+                                            fermatStructure.getLastActivity().getActivityType()
+                                    );
+                                } catch (InvalidParameterException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                            refreshWhenObjectsArrive = false;
-                        } else {
-                            Log.e(TAG, "ActivityObject null, line:" + new Throwable().getStackTrace()[0].getLineNumber());
-                        }
+                            }
+                        });
+                    } else {
+                        Log.e(TAG, "ActivityObject null, line:" + new Throwable().getStackTrace()[0].getLineNumber());
                     }
-
                 }
+
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -1503,15 +1817,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     protected void onBackPressedNotificate(){
         if(getAdapter()!=null) {
-            for (AbstractFermatFragment abstractFermatFragment : getAdapter().getLstCurrentFragments()) {
-                abstractFermatFragment.onBackPressed();
-            }
-        }else if(getScreenAdapter()!=null){
-            for (AbstractFermatFragment abstractFermatFragment : getScreenAdapter().getLstCurrentFragments()) {
+            List<AbstractFermatFragmentInterface> list = getAdapter().getLstCurrentFragments();
+            for (AbstractFermatFragmentInterface abstractFermatFragment : list) {
                 abstractFermatFragment.onBackPressed();
             }
         }
-
     }
 
 
@@ -1551,7 +1861,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 //    @Override
 //    public boolean onOptionsItemSelected(final MenuItem item) {
-//        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
+//        if (item.getId() == android.support.v7.appcompat.R.id.home) {
 //            return mDrawerToggle.onOptionsItemSelected(item);
 //        }
 //        return super.onOptionsItemSelected(item);
@@ -1591,8 +1901,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     public void onItemClickListener(final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, final int position) {
         data.setSelected(true);
-        mNavItemId = data.getItemId();
-
         // allow some time after closing the drawer before performing real navigation
         // so the user can see what is happening
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -1697,7 +2005,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try{
             ApplicationSession.getInstance().getApplicationManager().openFermatApp(appPublicKey);
         }catch (Exception e){
-            throw new Exception("Error calling openFermatApp in FermatSession");
+            throw new Exception("Error calling openFermatApp in ReferenceAppFermatSession");
         }
     }
 
@@ -1752,13 +2060,20 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     try {
                         reportError(email.getText().toString());
                     } catch (Exception e) {
-                        Toast.makeText(FermatActivity.this,"Error sending the report",LENGTH_SHORT).show();
+                        Toast.makeText(FermatActivity.this, "Error sending the report", LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
             });
-            alert.setNegativeButton("Cancel", null);
-            alert.show();
+
+            try {
+                alert.setNegativeButton("Cancel", null);
+//                alert.show();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
         }
         Intent intent = new Intent(this,StartActivity.class);
         startActivity(intent);
@@ -1770,10 +2085,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     public FermatRuntime getRuntimeManager(){
         return runtimeStructureManager;
-    }
-
-    public ScreenPagerAdapter getScreenAdapter() {
-        return screenPagerAdapter;
     }
 
     public ViewPager getPagertabs() {
@@ -1808,7 +2119,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         return null;
     }
 
-    public TabsPagerAdapter getAdapter() {
+    public FermatScreenAdapter getAdapter() {
         return adapter;
     }
 
@@ -1827,12 +2138,50 @@ public abstract class FermatActivity extends AppCompatActivity implements
         return (RelativeLayout) findViewById(R.id.toolbar_header_container);
     }
 
-
     public void setAppStatus(AppsStatus appStatus) {
         SharedMemory.getInstance().changeAppStatus(appStatus);
     }
 
     public AppsStatus getAppStatus(){
         return SharedMemory.getInstance().getAppStatus();
+    }
+
+
+    /**
+     * Framework Helpers
+     */
+    @Override
+    public int obtainRes(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
+        return ResourceLocationSearcherHelper.obtainRes(this, id, sourceLocation, appOwnerPublicKey);
+    }
+
+    @Override
+    public View obtainClassView(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
+        return ResourceLocationSearcherHelper.obtainView(this, id, sourceLocation, appOwnerPublicKey);
+    }
+
+    @Override
+    //todo: ampliar esto a mayor cantidad de clases
+    public View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation) {
+        return OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, id);
+    }
+
+    /**
+     *  Method to change the visibility of an optionMenu
+     *  todo: poner esto en otra clase
+     * @param id
+     * @param isVisible
+     * @param appPublicKey
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean isVisible,String appPublicKey) throws InvalidParameterException {
+        Activity activity = ApplicationSession.getInstance().getAppManager().getAppStructure(appPublicKey).getLastActivity();
+        OptionsMenu optionMenu = activity.getOptionsMenu();
+        if(optionMenu!=null){
+            optionMenu.getItem(id).setVisibility(isVisible);
+            getToolbar().getMenu().findItem(id).setVisible(isVisible);
+        }else{
+            throw new InvalidParameterException("OptionMenu in activity: "+activity.getType().getCode()+" in app: "+appPublicKey);
+        }
     }
 }

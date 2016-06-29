@@ -1,6 +1,5 @@
 package com.mati.fermat_preference_settings.drawer;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -26,7 +25,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by mati on 2016.02.08..
  */
-public abstract class FermatPreferenceFragment<S extends FermatSession,RE extends ResourceProviderManager> extends AbstractFermatFragment<S,RE> {
+public abstract class FermatPreferenceFragment<S extends ReferenceAppFermatSession,RE extends ResourceProviderManager> extends AbstractFermatFragment<S,RE> {
 
 
     /**
@@ -149,7 +148,8 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
         if(getBackgroundColor() != 0) {
             LinearLayout rl = (LinearLayout) layout.findViewById(R.id.linearLayout);
             rl.setBackgroundColor(getBackgroundColor());
-            rl.getBackground().setAlpha(getBackgroundAlpha());
+            if(getBackgroundAlpha() != 0)
+                rl.getBackground().setAlpha(getBackgroundAlpha());
         }
     }
 }

@@ -35,21 +35,21 @@ public class AssetRedeemPointWalletDatabaseFactory {
             //insertInitialBalancesRecord(database);
 
             return database;
-        } catch(CantCreateTableException exception){
+        } catch (CantCreateTableException exception) {
             //catch(CantCreateTableException | CantInsertRecordException exception){
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        } catch(CantCreateDatabaseException exception){
+        } catch (CantCreateDatabaseException exception) {
             throw exception;
-        } catch(Exception exception){
+        } catch (Exception exception) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
-    private void createAssetRedeemPointWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
-        try{
+    private void createAssetRedeemPointWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try {
             DatabaseTableFactory tableFactory = createAssetRedeemPointWalletTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
-        } catch(InvalidOwnerIdException exception){
+        } catch (InvalidOwnerIdException exception) {
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
     }
@@ -63,20 +63,20 @@ public class AssetRedeemPointWalletDatabaseFactory {
         }
     }
 
-    private void createAssetRedeemPointWalletBalancesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
-        try{
+    private void createAssetRedeemPointWalletBalancesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try {
             DatabaseTableFactory tableFactory = createAssetRedeemPointWalletBalanceTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
-        }catch(InvalidOwnerIdException exception){
+        } catch (InvalidOwnerIdException exception) {
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
     }
 
-    private DatabaseTableFactory createAssetRedeemPointWalletTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+    private DatabaseTableFactory createAssetRedeemPointWalletTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TABLE_NAME);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
-        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false );
-        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
@@ -96,7 +96,7 @@ public class AssetRedeemPointWalletDatabaseFactory {
         return table;
     }
 
-    private DatabaseTableFactory createAssetRedeemPointWalletBalanceTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+    private DatabaseTableFactory createAssetRedeemPointWalletBalanceTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, true);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 150, false);

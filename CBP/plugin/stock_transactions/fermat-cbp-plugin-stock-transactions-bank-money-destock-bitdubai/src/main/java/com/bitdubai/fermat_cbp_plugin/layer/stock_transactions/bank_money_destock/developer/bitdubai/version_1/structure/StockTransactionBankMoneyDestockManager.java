@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.BusinessTransactionBankMoneyDestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.MissingBankMoneyDestockDataException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -26,7 +27,7 @@ import java.util.UUID;
 public class StockTransactionBankMoneyDestockManager implements BankMoneyDestockManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private BusinessTransactionBankMoneyDestockPluginRoot pluginRoot;
 
     /**
      * Constructor with params.
@@ -36,10 +37,10 @@ public class StockTransactionBankMoneyDestockManager implements BankMoneyDestock
      */
     public StockTransactionBankMoneyDestockManager(final PluginDatabaseSystem pluginDatabaseSystem,
                                                    final UUID pluginId,
-                                                   final ErrorManager errorManager) {
+                                                   final BusinessTransactionBankMoneyDestockPluginRoot pluginRoot) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
-        this.errorManager         = errorManager        ;
+        this.pluginRoot           = pluginRoot;
     }
 
     /**
@@ -80,13 +81,13 @@ public class StockTransactionBankMoneyDestockManager implements BankMoneyDestock
             StockTransactionBankMoneyDestockFactory stockTransactionBankMoneyDestockFactory = new StockTransactionBankMoneyDestockFactory(pluginDatabaseSystem, pluginId);
             stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyRestockTransaction);
         } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateBankMoneyDestockException("Database Operation.", FermatException.wrapException(e), null, null);
         } catch (MissingBankMoneyDestockDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateBankMoneyDestockException("Missing Bank Money Destock Data.", FermatException.wrapException(e), null, null);
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantCreateBankMoneyDestockException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
         }
     }

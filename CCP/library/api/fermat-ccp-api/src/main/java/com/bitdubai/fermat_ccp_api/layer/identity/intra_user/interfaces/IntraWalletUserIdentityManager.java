@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
@@ -36,9 +38,8 @@ public interface IntraWalletUserIdentityManager  extends ModuleManager<FermatSet
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException if something goes wrong.
      */
-    IntraWalletUserIdentity createNewIntraWalletUser(String alias ,String phrase      ,
-                                             byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 
+    IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantCreateNewIntraWalletUserException;
 
     /**
      *
@@ -47,9 +48,8 @@ public interface IntraWalletUserIdentityManager  extends ModuleManager<FermatSet
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException
      */
-    IntraWalletUserIdentity createNewIntraWalletUser(String alias ,
-                                                     byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 
+    IntraWalletUserIdentity createNewIntraWalletUser(String alias, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantCreateNewIntraWalletUserException;
 
     /**
      * The method <code>hasIntraUserIdentity</code> returns if has a intra user identity created

@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
@@ -20,7 +20,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bi
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.MissingHoldCryptoDataException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.HoldCryptoMoneyTransactionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.BitcoinWalletTransactionRecordImpl;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.CryptoWalletTransactionRecordImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
@@ -41,18 +41,18 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
 
     private final ErrorManager errorManager;
     private final HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager;
-    private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
 
     public final int SLEEP_TIME = 5000;
 
 
     public HoldCryptoMoneyTransactionMonitorAgent(ErrorManager errorManager,
                                                   HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager,
-                                                  BitcoinWalletManager bitcoinWalletManager) {
+                                                  CryptoWalletManager cryptoWalletManager) {
 
         this.errorManager                      = errorManager;
         this.holdCryptoMoneyTransactionManager = holdCryptoMoneyTransactionManager;
-        this.bitcoinWalletManager              = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
 
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -182,12 +182,12 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
             long availableBalance = 0;
             for (CryptoHoldTransaction cryptoHoldTransaction : holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter)){
                 //TODO: Buscar el saldo disponible en la Bitcoin Wallet
-                availableBalance = bitcoinWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).getBalance();
+                availableBalance = cryptoWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).getBalance();
 
                 if(availableBalance >= cryptoHoldTransaction.getAmount()) {
                     //TODO: llamar metodo Hold de la wallet que se implementara luego que se pruebe las wallet CSH y BNK;
                     CryptoAddress cryptoAddress = new CryptoAddress(cryptoHoldTransaction.getPublicKeyActor(), CryptoCurrency.BITCOIN);
-                    BitcoinWalletTransactionRecordImpl bitcoinWalletTransactionRecord = new BitcoinWalletTransactionRecordImpl(UUID.randomUUID(),
+                    CryptoWalletTransactionRecordImpl bitcoinWalletTransactionRecord = new CryptoWalletTransactionRecordImpl(UUID.randomUUID(),
                             cryptoHoldTransaction.getTransactionId(),
                             cryptoHoldTransaction.getPublicKeyActor(),
                             cryptoHoldTransaction.getPublicKeyActor(),
@@ -199,9 +199,9 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                             (long)cryptoHoldTransaction.getAmount(),
                             new Date().getTime() / 1000,
                             "HOLD",
-                            cryptoHoldTransaction.getBlockchainNetworkType()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
+                            cryptoHoldTransaction.getBlockchainNetworkType(), cryptoHoldTransaction.getCurrency()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
 
-                    bitcoinWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionRecord);
+                    cryptoWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionRecord);
                     cryptoHoldTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
                     cryptoHoldTransaction.setTimestampAcknowledged(new Date().getTime() / 1000);
                     holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoHoldTransaction);

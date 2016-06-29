@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletWalletModulePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
@@ -9,7 +9,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develope
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 
 import junit.framework.TestCase;
 
@@ -27,7 +27,7 @@ public class PluginInterfaceImplementationTest extends TestCase {
      * DealsWithBitcoinWallet interface Mocked
      */
     @Mock
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     /**
      * DealsWithCryptoVault interface Mocked
@@ -71,7 +71,7 @@ public class PluginInterfaceImplementationTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         cryptoWalletWalletModulePluginRoot = new CryptoWalletCryptoModulePluginRoot();
-        cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
+        cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(cryptoWalletManager);
         cryptoWalletWalletModulePluginRoot.setCryptoVaultManager(cryptoVaultManager);
         cryptoWalletWalletModulePluginRoot.setErrorManager(errorManager);
         cryptoWalletWalletModulePluginRoot.setExtraUserManager(extraUserManager);

@@ -30,7 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.fan_community.commons.popups.AcceptDialog;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.fan_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class ConnectionNotificationsFragment extends
         AbstractFermatFragment<
-                FanCommunitySubAppSession,
+                FanCommunitySubAppSessionReferenceApp,
                 SubAppResourcesProviderManager>
         implements
         SwipeRefreshLayout.OnRefreshListener,
@@ -57,7 +57,7 @@ public class ConnectionNotificationsFragment extends
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private FanCommunitySubAppSession fanCommunitySubAppSession;
+    private FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession;
     private LinearLayout emptyView;
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
