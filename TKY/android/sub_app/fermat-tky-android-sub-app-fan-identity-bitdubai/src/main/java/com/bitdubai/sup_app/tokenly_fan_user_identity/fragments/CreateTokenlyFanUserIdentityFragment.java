@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -83,10 +84,11 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
-
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
     private static final int CONTEXT_MENU_DELETE = 3;
+    private static final int CONTEXT_MENU_TURN_RIGHT = 4;
+    private static final int CONTEXT_MENU_TURN_LEFT = 5;
     private TokenlyFanUserIdentitySubAppSession tokenlyFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private TokenlyFanIdentityManagerModule moduleManager;
@@ -617,7 +619,12 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-        if (updateProfileImage) {menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");}
+        if (updateProfileImage) {
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
+
+        }
         super.onCreateContextMenu(menu, view, menuInfo);
     }
     @Override
@@ -636,9 +643,29 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     DeletePicture();
                     contextMenuDelete = true;
                     return true;
+                case CONTEXT_MENU_TURN_RIGHT:
+                    turnpicture(90f);
+                    return true;
+                case CONTEXT_MENU_TURN_LEFT:
+                    turnpicture(-90f);
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+
+    private void turnpicture(float rotationInDegrees) {
+        ImageView pictureView = fanImage;
+        Bitmap bitmap = ((RoundedBitmapDrawable)pictureView.getDrawable()).getBitmap();
+        Matrix matrix = new Matrix();
+        matrix.preRotate(rotationInDegrees);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        fanImage.setImageDrawable(
+                ImagesUtils.getRoundedBitmap(
+                        getResources(), rotatedBitmap));
+        fanImageByteArray = toByteArray(rotatedBitmap);
+        contextMenuInUse = false;
     }
 
     private void DeletePicture() {

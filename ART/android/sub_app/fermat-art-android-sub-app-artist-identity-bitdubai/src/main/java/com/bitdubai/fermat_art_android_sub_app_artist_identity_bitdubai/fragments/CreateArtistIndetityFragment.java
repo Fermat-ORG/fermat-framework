@@ -13,11 +13,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -93,6 +95,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
     private static final int CONTEXT_MENU_DELETE = 3;
+    private static final int CONTEXT_MENU_TURN_RIGHT = 4;
+    private static final int CONTEXT_MENU_TURN_LEFT = 5;
 
 
     private ArtistIdentitySubAppSession artistIdentitySubAppSession;
@@ -128,6 +132,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private static final int ERROR_USER_DATA = 6;
     private static final int ERROR_BOTH = 8;
     private static final int SUCCESSFULL_DATA = 7;
+
 
     public static CreateArtistIndetityFragment newInstance() {
         return new CreateArtistIndetityFragment();
@@ -823,7 +828,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                     imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                     artistImageByteArray = toByteArray(imageBitmap);
                     updateProfileImage = true;
-                    Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(artistImage);
+                    //Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(artistImage);
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
@@ -838,7 +843,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             artistImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
-                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(artistImage);
+                           // Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(artistImage);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -863,9 +868,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
             int rotationInDegrees = exifToDegrees(rotation);
             Matrix matrix = new Matrix();
-            if (rotation != 0f) {
+
                 matrix.preRotate(rotationInDegrees);
-            }
+
             rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
 
@@ -893,9 +898,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         @SuppressWarnings("deprecation")
         Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
         int column_index = 0;
-       if(cursor != null){
-         column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);}
+        if (cursor != null) {
+            column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        }
 
         cursor.moveToFirst();
 
@@ -909,6 +915,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
         if (updateProfileImage) {
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "turn pic left");
             menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
         }
 
@@ -932,9 +940,28 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                     DeletePicture();
                     contextMenuDelete = true;
                     return true;
+                case CONTEXT_MENU_TURN_RIGHT:
+                    turnpicture(90f);
+                    return true;
+                case CONTEXT_MENU_TURN_LEFT:
+                    turnpicture(-90f);
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void turnpicture(float rotationInDegrees) {
+        ImageView pictureView = artistImage;
+        Bitmap bitmap = ((RoundedBitmapDrawable)pictureView.getDrawable()).getBitmap();
+        Matrix matrix = new Matrix();
+        matrix.preRotate(rotationInDegrees);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        artistImage.setImageDrawable(
+                ImagesUtils.getRoundedBitmap(
+                        getResources(), rotatedBitmap));
+        artistImageByteArray = toByteArray(rotatedBitmap);
+        contextMenuInUse = false;
     }
 
     private void DeletePicture() {

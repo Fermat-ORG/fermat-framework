@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -86,6 +87,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
+    private static final int CONTEXT_MENU_DELETE = 3;
+    private static final int CONTEXT_MENU_TURN_RIGHT = 4;
+    private static final int CONTEXT_MENU_TURN_LEFT = 5;
+
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
@@ -106,6 +111,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private FanIdentitySettings fanIdentitySettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean contextMenuDelete = false;
+
     private Handler handler;
     private boolean updateCheck = false;
     private View WarningCircle;
@@ -250,6 +257,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     }
     private void loadIdentity(){
         updateCheck = true;
+
         if (identitySelected.getProfileImage() != null) {
             Bitmap bitmap = null;
             if (identitySelected.getProfileImage().length > 0) {
@@ -257,6 +265,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         identitySelected.getProfileImage(),
                         0,
                         identitySelected.getProfileImage().length);
+                updateProfileImage = true;
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
             }
@@ -344,6 +353,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             @Override
             public void onClick(View view) {
 
+                CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
+                getActivity().openContextMenu(fanImage);
 
                 /*
                 WarningLabel.setVisibility(View.GONE);
@@ -351,8 +362,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 CommonLogger.debug(TAG, "get in on fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
                 */
-
-
+                /*
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -373,9 +383,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 });
                 dialog.show();
                 //botonG.setVisibility(View.VISIBLE);
-                CommonLogger.debug("Chat identity", "Entrando en chatImg.setOnClickListener");
-
+                CommonLogger.debug("Chat identity", "Entrando en chatImg.setOnClickListener")
+                   */
             }
+
+
         });
 
         WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
@@ -687,13 +699,6 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         }
     }
 
-
-
-
-
-
-
-
     private Bitmap FixRotation(File myFile, Bitmap bitmap) {
 
         Bitmap rotatedBitmap = null;
@@ -756,13 +761,19 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+
+
         menu.setHeaderTitle("Choose mode");
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.afi_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-
+        if (updateProfileImage) {
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
+        }
         super.onCreateContextMenu(menu, view, menuInfo);
-    }
+          }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if(!contextMenuInUse) {
@@ -775,10 +786,42 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     loadImageFromGallery();
                     contextMenuInUse = true;
                     return true;
+                case CONTEXT_MENU_DELETE:
+                    DeletePicture();
+                    contextMenuDelete = true;
+                    return true;
+                case CONTEXT_MENU_TURN_RIGHT:
+                    turnpicture(90f);
+                    return true;
+                case CONTEXT_MENU_TURN_LEFT:
+                    turnpicture(-90f);
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
     }
+
+    private void DeletePicture() {
+       fanImage.setImageDrawable(null);
+        fanImageByteArray = null;
+       // camEditButton.setBackgroundResource(R.drawable.art_edit_picture_button);
+        updateProfileImage = false;
+    }
+
+
+    private void turnpicture(float rotationInDegrees) {
+        ImageView pictureView = fanImage;
+        Bitmap bitmap = ((RoundedBitmapDrawable)pictureView.getDrawable()).getBitmap();
+        Matrix matrix = new Matrix();
+        matrix.preRotate(rotationInDegrees);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        fanImage.setImageDrawable(
+                ImagesUtils.getRoundedBitmap(
+                        getResources(), rotatedBitmap));
+        fanImageByteArray = toByteArray(rotatedBitmap);
+        contextMenuInUse = false;
+    }
+
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
