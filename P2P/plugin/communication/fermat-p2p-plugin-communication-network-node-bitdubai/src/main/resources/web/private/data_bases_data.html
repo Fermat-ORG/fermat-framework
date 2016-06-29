@@ -35,7 +35,7 @@
     table th, table td { overflow: hidden; }
 </style>
 
-<body role="document" ng-controller="DataBaseDataCtrl" >
+<body role="document" ng-controller="DataBaseDataCtrl"  >
 
 
 <!-- Fixed navbar -->
@@ -51,6 +51,7 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="../index.html">Home</a></li>
                 <li><a href="monitoring.html">Monitoring</a></li>
+                <li><a href="identities.html">Identities</a></li>
                 <li><a href="data_bases.html">Data Base</a></li>
                 <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank">Contact</a></li>
                 <li ng-controller="UserCtrl" ><a ng-click="logout();">Logout</a></li>
@@ -59,7 +60,7 @@
     </div>
 </nav>
 
-<div class="container theme-showcase" role="main" style="width:98%;">
+<div class="container theme-showcase" role="main" style="width:98%;" ng-cloak >
 
     <br/>
 
@@ -78,7 +79,6 @@
             </tr>
             </tbody>
         </table>
-
         <br/>
         <br/>
         <hr/>
@@ -87,12 +87,22 @@
             <span>Page: {{currentPage}} / {{numPages}}</span>
             <button type="button" class="btn btn-info pull-right"    ng-click="nextPage();"      ng-disabled="currentPage == numPages" >Next</button>
         </div>
+        <br/>
+        <hr/>
+        <a href="data_bases.html" class="btn btn-danger pull-left" >Return</a>
     </div>
 
     <div class="row" ng-show="totalRows === 0" >
-        The Table is empty
+        <div class="well">
+            <h3>
+                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                The Data Base Table is empty
+            </h3>
+            <br/>
+            <hr/>
+            <a href="data_bases.html" class="btn btn-danger" >Return</a>
+        </div>
     </div>
-
     <br/>
     <br/>
     <br/>
