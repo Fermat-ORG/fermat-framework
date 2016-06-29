@@ -44,7 +44,8 @@ public class JaxRsActivator extends Application {
             Monitoring.class,
             UserAuth.class,
             ConfigurationService.class,
-            Databases.class
+            Databases.class,
+            Actors.class
     );
 
     @Override
