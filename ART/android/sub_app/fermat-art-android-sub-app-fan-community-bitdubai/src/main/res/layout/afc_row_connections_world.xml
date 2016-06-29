@@ -65,7 +65,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/afc_community_name"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
                 android:ellipsize="end"
                 android:gravity="start"

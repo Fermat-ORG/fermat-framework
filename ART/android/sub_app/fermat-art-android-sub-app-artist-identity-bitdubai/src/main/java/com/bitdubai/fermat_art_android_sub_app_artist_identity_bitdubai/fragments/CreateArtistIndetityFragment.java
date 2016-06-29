@@ -410,7 +410,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistUserName.addTextChangedListener(new TextWatcher() {
             /** flag to prevent loop call of onTextChanged() */
             private boolean setTextFlag = true;
-
+            private Toast toastChar = null;
 
 
 
@@ -429,10 +429,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                System.out.println("ART_ALIAS="+s);
-                System.out.println("alias_lenght="+mArtistUserName.getText().length()+" - "+MAX_ALIAS_CHARACTER);
-                if (mArtistUserName.getText().length() >= MAX_ALIAS_CHARACTER) {
-                    Toast.makeText(getActivity(), "Only "+MAX_ALIAS_CHARACTER+" chars allowed", Toast.LENGTH_SHORT).show();
+                 if (mArtistUserName.getText().length() >= MAX_ALIAS_CHARACTER) {
+                     //this to avoid toast accumulation
+                     if (toastChar != null) toastChar.cancel();
+                     toastChar = Toast.makeText(getActivity(), "Only "+MAX_ALIAS_CHARACTER+" chars allowed", Toast.LENGTH_SHORT);
+                     toastChar.show();
+
 
                     // set the text to a string max length MAX_ALIAS_CHARACTER:
                     if (setTextFlag) {

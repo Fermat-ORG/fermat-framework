@@ -90,7 +90,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
 
-    private static final int MAX_ALIAS_CHARACTER = 2;
+    private static final int MAX_ALIAS_CHARACTER = 40;
 
 
     private ArtFanUserIdentitySubAppSession artFanUserIdentitySubAppSession;
@@ -405,6 +405,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         mFanExternalUserName.addTextChangedListener(new TextWatcher() {
 
             private boolean setTextFlag = true;
+            private Toast toastChar = null;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -416,13 +417,16 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
 
 
-                if (count >= MAX_ALIAS_CHARACTER) {
-                    Toast.makeText(getActivity(), "Only "+MAX_ALIAS_CHARACTER+" chars allowed", Toast.LENGTH_LONG).show();
-
+                if ( mFanExternalUserName.getText().length()>= MAX_ALIAS_CHARACTER) {
+                    //this to avoid toast accumulation
+                    if (toastChar != null) toastChar.cancel();
+                    toastChar = Toast.makeText(getActivity(), "Only "+MAX_ALIAS_CHARACTER+" chars allowed", Toast.LENGTH_SHORT);
+                    toastChar.show();
                     // set the text to a string max length MAX_ALIAS_CHARACTER:
                     if (setTextFlag) {
                         setTextFlag = false;
                         mFanExternalUserName.setText(s.subSequence(0, MAX_ALIAS_CHARACTER));
+                        mFanExternalUserName.setSelection(mFanExternalUserName.getText().length());
                     } else {
                         setTextFlag = true;
                     }
