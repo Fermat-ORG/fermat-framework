@@ -75,7 +75,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                     chatExposingData.getLocation(),
                     Actors.CHAT,
                     chatExposingData.getImage(),
-                    0, 0
+                    chatExposingData.getRefreshInterval(), chatExposingData.getAccurancy()
             );
 
         } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
