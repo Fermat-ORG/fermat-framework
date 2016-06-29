@@ -443,6 +443,20 @@ public class SubAppAppsGenerator {
 
             //Help optionMenu
             OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Search");
+            optionMenuItem.setShowAsAction(2);
+            optionsMenu.addMenuItem(optionMenuItem);
+
+            //Location optionMenu
+            optionMenuItem = new OptionMenuItem(2);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Geolocation");
+            optionMenuItem.setShowAsAction(2);
+            optionsMenu.addMenuItem(optionMenuItem);
+
+            //Search optionMenu
+            optionMenuItem = new OptionMenuItem(3);
             optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
             optionMenuItem.setLabel("Help");
             optionMenuItem.setShowAsAction(2);
@@ -451,9 +465,9 @@ public class SubAppAppsGenerator {
 /*            runtimeOptionsMenu = new OptionsMenu();
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
+            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);*/
 
-            runtimeActivity.setOptionsMenu(runtimeOptionsMenu);*/
+            runtimeActivity.setOptionsMenu(optionsMenu);
 
             runtimeFragment = new FermatRuntimeFragment();
             runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -941,13 +955,6 @@ public class SubAppAppsGenerator {
              owner = new Owner();
             owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_IDENTITY.getCode());
 
-            //Help optionMenu
-            optionMenuItem = new OptionMenuItem(1);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Help");
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-
 
             //Search optionMenu
             optionMenuItem = new OptionMenuItem(2);
@@ -955,6 +962,14 @@ public class SubAppAppsGenerator {
             optionMenuItem.setLabel("Geolocation");
             optionMenuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(optionMenuItem);
+
+            //Help optionMenu
+            optionMenuItem = new OptionMenuItem(1);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Help");
+            optionMenuItem.setShowAsAction(2);
+            optionsMenu.addMenuItem(optionMenuItem);
+
 
             runtimeActivity.setOptionsMenu(optionsMenu);
 

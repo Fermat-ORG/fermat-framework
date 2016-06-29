@@ -82,7 +82,10 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+               // getActivity().onBackPressed();
+
+                saveAndGoBack();
+                changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
             }
         });
     }
@@ -194,7 +197,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public void onBackPressed(){
         saveAndGoBack();
         changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
-      //  super.onBackPressed();
+      // super.onBackPressed();
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetIntraUserIdentityException {

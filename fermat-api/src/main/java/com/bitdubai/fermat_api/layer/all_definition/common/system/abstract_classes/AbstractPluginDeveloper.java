@@ -97,7 +97,7 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
         }
     }
 
-    public final Object getPluginByVersionMati(String platformCode, String layerCode, String pluginsCode, String developerCode, String version,Class[] interfaces) throws VersionNotFoundException {
+    public final Object getPluginByVersionMati(String platformCode, String layerCode, String pluginsCode, String developerCode, String version) throws VersionNotFoundException {
         PluginVersionReference pluginVersionReference = null;
         try {
             pluginVersionReference = new PluginVersionReference(
@@ -116,12 +116,6 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
             } else {
                 AbstractPlugin abstractPlugin =versions.values().iterator().next();
                 return abstractPlugin;
-//                return fermatContext.objectToProxyfactory(
-//                        abstractPlugin,
-//                        interfaces.getClass().getClassLoader(),
-//                        interfaces,
-//                        interfaces[0]);
-//                throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.");
             }
         }catch (Exception e){
             //todo: mejorar esta captura de excepción

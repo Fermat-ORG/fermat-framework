@@ -36,7 +36,7 @@ public interface DeveloperPluginInterface {
 
     void start() throws CantStartPluginDeveloperException;
 
-    Object getPluginByVersionMati(String platformCode, String layerCode, String pluginsCode, String developerCode, String version,Class[] interfaces) throws VersionNotFoundException;
+    Object getPluginByVersionMati(String platformCode, String layerCode, String pluginsCode, String developerCode, String version) throws VersionNotFoundException;
 
     List<PluginVersionReference> listVersionsMati();
 

@@ -49,7 +49,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     /**
      * Session
      */
-    ReferenceAppFermatSession referenceWalletSession;
+
     String walletPublicKey = "reference_wallet";
     BitcoinWalletSettings bitcoinWalletSettings;
     /**
@@ -204,7 +204,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             lstPaymentRequest = new ArrayList<PaymentRequest>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
@@ -252,7 +252,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,appSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
         }
