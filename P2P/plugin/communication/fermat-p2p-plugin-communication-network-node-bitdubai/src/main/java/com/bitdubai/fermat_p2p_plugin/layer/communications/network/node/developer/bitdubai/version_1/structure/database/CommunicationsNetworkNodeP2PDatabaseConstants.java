@@ -29,6 +29,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME                 = "extra_data"                ;
     public static final String ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME           = "hosted_timestamp"          ;
     public static final String ACTOR_CATALOG_LAST_UPDATE_TIME_COLUMN_NAME           = "last_update_time"          ;
+    public static final String ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME           = "last_connection"          ;
     public static final String ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME   = "node_identity_public_key"  ;
     public static final String ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
 
@@ -51,6 +52,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME           = "transaction_type"          ;
     public static final String ACTOR_CATALOG_TRANSACTION_GENERATION_TIME_COLUMN_NAME            = "generation_time"           ;
+    public static final String ACTOR_CATALOG_TRANSACTION_LAST_CONNECTION_COLUMN_NAME            = "last_connection"           ;
 
     /**
      * actors catalog transactions pending for propagation database table definition.

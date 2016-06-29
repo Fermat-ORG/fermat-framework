@@ -28,6 +28,7 @@ import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.d
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_UPDATE_TIME_COLUMN_NAME;
@@ -192,14 +193,15 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
         try{
 
             actorsCatalog.setIdentityPublicKey      (record.getStringValue(ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
-            actorsCatalog.setName                   (record.getStringValue(ACTOR_CATALOG_NAME_COLUMN_NAME));
-            actorsCatalog.setAlias                  (record.getStringValue(ACTOR_CATALOG_ALIAS_COLUMN_NAME));
-            actorsCatalog.setActorType              (record.getStringValue(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME));
-            actorsCatalog.setPhoto                  (Base64.decodeBase64(record.getStringValue(ACTOR_CATALOG_PHOTO_COLUMN_NAME)));
-            actorsCatalog.setLastLocation           (record.getDoubleValue(ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME), record.getDoubleValue(ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME));
-            actorsCatalog.setExtraData              (record.getStringValue(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME));
-            actorsCatalog.setHostedTimestamp        (getTimestampFromLongValue(record.getLongValue(ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME)));
-            actorsCatalog.setLastUpdateTime         (getTimestampFromLongValue(record.getLongValue(ACTOR_CATALOG_LAST_UPDATE_TIME_COLUMN_NAME)));
+            actorsCatalog.setName(record.getStringValue(ACTOR_CATALOG_NAME_COLUMN_NAME));
+            actorsCatalog.setAlias(record.getStringValue(ACTOR_CATALOG_ALIAS_COLUMN_NAME));
+            actorsCatalog.setActorType(record.getStringValue(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME));
+            actorsCatalog.setPhoto(Base64.decodeBase64(record.getStringValue(ACTOR_CATALOG_PHOTO_COLUMN_NAME)));
+            actorsCatalog.setLastLocation(record.getDoubleValue(ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME), record.getDoubleValue(ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME));
+            actorsCatalog.setExtraData(record.getStringValue(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME));
+            actorsCatalog.setHostedTimestamp(getTimestampFromLongValue(record.getLongValue(ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME)));
+            actorsCatalog.setLastUpdateTime(getTimestampFromLongValue(record.getLongValue(ACTOR_CATALOG_LAST_UPDATE_TIME_COLUMN_NAME)));
+            actorsCatalog.setLastConnection(getTimestampFromLongValue(record.getLongValue(ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME)));
             actorsCatalog.setNodeIdentityPublicKey  (record.getStringValue(ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
             actorsCatalog.setClientIdentityPublicKey(record.getStringValue(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
 
@@ -234,6 +236,7 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
         databaseTableRecord.setStringValue(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, entity.getExtraData());
         databaseTableRecord.setLongValue  (ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getHostedTimestamp()));
         databaseTableRecord.setLongValue  (ACTOR_CATALOG_LAST_UPDATE_TIME_COLUMN_NAME, getLongValueFromTimestamp(entity.getLastUpdateTime()));
+        databaseTableRecord.setLongValue  (ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME, getLongValueFromTimestamp(entity.getLastConnection()));
         databaseTableRecord.setStringValue(ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME,entity.getNodeIdentityPublicKey());
         databaseTableRecord.setStringValue(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME,entity.getClientIdentityPublicKey());
 

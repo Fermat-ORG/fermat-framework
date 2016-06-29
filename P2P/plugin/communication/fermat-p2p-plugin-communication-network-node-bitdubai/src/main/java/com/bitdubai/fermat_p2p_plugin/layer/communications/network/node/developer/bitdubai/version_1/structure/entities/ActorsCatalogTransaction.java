@@ -52,12 +52,15 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private Timestamp generationTime;
 
+	private Timestamp lastConnection;
+
 	public ActorsCatalogTransaction() {
 		super();
 
 		this.hashId         = UUID.randomUUID().toString();
 		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
 		this.generationTime = new Timestamp(System.currentTimeMillis());
+		this.lastConnection = new Timestamp(System.currentTimeMillis());
         this.lastLocation   = new NetworkNodeCommunicationDeviceLocation();
 	}
 
@@ -67,6 +70,14 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	public Timestamp getGenerationTime() {
 		return generationTime;
+	}
+
+	public Timestamp getLastConnection() {
+		return lastConnection;
+	}
+
+	public void setLastConnection(Timestamp lastConnection) {
+		this.lastConnection = lastConnection;
 	}
 
 	public String getTransactionType() {
@@ -198,6 +209,8 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 			return false;
 		if (getHostedTimestamp() != null ? !getHostedTimestamp().equals(that.getHostedTimestamp()) : that.getHostedTimestamp() != null)
 			return false;
+		if (getLastConnection() != null ? !getLastConnection().equals(that.getLastConnection()) : that.getLastConnection() != null)
+			return false;
 		if (getIdentityPublicKey() != null ? !getIdentityPublicKey().equals(that.getIdentityPublicKey()) : that.getIdentityPublicKey() != null)
 			return false;
 		if (getLastLocation() != null ? !getLastLocation().equals(that.getLastLocation()) : that.getLastLocation() != null)
@@ -220,6 +233,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		result = 31 * result + (getAlias() != null ? getAlias().hashCode() : 0);
 		result = 31 * result + (getExtraData() != null ? getExtraData().hashCode() : 0);
 		result = 31 * result + (getHostedTimestamp() != null ? getHostedTimestamp().hashCode() : 0);
+		result = 31 * result + (getLastConnection() != null ? getLastConnection().hashCode() : 0);
 		result = 31 * result + (getIdentityPublicKey() != null ? getIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getLastLocation() != null ? getLastLocation().hashCode() : 0);
 		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
