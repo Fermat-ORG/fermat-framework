@@ -29,6 +29,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,9 +42,13 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
@@ -104,7 +109,8 @@ public class ConnectionsWorldFragment
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
-    LocationManager locationManager;
+//    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+//    private LocationManager locationManager;
     Location locationGPS;
 
     //Flags
@@ -125,7 +131,7 @@ public class ConnectionsWorldFragment
     ImageView noData;
 
     //Greenbar layout
-    private LinearLayout greenBar;
+    private RelativeLayout greenBar;
     private ImageView closeGreenBar;
     private TextView greenBarCountry;
     private TextView greenBarCity;
@@ -137,7 +143,7 @@ public class ConnectionsWorldFragment
     @Override
     public void onMethodCallback(ExtendedCity city) {
 
-        greenBar = (LinearLayout) rootView.findViewById(R.id.green_bar_layout);
+        greenBar = (RelativeLayout) rootView.findViewById(R.id.green_bar_layout);
         closeGreenBar = (ImageView) rootView.findViewById(R.id.close_green_bar);
         greenBarCountry = (TextView) rootView.findViewById(R.id.country_green_bar);
         greenBarCity = (TextView) rootView.findViewById(R.id.city_green_bar);
@@ -145,7 +151,7 @@ public class ConnectionsWorldFragment
         greenBarCountry.setText(city.getCountryName());
         greenBarCity.setText(city.getName());
 
-        greenBar.bringToFront();
+        //greenBar.bringToFront();
         greenBar.setVisibility(View.VISIBLE);
 
         location=new DeviceLocation();
@@ -161,6 +167,7 @@ public class ConnectionsWorldFragment
             public void onClick(View v) {
                 greenBar.setVisibility(View.GONE);
                 location = null;
+                offset=0;
                 onRefresh();
             }
         });
@@ -486,15 +493,21 @@ public class ConnectionsWorldFragment
         try {
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
-                if(location == null){
-                    if(location.getLongitude() == 0 && location.getLatitude() == 0){
-                        locationGPS = locationManager.getLocation();
-                        if(locationGPS!= null){
-                            location.setLatitude(locationGPS.getLatitude());
-                            location.setLongitude(locationGPS.getLongitude());
-                        }
-                    }
-                }
+//                if(location != null){
+//                    if(location.getLongitude() == 0 && location.getLatitude() == 0){
+//                        locationGPS = locationManager.getLocation();
+//                        if(locationGPS!= null){
+//                            location.setLatitude(locationGPS.getLatitude());
+//                            location.setLongitude(locationGPS.getLongitude());
+//                        }
+//                    }
+//                }else{
+//                    locationGPS = locationManager.getLocation();
+//                    if(locationGPS!= null){
+//                        location.setLatitude(locationGPS.getLatitude());
+//                        location.setLongitude(locationGPS.getLongitude());
+//                    }
+//                }
                 result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
                         //null, 0, null, 0, 0);
                        location, distance, alias, max, offset);
