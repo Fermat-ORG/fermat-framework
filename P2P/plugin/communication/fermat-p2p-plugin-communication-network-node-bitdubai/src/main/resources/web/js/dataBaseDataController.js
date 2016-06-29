@@ -31,7 +31,7 @@ angular.module("serverApp").controller('DataBaseDataCtrl', ['$scope', '$http', '
 
             $http({
                 method: 'GET',
-                url: 'http://localhost:8080/fermat/rest/api/v1/admin/databases/data?tableName='+$scope.selectedTable+'&offSet='+$scope.offSet+'&max='+$scope.max
+                url: '/fermat/rest/api/v1/admin/databases/data?tableName='+$scope.selectedTable+'&offSet='+$scope.offSet+'&max='+$scope.max
             }).then(function successCallback(response) {
 
               var data = response.data;
@@ -44,15 +44,13 @@ angular.module("serverApp").controller('DataBaseDataCtrl', ['$scope', '$http', '
 
                 $scope.numPages = Math.ceil($scope.totalRows/$scope.max);
 
-              } else {
-
               }
 
            }, function errorCallback(response) {
                 var message = "";
                 if(response.status === -1){message = "Server no available";}
                 if(response.status === 401){message = "You must authenticate again";}
-                alert(response.status+" - Monitoring Service error 1: "+response.statusText+" "+message);
+                alert(response.status+" - Data base Service error 1: "+response.statusText+" "+message);
                 $window.location.href = '../index.html';
            });
 
