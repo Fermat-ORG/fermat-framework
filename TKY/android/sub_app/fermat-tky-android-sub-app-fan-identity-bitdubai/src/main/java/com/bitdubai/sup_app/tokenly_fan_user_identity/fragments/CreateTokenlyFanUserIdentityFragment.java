@@ -623,8 +623,8 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
         if (updateProfileImage) {
-            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "turn pic right");
-            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "Turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "Turn pic left");
             menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
 
         }

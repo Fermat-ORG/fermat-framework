@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.art_fan_identity.fragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -28,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,7 +44,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
@@ -771,12 +767,13 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
         if (updateProfileImage) {
-            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "turn pic right");
-            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "Turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "Turn pic left");
             menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
         }
         super.onCreateContextMenu(menu, view, menuInfo);
-          }
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if(!contextMenuInUse) {
@@ -794,10 +791,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     contextMenuDelete = true;
                     return true;
                 case CONTEXT_MENU_TURN_RIGHT:
-                    turnpicture(90f);
+                    turnPicture(90f);
                     return true;
                 case CONTEXT_MENU_TURN_LEFT:
-                    turnpicture(-90f);
+                    turnPicture(-90f);
                     return true;
             }
         }
@@ -812,7 +809,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     }
 
 
-    private void turnpicture(float rotationInDegrees) {
+    private void turnPicture(float rotationInDegrees) {
         ImageView pictureView = fanImage;
         Bitmap bitmap = ((RoundedBitmapDrawable)pictureView.getDrawable()).getBitmap();
         Matrix matrix = new Matrix();

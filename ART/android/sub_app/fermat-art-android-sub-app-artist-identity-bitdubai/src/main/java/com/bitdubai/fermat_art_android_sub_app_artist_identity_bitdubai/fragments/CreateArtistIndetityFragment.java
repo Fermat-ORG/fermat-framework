@@ -832,7 +832,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                     artistImageByteArray = toByteArray(imageBitmap);
                     updateProfileImage = true;
                     //Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(artistImage);
-                    updateProfileImage = true;
+                    //updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
@@ -918,8 +918,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
         if (updateProfileImage) {
-            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "turn pic right");
-            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "Turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "Turn pic left");
             menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
         }
 
