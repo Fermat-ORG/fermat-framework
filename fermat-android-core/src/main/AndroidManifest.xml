@@ -87,7 +87,13 @@
 
         </activity>
 
-        <service android:name="com.bitdubai.android_core.app.common.version_1.notifications.NotificationService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.notifications.NotificationService">
+
+            <intent-filter>
+                <action android:name="org.fermat.NOTIFICATION" />
+            </intent-filter>
+
+        </service>
 
 
         <activity

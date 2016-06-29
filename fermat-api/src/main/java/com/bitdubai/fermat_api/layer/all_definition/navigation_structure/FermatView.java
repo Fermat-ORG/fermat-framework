@@ -10,6 +10,10 @@ public class FermatView extends Artifact{
     public FermatView() {
     }
 
+    public FermatView(int id, SourceLocation sourceLocation) {
+        super(id, null, sourceLocation);
+    }
+
     public FermatView(int id, Owner owner, SourceLocation sourceLocation) {
         super(id, owner, sourceLocation);
     }
