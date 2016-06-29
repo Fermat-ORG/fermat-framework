@@ -124,12 +124,30 @@ public class ConnectionsWorldFragment
     TextView noDatalabel;
     ImageView noData;
 
+    //Greenbar layout
+    private LinearLayout greenBar;
+    private ImageView closeGreenBar;
+    private TextView greenBarCountry;
+    private TextView greenBarCity;
+
     public static ConnectionsWorldFragment newInstance() {
         return new ConnectionsWorldFragment();
     }
 
     @Override
     public void onMethodCallback(ExtendedCity city) {
+
+        greenBar = (LinearLayout) rootView.findViewById(R.id.green_bar_layout);
+        closeGreenBar = (ImageView) rootView.findViewById(R.id.close_green_bar);
+        greenBarCountry = (TextView) rootView.findViewById(R.id.country_green_bar);
+        greenBarCity = (TextView) rootView.findViewById(R.id.city_green_bar);
+
+        greenBarCountry.setText(city.getCountryName());
+        greenBarCity.setText(city.getName());
+
+        greenBar.bringToFront();
+        greenBar.setVisibility(View.VISIBLE);
+
         location=new DeviceLocation();
         location.setLatitude((double) city.getLatitude());
         location.setLongitude((double) city.getLongitude());
@@ -137,6 +155,16 @@ public class ConnectionsWorldFragment
         //location.setAccuracy((long) distance);
         offset=0;
         onRefresh();
+
+        closeGreenBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                greenBar.setVisibility(View.GONE);
+                location = null;
+                onRefresh();
+            }
+        });
+
     }
 
     @Override
