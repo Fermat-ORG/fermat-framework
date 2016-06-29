@@ -443,15 +443,22 @@ public class SubAppAppsGenerator {
 
             //Help optionMenu
             OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Help");
+            optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Search");
+            optionMenuItem.setShowAsAction(2);
+            optionsMenu.addMenuItem(optionMenuItem);
+
+            //Location optionMenu
+            optionMenuItem = new OptionMenuItem(2);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Geolocation");
             optionMenuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(optionMenuItem);
 
             //Search optionMenu
-            optionMenuItem = new OptionMenuItem(2);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Geolocation");
+            optionMenuItem = new OptionMenuItem(3);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Help");
             optionMenuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(optionMenuItem);
 
