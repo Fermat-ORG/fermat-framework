@@ -479,13 +479,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         try {
             int id = item.getItemId();
 
-            if (id == 1)
+            if (id == 3)
                 showDialogHelp();
 
            // if (id == 2)
                 //showDialogHelp();
 
-            if (id == 3)
+            if (id == 1)
                 searchIntraUsers();
 
         } catch (Exception e) {
