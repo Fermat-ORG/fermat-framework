@@ -30,7 +30,6 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.Cr
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -178,10 +177,10 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
                                 cryptoMoneyTransaction.getBlockchainNetworkType());
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
-                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EXECUTION);
                         stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
                         break;
-                    case IN_EJECUTION:
+                    case IN_EXECUTION:
                         if (CryptoTransactionStatus.CONFIRMED == cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId()))
                         {
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
@@ -197,7 +196,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
                         CryptoTransactionStatus cryptoTransactionStatus = cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId());
-                        if (Objects.equals(CryptoTransactionStatus.CONFIRMED.getCode(), cryptoTransactionStatus.getCode())) {
+                        if (cryptoTransactionStatus.getCode().equals(CryptoTransactionStatus.CONFIRMED.getCode())) {
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
 
                             WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
