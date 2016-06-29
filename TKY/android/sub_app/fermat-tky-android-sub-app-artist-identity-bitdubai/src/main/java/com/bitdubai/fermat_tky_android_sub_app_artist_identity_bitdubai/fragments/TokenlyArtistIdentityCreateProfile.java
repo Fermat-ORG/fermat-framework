@@ -53,6 +53,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.R;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSessionReferenceApp;
@@ -82,7 +83,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by juan Sulbaran
  */
-public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
+public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment<TkyIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> {
 
     private static final String TAG = "CreateTokenlyArtistIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
@@ -98,8 +99,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private static final int CONTEXT_MENU_DELETE = 3;
     private static final int CONTEXT_MENU_TURN_RIGHT = 4;
     private static final int CONTEXT_MENU_TURN_LEFT = 5;
-    private TkyIdentitySubAppSession tkyIdentitySubAppSession;
-    private TkyIdentitySubAppSessionReferenceApp tkyIdentitySubAppSession;
+    //private TkyIdentitySubAppSession tkyIdentitySubAppSession;
+    //private TkyIdentitySubAppSessionReferenceApp tkyIdentitySubAppSession;
     private byte[] ArtistImageByteArray;
     private TokenlyArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -146,17 +147,17 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            tkyIdentitySubAppSession = (TkyIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = tkyIdentitySubAppSession.getModuleManager();
+            //tkyIdentitySubAppSession = (TkyIdentitySubAppSessionReferenceApp) appSession;
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
 
             try {
-                if (tkyIdentitySubAppSession.getAppPublicKey()!= null){
-                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
+                if (appSession.getAppPublicKey()!= null){
+                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
                     //tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
-                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
+                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }
 
             } catch (Exception e) {
@@ -168,8 +169,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 if(moduleManager != null){
                 tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(true);
 
-                    if (tkyIdentitySubAppSession.getAppPublicKey()!=null){
-                        moduleManager.persistSettings(tkyIdentitySubAppSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
+                    if (appSession.getAppPublicKey()!=null){
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }else{
                         moduleManager.persistSettings(appSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }
@@ -381,7 +382,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private void setUpIdentity() {
         try {
 
-            identitySelected = (Artist) tkyIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (Artist) appSession.getData(SessionConstants.IDENTITY_SELECTED);
 
 
             if (identitySelected != null) {
@@ -872,7 +873,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private void setUpHelpTkyArtist(boolean checkButton) {
         try {
             PresentationDialog presentationDialog;
-            presentationDialog = new PresentationDialog.Builder(getActivity(), tkyIdentitySubAppSession)
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.ic_profile_tokenly)
                     .setIconRes(R.drawable.avatar_icon2)

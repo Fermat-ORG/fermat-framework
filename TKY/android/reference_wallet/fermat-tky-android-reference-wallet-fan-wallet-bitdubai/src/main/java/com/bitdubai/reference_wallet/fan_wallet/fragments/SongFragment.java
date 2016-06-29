@@ -130,7 +130,7 @@ public class SongFragment extends AbstractFermatFragment  {
                 downloading=fanwalletSession.getDownloading();
                 items=fanwalletSession.getItems();
                 firstTime=false;
-                noBackground=fanwalletSession.getNobackground();
+                //noBackground=fanwalletSession.getNobackground();
             }
 
             fanWalletModule=fanwalletSession.getModuleManager();
@@ -239,7 +239,7 @@ public class SongFragment extends AbstractFermatFragment  {
 
         fanwalletSession.setItems(items);
 
-        fanwalletSession.setNobackground(noBackground);
+        //fanwalletSession.setNobackground(noBackground);
     }
 
     @Override

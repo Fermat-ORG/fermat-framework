@@ -198,7 +198,7 @@ public class ProvisoryData {
 
 
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.fan);
+        item2.setIconResource(R.drawable.subapp_art_fan_icon);
         item2.setPosition(8);
         lstIdentities.add(item2);
 

@@ -45,6 +45,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
@@ -76,7 +77,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 22/03/16.
  */
-public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment {
+public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment<TokenlyFanUserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> {
     private static final String TAG = "CreateTokenlyFanIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -87,11 +88,11 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private static final int REQUEST_LOAD_IMAGE = 2;
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private TokenlyFanUserIdentitySubAppSessionReferenceApp tokenlyFanUserIdentitySubAppSession;
+    //private TokenlyFanUserIdentitySubAppSessionReferenceApp tokenlyFanUserIdentitySubAppSession;
     private static final int CONTEXT_MENU_DELETE = 3;
     private static final int CONTEXT_MENU_TURN_RIGHT = 4;
     private static final int CONTEXT_MENU_TURN_LEFT = 5;
-    private TokenlyFanUserIdentitySubAppSession tokenlyFanUserIdentitySubAppSession;
+    //private TokenlyFanUserIdentitySubAppSession tokenlyFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private TokenlyFanIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -132,22 +133,22 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         super.onCreate(savedInstanceState);
 
         try {
-            tokenlyFanUserIdentitySubAppSession = (TokenlyFanUserIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = tokenlyFanUserIdentitySubAppSession.getModuleManager();
+            //tokenlyFanUserIdentitySubAppSession = (TokenlyFanUserIdentitySubAppSessionReferenceApp) appSession;
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
             //settingsManager = tokenlyFanUserIdentitySubAppSession.getModuleManager().;
 
             try {
-                if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!= null){
-                    tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey());
+                if (appSession.getAppPublicKey()!= null){
+                    tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
                     //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
                     tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
                 }
 
-                if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!= null)
-                    tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey());
+                if (appSession.getAppPublicKey()!= null)
+                    tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 tokenlyFanPreferenceSettings = null;
             }
@@ -156,12 +157,12 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 tokenlyFanPreferenceSettings = new TokenlyFanPreferenceSettings();
                 tokenlyFanPreferenceSettings.setIsPresentationHelpEnabled(true);
                 if(moduleManager != null){
-                    if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!=null)
-                        moduleManager.persistSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
+                    if (appSession.getAppPublicKey()!=null)
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
                 tokenlyFanPreferenceSettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
-                    if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!=null){
-                        moduleManager.persistSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
+                    if (appSession.getAppPublicKey()!=null){
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
                     }else{
                         moduleManager.persistSettings("123456789", tokenlyFanPreferenceSettings);
                     }
@@ -204,7 +205,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private void setUpHelpTkyFan(boolean checkButton) {
                 try {
                         PresentationDialog presentationDialog;
-                        presentationDialog = new PresentationDialog.Builder(getActivity(), tokenlyFanUserIdentitySubAppSession)
+                        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                                         .setBannerRes(R.drawable.ic_profile_tokenly)
                                         .setIconRes(R.drawable.avatar_icon2)
@@ -226,7 +227,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private void setUpIdentity() {
         try {
             List<Fan> lst = new ArrayList<>();
-            identitySelected = (Fan) tokenlyFanUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (Fan) appSession.getData(SessionConstants.IDENTITY_SELECTED);
 
             if (identitySelected != null) {
                 loadIdentity();

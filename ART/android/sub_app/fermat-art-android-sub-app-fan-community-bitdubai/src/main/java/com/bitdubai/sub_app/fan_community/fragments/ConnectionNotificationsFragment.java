@@ -57,7 +57,7 @@ public class ConnectionNotificationsFragment extends
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession;
+    //private FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession;
     private LinearLayout emptyView;
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -77,9 +77,9 @@ public class ConnectionNotificationsFragment extends
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // setting up  module
-        fanCommunitySubAppSession = appSession;
+        //fanCommunitySubAppSession = appSession;
         fanCommunityInformation = (ArtCommunityInformation) appSession.getData(ACTOR_SELECTED);
-        moduleManager = fanCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         linkedFanIdentities = new ArrayList<>();
     }
@@ -206,7 +206,7 @@ public class ConnectionNotificationsFragment extends
         try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    fanCommunitySubAppSession,
+                    appSession,
                     null,
                     data,
                     moduleManager.getSelectedActorIdentity());

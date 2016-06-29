@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -49,8 +50,11 @@ import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.art_fan_identity.R;
 import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSessionReferenceApp;
+import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
+import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -63,19 +67,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
-import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
-import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
-import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
-import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
-
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
  */
-public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
+public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment<ArtFanUserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> {
     private static final String TAG = "CreateArtFanIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -95,8 +93,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private static final int MAX_ALIAS_CHARACTER = 40;
 
 
-    private ArtFanUserIdentitySubAppSession artFanUserIdentitySubAppSession;
-    private ArtFanUserIdentitySubAppSessionReferenceApp artFanUserIdentitySubAppSession;
+    //private ArtFanUserIdentitySubAppSession artFanUserIdentitySubAppSession;
+    //private ArtFanUserIdentitySubAppSessionReferenceApp artFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private FanIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -135,17 +133,17 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            artFanUserIdentitySubAppSession = (ArtFanUserIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = artFanUserIdentitySubAppSession.getModuleManager();
+            //artFanUserIdentitySubAppSession = (ArtFanUserIdentitySubAppSessionReferenceApp) appSession;
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
             //settingsManager = artFanUserIdentitySubAppSession.getModuleManager().
              //       getSettingsManager();
 
             try {
-                if (artFanUserIdentitySubAppSession.getAppPublicKey()!= null){
+                if (appSession.getAppPublicKey()!= null){
                     fanIdentitySettings = moduleManager.loadAndGetSettings(
-                            artFanUserIdentitySubAppSession.getAppPublicKey());
+                            appSession.getAppPublicKey());
                 }else{
                     fanIdentitySettings = moduleManager.loadAndGetSettings("art_fan_identity");
                 }
@@ -159,9 +157,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 fanIdentitySettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
                 fanIdentitySettings.setIsPresentationHelpEnabled(true);
-                    if (artFanUserIdentitySubAppSession.getAppPublicKey()!=null){
+                    if (appSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(
-                                artFanUserIdentitySubAppSession.getAppPublicKey(), fanIdentitySettings);
+                                appSession.getAppPublicKey(), fanIdentitySettings);
                     }else{
                         moduleManager.persistSettings("art_fan_identity", fanIdentitySettings);
                     }
@@ -202,7 +200,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private void setUpHelpArtFan(boolean checkButton) {
         try {
             PresentationDialog presentationDialog;
-            presentationDialog = new PresentationDialog.Builder(getActivity(), artFanUserIdentitySubAppSession)
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_fan_community)
                     .setIconRes(R.drawable.fan)
@@ -223,7 +221,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
     private void setUpIdentity() {
         try {
-            identitySelected = (Fanatic) artFanUserIdentitySubAppSession.getData(
+            identitySelected = (Fanatic) appSession.getData(
                     SessionConstants.IDENTITY_SELECTED);
 
             if (identitySelected != null) {

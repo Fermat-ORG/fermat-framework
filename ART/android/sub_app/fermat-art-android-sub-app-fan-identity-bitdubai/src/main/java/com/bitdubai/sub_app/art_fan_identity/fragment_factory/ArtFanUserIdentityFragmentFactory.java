@@ -29,8 +29,8 @@ public class ArtFanUserIdentityFragmentFactory extends
             FragmentNotFoundException {
 
         switch (fragments) {
-            case ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT:
-                return TestClassFragment.newInstance();
+            //case ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT:
+            //    return TestClassFragment.newInstance();
 
             case ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT:
                 return CreateArtFanUserIdentityFragment.newInstance();

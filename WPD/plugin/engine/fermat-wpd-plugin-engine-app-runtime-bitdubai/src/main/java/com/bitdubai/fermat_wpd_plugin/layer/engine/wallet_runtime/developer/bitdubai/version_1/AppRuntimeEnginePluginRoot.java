@@ -4273,9 +4273,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
         runtimeHeader.setStartCollapse(true);
-        runtimeActivity.setHeader(runtimeHeader);*/
-        runtimeHeader.setStartCollapsed(true);
         runtimeActivity.setHeader(runtimeHeader);
+        runtimeHeader.setStartCollapsed(true);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
 
         runtimeTabStrip = new TabStrip();

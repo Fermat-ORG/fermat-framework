@@ -11,6 +11,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
@@ -19,10 +20,10 @@ import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenc
 /**
  * Created by Miguel Payarez on 16/03/16.
  */
-public class FanWalletMainActivity extends AbstractFermatFragment  {
+public class FanWalletMainActivity extends AbstractFermatFragment<FanWalletSessionReferenceApp, SubAppResourcesProviderManager>  {
 
     //FermatManager
-    private FanWalletSessionReferenceApp fanwalletSession;
+    //private FanWalletSessionReferenceApp fanwalletSession;
     private FanWalletPreferenceSettings  fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -34,12 +35,12 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         super.onCreate(savedInstanceState);
 
         try {
-            fanwalletSession = ((FanWalletSessionReferenceApp) appSession);
+            //fanwalletSession = ((FanWalletSessionReferenceApp) appSession);
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FAN WALLET");
 
             try {
-                    fanWalletSettings =  fanwalletSession
+                    fanWalletSettings =  appSession
                             .getModuleManager()
                             .loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
@@ -50,7 +51,7 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletSession
+                    appSession
                             .getModuleManager()
                             .persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {

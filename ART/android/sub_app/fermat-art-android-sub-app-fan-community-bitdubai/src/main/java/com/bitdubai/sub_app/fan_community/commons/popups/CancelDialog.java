@@ -15,14 +15,14 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.R;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 
 /**
  * Created by Gabriel Araujo 29/04/2016.
  *
  */
-public class CancelDialog extends FermatDialog<FanCommunitySubAppSession, SubAppResourcesProviderManager>
+public class CancelDialog extends FermatDialog<FanCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -43,7 +43,7 @@ public class CancelDialog extends FermatDialog<FanCommunitySubAppSession, SubApp
 
 
     public CancelDialog(Activity a,
-                        FanCommunitySubAppSession fanCommunitySubAppSession,
+                        FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
                         SubAppResourcesProviderManager subAppResources,
                         FanCommunityInformation fanCommunityInformation,
                         FanCommunitySelectableIdentity identity) {

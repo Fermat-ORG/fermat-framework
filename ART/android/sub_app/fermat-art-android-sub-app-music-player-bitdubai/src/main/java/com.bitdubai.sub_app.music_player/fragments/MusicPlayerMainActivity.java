@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
@@ -45,10 +47,10 @@ import java.util.Map;
 /**
  * Created by Miguel Payarez on 13/04/16.
  */
-public class MusicPlayerMainActivity extends AbstractFermatFragment {
+public class MusicPlayerMainActivity extends AbstractFermatFragment<MusicPlayerSessionReferenceApp, SubAppResourcesProviderManager> {
 
     //FermatManager
-    private MusicPlayerSessionReferenceApp musicPlayerSession;
+    //private MusicPlayerSessionReferenceApp musicPlayerSession;
     private MusicPlayerModuleManager musicPlayermoduleManager;
     private MusicPlayerPreferenceSettings musicPlayerSettings;
     private ErrorManager errorManager;
@@ -85,31 +87,31 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         super.onCreate(savedInstanceState);
         try {
-            musicPlayerSession = ((MusicPlayerSessionReferenceApp) appSession);
-            musicPlayermoduleManager = musicPlayerSession.getModuleManager();
+            //musicPlayerSession = ((MusicPlayerSessionReferenceApp) appSession);
+            musicPlayermoduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START MUSIC PLAYER");
 
-            if(musicPlayerSession.getThreadsong()!=null){
+            if(appSession.getThreadsong()!=null){
                 System.out.println("ART_ IT IS PLAYING");
-                songPlayerThread=musicPlayerSession.getThreadsong();
-                mp=musicPlayerSession.getMusicPlayer();
+                songPlayerThread=appSession.getThreadsong();
+                mp=appSession.getMusicPlayer();
 
-                bplay = musicPlayerSession.getBplay();
-                bbb = musicPlayerSession.getBbb();
-                bff = musicPlayerSession.getBff();
-                pb = musicPlayerSession.getPb();
-                tiempo = musicPlayerSession.getTiempo();
-                recyclerView = musicPlayerSession.getRecyclerView();
-                song = musicPlayerSession.getSong();
+                bplay = appSession.getBplay();
+                bbb = appSession.getBbb();
+                bff = appSession.getBff();
+                pb = appSession.getPb();
+                tiempo = appSession.getTiempo();
+                recyclerView = appSession.getRecyclerView();
+                song = appSession.getSong();
 
-                adapter=musicPlayerSession.getAdapter();
+                adapter=appSession.getAdapter();
 
-                view=musicPlayerSession.getView();
+                view=appSession.getView();
 
                 firstTime=false;
 
-                pause=musicPlayerSession.getPause();
+                pause=appSession.getPause();
 
                 System.out.println("ART_ I CAN LISTEN");
             }
@@ -147,22 +149,22 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        musicPlayerSession.setMusicThread(songPlayerThread);
-        musicPlayerSession.setMusicPlayer(mp);
+        appSession.setMusicThread(songPlayerThread);
+        appSession.setMusicPlayer(mp);
 
-        musicPlayerSession.setBplay(bplay);
-        musicPlayerSession.setBbb(bbb);
-        musicPlayerSession.setBff(bff);
-        musicPlayerSession.setPb(pb);
-        musicPlayerSession.setRecyclerView(recyclerView);
-        musicPlayerSession.setTiempo(tiempo);
-        musicPlayerSession.setSong(song);
+        appSession.setBplay(bplay);
+        appSession.setBbb(bbb);
+        appSession.setBff(bff);
+        appSession.setPb(pb);
+        appSession.setRecyclerView(recyclerView);
+        appSession.setTiempo(tiempo);
+        appSession.setSong(song);
 
-        musicPlayerSession.setAdapter(adapter);
+        appSession.setAdapter(adapter);
 
-        musicPlayerSession.setView(view);
+        appSession.setView(view);
 
-        musicPlayerSession.setPause(pause);
+        appSession.setPause(pause);
 
     }
 

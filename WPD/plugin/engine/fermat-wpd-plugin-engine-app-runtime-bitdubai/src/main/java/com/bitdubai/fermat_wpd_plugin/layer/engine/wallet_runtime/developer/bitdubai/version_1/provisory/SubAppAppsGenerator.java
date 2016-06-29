@@ -4945,7 +4945,7 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
-        Fragment runtimeFragment;
+        //Fragment runtimeFragment;
         String tabTitleColor = "#555759";
         String tabBarColor="#E6E7E8";
         FermatRuntimeFragment runtimeFragment;

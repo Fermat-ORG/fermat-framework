@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
+import com.bitdubai.fermat_art_core.ARTPlatform;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_cer_core.CERPlatform;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
+import com.bitdubai.fermat_tky_core.TKYPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
 import java.lang.reflect.Method;
@@ -102,7 +104,7 @@ public final class FermatSystem {
         }
 
         try {
-            // fermatSystemContext.registerPlatform(new ARTPlatform());
+            fermatSystemContext.registerPlatform(new ARTPlatform());
             fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
 //            fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
 //           fermatSystemContext.registerPlatform(new CBPPlatform());
@@ -113,7 +115,7 @@ public final class FermatSystem {
             // fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
-            // fermatSystemContext.registerPlatform(new TKYPlatform());
+            fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
 
         } catch(CantRegisterPlatformException e) {

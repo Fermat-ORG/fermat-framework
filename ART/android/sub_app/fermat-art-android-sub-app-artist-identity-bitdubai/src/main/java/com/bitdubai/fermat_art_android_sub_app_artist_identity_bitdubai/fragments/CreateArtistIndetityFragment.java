@@ -43,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -82,7 +83,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 
-public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> {
+public class CreateArtistIndetityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ArtistIdentityManagerModule>, SubAppResourcesProviderManager> {
 
 
     private static final String TAG = "CreateArtArtistIdentity";
@@ -102,7 +103,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private static final int CONTEXT_MENU_TURN_LEFT = 5;
 
 
-    private ArtistIdentitySubAppSessionReferenceApp artistIdentitySubAppSession;
+    //private ArtistIdentitySubAppSessionReferenceApp artistIdentitySubAppSession;
     private byte[] artistImageByteArray;
     private ArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -146,8 +147,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         super.onCreate(savedInstanceState);
 
         try {
-            artistIdentitySubAppSession = (ArtistIdentitySubAppSession) appSession;
-            moduleManager = artistIdentitySubAppSession.getModuleManager();
+            //artistIdentitySubAppSession = appSession;
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
             //settingsManager = appSession.getModuleManager().
@@ -571,7 +572,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private void setUpHelpTkyArtist(boolean checkButton) {
         try {
             PresentationDialog presentationDialog;
-            presentationDialog = new PresentationDialog.Builder(getActivity(), artistIdentitySubAppSession)
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_artist_community)
                     .setIconRes(R.drawable.artist)
