@@ -411,6 +411,9 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Uri selectedImage2 = data.getData();
+                    if(selectedImage2==null){
+                        break;
+                    }
                     File myFile = new File(selectedImage2.getPath());
                     myFile.getAbsolutePath();
                     Bundle extras2 = data.getExtras();
