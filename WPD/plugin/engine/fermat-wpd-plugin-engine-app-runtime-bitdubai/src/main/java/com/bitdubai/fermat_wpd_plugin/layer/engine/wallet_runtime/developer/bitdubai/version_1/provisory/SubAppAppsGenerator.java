@@ -427,7 +427,7 @@ public class SubAppAppsGenerator {
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabelSize(20);
+            runtimeTitleBar.setLabelSize(16);
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#0072bb");
@@ -443,8 +443,9 @@ public class SubAppAppsGenerator {
 
             //Help optionMenu
             OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Search");
+            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Help");
+
             optionMenuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(optionMenuItem);
 
@@ -457,8 +458,8 @@ public class SubAppAppsGenerator {
 
             //Search optionMenu
             optionMenuItem = new OptionMenuItem(3);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Help");
+            optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Search");
             optionMenuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(optionMenuItem);
 
@@ -534,7 +535,7 @@ public class SubAppAppsGenerator {
             runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Cripto wallet users");
+            runtimeMenuItem.setLabel("Crypto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -626,7 +627,7 @@ public class SubAppAppsGenerator {
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#0072bb");
             runtimeTitleBar.setIconName("back");
-            runtimeTitleBar.setLabelSize(20);
+            runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
