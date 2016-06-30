@@ -8,7 +8,7 @@ android {
 
 
     compileSdkVersion 23
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.3'
 
 
     packagingOptions {
@@ -144,15 +144,15 @@ dependencies {
     compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
     //TKY
-//    compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
-//    compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
-//    compile project(':fermat-tky-android-sub-app-fan-identity-bitdubai')
+    compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
+    compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
+    compile project(':fermat-tky-android-sub-app-fan-identity-bitdubai')
     //ART
-//    compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
-//    compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
-//    compile project(':fermat-art-android-sub-app-fan-community-bitdubai')
-//    compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
-//    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
+    compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
+    compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
+    compile project(':fermat-art-android-sub-app-fan-community-bitdubai')
+    compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
+    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
     //WPD
     compile project(':fermat-wpd-android-sub-app-store-bitdubai')
     compile project(':fermat-wpd-android-sub-app-wallet-manager-bitdubai')

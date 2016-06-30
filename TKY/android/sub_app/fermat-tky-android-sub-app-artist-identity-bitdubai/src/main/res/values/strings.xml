@@ -11,7 +11,9 @@
     <string name="help">Help</string>
 
     <!--Dialog Help - Init-->
-    <string name="dap_redeem_identity_welcome_subTitle">Welcome to the Redeem Point Identity.</string>
-    <string name="dap_redeem_identity_welcome_body">From here you will be able to create a Redeem Point type identity.\n\nThis Identity will identify you in the system as a redeem point, and give you access to all tasks and applications you need.\n\nOther Asset Users will be able to request connection to you by finding you with the information you provide here.</string>
+    <string name="tky_artist_identity_welcome_subTitle">Welcome to TKY Artist Identity.</string>
+    <string name="tky_artist_identity_welcome_footer">Welcome to TKY Artist Identity.</string>
+    <string name="tky_artist_identity_welcome_body">"From here you can create a Artist identity\n" +
+                            "With this identity you will link you tokenly account of artist.</string>
     <!--Dialog Help - End-->
 </resources>

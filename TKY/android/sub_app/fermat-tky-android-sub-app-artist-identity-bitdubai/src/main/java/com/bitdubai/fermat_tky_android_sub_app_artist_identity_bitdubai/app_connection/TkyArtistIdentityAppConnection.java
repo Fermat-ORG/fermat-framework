@@ -59,10 +59,10 @@ public class TkyArtistIdentityAppConnection extends AppConnections {
     )};
     }
 
-    @Override
+    /*@Override
     protected AbstractReferenceAppFermatSession getSession() {
         return new TkyIdentitySubAppSessionReferenceApp();
-    }
+    }*/
 
     //-----------------------------------------------------------------------------------------------------
     //not final

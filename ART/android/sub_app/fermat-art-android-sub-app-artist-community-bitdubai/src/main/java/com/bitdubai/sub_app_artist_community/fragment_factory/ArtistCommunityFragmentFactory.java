@@ -3,6 +3,8 @@ package com.bitdubai.sub_app_artist_community.fragment_factory;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app_artist_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app_artist_community.fragments.ConnectionOtherProfileFragment;
@@ -15,7 +17,7 @@ import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferen
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ArtistCommunityFragmentFactory extends FermatFragmentFactory<ArtistSubAppSessionReferenceApp,SubAppResourcesProviderManager,ArtistCommunityFragmentEnumType> {
+public class ArtistCommunityFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<FanCommunityModuleManager>,SubAppResourcesProviderManager,ArtistCommunityFragmentEnumType> {
     @Override
     protected AbstractFermatFragment getFermatFragment(ArtistCommunityFragmentEnumType fragments) throws FragmentNotFoundException {
         AbstractFermatFragment currentFragment = null;

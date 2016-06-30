@@ -716,7 +716,7 @@ public class SubAppAppsGenerator {
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Artist Identity");
             runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setTitleColor("#3A3A3A");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -4958,6 +4958,9 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
+        //Fragment runtimeFragment;
+        String tabTitleColor = "#555759";
+        String tabBarColor="#E6E7E8";
         FermatRuntimeFragment runtimeFragment;
 
         AppNavigationStructure subAppFanCommunity = new AppNavigationStructure();
@@ -5002,15 +5005,15 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#E6E7E8");
+        statusBar.setColor("#000000");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fan Users");
         runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5036,14 +5039,14 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Your Identities");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5068,9 +5071,9 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -5101,9 +5104,9 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -5135,9 +5138,9 @@ public class SubAppAppsGenerator {
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Profile");
         runtimeTitleBar.setIconName("Back");
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -5170,7 +5173,7 @@ public class SubAppAppsGenerator {
 
         //Side Menu definition
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeSideMenu.setBackgroundColor("#363636");
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Artist Users");
@@ -5206,13 +5209,13 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Artist Users");
         runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -5235,19 +5238,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Your Identities");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5268,19 +5271,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5301,19 +5304,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5334,20 +5337,20 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Profile");
         runtimeTitleBar.setIconName("Back");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
