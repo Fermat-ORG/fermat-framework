@@ -7,7 +7,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -34,12 +36,15 @@ public class NotificationService extends Service {
     private final IBinder mBinder = new LocalBinder();
     // map from AppPublicKey to notificationId
     private Map<String,Integer> lstNotifications;
+    private Map<String,Notification> notifications;
 
     private Map<Integer,NotificationCompat.Builder> mapNotifications;
     private int notificationIdCount;
     //for progress notifications
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
+
+
 
 
     public class LocalBinder extends Binder {
@@ -55,6 +60,8 @@ public class NotificationService extends Service {
         this.lstNotifications = new HashMap<>();
         this.mapNotifications = new HashMap<>();
     }
+
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -76,9 +83,49 @@ public class NotificationService extends Service {
         super.onDestroy();
         Log.v(LOG_TAG, "in onDestroy");
     }
+
+    public void cancelNotification(String appPublicKey) {
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        int id = lstNotifications.get(appPublicKey);
+        notificationManager.cancel(id);
+    }
+
+    public void pushNotification(String appPublicKey,Notification notification) {
+        if(notification==null) throw new IllegalArgumentException("Notification null");
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        int id;
+        if(!lstNotifications.containsKey(appPublicKey)){
+            Random random = new Random();
+            id = random.nextInt(50);
+            lstNotifications.put(appPublicKey,id);
+        }else{
+            id = lstNotifications.get(appPublicKey);
+        }
+        notificationManager.notify(id,notification);
+    }
+
     public void notificate(String publicKey,String code){
         Notification.Builder builder = null;
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
         if (publicKey != null) {
+
+
+            if (lstNotifications.containsKey(publicKey)){
+                int notificationId = lstNotifications.get(publicKey);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    for (StatusBarNotification statusBarNotification : notificationManager.getActiveNotifications()) {
+                        if(statusBarNotification.getId()==notificationId){
+
+                        }
+                    }
+                }else{
+
+                }
+
+            }
             // notificationIdCount++;
             // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, ApplicationSession.getInstance().getAppManager().getAppsSession(publicKey));
@@ -148,10 +195,11 @@ public class NotificationService extends Service {
                     .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                     .setLights(Color.YELLOW, 3000, 3000);
         }
+
         if(builder!=null) {
-            NotificationManager notificationManager = (NotificationManager)
-                    getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, builder.build());
+            Notification notification = builder.build();
+//            mapNotifications.put()
+            notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, notification);
         }
     }
 

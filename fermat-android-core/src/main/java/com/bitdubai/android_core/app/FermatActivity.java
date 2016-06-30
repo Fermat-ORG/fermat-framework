@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.Notification;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -111,10 +112,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -130,6 +127,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_menu.FermatBasicNavigationMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
@@ -147,7 +148,6 @@ import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
-import static android.widget.Toast.makeText;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static java.lang.System.gc;
@@ -490,7 +490,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
            // Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getApplicationContext(), "Recovering from system error",
+            Toast.makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
             e.printStackTrace();
             handleExceptionAndRestart();
@@ -785,6 +785,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         String[] tabTitles = new String[tabsSize];
         FermatFragment[] fermatFragments = new FermatFragment[tabsSize];
         FermatDrawable[] tabsDrawables = new FermatDrawable[tabsSize];
+        //View[] tabsViews = new View[tabsSize];
         try {
             for (int i=0;i<tabs.size();i++) {
                 Tab tab = tabs.get(i);
@@ -806,6 +807,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 }
                 tabTitles[i] = tab.getLabel();
                 tabsDrawables[i] = tab.getDrawable();
+                //tabsViews[i] = tab.getFermatView();
             }
             tabLayout.setVisibility(View.VISIBLE);
             pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -824,6 +826,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     }
                 }
             }
+
+
+
+
             final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                     .getDisplayMetrics());
             pagertabs.setPageMargin(pageMargin);
@@ -1284,7 +1290,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
                 } catch (OutOfMemoryError outOfMemoryError) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, new Exception());
-                    makeText(this, "out of memory exception", LENGTH_SHORT).show();
+                    Toast.makeText(this, "out of memory exception", LENGTH_SHORT).show();
                 }
             }else{
                 try {
@@ -1354,7 +1360,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             onRestart();
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            makeText(getApplicationContext(), "Recovering from system error",
+            Toast.makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
             e.printStackTrace();
         }
@@ -1412,7 +1418,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
 
-            makeText(getApplicationContext(), "Recovering from system error",
+            Toast.makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
             e.printStackTrace();
         }
@@ -1559,7 +1565,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception ex) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-            makeText(getApplicationContext(), "Recovering from system error", LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Recovering from system error", LENGTH_SHORT).show();
             ex.printStackTrace();
             handleExceptionAndRestart();
         }
@@ -2147,6 +2153,16 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void cancelNotification(String appPublicKey) {
+        ApplicationSession.getInstance().getNotificationService().cancelNotification(appPublicKey);
+    }
+
+    @Override
+    public void pushNotification(String appPublicKey,Notification notification) {
+        ApplicationSession.getInstance().getNotificationService().pushNotification(appPublicKey,notification);
+    }
+
     /**
      * Framework Helpers
      */
@@ -2164,6 +2180,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
     //todo: ampliar esto a mayor cantidad de clases
     public View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation) {
         return OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, id);
+    }
+
+    @Override
+    public View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation, Object[] listeners) {
+        return OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, id,listeners);
     }
 
     /**
@@ -2184,4 +2205,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             throw new InvalidParameterException("OptionMenu in activity: "+activity.getType().getCode()+" in app: "+appPublicKey);
         }
     }
+
+
 }
