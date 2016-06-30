@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -42,7 +43,7 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
         this.pluginVersionReference = pluginVersionReference;
     }
 
-    @Override
+    /*@Override
     public List<FanExposingData> getResult() throws CantListArtistsException {
 
         try {
@@ -89,7 +90,7 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
                         new FanExposingData(
                                 platformComponentProfile.getIdentityPublicKey(),
                                 platformComponentProfile.getAlias(),
-                                extraDataString));
+                                extraDataString,platformComponentProfile.getLocation()));
             }
 
             return fanExposingDatas;
@@ -104,9 +105,9 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Unhandled error.");
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public List<FanExposingData> getResult(PlatformComponentType actorTypeToLookFor) throws CantListArtistsException {
         try {
 
@@ -149,7 +150,7 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
                         new FanExposingData(
                                 platformComponentProfile.getIdentityPublicKey(),
                                 platformComponentProfile.getAlias(),
-                                extraDataString));
+                                extraDataString,platformComponentProfile.getLocation()));
             }
 
             return artistExposingDatas;
@@ -164,6 +165,31 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Unhandled error.");
         }
+    }*/
+
+    @Override
+    public List<FanExposingData> getResult(Integer max, Integer offset) throws CantListArtistsException {
+        return null;
+    }
+
+    @Override
+    public List<FanExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantListArtistsException {
+        return null;
+    }
+
+    @Override
+    public List<FanExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offset) throws CantListArtistsException {
+        return null;
+    }
+
+    @Override
+    public List<FanExposingData> getResultDistance(double distance, Integer max, Integer offset) throws CantListArtistsException {
+        return null;
+    }
+
+    @Override
+    public List<FanExposingData> getResultAlias(String alias, Integer max, Integer offset) throws CantListArtistsException {
+        return null;
     }
 
     @Override

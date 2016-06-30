@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
@@ -74,6 +76,8 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
 
     private FanIdentityEventActions fanIdentityEventActions;
 
+    private LocationManager locationManager;
+
     /**
      * Constructor
      *
@@ -88,7 +92,8 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
             UUID pluginId,
             DeviceUserManager deviceUserManager,
             FanManager fanManager,
-            TokenlyFanIdentityManager tokenlyFanIdentityManager){
+            TokenlyFanIdentityManager tokenlyFanIdentityManager,
+            LocationManager locationManager){
 
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -97,6 +102,7 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
         this.deviceUserManager = deviceUserManager;
         this.fanManager = fanManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
+        this.locationManager = locationManager;
     }
 
     private FanaticIdentityDao getFanaticIdentityDao() throws CantInitializeFanaticIdentityDatabaseException {
@@ -220,7 +226,7 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
             externalPlatformInformationMap.put(artExternalPlatform, externalUsername);
             extraDataList.add(externalPlatformInformationMap);
             String extraDataString = XMLParser.parseObject(extraDataList);
-            final FanExposingData fanExposingData = new FanExposingData(publicKey,alias,extraDataString);
+            final FanExposingData fanExposingData = new FanExposingData(publicKey,alias,extraDataString,locationManager.getLocation());
             Thread updateToAns = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -233,6 +239,8 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
             updateToAns.start();
 
         } catch (CantInitializeFanaticIdentityDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantGetDeviceLocationException e) {
             e.printStackTrace();
         }
     }
@@ -249,9 +257,12 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
             FanExposingData fanExposingData = new FanExposingData(
                     fanatic.getPublicKey(),
                     fanatic.getAlias(),
-                    extraDataString);
+                    extraDataString,
+                    locationManager.getLocation());
             fanManager.exposeIdentity(fanExposingData);
         } catch (CantGetFanIdentityException | CantExposeIdentityException e) {
+            e.printStackTrace();
+        } catch (CantGetDeviceLocationException e) {
             e.printStackTrace();
         }
     }

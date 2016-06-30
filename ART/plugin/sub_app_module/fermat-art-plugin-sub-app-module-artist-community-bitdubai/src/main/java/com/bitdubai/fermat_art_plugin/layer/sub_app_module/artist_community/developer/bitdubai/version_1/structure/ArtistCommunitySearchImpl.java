@@ -39,7 +39,8 @@ public class ArtistCommunitySearchImpl implements ArtistCommunitySearch, Seriali
 
             //ActorSearch artistSearch = artistActorNetworkServiceManager.getSearch();
 
-            final List<ArtistExposingData> artistExposingDataList = artistSearch.getResult();
+            //TODO: to improve
+            final List<ArtistExposingData> artistExposingDataList = artistSearch.getResult(100,0);
 
             final List<ArtistCommunityInformation> artistCommunityInformationList = new ArrayList<>();
 

@@ -446,8 +446,9 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
                     artistActorNetworkServiceManager.getSearch();
             List<ArtistExposingData> artistExposingDataList=null;
             if(exposingDataActorSearch !=null){
+                //TODO: to improve
                 artistExposingDataList = exposingDataActorSearch.getResult(
-                        PlatformComponentType.ART_ARTIST);
+                        100,0);
             }
             final ArtistActorConnectionSearch search =
                     artistActorConnectionManager.getSearch(linkedActorIdentity);
@@ -489,8 +490,9 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
                     fanActorNetworkServiceManager.getSearch();
             List<FanExposingData> fanExposingDataList=null;
             if(exposingDataActorSearch !=null){
+                //TODO: to improve
                 fanExposingDataList = exposingDataFanSearch.getResult(
-                        PlatformComponentType.ART_ARTIST);
+                        100,0);
             }
             final FanActorConnectionSearch fanActorConnectionSearchSearch =
                     fanActorConnectionManager.getSearch(fanLinkedActorIdentity);

@@ -38,7 +38,8 @@ public class FanCommunitySearchImpl implements FanCommunitySearch, Serializable 
 
             //ActorSearch actorSearch = artistManagerActorNetworkServiceManager.getSearch();
 
-            final List<FanExposingData> fanExposingDataList = actorSearch.getResult();
+            //TODO: to improve
+            final List<FanExposingData> fanExposingDataList = actorSearch.getResult(100,0);
 
             final List<FanCommunityInformation> fanCommunityInformationList = new ArrayList<>();
 

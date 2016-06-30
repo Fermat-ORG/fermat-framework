@@ -145,7 +145,8 @@ public class FanIdentityEventActions {
                         //TODO: throw an exception
                         return;
                     }
-                    artistExposingDataList = actorSearch.getResult(PlatformComponentType.ART_ARTIST);
+                    //TODO: to improve
+                    artistExposingDataList = actorSearch.getResult(100,0);
                     switch (externalPlatform){
                         case TOKENLY:
                             updateTKYIdentity(senderPublicKey,fanatic, artistExposingDataList);
@@ -168,7 +169,8 @@ public class FanIdentityEventActions {
                         //TODO: throw an exception
                         return;
                     }
-                    fanExposingDataList = fanSearch.getResult(PlatformComponentType.ART_ARTIST);
+                    //TODO: to improve
+                    fanExposingDataList = fanSearch.getResult(100,0);
                     switch (externalPlatform){
                         case TOKENLY:
                             updateFanTKYIdentity(senderPublicKey, fanatic, fanExposingDataList);
