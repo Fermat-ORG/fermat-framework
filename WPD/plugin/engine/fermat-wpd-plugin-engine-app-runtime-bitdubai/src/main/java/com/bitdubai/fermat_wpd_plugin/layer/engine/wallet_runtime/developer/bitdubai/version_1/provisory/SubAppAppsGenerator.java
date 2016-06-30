@@ -4096,7 +4096,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabel("P2P Chat");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#FFFFFF");
-        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setIsTitleTextStatic(false);
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -4148,13 +4148,13 @@ public class SubAppAppsGenerator {
 
         optionMenuItem = new OptionMenuItem(3);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Profile");
+        optionMenuItem.setLabel("Go to Profile");
         optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(4);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Community");
+        optionMenuItem.setLabel("Go to Community");
         optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -4194,13 +4194,13 @@ public class SubAppAppsGenerator {
 
         optionMenuItem = new OptionMenuItem(2);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Profile");
+        optionMenuItem.setLabel("Go to Profile");
         optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Community");
+        optionMenuItem.setLabel("Go to Community");
         optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -4477,7 +4477,7 @@ public class SubAppAppsGenerator {
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setLabel("Clean Chat");
+        optionMenuItem.setLabel("Clear Chat");
         optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -4652,7 +4652,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabel("P2P Chat Community");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setIsTitleTextStatic(false);
         runtimeTitleBar.setColor("#075E54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 

@@ -860,7 +860,24 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
         return null;
     }
+    public void purifyMessage(Message message){
+//        String text = message.getMessage();
+//        char a = 39;
+//        char b = 182;
+//        text = text.replace(a,b);
+//        message.setMessage(text);
+        message.setMessage(message.getMessage().replace("'","@alt+39#"));
+    }
 
+    public void despurifyMessage(Message message){
+//        String text = message.getMessage();
+//        char a = 39;
+//        char b = 182;
+//        text = text.replace(b,a);
+//        message.setMessage(text);
+        //code to decode apostrophe
+        message.setMessage(message.getMessage().replace("@alt+39#","'"));
+    }
 
     /**
      * This method sends the message through the Chat Network Service
@@ -960,6 +977,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             Chat chat,
             Message message) {
         ChatMetadata chatMetadata;
+        purifyMessage(message);
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
         chatMetadata = new ChatMetadataRecord(
