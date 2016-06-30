@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
@@ -77,7 +78,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 22/03/16.
  */
-public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment<TokenlyFanUserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> {
+public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<TokenlyFanIdentityManagerModule>, SubAppResourcesProviderManager> {
     private static final String TAG = "CreateTokenlyFanIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;

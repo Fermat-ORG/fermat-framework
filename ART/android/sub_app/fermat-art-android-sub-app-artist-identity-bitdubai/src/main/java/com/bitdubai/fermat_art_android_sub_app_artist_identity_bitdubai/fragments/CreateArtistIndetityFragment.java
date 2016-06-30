@@ -245,7 +245,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<Referen
                         0,
                         identitySelected.getProfileImage().length);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
             }
             //  bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             artistImageByteArray = toByteArray(bitmap);
