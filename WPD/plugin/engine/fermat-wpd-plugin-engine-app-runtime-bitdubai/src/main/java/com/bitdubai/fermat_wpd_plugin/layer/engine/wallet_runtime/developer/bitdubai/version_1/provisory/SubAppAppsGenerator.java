@@ -24,6 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchViewOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
@@ -423,53 +426,22 @@ public class SubAppAppsGenerator {
 
             statusBar = new StatusBar();
             statusBar.setColor("#0072bb");
-
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setLabelSize(20);
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#0072bb");
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
-            //Menu
-
-
-            OptionsMenu optionsMenu = new OptionsMenu();
-            Owner owner = new Owner();
-            owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_COMMUNITY.getCode());
-
-            //Help optionMenu
-            OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Search");
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-
-            //Location optionMenu
-            optionMenuItem = new OptionMenuItem(2);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Geolocation");
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-
-            //Search optionMenu
-            optionMenuItem = new OptionMenuItem(3);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Help");
-
-
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-
 /*            runtimeOptionsMenu = new OptionsMenu();
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);*/
+            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeActivity.setOptionsMenu(optionsMenu);
+            runtimeActivity.setOptionsMenu(runtimeOptionsMenu);*/
 
             runtimeFragment = new FermatRuntimeFragment();
             runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -481,7 +453,7 @@ public class SubAppAppsGenerator {
             runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Crypto wallet users");
+            runtimeMenuItem.setLabel("Cripto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -536,7 +508,7 @@ public class SubAppAppsGenerator {
             runtimeSideMenu.setBackgroundColor("#0072bb");
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Crypto wallet users");
+            runtimeMenuItem.setLabel("Cripto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -628,7 +600,7 @@ public class SubAppAppsGenerator {
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeTitleBar.setColor("#0072bb");
             runtimeTitleBar.setIconName("back");
-            runtimeTitleBar.setLabelSize(16);
+            runtimeTitleBar.setLabelSize(20);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
@@ -950,71 +922,6 @@ public class SubAppAppsGenerator {
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            //Menu
-
-
-             optionsMenu = new OptionsMenu();
-             owner = new Owner();
-            owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_IDENTITY.getCode());
-
-
-            //Search optionMenu
-            optionMenuItem = new OptionMenuItem(2);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Geolocation");
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-
-            //Help optionMenu
-            optionMenuItem = new OptionMenuItem(1);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Help");
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-
-
-            runtimeActivity.setOptionsMenu(optionsMenu);
-
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getCode());
-            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Geolocation Settings");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-
-
-             optionsMenu = new OptionsMenu();
-             owner = new Owner();
-            owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_IDENTITY.getCode());
-
-            //Help optionMenu
-             optionMenuItem = new OptionMenuItem(1);
-            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
-            optionMenuItem.setLabel("Help");
-            optionMenuItem.setShowAsAction(2);
-            optionsMenu.addMenuItem(optionMenuItem);
-            runtimeActivity.setOptionsMenu(optionsMenu);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new FermatRuntimeFragment();
-            runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getKey());
-            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getKey());
-
-            runtimeSubApp.addActivity(runtimeActivity);
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
         } catch (Exception e) {
@@ -4143,14 +4050,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 
         OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(2);
-        optionMenuItem.setActionViewClass(100);
-        optionsMenu.addMenuItem(optionMenuItem);
+        SearchMenuItem searchOptionMenuItem = new SearchMenuItem(1);
+        searchOptionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        searchOptionMenuItem.setLabel("Search");
+        searchOptionMenuItem.setShowAsAction(2);
+        searchOptionMenuItem.setActionViewClass(100);
 
-        optionMenuItem = new OptionMenuItem(2);
+        //search view focus event
+        SearchViewOnPressEvent esearchEvent = new SearchViewOnPressEvent();
+        esearchEvent.setIsToolbarTitleVisible(false);
+        searchOptionMenuItem.setOptionMenuPressEvent(esearchEvent);
+        optionsMenu.addMenuItem(searchOptionMenuItem);
+
+        OptionMenuItem optionMenuItem = new OptionMenuItem(2);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
         optionMenuItem.setShowAsAction(4);
@@ -4188,6 +4100,11 @@ public class SubAppAppsGenerator {
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeFragment.setOwner(owner);
+
+        //Badge Tab View
+        TabBadgeView tabBadgeView = new TabBadgeView(200,SourceLocation.FERMAT_FRAMEWORK);
+        tabBadgeView.setTitle("CONTACTS");
+        runtimeTab.setFermatView(tabBadgeView);
 
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);

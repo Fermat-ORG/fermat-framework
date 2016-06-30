@@ -126,6 +126,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
     private void initViews(View layout) {
         // Spinner Drop down elements
         List<Frecuency> dataspinner = new ArrayList<Frecuency>();
+        dataspinner.add(Frecuency.NONE);
         dataspinner.add(Frecuency.LOW);
         dataspinner.add(Frecuency.NORMAL);
         dataspinner.add(Frecuency.HIGH);

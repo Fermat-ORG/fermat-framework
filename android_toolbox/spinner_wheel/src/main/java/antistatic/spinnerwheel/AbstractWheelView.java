@@ -24,8 +24,6 @@
 
 package antistatic.spinnerwheel;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -36,7 +34,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import com.customviews.spinner_wheel.R;
+import com.customviews.spinner.wheel.R;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 
 /**
