@@ -490,7 +490,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
     }
 
     @Override
-    public void monitorCryptoNetworkFromKeyList(CryptoVaults requester, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorCryptoNetworkException {
+    public synchronized void monitorCryptoNetworkFromKeyList(CryptoVaults requester, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorCryptoNetworkException {
         /**
          * This method will be called from agents from the Vaults. New keys may be added on each call or not.
          */

@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.AbstractBlockChainConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProvider;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProviderName;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.FermatNetworkConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +13,17 @@ import java.util.List;
 /**
  * Created by rodrigo on 6/29/16.
  */
-public class FermatBlockchainProvider extends AbstractBlockChainConfiguration implements BlockchainProvider {
+public class BitcoinBlockchainProvider extends AbstractBlockChainConfiguration implements BlockchainProvider {
+
     private BlockchainNetworkType activeNetworkType;
 
     @Override
     public BlockchainProviderName getName() {
-        return BlockchainProviderName.FERMAT;
+        return BlockchainProviderName.BITCOIN;
     }
 
     @Override
-    public  List<BlockchainNetworkType> getSupportedNetworkTypes() {
+    public List<BlockchainNetworkType> getSupportedNetworkTypes() {
         List<BlockchainNetworkType> supportedNetworks = new ArrayList<>();
         supportedNetworks.add(BlockchainNetworkType.PRODUCTION);
         supportedNetworks.add(BlockchainNetworkType.TEST_NET);
@@ -32,7 +33,7 @@ public class FermatBlockchainProvider extends AbstractBlockChainConfiguration im
 
     @Override
     public BlockchainNetworkType getDefaultBlockchainNetworkType() {
-        return FermatNetworkConfiguration.DEFAULT_NETWORK_TYPE;
+        return BitcoinNetworkConfiguration.DEFAULT_NETWORK_TYPE;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class FermatBlockchainProvider extends AbstractBlockChainConfiguration im
 
     @Override
     public CryptoCurrency getBlockchainCryptoCurrency() {
-        return CryptoCurrency.FERMAT;
+        return CryptoCurrency.BITCOIN;
     }
 
 
