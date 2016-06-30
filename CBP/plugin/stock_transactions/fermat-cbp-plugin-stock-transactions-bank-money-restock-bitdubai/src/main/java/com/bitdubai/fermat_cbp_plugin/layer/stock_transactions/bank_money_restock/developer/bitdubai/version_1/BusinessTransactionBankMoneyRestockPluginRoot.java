@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -65,6 +66,9 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
     @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION)
     HoldManager holdManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
 
     @Override
@@ -149,7 +153,8 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
                     cryptoBrokerWalletManager,
                     holdManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             businessTransactionBankMoneyRestockMonitorAgent.start();
