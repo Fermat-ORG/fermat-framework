@@ -23,7 +23,10 @@ import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.WheelCurrencyAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +93,11 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_pager, container, false);
+        TextView tvLabel = (TextView) view.findViewById(R.id.txt_rate_amount);
+        AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
+        currencies.setVisibleItems(3);
+        currencies.setViewAdapter(new WheelCurrencyAdapter(getContext()));
+
         tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
 
         AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
@@ -134,29 +142,25 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
                 if (result != null && result.length > 0) {
 
                     ExchangeRate rate = (ExchangeRate) result[0];
-                    if(rate != null)
-                    {
+                    if (rate != null) {
                         // progressBar.setVisibility(View.GONE);
                         tvLabelRate.setText(String.valueOf(
-                             WalletUtils.formatAmountStringWithDecimalEntry(
-                                     rate.getPurchasePrice(),
-                                     MAX_DECIMAL_FOR_RATE,
-                                     MIN_DECIMAL_FOR_RATE)));
+                                WalletUtils.formatAmountStringWithDecimalEntry(
+                                        rate.getPurchasePrice(),
+                                        MAX_DECIMAL_FOR_RATE,
+                                        MIN_DECIMAL_FOR_RATE)));
 
 
-
-                    }
-                    else {
+                    } else {
                         //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                       // dialog_error.show();
+                        // dialog_error.show();
                         Toast.makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
 
                     }
 
 
-                }
-                else {
-                   // ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                } else {
+                    // ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
                     //dialog_error.show();
                     Toast.makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
                 }
@@ -175,7 +179,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
                     Log.e("Exchange Rate", ex.getMessage(), ex);
 
                 //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-               // dialog_error.show();
+                // dialog_error.show();
             }
         });
 

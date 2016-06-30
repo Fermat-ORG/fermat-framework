@@ -5,26 +5,20 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.util.Base64;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecryptException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantEncryptException;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 
-import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
