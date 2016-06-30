@@ -175,7 +175,9 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
             final List<DatabaseTableRecord> cashMoneyDestockData = getCashMoneyDestockData(filter);
             for (DatabaseTableRecord cashMoneyRestockRecord : cashMoneyDestockData) {
                 final CashMoneyTransaction cashMoneyTransaction = getCashMoneyDestockTransaction(cashMoneyRestockRecord);
-                cashMoneyTransactions.add(cashMoneyTransaction);
+
+                if(!cashMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                    cashMoneyTransactions.add(cashMoneyTransaction);
             }
 
             return cashMoneyTransactions;

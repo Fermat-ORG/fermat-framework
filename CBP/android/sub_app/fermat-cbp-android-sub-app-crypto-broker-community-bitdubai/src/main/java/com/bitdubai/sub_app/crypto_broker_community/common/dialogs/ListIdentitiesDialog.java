@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppSelectableIdentitiesListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.SelectableIdentitiesListAdapter;
 
 import java.util.List;
 
@@ -101,7 +101,7 @@ public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession
 
                     List<CryptoBrokerCommunitySelectableIdentity> selectableIdentities = (List<CryptoBrokerCommunitySelectableIdentity>) result[0];
 
-                    AppSelectableIdentitiesListAdapter adapter = new AppSelectableIdentitiesListAdapter(getActivity(), selectableIdentities);
+                    SelectableIdentitiesListAdapter adapter = new SelectableIdentitiesListAdapter(getActivity(), selectableIdentities);
                     adapter.setFermatListEventListener(ListIdentitiesDialog.this);
 
                     adapter.changeDataSet(selectableIdentities);

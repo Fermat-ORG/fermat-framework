@@ -19,4 +19,9 @@
     <string name="cbp_ccc_launch_action_creation_dialog_body">* Browse for Customers around you.\n* See their profiles.\n* Connect with them.</string>
     <string name="cbp_ccc_launch_action_creation_dialog_footer">To begin, choose an avatar below.\nYou may change it later.</string>
     <string name="no_users">No Users</string>
+    <string name="connection_request">Connection Request</string>
+    <string name="ccc_please_select_an_identity">Please select an Identity</string>
+    <string name="ccc_connection_state_connected">Is connected with you</string>
+    <string name="ccc_connection_state_pending_acceptance">Pending request acceptance</string>
+    <string name="ccc_no_data_available">No Locations Available</string>
 </resources>

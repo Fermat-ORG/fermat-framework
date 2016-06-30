@@ -113,13 +113,13 @@ dependencies {
     //    compile project(':fermat-pip-android-sub-app-wallet-publisher-bitdubai')
 
     //cbp wallets
-//    compile project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
-//    compile project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
+    compile project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
+    compile project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
     // CBP Projects
-//    compile project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
-//    compile project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
-//    compile project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
-//    compile project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+    compile project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
+    compile project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
+    compile project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
+    compile project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
     // DAP Projects
 //    compile project(':fermat-dap-android-desktop-sub-app-manager')
 //    compile project(':fermat-dap-android-desktop-wallet-manager')
@@ -136,13 +136,13 @@ dependencies {
 //        exclude group: 'com.githang', module:'com.edmodo.cropper'
 //    }
     //BNK wallets
-//    compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
+    compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
-//    compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
+    compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
     //CHT
-    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
-    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-    compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
+//    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+//    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
+//    compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
     //TKY
     compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
     compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')

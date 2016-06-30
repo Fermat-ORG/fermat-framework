@@ -332,7 +332,7 @@ public class ProvisoryData {
                 ,Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.crypto_broker_community_final);
+        item1.setIconResource(R.drawable.broker_community);
         item1.setPosition(4);
         lstCommunities.add(item1);
 
@@ -348,7 +348,7 @@ public class ProvisoryData {
                 Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.crypto_customer_community_final);
+        item1.setIconResource(R.drawable.customer_community);
         item1.setPosition(5);
         lstCommunities.add(item1);
 
