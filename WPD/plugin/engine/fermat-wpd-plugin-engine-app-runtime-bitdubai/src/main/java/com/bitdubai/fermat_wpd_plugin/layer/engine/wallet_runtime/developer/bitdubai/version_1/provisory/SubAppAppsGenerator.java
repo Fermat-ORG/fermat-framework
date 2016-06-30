@@ -590,7 +590,7 @@ public class SubAppAppsGenerator {
             runtimeSideMenu.setHasFooter(false);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Cripto wallet users");
+            runtimeMenuItem.setLabel("Crypto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
