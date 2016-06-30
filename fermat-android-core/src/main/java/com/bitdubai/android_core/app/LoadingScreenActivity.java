@@ -43,9 +43,9 @@ public class LoadingScreenActivity extends AppCompatActivity {
 
 
 		Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-				R.anim.cbc_slide_down);
+				R.anim.slide_down);
 		final Animation slide_up = AnimationUtils.loadAnimation(getApplicationContext(),
-				R.anim.cbc_slide_up);
+				R.anim.slide_up);
 
 
 		slide_up.setAnimationListener(new Animation.AnimationListener() {
@@ -56,7 +56,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-						R.anim.cbc_slide_up);
+						R.anim.slide_up);
 				slide_down.setAnimationListener(new Animation.AnimationListener() {
 					@Override
 					public void onAnimationStart(Animation animation) {
@@ -66,7 +66,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 					@Override
 					public void onAnimationEnd(Animation animation) {
 						final Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-								R.anim.cbc_slide_up);
+								R.anim.slide_up);
 						slide_down.setAnimationListener(new Animation.AnimationListener() {
 							@Override
 							public void onAnimationStart(Animation animation) {
@@ -76,7 +76,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 							@Override
 							public void onAnimationEnd(Animation animation) {
 								Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-										R.anim.cbc_slide_down);
+										R.anim.slide_up);
 								slide_down.setAnimationListener(new Animation.AnimationListener() {
 									@Override
 									public void onAnimationStart(Animation animation) {
@@ -87,7 +87,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 									public void onAnimationEnd(Animation animation) {
 										right_wallet.setVisibility(View.GONE);
 										Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-												R.anim.cbc_slide_down);
+												R.anim.slide_up);
 										slide_down.setAnimationListener(new Animation.AnimationListener() {
 											@Override
 											public void onAnimationStart(Animation animation) {
@@ -98,7 +98,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 											public void onAnimationEnd(Animation animation) {
 												center_wallet.setVisibility(View.GONE);
 												Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-														R.anim.cbc_slide_down);
+														R.anim.slide_up);
 												slide_down.setAnimationListener(new Animation.AnimationListener() {
 													@Override
 													public void onAnimationStart(Animation animation) {
@@ -109,7 +109,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 													public void onAnimationEnd(Animation animation) {
 														left_wallet.setVisibility(View.GONE);
 														final Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-																R.anim.cbc_slide_down);
+																R.anim.slide_up);
 														slide_down.setAnimationListener(new Animation.AnimationListener() {
 															@Override
 															public void onAnimationStart(Animation animation) {
