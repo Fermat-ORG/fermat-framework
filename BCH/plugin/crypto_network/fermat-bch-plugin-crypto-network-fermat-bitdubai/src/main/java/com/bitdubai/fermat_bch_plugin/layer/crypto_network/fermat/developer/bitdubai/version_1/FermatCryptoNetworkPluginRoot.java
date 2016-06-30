@@ -176,6 +176,11 @@ public class FermatCryptoNetworkPluginRoot
         return fermatCryptoNetworkManager;
     }
 
+
+    /**
+     * BlockchainManager Implemented methods.
+     */
+
     @Override
     public void monitorCryptoNetworkFromKeyList(CryptoVaults requester, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorCryptoNetworkException {
         fermatCryptoNetworkManager.monitorCryptoNetworkFromKeyList(requester, blockchainNetworkTypes, keyList);

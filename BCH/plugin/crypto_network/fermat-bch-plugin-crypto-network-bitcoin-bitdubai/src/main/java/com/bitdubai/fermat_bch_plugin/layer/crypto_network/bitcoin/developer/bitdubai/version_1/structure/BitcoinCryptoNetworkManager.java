@@ -86,7 +86,7 @@ import javax.annotation.Nullable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager, BlockchainManager<ECKey, Transaction> {
+public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager {
 
 
     /**
@@ -146,7 +146,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @param blockchainNetworkTypes
      * @param keyList
      */
-    @Override
     public  synchronized void monitorCryptoNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorCryptoNetworkException {
         /**
          * This method will be called from agents from the Vaults. New keys may be added on each call or not.
@@ -495,7 +494,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return
      * @throws CantGetCryptoTransactionException
      */
-    @Override
     public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
         try {
             return dao.getCryptoTransactions(txHash, null, null);
@@ -512,7 +510,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @param txHash
      * @throws CantBroadcastTransactionException
      */
-    @Override
     public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
         /**
          * will get the network for this transaction and then call the right agent to broadcast it.
@@ -533,7 +530,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @param transactionHash
      * @return
      */
-    @Override
     public Transaction getBlockchainProviderTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
         Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
@@ -547,7 +543,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @param blockchainNetworkType
      * @return
      */
-    @Override
     public List<Transaction> getBlockchainProviderTransactions(BlockchainNetworkType blockchainNetworkType) {
         return runningAgents.get(blockchainNetworkType).getWallet().getTransactionsByTime();
     }
@@ -654,7 +649,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return the last crypto status
      * @throws CantGetTransactionCryptoStatusException
      */
-    @Override
     public CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException {
         try {
             return dao.getTransactionCryptoStatus(txHash);
@@ -673,7 +667,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    @Override
     public synchronized void storeTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreTransactionException {
         try {
             runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId, commit);
@@ -689,7 +682,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return
      * @throws CantGetBroadcastStatusException
      */
-    @Override
     public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
         try {
             return dao.getBroadcastStatus(txHash);
@@ -705,7 +697,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @param txHash
      * @throws CantCancellBroadcastTransactionException
      */
-    @Override
     public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
         /**
          * I will get the network type this transaction belongs to
@@ -743,7 +734,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
      * @throws CantGetBlockchainConnectionStatusException
      */
-    @Override
     public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
         return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
     }
@@ -755,7 +745,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return the last recorded CryptoTransaction.
      * @throws CantGetCryptoTransactionException
      */
-    @Override
     public CryptoTransaction getCryptoTransaction(String txHash, @Nullable CryptoTransactionType cryptoTransactionType, @Nullable CryptoAddress toAddress) throws CantGetCryptoTransactionException {
         if (StringUtils.isBlank(txHash))
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null ,"Invalid parameter. TxHash: " + txHash, "GetCryptoTransaction on CryptoNetwork");
@@ -829,7 +818,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return all the CryptoTransactions originated at the genesis transaction
      * @throws CantGetCryptoTransactionException
      */
-    @Override
     public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         try {
             if (blockchainNetworkType == null)
@@ -971,7 +959,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return the list of CryptoTransactions that are a direct child of the parent.
      * @throws CantGetCryptoTransactionException
      */
-    @Override
     public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
         try {
@@ -1029,7 +1016,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return the list of Crypto Transaction
      * @throws CantGetCryptoTransactionException
      */
-    @Override
     public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantGetCryptoTransactionException {
         try{
             return this.dao.getCryptoTransactions(blockchainNetworkType, addressTo, cryptoTransactionType);
@@ -1045,7 +1031,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return
      * @throws CantGetBlockchainDownloadProgress
      */
-    @Override
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
         return this.runningAgents.get(blockchainNetworkType).getBlockchainDownloadProgress();
     }
@@ -1055,7 +1040,6 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return the list of active networks {MainNet, TestNet and RegTest}
      * @throws CantGetActiveBlockchainNetworkTypeException
      */
-    @Override
     public List<BlockchainNetworkType> getActivesBlockchainNetworkTypes() throws CantGetActiveBlockchainNetworkTypeException {
         try {
             return  dao.getActiveBlockchainNetworkTypes();

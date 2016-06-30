@@ -13,17 +13,36 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetActiveBlockchainNetworkTypeException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorCryptoNetworkException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainConnectionStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
@@ -31,7 +50,14 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinBlockchainProvider;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by rodrigo on 9/23/15.
@@ -39,6 +65,7 @@ import java.util.List;
 @PluginInfo(difficulty = PluginInfo.Dificulty.HIGH, maintainerMail = "acosta_rodrigo@hotmail.com", createdBy = "acostarodrigo", layer = Layers.CRYPTO_NETWORK, platform = Platforms.BLOCKCHAINS, plugin = Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK)
 public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         TransactionSender<CryptoTransaction>,
+        BlockchainManager<ECKey, Transaction>,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
@@ -144,6 +171,91 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return bitcoinCryptoNetworkManager;
+    }
+
+
+    /**
+     * BlockchainManager Implemented methods.     
+     */
+
+    @Override
+    public void monitorCryptoNetworkFromKeyList(CryptoVaults requester, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorCryptoNetworkException {
+        bitcoinCryptoNetworkManager.monitorCryptoNetworkFromKeyList(requester, blockchainNetworkTypes, keyList);
+    }
+
+    @Override
+    public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getCryptoTransactions(txHash);
+    }
+
+    @Override
+    public CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException {
+        return bitcoinCryptoNetworkManager.getCryptoStatus(txHash);
+    }
+
+    @Override
+    public void storeTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreTransactionException {
+        bitcoinCryptoNetworkManager.storeTransaction(blockchainNetworkType, tx, transactionId, commit);
+    }
+
+    @Override
+    public void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
+        bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
+    }
+
+    @Override
+    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
+        bitcoinCryptoNetworkManager.cancelBroadcast(txHash);
+    }
+
+    @Override
+    public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
+        return bitcoinCryptoNetworkManager.getBroadcastStatus(txHash);
+    }
+
+    @Override
+    public List<Transaction> getBlockchainProviderTransactions(BlockchainNetworkType blockchainNetworkType) {
+        return bitcoinCryptoNetworkManager.getBlockchainProviderTransactions(blockchainNetworkType);
+    }
+
+    @Override
+    public Transaction getBlockchainProviderTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+        return bitcoinCryptoNetworkManager.getBlockchainProviderTransaction(blockchainNetworkType, transactionHash);
+    }
+
+    @Override
+    public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
+        return bitcoinCryptoNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType);
+    }
+
+    @Override
+    public List<BlockchainNetworkType> getActivesBlockchainNetworkTypes() throws CantGetActiveBlockchainNetworkTypeException {
+        return bitcoinCryptoNetworkManager.getActivesBlockchainNetworkTypes();
+    }
+
+    @Override
+    public CryptoTransaction getCryptoTransaction(String txHash, @Nullable CryptoTransactionType cryptoTransactionType, @Nullable CryptoAddress toAddress) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getCryptoTransaction(txHash, cryptoTransactionType, toAddress);
+    }
+
+    @Override
+    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getCryptoTransactions(blockchainNetworkType, addressTo, cryptoTransactionType);
+    }
+
+    @Override
+    public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getGenesisCryptoTransaction(blockchainNetworkType, transactionChain);
+    }
+
+    @Override
+    public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getChildTransactionsFromParent(parentTransactionHash);
+    }
+
+    @Override
+    public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
+        return bitcoinCryptoNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
     }
 
 }
