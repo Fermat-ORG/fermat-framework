@@ -8,17 +8,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppCon
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboAppType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.app_connection.FermatWalletAppConnection;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
-
-import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
-
 import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
 import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
+
 import java.util.HashMap;
 import java.util.Map;
 
