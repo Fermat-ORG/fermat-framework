@@ -109,7 +109,7 @@ public class DraftTransaction {
      * @return
      */
     public byte[] serialize(){
-        return bitcoinTransaction.bitcoinSerialize();
+        return bitcoinTransaction.fermatSerialize();
     }
 
     @Override
