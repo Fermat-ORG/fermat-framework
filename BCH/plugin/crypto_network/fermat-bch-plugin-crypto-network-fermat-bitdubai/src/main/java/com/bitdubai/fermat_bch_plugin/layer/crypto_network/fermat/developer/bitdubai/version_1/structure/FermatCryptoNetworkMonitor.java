@@ -44,6 +44,7 @@ import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
@@ -255,6 +256,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
 
             try{
                 /**
+                /**
                  * creates the blockchain object for the specified network.
                  */
                 FermatCryptoNetworkBlockChain cryptoNetworkBlockChain = new FermatCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
@@ -283,7 +285,12 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 peerGroup.setUseLocalhostPeerWhenPossible(true);
 
 
-                peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
+                /**
+                 * I add the seed node of the fermat blockchain
+                 */
+                for (PeerAddress peerAddress : FermatSeedNodes.getNodes()){
+                    peerGroup.addAddress(peerAddress);
+                }
 
                 /**
                  * Define internal agent information.
