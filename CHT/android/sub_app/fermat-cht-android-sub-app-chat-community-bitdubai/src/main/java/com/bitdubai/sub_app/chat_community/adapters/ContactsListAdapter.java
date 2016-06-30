@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -13,6 +15,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
+import com.bitdubai.sub_app.chat_community.filters.ContactsFilter;
 import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
 
 import java.util.List;
@@ -25,10 +29,13 @@ import java.util.List;
  */
 
 public class ContactsListAdapter
-        extends FermatAdapter<ChatActorCommunityInformation, ContactsListHolder> {
+        extends FermatAdapter<ChatActorCommunityInformation, ContactsListHolder>
+        implements Filterable {
 
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
+    List<ChatActorCommunityInformation> filteredData;
+    private String filterString;
 
     public ContactsListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
@@ -79,5 +86,21 @@ public class ContactsListAdapter
         if (dataSet != null)
             return dataSet.size();
         return 0;
+    }
+
+    public void setData(List<ChatActorCommunityInformation> data) {
+        this.filteredData = data;
+    }
+
+    public Filter getFilter() {
+        return new ContactsFilter(dataSet, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
     }
 }
