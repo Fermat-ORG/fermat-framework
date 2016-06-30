@@ -76,7 +76,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 6/22/16.
  */
-public class FermatCryptoNetworkManager implements TransactionProtocolManager, BlockchainManager<ECKey, Transaction> {
+public class FermatCryptoNetworkManager implements TransactionProtocolManager {
 
 
     /**
@@ -379,7 +379,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @param transactionHash
      * @return
      */
-    @Override
+
     public Transaction getBlockchainProviderTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
         Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
@@ -491,7 +491,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
         return null;
     }
 
-    @Override
+
     public synchronized void monitorCryptoNetworkFromKeyList(CryptoVaults requester, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorCryptoNetworkException {
         /**
          * This method will be called from agents from the Vaults. New keys may be added on each call or not.
@@ -631,7 +631,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
         }
     }
 
-    @Override
+
     public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
         try {
             return dao.getCryptoTransactions(txHash,null,null);
@@ -657,7 +657,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
         }
     }
 
-    @Override
+
     public void storeTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreTransactionException {
         try {
             runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId, commit);
@@ -758,7 +758,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
         }
     }
 
-    @Override
+
     public List<Transaction> getBlockchainProviderTransactions(BlockchainNetworkType blockchainNetworkType) {
         return runningAgents.get(blockchainNetworkType).getWallet().getTransactionsByTime();
     }
@@ -806,7 +806,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
      * @throws CantGetBlockchainConnectionStatusException
      */
-    @Override
+
     public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
         return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
     }
@@ -891,7 +891,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @return all the CryptoTransactions originated at the genesis transaction
      * @throws CantGetCryptoTransactionException
      */
-    @Override
+
     public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         try {
             if (blockchainNetworkType == null)
@@ -1114,7 +1114,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @return the list of active networks {MainNet, TestNet and RegTest}
      * @throws CantGetActiveBlockchainNetworkTypeException
      */
-    @Override
+
     public List<BlockchainNetworkType> getActivesBlockchainNetworkTypes() throws CantGetActiveBlockchainNetworkTypeException {
         try {
             return  dao.getActiveBlockchainNetworkTypes();
