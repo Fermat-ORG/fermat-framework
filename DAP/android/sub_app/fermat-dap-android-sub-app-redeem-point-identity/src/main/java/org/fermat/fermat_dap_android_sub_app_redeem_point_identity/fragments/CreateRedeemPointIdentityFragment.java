@@ -55,6 +55,7 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLo
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.IdentityRedeemDialogCropImage;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
@@ -275,6 +276,132 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                 });
             }
 
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mIdentityContactInformation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RedeemPointIdentity redeemPointIdentity;
+                        try {
+                            redeemPointIdentity = appSession.getModuleManager().getIdentityAssetRedeemPoint();
+                            if (redeemPointIdentity != null) {
+                                if (redeemPointIdentity.getContactInformation().trim().equals(mIdentityContactInformation.getText().toString().trim())) {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                } else {
+                                    activateButton();
+                                }
+                            } else {
+                                if (mIdentityContactInformation.getText().toString().trim().length() > 0) {
+                                    activateButton();
+                                } else {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                }
+                            }
+                        } catch (CantGetRedeemPointIdentitiesException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mIdentityAddressCountryName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RedeemPointIdentity redeemPointIdentity;
+                        try {
+                            redeemPointIdentity = appSession.getModuleManager().getIdentityAssetRedeemPoint();
+                            if (redeemPointIdentity != null) {
+                                if (redeemPointIdentity.getCountryName().trim().equals(mIdentityAddressCountryName.getText().toString().trim())) {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                } else {
+                                    activateButton();
+                                }
+                            } else {
+                                if (mIdentityAddressCountryName.getText().toString().trim().length() > 0) {
+                                    activateButton();
+                                } else {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                }
+                            }
+                        } catch (CantGetRedeemPointIdentitiesException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mIdentityAddressCityName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RedeemPointIdentity redeemPointIdentity;
+                        try {
+                            redeemPointIdentity = appSession.getModuleManager().getIdentityAssetRedeemPoint();
+                            if (redeemPointIdentity != null) {
+                                if (redeemPointIdentity.getCityName().trim().equals(mIdentityAddressCityName.getText().toString().trim())) {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                } else {
+                                    activateButton();
+                                }
+                            } else {
+                                if (mIdentityAddressCityName.getText().toString().trim().length() > 0) {
+                                    activateButton();
+                                } else {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                }
+                            }
+                        } catch (CantGetRedeemPointIdentitiesException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
