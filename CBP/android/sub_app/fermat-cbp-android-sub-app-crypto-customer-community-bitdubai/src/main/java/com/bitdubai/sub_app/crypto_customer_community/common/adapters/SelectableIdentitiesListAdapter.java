@@ -32,7 +32,7 @@ public class SelectableIdentitiesListAdapter
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.ccc_row_connection_list;
+        return R.layout.ccc_dialog_selectable_identity_list_item;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class SelectableIdentitiesListAdapter
          * @param itemView cast ui elements
          */
         public AppSelectableIdentityHolder(View itemView) {
-            super(itemView);
+            super(itemView, 0);
 
             friendName = (FermatTextView) itemView.findViewById(R.id.ccc_selectable_identity_username);
             friendAvatar = (ImageView) itemView.findViewById(R.id.ccc_selectable_identity_user_avatar);
