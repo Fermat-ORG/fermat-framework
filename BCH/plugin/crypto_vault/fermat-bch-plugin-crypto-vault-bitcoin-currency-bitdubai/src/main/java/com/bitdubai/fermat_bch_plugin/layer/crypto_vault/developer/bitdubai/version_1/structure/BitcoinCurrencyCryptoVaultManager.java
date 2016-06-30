@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -10,11 +12,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
@@ -31,11 +32,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
-
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -78,7 +77,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     /**
      * platform interfaces definition
      */
-    BitcoinNetworkManager bitcoinNetworkManager;
+    BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     PluginFileSystem pluginFileSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
     ErrorManager errorManager;
@@ -93,7 +92,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
                                    PluginFileSystem pluginFileSystem,
                                    PluginDatabaseSystem pluginDatabaseSystem,
                                    String seedFileName,
-                                   BitcoinNetworkManager bitcoinNetworkManager,
+                                             BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                    ErrorManager errorManager) throws InvalidSeedException {
         super(pluginFileSystem, pluginId, bitcoinNetworkManager, "BitcoinVaultSeed", seedFileName);
 
@@ -180,17 +179,17 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+        if (BitcoinBlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
             try {
                 // If only one network is enabled, then I will return the default
                 if (getDao().getActiveNetworkTypes().size() == 1)
-                    return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    return BitcoinBlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else {
                     // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
                     return networkParameters;
                 }
             } catch (CantExecuteDatabaseOperationException e) {
-                return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return BitcoinBlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
         } else
             return networkParameters;
@@ -221,7 +220,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I extract the network Parameter from the address
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * If the address is correct, then no exception raised.
@@ -285,7 +284,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -302,7 +301,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = bitcoinNetworkManager.getBlockchainProviderTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -404,8 +403,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
-        } catch (CantStoreBitcoinTransactionException e) {
+            bitcoinNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
+        } catch (CantStoreTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
 
@@ -522,7 +521,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -538,7 +537,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = bitcoinNetworkManager.getBlockchainProviderTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -633,8 +632,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
-        } catch (CantStoreBitcoinTransactionException e) {
+            bitcoinNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
+        } catch (CantStoreTransactionException e) {
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
 
