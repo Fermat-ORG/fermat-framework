@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces;
+package com.bitdubai.fermat_bch_api.layer.crypto_network.fermat;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+
 
 import org.bitcoinj.core.NetworkParameters;
 
@@ -12,5 +12,4 @@ import org.bitcoinj.core.NetworkParameters;
 public interface FermatNetworkConfiguration {
     static final BlockchainNetworkType DEFAULT_NETWORK_TYPE = BlockchainNetworkType.PRODUCTION;
     static final CryptoCurrency CRYPTO_CURRENCY = CryptoCurrency.FERMAT;
-
 }

@@ -39,11 +39,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorCryptoNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProvider;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProviderName;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.AbstractBlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
@@ -382,7 +378,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @param transactionHash
      * @return
      */
-    public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+    private Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
         Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
 
@@ -635,7 +631,12 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
 
     @Override
     public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
-        return null;
+        try {
+            return dao.getCryptoTransactions(txHash,null,null);
+        } catch (CantExecuteDatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
+        }
     }
 
     /**

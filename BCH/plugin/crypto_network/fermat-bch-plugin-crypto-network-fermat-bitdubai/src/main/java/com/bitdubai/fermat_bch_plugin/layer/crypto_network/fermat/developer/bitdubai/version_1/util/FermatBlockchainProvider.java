@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.AbstractBlockChainConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProvider;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProviderName;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.FermatNetworkConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
