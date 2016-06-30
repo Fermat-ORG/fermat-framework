@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-package antistatic.spinnerwheel;
+package com.customviews.spinner_wheel;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -37,7 +37,6 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.customviews.spinner_wheel.R;
-
 
 /**
  * Abstract spinner spinnerwheel view.

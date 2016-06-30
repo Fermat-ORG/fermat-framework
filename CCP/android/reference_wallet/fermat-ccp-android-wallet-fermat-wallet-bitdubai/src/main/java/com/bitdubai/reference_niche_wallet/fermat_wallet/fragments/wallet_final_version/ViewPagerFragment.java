@@ -1,6 +1,6 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version;
 
-import android.app.Fragment;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,13 +26,11 @@ import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.WheelCurrencyAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
+import com.customviews.spinner_wheel.AbstractWheel;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import antistatic.spinnerwheel.AbstractWheel;
 
 /**
  * Created by root on 28/06/16.
@@ -96,12 +94,13 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
         TextView tvLabel = (TextView) view.findViewById(R.id.txt_rate_amount);
         AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
         currencies.setVisibleItems(3);
-        currencies.setViewAdapter(new WheelCurrencyAdapter(getContext()));
+        WheelCurrencyAdapter wheelCurrencyAdapter = new WheelCurrencyAdapter(getActivity());
+        currencies.setViewAdapter(wheelCurrencyAdapter);
 
         tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
 
      try {
-            getAndShowMarketExchangeRateData(container);
+           // getAndShowMarketExchangeRateData(container);
         } catch (Exception e) {
             e.printStackTrace();
         }
