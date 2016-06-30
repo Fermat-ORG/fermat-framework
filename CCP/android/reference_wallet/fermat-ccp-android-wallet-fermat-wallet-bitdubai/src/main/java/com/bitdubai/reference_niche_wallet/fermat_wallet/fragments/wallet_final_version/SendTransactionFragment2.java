@@ -443,7 +443,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         try {
 
-            List<ExchangeRateProvider> ProviderList  = moduleManager.getExchangeRateProviders();M
+            List<ExchangeRateProvider> ProviderList  = moduleManager.getExchangeRateProviders();
 
             for (ExchangeRateProvider lst : ProviderList) {
 

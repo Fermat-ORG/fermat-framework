@@ -40,11 +40,9 @@ dependencies {
     compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
     compile project(':fermat_preference_settings')
-<<<<<<< HEAD
+
     compile project(':spinner_wheel')
 
-=======
->>>>>>> 2635194af41e08234f28f14451bea5e457956644
     compile project(':fermat_navigator_drawer')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:design:23.1.1'

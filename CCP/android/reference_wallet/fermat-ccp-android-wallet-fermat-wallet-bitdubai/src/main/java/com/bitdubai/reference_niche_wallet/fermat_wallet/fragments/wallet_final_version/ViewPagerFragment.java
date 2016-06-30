@@ -100,9 +100,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
 
         tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
 
-        AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
-
-        try {
+     try {
             getAndShowMarketExchangeRateData(container);
         } catch (Exception e) {
             e.printStackTrace();
