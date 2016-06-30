@@ -3,8 +3,11 @@ package org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
@@ -81,5 +84,5 @@ public interface DigitalAssetVault {
 
     void setWalletPublicKey(String walletPublicKey) throws CantSetObjectException;
 
-    void setBitcoinCryptoNetworkManager(BitcoinNetworkManager bitcoinNetworkManager);
+    void setBitcoinCryptoNetworkManager(BlockchainManager<ECKey, Transaction> bitcoinNetworkManager);
 }

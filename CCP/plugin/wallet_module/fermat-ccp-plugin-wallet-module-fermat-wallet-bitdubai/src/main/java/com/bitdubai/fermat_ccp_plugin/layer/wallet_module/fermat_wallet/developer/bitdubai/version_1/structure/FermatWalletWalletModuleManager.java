@@ -25,9 +25,10 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 
@@ -150,6 +151,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -193,7 +196,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
     private final EventManager eventManager;
-    private final FermatNetworkManager fermatNetworkManager                     ;
+    private final BlockchainManager<ECKey, Transaction> fermatNetworkManager                     ;
     private final Broadcaster                   broadcaster                     ;
     private final WalletManagerManager walletManagerManager;
     private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
@@ -217,7 +220,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                            final UUID pluginId,
                                            final PluginFileSystem pluginFileSystem,
                                            final EventManager eventManager,
-                                           final FermatNetworkManager fermatNetworkManager,
+                                           final BlockchainManager<ECKey, Transaction> fermatNetworkManager,
                                            final Broadcaster broadcaster,
                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
                                            final WalletManagerManager walletManagerManager,

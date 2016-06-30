@@ -43,13 +43,16 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+
+
 
 import java.util.UUID;
 
@@ -353,9 +356,9 @@ public class FermatSystemUtils {
     /**
      * Return instance of the bitcoin network
      */
-    public static BitcoinNetworkManager getNetwork() {
+    public static BlockchainManager getNetwork() {
         try {
-            return (BitcoinNetworkManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
+            return (BlockchainManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.BLOCKCHAINS,
                             Layers.CRYPTO_NETWORK,

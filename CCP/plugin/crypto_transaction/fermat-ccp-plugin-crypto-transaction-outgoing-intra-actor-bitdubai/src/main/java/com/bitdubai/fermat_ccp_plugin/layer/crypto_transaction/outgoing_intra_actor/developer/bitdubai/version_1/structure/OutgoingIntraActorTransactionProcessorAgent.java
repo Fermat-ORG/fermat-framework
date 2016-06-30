@@ -13,7 +13,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
@@ -47,6 +48,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -62,7 +66,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     private ErrorManager errorManager;
     private CryptoVaultManager cryptoVaultManager;
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     private CryptoWalletManager cryptoWalletManager;
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
     private OutgoingIntraActorDao outgoingIntraActorDao;
@@ -79,7 +83,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     public OutgoingIntraActorTransactionProcessorAgent(final ErrorManager errorManager,
                                                        final CryptoVaultManager cryptoVaultManager,
-                                                       final BitcoinNetworkManager bitcoinNetworkManager,
+                                                       final BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                                        final CryptoWalletManager cryptoWalletManager,
                                                        final OutgoingIntraActorDao outgoingIntraActorDao,
                                                        final OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
@@ -144,7 +148,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private ErrorManager errorManager;
         private CryptoWalletManager cryptoWalletManager;
         private CryptoVaultManager cryptoVaultManager;
-        private BitcoinNetworkManager bitcoinNetworkManager;
+        private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager cryptoTransmissionManager;
         private EventManager eventManager;
@@ -162,7 +166,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                  OutgoingIntraActorDao dao,
                                  CryptoWalletManager cryptoWalletManager,
                                  CryptoVaultManager cryptoVaultManager,
-                                 BitcoinNetworkManager bitcoinNetworkManager,
+                                 BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                  CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager,
                                  NetworkExecutorPool executorPool,

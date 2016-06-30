@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantDeleteExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -87,7 +88,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         /**
          * The Wallet class of bitcoinJ has a great entrophy level to generate a random seed.
          */
-        Wallet seedWallet = new Wallet(BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS);
+        Wallet seedWallet = new Wallet(BlockchainNetworkSelector.getNetworkParameter(BitcoinNetworkConfiguration.DEFAULT_NETWORK_TYPE));
         DeterministicSeed seed = seedWallet.getKeyChainSeed();
 
         /**

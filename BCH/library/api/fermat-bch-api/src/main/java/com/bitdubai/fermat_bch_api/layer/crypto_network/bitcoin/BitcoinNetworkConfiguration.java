@@ -13,4 +13,7 @@ public interface BitcoinNetworkConfiguration {
     static final int IRREVERSIBLE_BLOCK_DEPTH = 3;
     static final int FIXED_FEE_VALUE = 30000;
     static final int MIN_ALLOWED_SATOSHIS_ON_SEND = 5000;
+
+
+
 }
