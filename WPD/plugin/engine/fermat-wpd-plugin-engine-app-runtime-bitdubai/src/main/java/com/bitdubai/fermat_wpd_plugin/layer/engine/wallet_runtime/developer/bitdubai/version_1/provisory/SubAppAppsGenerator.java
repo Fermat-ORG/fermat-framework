@@ -3578,21 +3578,21 @@ public class SubAppAppsGenerator {
 
         //TODO: en esta version a de no aparecer porque uno no recibe Solicitudes de coneccion de parte de un broker
         //Tabs Requests
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("REQUESTS");
-        runtimeFragment = new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
-        runtimeTab.setFragment(runtimeFragment);
-        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        optionsMenu = new OptionsMenu();
-        runtimeFragment.setOptionsMenu(optionsMenu);
-
-        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
-        optionsMenu.addMenuItem(optionMenuItem);
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("REQUESTS");
+//        runtimeFragment = new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+//        runtimeTab.setFragment(runtimeFragment);
+//        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        optionsMenu = new OptionsMenu();
+//        runtimeFragment.setOptionsMenu(optionsMenu);
+//
+//        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+//        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Help");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        optionsMenu.addMenuItem(optionMenuItem);
 
         subAppBrokerCommunity.addActivity(runtimeActivity);
         listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);

@@ -93,6 +93,7 @@
             tools:text="Distrito Capital"/>
 
         <ImageView
+            android:id="@+id/ccc_location_filter_footer_bar_close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

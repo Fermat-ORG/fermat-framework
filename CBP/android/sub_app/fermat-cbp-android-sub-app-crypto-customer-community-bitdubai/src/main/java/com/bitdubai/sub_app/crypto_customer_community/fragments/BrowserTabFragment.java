@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -24,15 +26,21 @@ import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AvailableActorsListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.dialogs.GeolocationDialog;
 import com.bitdubai.sub_app.crypto_customer_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
@@ -47,11 +55,10 @@ import java.util.List;
  */
 public class BrowserTabFragment
         extends FermatListFragment<CryptoCustomerCommunityInformation, ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>>
-        implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreDataListener {
+        implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreDataListener, GeolocationDialog.AdapterCallback {
 
     //Constants
     private static final int MAX = 15;
-    private static final int SPAN_COUNT = 3;
     protected static final String TAG = "BrowserTabFragment";
 
     //Managers
@@ -59,6 +66,9 @@ public class BrowserTabFragment
     private ErrorManager errorManager;
 
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+    private CryptoCustomerCommunitySelectableIdentity identity;
+    private DeviceLocation location;
+    private double distance;
     private int offset;
 
     //Flags
@@ -69,11 +79,15 @@ public class BrowserTabFragment
     private AvailableActorsListAdapter adapter;
     private ImageView noUsers;
     private PresentationDialog helpDialog;
+    private GeolocationDialog geolocationDialog;
+    private RelativeLayout locationFilterBar;
+    private FermatTextView locationFilterBarCountry;
+    private FermatTextView locationFilterBarPlace;
+
 
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
     }
-
 
     /**
      * Fragment interface implementation.
@@ -90,7 +104,7 @@ public class BrowserTabFragment
 
         //Check if a default identity is configured
         try {
-            moduleManager.getSelectedActorIdentity();
+            identity = moduleManager.getSelectedActorIdentity();
         } catch (CantGetSelectedActorIdentityException e) {
             launchActorCreationDialog = true;   //There are no identities in device
         } catch (ActorIdentityNotSelectedException e) {
@@ -125,6 +139,23 @@ public class BrowserTabFragment
         configureToolbar();
 
         noUsers = (ImageView) rootView.findViewById(R.id.ccc_no_users);
+        locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.ccc_location_filter_footer_bar);
+        locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.ccc_location_filter_footer_bar_country);
+        locationFilterBarPlace = (FermatTextView) rootView.findViewById(R.id.ccc_location_filter_footer_bar_place);
+
+        final View locationFilterBarCloseButton = rootView.findViewById(R.id.ccc_location_filter_footer_bar_close_button);
+        locationFilterBarCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                location = null;
+                distance = identity.getAccuracy();
+                offset = 0;
+
+                final Animation slideDown = AnimationUtils.loadAnimation(getActivity(), R.anim.ccc_slide_down);
+                locationFilterBar.startAnimation(slideDown);
+                locationFilterBar.setVisibility(View.GONE);
+            }
+        });
 
         launchPresentationDialog();
     }
@@ -214,8 +245,14 @@ public class BrowserTabFragment
                 return true;
 
             case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
-                //TODO: colocar aqui el codigo para mostrar el filtro de geolocalizacion
-                return true;
+                try {
+                    geolocationDialog = new GeolocationDialog(getActivity(), appSession, appResourcesProviderManager, this);
+                    geolocationDialog.show();
+
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
 
             case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
                 //TODO: colocar aqui el codigo para mostrar el SearchView
@@ -223,6 +260,28 @@ public class BrowserTabFragment
         }
 
         return false;
+    }
+
+    @Override
+    public void onLocationItemClicked(ExtendedCity city) {
+        offset = 0;
+
+        location = new DeviceLocation();
+        location.setLatitude((double) city.getLatitude());
+        location.setLongitude((double) city.getLongitude());
+
+        distance = identity.getAccuracy();
+        location.setAccuracy((long) distance);
+
+        geolocationDialog.dismiss();
+        locationFilterBarCountry.setText(city.getCountryName());
+        locationFilterBarPlace.setText(city.getName());
+
+        Animation slideUp = AnimationUtils.loadAnimation(getActivity(), R.anim.ccc_slide_up);
+        locationFilterBar.setVisibility(View.VISIBLE);
+        locationFilterBar.startAnimation(slideUp);
+
+        onRefresh();
     }
 
     @Override
@@ -254,6 +313,7 @@ public class BrowserTabFragment
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {

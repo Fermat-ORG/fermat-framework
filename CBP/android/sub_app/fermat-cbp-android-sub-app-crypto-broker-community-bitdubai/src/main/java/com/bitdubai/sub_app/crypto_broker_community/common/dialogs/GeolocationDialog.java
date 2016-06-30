@@ -35,7 +35,8 @@ import java.util.List;
 
 /**
  * Created by roy on 11/06/16.
- * Update by Jose Cardozo josejcb (josejcb89@gmail.com) on 27/06/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 27/06/16.
+ * Updated by Nelson Ramirez (nelsonalfo@gmail.com) on 29/06/16.
  */
 public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, ResourceProviderManager>
         implements FermatListItemListeners<ExtendedCity> {

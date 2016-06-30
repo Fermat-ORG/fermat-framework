@@ -7,7 +7,6 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 
-import java.util.Arrays;
 
 /**
  * Created by Alejandro Bicelis on 26/1/2016.
@@ -18,12 +17,11 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
     private final Actors actorType;
     private final String alias;
     private final byte[] image;
-    private long   accuracy;
+    private long accuracy;
     private Frequency frequency;
 
-    CryptoBrokerCommunitySelectableIdentityImpl(String publicKey, Actors actorType,
-                                                String alias, byte[] image,
-                                                long accuracy, Frequency frequency){
+
+    CryptoBrokerCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image, long accuracy, Frequency frequency) {
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
@@ -34,26 +32,27 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
 
     CryptoBrokerCommunitySelectableIdentityImpl(final CryptoBrokerIdentity cryptoBrokerIdentity) {
 
-        this.alias     = cryptoBrokerIdentity.getAlias()       ;
-        this.publicKey = cryptoBrokerIdentity.getPublicKey()   ;
-        this.actorType = Actors.CBP_CRYPTO_BROKER              ;
-        this.image     = cryptoBrokerIdentity.getProfileImage();
+        this.alias = cryptoBrokerIdentity.getAlias();
+        this.publicKey = cryptoBrokerIdentity.getPublicKey();
+        this.actorType = Actors.CBP_CRYPTO_BROKER;
+        this.image = cryptoBrokerIdentity.getProfileImage();
         this.accuracy = cryptoBrokerIdentity.getAccuracy();
         this.frequency = cryptoBrokerIdentity.getFrequency();
     }
 
     CryptoBrokerCommunitySelectableIdentityImpl(final CryptoCustomerIdentity cryptoCustomerIdentity) {
 
-        this.alias     = cryptoCustomerIdentity.getAlias()       ;
-        this.publicKey = cryptoCustomerIdentity.getPublicKey()   ;
-        this.actorType = Actors.CBP_CRYPTO_CUSTOMER              ;
-        this.image     = cryptoCustomerIdentity.getProfileImage();
+        this.alias = cryptoCustomerIdentity.getAlias();
+        this.publicKey = cryptoCustomerIdentity.getPublicKey();
+        this.actorType = Actors.CBP_CRYPTO_CUSTOMER;
+        this.image = cryptoCustomerIdentity.getProfileImage();
         this.accuracy = cryptoCustomerIdentity.getAccuracy();
         this.frequency = cryptoCustomerIdentity.getFrequency();
     }
 
     @Override
-    public void select() throws CantSelectIdentityException {}
+    public void select() throws CantSelectIdentityException {
+    }
 
     @Override
     public String getPublicKey() {
