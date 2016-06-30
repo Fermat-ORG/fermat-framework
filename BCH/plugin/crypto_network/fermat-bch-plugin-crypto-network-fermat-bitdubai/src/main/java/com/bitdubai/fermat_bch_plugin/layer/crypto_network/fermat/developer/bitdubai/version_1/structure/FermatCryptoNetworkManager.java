@@ -52,15 +52,15 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitd
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang.StringUtils;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.store.UnreadableWalletException;
+import org.fermatj.core.Address;
+import org.fermatj.core.Context;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.NetworkParameters;
+import org.fermatj.core.Sha256Hash;
+import org.fermatj.core.Transaction;
+import org.fermatj.core.TransactionInput;
+import org.fermatj.core.Wallet;
+import org.fermatj.store.UnreadableWalletException;
 
 import java.io.File;
 import java.io.IOException;

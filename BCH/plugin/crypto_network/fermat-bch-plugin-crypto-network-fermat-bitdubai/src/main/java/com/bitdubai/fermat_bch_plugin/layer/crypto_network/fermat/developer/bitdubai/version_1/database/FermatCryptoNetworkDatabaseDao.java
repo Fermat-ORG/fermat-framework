@@ -43,10 +43,10 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitd
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.TransactionProtocolData;
 
 import org.apache.commons.lang.StringUtils;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
+import org.fermatj.core.Address;
+import org.fermatj.core.AddressFormatException;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.NetworkParameters;
 
 import java.util.ArrayList;
 import java.util.HashSet;

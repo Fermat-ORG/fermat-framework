@@ -2,10 +2,10 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdu
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.params.TestNet3Params;
+import org.fermatj.core.NetworkParameters;
+import org.fermatj.params.MainNetParams;
+import org.fermatj.params.RegTestParams;
+import org.fermatj.params.TestNet3Params;
 
 /**
  * Created by rodrigo on 6/30/16.

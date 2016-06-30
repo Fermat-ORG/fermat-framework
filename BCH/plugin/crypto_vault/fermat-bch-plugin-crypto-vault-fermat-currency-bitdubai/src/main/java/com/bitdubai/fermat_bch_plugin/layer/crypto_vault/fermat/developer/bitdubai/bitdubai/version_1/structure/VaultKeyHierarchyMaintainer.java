@@ -16,11 +16,11 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdub
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.interfaces.VaultKeyMaintenanceParameters;
 
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.crypto.ChildNumber;
-import org.bitcoinj.crypto.DeterministicHierarchy;
-import org.bitcoinj.crypto.DeterministicKey;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.Transaction;
+import org.fermatj.crypto.ChildNumber;
+import org.fermatj.crypto.DeterministicHierarchy;
+import org.fermatj.crypto.DeterministicKey;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

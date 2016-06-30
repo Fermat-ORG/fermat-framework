@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.structure;
 
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.params.MainNetParams;
+import org.fermatj.core.PeerAddress;
+import org.fermatj.params.MainNetParams;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

@@ -50,9 +50,9 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdub
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.NetworkParameters;
+import org.fermatj.core.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;

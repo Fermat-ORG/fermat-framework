@@ -10,11 +10,11 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdub
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccountType;
 
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.crypto.HDKeyDerivation;
-import org.bitcoinj.wallet.DeterministicSeed;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.Transaction;
+import org.fermatj.crypto.DeterministicKey;
+import org.fermatj.crypto.HDKeyDerivation;
+import org.fermatj.wallet.DeterministicSeed;
 
 import java.util.ArrayList;
 import java.util.List;

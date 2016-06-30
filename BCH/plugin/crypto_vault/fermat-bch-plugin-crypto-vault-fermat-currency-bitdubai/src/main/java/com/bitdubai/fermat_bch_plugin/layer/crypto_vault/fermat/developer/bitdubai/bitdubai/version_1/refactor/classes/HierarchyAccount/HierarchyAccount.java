@@ -3,7 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdu
 
 import com.google.common.collect.ImmutableList;
 
-import org.bitcoinj.crypto.ChildNumber;
+import org.fermatj.crypto.ChildNumber;
 
 
 import java.util.List;

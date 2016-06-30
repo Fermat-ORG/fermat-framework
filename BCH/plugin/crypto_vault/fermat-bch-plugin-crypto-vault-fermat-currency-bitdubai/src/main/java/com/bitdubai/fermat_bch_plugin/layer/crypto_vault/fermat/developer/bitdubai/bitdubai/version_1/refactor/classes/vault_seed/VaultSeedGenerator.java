@@ -13,9 +13,9 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdub
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.vault_seed.exceptions.CantDeleteExistingVaultSeed;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.wallet.DeterministicSeed;
+import org.fermatj.core.Wallet;
+import org.fermatj.params.MainNetParams;
+import org.fermatj.wallet.DeterministicSeed;
 
 import java.util.Arrays;
 import java.util.List;

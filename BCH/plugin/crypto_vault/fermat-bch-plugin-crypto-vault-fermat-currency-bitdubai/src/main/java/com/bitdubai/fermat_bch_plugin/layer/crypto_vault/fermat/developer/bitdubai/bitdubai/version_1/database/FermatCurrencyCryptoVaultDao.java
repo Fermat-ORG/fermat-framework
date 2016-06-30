@@ -25,7 +25,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdub
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.interfaces.VaultKeyMaintenanceParameters;
 
-import org.bitcoinj.core.ECKey;
+import org.fermatj.core.ECKey;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

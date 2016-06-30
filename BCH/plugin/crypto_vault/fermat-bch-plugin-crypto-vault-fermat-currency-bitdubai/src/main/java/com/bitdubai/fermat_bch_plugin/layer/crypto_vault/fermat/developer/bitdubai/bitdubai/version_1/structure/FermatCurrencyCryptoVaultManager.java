@@ -36,19 +36,19 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdub
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.vault_seed.exceptions.InvalidSeedException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.script.ScriptOpCodes;
-import org.bitcoinj.wallet.DeterministicSeed;
-import org.bitcoinj.wallet.WalletTransaction;
+import org.fermatj.core.Address;
+import org.fermatj.core.AddressFormatException;
+import org.fermatj.core.Coin;
+import org.fermatj.core.Context;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.InsufficientMoneyException;
+import org.fermatj.core.NetworkParameters;
+import org.fermatj.core.Transaction;
+import org.fermatj.core.Wallet;
+import org.fermatj.script.ScriptBuilder;
+import org.fermatj.script.ScriptOpCodes;
+import org.fermatj.wallet.DeterministicSeed;
+import org.fermatj.wallet.WalletTransaction;
 
 import java.util.ArrayList;
 import java.util.List;

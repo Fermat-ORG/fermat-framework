@@ -4,12 +4,12 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteData
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.interfaces.CryptoVaultDao;
 
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.crypto.ChildNumber;
-import org.bitcoinj.crypto.DeterministicHierarchy;
-import org.bitcoinj.crypto.DeterministicKey;
+import org.fermatj.core.Address;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.NetworkParameters;
+import org.fermatj.crypto.ChildNumber;
+import org.fermatj.crypto.DeterministicHierarchy;
+import org.fermatj.crypto.DeterministicKey;
 
 import java.util.ArrayList;
 import java.util.List;
