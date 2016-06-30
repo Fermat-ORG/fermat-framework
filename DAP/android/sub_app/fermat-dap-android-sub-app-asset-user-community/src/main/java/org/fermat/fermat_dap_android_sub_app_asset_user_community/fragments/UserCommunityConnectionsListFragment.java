@@ -153,7 +153,7 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
 
     @Override
     public void onOptionMenuPrepared(Menu menu){
-        super.onOptionMenuPrepared(menu, inflater);
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override
