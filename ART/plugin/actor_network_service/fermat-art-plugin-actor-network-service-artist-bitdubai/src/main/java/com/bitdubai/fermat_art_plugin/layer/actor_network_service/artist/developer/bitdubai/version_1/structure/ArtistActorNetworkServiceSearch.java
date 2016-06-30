@@ -1,13 +1,9 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
@@ -15,10 +11,6 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,11 +102,11 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            final List<ArtistExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
+            final List<ArtistExposingData> artistExposingDataList = new ArrayList<>();
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(
+                artistExposingDataList.add(
                         new ArtistExposingData(
                                 actorProfile.getIdentityPublicKey(),
                                 actorProfile.getAlias(),
@@ -122,7 +114,7 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
                                 actorProfile.getLocation()));
             }
 
-            return cryptoBrokerExposingDataList;
+            return artistExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
 
@@ -159,11 +151,11 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            final List<ArtistExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
+            final List<ArtistExposingData> artistExposingDataList = new ArrayList<>();
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(
+                artistExposingDataList.add(
                         new ArtistExposingData(
                                 actorProfile.getIdentityPublicKey(),
                                 actorProfile.getAlias(),
@@ -171,7 +163,7 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
                                 actorProfile.getLocation()));
             }
 
-            return cryptoBrokerExposingDataList;
+            return artistExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
 
@@ -208,11 +200,11 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            final List<ArtistExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
+            final List<ArtistExposingData> artistExposingDataList = new ArrayList<>();
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(
+                artistExposingDataList.add(
                         new ArtistExposingData(
                                 actorProfile.getIdentityPublicKey(),
                                 actorProfile.getAlias(),
@@ -220,7 +212,7 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
                                 actorProfile.getLocation()));
             }
 
-            return cryptoBrokerExposingDataList;
+            return artistExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
 
@@ -254,11 +246,11 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            final List<ArtistExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
+            final List<ArtistExposingData> artistExposingDataList = new ArrayList<>();
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(
+                artistExposingDataList.add(
                         new ArtistExposingData(
                                 actorProfile.getIdentityPublicKey(),
                                 actorProfile.getAlias(),
@@ -266,7 +258,7 @@ public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExp
                                 actorProfile.getLocation()));
             }
 
-            return cryptoBrokerExposingDataList;
+            return artistExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
 
