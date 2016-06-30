@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 
 /**
  * Modified by

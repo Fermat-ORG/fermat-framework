@@ -50,6 +50,7 @@ public class CryptoCustomerWalletNavigationViewAdapter extends FermatAdapter<Men
             } else {
                 bindMenuItem(holder, position);
             }
+            data.setSelected(false);
         } catch (Exception e) {
             e.printStackTrace();
         }

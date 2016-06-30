@@ -574,14 +574,27 @@ public class CryptoBrokerCommunityManager
                 CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity = null;
 
                 if (lastSelectedActorType == Actors.CBP_CRYPTO_BROKER) {
-                    for (CryptoBrokerIdentity i : brokerIdentitiesInDevice) {
-                        if (i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
+                    for (CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                        if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(
+                                    identity.getPublicKey(),
+                                    Actors.CBP_CRYPTO_BROKER,
+                                    identity.getAlias(),
+                                    identity.getProfileImage(),
+                                    identity.getAccuracy(),
+                                    identity.getFrequency());
                     }
+
                 } else if (lastSelectedActorType == Actors.CBP_CRYPTO_CUSTOMER) {
-                    for (CryptoCustomerIdentity i : customerIdentitiesInDevice) {
-                        if (i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, i.getAlias(), i.getProfileImage());
+                    for (CryptoCustomerIdentity identity : customerIdentitiesInDevice) {
+                        if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                            selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(
+                                    identity.getPublicKey(),
+                                    Actors.CBP_CRYPTO_CUSTOMER,
+                                    identity.getAlias(),
+                                    identity.getProfileImage(),
+                                    identity.getAccuracy(),
+                                    identity.getFrequency());
                     }
                 }
 

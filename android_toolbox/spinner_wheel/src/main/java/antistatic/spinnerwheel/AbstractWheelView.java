@@ -34,7 +34,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import com.customviews.spinner.wheel.R;
+import com.customviews.spinner_wheel.R;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 
@@ -188,9 +188,16 @@ public abstract class AbstractWheelView extends AbstractWheel {
      */
     @Override
     protected void recreateAssets(int width, int height) {
-        mSpinBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        mSeparatorsBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        setSelectorPaintCoeff(0);
+        try
+        {
+            mSpinBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            mSeparatorsBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            setSelectorPaintCoeff(0);
+        }
+        catch(Exception e)
+        {
+
+        }
     }
 
     /**

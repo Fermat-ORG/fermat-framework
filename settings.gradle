@@ -55,4 +55,4 @@ include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
 //include ':ApplicationSessionTest'
-project(':spinner_wheel').projectDir = new File('android_toolbox/spinner_wheel')
+

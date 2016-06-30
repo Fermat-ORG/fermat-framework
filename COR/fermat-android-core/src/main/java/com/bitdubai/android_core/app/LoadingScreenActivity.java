@@ -76,7 +76,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 							@Override
 							public void onAnimationEnd(Animation animation) {
 								Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-										R.anim.slide_down);
+										R.anim.slide_up);
 								slide_down.setAnimationListener(new Animation.AnimationListener() {
 									@Override
 									public void onAnimationStart(Animation animation) {
@@ -87,7 +87,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 									public void onAnimationEnd(Animation animation) {
 										right_wallet.setVisibility(View.GONE);
 										Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-												R.anim.slide_down);
+												R.anim.slide_up);
 										slide_down.setAnimationListener(new Animation.AnimationListener() {
 											@Override
 											public void onAnimationStart(Animation animation) {
@@ -98,7 +98,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 											public void onAnimationEnd(Animation animation) {
 												center_wallet.setVisibility(View.GONE);
 												Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-														R.anim.slide_down);
+														R.anim.slide_up);
 												slide_down.setAnimationListener(new Animation.AnimationListener() {
 													@Override
 													public void onAnimationStart(Animation animation) {
@@ -109,7 +109,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
 													public void onAnimationEnd(Animation animation) {
 														left_wallet.setVisibility(View.GONE);
 														final Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-																R.anim.slide_down);
+																R.anim.slide_up);
 														slide_down.setAnimationListener(new Animation.AnimationListener() {
 															@Override
 															public void onAnimationStart(Animation animation) {

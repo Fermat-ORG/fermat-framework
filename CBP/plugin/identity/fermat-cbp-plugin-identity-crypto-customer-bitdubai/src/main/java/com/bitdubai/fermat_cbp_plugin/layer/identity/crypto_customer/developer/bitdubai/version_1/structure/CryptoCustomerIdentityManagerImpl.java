@@ -134,8 +134,9 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
         try {
             Location location = locationManager.getLocation();
             CryptoCustomerIdentity customer = cryptoCustomerIdentityDatabaseDao.getIdentity(publicKey);
+            long refreshInterval = customer.getFrequency().getRefreshInterval();
             if( customer.isPublished() ){
-                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location));
+                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location,  refreshInterval, customer.getAccuracy()));
             }
         } catch (CantGetIdentityException e) {
 
@@ -217,7 +218,8 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
 
         try {
             Location location = locationManager.getLocation();
-            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location));
+            long refreshInterval = identity.getFrequency().getRefreshInterval();
+            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy()));
 
         } catch (final CantExposeIdentityException e) {
 
