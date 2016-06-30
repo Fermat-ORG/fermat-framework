@@ -31,6 +31,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
@@ -42,8 +44,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCry
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.database.FermatCurrencyCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.transactions.DraftTransaction;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.currency_vault.CryptoVaultManager;
+
+
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.structure.FermatCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -284,7 +286,11 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
      */
     @Override
     public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
-        return fermatCurrencyCryptoVaultManager.getMnemonicCode();
+        try {
+            return fermatCurrencyCryptoVaultManager.getMnemonicCode();
+        } catch (com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.vault_seed.exceptions.CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, cantLoadExistingVaultSeed, null, null);
+        }
     }
 
     @Override
@@ -297,60 +303,69 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
         fermatCurrencyCryptoVaultManager.importCryptoFromSeed(networkParameters,mnemonicCode,date,userPhrase);
     }
 
-
-    /**
-     * Signs the owned inputs of the passed Draft transaction
-     * @param draftTransaction the transaction to sign
-     * @return the signed Transaction
-     * @throws CantSignTransactionException
-     */
     @Override
-    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
-        return fermatCurrencyCryptoVaultManager.signTransaction(draftTransaction);
+    public com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction signTransaction(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction draftTransaction) throws CantSignTransactionException {
+        return null;
     }
 
-    /**
-     * Adds more inputs and outputs to a draft transaction
-     * @param draftTransaction the incomplete draft transaction
-     * @param valueToSend the amount of bitcoins in satoshis to add to the transaction
-     * @param addressTo the address to that will receive the bitcoins.
-     * @return the draft transaction with the added values.
-     * @throws CantCreateDraftTransactionException
-     */
     @Override
-    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
-        return fermatCurrencyCryptoVaultManager.addInputsToDraftTransaction(draftTransaction, valueToSend, addressTo, blockchainNetworkType);
+    public com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction addInputsToDraftTransaction(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
+        return null;
     }
 
-    /**
-     * Returns a stored draft transaction
-     * @param blockchainNetworkType
-     * @param txHash
-     * @return
-     * @throws CantGetDraftTransactionException
-     */
     @Override
-    public DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException{
-        return fermatCurrencyCryptoVaultManager.getDraftTransaction(blockchainNetworkType, txHash);
+    public com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException {
+        return null;
     }
 
-    /**
-     * Persists a draft transaction in the vault.
-     * @param draftTransaction the draft Transaction to store
-     * @throws CantStoreBitcoinTransactionException
-     */
+
+//    /**
+//     * Adds more inputs and outputs to a draft transaction
+//     * @param draftTransaction the incomplete draft transaction
+//     * @param valueToSend the amount of bitcoins in satoshis to add to the transaction
+//     * @param addressTo the address to that will receive the bitcoins.
+//     * @return the draft transaction with the added values.
+//     * @throws CantCreateDraftTransactionException
+//     */
+//    @Override
+//    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
+//        return fermatCurrencyCryptoVaultManager.addInputsToDraftTransaction(draftTransaction, valueToSend, addressTo, blockchainNetworkType);
+//    }
+
+//    /**
+//     * Returns a stored draft transaction
+//     * @param blockchainNetworkType
+//     * @param txHash
+//     * @return
+//     * @throws CantGetDraftTransactionException
+//     */
+//    @Override
+//    public DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException{
+//        return fermatCurrencyCryptoVaultManager.getDraftTransaction(blockchainNetworkType, txHash);
+//    }
+
     @Override
-    public void saveTransaction(DraftTransaction draftTransaction) throws CantStoreBitcoinTransactionException {
-        try {
-            fermatCurrencyCryptoVaultManager.storeDraftTransaction(draftTransaction);
-        } catch (Exception e){
-            CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(
-                    CantStoreBitcoinTransactionException.DEFAULT_MESSAGE,
-                    e,
-                    "There was an error persisting the transaction on the vault",
-                    "IO Error");
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw exception;
-        }
+    public void saveTransaction(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction draftTransaction) throws CantStoreBitcoinTransactionException {
+
     }
+
+//    /**
+//     * Persists a draft transaction in the vault.
+//     * @param draftTransaction the draft Transaction to store
+//     * @throws CantStoreBitcoinTransactionException
+//     */
+//    @Override
+//    public void saveTransaction(DraftTransaction draftTransaction) throws CantStoreBitcoinTransactionException {
+//        try {
+//            fermatCurrencyCryptoVaultManager.storeDraftTransaction(draftTransaction);
+//        } catch (Exception e){
+//            CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(
+//                    CantStoreBitcoinTransactionException.DEFAULT_MESSAGE,
+//                    e,
+//                    "There was an error persisting the transaction on the vault",
+//                    "IO Error");
+//            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+//            throw exception;
+//        }
+//    }
 }
