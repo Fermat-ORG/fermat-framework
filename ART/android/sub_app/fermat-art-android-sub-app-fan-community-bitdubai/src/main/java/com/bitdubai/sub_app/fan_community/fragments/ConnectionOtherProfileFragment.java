@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -47,7 +48,7 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
 public class ConnectionOtherProfileFragment extends
-        AbstractFermatFragment<FanCommunitySubAppSessionReferenceApp,
+        AbstractFermatFragment<ReferenceAppFermatSession<FanCommunityModuleManager>,
                 SubAppResourcesProviderManager>
         implements
         Dialog.OnDismissListener,

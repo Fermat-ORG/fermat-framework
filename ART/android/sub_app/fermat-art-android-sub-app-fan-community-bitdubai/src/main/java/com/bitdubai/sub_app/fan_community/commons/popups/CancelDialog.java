@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.FanCancellingFailedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.R;
@@ -22,7 +24,7 @@ import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionRefe
  * Created by Gabriel Araujo 29/04/2016.
  *
  */
-public class CancelDialog extends FermatDialog<FanCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<FanCommunityModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -43,7 +45,7 @@ public class CancelDialog extends FermatDialog<FanCommunitySubAppSessionReferenc
 
 
     public CancelDialog(Activity a,
-                        FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
+                        ReferenceAppFermatSession fanCommunitySubAppSession,
                         SubAppResourcesProviderManager subAppResources,
                         FanCommunityInformation fanCommunityInformation,
                         FanCommunitySelectableIdentity identity) {

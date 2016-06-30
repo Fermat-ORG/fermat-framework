@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.artist_community.R;
 import com.squareup.picasso.Picasso;
 
