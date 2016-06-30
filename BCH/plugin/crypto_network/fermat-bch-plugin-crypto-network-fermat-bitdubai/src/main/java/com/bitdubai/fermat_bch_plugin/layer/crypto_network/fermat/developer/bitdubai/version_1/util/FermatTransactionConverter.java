@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.FermatNetworkConfiguration;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Sha256Hash;
@@ -22,15 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by rodrigo on 6/14/16.
- * This class migrates from Bitcoin Transactions to Fermat internal CryptoTransaction
+ * Created by rodrigo on 6/29/16.
  */
-public final class TransactionConverter {
+public class FermatTransactionConverter {
 
     /**
      * only static methods in this class.
      */
-    private TransactionConverter(){}
+    private FermatTransactionConverter(){}
 
     /**
      * Static method that creates a CryptoTransaction from a Bitcoin Transaction
@@ -69,12 +68,12 @@ public final class TransactionConverter {
                     address = input.getFromAddress();
             }
 
-            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.FERMAT);
         } catch (Exception e){
             /**
              * if there is an error, because this may not always be possible to get.
              */
-            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
+            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.FERMAT);
         }
         return cryptoAddress;
     }
@@ -98,10 +97,10 @@ public final class TransactionConverter {
                 address = output.getScriptPubKey().getToAddress(transaction.getParams());
             }
 
-            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.FERMAT);
             return cryptoAddress;
         } catch (Exception e){
-            return cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
+            return cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.FERMAT);
         }
 
     }
@@ -123,9 +122,9 @@ public final class TransactionConverter {
                 return CryptoStatus.PENDING_SUBMIT;
             else if (depth == 0 && confidenceType == TransactionConfidence.ConfidenceType.PENDING)
                 return CryptoStatus.ON_CRYPTO_NETWORK;
-            else if(depth > 0 && depth < BitcoinNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
+            else if(depth > 0 && depth < FermatNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
                 return CryptoStatus.ON_BLOCKCHAIN;
-            else if (depth >= BitcoinNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
+            else if (depth >= FermatNetworkConfiguration.IRREVERSIBLE_BLOCK_DEPTH)
                 return CryptoStatus.IRREVERSIBLE;
             else
                 return CryptoStatus.PENDING_SUBMIT;
@@ -192,7 +191,7 @@ public final class TransactionConverter {
     }
 
     /**
-     * Will deserialize into CryptoTransaction the bitcoin transaction passed
+     * Will deserialize into CryptoTransaction the fermat transaction passed
      * @param wallet
      * @param transaction
      * @return
@@ -202,7 +201,7 @@ public final class TransactionConverter {
 
         try{
             /**
-             * for each output that sends us bitcoins, I will create INC transactions
+             * for each output that sends us fermats, I will create INC transactions
              */
             for (TransactionOutput output : transaction.getWalletOutputs(wallet)){
                 CryptoTransaction incomingCryptoTransaction = getBaseCryptoTransaction(transaction, cryptoCurrency, blockchainNetworkType);
@@ -292,7 +291,7 @@ public final class TransactionConverter {
          * if fee is 0, Will try to recalculate
          */
         if (fee ==0)
-            fee = BitcoinNetworkConfiguration.FIXED_FEE_VALUE;
+            fee = FermatNetworkConfiguration.FIXED_FEE_VALUE;
 
         return fee;
     }

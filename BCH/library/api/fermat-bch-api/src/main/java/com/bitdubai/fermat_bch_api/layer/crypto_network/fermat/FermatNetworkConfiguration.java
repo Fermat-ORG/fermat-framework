@@ -12,4 +12,6 @@ import org.bitcoinj.core.NetworkParameters;
 public interface FermatNetworkConfiguration {
     static final BlockchainNetworkType DEFAULT_NETWORK_TYPE = BlockchainNetworkType.PRODUCTION;
     static final CryptoCurrency CRYPTO_CURRENCY = CryptoCurrency.FERMAT;
+    static final int IRREVERSIBLE_BLOCK_DEPTH = 3;
+    static final int FIXED_FEE_VALUE = 30000;
 }

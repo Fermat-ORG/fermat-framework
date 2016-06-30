@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
 
-import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
@@ -47,6 +47,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitd
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainProvider;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatTransactionConverter;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.TransactionProtocolData;
 import com.google.common.collect.Lists;
 
@@ -428,7 +429,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
              */
             for (TransactionInput input : transaction.getInputs()) {
                 if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
-                    cryptoTransaction = TransactionConverter.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transaction, CURRENCY);
+                    cryptoTransaction = FermatTransactionConverter.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transaction, CURRENCY);
             }
         }
 
@@ -472,7 +473,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @return
      */
     private CryptoTransaction duplicateCryptoTransaction(CryptoTransaction cryptoTransaction, CryptoStatus cryptoStatus) {
-        CryptoTransaction newCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+        CryptoTransaction newCryptoTransaction = FermatTransactionConverter.copyCryptoTransaction(cryptoTransaction);
         newCryptoTransaction.setCryptoStatus(cryptoStatus);
         return newCryptoTransaction;
     }
@@ -852,7 +853,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
 
                     // If I find it on a running agent, then I will form the CryptoTransaction and return it.
                     if (transaction != null){
-                        cryptoTransaction = TransactionConverter.getCryptoTransaction(entry.getKey(), transaction, CURRENCY);
+                        cryptoTransaction = FermatTransactionConverter.getCryptoTransaction(entry.getKey(), transaction, CURRENCY);
                         cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                         return cryptoTransaction;
                     }
@@ -894,7 +895,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
         try {
             if (blockchainNetworkType == null)
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain), CURRENCY);
+            CryptoTransaction cryptoTransaction = FermatTransactionConverter.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain), CURRENCY);
             return cryptoTransaction;
         } catch (CantGetTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1035,7 +1036,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
         try {
             for (Map.Entry<Transaction, BlockchainNetworkType> entry : getChildBitcoinTransactionsFromParent(parentTransactionHash).entrySet()){
-                cryptoTransactions.add(TransactionConverter.getCryptoTransaction(entry.getValue(), entry.getKey(), CURRENCY));
+                cryptoTransactions.add(FermatTransactionConverter.getCryptoTransaction(entry.getValue(), entry.getKey(), CURRENCY));
             }
         } catch (CantGetTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

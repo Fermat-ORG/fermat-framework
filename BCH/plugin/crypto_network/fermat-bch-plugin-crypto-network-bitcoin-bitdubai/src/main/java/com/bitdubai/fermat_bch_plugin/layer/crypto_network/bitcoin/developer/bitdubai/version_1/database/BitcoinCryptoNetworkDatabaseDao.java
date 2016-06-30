@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
@@ -235,19 +235,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
         switch (cryptoTransaction.getCryptoStatus()){
             case ON_BLOCKCHAIN:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = BitcoinTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 break;
             case IRREVERSIBLE:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = BitcoinTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingOBCCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingOBCCryptoTransaction = BitcoinTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingOBCCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     saveNewTransaction(missingOBCCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingOBCCryptoTransaction));
                 }

@@ -1,6 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork;
-
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.networkNodes;
 
 import org.bitcoinj.core.PeerAddress;
 

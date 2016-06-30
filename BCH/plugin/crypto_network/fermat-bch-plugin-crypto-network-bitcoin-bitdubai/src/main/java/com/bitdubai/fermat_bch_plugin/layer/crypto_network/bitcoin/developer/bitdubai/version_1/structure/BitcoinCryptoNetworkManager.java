@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
-import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorCryptoNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
@@ -26,7 +26,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadP
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetActiveBlockchainNetworkTypeException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
@@ -36,7 +35,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
@@ -598,7 +597,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
              */
             for (TransactionInput input : transaction.getInputs()) {
                 if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
-                    cryptoTransaction = TransactionConverter.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transaction, BITCOIN);
+                    cryptoTransaction = BitcoinTransactionConverter.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transaction, BITCOIN);
             }
         }
 
@@ -642,7 +641,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @return
      */
     private CryptoTransaction duplicateCryptoTransaction(CryptoTransaction cryptoTransaction, CryptoStatus cryptoStatus) {
-        CryptoTransaction newCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+        CryptoTransaction newCryptoTransaction = BitcoinTransactionConverter.copyCryptoTransaction(cryptoTransaction);
         newCryptoTransaction.setCryptoStatus(cryptoStatus);
         return newCryptoTransaction;
     }
@@ -793,7 +792,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
 
                     // If I find it on a running agent, then I will form the CryptoTransaction and return it.
                     if (transaction != null){
-                        cryptoTransaction = TransactionConverter.getCryptoTransaction(entry.getKey(), transaction, BITCOIN);
+                        cryptoTransaction = BitcoinTransactionConverter.getCryptoTransaction(entry.getKey(), transaction, BITCOIN);
                         cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                         return cryptoTransaction;
                     }
@@ -835,7 +834,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
         try {
             if (blockchainNetworkType == null)
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain), BITCOIN);
+            CryptoTransaction cryptoTransaction = BitcoinTransactionConverter.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain), BITCOIN);
             return cryptoTransaction;
         } catch (CantGetTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -977,7 +976,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
         try {
             for (Map.Entry<Transaction, BlockchainNetworkType> entry : getChildBitcoinTransactionsFromParent(parentTransactionHash).entrySet()){
-                cryptoTransactions.add(TransactionConverter.getCryptoTransaction(entry.getValue(), entry.getKey(), BITCOIN));
+                cryptoTransactions.add(BitcoinTransactionConverter.getCryptoTransaction(entry.getValue(), entry.getKey(), BITCOIN));
             }
         } catch (CantGetTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

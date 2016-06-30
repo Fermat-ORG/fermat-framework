@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bit
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -16,27 +17,23 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
 
-import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainConnectionStatus;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.util.ConnectedBitcoinNode;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.FermatNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainConnectionStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.ConnectedBitcoinNode;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainProvider;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatTransactionConverter;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -53,7 +50,6 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
-import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.utils.ContextPropagatingThreadFactory;
 
 import java.io.File;
@@ -286,13 +282,8 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 //connect to local if possible
                 peerGroup.setUseLocalhostPeerWhenPossible(true);
 
-                if (NETWORK_PARAMETERS == RegTestParams.get()){
-                    FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
-                    for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()){
-                        peerGroup.addAddress(node.getPeerAddress());
-                    }
-                } else
-                    peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
+
+                peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 
                 /**
                  * Define internal agent information.
@@ -544,7 +535,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
          * @param transactionId
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-            for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, CURRENCY, wallet, tx)){
+            for (CryptoTransaction cryptoTransaction : FermatTransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, CURRENCY, wallet, tx)){
                 try {
                     dao.saveCryptoTransaction(cryptoTransaction, transactionId);
                 } catch (CantExecuteDatabaseOperationException e) {
@@ -599,7 +590,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 /**
                  * store the transaction as Pending submit in the transactions table
                  */
-                CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx, CURRENCY );
+                CryptoTransaction cryptoTransaction = FermatTransactionConverter.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx, CURRENCY );
                 cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                 dao.saveCryptoTransaction(cryptoTransaction, transactionId);
 

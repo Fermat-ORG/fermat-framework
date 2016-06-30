@@ -2,7 +2,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.AbstractBlockChainConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProvider;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProviderName;

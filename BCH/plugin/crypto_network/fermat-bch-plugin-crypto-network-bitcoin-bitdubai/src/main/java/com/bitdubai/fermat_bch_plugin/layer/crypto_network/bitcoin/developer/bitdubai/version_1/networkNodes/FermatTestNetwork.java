@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.networkNodes;
 
 import java.util.ArrayList;
 import java.util.List;
