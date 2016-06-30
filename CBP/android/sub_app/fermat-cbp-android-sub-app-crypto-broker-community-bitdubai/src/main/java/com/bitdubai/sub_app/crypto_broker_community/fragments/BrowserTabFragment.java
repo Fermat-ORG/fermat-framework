@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -233,6 +235,38 @@ public class BrowserTabFragment
 //
 //        return scrollListener;
         return null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+//        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+//        final SearchView searchView = (SearchView) menuItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                List<CryptoBrokerCommunityInformation> filteredList = filterList(newText, cryptoBrokerCommunityInformationList);
+//                adapter.changeDataSet(filteredList);
+//                return true;
+//            }
+//        });
+    }
+
+    private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
+        final ArrayList<CryptoBrokerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoBrokerCommunityInformation item : baseList) {
+            if (item.getAlias().contains(filterText)) {
+                filteredList.add(item);
+            }
+        }
+
+        return filteredList;
     }
 
     @Override
