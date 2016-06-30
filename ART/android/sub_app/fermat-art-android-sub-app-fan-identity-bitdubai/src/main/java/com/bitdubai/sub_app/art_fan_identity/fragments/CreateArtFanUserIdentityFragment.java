@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -73,7 +74,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
  */
-public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment<ArtFanUserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> {
+public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<FanIdentityManagerModule>, SubAppResourcesProviderManager> {
     private static final String TAG = "CreateArtFanIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
