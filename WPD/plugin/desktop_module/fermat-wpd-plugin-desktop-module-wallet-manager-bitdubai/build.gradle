@@ -15,11 +15,21 @@
 //}
 
 apply plugin: 'java'
+apply plugin:  'maven'
+apply plugin: 'maven-publish'
 //apply plugin: 'maven-publish'
 //apply plugin: "com.jfrog.artifactory"
 
 sourceCompatibility = 1.7
 version = '1.0'
+group = "com.bitdubai.pip.module.wallet.manager"
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'module.wallet.manager',
+                'Implementation-Version': '1'
+    }
+}
 
 repositories {
     mavenCentral()
@@ -27,11 +37,24 @@ repositories {
 
 dependencies {
 
-    compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile project(':fermat-ccp-api')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            from components.java
+
+        }
+    }
+    repositories {
+        maven {
+            url "file:/${System.properties['user.home']}/artifacts"
+        }
+    }
 }
 
 //
