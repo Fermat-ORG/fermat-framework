@@ -130,13 +130,13 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
         List<ActorsCatalogTransaction> transactionList = null;
 
-        if (offset > 0 && max > 0){
+        if (offset >= 0 && max > 0){
 
             transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(offset, max);
 
         }else {
 
-            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll();
+            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(0, 50);
 
         }
 
