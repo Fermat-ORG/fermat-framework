@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
+package com.bitdubai.fermat_bch_api.layer.crypto_network;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
