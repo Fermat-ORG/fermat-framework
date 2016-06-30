@@ -414,6 +414,12 @@ public class BrowserTabFragment
         }
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
 }
 
 

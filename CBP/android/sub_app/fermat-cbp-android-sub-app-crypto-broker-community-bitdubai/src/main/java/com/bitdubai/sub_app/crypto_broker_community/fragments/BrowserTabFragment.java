@@ -519,7 +519,11 @@ public class BrowserTabFragment
         }
     }
 
-    private void slideUpLocationFilterBar() {
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
     }
 }
 

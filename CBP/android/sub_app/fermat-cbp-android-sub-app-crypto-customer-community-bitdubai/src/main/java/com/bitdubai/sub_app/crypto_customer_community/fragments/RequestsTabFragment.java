@@ -328,4 +328,11 @@ public class RequestsTabFragment
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
 }
