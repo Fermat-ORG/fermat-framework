@@ -251,7 +251,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);;
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);;
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     try {
@@ -265,7 +265,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
@@ -533,8 +533,8 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager,
      * @param transactionHash
      * @return
      */
-
-    public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+    @Override
+    public Transaction getBlockchainProviderTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
         Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
 

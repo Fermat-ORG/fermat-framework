@@ -379,7 +379,8 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @param transactionHash
      * @return
      */
-    private Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+    @Override
+    public Transaction getBlockchainProviderTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
         Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
 
@@ -703,7 +704,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @param transactionProtocolData
      */
     private void fixCryptoAmountInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBlockchainProviderTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
     }
 
@@ -714,7 +715,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @param transactionProtocolData
      */
     private void fixAddressToInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBlockchainProviderTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
     }
 
@@ -724,7 +725,7 @@ public class FermatCryptoNetworkManager implements TransactionProtocolManager, B
      * @param transactionProtocolData
      */
     private void fixAddressFromInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBlockchainProviderTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
 
     }

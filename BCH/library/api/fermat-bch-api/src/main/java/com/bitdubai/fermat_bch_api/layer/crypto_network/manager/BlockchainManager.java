@@ -100,6 +100,16 @@ public interface BlockchainManager <T1, T2> {
 
 
     /**
+     * Get the transaction stored by the CryptoNetwork
+     *
+     * @param blockchainNetworkType the network type
+     * @param transactionHash       the transsaction hash
+     * @return the bitcoin transaction
+     */
+    T2 getBlockchainProviderTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash);
+
+
+    /**
      * Will get the BlockchainConnectionStatus for the specified network.
      * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
      * then we will receive null.
