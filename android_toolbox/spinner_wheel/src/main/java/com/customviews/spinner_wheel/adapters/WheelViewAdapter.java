@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-package antistatic.spinnerwheel.adapters;
+package com.customviews.spinner_wheel.adapters;
 
 import android.database.DataSetObserver;
 import android.view.View;

@@ -80,8 +80,8 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserManager;
 
-   // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
-   // private LocationManager locationManager;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     private IntraWalletUserIdentity intraWalletUser;
 
@@ -276,7 +276,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
            // } catch (CantGetDeviceLocationException e) {
                // e.printStackTrace();
             //}
-            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,deviceLocation);
+            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager);
         }
         return intraUserModuleManager;
     }

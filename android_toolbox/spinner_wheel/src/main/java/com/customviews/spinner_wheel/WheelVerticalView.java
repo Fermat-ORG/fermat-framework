@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-package antistatic.spinnerwheel;
+package com.customviews.spinner_wheel;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -30,19 +30,19 @@ import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import com.customviews.spinner_wheel.R;
+
+
 /**
- * Spinner wheel horizontal view.
+ * Spinner wheel vertical view.
  *
  * @author Yuri Kanivets
  * @author Dimitri Fedorov
  */
-public class WheelHorizontalView extends AbstractWheelView {
+public class WheelVerticalView extends AbstractWheelView {
 
     private static int itemID = -1;
 
@@ -50,12 +50,12 @@ public class WheelHorizontalView extends AbstractWheelView {
     private final String LOG_TAG = WheelVerticalView.class.getName() + " #" + (++itemID);
 
     /**
-     * The width of the selection divider.
+     * The height of the selection divider.
      */
-    protected int mSelectionDividerWidth;
+    protected int mSelectionDividerHeight;
 
-    // Item width
-    private int itemWidth = 0;
+    // Cached item height
+    private int mItemHeight = 0;
 
     //--------------------------------------------------------------------------
     //
@@ -64,32 +64,32 @@ public class WheelHorizontalView extends AbstractWheelView {
     //--------------------------------------------------------------------------
 
     /**
-     * Create a new wheel horizontal view.
+     * Create a new wheel vertical view.
      *
      * @param context The application environment.
      */
-    public WheelHorizontalView(Context context) {
+    public WheelVerticalView(Context context) {
         this(context, null);
     }
 
     /**
-     * Create a new wheel horizontal view.
+     * Create a new wheel vertical view.
      *
      * @param context The application environment.
      * @param attrs A collection of attributes.
      */
-    public WheelHorizontalView(Context context, AttributeSet attrs) {
+    public WheelVerticalView(Context context, AttributeSet attrs) {
         this(context, attrs, R.attr.abstractWheelViewStyle);
     }
 
     /**
-     * Create a new wheel horizontal view.
+     * Create a new wheel vertical view.
      *
      * @param context the application environment.
      * @param attrs a collection of attributes.
      * @param defStyle The default style to apply to this view.
      */
-    public WheelHorizontalView(Context context, AttributeSet attrs, int defStyle) {
+    public WheelVerticalView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -104,26 +104,19 @@ public class WheelHorizontalView extends AbstractWheelView {
     protected void initAttributes(AttributeSet attrs, int defStyle) {
         super.initAttributes(attrs, defStyle);
 
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.WheelHorizontalView, defStyle, 0);
-        mSelectionDividerWidth = a.getDimensionPixelSize(R.styleable.WheelHorizontalView_selectionDividerWidth, DEF_SELECTION_DIVIDER_SIZE);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.WheelVerticalView, defStyle, 0);
+        mSelectionDividerHeight = a.getDimensionPixelSize(R.styleable.WheelVerticalView_selectionDividerHeight, DEF_SELECTION_DIVIDER_SIZE);
         a.recycle();
-    }
-
-    public void setSelectionDividerWidth(int selectionDividerWidth) {
-        this.mSelectionDividerWidth = selectionDividerWidth;
     }
 
     @Override
     public void setSelectorPaintCoeff(float coeff) {
-        if (mItemsDimmedAlpha >= 100)
-            return;
-
         LinearGradient shader;
 
-        int w = getMeasuredWidth();
-        int iw = getItemDimension();
-        float p1 = (1 - iw/(float) w)/2;
-        float p2 = (1 + iw/(float) w)/2;
+        int h = getMeasuredHeight();
+        int ih = getItemDimension();
+        float p1 = (1 - ih/(float) h)/2;
+        float p2 = (1 + ih/(float) h)/2;
         float z = mItemsDimmedAlpha * (1 - coeff);
         float c1f = z + 255 * coeff;
 
@@ -132,10 +125,10 @@ public class WheelHorizontalView extends AbstractWheelView {
             int c2 = Math.round( z ) << 24;
             int[] colors =      {c2, c1, 0xff000000, 0xff000000, c1, c2};
             float[] positions = { 0, p1,     p1,         p2,     p2,  1};
-            shader = new LinearGradient(0, 0, w, 0, colors, positions, Shader.TileMode.CLAMP);
+            shader = new LinearGradient(0, 0, 0, h, colors, positions, Shader.TileMode.CLAMP);
         } else {
-            float p3 = (1 - iw*3/(float) w)/2;
-            float p4 = (1 + iw*3/(float) w)/2;
+            float p3 = (1 - ih*3/(float) h)/2;
+            float p4 = (1 + ih*3/(float) h)/2;
 
             float s = 255 * p3/p1;
             float c3f = s * coeff ; // here goes some optimized stuff
@@ -145,9 +138,9 @@ public class WheelHorizontalView extends AbstractWheelView {
             int c2 = Math.round( c2f ) << 24;
             int c3 = Math.round( c3f ) << 24;
 
-            int[] colors = { c2, c2, c2, c2, 0xff000000, 0xff000000, c2, c2, c2, c2 };
-            float[] positions = { 0, p3, p3, p1, p1, p2, p2, p4, p4, 1 };
-            shader = new LinearGradient(0, 0, w, 0, colors, positions, Shader.TileMode.CLAMP);
+            int[] colors =      {0, c3, c2, c1, 0xff000000, 0xff000000, c1, c2, c3, 0};
+            float[] positions = {0, p3, p3, p1,     p1,         p2,     p2, p4, p4, 1};
+            shader = new LinearGradient(0, 0, 0, h, colors, positions, Shader.TileMode.CLAMP);
         }
         mSelectorWheelPaint.setShader(shader);
         invalidate();
@@ -162,14 +155,13 @@ public class WheelHorizontalView extends AbstractWheelView {
 
     @Override
     protected WheelScroller createScroller(WheelScroller.ScrollingListener scrollingListener) {
-        return new WheelHorizontalScroller(getContext(), scrollingListener);
+        return new WheelVerticalScroller(getContext(), scrollingListener);
     }
 
     @Override
     protected float getMotionEventPosition(MotionEvent event) {
-        return event.getX();
+        return event.getY();
     }
-
 
     //--------------------------------------------------------------------------
     //
@@ -179,49 +171,26 @@ public class WheelHorizontalView extends AbstractWheelView {
 
     @Override
     protected int getBaseDimension() {
-        return getWidth();
+        return getHeight();
     }
 
     /**
-     * Returns height of spinnerwheel item
-     * @return the item width
+     * Returns height of the spinnerwheel
+     * @return the item height
      */
     @Override
     protected int getItemDimension() {
-        if (itemWidth != 0) {
-            return itemWidth;
+        if (mItemHeight != 0) {
+            return mItemHeight;
         }
 
         if (mItemsLayout != null && mItemsLayout.getChildAt(0) != null) {
-            itemWidth = mItemsLayout.getChildAt(0).getMeasuredWidth();
-            return itemWidth;
+            mItemHeight = mItemsLayout.getChildAt(0).getMeasuredHeight();
+            return mItemHeight;
         }
 
         return getBaseDimension() / mVisibleItems;
     }
-
-    //--------------------------------------------------------------------------
-    //
-    //  Debugging stuff
-    //
-    //--------------------------------------------------------------------------
-
-
-    @Override
-    protected void onScrollTouchedUp() {
-        super.onScrollTouchedUp();
-        int cnt = mItemsLayout.getChildCount();
-        View itm;
-        Log.e(LOG_TAG, " ----- layout: " + mItemsLayout.getMeasuredWidth() + mItemsLayout.getMeasuredHeight());
-        Log.e(LOG_TAG, " -------- dumping " + cnt + " items");
-        for (int i = 0; i < cnt; i++) {
-            itm = mItemsLayout.getChildAt(i);
-            Log.e(LOG_TAG, " item #" + i + ": " + itm.getWidth() + "x" + itm.getHeight());
-            itm.forceLayout(); // forcing layout without re-rendering parent
-        }
-        Log.e(LOG_TAG, " ---------- dumping finished ");
-    }
-
 
     //--------------------------------------------------------------------------
     //
@@ -230,35 +199,37 @@ public class WheelHorizontalView extends AbstractWheelView {
     //--------------------------------------------------------------------------
 
     /**
-     * Creates item layouts if necessary
+     * Creates item layout if necessary
      */
     @Override
     protected void createItemsLayout() {
         if (mItemsLayout == null) {
             mItemsLayout = new LinearLayout(getContext());
-            mItemsLayout.setOrientation(LinearLayout.HORIZONTAL);
+            mItemsLayout.setOrientation(LinearLayout.VERTICAL);
         }
     }
 
     @Override
     protected void doItemsLayout() {
-        mItemsLayout.layout(0, 0, getMeasuredWidth(), getMeasuredHeight() - 2 * mItemsPadding);
+        mItemsLayout.layout(0, 0, getMeasuredWidth() - 2 * mItemsPadding, getMeasuredHeight());
     }
+
 
     @Override
     protected void measureLayout() {
         mItemsLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        // XXX: Locating bug
+
         mItemsLayout.measure(
-                MeasureSpec.makeMeasureSpec(getWidth() + getItemDimension(), MeasureSpec.UNSPECIFIED),
-                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
+                MeasureSpec.makeMeasureSpec(getWidth() - 2 * mItemsPadding, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        );
+        
     }
 
-    //XXX: Most likely, measurements of mItemsLayout or/and its children are done inconrrectly.
-    // Investigate and fix it
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -266,59 +237,58 @@ public class WheelHorizontalView extends AbstractWheelView {
 
         rebuildItems(); // rebuilding before measuring
 
-        int height = calculateLayoutHeight(heightSize, heightMode);
+        int width = calculateLayoutWidth(widthSize, widthMode);
 
-        int width;
-        if (widthMode == MeasureSpec.EXACTLY) {
-            width = widthSize;
+        int height;
+        if (heightMode == MeasureSpec.EXACTLY) {
+            height = heightSize;
         } else {
-            width = Math.max(
+            height = Math.max(
                     getItemDimension() * (mVisibleItems - mItemOffsetPercent / 100),
-                    getSuggestedMinimumWidth()
+                    getSuggestedMinimumHeight()
             );
 
-            if (widthMode == MeasureSpec.AT_MOST) {
-                width = Math.min(width, widthSize);
+            if (heightMode == MeasureSpec.AT_MOST) {
+                height = Math.min(height, heightSize);
             }
         }
         setMeasuredDimension(width, height);
     }
 
-
     /**
-     * Calculates control height and creates text layouts
-     * @param heightSize the input layout height
+     * Calculates control width
+     * @param widthSize the input layout width
      * @param mode the layout mode
-     * @return the calculated control height
+     * @return the calculated control width
      */
-    private int calculateLayoutHeight(int heightSize, int mode) {
+    private int calculateLayoutWidth(int widthSize, int mode) {
         mItemsLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         mItemsLayout.measure(
-                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-                MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.UNSPECIFIED)
-                );
-        int height = mItemsLayout.getMeasuredHeight();
+                MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        );
+        int width = mItemsLayout.getMeasuredWidth();
 
         if (mode == MeasureSpec.EXACTLY) {
-            height = heightSize;
+            width = widthSize;
         } else {
-            height += 2 * mItemsPadding;
+            width += 2 * mItemsPadding;
 
             // Check against our minimum width
-            height = Math.max(height, getSuggestedMinimumHeight());
+            width = Math.max(width, getSuggestedMinimumWidth());
 
-            if (mode == MeasureSpec.AT_MOST && heightSize < height) {
-                height = heightSize;
+            if (mode == MeasureSpec.AT_MOST && widthSize < width) {
+                width = widthSize;
             }
         }
+
         // forcing recalculating
         mItemsLayout.measure(
-                // MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-                MeasureSpec.makeMeasureSpec(400, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(height - 2 * mItemsPadding, MeasureSpec.EXACTLY)
+                MeasureSpec.makeMeasureSpec(width - 2 * mItemsPadding, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         );
 
-        return height;
+        return width;
     }
 
 
@@ -333,15 +303,15 @@ public class WheelHorizontalView extends AbstractWheelView {
         canvas.save();
         int w = getMeasuredWidth();
         int h = getMeasuredHeight();
-        int iw = getItemDimension();
+        int ih = getItemDimension();
 
         // resetting intermediate bitmap and recreating canvases
         mSpinBitmap.eraseColor(0);
         Canvas c = new Canvas(mSpinBitmap);
         Canvas cSpin = new Canvas(mSpinBitmap);
 
-        int left = (mCurrentItemIdx - mFirstItemIdx) * iw + (iw - getWidth()) / 2;
-        c.translate(- left + mScrollingOffset, mItemsPadding);
+        int top = (mCurrentItemIdx - mFirstItemIdx) * ih + (ih - getHeight()) / 2;
+        c.translate(mItemsPadding, - top + mScrollingOffset);
         mItemsLayout.draw(c);
 
         mSeparatorsBitmap.eraseColor(0);
@@ -349,24 +319,16 @@ public class WheelHorizontalView extends AbstractWheelView {
 
         if (mSelectionDivider != null) {
             // draw the top divider
-            int leftOfLeftDivider = (getWidth() - iw - mSelectionDividerWidth) / 2;
-            int rightOfLeftDivider = leftOfLeftDivider + mSelectionDividerWidth;
-            cSeparators.save();
-            // On Gingerbread setBounds() is ignored resulting in an ugly visual bug.
-            cSeparators.clipRect(leftOfLeftDivider, 0, rightOfLeftDivider, h);
-            mSelectionDivider.setBounds(leftOfLeftDivider, 0, rightOfLeftDivider, h);
+            int topOfTopDivider = (getHeight() - ih - mSelectionDividerHeight) / 2;
+            int bottomOfTopDivider = topOfTopDivider + mSelectionDividerHeight;
+            mSelectionDivider.setBounds(0, topOfTopDivider, w, bottomOfTopDivider);
             mSelectionDivider.draw(cSeparators);
-            cSeparators.restore();
 
-            cSeparators.save();
             // draw the bottom divider
-            int leftOfRightDivider =  leftOfLeftDivider + iw;
-            int rightOfRightDivider = rightOfLeftDivider + iw;
-            // On Gingerbread setBounds() is ignored resulting in an ugly visual bug.
-            cSeparators.clipRect(leftOfRightDivider, 0, rightOfRightDivider, h);
-            mSelectionDivider.setBounds(leftOfRightDivider, 0, rightOfRightDivider, h);
+            int topOfBottomDivider =  topOfTopDivider + ih;
+            int bottomOfBottomDivider = bottomOfTopDivider + ih;
+            mSelectionDivider.setBounds(0, topOfBottomDivider, w, bottomOfBottomDivider);
             mSelectionDivider.draw(cSeparators);
-            cSeparators.restore();
         }
 
         cSpin.drawRect(0, 0, w, h, mSelectorWheelPaint);
