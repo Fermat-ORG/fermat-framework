@@ -132,7 +132,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
                 actorConnections = search.getResult(1000, 0);
-//                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            //  actorConnections = search.getResult(Integer.MAX_VALUE, 0);
             }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
