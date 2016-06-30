@@ -417,7 +417,7 @@ public class ContactsListFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -451,7 +451,7 @@ public class ContactsListFragment
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -460,6 +460,7 @@ public class ContactsListFragment
 
                 @Override
                 public boolean onQueryTextChange(String s) {
+
                     if (s.equals(searchView.getQuery().toString())) {
                         updateValues();
                         adapter.refreshEvents(contactname, contacticon, contactid);
@@ -473,7 +474,9 @@ public class ContactsListFragment
                 if (filterString.length() > 0) {
                     searchView.setQuery(filterString, true);
                     searchView.setIconified(false);
+                    //getToolbar().setTitle("");
                 }else{
+                    //getToolbar().setTitle("P2P Chat");
                     updateValues();
                     adapter.refreshEvents(contactname, contacticon, contactid);
                 }
