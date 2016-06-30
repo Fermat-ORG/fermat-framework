@@ -200,7 +200,7 @@ public class ConnectionsTabFragment
                 if (helpDialog == null)
                     helpDialog = new PresentationDialog.Builder(getActivity(), appSession)
                             .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                            .setBannerRes(R.drawable.banner_crypto_broker)
+                            .setBannerRes(R.drawable.cbc_banner)
                             .setIconRes(R.drawable.crypto_broker)
                             .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
