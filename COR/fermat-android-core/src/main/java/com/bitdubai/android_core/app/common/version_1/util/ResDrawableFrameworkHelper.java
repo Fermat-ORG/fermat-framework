@@ -16,7 +16,7 @@ public class ResDrawableFrameworkHelper {
         switch (id){
             case IC_ARROW_BACK_WHITE:
                 //todo: ver esto
-                resId = R.drawable.cht_arrow_left;
+                resId = R.drawable.arrow_left;
                 break;
         }
         return resId;
