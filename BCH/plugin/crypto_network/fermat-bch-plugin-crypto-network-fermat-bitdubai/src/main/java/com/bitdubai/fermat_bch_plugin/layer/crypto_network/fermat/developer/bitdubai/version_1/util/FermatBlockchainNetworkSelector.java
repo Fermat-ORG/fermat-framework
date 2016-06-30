@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.MainNetParams;
@@ -9,10 +8,10 @@ import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 
 /**
- * Created by rodrigo on 9/21/15.
- * Calculates the correct network Parameters based on the requested network configuration
+ * Created by rodrigo on 6/29/16.
  */
-public class BlockchainNetworkSelector {
+public class FermatBlockchainNetworkSelector {
+
     public static NetworkParameters getNetworkParameter(BlockchainNetworkType blockchainNetworkType){
         switch (blockchainNetworkType){
             case PRODUCTION:
@@ -22,7 +21,7 @@ public class BlockchainNetworkSelector {
             case REG_TEST:
                 return RegTestParams.get();
             default:
-                return  BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS;
+                return  MainNetParams.get();
         }
     }
 
@@ -32,13 +31,6 @@ public class BlockchainNetworkSelector {
      * @return
      */
     public static BlockchainNetworkType getBlockchainNetworkType(NetworkParameters networkParameters){
-        /**
-         * if this is the default network type, I will return it.
-         */
-        if (BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS == networkParameters){
-            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        }
-
         /**
          * I will return the correct network type.
          */
@@ -53,6 +45,4 @@ public class BlockchainNetworkSelector {
 
         return blockchainNetworkType;
     }
-
-
 }

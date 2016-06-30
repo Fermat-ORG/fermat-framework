@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.ConnectedBitcoinNode;
@@ -29,12 +29,16 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProvider;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;import com.google.common.util.concurrent.FutureCallback;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainProvider;
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -77,6 +81,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
     private BlockchainDownloadProgress blockchainDownloadProgress;
     private final FermatCryptoNetworkDatabaseDao dao;
     private final CryptoCurrency CURRENCY = FermatNetworkConfiguration.CRYPTO_CURRENCY;
+    private FermatBlockchainProvider blockchainProvider;
     private ContextPropagatingThreadFactory contextPropagatingThreadFactory;
 
 
@@ -103,7 +108,8 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                                        PluginFileSystem pluginFileSystem,
                                        ErrorManager errorManager,
                                        FermatCryptoNetworkDatabaseDao FermatCryptoNetworkDatabaseDao,
-                                       EventManager eventManager) {
+                                       EventManager eventManager,
+                                      FermatBlockchainProvider blockchainProvider) {
         /**
          * I initialize the local variables
          */
@@ -115,13 +121,16 @@ public class FermatCryptoNetworkMonitor  implements Agent {
         this.context = wallet.getContext();
         this.dao = FermatCryptoNetworkDatabaseDao;
         this.eventManager = eventManager;
+        this.blockchainProvider = blockchainProvider;
 
 
         /**
          * Define the constants
          */
         NETWORK_PARAMETERS = context.getParams();
-        BLOCKCHAIN_NETWORKTYPE = BlockchainNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
+        BLOCKCHAIN_NETWORKTYPE = FermatBlockchainNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
+
+        this.blockchainProvider.setActiveBlockchainNetworkType(BLOCKCHAIN_NETWORKTYPE);
 
         contextPropagatingThreadFactory = new ContextPropagatingThreadFactory("FermatNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode());
 
@@ -289,8 +298,8 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 /**
                  * Define internal agent information.
                  */
-                peerGroup.setUserAgent(FermatNetworkConfiguration.USER_AGENT_NAME, FermatNetworkConfiguration.USER_AGENT_VERSION);
-                peerGroup.setMinBroadcastConnections(FermatNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
+                peerGroup.setUserAgent(blockchainProvider.getAgentName(), blockchainProvider.getAgentVersion().toString());
+                peerGroup.setMinBroadcastConnections(blockchainProvider.getMinimumBroadcastConnections());
 
 
                 /**
@@ -421,7 +430,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
 
 
 
-            ListenableFuture<Transaction> future = peerGroup.broadcastTransaction(transaction, FermatNetworkConfiguration.MIN_BROADCAST_CONNECTIONS).future();
+            ListenableFuture<Transaction> future = peerGroup.broadcastTransaction(transaction, blockchainProvider.getMinimumBroadcastConnections()).future();
             wallet.receivePending(finalTransaction, null);
             /**
              * I add the future that will get the broadcast result into a call back to respond to it.

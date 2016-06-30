@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
@@ -41,6 +42,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProvider;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
@@ -48,6 +50,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitd
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantInitializeFermatCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.structure.FermatCryptoNetworkEventsAgent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.structure.FermatCryptoNetworkManager;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainProvider;
 
 import org.bitcoinj.core.ECKey;
 
@@ -62,9 +65,10 @@ import javax.annotation.Nullable;
  * Created by rodrigo on 5/20/16.
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.HIGH, maintainerMail = "acosta_rodrigo@hotmail.com", createdBy = "acostarodrigo", layer = Layers.CRYPTO_NETWORK, platform = Platforms.BLOCKCHAINS, plugin = Plugins.FERMAT_NETWORK)
-public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
-        FermatNetworkManager,
-        DatabaseManagerForDevelopers {
+public class FermatCryptoNetworkPluginRoot
+        extends AbstractPlugin
+        implements  TransactionSender<CryptoTransaction>,
+                    DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
@@ -82,6 +86,7 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     private FermatCryptoNetworkDatabaseDao dao;
     private FermatCryptoNetworkManager fermatCryptoNetworkManager;
+    private FermatBlockchainProvider blockchainProvider;
 
     /**
      * Default Constructor
@@ -131,9 +136,14 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         /**
+         * instantiate the Fermat Blockchain Provider
+         */
+        blockchainProvider = new FermatBlockchainProvider();
+
+        /**
          * instantiate the network Manager
          */
-        fermatCryptoNetworkManager = new FermatCryptoNetworkManager(this.eventManager, this.pluginFileSystem, this.pluginId, this.errorManager, getDao());
+        fermatCryptoNetworkManager = new FermatCryptoNetworkManager(this.eventManager, this.pluginFileSystem, this.pluginId, this.errorManager, getDao(), blockchainProvider);
 
         /**
          * Start the agent that will search for pending transactions to be notified.
@@ -157,49 +167,6 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
-     * test method
-     */
-    private void testBlockChainConnectionStatus() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000 * 10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    for (BlockchainNetworkType networkType : getActivesBlockchainNetworkTypes()){
-                        System.out.println("***CryptoNetwork***Test " + getBlockchainConnectionStatus(networkType).toString());
-                    }
-                } catch (CantGetActiveBlockchainNetworkTypeException e) {
-                    e.printStackTrace();
-                } catch (CantGetBlockchainConnectionStatusException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
-    /**
-     * Pass the Keys to the bitcoin network to monitor the network
-     * @param cryptoVault
-     * @param blockchainNetworkTypes
-     * @param keyList
-     * @throws CantMonitorBitcoinNetworkException
-     */
-    @Override
-    public void monitorNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
-        try {
-            fermatCryptoNetworkManager.monitorNetworkFromKeyList(cryptoVault, blockchainNetworkTypes, keyList);
-        } catch (Exception e) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantMonitorBitcoinNetworkException (CantMonitorBitcoinNetworkException.DEFAULT_MESSAGE, e, null, null);
-        }
-    }
-
-    /**
      * returns Transcation Manager for the Incoming Crypto Router
      * @return
      */
@@ -208,173 +175,5 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
         return fermatCryptoNetworkManager;
     }
 
-    /**
-     * Gets all CryptoTransactions that matches that passed transcation hash
-     * We may have multiple CryptoTranscation because each have a different CryptoStatus
-     * @param txHash
-     * @return
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
-        return fermatCryptoNetworkManager.getGenesisTransaction(txHash);
-    }
 
-    /**
-     * Gets the specified bitcoin transaction
-     * @param transactionHash
-     * @return
-     */
-    @Override
-    public org.bitcoinj.core.Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
-        return fermatCryptoNetworkManager.getBitcoinTransaction(blockchainNetworkType, transactionHash);
-    }
-
-    /**
-     * gets the current Crypto Status for the specified Transaction ID
-     * @param txHash the Bitcoin transaction hash
-     * @return the last crypto status
-     * @throws CantGetTransactionCryptoStatusException
-     */
-    @Override
-    public CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException {
-        return fermatCryptoNetworkManager.getCryptoStatus(txHash);
-    }
-
-    /**
-     * Broadcast a well formed, commited and signed transaction into the network.
-     * @param txHash
-     * @throws CantBroadcastTransactionException
-     */
-    @Override
-    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
-        fermatCryptoNetworkManager.broadcastTransaction(txHash);
-    }
-
-    /**
-     * Returns the broadcast Status for a specified transaction.
-     * @param txHash
-     * @return
-     * @throws CantGetBroadcastStatusException
-     */
-    @Override
-    public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
-        return fermatCryptoNetworkManager.getBroadcastStatus(txHash);
-    }
-
-
-    /**
-     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
-     * @param blockchainNetworkType
-     * @param tx
-     * @param transactionId
-     * @param commit
-     * @throws CantStoreBitcoinTransactionException
-     */
-    @Override
-    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, org.bitcoinj.core.Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException {
-        fermatCryptoNetworkManager.storeBitcoinTransaction(blockchainNetworkType, tx, transactionId, commit);
-    }
-
-    /**
-     * Will mark the passed transaction as cancelled, and it won't be broadcasted again.
-     * @param txHash
-     * @throws CantCancellBroadcastTransactionException
-     */
-    @Override
-    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
-        fermatCryptoNetworkManager.cancelBroadcast(txHash);
-    }
-
-    /**
-     * Will get the BlockchainConnectionStatus for the specified network.
-     * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
-     *                              then we will receive null.
-     * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
-     * @exception CantGetBlockchainConnectionStatusException
-     */
-    @Override
-    public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
-        return fermatCryptoNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType);
-    }
-
-    /**
-     * Gets the active networks running on the Crypto Network
-     * @return the list of active networks {MainNet, TestNet and RegTest}
-     * @throws CantGetActiveBlockchainNetworkTypeException
-     */
-    @Override
-    public List<BlockchainNetworkType> getActivesBlockchainNetworkTypes() throws CantGetActiveBlockchainNetworkTypeException {
-        return  fermatCryptoNetworkManager.getActivesBlockchainNetworkTypes();
-    }
-
-    /**
-     * Get the bitcoin transactions stored by the CryptoNetwork
-     * @param blockchainNetworkType the network type
-     * @return the bitcoin transaction
-     */
-    @Override
-    public List<org.bitcoinj.core.Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
-        return fermatCryptoNetworkManager.getBitcoinTransactions(blockchainNetworkType);
-    }
-
-    /**
-     * Gets a stored CryptoTransaction in whatever network.
-     * @param txHash the transaction hash of the transaction
-     * @param cryptoTransactionType the type of CryptoTransaction we are looking for
-     * @param toAddress the address this transaction was sent to.
-     * @return the CryptoTransaction with the latest cryptoStatus
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public CryptoTransaction getCryptoTransaction(String txHash, @Nullable CryptoTransactionType cryptoTransactionType, @Nullable CryptoAddress toAddress) throws CantGetCryptoTransactionException {
-        return fermatCryptoNetworkManager.getCryptoTransaction(txHash, cryptoTransactionType, toAddress);
-    }
-
-    /**
-     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
-     * of the chain until the Genesis Transaction is reached.
-     * The genesis Transaction will be the first transaction in the map.
-     * @param transactionChain a Map with the form TransactionHash / BlockHash
-     * @return all the CryptoTransactions originated at the genesis transaction
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
-        return fermatCryptoNetworkManager.getGenesisCryptoTransaction(blockchainNetworkType, transactionChain);
-    }
-
-    /**
-     * Based on the Parent trasaction passed, will return all the CryptoTransactions that are a direct descendant of this parent.
-     * Only if it is a locally stored transaction
-     * @param parentTransactionHash the hash of the parent trasaction
-     * @return the list of CryptoTransactions that are a direct child of the parent.
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
-        return fermatCryptoNetworkManager.getChildTransactionsFromParent(parentTransactionHash);
-    }
-
-    /**
-     * Gets the download progress from the specified network
-     * @param blockchainNetworkType The network type we want to know the download progress
-     * @return the BlockchainDownloadProgress class which includes information about pending blocks, total blocks, etc.
-     * @throws CantGetBlockchainDownloadProgress
-     */
-    @Override
-    public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
-        return fermatCryptoNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
-    }
-
-    /**
-     * Gets the list of stored CryptoTransactions for the specified network type
-     * @param blockchainNetworkType the network type to get the transactions from.
-     * @return the list of Crypto Transaction
-     * @throws CantGetCryptoTransactionException
-     */
-    @Override
-    public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantGetCryptoTransactionException {
-        return fermatCryptoNetworkManager.getCryptoTransactions(blockchainNetworkType, addressTo, cryptoTransactionType);
-    }
 }

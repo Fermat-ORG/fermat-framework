@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.AbstractBlockchainProviderManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+
+
 import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
@@ -36,14 +36,21 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorCryptoNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainProviderName;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProvider;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration.BlockchainProviderName;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.AbstractBlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainProvider;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.TransactionProtocolData;
 import com.google.common.collect.Lists;
 
@@ -72,7 +79,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 6/22/16.
  */
-public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManager implements TransactionProtocolManager {
+public class FermatCryptoNetworkManager implements TransactionProtocolManager, BlockchainManager<ECKey, Transaction> {
 
 
     /**
@@ -80,8 +87,9 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
      */
     private final String WALLET_PATH;
     private String walletFileName;
-    private final CryptoCurrency CURRENCY = FermatNetworkConfiguration.CRYPTO_CURRENCY;
+    private final CryptoCurrency CURRENCY;
     private final FermatCryptoNetworkDatabaseDao dao;
+    private final FermatBlockchainProvider blockchainProvider;
 
     /**
      * List of running agents per network
@@ -110,154 +118,21 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                                        PluginFileSystem pluginFileSystem,
                                        UUID pluginId,
                                        ErrorManager errorManager,
-                                       FermatCryptoNetworkDatabaseDao FermatCryptoNetworkDatabaseDao) {
+                                       FermatCryptoNetworkDatabaseDao FermatCryptoNetworkDatabaseDao,
+                                      FermatBlockchainProvider blockchainProvider) {
         this.eventManager = eventManager;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
         this.WALLET_PATH = pluginFileSystem.getAppPath();        
         this.dao = FermatCryptoNetworkDatabaseDao;
+        this.blockchainProvider = blockchainProvider;
+
+        CURRENCY = blockchainProvider.getBlockchainCryptoCurrency();
 
         runningAgents = new HashMap<>();
 
 
-    }
-
-    /**
-     * Monitor the bitcoin network with the passes Key Lists.
-     *
-     * @param blockchainNetworkTypes
-     * @param keyList
-     */
-    public synchronized void monitorNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantStartAgentException {
-        /**
-         * This method will be called from agents from the Vaults. New keys may be added on each call or not.
-         */
-        try {
-            dao.updateCryptoVaultsStatistics(cryptoVault, keyList.size());
-        } catch (CantExecuteDatabaseOperationException e) {
-            //If stats where not updated, I will just continue.
-            e.printStackTrace();
-        }
-
-        /**
-         * For each network that is active to be monitored I will...
-         */
-        for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes) {
-            System.out.println("***CryptoNetwork*** Monitor Request from " + cryptoVault.getCode() + " vault on " + blockchainNetworkType.getCode() + " for " + keyList.size() + " keys...");
-
-            // I create the walletFile for this network
-            walletFileName = CURRENCY + "_" + blockchainNetworkType.getCode();
-            File walletFile = new File(WALLET_PATH, walletFileName);
-            /**
-             * load (or create) the wallet.
-             */
-            Wallet wallet = null;
-            try {
-                wallet = getWallet(blockchainNetworkType, keyList);
-            } catch (UnreadableWalletException e) {
-                CantStartAgentException exception = new CantStartAgentException(e, "Unable to load wallet from file for network " + blockchainNetworkType.getCode(), "IO error");
-
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                e.printStackTrace();
-                throw exception;
-            }
-
-            Context context = wallet.getContext();
-
-            /**
-             * add new keys (if any).
-             */
-            boolean isWalletReset = false;
-
-            /**
-             * if this is the Watch Only Vault, I won't be importing keys, I will be watching them
-             */
-            if (cryptoVault == CryptoVaults.BITCOIN_WATCH_ONLY) {
-                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)) {
-                    NetworkParameters networkParameters = context.getParams();
-                    for (ECKey ecKey : keyList) {
-                        wallet.addWatchedAddress(ecKey.toAddress(networkParameters));
-                    }
-
-                    try {
-                        wallet.saveToFile(walletFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    /**
-                     * I do not need to reset the wallet because I will
-                     * always be importing fresh (unused) keys.
-                     */
-                    isWalletReset = true;
-                }
-            } else {
-                /**
-                 * regular vault, so will try to import new keys if any
-                 */
-                if (areNewKeysAdded(wallet, keyList)) {
-                    wallet.importKeys(keyList);
-                    for (ECKey key : keyList){
-                        wallet.addWatchedAddress(key.toAddress(context.getParams()));
-                    }
-                    try {
-                        wallet.saveToFile(walletFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    /**
-                     * I do not need to reset the wallet because I will
-                     * always be importing fresh (unused) keys.
-                     */
-                    isWalletReset = true;
-                }
-            }
-
-
-            /**
-             * If the agent for this network is already running...
-             */
-            if (isAgentRunning(blockchainNetworkType)) {
-                /**
-                 * and the wallet was reseted because new keys were added
-                 */
-                if (isWalletReset) {
-                    System.out.println("***CryptoNetwork*** new keys added from " + cryptoVault.getCode() + " vault in " + blockchainNetworkType.getCode() + " network...");
-
-                    FermatCryptoNetworkMonitor fermatCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
-                    fermatCryptoNetworkMonitor.stop();
-                    runningAgents.remove(blockchainNetworkType);
-                    fermatCryptoNetworkMonitor = null;
-
-                    /**
-                     * once the agent is stopped, I will restart it with the new wallet.
-                     */
-                    File walletFilename = new File(WALLET_PATH, walletFileName);
-                    fermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
-                    runningAgents.put(blockchainNetworkType, fermatCryptoNetworkMonitor);
-
-                    fermatCryptoNetworkMonitor.start();
-                }
-            } else {
-                /**
-                 * If the agent for the network is not running, I will start a new one.
-                 */
-                File walletFilename = new File(WALLET_PATH, walletFileName);
-                FermatCryptoNetworkMonitor FermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
-                runningAgents.put(blockchainNetworkType, FermatCryptoNetworkMonitor);
-
-                System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
-
-                FermatCryptoNetworkMonitor.start();
-            }
-
-            /**
-             * I will update the detailed stats table with the keys that are imported in the wallet.
-             */
-            List<ECKey> importedKEys = wallet.getImportedKeys();
-            updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, importedKEys);
-        }
     }
 
     /**
@@ -271,7 +146,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         List<Address> watchedAddresses = wallet.getWatchedAddresses();
         List<Address> newAddresses = new ArrayList<>();
 
-        NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        NetworkParameters networkParameters = FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
         for (ECKey ecKey : keyList) {
             newAddresses.add(ecKey.toAddress(networkParameters));
         }
@@ -313,7 +188,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         walletFileName = CURRENCY + "_" + blockchainNetworkType.getCode();
         File walletFile = new File(WALLET_PATH, walletFileName);
 
-        final NetworkParameters NETWORK_PARAMETER = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters NETWORK_PARAMETER = FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
@@ -514,18 +389,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         return transaction;
     }
 
-    /**
-     * Gets all the transactions stored in the specified network.
-     *
-     * @param blockchainNetworkType
-     * @return
-     */
-    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
-        return runningAgents.get(blockchainNetworkType).getWallet().getTransactionsByTime();
-    }
-
-
-    /**
+     /**
      * Gets the transaction passed in the network.
      * It will look first if it is a local trasaction, if not I will look for it at the stored blockchain
      * and if still not found, I will look for it at the Blockchain requesting it from multiple peers.
@@ -560,7 +424,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         /**
          * I will get the list of stored transactions for the default network.
          */
-        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+        List<Transaction> transactions = getBlockchainProviderTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
         for (Transaction transaction : transactions) {
             /**
@@ -629,6 +493,151 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         return null;
     }
 
+    @Override
+    public void monitorCryptoNetworkFromKeyList(CryptoVaults requester, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorCryptoNetworkException {
+        /**
+         * This method will be called from agents from the Vaults. New keys may be added on each call or not.
+         */
+        try {
+            dao.updateCryptoVaultsStatistics(requester, keyList.size());
+        } catch (CantExecuteDatabaseOperationException e) {
+            //If stats where not updated, I will just continue.
+            e.printStackTrace();
+        }
+
+        /**
+         * For each network that is active to be monitored I will...
+         */
+        for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes) {
+            System.out.println("***CryptoNetwork*** Monitor Request from " + requester.getCode() + " vault on " + blockchainNetworkType.getCode() + " for " + keyList.size() + " keys...");
+
+            // I create the walletFile for this network
+            walletFileName = CURRENCY + "_" + blockchainNetworkType.getCode();
+            File walletFile = new File(WALLET_PATH, walletFileName);
+            /**
+             * load (or create) the wallet.
+             */
+            Wallet wallet = null;
+            try {
+                wallet = getWallet(blockchainNetworkType, keyList);
+            } catch (UnreadableWalletException e) {
+                CantStartAgentException exception = new CantStartAgentException(e, "Unable to load wallet from file for network " + blockchainNetworkType.getCode(), "IO error");
+
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                e.printStackTrace();
+                throw new CantMonitorCryptoNetworkException(e, blockchainProvider, "IO Error");
+            }
+
+            Context context = wallet.getContext();
+
+            /**
+             * add new keys (if any).
+             */
+            boolean isWalletReset = false;
+
+            /**
+             * if this is the Watch Only Vault, I won't be importing keys, I will be watching them
+             */
+            if (requester == CryptoVaults.BITCOIN_WATCH_ONLY) {
+                if (areNewKeysWatched(wallet, keyList, blockchainNetworkType)) {
+                    NetworkParameters networkParameters = context.getParams();
+                    for (ECKey ecKey : keyList) {
+                        wallet.addWatchedAddress(ecKey.toAddress(networkParameters));
+                    }
+
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
+                }
+            } else {
+                /**
+                 * regular vault, so will try to import new keys if any
+                 */
+                if (areNewKeysAdded(wallet, keyList)) {
+                    wallet.importKeys(keyList);
+                    for (ECKey key : keyList){
+                        wallet.addWatchedAddress(key.toAddress(context.getParams()));
+                    }
+                    try {
+                        wallet.saveToFile(walletFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /**
+                     * I do not need to reset the wallet because I will
+                     * always be importing fresh (unused) keys.
+                     */
+                    isWalletReset = true;
+                }
+            }
+
+
+            /**
+             * If the agent for this network is already running...
+             */
+            if (isAgentRunning(blockchainNetworkType)) {
+                /**
+                 * and the wallet was reseted because new keys were added
+                 */
+                if (isWalletReset) {
+                    System.out.println("***CryptoNetwork*** new keys added from " + requester.getCode() + " vault in " + blockchainNetworkType.getCode() + " network...");
+
+                    FermatCryptoNetworkMonitor fermatCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
+                    fermatCryptoNetworkMonitor.stop();
+                    runningAgents.remove(blockchainNetworkType);
+                    fermatCryptoNetworkMonitor = null;
+
+                    /**
+                     * once the agent is stopped, I will restart it with the new wallet.
+                     */
+                    File walletFilename = new File(WALLET_PATH, walletFileName);
+                    fermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                    runningAgents.put(blockchainNetworkType, fermatCryptoNetworkMonitor);
+
+                    try {
+                        fermatCryptoNetworkMonitor.start();
+                    } catch (CantStartAgentException e) {
+                        throw new CantMonitorCryptoNetworkException(e, blockchainProvider, "Unable to start monitoring agent.");
+                    }
+                }
+            } else {
+                /**
+                 * If the agent for the network is not running, I will start a new one.
+                 */
+                File walletFilename = new File(WALLET_PATH, walletFileName);
+                FermatCryptoNetworkMonitor FermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                runningAgents.put(blockchainNetworkType, FermatCryptoNetworkMonitor);
+
+                System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + requester.getCode() + " vault...");
+
+                try {
+                    FermatCryptoNetworkMonitor.start();
+                } catch (CantStartAgentException e) {
+                    throw new CantMonitorCryptoNetworkException(e, blockchainProvider, "unable to start monitoring agent");
+                }
+            }
+
+            /**
+             * I will update the detailed stats table with the keys that are imported in the wallet.
+             */
+            List<ECKey> importedKEys = wallet.getImportedKeys();
+            updateDetailedCryptoStats(requester, blockchainNetworkType, importedKEys);
+        }
+    }
+
+    @Override
+    public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
+        return null;
+    }
+
     /**
      * gets the current Crypto Status for the specified Transaction ID
      *
@@ -644,6 +653,16 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
             throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + txHash, "database issue");
         }
     }
+
+    @Override
+    public void storeTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreTransactionException {
+        try {
+            runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId, commit);
+        } catch (CantStoreBitcoinTransactionException e) {
+            throw new CantStoreTransactionException(e, blockchainProvider, "IO error");
+        }
+    }
+
 
     /**
      * Will check and fix any inconsistency that may be in out transaction table.
@@ -736,6 +755,11 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         }
     }
 
+    @Override
+    public List<Transaction> getBlockchainProviderTransactions(BlockchainNetworkType blockchainNetworkType) {
+        return runningAgents.get(blockchainNetworkType).getWallet().getTransactionsByTime();
+    }
+
     /**
      * Will mark the passed transaction as cancelled, and it won't be broadcasted again.
      *
@@ -779,6 +803,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
      * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
      * @throws CantGetBlockchainConnectionStatusException
      */
+    @Override
     public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
         return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
     }
@@ -863,6 +888,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
      * @return all the CryptoTransactions originated at the genesis transaction
      * @throws CantGetCryptoTransactionException
      */
+    @Override
     public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         try {
             if (blockchainNetworkType == null)
@@ -1036,7 +1062,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
          */
         try {
             for (BlockchainNetworkType blockchainNetworkType : this.dao.getActiveBlockchainNetworkTypes()){
-                for (Transaction transaction : this.getBitcoinTransactions(blockchainNetworkType)){
+                for (Transaction transaction : this.getBlockchainProviderTransactions(blockchainNetworkType)){
                     /**
                      * for each transaction I will search in the input the outpoint that matches the passed transactionHash
                      */
@@ -1085,25 +1111,12 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
      * @return the list of active networks {MainNet, TestNet and RegTest}
      * @throws CantGetActiveBlockchainNetworkTypeException
      */
+    @Override
     public List<BlockchainNetworkType> getActivesBlockchainNetworkTypes() throws CantGetActiveBlockchainNetworkTypeException {
         try {
             return  dao.getActiveBlockchainNetworkTypes();
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetActiveBlockchainNetworkTypeException(e, "error getting list of active networks.", "database issue");
         }
-    }
-
-    @Override
-    public BlockchainProviderName getName() {
-        return BlockchainProviderName.FERMAT;
-    }
-
-    @Override
-    public List<BlockchainNetworkType> getSupportedNetworkTypes() {
-        List<BlockchainNetworkType> supportedNetworkTypes = new ArrayList<>();
-        supportedNetworkTypes.add(BlockchainNetworkType.PRODUCTION);
-        supportedNetworkTypes.add(BlockchainNetworkType.TEST_NET);
-        supportedNetworkTypes.add(BlockchainNetworkType.REG_TEST);
-        return supportedNetworkTypes;
     }
 }

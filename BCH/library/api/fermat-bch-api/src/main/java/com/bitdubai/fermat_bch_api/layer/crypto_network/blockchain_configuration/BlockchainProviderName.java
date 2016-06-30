@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.enums;
+package com.bitdubai.fermat_bch_api.layer.crypto_network.blockchain_configuration;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
