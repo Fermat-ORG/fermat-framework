@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 
@@ -20,7 +22,7 @@ import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenc
 /**
  * Created by Miguel Payarez on 16/03/16.
  */
-public class FanWalletMainActivity extends AbstractFermatFragment<FanWalletSessionReferenceApp, SubAppResourcesProviderManager>  {
+public class FanWalletMainActivity extends AbstractFermatFragment<ReferenceAppFermatSession<FanWalletModule>, SubAppResourcesProviderManager>  {
 
     //FermatManager
     //private FanWalletSessionReferenceApp fanwalletSession;

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -47,10 +48,10 @@ import java.util.Map;
 /**
  * Created by Miguel Payarez on 13/04/16.
  */
-public class MusicPlayerMainActivity extends AbstractFermatFragment<MusicPlayerSessionReferenceApp, SubAppResourcesProviderManager> {
+public class MusicPlayerMainActivity extends AbstractFermatFragment<ReferenceAppFermatSession<MusicPlayerModuleManager>, SubAppResourcesProviderManager> {
 
     //FermatManager
-    //private MusicPlayerSessionReferenceApp musicPlayerSession;
+    private MusicPlayerSessionReferenceApp musicPlayerSession;
     private MusicPlayerModuleManager musicPlayermoduleManager;
     private MusicPlayerPreferenceSettings musicPlayerSettings;
     private ErrorManager errorManager;
@@ -87,31 +88,31 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment<MusicPlayerS
 
         super.onCreate(savedInstanceState);
         try {
-            //musicPlayerSession = ((MusicPlayerSessionReferenceApp) appSession);
+            musicPlayerSession = ((MusicPlayerSessionReferenceApp) appSession);
             musicPlayermoduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START MUSIC PLAYER");
 
-            if(appSession.getThreadsong()!=null){
+            if(musicPlayerSession.getThreadsong()!=null){
                 System.out.println("ART_ IT IS PLAYING");
-                songPlayerThread=appSession.getThreadsong();
-                mp=appSession.getMusicPlayer();
+                songPlayerThread=musicPlayerSession.getThreadsong();
+                mp=musicPlayerSession.getMusicPlayer();
 
-                bplay = appSession.getBplay();
-                bbb = appSession.getBbb();
-                bff = appSession.getBff();
-                pb = appSession.getPb();
-                tiempo = appSession.getTiempo();
-                recyclerView = appSession.getRecyclerView();
-                song = appSession.getSong();
+                bplay = musicPlayerSession.getBplay();
+                bbb = musicPlayerSession.getBbb();
+                bff = musicPlayerSession.getBff();
+                pb = musicPlayerSession.getPb();
+                tiempo = musicPlayerSession.getTiempo();
+                recyclerView = musicPlayerSession.getRecyclerView();
+                song = musicPlayerSession.getSong();
 
-                adapter=appSession.getAdapter();
+                adapter=musicPlayerSession.getAdapter();
 
-                view=appSession.getView();
+                view=musicPlayerSession.getView();
 
                 firstTime=false;
 
-                pause=appSession.getPause();
+                pause=musicPlayerSession.getPause();
 
                 System.out.println("ART_ I CAN LISTEN");
             }
@@ -149,22 +150,22 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment<MusicPlayerS
     public void onDestroyView() {
         super.onDestroyView();
 
-        appSession.setMusicThread(songPlayerThread);
-        appSession.setMusicPlayer(mp);
+        musicPlayerSession.setMusicThread(songPlayerThread);
+        musicPlayerSession.setMusicPlayer(mp);
 
-        appSession.setBplay(bplay);
-        appSession.setBbb(bbb);
-        appSession.setBff(bff);
-        appSession.setPb(pb);
-        appSession.setRecyclerView(recyclerView);
-        appSession.setTiempo(tiempo);
-        appSession.setSong(song);
+        musicPlayerSession.setBplay(bplay);
+        musicPlayerSession.setBbb(bbb);
+        musicPlayerSession.setBff(bff);
+        musicPlayerSession.setPb(pb);
+        musicPlayerSession.setRecyclerView(recyclerView);
+        musicPlayerSession.setTiempo(tiempo);
+        musicPlayerSession.setSong(song);
 
-        appSession.setAdapter(adapter);
+        musicPlayerSession.setAdapter(adapter);
 
-        appSession.setView(view);
+        musicPlayerSession.setView(view);
 
-        appSession.setPause(pause);
+        musicPlayerSession.setPause(pause);
 
     }
 
