@@ -233,7 +233,7 @@
                             android:layout_width="100dp"
                             android:layout_height="40dp"
                             android:text="@string/add_fermat_user_text"
-                            android:textSize="12sp"
+                            android:textSize="10sp"
                             android:background="@color/green_presentation"/>
                     </LinearLayout>
 
@@ -256,7 +256,7 @@
                             android:layout_width="100dp"
                             android:layout_height="40dp"
                             android:text="@string/add_extra_user_text"
-                            android:textSize="12sp"
+                            android:textSize="10sp"
                             android:background="@color/green_presentation"/>
                     </LinearLayout>
 

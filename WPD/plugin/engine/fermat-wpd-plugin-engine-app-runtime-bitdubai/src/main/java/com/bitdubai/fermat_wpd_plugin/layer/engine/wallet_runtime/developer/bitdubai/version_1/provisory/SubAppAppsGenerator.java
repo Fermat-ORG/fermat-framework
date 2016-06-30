@@ -24,6 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchViewOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
@@ -4125,14 +4128,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 
         OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(2);
-        optionMenuItem.setActionViewClass(100);
-        optionsMenu.addMenuItem(optionMenuItem);
+        SearchMenuItem searchOptionMenuItem = new SearchMenuItem(1);
+        searchOptionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        searchOptionMenuItem.setLabel("Search");
+        searchOptionMenuItem.setShowAsAction(2);
+        searchOptionMenuItem.setActionViewClass(100);
 
-        optionMenuItem = new OptionMenuItem(2);
+        //search view focus event
+        SearchViewOnPressEvent esearchEvent = new SearchViewOnPressEvent();
+        esearchEvent.setIsToolbarTitleVisible(false);
+        searchOptionMenuItem.setOptionMenuPressEvent(esearchEvent);
+        optionsMenu.addMenuItem(searchOptionMenuItem);
+
+        OptionMenuItem optionMenuItem = new OptionMenuItem(2);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
         optionMenuItem.setShowAsAction(4);
@@ -4170,6 +4178,11 @@ public class SubAppAppsGenerator {
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeFragment.setOwner(owner);
+
+        //Badge Tab View
+        TabBadgeView tabBadgeView = new TabBadgeView(200,SourceLocation.FERMAT_FRAMEWORK);
+        tabBadgeView.setTitle("CONTACTS");
+        runtimeTab.setFermatView(tabBadgeView);
 
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);

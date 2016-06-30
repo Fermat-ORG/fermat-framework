@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,13 +11,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.support.v7.widget.Toolbar;
 
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
@@ -33,17 +34,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.11.21..
@@ -67,6 +69,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     protected S appSession;
     protected R appResourcesProviderManager;
 
+    /**
+     * OptionMenuListeners
+     */
+    private Map<Integer,?> optionMenuListeners;
 
     /**
      * ViewInflater
@@ -149,7 +155,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                                     item.setShowAsAction(menuItem.getShowAsAction());
                                 int actionViewClass = menuItem.getActionViewClass();
                                 if (actionViewClass != -1) {
-                                    item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                                    View view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
+                                    item.setActionView(view);
                                 }
                             }
                         }
@@ -228,6 +235,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
     private final View obtainFrameworkViewOptionMenuAvailable(int id,SourceLocation sourceLocation){
         return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation);
+    }
+
+    private final View obtainFrameworkViewOptionMenuAvailableAndLoadListeners(int id,SourceLocation sourceLocation,Object[] listeners){
+        return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation, listeners);
     }
 
 
@@ -537,6 +548,18 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public void setToolbarTitleVisibility(boolean isVisible){
+
+    }
+
+    public void pushNotification(Notification notification){
+        getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(),notification);
+    }
+
+    public void cancelNotification(){
+        getPaintActivtyFeactures().cancelNotification(appSession.getAppPublicKey());
     }
 
 

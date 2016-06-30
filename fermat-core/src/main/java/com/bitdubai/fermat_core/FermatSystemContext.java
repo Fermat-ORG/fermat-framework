@@ -160,24 +160,23 @@ public final class FermatSystemContext {
         AbstractPluginInterface abstractPlugin = null;
         try {
             if (isPluginLoadedInTheNewWay(pluginVersionReference)) {
-                Object plugin = getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).
+                abstractPlugin = (AbstractPluginInterface) getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).
                         getPluginByVersionMati(
                                 pluginVersionReference.getPlatform().getCode(),
                                 pluginVersionReference.getLayers().getCode(),
                                 pluginVersionReference.getPlugins().getCode(),
                                 pluginVersionReference.getDeveloper().getCode(),
-                                pluginVersionReference.getVersion().toString(),
-                                new Class[]{AbstractPlugin.class}
+                                pluginVersionReference.getVersion().toString()
                         );
                 //todo: provando con esto así, si no funciona debo pasar las interfaces a interfaces cargadas por el base classloader y no que vengan externos
 //                Class<?>[] interfaces = plugin.getClass().getInterfaces();
 
 
-                abstractPlugin = (AbstractPluginInterface) fermatContext.objectToProxyfactory(
-                                plugin,
-                                getClass().getClassLoader(),
-                                new Class[]{AbstractPluginInterface.class},
-                                AbstractPluginInterface.class);
+//                abstractPlugin = (AbstractPluginInterface) fermatContext.objectToProxyfactory(
+//                                plugin,
+//                                getClass().getClassLoader(),
+//                                new Class[]{AbstractPluginInterface.class},
+//                                AbstractPluginInterface.class);
             } else
                 abstractPlugin = getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).getPluginByVersion(pluginVersionReference);
 

@@ -117,7 +117,7 @@
                 android:fontFamily="ROBOTO"
                 android:textSize="16sp"
                 android:textColor="#fff"
-                android:text="Total earnings and losts:"
+                android:text="Total earnings and lost:"
                 android:focusable="false"
                 android:focusableInTouchMode="false"/>
         </LinearLayout>

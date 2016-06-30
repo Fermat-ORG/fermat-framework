@@ -1,10 +1,19 @@
 apply plugin: 'java'
+apply plugin:  'maven'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
+group = "com.bitdubai.pip.middleware.wallet.manager"
 version = '1.0'
 
 repositories {
     mavenCentral()
+}
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'wallet.manager',
+                'Implementation-Version': '1'
+    }
 }
 
 
@@ -15,4 +24,19 @@ dependencies {
     compile 'org.kohsuke:github-api:1.69'
     testCompile 'junit:junit:4.11'
     compile project(':fermat-wpd-api')
+}
+
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            from components.java
+
+        }
+    }
+    repositories {
+        maven {
+            url "file:/${System.properties['user.home']}/artifacts"
+        }
+    }
 }

@@ -175,7 +175,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == 3){
+            if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 return true;
             }else {

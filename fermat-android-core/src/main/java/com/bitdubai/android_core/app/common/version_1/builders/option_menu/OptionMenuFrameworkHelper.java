@@ -1,8 +1,8 @@
 package com.bitdubai.android_core.app.common.version_1.builders.option_menu;
 
 import android.content.Context;
-import android.support.v7.widget.SearchView;
 import android.view.View;
+import android.widget.SearchView;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuViewsAvailables;
 
@@ -14,14 +14,29 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 public class OptionMenuFrameworkHelper {
 
     public static View obtainFrameworkAvailableOptionMenuItems(Context context,int id){
+        return obtainFrameworkAvailableOptionMenuItems(context,id,null);
+    }
+
+
+    public static View obtainFrameworkAvailableOptionMenuItems(Context context, int id, Object[] listeners) {
         View view = null;
         switch (id){
             case OptionMenuViewsAvailables.SEARCH_VIEW:
-                view = new SearchView(context);
+                android.widget.SearchView searchView = new android.widget.SearchView(context);
+                for (Object listener : listeners) {
+                    if (listener instanceof android.widget.SearchView.OnQueryTextListener){
+                        searchView.setOnQueryTextListener((android.widget.SearchView.OnQueryTextListener) listener);
+                    }else if (listener instanceof android.widget.SearchView.OnCloseListener){
+                        searchView.setOnCloseListener((android.widget.SearchView.OnCloseListener) listener);
+                    } else if (listener instanceof SearchView.OnSuggestionListener){
+                        searchView.setOnSuggestionListener((SearchView.OnSuggestionListener) listener);
+                    } else if (listener instanceof View.OnClickListener){
+                        searchView.setOnClickListener((View.OnClickListener) listener);
+                    }
+                }
+                view = searchView;
                 break;
         }
         return view;
     }
-
-
 }
