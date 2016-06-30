@@ -1,9 +1,8 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
+package com.bitdubai.fermat_bch_api.layer.crypto_network.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by rodrigo on 1/10/16.

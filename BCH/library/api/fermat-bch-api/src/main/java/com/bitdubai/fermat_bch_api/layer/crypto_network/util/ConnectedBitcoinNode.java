@@ -1,6 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
-
-import org.bitcoinj.core.Peer;
+package com.bitdubai.fermat_bch_api.layer.crypto_network.util;
 
 /**
  * Represents a bitcoin node that we are connecte to.
