@@ -15,7 +15,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
@@ -128,7 +128,7 @@ public class NotificationService extends Service {
             }
             // notificationIdCount++;
             // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, ApplicationSession.getInstance().getAppManager().getAppsSession(publicKey));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(code);

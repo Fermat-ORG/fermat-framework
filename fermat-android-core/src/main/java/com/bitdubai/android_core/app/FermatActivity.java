@@ -1537,7 +1537,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
 
             if (pagertabs.getBackground() == null) {
-                if(ApplicationSession.applicationState==ApplicationSession.STATE_STARTED) {
+                if(FermatFramework.applicationState==FermatFramework.STATE_STARTED) {
                     //FermatDrawable d = FermatDrawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
                     //getWindow().setBackgroundDrawable(FermatDrawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
                     //pager.setBackground(d);
@@ -1558,7 +1558,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER,
                             WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
 
-                    ApplicationSession.applicationState = ApplicationSession.STATE_STARTED_DESKTOP;
+                    FermatApplication.getInstance().changeApplicationState(FermatFramework.STATE_STARTED_DESKTOP);
                 }
             }
 
@@ -1596,13 +1596,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     publicKey = bundle.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
                 }
                 if (fermatApp == null) {
-                    fermatApp = ApplicationSession.getInstance().getAppManager().getApp(publicKey);
+                    fermatApp = FermatApplication.getInstance().getAppManager().getApp(publicKey);
                 }
                 if (bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)) {
                     String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
                     if (activityCode != null)
                         try {
-                            ApplicationSession.getInstance().getAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
+                            FermatApplication.getInstance().getAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
                         } catch (IllegalArgumentException e) {
                             Log.e(TAG,"Error: illegalArgumentException, Activity code: "+activityCode+" not founded in App: "+fermatApp.getAppName());
                         }
@@ -1625,7 +1625,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     private FermatSession createOrOpenApp(FermatApp fermatApp) throws Exception {
         FermatSession fermatSession = null;
-        FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
+        FermatAppsManager fermatAppsManager = FermatApplication.getInstance().getAppManager();
         if(fermatAppsManager.isAppOpen(fermatApp.getAppPublicKey())){
             fermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
         }else{
@@ -1644,7 +1644,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     protected FermatSession createOrOpenSession(String appPublicKey) throws Exception {
         FermatSession fermatSession = null;
-        FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
+        FermatAppsManager fermatAppsManager = FermatApplication.getInstance().getAppManager();
         if(fermatAppsManager.isAppOpen(appPublicKey)){
             fermatSession = fermatAppsManager.getAppsSession(appPublicKey);
         }else{
@@ -1715,7 +1715,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             /**
              * stop every service
              */
-            //ApplicationSession.getInstance().getServicesHelpers().unbindServices();
+            //FermatApplication.getInstance().getServicesHelpers().unbindServices();
 
             resetThisActivity();
 
@@ -1741,7 +1741,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     public void goHome() {
         try {
-            ApplicationSession.getInstance().getApplicationManager().openFermatHome();
+            FermatApplication.getInstance().getApplicationManager().openFermatHome();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1758,9 +1758,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 try {
-                    FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+                    FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
                     final Activity activity = fermatStructure.getLastActivity();
-                    FermatSession session = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+                    FermatSession session = FermatApplication.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
                     final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), session);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1782,7 +1782,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void refreshSideMenu(final AppConnections appConnections){
         try {
             if (!(this instanceof DesktopActivity)) {
-                final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+                final FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
                 final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
                 if (viewPainter != null) {
                     final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
@@ -1916,7 +1916,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 onNavigationMenuItemTouchListener(data, position);
             }
         }, DRAWER_CLOSE_DELAY_MS);
-        ApplicationSession.getInstance().getAppManager().clearRuntime();
+        FermatApplication.getInstance().getAppManager().clearRuntime();
 
     }
 
@@ -2009,7 +2009,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     public void selectApp(String appPublicKey) throws Exception {
         try{
-            ApplicationSession.getInstance().getApplicationManager().openFermatApp(appPublicKey);
+            FermatApplication.getInstance().getApplicationManager().openFermatApp(appPublicKey);
         }catch (Exception e){
             throw new Exception("Error calling openFermatApp in ReferenceAppFermatSession");
         }
@@ -2021,9 +2021,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //        // TODO Add extras or a data URI to this intent as appropriate.
 //        setResult(android.app.Activity.RESULT_OK, resultIntent);
 //        //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, ApplicationSession.getInstance().getAppManager().getRecentsAppsStack().toArray());
+//        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray());
 //        startActivityForResult(resultIntent, TASK_MANAGER_STACK);
-        ApplicationSession.getInstance().getApplicationManager().openRecentsScreen();
+        FermatApplication.getInstance().getApplicationManager().openRecentsScreen();
     }
 
 
@@ -2155,12 +2155,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public void cancelNotification(String appPublicKey) {
-        ApplicationSession.getInstance().getNotificationService().cancelNotification(appPublicKey);
+        FermatApplication.getInstance().getNotificationService().cancelNotification(appPublicKey);
     }
 
     @Override
     public void pushNotification(String appPublicKey,Notification notification) {
-        ApplicationSession.getInstance().getNotificationService().pushNotification(appPublicKey,notification);
+        FermatApplication.getInstance().getNotificationService().pushNotification(appPublicKey,notification);
     }
 
     /**
@@ -2196,7 +2196,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @throws InvalidParameterException
      */
     public void changeOptionMenuVisibility(int id,boolean isVisible,String appPublicKey) throws InvalidParameterException {
-        Activity activity = ApplicationSession.getInstance().getAppManager().getAppStructure(appPublicKey).getLastActivity();
+        Activity activity = FermatApplication.getInstance().getAppManager().getAppStructure(appPublicKey).getLastActivity();
         OptionsMenu optionMenu = activity.getOptionsMenu();
         if(optionMenu!=null){
             optionMenu.getItem(id).setVisibility(isVisible);

@@ -1,11 +1,10 @@
 package com.bitdubai.android_core.app;
 
-
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,7 +14,6 @@ import com.bitdubai.android_core.app.common.version_1.notifications.Notification
 import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
-import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_api.FermatContext;
@@ -25,34 +23,28 @@ import com.mati.fermat_osa_addon_android_loader.LoaderManager;
 import com.mati.fermat_osa_addon_android_loader.Smith;
 
 import org.acra.ACRA;
-import org.acra.ReportField;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
 
 import java.util.List;
 
 /**
- * Matias Furszyfer
+ * Created by Matias Furszyfer on 2016.06.29..
  */
+public class FermatFramework implements FermatApplicationSession<FermatSystem>,FermatContext {
 
+    private static final String TAG = "FermatFramework";
 
-@ReportsCrashes(//formUri = "http://yourserver.com/yourscript",
-        mailTo = "matiasfurszyfer@gmail.com",
-        customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT},
-        mode = ReportingInteractionMode.TOAST,
-        resToastText = R.string.crash_toast_text)
-
-public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession<FermatSystem>,FermatContext {
-
-    private final String TAG = "ApplicationSession";
-
-    private static ApplicationSession instance;
     /**
      * Application states
      */
     public static final int STATE_NOT_CREATED=0;
     public static final int STATE_STARTED=1;
     public static final int STATE_STARTED_DESKTOP=2;
+
+
+    /**
+     * ApplicationClass
+     */
+    private Application application;
 
     /**
      *  Fermat platform
@@ -65,12 +57,6 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
      */
     public static int applicationState=STATE_NOT_CREATED;
     private boolean fermatRunning;
-
-
-    public static ApplicationSession getInstance(){
-        return instance;
-    }
-
     private Thread.UncaughtExceptionHandler defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler();
 
 
@@ -91,17 +77,20 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     private LoaderManager loaderManager;
 
+    public static FermatFramework init(Application application){
+        return new FermatFramework(application);
+    }
+
+
     /**
      *  Application session constructor
      */
 
-    public ApplicationSession() {
+    private FermatFramework(Application application) {
         super();
-        instance = this;
+        this.application = application;
         fermatSystem = FermatSystem.getInstance();
         fermatSystem.setFermatContext(this);
-
-
     }
 
 
@@ -118,42 +107,41 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     @Override
     public FermatApplicationCaller getApplicationManager() {
-        return new ApplicationsHelper(this);
+        return new ApplicationsHelper(application);
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return application.getApplicationContext();
     }
 
     /**
      *  Method to change the application state from services or activities
      *
-     * @param applicationState  is an application state constant from ApplicationSession class
+     * @param applicationState  is an application state constant from FermatFramework class
      */
 
     public void changeApplicationState(int applicationState){
-        ApplicationSession.applicationState =applicationState;
+        FermatFramework.applicationState =applicationState;
     }
 
     /**
      * Method to get the application state from services or activities
      *
-     * @return application state constant from ApplicationSession class
+     * @return application state constant from FermatFramework class
      */
 
     public int getApplicationState(){
         return applicationState;
     }
 
+    /**
+     * this method have to be called in the onCreate of the application
+     */
 
-    @Override
-    public void onTerminate(){
-        Log.i(TAG,"onTerminate");
-        servicesHelpers.unbindServices();
-        unregisterReceiver(notificationReceiver);
-        super.onTerminate();
-    }
-
-    @Override
     public void onCreate() {
-        ACRA.init(this);
-        YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
+        ACRA.init(application);
+        YourOwnSender yourSender = new YourOwnSender(application);
         ACRA.getErrorReporter().setReportSender(yourSender);
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -170,7 +158,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         try {
             Log.d(TAG, "Starting app");
             //loading the main class loader
-            Context mBase = new Smith<Context>(this, "mBase").get();
+            Context mBase = new Smith<Context>(application, "mBase").get();
             Object mPackageInfo = new Smith<Object>(mBase, "mPackageInfo")
                     .get();
             Smith<ClassLoader> sClassLoader = new Smith<ClassLoader>(
@@ -187,9 +175,9 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         boolean isThisProcessFermatFrontApp = isThisProcessFermatFrontApp();
         runServiceHelpers(isThisProcessFermatFrontApp);
         if(!isThisProcessFermatFrontApp){
-//            notificationReceiver = new NotificationReceiver(this);
+            notificationReceiver = new NotificationReceiver(this);
             IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
-            registerReceiver(notificationReceiver, intentFilter);
+            application.getApplicationContext().registerReceiver(notificationReceiver, intentFilter);
         }
 
 //        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
@@ -199,18 +187,13 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
         new ANRWatchDog().start();
 
-        super.onCreate();
-    }
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-       // MultiDex.install(this);
     }
 
 
-    private void handleUncaughtException (Thread thread, Throwable e) {
-        Toast.makeText(this,"Sorry, The app is not working",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this,StartActivity.class);
-        startActivity(intent);
+    void handleUncaughtException(Thread thread, Throwable e) {
+        Toast.makeText(application.getApplicationContext(), "Sorry, The app is not working", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(application.getApplicationContext(),StartActivity.class);
+        application.startActivity(intent);
     }
 
     public FermatAppsManagerService getAppManager(){
@@ -231,15 +214,15 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     private void loadProcessInfo() {
         int processId = android.os.Process.myPid();
 
-        String myProcessName =getApplicationContext().getPackageName();
+        String myProcessName = application.getPackageName();
         Log.i(TAG,"context:"+myProcessName);
 
     }
 
     public boolean isThisProcessFermatFrontApp() {
         int pId = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager) this
-                .getSystemService(ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) application
+                .getSystemService(application.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager
                 .getRunningAppProcesses();
         for (int idx = 0; idx < procInfos.size(); idx++) {
@@ -259,7 +242,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
             @Override
             public void run() {
                 try {
-                    servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext(), isFermatOpen);
+                    servicesHelpers = new ServicesHelpers(application.getApplicationContext(), isFermatOpen);
                     servicesHelpers.bindServices();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -298,7 +281,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     @Override
     public Object objectToProxyfactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
-        return loaderManager.objectToProxyFactory(base,interfaceLoader,interfaces,returnInterface);
+        return loaderManager.objectToProxyFactory(base, interfaceLoader, interfaces, returnInterface);
     }
 
 //    public ProxyBuilder
@@ -311,11 +294,17 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     public ClassLoader getExternalLoader(String name){
         return loaderManager.getExternalLoader(name);
     }
-//    @Override
-//    public Object loadProxyObject(FermatContext fermatContext, String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... args) {
-//        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
-//    }
-//    public <I> I loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,I returnInterface) {
-//        return (I) loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface);
-//    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void onTerminate() {
+        servicesHelpers.unbindServices();
+        application.getApplicationContext().unregisterReceiver(notificationReceiver);
+    }
+
+    public LoaderManager getLoaderManager() {
+        return loaderManager;
+    }
 }

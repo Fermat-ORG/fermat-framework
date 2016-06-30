@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 
 /**
  * Created by Matias Furszyfer on 2016.04.22..
@@ -21,6 +21,6 @@ public class FermatSystemRunningReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG,"Receiving fermat running");
-        ApplicationSession.getInstance().setFermatRunning(true);
+        FermatApplication.getInstance().setFermatRunning(true);
     }
 }

@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatFramework;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
@@ -21,11 +21,11 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     public static final String INTENT_NAME = "notification_receiver";
     private static final String TAG = "NotificationReceiver";
-    private final WeakReference<ApplicationSession> weakSession;
+    private final WeakReference<FermatFramework> weakSession;
 
 
-    public NotificationReceiver(ApplicationSession applicationSession) {
-        this.weakSession = new WeakReference<ApplicationSession>(applicationSession);
+    public NotificationReceiver(FermatFramework applicationSession) {
+        this.weakSession = new WeakReference<FermatFramework>(applicationSession);
     }
 
     @Override
@@ -44,8 +44,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     public ActivityManager.RunningAppProcessInfo getCurrentProcess() {
         int pId = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager) weakSession.get()
-                .getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) weakSession.get().getApplication().getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager
                 .getRunningAppProcesses();
         for (int idx = 0; idx < procInfos.size(); idx++) {

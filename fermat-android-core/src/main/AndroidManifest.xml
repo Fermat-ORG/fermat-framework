@@ -21,7 +21,7 @@
         android:maxSdkVersion="23" />
 
     <application
-        android:name="com.bitdubai.android_core.app.ApplicationSession"
+        android:name="com.bitdubai.android_core.app.FermatApplication"
         android:allowBackup="true"
         android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"

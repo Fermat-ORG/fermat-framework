@@ -23,15 +23,17 @@ public class OptionMenuFrameworkHelper {
         switch (id){
             case OptionMenuViewsAvailables.SEARCH_VIEW:
                 android.widget.SearchView searchView = new android.widget.SearchView(context);
-                for (Object listener : listeners) {
-                    if (listener instanceof android.widget.SearchView.OnQueryTextListener){
-                        searchView.setOnQueryTextListener((android.widget.SearchView.OnQueryTextListener) listener);
-                    }else if (listener instanceof android.widget.SearchView.OnCloseListener){
-                        searchView.setOnCloseListener((android.widget.SearchView.OnCloseListener) listener);
-                    } else if (listener instanceof SearchView.OnSuggestionListener){
-                        searchView.setOnSuggestionListener((SearchView.OnSuggestionListener) listener);
-                    } else if (listener instanceof View.OnClickListener){
-                        searchView.setOnClickListener((View.OnClickListener) listener);
+                if(listeners!=null) {
+                    for (Object listener : listeners) {
+                        if (listener instanceof android.widget.SearchView.OnQueryTextListener) {
+                            searchView.setOnQueryTextListener((android.widget.SearchView.OnQueryTextListener) listener);
+                        } else if (listener instanceof android.widget.SearchView.OnCloseListener) {
+                            searchView.setOnCloseListener((android.widget.SearchView.OnCloseListener) listener);
+                        } else if (listener instanceof SearchView.OnSuggestionListener) {
+                            searchView.setOnSuggestionListener((SearchView.OnSuggestionListener) listener);
+                        } else if (listener instanceof View.OnClickListener) {
+                            searchView.setOnClickListener((View.OnClickListener) listener);
+                        }
                     }
                 }
                 view = searchView;

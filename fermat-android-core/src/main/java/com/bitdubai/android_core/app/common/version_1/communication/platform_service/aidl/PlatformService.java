@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastInterface;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationDataKeys;
@@ -821,7 +821,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
     public void onPostExecute(Object... result) {
         try {
 
-            final FermatSystem fermatSystem = ApplicationSession.getInstance().getFermatSystem();
+            final FermatSystem fermatSystem = FermatApplication.getInstance().getFermatSystem();
 
             PlatformInfoManager platformInfoManager = (PlatformInfoManager) fermatSystem.startAndGetAddon(
                     new AddonVersionReference(

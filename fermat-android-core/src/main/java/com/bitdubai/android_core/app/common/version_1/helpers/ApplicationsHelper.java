@@ -3,7 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.helpers;
 import android.content.Context;
 import android.content.Intent;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
@@ -53,7 +53,7 @@ public class ApplicationsHelper implements FermatApplicationCaller {
     public void openRecentsScreen(){
         Intent resultIntent = new Intent(context.get(),RecentsActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, ApplicationSession.getInstance().getAppManager().getRecentsAppsStack().toArray());
+        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray());
         context.get().startActivity(resultIntent);
     }
 

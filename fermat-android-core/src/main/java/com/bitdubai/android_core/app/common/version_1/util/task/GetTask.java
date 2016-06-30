@@ -3,7 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.util.task;
 import android.app.Service;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatServiceWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
@@ -30,7 +30,7 @@ public class GetTask extends FermatServiceWorker {
         protected Object doInBackground() throws Exception {
 
             Log.i("GetTask", "fermat system");
-            final FermatSystem fermatSystem =((ApplicationSession) activityWeakReference.get().getApplication()).getFermatSystem();
+            final FermatSystem fermatSystem =((FermatApplication) activityWeakReference.get().getApplication()).getFermatSystem();
 
             if(!fermatSystem.isStarted) {
                 try {

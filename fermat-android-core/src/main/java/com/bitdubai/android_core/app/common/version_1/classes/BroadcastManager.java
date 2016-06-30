@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.receivers.UpdateViewReceiver;
@@ -38,7 +38,6 @@ public class BroadcastManager implements BroadcasterInterface {
                     break;
                 case NOTIFICATION_SERVICE:
                     sendNotificationIntent(null,code,null);
-                    //ApplicationSession.getInstance().getNotificationService().notificate(code, null);
                     break;
             }
         }catch (Exception e){
@@ -57,7 +56,6 @@ public class BroadcastManager implements BroadcasterInterface {
                     break;
                 case NOTIFICATION_SERVICE:
                     sendNotificationIntent(appCode, code,null);
-                    //ApplicationSession.getInstance().getNotificationService().notificate(code, appCode);
                     break;
             }
         }catch (Exception e){
@@ -78,7 +76,6 @@ public class BroadcastManager implements BroadcasterInterface {
                     break;
                 case NOTIFICATION_SERVICE:
                     sendNotificationIntent(null,code,null);
-//                    ApplicationSession.getInstance().getNotificationService().notificate(code, null);
                     break;
             }
         }catch (Exception e){
@@ -155,7 +152,7 @@ public class BroadcastManager implements BroadcasterInterface {
         intnet.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,appPublicKey);
         intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA,code);
         intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
-        ApplicationSession.getInstance().sendBroadcast(intnet);
+        FermatApplication.getInstance().sendBroadcast(intnet);
     }
 
     private void sendNotificationIntent(String appPublicKey,@Nullable String code,@Nullable FermatBundle data) {
@@ -163,7 +160,7 @@ public class BroadcastManager implements BroadcasterInterface {
         intnet.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,appPublicKey);
         intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA,code);
         intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
-        ApplicationSession.getInstance().sendBroadcast(intnet);
+        FermatApplication.getInstance().sendBroadcast(intnet);
     }
 
 

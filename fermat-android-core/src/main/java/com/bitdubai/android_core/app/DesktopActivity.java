@@ -76,7 +76,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         try {
 
-//            ClassLoaderManager classLoaderManager = new ClassLoaderManager<>(ApplicationSession.getInstance());
+//            ClassLoaderManager classLoaderManager = new ClassLoaderManager<>(FermatApplication.getInstance());
 //            Object o = classLoaderManager.load("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
 //            for (Method method : o.getClass().getMethods()) {
 //                Log.i(TAG, method.getName());
@@ -388,14 +388,14 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
 
                 
-                ApplicationSession.getInstance().getAppManager().openApp(getDesktopManager(), fermatAppConnection);
+                FermatApplication.getInstance().getAppManager().openApp(getDesktopManager(), fermatAppConnection);
                 //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
                 /**
                  *
                  * Get current activity to paint
                  */
 
-                FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+                FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
                 activity = fermatStructure.getLastActivity();
 
 
@@ -424,7 +424,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
 
                         if (activity.getFragments().size() == 1) {
-                            setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), ApplicationSession.getInstance().getAppManager().lastAppSession(), activity.getLastFragment());
+                            setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), FermatApplication.getInstance().getAppManager().lastAppSession(), activity.getLastFragment());
                         }
                     }
 

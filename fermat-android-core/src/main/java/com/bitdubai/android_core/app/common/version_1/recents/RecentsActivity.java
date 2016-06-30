@@ -24,7 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
@@ -227,7 +227,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 //        setResult(Activity.RESULT_OK, resultIntent);
 //
         try {
-            ApplicationSession.getInstance().getApplicationManager().openFermatApp(item.getPublicKey());
+            FermatApplication.getInstance().getApplicationManager().openFermatApp(item.getPublicKey());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -161,8 +161,8 @@ public class WizardActivity extends FermatActivity
     private void setupFragments() {
         if (wizarType != null) {
             try {
-                FermatStructure wallet = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-                FermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(wallet.getPublicKey());
+                FermatStructure wallet = FermatApplication.getInstance().getAppManager().getLastAppStructure();
+                FermatSession referenceAppFermatSession = FermatApplication.getInstance().getAppManager().getAppsSession(wallet.getPublicKey());
 
                 FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this, referenceAppFermatSession);
 
@@ -334,7 +334,7 @@ public class WizardActivity extends FermatActivity
         try {
             String frgBackType = null;
 
-            FermatStructure walletNavigationStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+            FermatStructure walletNavigationStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
 
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity = walletNavigationStructure.getLastActivity();
 

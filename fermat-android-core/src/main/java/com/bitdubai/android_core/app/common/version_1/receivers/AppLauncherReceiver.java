@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.AppActivity;
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.DesktopActivity;
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
@@ -29,7 +29,7 @@ public class AppLauncherReceiver extends BroadcastReceiver {
         String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
         FermatApp fermatApp = null;
         try {
-             fermatApp = ApplicationSession.getInstance().getAppManager().getApp(appPublicKey);
+             fermatApp = FermatApplication.getInstance().getAppManager().getApp(appPublicKey);
         } catch (Exception e) {
             e.printStackTrace();
         }

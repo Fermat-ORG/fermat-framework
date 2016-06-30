@@ -17,7 +17,7 @@ import android.os.TransactionTooLargeException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.FermatPlatformServiceNotConnectedException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
@@ -374,7 +374,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             }
 
             try {
-                ApplicationSession.getInstance().setFermatRunning(iServerBrokerService.isFermatSystemRunning());
+                FermatApplication.getInstance().setFermatRunning(iServerBrokerService.isFermatSystemRunning());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

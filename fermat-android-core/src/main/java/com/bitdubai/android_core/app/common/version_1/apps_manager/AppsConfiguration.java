@@ -2,7 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.apps_manager;
 
 import android.content.Context;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
@@ -30,7 +30,7 @@ public class AppsConfiguration {
 
     public HashMap<String, FermatAppType> readAppsCoreInstalled(){
         try{
-            Context context = ApplicationSession.getInstance().getApplicationContext();
+            Context context = FermatApplication.getInstance().getApplicationContext();
             FileInputStream fIn = context.openFileInput(APPS_CONFIGURATION_FILE);
             ObjectInputStream isr = new ObjectInputStream(fIn);
             return (HashMap<String, FermatAppType>) isr.readObject();
@@ -56,7 +56,7 @@ public class AppsConfiguration {
                     appsInstalledInDevice.put(key,fermatAppType);
                 }
         }
-        Context context = ApplicationSession.getInstance().getApplicationContext();
+        Context context = FermatApplication.getInstance().getApplicationContext();
         try {
             FileOutputStream fOut = context.openFileOutput(APPS_CONFIGURATION_FILE,
                     Context.MODE_PRIVATE);

@@ -169,7 +169,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             String frgBackType = null;
             RuntimeManager runtimeManager = null;
             FermatStructure fermatStructure = null;
-            FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
+            FermatAppsManager fermatAppsManager = FermatApplication.getInstance().getAppManager();
             if (activityBackCode != null) {
                 runtimeManager = fermatAppsManager.selectRuntimeManager(fermatAppsManager.getApp(activityBackCode).getAppType());
                 fermatStructure = runtimeManager.getAppByPublicKey(activityBackCode);
@@ -201,7 +201,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     @Override
     public void setChangeBackActivity(Activities activityCodeBack) {
         try {
-            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().setBackActivity(activityCodeBack);
+            FermatApplication.getInstance().getAppManager().getLastAppStructure().getLastActivity().setBackActivity(activityCodeBack);
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
@@ -243,7 +243,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         try {
             if(session !=null) {
 //                Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
-                FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(session.getAppPublicKey());
+                FermatStructure appStructure = FermatApplication.getInstance().getAppManager().getAppStructure(session.getAppPublicKey());
 //                Log.i("APP ACTIVITY loadUI", "Get App Structure " + System.currentTimeMillis());
                 final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, session);
 //                Log.i("APP ACTIVITY loadUI", "getFermatAppConnection " + System.currentTimeMillis());
@@ -314,7 +314,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         Activity lastActivity = null;
         Activity nextActivity = null;
         try {
-            FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+            FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
             lastActivity = fermatStructure.getLastActivity();
             try {
                 nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
@@ -322,7 +322,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 e.printStackTrace();
                 try {
                     //TODO: this is only because i am tired, remember to delete this.
-                    fermatStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(appBackPublicKey);
+                    fermatStructure = FermatApplication.getInstance().getAppManager().getAppStructure(appBackPublicKey);
                     nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
                 }catch (Exception e1){
                     handleExceptionAndRestart();
@@ -338,7 +338,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     //finish();
                     //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
+                    loadUI(FermatApplication.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             }else{
                 Log.e(TAG, "nextActivity null, activity code: " + activityName +
@@ -394,10 +394,10 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     public void changeFragment(String appPublicKey, FermatFragment fermatFragment) {
         try {
-            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fermatFragment.getType());
-            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getOwner().getOwnerAppPublicKey(),this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
+            FermatApplication.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fermatFragment.getType());
+            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getOwner().getOwnerAppPublicKey(),this,FermatApplication.getInstance().getAppManager().getAppsSession(appPublicKey));
             FermatFragmentFactory fragmentFactory = fermatAppConnection.getFragmentFactory();
-            Fragment fragment = fragmentFactory.getFragment(fermatFragment.getType(),ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources(),fermatFragment);
+            Fragment fragment = fragmentFactory.getFragment(fermatFragment.getType(),FermatApplication.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources(),fermatFragment);
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 //            FT.replace(R.id.fragment_container2, fragment);
@@ -415,7 +415,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     @Override
     public void connectWithOtherApp(String fermatAppPublicKey,Object[] objectses) {
         try {
-            selectApp(ApplicationSession.getInstance().getAppManager().getApp(fermatAppPublicKey));
+            selectApp(FermatApplication.getInstance().getAppManager().getApp(fermatAppPublicKey));
         } catch (Exception e) {
             e.printStackTrace();
         }

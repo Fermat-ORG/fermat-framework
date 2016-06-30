@@ -72,7 +72,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final FermatSystem fermatSystem =ApplicationSession.getInstance().getFermatSystem();
+        final FermatSystem fermatSystem =FermatApplication.getInstance().getFermatSystem();
 
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
@@ -110,9 +110,9 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
                         Toast.LENGTH_LONG).show();
             }
 
-            int applicationState = ApplicationSession.getInstance().getApplicationState();
+            int applicationState = FermatApplication.getInstance().getApplicationState();
 
-            if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
+            if(applicationState==FermatFramework.STATE_NOT_CREATED) {
 //                mDialog = new ProgressDialog(this);
 //                mDialog.setMessage("Please wait...");
 //                mDialog.setCancelable(false);
@@ -182,7 +182,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 //                getTask.execute();
 
 
-            }else if (applicationState == ApplicationSession.STATE_STARTED ){
+            }else if (applicationState == FermatFramework.STATE_STARTED ){
                 fermatInit();
             }
 
@@ -191,7 +191,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
             @Override
             public void run() {
                 try {
-                    if (ApplicationSession.getInstance().isFermatRunning()) {
+                    if (FermatApplication.getInstance().isFermatRunning()) {
                         fermatInit();
                     }
                 } catch (Exception e) {
@@ -218,7 +218,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 //            @Override
 //            public void run() {
 //                try {
-//                    boolean b = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+//                    boolean b = FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
 //                    if (b) {
 //                        fermatInit();
 //                    }
@@ -232,7 +232,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
             myReceiverIsRegistered = true;
         }
         try {
-            if (ApplicationSession.getInstance().isFermatRunning()) {
+            if (FermatApplication.getInstance().isFermatRunning()) {
                 fermatInit();
             }
         }catch (Exception e){
@@ -288,7 +288,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     public void onPostExecute(Object... result) {
         try {
 
-            final FermatSystem fermatSystem = ApplicationSession.getInstance().getFermatSystem();
+            final FermatSystem fermatSystem = FermatApplication.getInstance().getFermatSystem();
 
             PlatformInfoManager platformInfoManager = (PlatformInfoManager) fermatSystem.startAndGetAddon(
                     new AddonVersionReference(

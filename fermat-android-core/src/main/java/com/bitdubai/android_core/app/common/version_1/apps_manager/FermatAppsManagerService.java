@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
@@ -157,7 +157,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                 return openApp(
                         getApp(appPublicKey),
                         FermatAppConnectionManager.getFermatAppConnection(
-                                appPublicKey,ApplicationSession.getInstance().getApplicationContext()
+                                appPublicKey,FermatApplication.getInstance().getApplicationContext()
                         ),
                         isForSubSession
                 );
@@ -210,7 +210,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                     try {
                         if(pluginVersionReferences==null) throw new CantOpenSessionException("","PluginVersionReference null in app: "+fermatApp.getAppPublicKey());
                         if(pluginVersionReferences.length!=1) throw new CantOpenSessionException("","ReferenceApp can't have more than one module to assign, check your AppConnections getPluginVersionReference method");
-                        ModuleManager moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference()[0]);
+                        ModuleManager moduleManager = FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference()[0]);
                         referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager,isForSubSession);
                     } catch (CantCreateProxyException e) {
                         e.printStackTrace();
@@ -218,7 +218,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                     break;
                 case COMBO_TYPE_1:
                     try {
-                        ModuleManager[] moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
+                        ModuleManager[] moduleManager = FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
                         referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(),moduleManager,isForSubSession);
                     } catch (CantCreateProxyException e) {
                         e.printStackTrace();
@@ -226,7 +226,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                     break;
                 case COMBO_TYPE_2:
                     try {
-                        //ModuleManager[] moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
+                        //ModuleManager[] moduleManager = FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
                         //getApp()
                         ComboType2FermatSession comboType2FermatSession = fermatSessionManager.openComboAppType2Session(fermatApp, FermatSystemUtils.getErrorManager(),isForSubSession);
                         for(String key:fermatStructure.getAppsKeyConsumed()){
@@ -264,7 +264,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
             fermatApp = recents.getApp(publicKey).getFermatApp();
         }else{
             fermatApp = selectAppManager(fermatAppType).getApp(publicKey);
-            //openApp(fermatApp,FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(),ApplicationSession.getInstance().getApplicationContext()));
+            //openApp(fermatApp,FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(),FermatApplication.getInstance().getApplicationContext()));
         }
         orderStackWithThisPkLast(publicKey);
         return fermatApp;

@@ -2,7 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.runtime_estructure_manage
 
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -24,7 +24,7 @@ public class RuntimeStructureManager implements FermatRuntime {
     @Override
     public void changeActivityBack(String appBackPublicKey, String activityCode) {
         try {
-            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().changeBackActivity(appBackPublicKey,activityCode);
+            FermatApplication.getInstance().getAppManager().getLastAppStructure().getLastActivity().changeBackActivity(appBackPublicKey,activityCode);
         }catch (InvalidParameterException e) {
             e.printStackTrace();
             Toast.makeText(fermatActivity.get().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
@@ -34,9 +34,9 @@ public class RuntimeStructureManager implements FermatRuntime {
     @Override
     public void changeStartActivity(String activityCode){
         try {
-            FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+            FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getLastAppStructure();
             fermatStructure.changeActualStartActivity(activityCode);
-            ApplicationSession.getInstance().getAppManager().selectRuntimeManager(ApplicationSession.getInstance().getAppManager().getApp(fermatStructure.getPublicKey()).getAppType()).recordNAvigationStructure(fermatStructure);
+            FermatApplication.getInstance().getAppManager().selectRuntimeManager(FermatApplication.getInstance().getAppManager().getApp(fermatStructure.getPublicKey()).getAppType()).recordNAvigationStructure(fermatStructure);
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(fermatActivity.get().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();

@@ -1,6 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.util.system;
 
-import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.provisory.P2PAppsRuntimeManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
@@ -65,7 +65,7 @@ public class FermatSystemUtils {
 //     */
 //
 //    public static FermatAppsManager getFermatAppManager(){
-//        return ApplicationSession.getInstance().getFermatAppsManager();
+//        return FermatApplication.getInstance().getFermatAppsManager();
 //    }
 
 
@@ -77,7 +77,7 @@ public class FermatSystemUtils {
      */
     public static ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
         try {
-            return ApplicationSession.getInstance().getFermatSystem().getModuleManager(pluginVersionReference);
+            return FermatApplication.getInstance().getFermatSystem().getModuleManager(pluginVersionReference);
         } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
             System.err.println(e.getMessage());
             System.err.println(e.toString());
@@ -97,7 +97,7 @@ public class FermatSystemUtils {
 
     public static ErrorManager getErrorManager() {
         try {
-            return ApplicationSession.getInstance().getFermatSystem().getErrorManager(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
+            return FermatApplication.getInstance().getFermatSystem().getErrorManager(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
         } catch (ErrorManagerNotFoundException |
                 CantGetErrorManagerException e) {
 
@@ -122,7 +122,7 @@ public class FermatSystemUtils {
     public static WalletRuntimeManager getWalletRuntimeManager() {
 
         try {
-            return (WalletRuntimeManager) ApplicationSession.getInstance().getFermatSystem().getRuntimeManager(
+            return (WalletRuntimeManager) FermatApplication.getInstance().getFermatSystem().getRuntimeManager(
                     new PluginVersionReference(
                             Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                             Layers.ENGINE,
@@ -156,7 +156,7 @@ public class FermatSystemUtils {
     public static WalletManager getWalletManager() {
 
         try {
-            return (WalletManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
+            return (WalletManager) FermatApplication.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.CRYPTO_CURRENCY_PLATFORM,
                             Layers.DESKTOP_MODULE,
@@ -182,7 +182,7 @@ public class FermatSystemUtils {
     public static SubAppManager getSubAppManager() {
 
         try {
-            return (SubAppManager) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
+            return (SubAppManager) FermatApplication.getInstance().getFermatSystem().getModuleManager(
                     new PluginVersionReference(
                             Platforms.CRYPTO_CURRENCY_PLATFORM,
                             Layers.DESKTOP_MODULE,
@@ -214,7 +214,7 @@ public class FermatSystemUtils {
      */
     public static WalletResourcesProviderManager getWalletResourcesProviderManager() {
         try {
-            return (WalletResourcesProviderManager) ApplicationSession.getInstance().getFermatSystem().getResourcesManager(
+            return (WalletResourcesProviderManager) FermatApplication.getInstance().getFermatSystem().getResourcesManager(
                     new PluginVersionReference(
                             Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                             Layers.NETWORK_SERVICE,
@@ -244,7 +244,7 @@ public class FermatSystemUtils {
     public static SubAppResourcesProviderManager getSubAppResourcesProviderManager() {
 
         try {
-            return (SubAppResourcesProviderManager) ApplicationSession.getInstance().getFermatSystem().getResourcesManager(
+            return (SubAppResourcesProviderManager) FermatApplication.getInstance().getFermatSystem().getResourcesManager(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.NETWORK_SERVICE,
@@ -273,7 +273,7 @@ public class FermatSystemUtils {
      */
     public static NotificationManagerMiddleware getNotificationManager() {
         try {
-            return (NotificationManagerMiddleware) ApplicationSession.getInstance().getFermatSystem().getPlugin(
+            return (NotificationManagerMiddleware) FermatApplication.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.SUB_APP_MODULE,
@@ -303,7 +303,7 @@ public class FermatSystemUtils {
     public static DesktopRuntimeManager getDesktopRuntimeManager() {
 
         try {
-            return (DesktopRuntimeManager) ApplicationSession.getInstance().getFermatSystem().getRuntimeManager(
+            return (DesktopRuntimeManager) FermatApplication.getInstance().getFermatSystem().getRuntimeManager(
                     new PluginVersionReference(
                             Platforms.PLUG_INS_PLATFORM,
                             Layers.ENGINE,
@@ -334,7 +334,7 @@ public class FermatSystemUtils {
 
     public static WsCommunicationsCloudClientManager getCloudClient() {
         try {
-            return (WsCommunicationsCloudClientManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
+            return (WsCommunicationsCloudClientManager) FermatApplication.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.COMMUNICATION_PLATFORM,
                             Layers.COMMUNICATION,
@@ -355,7 +355,7 @@ public class FermatSystemUtils {
      */
     public static BitcoinNetworkManager getNetwork() {
         try {
-            return (BitcoinNetworkManager) ApplicationSession.getInstance().getFermatSystem().getPlugin(
+            return (BitcoinNetworkManager) FermatApplication.getInstance().getFermatSystem().getPlugin(
                     new PluginVersionReference(
                             Platforms.BLOCKCHAINS,
                             Layers.CRYPTO_NETWORK,
@@ -382,7 +382,7 @@ public class FermatSystemUtils {
     public static AndroidCoreModule getAndroidCoreModule() throws CantCreateProxyException {
         try{
             if(androidCoreModule==null) {
-                androidCoreModule = (AndroidCoreModule) ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(
+                androidCoreModule = (AndroidCoreModule) FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(
                         new PluginVersionReference(
                                 Platforms.PLUG_INS_PLATFORM,
                                 Layers.SUB_APP_MODULE,
@@ -398,7 +398,7 @@ public class FermatSystemUtils {
         }
 //
 //        try {
-//            return (AndroidCoreModule) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
+//            return (AndroidCoreModule) FermatApplication.getInstance().getFermatSystem().getModuleManager(
 //                    new PluginVersionReference(
 //                            Platforms.PLUG_INS_PLATFORM,
 //                            Layers.SUB_APP_MODULE,
