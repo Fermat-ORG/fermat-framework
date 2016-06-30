@@ -1,0 +1,49 @@
+apply plugin: 'java'
+apply plugin:  'maven'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.7
+group = "com.bitdubai.bch.network"
+version = '1'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'bch-network',
+                'Implementation-Version': '1'
+    }
+}
+
+repositories {
+//    mavenLocal()
+    maven {
+        url "file:/${System.properties['user.home']}/artifacts"
+    }
+//    mavenRepo urls: localMavenRepo
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile project(':fermat-bch-api'){
+        dependencies{
+            compile project(':fermat-api')
+        }
+    }
+}
+
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            // telling gradle to publish project's jar archive (2)
+            from components.java
+
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
+    repositories {
+        maven {
+//            url "file:/${project.projectDir}/artifacts"
+            url "file:/${System.properties['user.home']}/artifacts"
+        }
+    }
+}

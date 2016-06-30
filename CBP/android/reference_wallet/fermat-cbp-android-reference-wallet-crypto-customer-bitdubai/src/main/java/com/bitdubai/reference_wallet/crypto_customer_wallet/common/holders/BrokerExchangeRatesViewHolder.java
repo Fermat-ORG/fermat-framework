@@ -8,7 +8,6 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.ibm.icu.text.DecimalFormatSymbols;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

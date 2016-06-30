@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -207,7 +208,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
             toolbar = getToolbar();
-            toolbar.setTitle("Cripto wallet users");
+            toolbar.setTitle("Crypto wallet users");
+
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
@@ -260,10 +262,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (!isRefreshing) {
                 isRefreshing = true;
-               /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users Cache");
+               final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users...");
                 notificationsProgressDialog.setCancelable(false);
-                notificationsProgressDialog.show();*/
+                notificationsProgressDialog.show();
                 //Get Fermat User Cache List First
                 worker = new FermatWorker() {
                     @Override
@@ -277,7 +279,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                      //  notificationsProgressDialog.dismiss();
+                      notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -325,7 +327,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        //notificationsProgressDialog.dismiss();
+                        notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -456,118 +458,19 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.cripto_users_menu, menu);
+     /*  inflater.inflate(R.menu.cripto_users_menu, menu);
 
         try {
             final MenuItem searchItem = menu.findItem(R.id.action_search);
             menu.findItem(R.id.action_help).setVisible(true);
             menu.findItem(R.id.action_search).setVisible(true);
             searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    menu.findItem(R.id.action_help).setVisible(false);
-                    menu.findItem(R.id.action_search).setVisible(false);
-                    toolbar = getToolbar();
-                    toolbar.setTitle("");
-                    toolbar.addView(searchView);
-                    if (closeSearch != null)
-                        closeSearch.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                menu.findItem(R.id.action_help).setVisible(true);
-                                menu.findItem(R.id.action_search).setVisible(true);
-                                toolbar = getToolbar();
-                                toolbar.removeView(searchView);
-                                toolbar.setTitle("Cripto wallet users");
-                                onRefresh();
-                            }
-                        });
 
-                    if (searchEditText != null) {
-                        searchEditText.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                            }
-
-                            @Override
-                            public void onTextChanged(final CharSequence s, int start, int before, int count) {
-                                if (s.length() > 0) {
-                                    worker = new FermatWorker() {
-                                        @Override
-                                        protected Object doInBackground() throws Exception {
-                                            return getQueryData(s);
-                                        }
-                                    };
-                                    worker.setContext(getActivity());
-                                    worker.setCallBack(new FermatWorkerCallBack() {
-                                        @SuppressWarnings("unchecked")
-                                        @Override
-                                        public void onPostExecute(Object... result) {
-                                            isRefreshing = false;
-                                            if (swipeRefresh != null)
-                                                swipeRefresh.setRefreshing(false);
-                                            if (result != null &&
-                                                    result.length > 0) {
-                                                if (getActivity() != null && adapter != null) {
-                                                    dataSetFiltered = (ArrayList<IntraUserInformation>) result[0];
-                                                    adapter.changeDataSet(dataSetFiltered);
-                                                    if (dataSetFiltered != null) {
-                                                        if (dataSetFiltered.isEmpty()) {
-                                                            showEmpty(true, searchEmptyView);
-                                                            showEmpty(false, emptyView);
-
-                                                        } else {
-                                                            showEmpty(false, searchEmptyView);
-                                                            showEmpty(false, emptyView);
-                                                        }
-                                                    } else {
-                                                        showEmpty(true, searchEmptyView);
-                                                        showEmpty(false, emptyView);
-                                                    }
-                                                }
-                                            } else {
-                                                showEmpty(true, searchEmptyView);
-                                                showEmpty(false, emptyView);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onErrorOccurred(Exception ex) {
-                                            isRefreshing = false;
-                                            if (swipeRefresh != null)
-                                                swipeRefresh.setRefreshing(false);
-                                            showEmpty(true, searchEmptyView);
-                                            if (getActivity() != null)
-                                                Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                                            ex.printStackTrace();
-
-                                        }
-                                    });
-                                    worker.execute();
-                                } else {
-                                    menu.findItem(R.id.action_help).setVisible(true);
-                                    menu.findItem(R.id.action_search).setVisible(true);
-                                    toolbar = getToolbar();
-                                    toolbar.removeView(searchView);
-                                    toolbar.setTitle("Cripto wallet users");
-                                    onRefresh();
-                                }
-                            }
-
-                            @Override
-                            public void afterTextChanged(Editable s) {
-
-                            }
-                        });
-                    }
-                    return false;
-                }
             });
 
         } catch (Exception e) {
 
-        }
+        }*/
 
     }
 
@@ -576,8 +479,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         try {
             int id = item.getItemId();
 
-            if (id == R.id.action_help)
+            if (id == 3)
                 showDialogHelp();
+
+           // if (id == 2)
+                //showDialogHelp();
+
+            if (id == 1)
+                searchIntraUsers();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -585,6 +494,110 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void searchIntraUsers()
+    {
+
+        //menu.findItem(R.id.action_help).setVisible(false);
+       // menu.findItem(R.id.action_search).setVisible(false);
+        toolbar = getToolbar();
+        toolbar.setTitle("");
+        toolbar.addView(searchView);
+        if (closeSearch != null)
+            closeSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  //  menu.findItem(R.id.action_help).setVisible(true);
+                  //  menu.findItem(R.id.action_search).setVisible(true);
+                    toolbar = getToolbar();
+                    toolbar.removeView(searchView);
+                    toolbar.setTitle("Crypto wallet users");
+                    onRefresh();
+                }
+            });
+
+        if (searchEditText != null) {
+            searchEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(final CharSequence s, int start, int before, int count) {
+                    if (s.length() > 0) {
+                        worker = new FermatWorker() {
+                            @Override
+                            protected Object doInBackground() throws Exception {
+                                return getQueryData(s);
+                            }
+                        };
+                        worker.setContext(getActivity());
+                        worker.setCallBack(new FermatWorkerCallBack() {
+                            @SuppressWarnings("unchecked")
+                            @Override
+                            public void onPostExecute(Object... result) {
+                                isRefreshing = false;
+                                if (swipeRefresh != null)
+                                    swipeRefresh.setRefreshing(false);
+                                if (result != null &&
+                                        result.length > 0) {
+                                    if (getActivity() != null && adapter != null) {
+                                        dataSetFiltered = (ArrayList<IntraUserInformation>) result[0];
+                                        adapter.changeDataSet(dataSetFiltered);
+                                        if (dataSetFiltered != null) {
+                                            if (dataSetFiltered.isEmpty()) {
+                                                showEmpty(true, searchEmptyView);
+                                                showEmpty(false, emptyView);
+
+                                            } else {
+                                                showEmpty(false, searchEmptyView);
+                                                showEmpty(false, emptyView);
+                                            }
+                                        } else {
+                                            showEmpty(true, searchEmptyView);
+                                            showEmpty(false, emptyView);
+                                        }
+                                    }
+                                } else {
+                                    showEmpty(true, searchEmptyView);
+                                    showEmpty(false, emptyView);
+                                }
+                            }
+
+                            @Override
+                            public void onErrorOccurred(Exception ex) {
+                                isRefreshing = false;
+                                if (swipeRefresh != null)
+                                    swipeRefresh.setRefreshing(false);
+                                showEmpty(true, searchEmptyView);
+                                if (getActivity() != null)
+                                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                ex.printStackTrace();
+
+                            }
+                        });
+                        worker.execute();
+                    } else {
+                      //  menu.findItem(R.id.action_help).setVisible(true);
+                       // menu.findItem(R.id.action_search).setVisible(true);
+                        toolbar = getToolbar();
+                        toolbar.removeView(searchView);
+                        toolbar.setTitle("Crypto wallet users");
+                        onRefresh();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+
+    }
+
     }
 
     private void updateNotificationsBadge(int count) {
@@ -712,7 +725,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            //showCriptoUsersCache();
+                            showCriptoUsersCache();
                             invalidate();
                         }
                     });
@@ -732,8 +745,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                     getActivity().finish();
                                 }
                             } else {
-                               // showCriptoUsersCache();
-                                invalidate();
+                                showCriptoUsersCache();
+
                             }
                         }
                     });
@@ -756,8 +769,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                             if (isBackPressed) {
                                 getActivity().onBackPressed();
                             }
-                        } //else
-                            //showCriptoUsersCache();
+                        } else
+                            showCriptoUsersCache();
                     }
                 });
             }

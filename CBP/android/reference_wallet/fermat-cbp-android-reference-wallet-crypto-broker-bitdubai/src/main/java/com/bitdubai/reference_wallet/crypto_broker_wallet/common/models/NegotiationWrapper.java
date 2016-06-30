@@ -170,8 +170,9 @@ final public class NegotiationWrapper {
      */
     public void addClause(final ClauseType clauseType, final String value) {
         final String clauseValue = (value != null) ? value : "";
-        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
-        negotiationInfo.getClauses().put(clauseType, clauseInformation);
+        //todo: ver esto, core comentado
+//        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
+//        negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
     /**
@@ -182,11 +183,12 @@ final public class NegotiationWrapper {
      */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
         final ClauseStatus clauseStatus = clause.getValue().equals(value) && clause.getStatus() == DRAFT ? ACCEPTED : CHANGED;
+        //todo: ver esto, core comentado
 
-        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
-        clauseInformation.setStatus(clauseStatus);
-        clauseInformation.setValue(value);
-
-        negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
+//        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
+//        clauseInformation.setStatus(clauseStatus);
+//        clauseInformation.setValue(value);
+//
+//        negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
     }
 }

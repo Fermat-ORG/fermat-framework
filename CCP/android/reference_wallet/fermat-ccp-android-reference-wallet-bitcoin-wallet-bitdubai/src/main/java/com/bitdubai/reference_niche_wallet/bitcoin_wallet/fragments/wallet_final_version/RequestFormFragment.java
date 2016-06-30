@@ -364,7 +364,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             @Override
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
-                    contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+                    contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, (List<WalletContact>)result[0]);
 
                     contactName.setAdapter(contactsAdapter);
                     //autocompleteContacts.setTypeface(tf);

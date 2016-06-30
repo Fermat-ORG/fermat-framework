@@ -1,21 +1,10 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders;
 
-import android.content.res.Resources;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by Matias Furszyfer on 28/10/15.

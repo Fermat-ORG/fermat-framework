@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
@@ -23,6 +24,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantM
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 
+
+
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
@@ -34,10 +37,11 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+
 /**
  * Created by rodrigo on 9/30/15.
  */
-public interface BitcoinNetworkManager extends TransactionSender<CryptoTransaction> {
+public interface BitcoinNetworkManager extends TransactionSender<CryptoTransaction>, BlockchainCryptoManager {
 
     /**
      * Starts monitoring the network active networks with the list of keys passed.
@@ -96,14 +100,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantGetBroadcastStatusException
      */
     BroadcastStatus getBroadcastStatus (String txHash) throws CantGetBroadcastStatusException;
-
-    /**
-     * Get the bitcoin transaction stored by the CryptoNetwork
-     * @param blockchainNetworkType the network type
-     * @param transactionHash the transsaction hash
-     * @return the bitcoin transaction
-     */
-    Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash);
 
 
     /**
