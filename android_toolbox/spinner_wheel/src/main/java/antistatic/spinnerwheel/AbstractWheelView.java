@@ -34,7 +34,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import com.customviews.spinner.wheel.R;
+import com.customviews.spinner_wheel.R;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 

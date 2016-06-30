@@ -35,7 +35,7 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
-import com.customviews.spinner.wheel.R;
+import com.customviews.spinner_wheel.R;
 
 import java.util.LinkedList;
 import java.util.List;
