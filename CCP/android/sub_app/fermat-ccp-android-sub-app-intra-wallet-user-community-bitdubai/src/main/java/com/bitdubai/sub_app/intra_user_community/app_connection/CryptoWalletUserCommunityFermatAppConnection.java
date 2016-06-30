@@ -16,6 +16,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.intra_user_community.navigation_drawer.IntraUserCommunityNavigationViewPainter;
 
+import com.bitdubai.sub_app.intra_user_community.R;
+
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
@@ -83,5 +85,19 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
         }
 
         return null;
+    }
+
+
+    @Override
+    public int getResource(int id) {
+         if (id==3)
+            return R.drawable.search_icon;
+
+             if (id==2)
+                 return R.drawable.cht_id_geolocation_icon;
+       if (id==1)
+            return R.drawable.help_icon;
+
+        return super.getResource(id);
     }
 }

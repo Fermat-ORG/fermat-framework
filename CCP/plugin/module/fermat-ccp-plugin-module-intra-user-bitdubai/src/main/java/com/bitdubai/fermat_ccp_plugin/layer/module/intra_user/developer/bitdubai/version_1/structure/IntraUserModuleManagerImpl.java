@@ -254,6 +254,14 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
             if(intraUserInformationModuleList!=null) {
                 if (userCacheList.size() == 0) {
+
+                    //save cache records
+                    try {
+                        saveCacheIntraUsersSuggestions(intraUserInformationModuleList);
+                    } catch (CantGetIntraUsersListException e) {
+                        e.printStackTrace();
+                    }
+
                     return intraUserInformationModuleList;
                 }
                 else {
@@ -638,9 +646,9 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantUpdateIdentityException {
         try {
-            this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, identityPhrase, profileImage);
+            this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, identityPhrase, profileImage, accuracy, frecuency);
         } catch (CantUpdateIdentityException e) {
             throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error on IntraUserIdentity Manager");
         } catch (Exception e) {

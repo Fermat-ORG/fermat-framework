@@ -767,7 +767,7 @@ public enum Activities implements FermatEnum {
 
             case "CCPSAISI":
                 return Activities.CCP_SUB_APP_INTRA_USER_IDENTITY;
-            case "CCPSAIGI":
+            case "CCPSAIIGI":
                 return Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY;
             case "CCPSAIICI":
                 return Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;

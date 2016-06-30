@@ -17,6 +17,9 @@ public class ChatExposingData {
     private final String city     ;
     private final String status;
     private final Location location;
+    private final long refreshInterval;
+    private final long accuracy;
+
 
     public ChatExposingData(final String publicKey,
                                     final String alias    ,
@@ -25,7 +28,9 @@ public class ChatExposingData {
                                     final String state,
                                     final String city,
                             final String status,
-                            final Location location) {
+                            final Location location,
+                            long refreshInterva,
+                            final long accuracy) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
@@ -35,6 +40,8 @@ public class ChatExposingData {
         this.city      = city;
         this.status = status;
         this.location = location;
+        this.refreshInterval = refreshInterva;
+        this.accuracy = accuracy;
     }
 
     /**
@@ -76,6 +83,14 @@ public class ChatExposingData {
 
     public Location getLocation() {
         return location;
+    }
+
+    public long getRefreshInterval() {
+        return refreshInterval;
+    }
+
+    public long getAccurancy() {
+        return accuracy;
     }
 
     @Override

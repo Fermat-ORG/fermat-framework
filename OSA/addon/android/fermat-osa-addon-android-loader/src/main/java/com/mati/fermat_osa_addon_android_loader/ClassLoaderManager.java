@@ -1,10 +1,10 @@
 package com.mati.fermat_osa_addon_android_loader;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.util.MfClassUtils;
 
@@ -21,7 +21,7 @@ import dalvik.system.DexClassLoader;
 /**
  * Created by MAtias Furszyfer on 2016.06.22..
  */
-public class ClassLoaderManager<O extends Application & FermatContext> {
+public class ClassLoaderManager<O extends FermatApplicationSession & FermatContext> {
 
     private static final String TAG = "ClassLoaderManager";
     O context;
@@ -99,13 +99,13 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
     public DexClassLoader loadAllPlugin() {
         try {
             Log.d(TAG, "Loading plugins");
-            AssetManager asset = context.getAssets();
+            AssetManager asset = context.getApplicationContext().getAssets();
             for (String title : asset.list("plugins")) {
                 String path = "plugins/" + title;
-                File dexInternalStoragePath = context.getDir("dex", Context.MODE_PRIVATE);
+                File dexInternalStoragePath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE);
                 dexInternalStoragePath.mkdirs();
                 File f = new File(dexInternalStoragePath, title);
-                InputStream fis = context.getAssets().open(path);
+                InputStream fis = context.getApplicationContext().getAssets().open(path);
                 FileOutputStream fos = new FileOutputStream(f);
                 byte[] buffer = new byte[0xFF];
                 int len;
@@ -115,11 +115,11 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
                 fis.close();
                 fos.close();
 
-                File optimizedDexPath = context.getDir("outdex", Context.MODE_PRIVATE);
+                File optimizedDexPath = context.getApplicationContext().getDir("outdex", Context.MODE_PRIVATE);
                 optimizedDexPath.mkdirs();
                 DexClassLoader dcl = new DexClassLoader(f.getAbsolutePath(),
                         optimizedDexPath.getAbsolutePath(), null,
-                        context.getClassLoader().getParent());
+                        context.getApplicationContext().getClassLoader().getParent());
 
                 return dcl;
             }
@@ -132,13 +132,13 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
     public FermatClassLoader customClassLoader() {
         try {
             Log.d(TAG, "Loading plugins");
-            AssetManager asset = context.getAssets();
+            AssetManager asset = context.getApplicationContext().getAssets();
             for (String title : asset.list("plugins")) {
                 String path = "plugins/" + title;
-                File dexInternalStoragePath = context.getDir("dex", Context.MODE_PRIVATE);
+                File dexInternalStoragePath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE);
                 dexInternalStoragePath.mkdirs();
                 File f = new File(dexInternalStoragePath, title);
-                InputStream fis = context.getAssets().open(path);
+                InputStream fis = context.getApplicationContext().getAssets().open(path);
                 FileOutputStream fos = new FileOutputStream(f);
                 byte[] buffer = new byte[0xFF];
                 int len;
@@ -148,17 +148,17 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
                 fis.close();
                 fos.close();
 
-                File optimizedDexPath = context.getDir("outdex", Context.MODE_PRIVATE);
+                File optimizedDexPath = context.getApplicationContext().getDir("outdex", Context.MODE_PRIVATE);
                 optimizedDexPath.mkdirs();
                 DexClassLoader dcl = new DexClassLoader(f.getAbsolutePath(),
                         optimizedDexPath.getAbsolutePath(), null,
-                        context.getClassLoader().getParent());
+                        context.getApplicationContext().getClassLoader().getParent());
 
-                FermatClassLoader classLoaderManger = new FermatClassLoader(dcl,context.getBaseClassLoader(),context.getClassLoader().getParent());
+                FermatClassLoader classLoaderManger = new FermatClassLoader(dcl,context.getBaseClassLoader(),context.getApplicationContext().getClassLoader().getParent());
 
 //                dcl.addClassLoader(mBaseClassLoader);
 
-                String resPath = context.getDir("dex", Context.MODE_PRIVATE).getAbsolutePath() + "/" + title;
+                String resPath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE).getAbsolutePath() + "/" + title;
 //                PLUGIN_LOADER.put(title, dcl);
 
 

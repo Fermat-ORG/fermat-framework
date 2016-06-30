@@ -26,7 +26,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
-import com.bitdubai.fermat_art_core.ARTPlatform;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_cer_core.CERPlatform;
@@ -38,7 +37,6 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
-import com.bitdubai.fermat_tky_core.TKYPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
 import java.lang.reflect.Method;
@@ -104,7 +102,10 @@ public final class FermatSystem {
         }
 
         try {
-            fermatSystemContext.registerPlatform(new ARTPlatform());
+
+
+           // fermatSystemContext.registerPlatform(new ARTPlatform());
+
             fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
 //            fermatSystemContext.registerPlatform(new BNKPlatform(fermatContext));
 //           fermatSystemContext.registerPlatform(new CBPPlatform());
@@ -115,8 +116,10 @@ public final class FermatSystem {
             // fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform(fermatContext));
-            fermatSystemContext.registerPlatform(new TKYPlatform());
+
+           // fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
+
 
         } catch(CantRegisterPlatformException e) {
 
@@ -450,9 +453,6 @@ public final class FermatSystem {
     public final void startAllRegisteredPlatforms() throws CantStartAllRegisteredPlatformsException {
         final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
         final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
-        System.out.println("---------------------------------------------\n");
-        System.out.println("Starting addons");
-        System.out.println("---------------------------------------------\n");
         for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
             try {
                 fermatAddonManager.startAddonAndReferences(addon.getValue());
@@ -465,10 +465,10 @@ public final class FermatSystem {
 
             List<AbstractPlugin> list = fermatSystemContext.getPlatform(new PlatformReference(Platforms.COMMUNICATION_PLATFORM)).getPlugins();
             for (AbstractPlugin abstractPlugin : list) {
+                fermatPluginManager.startPluginAndReferences(abstractPlugin);
                 System.out.println("---------------------------------------------\n");
                 System.out.println("Cloud client starting");
                 System.out.println("---------------------------------------------\n");
-                fermatPluginManager.startPluginAndReferences(abstractPlugin);
             }
         } catch (PlatformNotFoundException e) {
             e.printStackTrace();
