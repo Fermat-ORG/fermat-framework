@@ -109,7 +109,6 @@ public class ConnectionNotificationsFragment
             chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             lstChatUserInformations = new ArrayList<>();
 
@@ -306,6 +305,9 @@ public class ConnectionNotificationsFragment
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     try {
+//                        lstChatUserInformations = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
+//                                identity.getActorType(), MAX, offset);
+//                        adapter.changeDataSet(lstChatUserInformations);
                         onRefresh();
                     }catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY,

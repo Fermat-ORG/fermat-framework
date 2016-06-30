@@ -660,7 +660,6 @@ public class ConnectionsWorldFragment
     }
 
     private void showDialogHelp() {
-
         try {
             moduleManager = appSession.getModuleManager();
             if (identity != null) {

@@ -45,7 +45,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -54,7 +54,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
@@ -62,7 +61,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -75,6 +73,7 @@ import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.uti
 /**
  * FERMAT-ORG
  * Developed by Lozadaa on 04/04/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/06/16.
  */
 
 public class CreateChatIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatIdentityModuleManager>, SubAppResourcesProviderManager> {
@@ -101,6 +100,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
     ChatIdentity identity;
+    Location location;
 
     public static CreateChatIdentityFragment newInstance() {
         return new CreateChatIdentityFragment();
@@ -115,7 +115,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-                //chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             }catch(Exception e){
                 chatIdentitySettings = null;
             }
@@ -124,10 +123,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 chatIdentitySettings.setIsPresentationHelpEnabled(true);
                 try {
                     moduleManager.persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
-                    //moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
+            }
+
+            //Check if GPS is on and coordinate are fine
+            try{
+                location = moduleManager.getLocation();
+            }catch (Exception e){
+                if (errorManager!=null)
+                    errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
 
             //Check if a default identity is configured
@@ -168,6 +174,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
             setUpDialog();
         }
+        checkGPSOn();
         try {
             if (ExistIdentity() == false) {
                 botonG.setOnClickListener(new View.OnClickListener() {
@@ -285,7 +292,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         }
     }
 
-    public void turnOnGPS() {
+    public void turnOnGPSDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
@@ -940,5 +947,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         String permission = "android.permission.ACCESS_FINE_LOCATION";
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void checkGPSOn(){
+        if(location!= null){
+            if(location.getLongitude()==0 || location.getLatitude()==0){
+                turnOnGPSDialog();
+            }
+        }else
+            turnOnGPSDialog();
     }
 }
