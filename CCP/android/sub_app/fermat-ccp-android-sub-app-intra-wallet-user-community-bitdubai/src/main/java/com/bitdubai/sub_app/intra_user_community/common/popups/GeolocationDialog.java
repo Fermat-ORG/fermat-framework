@@ -57,7 +57,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     String State;
     String Input;
 
-    public GeolocationDialog(Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager---> appSession,
+    public GeolocationDialog(Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
                              ResourceProviderManager resources, AdapterCallback mAdapterCallback){
         super(activity, appSession, null);
         this.appSession = appSession;
