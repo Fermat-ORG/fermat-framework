@@ -19,7 +19,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:typeface="ROBOTO_REGULAR"
             android:text="@string/amount_to_restock_or_destock"

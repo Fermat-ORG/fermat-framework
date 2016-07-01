@@ -402,6 +402,7 @@ public enum Activities implements FermatEnum {
     ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST("ASAACLIL"),
 
     ART_FAN_IDENTITY_CREATE_PROFILE("AFICP"),
+    ART_FAN_IDENTITY_TEST_ACTIVITY("AFITA"),
 
     ART_MUSIC_PLAYER_MAIN_ACTIVITY("ARTMPMA"),
 
@@ -443,6 +444,8 @@ public enum Activities implements FermatEnum {
         //    }
         //}
         switch (code) {
+            case "AFITA":
+                return Activities.ART_FAN_IDENTITY_TEST_ACTIVITY;
             case "AAICP":
                 return Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE;
             case "TAICP":

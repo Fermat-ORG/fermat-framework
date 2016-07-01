@@ -4,6 +4,8 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionOtherProfileFragment;
@@ -18,7 +20,7 @@ import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionRefe
  */
 public class FanCommunityFragmentFactory extends
         FermatFragmentFactory<
-                FanCommunitySubAppSessionReferenceApp,
+                ReferenceAppFermatSession<FanCommunityModuleManager>,
                 SubAppResourcesProviderManager,
                 FanCommunityFragmentsEnumType> {
 

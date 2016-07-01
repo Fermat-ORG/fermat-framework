@@ -29,4 +29,5 @@ public interface FrameworkHelpers {
      */
     View obtainFrameworkOptionMenuClassViewAvailable(int id,SourceLocation sourceLocation);
 
+    View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation, Object[] listeners);
 }

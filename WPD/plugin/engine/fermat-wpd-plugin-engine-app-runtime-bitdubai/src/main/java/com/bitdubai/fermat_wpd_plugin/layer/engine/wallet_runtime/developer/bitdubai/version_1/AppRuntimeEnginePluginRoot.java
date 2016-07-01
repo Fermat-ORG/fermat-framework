@@ -4265,12 +4265,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeHeader = new Header();
+        /*runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
         runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
-        runtimeHeader.setStartCollapsed(true);
+        runtimeHeader.setStartCollapse(true);
         runtimeActivity.setHeader(runtimeHeader);
+        runtimeHeader.setStartCollapsed(true);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
 
         runtimeTabStrip = new TabStrip();

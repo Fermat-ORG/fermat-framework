@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanLinkedActorIdentity;
@@ -632,10 +633,21 @@ public class ActorConnectionEventActions {
                             connectionId,
                             ConnectionState.CONNECTED
                     );
-                    if (eventSource == EventSource.ACTOR_NETWORK_SERVICE_ARTIST)
+                    if (eventSource == EventSource.ACTOR_NETWORK_SERVICE_ARTIST){
+                        broadcaster.publish(
+                                BroadcasterType.NOTIFICATION_SERVICE,
+                                SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
+                                ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
                         artistNetworkService.confirm(connectionId);
-                    else
+                    }
+                    else{
                         fanNetworkService.confirm(connectionId);
+                        broadcaster.publish(
+                                BroadcasterType.UPDATE_VIEW,
+                                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
+                                FanActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
+                    }
+
                     break;
                 default:
                     throw new UnexpectedConnectionStateException(

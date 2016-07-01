@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
@@ -134,16 +135,13 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             int offset) throws CantListArtistsException {
         List<ArtistCommunityInformation> worldArtistList;
         List<ArtistActorConnection> actorConnections;
+        List<FanActorConnection> fanActorConnections;
 
         try{
             worldArtistList = getArtistSearch().getResult(artistActorNetworkServiceManager.getSearch());
         } catch (CantGetArtistSearchResult e) {
-            //TODO: to report error
             //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantListArtistsException(
-                    e,
-                    "",
-                    "Error in listWorldArtists trying to list world Artists");
+            throw new CantListArtistsException(e, "", "Error in listWorldArtists trying to list world Artists");
         }
 
 
@@ -152,11 +150,23 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType());
+            //Artist connections
+            //final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final ArtistActorConnectionSearch search = artistActorConnectionManager.getSearch(linkedActorIdentity);
             //search.addConnectionState(ConnectionState.CONNECTED);
             //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+
+            //Fan connections
+            final FanLinkedActorIdentity fanLinkedActorIdentity = new FanLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType());
+            final FanActorConnectionSearch fanSearch = fanActorConnectionManager.getSearch(
+                    fanLinkedActorIdentity);
+            fanSearch.addConnectionState(ConnectionState.CONNECTED);
+
+            fanActorConnections = fanSearch.getResult(Integer.MAX_VALUE, 0);
 
         } catch (final CantListActorConnectionsException e) {
             //TODO: to report error
@@ -168,18 +178,40 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
         }
 
         ArtistCommunityInformation worldArtist;
+        ArtistCommunityInformation artistCommunityInformation;
         for(int i = 0; i < worldArtistList.size(); i++)
         {
             worldArtist = worldArtistList.get(i);
+            //Check connection from Artist Actor connections
             for(ArtistActorConnection connectedArtist : actorConnections)
             {
-                if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey()))
-                    worldArtistList.set(i, new ArtistCommunityInformationImpl(
+                if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey())){
+                    artistCommunityInformation = new ArtistCommunityInformationImpl(
                             worldArtist.getPublicKey(),
                             worldArtist.getAlias(),
                             worldArtist.getImage(),
                             connectedArtist.getConnectionState(),
-                            connectedArtist.getConnectionId()));
+                            connectedArtist.getConnectionId());
+                    artistCommunityInformation.setArtExternalPlatform(
+                            worldArtist.getArtExternalPlatform());
+                    worldArtistList.set(i, artistCommunityInformation);
+                }
+
+            }
+            //Check connections from Fan Actor Connection
+            for(FanActorConnection connectedFan : fanActorConnections)
+            {
+                if(worldArtist.getPublicKey().equals(connectedFan.getPublicKey())){
+                    artistCommunityInformation = new ArtistCommunityInformationImpl(
+                            worldArtist.getPublicKey(),
+                            worldArtist.getAlias(),
+                            worldArtist.getImage(),
+                            connectedFan.getConnectionState(),
+                            connectedFan.getConnectionId());
+                    artistCommunityInformation.setArtExternalPlatform(worldArtist.getArtExternalPlatform());
+                    worldArtistList.set(i, artistCommunityInformation);
+                }
+
             }
         }
         return worldArtistList;
@@ -414,8 +446,9 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
                     artistActorNetworkServiceManager.getSearch();
             List<ArtistExposingData> artistExposingDataList=null;
             if(exposingDataActorSearch !=null){
+                //TODO: to improve
                 artistExposingDataList = exposingDataActorSearch.getResult(
-                        PlatformComponentType.ART_ARTIST);
+                        100,0);
             }
             final ArtistActorConnectionSearch search =
                     artistActorConnectionManager.getSearch(linkedActorIdentity);
@@ -457,8 +490,9 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
                     fanActorNetworkServiceManager.getSearch();
             List<FanExposingData> fanExposingDataList=null;
             if(exposingDataActorSearch !=null){
+                //TODO: to improve
                 fanExposingDataList = exposingDataFanSearch.getResult(
-                        PlatformComponentType.ART_ARTIST);
+                        100,0);
             }
             final FanActorConnectionSearch fanActorConnectionSearchSearch =
                     fanActorConnectionManager.getSearch(fanLinkedActorIdentity);
@@ -874,5 +908,13 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
                     "Cannot find the connection ID",
                     "The actor connection doesn't exist");
         }
+    }
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    public void checkAllConnections()throws CantHandleNewsEventException {
+        this.fanaticIdentityManager.checkAllConnections();
     }
 }

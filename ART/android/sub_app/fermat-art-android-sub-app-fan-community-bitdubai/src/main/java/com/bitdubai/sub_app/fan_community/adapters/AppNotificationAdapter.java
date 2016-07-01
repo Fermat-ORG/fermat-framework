@@ -40,7 +40,7 @@ public class AppNotificationAdapter extends FermatAdapter<LinkedFanIdentity, App
         } else {
             bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.afc_profile_image);
         }
-        bitmap = Bitmap.createScaledBitmap(bitmap, 40,40, true);
+    //    bitmap = Bitmap.createScaledBitmap(bitmap, 40,40, true);
         //holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
         holder.userAvatar.setImageBitmap(bitmap);
     }

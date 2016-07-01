@@ -20,6 +20,7 @@
                 android:id="@+id/crypto_customer_image"
                 android:layout_width="240dp"
                 android:layout_height="240dp"
+                android:padding="10dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"

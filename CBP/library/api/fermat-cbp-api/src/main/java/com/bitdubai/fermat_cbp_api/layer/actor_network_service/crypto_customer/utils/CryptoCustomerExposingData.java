@@ -16,16 +16,22 @@ public final class CryptoCustomerExposingData {
     private final String alias    ;
     private final byte[] image    ;
     private final Location location;
+    private final long refreshInterval;
+    private final long accuracy;
 
     public CryptoCustomerExposingData(final String publicKey,
                                       final String alias,
                                       final byte[] image,
-                                      final Location location) {
+                                      final Location location,
+                                      final long refreshInterval,
+                                      final long accuracy) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
         this.image     = image    ;
         this.location  = location;
+        this.refreshInterval = refreshInterval;
+        this.accuracy = accuracy;
     }
 
     /**
@@ -50,10 +56,24 @@ public final class CryptoCustomerExposingData {
     }
 
     /**
-     * @return an locarion  with the image exposed by the Crypto Broker.
+     * @return an locarion  with the image exposed by the Crypto Customer.
      */
     public final Location getLocation() {
         return location;
+    }
+
+    /**
+     * @return an long with interval refresh by the Crypto Customer.
+     */
+    public final long getRefreshInterval() {
+        return refreshInterval;
+    }
+
+    /**
+     * @return an long with accuracy refresh by the Crypto Customer.
+     */
+    public final long getAccuracy() {
+        return accuracy;
     }
 
     @Override

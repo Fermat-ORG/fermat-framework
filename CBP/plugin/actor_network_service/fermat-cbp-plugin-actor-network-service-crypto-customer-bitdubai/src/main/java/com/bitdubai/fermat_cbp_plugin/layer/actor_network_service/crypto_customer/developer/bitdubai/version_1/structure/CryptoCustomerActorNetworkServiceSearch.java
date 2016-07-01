@@ -58,7 +58,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
             }
 
             return cryptoCustomerExposingDataList;
@@ -103,7 +103,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
             }
 
             return cryptoCustomerExposingDataList;
@@ -148,7 +148,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
             }
 
             return cryptoCustomerExposingDataList;
@@ -193,7 +193,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
             }
 
             return cryptoCustomerExposingDataList;
@@ -238,7 +238,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
             }
 
             return cryptoCustomerExposingDataList;

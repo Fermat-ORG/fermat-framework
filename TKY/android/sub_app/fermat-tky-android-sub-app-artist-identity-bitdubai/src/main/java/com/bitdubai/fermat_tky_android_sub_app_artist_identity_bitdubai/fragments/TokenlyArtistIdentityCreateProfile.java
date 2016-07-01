@@ -4,16 +4,22 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,19 +37,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.R;
-import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.popup.PresentationTokenlyArtistUserIdentityDialog;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSessionReferenceApp;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
@@ -62,6 +74,8 @@ import com.squareup.picasso.Picasso;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -70,7 +84,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by juan Sulbaran
  */
-public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
+public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment<ReferenceAppFermatSession<TokenlyArtistIdentityManagerModule>, SubAppResourcesProviderManager> {
 
     private static final String TAG = "CreateTokenlyArtistIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
@@ -83,13 +97,18 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private TkyIdentitySubAppSessionReferenceApp tkyIdentitySubAppSession;
+    private static final int CONTEXT_MENU_DELETE = 3;
+    private static final int CONTEXT_MENU_TURN_RIGHT = 4;
+    private static final int CONTEXT_MENU_TURN_LEFT = 5;
+    //private TkyIdentitySubAppSession tkyIdentitySubAppSession;
+    //private TkyIdentitySubAppSessionReferenceApp tkyIdentitySubAppSession;
     private byte[] ArtistImageByteArray;
     private TokenlyArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
     private Button createButton;
     private EditText mArtistExternalUserName;
     private ImageView ArtistImage;
+    private ImageView ArtistImageDefoult;
     private RelativeLayout relativeLayout;
     private Menu menuHelp;
     private Artist identitySelected;
@@ -102,6 +121,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private TokenlyArtistPreferenceSettings tokenlyArtistPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean contextMenuDelete = false;
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private ProgressDialog tokenlyRequestDialog;
@@ -112,7 +132,9 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private View buttonCam;
     private TextView UserNameLabel;
     private TextView PassWordLabel;
+
     private Handler handler;
+
 
 
 
@@ -126,17 +148,17 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            tkyIdentitySubAppSession = (TkyIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = tkyIdentitySubAppSession.getModuleManager();
+            //tkyIdentitySubAppSession = (TkyIdentitySubAppSessionReferenceApp) appSession;
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
 
             try {
-                if (tkyIdentitySubAppSession.getAppPublicKey()!= null){
-                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
+                if (appSession.getAppPublicKey()!= null){
+                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
+                    //tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
+                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }
 
             } catch (Exception e) {
@@ -145,15 +167,16 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
             if (tokenlyArtistPreferenceSettings == null) {
                 tokenlyArtistPreferenceSettings = new TokenlyArtistPreferenceSettings();
-                tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
-                    if (tkyIdentitySubAppSession.getAppPublicKey()!=null){
-                        moduleManager.persistSettings(tkyIdentitySubAppSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
+                tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(true);
+
+                    if (appSession.getAppPublicKey()!=null){
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }else{
-                        moduleManager.persistSettings("123456789", tokenlyArtistPreferenceSettings);
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }
-                }
-            }
+
+            }}
 
 //            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
 //                moduleManager.createNewIntraWalletUser("John Doe", null);
@@ -177,17 +200,17 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
           setUpIdentity();
 
 
-
 // SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
 //        if (!pref.getBoolean("isChecked", false)) {
 //            PresentationTokenlyFanUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(), null, null);
 //            presentationIntraUserCommunityDialog.show();
 //        }
 
-//        if (tokenlyFanPreferenceSettings.isHomeTutorialDialogEnabled()) {
-//            PresentationTokenlyFanUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(),tokenlyFanUserIdentitySubAppSession, null,moduleManager);
-//            presentationTokenlyFanUserIdentityDialog.show();
-//        }
+
+
+          if (tokenlyArtistPreferenceSettings.isHomeTutorialDialogEnabled()==true) {
+              setUpHelpTkyArtist(false);
+          }
 
 
           return rootLayout;
@@ -207,6 +230,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         mArtistExternalUserName = (EditText) layout.findViewById(R.id.external_username);
         mArtistExternalPassword = (EditText) layout.findViewById(R.id.tokenly_access_password);
         ArtistImage =  (ImageView) layout.findViewById(R.id.tokenly_Artist_image);
+        ArtistImageDefoult = ArtistImage;
         mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
         MexposureLevel = (Spinner) layout.findViewById(R.id.exposureLevel);
         MartistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.artistAcceptConnectionsType);
@@ -293,6 +317,11 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                //changeActivity(Activities.ART_FAN_IDENTITY_TEST_ACTIVITY);
+
+
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 tokenlyRequestDialog = new ProgressDialog(getActivity());
                 tokenlyRequestDialog.setMessage("Please Wait");
@@ -326,6 +355,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                         }
                     }
                 });
+
+
             }
         });
     }
@@ -347,10 +378,12 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
+
     private void setUpIdentity() {
         try {
 
-            identitySelected = (Artist) tkyIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (Artist) appSession.getData(SessionConstants.IDENTITY_SELECTED);
 
 
             if (identitySelected != null) {
@@ -364,6 +397,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    updateProfileImage = true;
                     buttonCam.setBackgroundResource(R.drawable.boton_editar);
                     createButton.setText("Save changes");
                 }
@@ -384,31 +418,46 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    imageBitmap = (Bitmap) extras.get("data");
+                    Uri selectedImage2 = data.getData();
+                    if(selectedImage2==null){
+                        break;
+                    }
+                    File myFile = new File(selectedImage2.getPath());
+                    myFile.getAbsolutePath();
+                    Bundle extras2 = data.getExtras();
+                    Bitmap fixedBitmap = FixRotation(myFile, (Bitmap) extras2.get("data"));
+                    imageBitmap = fixedBitmap;
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                    ArtistImageByteArray = toByteArray(imageBitmap);
+                    updateProfileImage = true;
+                    //Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(ArtistImage);
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
+                    String absolutePath = getRealPathFromURI(selectedImage);
+                    File uriFile = new File(absolutePath);
                     try {
                         if (isAttached) {
                             buttonCam.setBackgroundResource(R.drawable.boton_editar);
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            imageBitmap = FixRotation(uriFile, imageBitmap);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             ArtistImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
-                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(ArtistImage);
+                           // Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(ArtistImage);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error loading picture", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the picture", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
 
             if (pictureView != null && imageBitmap != null)
                 pictureView.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+            contextMenuInUse = false;
 
         }
     }
@@ -419,6 +468,59 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
      * @param bitmap Bitmap
      * @return byte array
      */
+
+
+    private Bitmap FixRotation(File myFile, Bitmap bitmap) {
+
+        Bitmap rotatedBitmap = null;
+
+        try {
+            ExifInterface exif = new ExifInterface(myFile.getPath());
+            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int rotationInDegrees = exifToDegrees(rotation);
+            Matrix matrix = new Matrix();
+            if (rotation != 0f) {
+                matrix.preRotate(rotationInDegrees);
+            }
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+
+        } catch (IOException ex) {
+            Log.e(TAG, "Failed to get Exif data", ex);
+        }
+
+        return rotatedBitmap;
+    }
+
+    private int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+
+    public String getRealPathFromURI(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = 0;
+        if(cursor != null){
+            column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);}
+
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
+    }
+
+
+
+
     private byte[] toByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -434,13 +536,13 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             Bitmap bitmap = null;
             if (identitySelected.getProfileImage().length > 0) {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
-//                bitmap = Bitmap.createScaledBitmap(bitmap, fanImage.getWidth(), fanImage.getHeight(), true);
+              //bitmap = Bitmap.createScaledBitmap(bitmap, fanImage.getWidth(), fanImage.getHeight(), true);
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(fanImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             ArtistImageByteArray = toByteArray(bitmap);
             ArtistImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -710,12 +812,12 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             ArtistIdentityAlreadyExistsException,
             WrongTokenlyUserCredentialsException {
        return moduleManager.createArtistIdentity(
-                fanExternalName,
-                (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
-                fanPassword,
-                externalPlatform,
-                exposureLevel,
-                artistAcceptConnectionsType) ;
+               fanExternalName,
+               (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
+               fanPassword,
+               externalPlatform,
+               exposureLevel,
+               artistAcceptConnectionsType) ;
     }
 
     private Artist updateIdentity(
@@ -727,13 +829,14 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             CantUpdateArtistIdentityException,
             WrongTokenlyUserCredentialsException {
        return moduleManager.updateArtistIdentity(
-                fanExternalName,
-                fanPassword, identitySelected.getId(),
-                identitySelected.getPublicKey(),
-                identitySelected.getProfileImage(),
-                externalPlatform,
-                exposureLevel,
-                artistAcceptConnectionsType);
+               fanExternalName,
+               fanPassword,
+               identitySelected.getId(),
+               identitySelected.getPublicKey(),
+               (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
+               externalPlatform,
+               exposureLevel,
+               artistAcceptConnectionsType);
     }
 
     private Artist updateIdentityImage(
@@ -745,14 +848,14 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             CantUpdateArtistIdentityException,
             WrongTokenlyUserCredentialsException {
        return  moduleManager.updateArtistIdentity(
-                fanExternalName,
-                fanPassword,
-                identitySelected.getId(),
-                identitySelected.getPublicKey(),
-                ArtistImageByteArray,
-                externalPlatform,
-                exposureLevel,
-                artistAcceptConnectionsType);
+               fanExternalName,
+               fanPassword,
+               identitySelected.getId(),
+               identitySelected.getPublicKey(),
+               (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
+               externalPlatform,
+               exposureLevel,
+               artistAcceptConnectionsType);
     }
 
     private byte[] convertImage(int resImage){
@@ -763,9 +866,31 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         return stream.toByteArray();
     }
 
-    public void showDialog(){
+   /* public void showDialog(){
         PresentationTokenlyArtistUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyArtistUserIdentityDialog(getActivity(),tkyIdentitySubAppSession, null,moduleManager);
         presentationTokenlyFanUserIdentityDialog.show();
+    }*/
+
+    private void setUpHelpTkyArtist(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog;
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.ic_profile_tokenly)
+                    .setIconRes(R.drawable.avatar_icon2)
+                    .setSubTitle(R.string.tky_artist_identity_welcome_subTitle)
+                    .setBody(R.string.tky_artist_identity_welcome_body)
+                    .setTextFooter(R.string.tky_artist_identity_welcome_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                    e);
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -789,7 +914,11 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-
+        if (updateProfileImage) {
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "Turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "Turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
+        }
         super.onCreateContextMenu(menu, view, menuInfo);
     }
 
@@ -804,9 +933,43 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                     loadImageFromGallery();
                     contextMenuInUse = true;
                     return true;
+                case CONTEXT_MENU_DELETE:
+                   DeletePicture();
+                    contextMenuDelete = true;
+                    return true;
+                case CONTEXT_MENU_TURN_RIGHT:
+                    turnpicture(90f);
+                    return true;
+                case CONTEXT_MENU_TURN_LEFT:
+                    turnpicture(-90f);
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void turnpicture(float rotationInDegrees) {
+        ImageView pictureView = ArtistImage;
+        Bitmap bitmap = ((RoundedBitmapDrawable)pictureView.getDrawable()).getBitmap();
+        Matrix matrix = new Matrix();
+        matrix.preRotate(rotationInDegrees);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        ArtistImage.setImageDrawable(
+                ImagesUtils.getRoundedBitmap(
+                        getResources(), rotatedBitmap));
+        ArtistImageByteArray = toByteArray(rotatedBitmap);
+        contextMenuInUse = false;
+    }
+
+    private void DeletePicture() {
+        ArtistImage.setImageDrawable(null);
+        ArtistImageByteArray = null;
+        buttonCam.setBackgroundResource(R.drawable.boton_cam);
+        updateProfileImage = false;
+
+
+
+
     }
 
 
@@ -841,7 +1004,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == 99)
-                showDialog();
+                setUpHelpTkyArtist(false);
+            //  showDialog();
 
 
         } catch (Exception e) {

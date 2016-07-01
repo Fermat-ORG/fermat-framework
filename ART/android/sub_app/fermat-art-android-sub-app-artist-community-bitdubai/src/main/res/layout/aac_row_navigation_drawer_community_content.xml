@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#0072bb"
+    android:background="#363636"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingRight="24dp">
@@ -19,15 +19,16 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:background="#0072bb"
+            android:background="#363636"
             android:src="@drawable/aac_ic_nav_connections"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/aac_textView_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0072bb"
+            android:background="#363636"
             android:paddingBottom="14dp"
             android:paddingLeft="16dp"
             android:paddingTop="14dp"

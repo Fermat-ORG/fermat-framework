@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="350dp"
+              android:background="@color/color_white"
+              android:orientation="vertical">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/ccc_dark_purple"
+        android:gravity="center"
+        android:text="@string/ccc_please_select_an_identity"
+        android:textColor="@color/color_white"
+        android:textSize="17sp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingEnd="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="5dp"
+        tools:listitem="@layout/ccc_dialog_selectable_identity_list_item"/>
+
+</LinearLayout>

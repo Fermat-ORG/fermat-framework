@@ -33,9 +33,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+
 import com.customviews.spinner_wheel.R;
 
+<<<<<<< HEAD:android_toolbox/spinner_wheel/src/main/java/com/customviews/spinner_wheel/WheelVerticalView.java
 
+=======
+>>>>>>> 3eea0cfcc182d1639b46b9ed0239b0f25ccf8686:android_toolbox/spinner_wheel/src/main/java/antistatic/spinnerwheel/WheelVerticalView.java
 /**
  * Spinner wheel vertical view.
  *

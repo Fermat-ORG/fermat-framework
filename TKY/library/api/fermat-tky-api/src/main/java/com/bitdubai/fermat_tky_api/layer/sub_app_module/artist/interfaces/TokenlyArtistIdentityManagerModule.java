@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
@@ -98,4 +99,14 @@ public interface TokenlyArtistIdentityManagerModule extends
      * @throws TokenlyAPINotAvailableException
      */
     TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException;
+
+    /**
+     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
+     * settings class parametrized.
+     *
+     * @return a new instance of the settings manager for the specified fermat settings object.
+     */
+    @Override
+    SettingsManager<TokenlyArtistPreferenceSettings> getSettingsManager();
+
 }

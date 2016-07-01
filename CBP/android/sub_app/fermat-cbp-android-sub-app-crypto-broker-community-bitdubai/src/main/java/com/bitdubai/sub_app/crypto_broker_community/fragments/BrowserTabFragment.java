@@ -9,14 +9,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -30,16 +34,20 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.GeolocationDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
@@ -55,7 +63,7 @@ import java.util.List;
  */
 public class BrowserTabFragment
         extends FermatListFragment<CryptoBrokerCommunityInformation, ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>>
-        implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener {
+        implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener, GeolocationDialog.AdapterCallback {
 
     //Constants
     private static final int MAX = 10;
@@ -67,19 +75,27 @@ public class BrowserTabFragment
     private ErrorManager errorManager;
 
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
+    private int offset = 0;
+    private DeviceLocation location;
+    private double distance;
+    private String alias;
+    private CryptoBrokerCommunitySelectableIdentity identity;
 
     //Flags
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
 
     private AvailableActorsListAdapter adapter;
-    ImageView noContacts;
-    private int offset;
+    private ImageView noContacts;
+    private PresentationDialog helpDialog;
+    private GeolocationDialog geolocationDialog;
+    private RelativeLayout locationFilterBar;
+    private FermatTextView locationFilterBarCountry;
+    private FermatTextView locationFilterBarPlace;
 
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
     }
-
 
     /**
      * Fragment interface implementation.
@@ -87,29 +103,20 @@ public class BrowserTabFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        moduleManager = appSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+        loadSettings();
+
+        //Check if a default identity is configured
         try {
-            setHasOptionsMenu(true);
-
-            //Get managers
-            moduleManager = appSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
-            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-            loadingSettings();
-
-            //Check if a default identity is configured
-            try {
-                moduleManager.getSelectedActorIdentity();
-            } catch (CantGetSelectedActorIdentityException e) {
-                //There are no identities in device
-                launchActorCreationDialog = true;
-            } catch (ActorIdentityNotSelectedException e) {
-                //There are identities in device, but none selected
-                launchListIdentitiesDialog = true;
-            }
-
-        } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
+            identity = moduleManager.getSelectedActorIdentity();
+        } catch (CantGetSelectedActorIdentityException e) {
+            launchActorCreationDialog = true;  //There are no identities in device
+        } catch (ActorIdentityNotSelectedException e) {
+            launchListIdentitiesDialog = true; //There are identities in device, but none selected
         }
     }
 
@@ -122,6 +129,23 @@ public class BrowserTabFragment
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         noContacts = (ImageView) rootView.findViewById(R.id.cbc_no_contacts);
+        locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
+        locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_country);
+        locationFilterBarPlace = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_place);
+
+        final View locationFilterBarCloseButton = rootView.findViewById(R.id.cbc_location_filter_footer_bar_close_button);
+        locationFilterBarCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                location = null;
+                distance = identity.getAccuracy();
+                offset = 0;
+
+                final Animation slideDown = AnimationUtils.loadAnimation(getActivity(), R.anim.cbc_slide_down);
+                locationFilterBar.startAnimation(slideDown);
+                locationFilterBar.setVisibility(View.GONE);
+            }
+        });
 
         launchPresentationDialog();
     }
@@ -202,6 +226,7 @@ public class BrowserTabFragment
 
     @Override
     public RecyclerView.OnScrollListener getScrollListener() {
+        //TODO: Descomentar esto para activar la paginacion cuando esta funcionando en los Actor Network Service
 //        if (scrollListener == null) {
 //            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
 //            endlessScrollListener.setOnLoadMoreDataListener(this);
@@ -213,16 +238,80 @@ public class BrowserTabFragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+//        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+//        final SearchView searchView = (SearchView) menuItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                List<CryptoBrokerCommunityInformation> filteredList = filterList(newText, cryptoBrokerCommunityInformationList);
+//                adapter.changeDataSet(filteredList);
+//                return true;
+//            }
+//        });
+    }
+
+    private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
+        final ArrayList<CryptoBrokerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoBrokerCommunityInformation item : baseList) {
+            if (item.getAlias().contains(filterText)) {
+                filteredList.add(item);
+            }
+        }
+
+        return filteredList;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //TODO: colocar aqui el codigo para mostrar el filtro de geolocalizacion, el help dialog y el SearchView
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                if (helpDialog == null)
+                    helpDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.cbc_banner)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
+                            .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                            .setIsCheckEnabled(true)
+                            .build();
+
+                helpDialog.show();
+
+                return true;
+
+            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
+                try {
+                    geolocationDialog = new GeolocationDialog(getActivity(), appSession, appResourcesProviderManager, this);
+                    geolocationDialog.show();
+
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+
+                return true;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el SearchView
+                return true;
+        }
+
+        return false;
     }
 
     @Override
     public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
         try {
             ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager,
-                    data, moduleManager.getSelectedActorIdentity());
+                    data, identity);
 
             connectDialog.setTitle("Connection Request");
             connectDialog.setSubtitle("New Request");
@@ -236,7 +325,7 @@ public class BrowserTabFragment
 
             connectDialog.show();
 
-        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
             Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
         }
@@ -244,6 +333,29 @@ public class BrowserTabFragment
 
     @Override
     public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+    }
+
+    @Override
+    public void onLocationItemClicked(ExtendedCity city) {
+        offset = 0;
+
+        location = new DeviceLocation();
+        location.setLatitude((double) city.getLatitude());
+        location.setLongitude((double) city.getLongitude());
+
+        distance = identity.getAccuracy();
+        location.setAccuracy((long) distance);
+
+
+        geolocationDialog.dismiss();
+        locationFilterBarCountry.setText(city.getCountryName());
+        locationFilterBarPlace.setText(city.getName());
+
+        Animation slideUp = AnimationUtils.loadAnimation(getActivity(), R.anim.cbc_slide_up);
+        locationFilterBar.setVisibility(View.VISIBLE);
+        locationFilterBar.startAnimation(slideUp);
+
+        onRefresh();
     }
 
     @Override
@@ -265,7 +377,7 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -275,6 +387,7 @@ public class BrowserTabFragment
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
@@ -313,7 +426,7 @@ public class BrowserTabFragment
     /**
      * Obtain Settings or create new Settings if first time opening subApp
      */
-    private void loadingSettings() {
+    private void loadSettings() {
         CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -340,14 +453,13 @@ public class BrowserTabFragment
             if (launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.banner_crypto_broker)
+                        .setBannerRes(R.drawable.cbc_banner)
                         .setIconRes(R.drawable.crypto_broker)
                         .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                         .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
-                        .setImageRight(R.drawable.ic_profile_male)
                         .setIsCheckEnabled(true)
                         .build();
 
@@ -356,6 +468,13 @@ public class BrowserTabFragment
                     public void onDismiss(DialogInterface dialog) {
                         invalidate();
                         onRefresh();
+
+                        try {
+                            identity = moduleManager.getSelectedActorIdentity();
+                        } catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
                     }
                 });
 
@@ -432,6 +551,13 @@ public class BrowserTabFragment
             errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
     }
 }
 
