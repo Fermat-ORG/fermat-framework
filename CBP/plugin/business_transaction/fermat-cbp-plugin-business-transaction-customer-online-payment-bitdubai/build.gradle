@@ -9,11 +9,11 @@ targetCompatibility = 1.7
 version = '1.0'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':fermat-pip-api')
-    compile project(':fermat-api')
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile project(':fermat-pip-api')
+    //compile project(':fermat-api')
     compile project(':fermat-cbp-api')
-    compile project(':fermat-ccp-api')
+    //compile project(':fermat-ccp-api')
     testCompile "junit:junit:4.11"
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
 
