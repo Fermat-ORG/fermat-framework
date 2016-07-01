@@ -13,8 +13,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
@@ -42,14 +45,13 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
     protected String walletPublicKey = org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities.WALLET_PUBLIC_KEY;
     protected org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager actorAssetIssuerManager;
     protected org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager actorAssetUserManager;
-    protected BitcoinNetworkManager bitcoinNetworkManager;
+    protected BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
     /**
      * Set the UUID from this plugin
      *
      * @param pluginId
-     * @throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException
-     */
+          */
     public void setPluginId(UUID pluginId) throws CantSetObjectException {
         if (pluginId == null) {
             throw new CantSetObjectException("pluginId is null");
@@ -61,7 +63,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * Set the PliginFileSystem used to persist Digital Assets in local storage
      *
      * @param pluginFileSystem
-     * @throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException
+     * @throws
      */
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException {
         if (pluginFileSystem == null) {
@@ -221,7 +223,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         System.out.println("The wallet public key in vault is " + this.walletPublicKey);
     }
 
-    public void setBitcoinCryptoNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+    public void setBitcoinCryptoNetworkManager(BlockchainManager<ECKey, Transaction> bitcoinNetworkManager) {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 

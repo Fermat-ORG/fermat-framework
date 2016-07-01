@@ -2,19 +2,20 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bit
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.BlockchainException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 
 
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.DownloadProgressTracker;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.store.SPVBlockStore;
+import org.fermatj.core.BlockChain;
+import org.fermatj.core.Context;
+import org.fermatj.core.DownloadProgressTracker;
+import org.fermatj.core.NetworkParameters;
+import org.fermatj.core.Wallet;
+import org.fermatj.store.BlockStore;
+import org.fermatj.store.BlockStoreException;
+import org.fermatj.store.MemoryBlockStore;
+import org.fermatj.store.SPVBlockStore;
 
 import java.io.File;
 import java.io.Serializable;
@@ -48,7 +49,7 @@ public class FermatCryptoNetworkBlockChain extends DownloadProgressTracker imple
         this.context = context;
         this.networkParameters= this.context.getParams();
 
-        this.BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkSelector.getBlockchainNetworkType(this.networkParameters);
+        this.BLOCKCHAIN_NETWORK_TYPE = FermatBlockchainNetworkSelector.getBlockchainNetworkType(this.networkParameters);
         this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();
         this.BLOCKCHAIN_FILENAME = "fermat_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
         this.CHECKPOINT_FILENAME = "checkpoints-" + BLOCKCHAIN_NETWORK_TYPE.getCode();

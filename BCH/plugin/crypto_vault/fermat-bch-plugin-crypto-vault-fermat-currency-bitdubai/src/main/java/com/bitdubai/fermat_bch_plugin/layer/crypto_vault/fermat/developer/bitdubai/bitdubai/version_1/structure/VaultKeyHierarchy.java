@@ -4,21 +4,23 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.KeyHierarchy;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
+
 import com.bitdubai.fermat_bch_api.layer.exceptions.database.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.database.FermatCurrencyCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.exceptions.CantInitializeFermatCurrencyCryptoVaultDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.KeyHierarchy;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.interfaces.CryptoVaultDao;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.crypto.ChildNumber;
-import org.bitcoinj.crypto.DeterministicHierarchy;
-import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.crypto.HDKeyDerivation;
+import org.fermatj.core.ECKey;
+import org.fermatj.crypto.ChildNumber;
+import org.fermatj.crypto.DeterministicHierarchy;
+import org.fermatj.crypto.DeterministicKey;
+import org.fermatj.crypto.HDKeyDerivation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +64,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
      * These are the m/n paths...for example m/0 , m/1, ... m m/n
      * @param account
      */
-    public void addVaultAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
+    public void addVaultAccount(HierarchyAccount account){
         DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), true, true, ChildNumber.ZERO);
         accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
@@ -104,7 +106,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
      * @param blockchainNetworkType
      * @return the crypto address
      */
-    public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
+    public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
         /**
          * I get the next available key for this account
          */
@@ -117,7 +119,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
         /**
          * I will create the CryptoAddress with the key I just got
          */
-        String address = ecKey.toAddress(BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
+        String address = ecKey.toAddress(FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.FERMAT);
 
         /**
@@ -125,7 +127,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
          * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
          * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
          */
-        if (BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType) != BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
+        if (FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType) != FermatBlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
             setActiveNetwork(blockchainNetworkType);
         }
 
@@ -164,7 +166,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
      * @param account
      * @return
      */
-    public ECKey getNextAvailableKey(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account) throws CantExecuteDatabaseOperationException {
+    public ECKey getNextAvailableKey(HierarchyAccount account) throws CantExecuteDatabaseOperationException {
         /**
          * I get from database the next available key depth
          */
@@ -202,7 +204,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
      * @param hierarchyAccount
      * @return
      */
-    private int getNextAvailableKeyDepth(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+    private int getNextAvailableKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
         int returnValue = 0;
         int currentUsedKey = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
         /**
