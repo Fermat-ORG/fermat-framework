@@ -270,7 +270,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
                 List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset, location);
+                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(distance,alias,max, offset, location);
 
 
 
