@@ -128,6 +128,27 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
                         pair = insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
                         databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
+                    } else {
+
+                        /*
+                         * Update the profile in the catalog
+                         */
+                        pair = updateActorsCatalog(actorProfile.getIdentityPublicKey(), currentMillis);
+                        databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+
+                        ActorsCatalogTransaction actorsCatalogTransaction = createActorsCatalogTransaction(actorProfile.getIdentityPublicKey(), currentMillis);
+
+                        /*
+                         * Create the transaction
+                         */
+                        pair = insertActorsCatalogTransaction(actorsCatalogTransaction);
+                        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                        /*
+                         * Create the transaction for propagation
+                         */
+                        pair = insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
+                        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
                     }
 
                 }else {
@@ -168,6 +189,47 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
             LOG.error(exception.getCause());
 
         }
+    }
+
+    /**
+     * Update a row into the data base
+     *
+     * @param actorPublicKey
+     * @param lastConnection
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    private DatabaseTransactionStatementPair updateActorsCatalog(final String    actorPublicKey,
+                                                                 final Timestamp lastConnection) throws CantCreateTransactionStatementPairException {
+
+        /*
+         * Save into the data base
+         */
+        return getDaoFactory().getActorsCatalogDao().createLastConnectionUpdateTransaction(actorPublicKey, lastConnection);
+    }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param identityPublicKey
+     * @param lastConnection
+     */
+    private ActorsCatalogTransaction createActorsCatalogTransaction(final String    identityPublicKey,
+                                                                    final Timestamp lastConnection   )  {
+
+        /*
+         * Create the transaction
+         */
+        ActorsCatalogTransaction transaction = new ActorsCatalogTransaction();
+        transaction.setIdentityPublicKey(identityPublicKey);
+        transaction.setTransactionType(ActorsCatalogTransaction.UPDATE_LAST_CONNECTION_TRANSACTION_TYPE);
+        transaction.setGenerationTime(lastConnection);
+        transaction.setLastConnection(lastConnection);
+
+        /*
+         * Create Object transaction
+         */
+        return transaction;
     }
 
     /**
