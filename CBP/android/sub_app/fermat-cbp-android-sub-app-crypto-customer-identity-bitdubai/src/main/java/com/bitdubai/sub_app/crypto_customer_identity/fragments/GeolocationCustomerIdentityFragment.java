@@ -18,19 +18,21 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -42,9 +44,6 @@ import java.util.concurrent.ExecutorService;
 public class GeolocationCustomerIdentityFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, SubAppResourcesProviderManager> {
 
-    private ExecutorService executor;
-
-    ErrorManager errorManager;
     EditText accuracy;
     Spinner frequency;
     Toolbar toolbar;
@@ -57,6 +56,7 @@ public class GeolocationCustomerIdentityFragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -85,6 +85,7 @@ public class GeolocationCustomerIdentityFragment
         menu.clear();
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -120,8 +121,9 @@ public class GeolocationCustomerIdentityFragment
                         frequencyData = Frequency.getByCode(parent.getItemAtPosition(position).toString());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
-                    } catch (InvalidParameterException e) {
-                        e.printStackTrace();
+                    } catch (InvalidParameterException ex) {
+                        appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW,
+                                UnexpectedUIExceptionSeverity.UNSTABLE, ex);
                     }
                 }
 
@@ -129,8 +131,9 @@ public class GeolocationCustomerIdentityFragment
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-        } catch (CantGetChatIdentityException e) {
-            e.printStackTrace();
+        } catch (CantGetCryptoCustomerIdentityException ex) {
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
     }
@@ -151,7 +154,7 @@ public class GeolocationCustomerIdentityFragment
         }
     }
 
-    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetChatIdentityException {
+    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetCryptoCustomerIdentityException {
         final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         if (identityInfo != null) {

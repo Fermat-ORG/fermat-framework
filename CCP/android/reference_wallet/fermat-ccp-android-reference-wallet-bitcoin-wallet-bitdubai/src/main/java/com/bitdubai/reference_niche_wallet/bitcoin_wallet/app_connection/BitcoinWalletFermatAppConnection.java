@@ -105,10 +105,10 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceAp
 
                 break;
             case 2:
-                resId = R.drawable.ic_menu_help_icon;
+                resId = R.drawable.help_icon;
                 break;
             case 4:
-                resId = R.drawable.ic_actionbar_send;
+                resId = R.drawable.sendbtc_icon;
                 break;
             case 3:
 

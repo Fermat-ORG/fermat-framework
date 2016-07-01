@@ -20,7 +20,7 @@ public class PluginVersionReference implements Serializable {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private PluginDeveloperReference pluginDeveloperReference;
-    private final Version version;
+    private Version version;
 
     public PluginVersionReference(final Version version) {
 
@@ -32,6 +32,9 @@ public class PluginVersionReference implements Serializable {
 
         this.pluginDeveloperReference = pluginDeveloperReference;
         this.version = version;
+    }
+
+    public PluginVersionReference() {
     }
 
     public PluginVersionReference(final Platforms platform,
@@ -94,7 +97,8 @@ public class PluginVersionReference implements Serializable {
         int c = 0;
         if (pluginDeveloperReference != null)
             c += pluginDeveloperReference.hashCode();
-        c += version.hashCode();
+        if(version!=null)
+            c += version.hashCode();
         return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 

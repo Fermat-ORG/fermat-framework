@@ -77,7 +77,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -363,7 +363,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
-                            "Payment from Crypto Customer contract " + pendingContractHash,
+                            "Merchandise sent from a Broker",
                             intraUser.getPublicKey(),
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,

@@ -3,6 +3,7 @@ package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 
 import java.io.Serializable;
@@ -16,18 +17,24 @@ public class IdentityAssetUsermpl implements IdentityAssetUser, Serializable {
     private String publicKey;
     private byte[] profileImage;
     private String privateKey;
+    private int accuracy;
+    private Frequency frequency;
 
-    public IdentityAssetUsermpl(String alias, String publicKey, String privateKey, byte[] profileImage) {
+    public IdentityAssetUsermpl(String alias, String publicKey, String privateKey, byte[] profileImage, int accuracy, Frequency frequency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.privateKey = privateKey;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
     }
 
-    public IdentityAssetUsermpl(String alias, String publicKey, byte[] profileImage) {
+    public IdentityAssetUsermpl(String alias, String publicKey, byte[] profileImage, int accuracy, Frequency frequency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
     }
 
     @Override
@@ -65,6 +72,16 @@ public class IdentityAssetUsermpl implements IdentityAssetUser, Serializable {
             // throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
         }
         return null;
+    }
+
+    @Override
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    @Override
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     @Override

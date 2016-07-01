@@ -40,6 +40,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_men
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_menu.FermatBasicNavigationMenuBody;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuViewsAvailables;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -53,7 +54,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
@@ -85,7 +86,6 @@ import java.util.UUID;
 public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         WalletRuntimeManager,
         XML {
-
 
     /**
      * Path of xml files
@@ -385,6 +385,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Combo cht identity/community
         runtimeAppNavigationStructure = buildChatCommunityIdentityComboApp();
         recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
+
+
 
         /**
          * SubApp generator
@@ -1263,7 +1265,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset Issuer");
+        runtimeTitleBar.setLabel("Wallet Asset Issuer");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
 //        runtimeTitleBar.setIsTitleTextStatic(true);
@@ -1283,14 +1285,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1505,7 +1507,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1540,7 +1542,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1633,20 +1635,20 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
         menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
         menuItem.setFermatDrawable(new FermatDrawable(1, "ic_send", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
         menuItem.setLabel("Send");
-        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(3);
 //        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1740,7 +1742,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset User");
+        runtimeTitleBar.setLabel("Wallet Asset User");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
 //        runtimeTitleBar.setTitleColor(titleBarLabelColor);
 //        runtimeTitleBar.setIsTitleTextStatic(true);
@@ -1763,14 +1765,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
         menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1850,9 +1852,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1889,7 +1891,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1926,7 +1928,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1963,7 +1965,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2000,7 +2002,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(2);
 //        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_redeem", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Redeem");
-        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2063,7 +2065,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(2);
 //        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_sell", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Sell");
-        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2125,7 +2127,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(2);
 //        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_transfer", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Transfer");
-        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2230,7 +2232,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Redeem Point");
+        runtimeTitleBar.setLabel("Wallet Redeem Point");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
 //        runtimeTitleBar.setIsTitleTextStatic(true);
@@ -2250,14 +2252,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2273,7 +2275,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Redeem Point");
+        runtimeTitleBar.setLabel("Wallet Redeem Point");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#009688");
@@ -2312,14 +2314,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
         menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2358,7 +2360,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2395,7 +2397,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2431,7 +2433,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2467,7 +2469,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         menuItem = new OptionMenuItem(1);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -3913,6 +3915,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     public AppNavigationStructure createBankMoneyWalletNavigationStructure() {
 
+        final int ADD_ACCOUNT_ACTION = 0;
+        final int EDIT_ACCOUNT_ACTION = 1;
+        final int SAVE_ACTION = 2;
+        final int HELP_ACTION = 3;
+
         AppNavigationStructure runtimeAppNavigationStructure;
         Activity runtimeActivity;
         FermatRuntimeFragment runtimeFragment;
@@ -3924,15 +3931,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
-        final String publicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
+        final String PUBLIC_KEY = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
         final String statusBarColor = "#0e0719";
         final String titleBarLabelColor = "#FFFFFF";
         final int titleBarLabelSize = 16;
 
 
         runtimeAppNavigationStructure = new AppNavigationStructure();
-        runtimeAppNavigationStructure.setPublicKey(publicKey);
-        navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
+        runtimeAppNavigationStructure.setPublicKey(PUBLIC_KEY);
+        navigationStructureOpen.put(PUBLIC_KEY, runtimeAppNavigationStructure);
 
         //Setup activity
         runtimeActivity = new Activity();
@@ -3969,6 +3978,25 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        // Option Menu - Home Activity
+        OptionsMenu optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Add Account
+        OptionMenuItem optionMenuItem = new OptionMenuItem(ADD_ACCOUNT_ACTION);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(ADD_ACCOUNT_ACTION, "bw_action_add", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        //optionMenuItem.setLabel("Add Account");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_ACTION);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_ACTION, "bw_action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        //optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey());
         runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNTS_LIST.getKey(), runtimeFragment);
@@ -3979,7 +4007,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS);
         runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3994,6 +4022,23 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        // Option Menu - Account Detail Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Edit Account
+        optionMenuItem = new OptionMenuItem(EDIT_ACCOUNT_ACTION);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(EDIT_ACCOUNT_ACTION, "bw_action_edit", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_ACTION);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_ACTION, "bw_action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAIL.getKey());
         runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAIL.getKey(), runtimeFragment);
@@ -4004,7 +4049,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL);
         runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -4029,7 +4074,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT);
         runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT.getCode());
         runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -4044,6 +4089,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        // Option Menu - Add Account Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - SAVE Account
+        optionMenuItem = new OptionMenuItem(SAVE_ACTION);
+        optionMenuItem.setLabel("SAVE");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT.getKey());
         runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT.getKey(), runtimeFragment);
@@ -4054,7 +4109,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT);
         runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT.getCode());
         runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -4068,6 +4123,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // Option Menu - Edit Account Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - SAVE Account
+        optionMenuItem = new OptionMenuItem(SAVE_ACTION);
+        optionMenuItem.setLabel("SAVE");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT.getKey());
@@ -4201,12 +4266,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeHeader = new Header();
+        /*runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
         runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
-        runtimeHeader.setStartCollapsed(true);
+        runtimeHeader.setStartCollapse(true);
         runtimeActivity.setHeader(runtimeHeader);
+        runtimeHeader.setStartCollapsed(true);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
 
         runtimeTabStrip = new TabStrip();
@@ -4353,9 +4420,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         return xml;
     }
 
-
-
-
     @Override
     public void setNavigationStructureXml(AppNavigationStructure walletNavigationStructure) {
         String publiKey = walletNavigationStructure.getPublicKey();
@@ -4391,7 +4455,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         }
 
     }
-
 
     /**
      * Meanwhile
@@ -4505,20 +4568,21 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          *
          * */
         OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
-        optionsMenu.addMenuItem(optionMenuItem);
 
-
-        optionMenuItem = new OptionMenuItem(2);
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "bit_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
-        optionMenuItem.setShowAsAction(2); //show always icon
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
+
+         optionMenuItem = new OptionMenuItem(2);
+         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 //
@@ -4676,7 +4740,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -5295,22 +5359,24 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          * Menu
          *
          * */
-        OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
-        optionsMenu.addMenuItem(optionMenuItem);
 
-
-        optionMenuItem = new OptionMenuItem(2);
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
-        optionMenuItem.setShowAsAction(2); //show always icon
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
+
+        optionMenuItem = new OptionMenuItem(2);
+
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 //
 //        /**
 //         *  Fin de menu
@@ -5372,7 +5438,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(new FermatRuntimeFragment(2,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -5488,12 +5554,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          *
          * */
        optionsMenu = new OptionsMenu();
-        optionMenuItem = new OptionMenuItem(2);
+         optionMenuItem = new OptionMenuItem(2);
         owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -5629,21 +5695,24 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          * Menu
          *
          * */
-        optionsMenu = new OptionsMenu();
-        optionMenuItem = new OptionMenuItem(1);
+
         owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
-        optionsMenu.addMenuItem(optionMenuItem);
 
-
-        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
-        optionMenuItem.setShowAsAction(2); //show always icon
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
+
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(2);
+
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeTitleBar = new TitleBar();
@@ -6203,7 +6272,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         return runtimeSideMenu;
     }
 
-
     private AppNavigationStructure buildChatCommunityIdentityComboApp(){
 
         AppNavigationStructure runtimeWalletNavigationStructure = new AppNavigationStructure();
@@ -6301,7 +6369,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setLabel("Help");
         optionMenuItem.setOrder(2);
-        optionMenuItem.setShowAsAction(4);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -6309,15 +6377,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem = new OptionMenuItem(2);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(2);
-        optionMenuItem.setActionViewClass(100);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(optionMenuItem);
 
         // World optionMenu
         optionMenuItem = new OptionMenuItem(3);
         optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_world", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("World");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CHT_COMBO_WORLD.getCode()));
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -6325,15 +6393,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem = new OptionMenuItem(4);
         optionMenuItem.setLabel("Location");
         optionMenuItem.setOrder(1);
-        optionMenuItem.setShowAsAction(4);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(5);
         optionMenuItem.setLabel("Profile");
         optionMenuItem.setOrder(0);
-        optionMenuItem.setShowAsAction(4);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CHT_COMBO_PROFILE.getCode()));
-//        optionMenuItem.setShowAsAction(2);
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -6398,7 +6466,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
         runtimeFragment.setOwner(owner);
         menuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner, SourceLocation.DEVELOPER_RESOURCES));
-        menuItem.setShowAsAction(2);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -6460,9 +6528,109 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
         runtimeFragment.setOwner(owner);
         menuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner, SourceLocation.DEVELOPER_RESOURCES));
-        menuItem.setShowAsAction(2);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        return runtimeWalletNavigationStructure;
+    }
+
+
+    private AppNavigationStructure buildWalletIdentityApp() {
+
+        AppNavigationStructure runtimeWalletNavigationStructure = new AppNavigationStructure();
+        Activity runtimeActivity;
+        FermatRuntimeFragment runtimeFragment;
+        TitleBar runtimeTitleBar;
+
+
+        StatusBar runtimeStatusBar;
+
+        Tab runtimeTab;
+
+
+        final String publicKey = SubAppsPublicKeys.CCP_IDENTITY.getCode();
+
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+
+        //Home Activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+        runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackgroundColor("#ffffff");
+        runtimeActivity.setColor("#ffffff");
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Wallet Users");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#009CD4");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#009CD4");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+        //Menu
+
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_IDENTITY.getCode());
+
+        //Help optionMenu
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(99);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
+        //Search optionMenu
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // home fragment
+
+        runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+
+
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
+
+
+        // Profile Activity
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getCode());
+        runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY);
+        runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+        runtimeActivity.setColor("#ffffff");
+
+//Fragments
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getKey(), runtimeFragment);
+
 
         // Add to navigation structure
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -6512,7 +6680,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         return runtimeSideMenu;
     }
-
 
     private AppNavigationStructure startFermatWalletNavigationStructure() {
 
@@ -6626,20 +6793,24 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          *
          * */
         OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+
         owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
-        optionsMenu.addMenuItem(optionMenuItem);
 
-
-        optionMenuItem = new OptionMenuItem(2);
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "fw_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
-        optionMenuItem.setShowAsAction(2); //show always icon
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
+
+         optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
+
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -6683,7 +6854,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(new FermatRuntimeFragment(2,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -6735,20 +6906,24 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          *
          * */
          optionsMenu = new OptionsMenu();
-         optionMenuItem = new OptionMenuItem(2);
+
         owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
-        optionsMenu.addMenuItem(optionMenuItem);
 
-
-        optionMenuItem = new OptionMenuItem(3);
+        optionMenuItem = new OptionMenuItem(2);
         optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_actionbar_send", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("New");
-        optionMenuItem.setShowAsAction(2); //show always icon
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
         optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(3);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
+
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -6831,7 +7006,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
 

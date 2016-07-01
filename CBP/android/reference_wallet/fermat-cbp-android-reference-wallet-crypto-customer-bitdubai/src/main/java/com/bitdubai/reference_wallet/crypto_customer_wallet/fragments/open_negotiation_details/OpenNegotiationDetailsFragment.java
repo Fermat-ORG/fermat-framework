@@ -38,7 +38,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
@@ -47,7 +49,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotUpdateNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
@@ -95,8 +97,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
     private ArrayList<MoneyType> receptionMethods;
-    private List<BankAccountNumber> bankAccountList;
-    private List<String> locationList;
+    private List<BankAccountNumber> bankAccountList = new ArrayList<>();;
+    private List<String> locationList = new ArrayList<>();;
 
 
     public static OpenNegotiationDetailsFragment newInstance() {
@@ -114,22 +116,36 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             errorManager = appSession.getErrorManager();
             clausesTemp = new HashMap<>();
 
+            //Try to load appSession BANK_ACCOUNT_LIST data
             Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
-            if (data == null) {
-                bankAccountList = new ArrayList<>();
+            if(data == null) {
+            if(bankAccountList == null) {
+                //Get saved locations from settings
+                bankAccountList = moduleManager.getListOfBankAccounts();
+            }
+//                Save locations to appSession BANK_ACCOUNT_LIST data
                 appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
             } else {
-//                bankAccountList = (List<String>) data;
                 bankAccountList = (List<BankAccountNumber>) data;
             }
 
+
+            //Try to load appSession LOCATION_LIST data
             data = appSession.getData(FragmentsCommons.LOCATION_LIST);
             if (data == null) {
-                locationList = new ArrayList<>();
+
+                //Get saved locations from settings
+                Collection<NegotiationLocations> listAux = moduleManager.getAllLocations(NegotiationType.PURCHASE);
+                for (NegotiationLocations locationAux : listAux) {
+                    locationList.add(locationAux.getLocation());
+                }
+
+//                //Save locations to appSession LOCATION_LIST data
                 appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
+
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -949,6 +965,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
                     String bankAccount = "INSERT BANK ACCOUNT IN WALLET SETTINGS.";
+
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
 //                    bankAccount = bankAccountList.get(0).getAccount();
@@ -961,6 +978,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
                     String infoDelivery = "INSERT LOCATION IN WALLET SETTINGS.";
+
                     if (locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);

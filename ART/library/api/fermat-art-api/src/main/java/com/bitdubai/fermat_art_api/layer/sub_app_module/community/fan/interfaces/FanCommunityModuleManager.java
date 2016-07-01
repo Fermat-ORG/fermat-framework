@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
@@ -157,10 +157,10 @@ public interface FanCommunityModuleManager extends
 
     /**
      * The method <code>cancelArtist</code> cancels an artist from the list managed by this
-     * @param fanToCancelPublicKey
+     * @param connectionID
      * @throws FanCancellingFailedException
      */
-    void cancelFan(String fanToCancelPublicKey) throws FanCancellingFailedException;
+    void cancelFan(UUID connectionID) throws FanCancellingFailedException;
 
     /**
      * The method <code>getAllFans</code> returns the list of all fan registered by the
@@ -259,4 +259,10 @@ public interface FanCommunityModuleManager extends
 
     @Override
     int[] getMenuNotifications();
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    void checkAllConnections() throws CantHandleNewsEventException;
 }

@@ -3,8 +3,6 @@ package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.deve
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure.ArtistIdentityManager;
 
@@ -29,7 +27,7 @@ public class TestCreateArtistIdentity {
     public void setUp() throws Exception {
         System.out.println("initializing");
         Assert.assertNull(artistIdentityManager);
-        artistIdentityManager = new ArtistIdentityManager(null, null,null);
+        artistIdentityManager = new ArtistIdentityManager(null, null,null, pluginFileSystem, pluginId);
         Assert.assertNotNull(artistIdentityManager);
     }
 

@@ -1,19 +1,26 @@
 package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +35,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -60,8 +68,16 @@ implements FermatWorkerCallBack{
 
     private EditText mCustomerName;
     private View progressBar;
+    private int maxLenghtTextCount = 30;
+    FermatTextView textCount;
+
     private ExecutorService executor;
 
+    private final TextWatcher textWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
     public static CreateCryptoCustomerIdentityFragment newInstance() {
         return new CreateCryptoCustomerIdentityFragment();
@@ -89,6 +105,7 @@ implements FermatWorkerCallBack{
             appSession.removeData(FragmentsCommons.CUSTOMER_NAME);
         }
 
+        turnGPSOn();
     }
 
     @Override
@@ -103,6 +120,7 @@ implements FermatWorkerCallBack{
         progressBar = layout.findViewById(R.id.cci_progress_bar);
         final ImageView mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
+        textCount = (FermatTextView) layout.findViewById(R.id.crypto_customer_name_text_count);
 
 
         if (cryptoCustomerBitmap != null) {
@@ -117,7 +135,9 @@ implements FermatWorkerCallBack{
 
         mCustomerName.requestFocus();
         mCustomerName.performClick();
-
+        mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
+        mCustomerName.addTextChangedListener(textWatcher);
+        textCount.setText(String.valueOf(maxLenghtTextCount));
 
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -296,5 +316,70 @@ implements FermatWorkerCallBack{
     private Frequency getFrequencyData() {
         return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
                 (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    }
+
+    public void turnGPSOn() {
+        final Activity activity = getActivity();
+
+        try {
+            if (!checkGPSFineLocation() || !checkGPSCoarseLocation()) { //if gps is disabled
+                if (Build.VERSION.SDK_INT < 23) {
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
+                } else {
+                    if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+                    if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                        activity.requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
+                }
+            }
+        } catch (Exception e) {
+            try {
+                Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+                intent.putExtra("enabled", true);
+
+                if (Build.VERSION.SDK_INT < 23) {
+                    String provider = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                    if (!provider.contains("gps")) { //if gps is disabled
+                        Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+
+                } else {
+                    String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                    if (!provider.contains("gps")) { //if gps is disabled
+                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                        Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+                }
+
+            } catch (Exception ex) {
+                if (Build.VERSION.SDK_INT < 23) {
+                    Toast.makeText(activity, "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private boolean checkGPSCoarseLocation() {
+        String permission = "android.permission.ACCESS_COARSE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean checkGPSFineLocation() {
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }

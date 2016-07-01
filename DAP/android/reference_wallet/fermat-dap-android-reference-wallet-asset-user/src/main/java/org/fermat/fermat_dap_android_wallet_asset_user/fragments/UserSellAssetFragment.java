@@ -56,7 +56,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.UserSelectorAdap
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.SellInfo;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
@@ -380,12 +379,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override

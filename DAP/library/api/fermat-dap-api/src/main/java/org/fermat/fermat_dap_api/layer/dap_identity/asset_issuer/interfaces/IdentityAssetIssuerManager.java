@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
@@ -46,7 +47,10 @@ public interface IdentityAssetIssuerManager extends FermatManager, Serializable 
      * @return the intra user created
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException if something goes wrong.
      */
-    IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException;
+    IdentityAssetIssuer createNewIdentityAssetIssuer(String alias,
+                                                     byte[] profileImage,
+                                                     int accuracy,
+                                                     Frequency frequency) throws CantCreateNewIdentityAssetIssuerException;
 
     /**
      * The method <code>updateIdentityAssetIssuer</code> change a identity information data
@@ -56,7 +60,11 @@ public interface IdentityAssetIssuerManager extends FermatManager, Serializable 
      * @param profileImage
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException
      */
-    void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException;
+    void updateIdentityAssetIssuer(String identityPublicKey,
+                                   String identityAlias,
+                                   byte[] profileImage,
+                                   int accuracy,
+                                   Frequency frequency) throws CantUpdateIdentityAssetIssuerException;
 
     /**
      * The method <code>hasIntraIssuerIdentity</code> returns if has a intra user identity created
@@ -65,4 +73,8 @@ public interface IdentityAssetIssuerManager extends FermatManager, Serializable 
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException
      */
     boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException;
+
+    int getAccuracyDataDefault();
+
+    Frequency getFrequencyDataDefault();
 }

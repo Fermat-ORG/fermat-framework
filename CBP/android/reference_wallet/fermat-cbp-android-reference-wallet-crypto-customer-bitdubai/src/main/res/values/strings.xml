@@ -215,4 +215,5 @@
     <string name="sending_to_the_broker">Sending to the Broker</string>
     <string name="location">Location</string>
     <string name="ccw_exchange_rate">EXCHANGE RATE</string>
+    <string name="fermat_balance">Fermat Balance</string>
 </resources>

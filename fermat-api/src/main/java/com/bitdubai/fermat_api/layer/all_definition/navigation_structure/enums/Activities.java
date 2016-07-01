@@ -342,18 +342,23 @@ public enum Activities implements FermatEnum {
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
     CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI"),
+    CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY("CCPSAIIGI"),
+
     // DAP ISSUER IDENTITY
     DAP_SUB_APP_ASSET_ISSUER_IDENTITY("DAPSAAII"),
     DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY("DAPSAAIICI"),
+    DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_ACTIVITY("DSAAIIGA"),
 
     // DAP USER IDENTITY
     DAP_SUB_APP_ASSET_USER_IDENTITY("DAPSAAUI"),
     DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY("DAPSAAUICI"),
+    DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_ACTIVITY("DSAAUIGA"),
 
 
     // DAP REDEEM POINT IDENTITY
     DAP_SUB_APP_REDEEM_POINT_IDENTITY("DAPSARPI"),
     DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY("DAPSARPICI"),
+    DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_ACTIVITY("DAPSARPIGA"),
     // end of dap identities
     DEVELOP_MODE("develop_mode"),
 
@@ -397,6 +402,7 @@ public enum Activities implements FermatEnum {
     ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST("ASAACLIL"),
 
     ART_FAN_IDENTITY_CREATE_PROFILE("AFICP"),
+    ART_FAN_IDENTITY_TEST_ACTIVITY("AFITA"),
 
     ART_MUSIC_PLAYER_MAIN_ACTIVITY("ARTMPMA"),
 
@@ -438,6 +444,8 @@ public enum Activities implements FermatEnum {
         //    }
         //}
         switch (code) {
+            case "AFITA":
+                return Activities.ART_FAN_IDENTITY_TEST_ACTIVITY;
             case "AAICP":
                 return Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE;
             case "TAICP":
@@ -450,10 +458,16 @@ public enum Activities implements FermatEnum {
                 return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY;
             case "DAPSAAUICI":
                 return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY;
+            case "DSAAUIGA":
+                return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_ACTIVITY;
             case "DAPSAAII":
                 return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY;
             case "DAPSAAIICI":
                 return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY;
+            case "DSAAIIGA":
+                return DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_ACTIVITY;
+            case "DAPSARPIGA":
+                return DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_ACTIVITY;
             case "CSL":
                 return Activities.CWP_SHELL_LOGIN;
             case "CSMM":
@@ -753,6 +767,8 @@ public enum Activities implements FermatEnum {
 
             case "CCPSAISI":
                 return Activities.CCP_SUB_APP_INTRA_USER_IDENTITY;
+            case "CCPSAIIGI":
+                return Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY;
             case "CCPSAIICI":
                 return Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
             case "CCPSAIUCR":

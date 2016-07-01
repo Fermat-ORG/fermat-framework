@@ -84,7 +84,7 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
         }
 
         for(Clause clause : saleNegotiationClauses){
-            clauses.put(clause.getType(), new CryptoBrokerWalletModuleClauseInformation(clause));
+            clauses.put(clause.getType(), new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.classes.CryptoBrokerWalletModuleClauseInformation(clause));
         }
     }
 

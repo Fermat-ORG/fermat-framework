@@ -36,14 +36,14 @@ public class EmptyCustomerBrokerNegotiationInformationImpl implements CustomerBr
     }
 
     public ClauseInformation putClause(final ClauseType clauseType, final String value) {
-        final ClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clauseType, value, DRAFT);
+        final ClauseInformation clauseInformation = new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation(clauseType, value, DRAFT);
         clauses.put(clauseType, clauseInformation);
 
         return clauseInformation;
     }
 
     public ClauseInformation putClause(final ClauseInformation clause, final String value) {
-        final CryptoCustomerWalletModuleClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clause);
+        final com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation clauseInformation = new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation(clause);
         clauseInformation.setValue(value);
 
         clauses.put(clause.getType(), clauseInformation);

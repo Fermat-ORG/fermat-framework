@@ -24,6 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
@@ -74,6 +76,9 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.TOKENLY,layer = Layers.IDENTITY, plugin = Plugins.TOKENLY_ARTIST)
     private TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     public static final String ARTIST_PROFILE_IMAGE_FILE_NAME = "artistIdentityProfileImage";
@@ -97,7 +102,8 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.pluginId,
                     this.deviceUserManager,
                     this.artistManager,
-                    this.tokenlyArtistIdentityManager);
+                    this.tokenlyArtistIdentityManager,
+                    this.locationManager);
 
             exposeIdentities();
 
@@ -123,18 +129,17 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                 externalInformation.put(artist.getExternalPlatform(), artist.getExternalUsername());
                 List extraData = new ArrayList();
                 extraData.add(artist.getProfileImage());
-                extraData.add(new ArtistExternalPlatformInformation(externalInformation));
+                extraData.add(new ArtistExternalPlatformInformation(externalInformation).getExternalPlatformInformationMap());
                 String xmlExtraData = XMLParser.parseObject(extraData);
                 artistExposingDatas.add(new ArtistExposingData(
                         artist.getPublicKey(),
                         artist.getAlias(),
-                        xmlExtraData
+                        xmlExtraData,
+                        locationManager.getLocation()
                 ));
             }
             artistManager.exposeIdentities(artistExposingDatas);
-        } catch (CantListArtistIdentitiesException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        } catch (CantExposeIdentitiesException e) {
+        } catch (CantListArtistIdentitiesException | CantExposeIdentitiesException | CantGetDeviceLocationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }

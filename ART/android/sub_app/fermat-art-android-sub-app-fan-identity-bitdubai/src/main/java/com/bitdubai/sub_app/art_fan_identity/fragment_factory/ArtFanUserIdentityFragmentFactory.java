@@ -27,9 +27,17 @@ public class ArtFanUserIdentityFragmentFactory extends
     protected AbstractFermatFragment getFermatFragment(
             ArtFanUserIdentityFragmentsEnumType fragments) throws
             FragmentNotFoundException {
-        if(fragments.equals(ArtFanUserIdentityFragmentsEnumType.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT))
-            return CreateArtFanUserIdentityFragment.newInstance();
-        return null;
+
+        switch (fragments) {
+            //case ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT:
+            //    return TestClassFragment.newInstance();
+
+            case ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT:
+                return CreateArtFanUserIdentityFragment.newInstance();
+            default:
+                throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
+                        new Exception(), "fermat-tky-android-sub-app-artist-community", "fragment not found");
+        }
     }
 
     @Override

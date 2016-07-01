@@ -9,7 +9,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumType<IntraUserIdentityFragmentsEnumType> {
 
     CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CCPSACCIMF"),
-    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT("CCPSACCICIF")
+    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT("CCPSACCICIF"),
+    CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY("CCPSACCIGI")
     ;
 
     private String key;

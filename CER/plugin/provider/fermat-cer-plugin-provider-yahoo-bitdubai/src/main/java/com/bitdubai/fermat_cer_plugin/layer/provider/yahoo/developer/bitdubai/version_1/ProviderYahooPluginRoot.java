@@ -29,11 +29,11 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRat
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.database.YahooProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.yahoo.developer.bitdubai.version_1.exceptions.CantInitializeYahooProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,7 +140,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         String aux;
 
         try {
-            JSONObject json = new JSONObject(HttpReader.getHTTPContent(url));
+            JSONObject json = new JSONObject(HttpHelper.getHTTPContent(url));
 
             aux = json.getJSONObject("query").getJSONObject("results").getJSONObject("rate").get("Ask").toString();
             salePrice = Double.valueOf(aux);

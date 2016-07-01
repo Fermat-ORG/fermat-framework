@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.MaxTimeOutNotificationReachedEvent;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.TimeOutReachedEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;

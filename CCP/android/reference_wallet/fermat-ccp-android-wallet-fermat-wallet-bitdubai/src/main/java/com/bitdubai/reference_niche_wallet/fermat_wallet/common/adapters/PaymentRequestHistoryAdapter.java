@@ -16,7 +16,6 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.PaymentH
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
-
 import java.util.List;
 
 import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.formatBalanceString;

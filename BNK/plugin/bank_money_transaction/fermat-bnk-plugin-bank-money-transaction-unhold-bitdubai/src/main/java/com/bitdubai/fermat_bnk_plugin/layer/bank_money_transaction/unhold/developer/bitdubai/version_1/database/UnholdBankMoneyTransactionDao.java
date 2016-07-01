@@ -202,7 +202,7 @@ public class UnholdBankMoneyTransactionDao {
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, BankTransactionStatus.ACKNOWLEDGE.getCode());
-        newRecord.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, (new Date().getTime() / 1000));
+        newRecord.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, new Date().getTime());
         newRecord.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, 0);
     }
 

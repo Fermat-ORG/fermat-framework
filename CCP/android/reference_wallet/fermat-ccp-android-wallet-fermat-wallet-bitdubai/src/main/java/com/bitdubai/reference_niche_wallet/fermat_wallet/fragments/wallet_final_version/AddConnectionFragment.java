@@ -44,9 +44,6 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletCons
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
-
-
-
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;

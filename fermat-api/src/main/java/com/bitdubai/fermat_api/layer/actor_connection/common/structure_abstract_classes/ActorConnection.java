@@ -42,7 +42,7 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
         Validate.notNull(linkedIdentity , "The Linked Identity can't be null." );
         Validate.notNull(publicKey      , "The Public Key can't be null."      );
         Validate.notNull(alias          , "The Alias can't be null."           );
-        Validate.notNull(image          , "The Image can't be null."           );
+        //Validate.notNull(image          , "The Image can't be null."           );
         Validate.notNull(connectionState, "The Connection State can't be null.");
         Validate.notNull(creationTime   , "The Creation Time can't be null."   );
 

@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -24,7 +26,7 @@ import java.util.UUID;
  */
 public class AcceptDialog extends
         FermatDialog<
-                FanCommunitySubAppSessionReferenceApp,
+                ReferenceAppFermatSession<FanCommunityModuleManager>,
                 SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
@@ -45,7 +47,7 @@ public class AcceptDialog extends
 
     public AcceptDialog(
             Activity a,
-            FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
+            ReferenceAppFermatSession fanCommunitySubAppSession,
             SubAppResourcesProviderManager subAppResources,
             LinkedFanIdentity fanInformation,
             FanCommunitySelectableIdentity identity) {
@@ -57,7 +59,7 @@ public class AcceptDialog extends
 
     public AcceptDialog(
             Activity a,
-            FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
+            ReferenceAppFermatSession fanCommunitySubAppSession,
             SubAppResourcesProviderManager subAppResources,
             UUID connectionId,
             String alias,
@@ -82,8 +84,8 @@ public class AcceptDialog extends
         negativeBtn.setOnClickListener(this);
 
         title.setText("Connect");
-        description.setText("Do you want to accept");
-        userName.setText(alias);
+        description.setText("Do you want to accept the connection request from");
+        userName.setText(alias+"?");
     }
 
     @Override
@@ -107,7 +109,7 @@ public class AcceptDialog extends
                     getSession().getModuleManager().acceptFan(
                             connectionId);
                     Toast.makeText(getContext(),
-                            " Accepted connection request from " + alias,
+                            "Accepted connection request from " + alias,
                             Toast.LENGTH_SHORT).show();
                     getSession().setData("connectionresult", 3);
                 } else {

@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.factory.AssetRedeemPointCommunityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.navigation_drawer.RedeemPointCommunityNavigationViewPainter;
@@ -116,4 +117,19 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Refe
         return notification;
     }
 
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+
+        switch (id) {
+            case 1:
+                resId = R.drawable.ic_geolacation;
+                break;
+            case 2:
+                resId = R.drawable.ic_menu_search;
+                break;
+        }
+
+        return resId;
+    }
 }

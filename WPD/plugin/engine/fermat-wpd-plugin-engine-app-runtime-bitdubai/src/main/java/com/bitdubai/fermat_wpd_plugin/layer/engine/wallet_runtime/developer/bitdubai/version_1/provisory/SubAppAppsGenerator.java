@@ -23,7 +23,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuViewsAvailables;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchViewOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
@@ -559,7 +563,7 @@ public class SubAppAppsGenerator {
             runtimeSideMenu.setHasFooter(false);
 
             runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("Cripto wallet users");
+            runtimeMenuItem.setLabel("Crypto wallet users");
             runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
             runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -713,7 +717,7 @@ public class SubAppAppsGenerator {
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Artist Identity");
             runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setTitleColor("#3A3A3A");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1072,8 +1076,6 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
         runtimeActivity.setColor("#03A9F4");
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Issuer Identity");
@@ -1093,20 +1095,50 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
         optionsMenu = new OptionsMenu();
-//            menuItem = new OptionMenuItem(1);
-//            Owner owner = new Owner();
-//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
-//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
-//            menuItem.setShowAsAction(2);
-//            optionsMenu.addMenuItem(menuItem);
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Location");
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
+
+        //Activity Geolocation
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_ACTIVITY.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(identityPublicKey);
+//        runtimeActivity.setBackgroundColor("#F9F9F9");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
@@ -1163,8 +1195,8 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setColor("#03A9F4");
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+        //runtimeSubApp.addActivity(runtimeActivity);
+        //runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset User Identity");
@@ -1184,20 +1216,50 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
         optionsMenu = new OptionsMenu();
-//            menuItem = new OptionMenuItem(1);
-//            Owner owner = new Owner();
-//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
-//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
-//            menuItem.setShowAsAction(2);
-//            optionsMenu.addMenuItem(menuItem);
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Location");
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+
+        //Activity Geolocation
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_ACTIVITY.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(identityPublicKey);
+        //        runtimeActivity.setBackgroundColor("#F9F9F9");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
@@ -1254,19 +1316,20 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setColor("#03A9F4");
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
+//        runtimeSubApp.addActivity(runtimeActivity);
+//        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Redeem Point Identity");
-        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setColor("#009688");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
+        statusBar.setColor("#009688");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -1275,20 +1338,50 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
         optionsMenu = new OptionsMenu();
-//            menuItem = new OptionMenuItem(1);
-//            Owner owner = new Owner();
-//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
-//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
-//            menuItem.setShowAsAction(2);
-//            optionsMenu.addMenuItem(menuItem);
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Location");
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
+
+        //Activity Geolocation
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_ACTIVITY.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(identityPublicKey);
+        //        runtimeActivity.setBackgroundColor("#F9F9F9");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#009688");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#009688");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
@@ -1389,14 +1482,14 @@ public class SubAppAppsGenerator {
         menuItem = new OptionMenuItem(1);
         menuItem.setFermatDrawable(new FermatDrawable(1, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1534,7 +1627,7 @@ public class SubAppAppsGenerator {
         menuItem = new OptionMenuItem(2);
         menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1572,9 +1665,9 @@ public class SubAppAppsGenerator {
 
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1612,9 +1705,9 @@ public class SubAppAppsGenerator {
 
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1652,9 +1745,9 @@ public class SubAppAppsGenerator {
 
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1758,42 +1851,48 @@ public class SubAppAppsGenerator {
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Connect");
         menuItem.setOrder(0);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
 //        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Cancel Connecting");
         menuItem.setOrder(1);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(3);
 //        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Select All");
         menuItem.setOrder(2);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(4);
 //        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Unselect All");
         menuItem.setOrder(3);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(5);
 //        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
         menuItem.setOrder(4);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(6);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(7);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Location");
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -1832,7 +1931,7 @@ public class SubAppAppsGenerator {
 //        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
 //        menuItem.setOrder(4);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -1936,7 +2035,7 @@ public class SubAppAppsGenerator {
 //        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
 //        menuItem.setOrder(4);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -2096,52 +2195,58 @@ public class SubAppAppsGenerator {
         OptionsMenu optionsMenuMain = new OptionsMenu();
 
         OptionMenuItem menuItemMain = new OptionMenuItem(0);
-        menuItemMain.setFermatDrawable(new FermatDrawable(0, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemMain.setFermatDrawable(new FermatDrawable(0, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Connect");
         menuItemMain.setOrder(0);
-        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
         menuItemMain = new OptionMenuItem(1);
-        menuItemMain.setFermatDrawable(new FermatDrawable(1, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemMain.setFermatDrawable(new FermatDrawable(1, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Disconnect");
         menuItemMain.setOrder(1);
-        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
         menuItemMain = new OptionMenuItem(2);
-        menuItemMain.setFermatDrawable(new FermatDrawable(2, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemMain.setFermatDrawable(new FermatDrawable(2, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Cancel Connecting");
         menuItemMain.setOrder(2);
-        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
         menuItemMain = new OptionMenuItem(3);
-        menuItemMain.setFermatDrawable(new FermatDrawable(3, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemMain.setFermatDrawable(new FermatDrawable(3, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Select All");
         menuItemMain.setOrder(3);
-        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
         menuItemMain = new OptionMenuItem(4);
-        menuItemMain.setFermatDrawable(new FermatDrawable(4, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemMain.setFermatDrawable(new FermatDrawable(4, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Unselect All");
         menuItemMain.setOrder(4);
-        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
         menuItemMain = new OptionMenuItem(5);
-        menuItemMain.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemMain.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Help");
         menuItemMain.setOrder(5);
-        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
         menuItemMain = new OptionMenuItem(6);
-        menuItemMain.setFermatDrawable(new FermatDrawable(6, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Search");
-        menuItemMain.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
-        menuItemMain.setActionViewClass(100);
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionsMenuMain.addMenuItem(menuItemMain);
+
+        menuItemMain = new OptionMenuItem(7);
+        menuItemMain.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Location");
+        menuItemMain.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
         runtimeActivity.setOptionsMenu(optionsMenuMain);
@@ -2239,10 +2344,10 @@ public class SubAppAppsGenerator {
         //reinicializacion optionMenu for not reply menu en diferente activity
         OptionsMenu optionsMenuConnection = new OptionsMenu();
         OptionMenuItem menuItemConnection = new OptionMenuItem(1);
-        menuItemConnection.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemConnection.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemConnection.setLabel("Help");
 //        menuItemConnection.setOrder(4);
-        menuItemConnection.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemConnection.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuConnection.addMenuItem(menuItemConnection);
         runtimeActivity.setOptionsMenu(optionsMenuConnection);
 
@@ -2278,10 +2383,10 @@ public class SubAppAppsGenerator {
         //reinicializacion optionMenu for not reply menu en diferente activity
         OptionsMenu optionsMenuMgroup = new OptionsMenu();
         OptionMenuItem menuItemMgroup = new OptionMenuItem(1);
-        menuItemMgroup.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemMgroup.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMgroup.setLabel("Help");
 //        menuItemMgroup.setOrder(4);
-        menuItemMgroup.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMgroup.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMgroup.addMenuItem(menuItemMgroup);
         runtimeActivity.setOptionsMenu(optionsMenuMgroup);
 
@@ -2316,31 +2421,31 @@ public class SubAppAppsGenerator {
         //reinicializacion optionMenu for not reply menu en diferente activity
         OptionsMenu optionsMenuGroupUser = new OptionsMenu();
         OptionMenuItem menuItemGroupUser = new OptionMenuItem(1);
-        menuItemGroupUser.setFermatDrawable(new FermatDrawable(1, "rename_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemGroupUser.setFermatDrawable(new FermatDrawable(1, "rename_group", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemGroupUser.setLabel("Rename Group");
         menuItemGroupUser.setOrder(0);
-        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemGroupUser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
         menuItemGroupUser = new OptionMenuItem(2);
-        menuItemGroupUser.setFermatDrawable(new FermatDrawable(2, "delete_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemGroupUser.setFermatDrawable(new FermatDrawable(2, "delete_group", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemGroupUser.setLabel("Delete Group");
         menuItemGroupUser.setOrder(1);
-        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemGroupUser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
         menuItemGroupUser = new OptionMenuItem(3);
-        menuItemGroupUser.setFermatDrawable(new FermatDrawable(3, "delete_selected_users", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemGroupUser.setFermatDrawable(new FermatDrawable(3, "delete_selected_users", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemGroupUser.setLabel("Delete Selected Users");
         menuItemGroupUser.setOrder(2);
-        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemGroupUser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
         menuItemGroupUser = new OptionMenuItem(4);
-        menuItemGroupUser.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemGroupUser.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemGroupUser.setLabel("Help");
         menuItemGroupUser.setOrder(3);
-        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemGroupUser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
         runtimeActivity.setOptionsMenu(optionsMenuGroupUser);
 
@@ -2375,17 +2480,17 @@ public class SubAppAppsGenerator {
         //reinicializacion optionMenu for not reply menu en diferente activity
         OptionsMenu optionsMenuAdminUser = new OptionsMenu();
         OptionMenuItem menuItemAdminUser = new OptionMenuItem(1);
-        menuItemAdminUser.setFermatDrawable(new FermatDrawable(1, "add_to_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemAdminUser.setFermatDrawable(new FermatDrawable(1, "add_to_group", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemAdminUser.setLabel("Add to Group");
         menuItemAdminUser.setOrder(0);
-        menuItemAdminUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemAdminUser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuAdminUser.addMenuItem(menuItemAdminUser);
 
         menuItemAdminUser = new OptionMenuItem(2);
-        menuItemAdminUser.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemAdminUser.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemAdminUser.setLabel("Help");
         menuItemAdminUser.setOrder(1);
-        menuItemAdminUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemAdminUser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuAdminUser.addMenuItem(menuItemAdminUser);
         runtimeActivity.setOptionsMenu(optionsMenuAdminUser);
 
@@ -2420,10 +2525,10 @@ public class SubAppAppsGenerator {
         //reinicializacion optionMenu for not reply menu en diferente activity
         OptionsMenu optionsMenuNotification = new OptionsMenu();
         OptionMenuItem menuItemNotification = new OptionMenuItem(1);
-        menuItemNotification.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItemNotification.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemNotification.setLabel("Help");
 //        menuItemNotification.setOrder(4);
-        menuItemNotification.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemNotification.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuNotification.addMenuItem(menuItemNotification);
         runtimeActivity.setOptionsMenu(optionsMenuNotification);
 
@@ -2581,52 +2686,58 @@ public class SubAppAppsGenerator {
         optionsMenu = new OptionsMenu();
 
         menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Connect");
         menuItem.setOrder(0);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Disconnect");
         menuItem.setOrder(1);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(3);
-        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Cancel Connecting");
         menuItem.setOrder(2);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(4);
-        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Select All");
         menuItem.setOrder(3);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(5);
-        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Unselect All");
         menuItem.setOrder(4);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(6);
-        menuItem.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
         menuItem.setOrder(5);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(7);
-        menuItem.setFermatDrawable(new FermatDrawable(7, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Search");
-        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
-        menuItem.setActionViewClass(100);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(7);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Location");
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -2699,10 +2810,10 @@ public class SubAppAppsGenerator {
         //reinicializacion optionMenu for not reply menu en diferente activity
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
 //        menuItem.setOrder(5);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -2824,10 +2935,10 @@ public class SubAppAppsGenerator {
         //reinicializacion optionMenu for not reply menu en diferente activity
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
 //        menuItem.setOrder(5);
-        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -2953,7 +3064,7 @@ public class SubAppAppsGenerator {
         runtimeSubApp.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#2D2E82");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3031,10 +3142,9 @@ public class SubAppAppsGenerator {
         optionsMenu = new OptionsMenu();
         runtimeActivity.setOptionsMenu(optionsMenu);
 
-        // Option Menu Item - Geolocation Settings
+        // Option Menu Item - GEOLOCATION
         optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "ic_location", OWNER, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -3361,336 +3471,269 @@ public class SubAppAppsGenerator {
     }
 
     private void createCryptoBrokerCommunitySubAppNavigationStructure() throws InvalidParameterException {
+        final int SEARCH_FILTER_OPTION_MENU_ID = 1;
+        final int LOCATION_FILTER_OPTION_MENU_ID = 2;
+        final int HELP_OPTION_MENU_ID = 3;
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode();
+        final Owner owner = new Owner(PUBLIC_KEY);
+
         TitleBar runtimeTitleBar;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
         FermatRuntimeFragment runtimeFragment;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
+
 
         AppNavigationStructure subAppBrokerCommunity = new AppNavigationStructure();
 
-        String communityPublicKey = SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode();
         subAppBrokerCommunity.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
-        subAppBrokerCommunity.setPublicKey(communityPublicKey);
+        subAppBrokerCommunity.setPublicKey(PUBLIC_KEY);
+        listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);
 
-        //Side Menu definition
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        statusBar = new StatusBar();
+        statusBar.setColor("#1375a7");
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Crypto Broker Users");
-        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS);
-        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-        //Activity: CONNECTION_WORLD
+        //Activity Home Browser
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getCode());
+        runtimeActivity.setBackgroundColor("#f9f9f9");
         subAppBrokerCommunity.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getCode());
-        runtimeActivity.setColor("#FF0B46F0");
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Crypto Broker Users");
-        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setLabel("Broker Community");
+        runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor("#1291A3");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setOwner(owner);
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppBrokerCommunity.addActivity(runtimeActivity);
+
+        //TabStrip
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#1291A3");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        //Tabs Browser
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("BROWSER");
+        runtimeFragment = new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeTab.setFragment(runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
+
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
+
+        optionMenuItem = new OptionMenuItem(SEARCH_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(SEARCH_FILTER_OPTION_MENU_ID, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(LOCATION_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(LOCATION_FILTER_OPTION_MENU_ID, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Location");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
 
-        // Activity: CONNECTION_FRIEND_LIST
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST);
-        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
-        runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Connections");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        //Tabs Connections
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("CONNECTIONS");
+        runtimeFragment = new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeTab.setFragment(runtimeFragment);
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppBrokerCommunity.addActivity(runtimeActivity);
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
 
+        optionMenuItem = new OptionMenuItem(SEARCH_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(SEARCH_FILTER_OPTION_MENU_ID, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
-        // Activity: CONNECTION_NOTIFICATIONS
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS);
-        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
-        runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppBrokerCommunity.addActivity(runtimeActivity);
-
-
-        // Activity: CONNECTION_OTHER_PROFILE
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE);
-        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
-        runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Profile");
-        runtimeTitleBar.setIconName("Back");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        //TODO: en esta version a de no aparecer porque uno no recibe Solicitudes de coneccion de parte de un broker
+        //Tabs Requests
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("REQUESTS");
+//        runtimeFragment = new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+//        runtimeTab.setFragment(runtimeFragment);
+//        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        optionsMenu = new OptionsMenu();
+//        runtimeFragment.setOptionsMenu(optionsMenu);
+//
+//        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+//        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Help");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        optionsMenu.addMenuItem(optionMenuItem);
 
         subAppBrokerCommunity.addActivity(runtimeActivity);
-
-
         listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);
     }
 
     private void createCryptoCustomerCommunitySubAppNavigationStructure() throws InvalidParameterException {
+        final int SEARCH_FILTER_OPTION_MENU_ID = 1;
+        final int LOCATION_FILTER_OPTION_MENU_ID = 2;
+        final int HELP_OPTION_MENU_ID = 3;
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode();
+        final Owner owner = new Owner(PUBLIC_KEY);
+
         TitleBar runtimeTitleBar;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
         FermatRuntimeFragment runtimeFragment;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
+
 
         AppNavigationStructure subAppCustomerCommunity = new AppNavigationStructure();
 
-        String communityPublicKey = SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode();
-        subAppCustomerCommunity.setPublicKey(communityPublicKey);
         subAppCustomerCommunity.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
+        subAppCustomerCommunity.setPublicKey(PUBLIC_KEY);
+        listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
 
-        //Side Menu definition
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        statusBar = new StatusBar();
+        statusBar.setColor("#2D2E82");
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Crypto Customer Users");
-        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS);
-        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-        //Activity: CONNECTION_WORLD
+        //Activity Home Browser
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
+        runtimeActivity.setBackgroundColor("#f9f9f9");
         subAppCustomerCommunity.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
-        runtimeActivity.setColor("#FF0B46F0");
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Crypto Customer Users");
-        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setLabel("Customer Community");
+        runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor("#2D2E82");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setOwner(owner);
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppCustomerCommunity.addActivity(runtimeActivity);
+        //TabStrip
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#a60f7f");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
+        //Tabs Browser
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("BROWSER");
+        runtimeFragment = new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeTab.setFragment(runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
 
-        // Activity: CONNECTION_FRIEND_LIST
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST);
-        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
-        runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
+        optionMenuItem = new OptionMenuItem(SEARCH_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(SEARCH_FILTER_OPTION_MENU_ID, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Connections");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
+        optionMenuItem = new OptionMenuItem(LOCATION_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(LOCATION_FILTER_OPTION_MENU_ID, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Location");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        //Tabs Connections
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("CONNECTIONS");
+        runtimeFragment = new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeTab.setFragment(runtimeFragment);
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppCustomerCommunity.addActivity(runtimeActivity);
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
 
+        optionMenuItem = new OptionMenuItem(SEARCH_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(SEARCH_FILTER_OPTION_MENU_ID, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
-        // Activity: CONNECTION_NOTIFICATIONS
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS);
-        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
-        runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        // Tab Requests
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("REQUESTS");
+        runtimeFragment = new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeTab.setFragment(runtimeFragment);
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppCustomerCommunity.addActivity(runtimeActivity);
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
 
-
-        // Activity: CONNECTION_OTHER_PROFILE
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE);
-        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
-        runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Profile");
-        runtimeTitleBar.setIconName("Back");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
 
         subAppCustomerCommunity.addActivity(runtimeActivity);
-
-
         listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
     }
 
@@ -3739,13 +3782,13 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("DataBase Tools");
         owner = new Owner();
         owner.setOwnerAppPublicKey(publickeyDeveloperTools);
-        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Log Tools");
         owner.setOwnerAppPublicKey(publickeyDeveloperTools);
-        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -3755,18 +3798,27 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
 
-
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
 //        runtimeFragment = new FermatRuntimeFragment();
 //        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
@@ -3972,7 +4024,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabel("P2P Chat");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#FFFFFF");
-        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setIsTitleTextStatic(false);
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -3997,30 +4049,47 @@ public class SubAppAppsGenerator {
         runtimeTab = new Tab();
         runtimeTab.setLabel("CHATS");
 
-        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeFragment.setOwner(owner);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 
         OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(2);
-        optionMenuItem.setActionViewClass(100);
-        optionsMenu.addMenuItem(optionMenuItem);
+        SearchMenuItem searchOptionMenuItem = new SearchMenuItem(1);
+        searchOptionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        searchOptionMenuItem.setLabel("Search");
+        searchOptionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        searchOptionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
 
-        optionMenuItem = new OptionMenuItem(2);
-        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(4);
+        //search view focus event
+        SearchViewOnPressEvent esearchEvent = new SearchViewOnPressEvent();
+        esearchEvent.setIsToolbarTitleVisible(false);
+        searchOptionMenuItem.setOptionMenuPressEvent(esearchEvent);
+        optionsMenu.addMenuItem(searchOptionMenuItem);
+
+        OptionMenuItem optionMenuItem = new OptionMenuItem(2);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Delete All Chats");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItem.setLabel("Delete All Chats");
-        optionMenuItem.setShowAsAction(4);
+        optionMenuItem.setLabel("Go to Profile");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(4);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Go to Community");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(5);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment.setOptionsMenu(optionsMenu);
@@ -4038,18 +4107,35 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeFragment.setOwner(owner);
 
+        //Badge Tab View
+        TabBadgeView tabBadgeView = new TabBadgeView(200,SourceLocation.FERMAT_FRAMEWORK);
+        tabBadgeView.setTitle("CONTACTS");
+        runtimeTab.setFermatView(tabBadgeView);
+
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(2);
-        optionMenuItem.setActionViewClass(100);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Go to Profile");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(3);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Go to Community");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(4);
         //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(4);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment.setOptionsMenu(optionsMenu);
@@ -4314,13 +4400,13 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
-        optionMenuItem.setShowAsAction(2);
-        optionMenuItem.setActionViewClass(100);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setLabel("Clean Chat");
-        optionMenuItem.setShowAsAction(4);
+        optionMenuItem.setLabel("Clear Chat");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -4494,7 +4580,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabel("P2P Chat Community");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setIsTitleTextStatic(false);
         runtimeTitleBar.setColor("#075E54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -4531,20 +4617,20 @@ public class SubAppAppsGenerator {
         OptionMenuItem optionMenuItemBrowser = new OptionMenuItem(1);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Search");
-        optionMenuItemBrowser.setShowAsAction(2);
-        optionMenuItemBrowser.setActionViewClass(100);
+        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItemBrowser.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(2);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Location");
-        optionMenuItemBrowser.setShowAsAction(2);
+        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(3);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Help");
-        optionMenuItemBrowser.setShowAsAction(2);
+        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
@@ -4566,14 +4652,15 @@ public class SubAppAppsGenerator {
         OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(3, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Search");
-        optionMenuItemConn.setActionViewClass(100);
-        optionMenuItemConn.setShowAsAction(2);
+        optionMenuItemConn.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
+        optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
+
         optionMenuItemConn = new OptionMenuItem(2);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
-        optionMenuItemConn.setShowAsAction(4);
+        optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         runtimeFragment.setOptionsMenu(optionsMenuConn);
@@ -4595,7 +4682,7 @@ public class SubAppAppsGenerator {
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Help");
-        optionMenuItemNot.setShowAsAction(2);
+        optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
 
         runtimeFragment.setOptionsMenu(optionsMenuNot);
@@ -4741,12 +4828,12 @@ public class SubAppAppsGenerator {
         OptionMenuItem menuItem = new OptionMenuItem(1);
         menuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Location");
-        menuItem.setShowAsAction(2);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
         menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner2, SourceLocation.DEVELOPER_RESOURCES));
-        menuItem.setShowAsAction(2);
+        menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         menuItem.setLabel("Help");
         optionsMenu.addMenuItem(menuItem);
 
@@ -4776,6 +4863,12 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E54");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setLabelSize(18);
+        leftIconMenuItem = new MenuItem();
+
+        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+        leftIconMenuItem.setAppLinkPublicKey("back");
+        runtimeTitleBar.setNavItem(leftIconMenuItem);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -4793,6 +4886,9 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
+        //Fragment runtimeFragment;
+        String tabTitleColor = "#555759";
+        String tabBarColor="#E6E7E8";
         FermatRuntimeFragment runtimeFragment;
 
         AppNavigationStructure subAppFanCommunity = new AppNavigationStructure();
@@ -4837,15 +4933,15 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#E6E7E8");
+        statusBar.setColor("#000000");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fan Users");
         runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -4871,14 +4967,14 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Your Identities");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -4903,9 +4999,9 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -4936,9 +5032,9 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -4970,9 +5066,9 @@ public class SubAppAppsGenerator {
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Profile");
         runtimeTitleBar.setIconName("Back");
-        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setTitleColor(tabTitleColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setColor(tabBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -5005,7 +5101,7 @@ public class SubAppAppsGenerator {
 
         //Side Menu definition
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeSideMenu.setBackgroundColor("#363636");
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Artist Users");
@@ -5041,13 +5137,13 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Artist Users");
         runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -5070,19 +5166,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Your Identities");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5103,19 +5199,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5136,19 +5232,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -5169,20 +5265,20 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Profile");
         runtimeTitleBar.setIconName("Back");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#000000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#0072bb");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#368CA8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();

@@ -39,7 +39,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetRedeemPointAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
@@ -144,13 +143,8 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, "Redeem")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "Help")
-        //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override

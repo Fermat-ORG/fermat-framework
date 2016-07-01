@@ -13,7 +13,7 @@ import com.bitdubai.sub_app.artist_community.R;
  */
 public class AppWorldHolder extends FermatViewHolder {
 
-    public SquareImageView thumbnail;
+    public ImageView thumbnail;
     public FermatTextView name;
     public ImageView connectionState;
 
@@ -26,7 +26,7 @@ public class AppWorldHolder extends FermatViewHolder {
     public AppWorldHolder(View itemView) {
         super(itemView);
         connectionState = (ImageView) itemView.findViewById(R.id.aac_connection_state);
-        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
+        thumbnail = (ImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.aac_community_name);
     }
 }

@@ -15,4 +15,5 @@
     <string name="no_preview_images">No Preview Images</string>
     <string name="art_afc_launch_action_creation_dialog_sub_title">This app let\'s you find Fans in the Fermat Network. \nIt\'s main features are:</string>
     <string name="art_afc_launch_action_creation_dialog_body">* Browse for Fans around you.\n* See their profiles.\n* Connect with them.</string>
+    <string name="Primary_Color">#363636</string>
 </resources>

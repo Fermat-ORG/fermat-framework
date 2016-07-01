@@ -22,7 +22,7 @@
     <string name="cht_chat_subtitle_broadcast_step_one">Subtitle of step one broadcast chat dialog</string>
     <string name="cht_chat_footer_broadcast_step_one">Footer of step one broadcast chat dialog</string>
     <string name="menu_view_contact">View Contact</string>
-    <string name="menu_clean_chat">Clean Chat</string>
+    <string name="menu_clean_chat">Clear Chat</string>
     <string name="menu_send_chat_email">Send Chat by Email</string>
     <string name="menu_edit_contact">Edit Contact</string>
     <string name="menu_delete_chat">Delete Chat</string>

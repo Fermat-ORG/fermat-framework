@@ -6,4 +6,15 @@ package com.bitdubai.fermat_api;
 public interface FermatContext {
 
     ClassLoader getBaseClassLoader();
+
+    ClassLoader getExternalLoader(String name);
+
+    Object loadObject(String pluginName);
+
+    Object objectToProxyfactory(Object base,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface);
+
+    Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... parameters);
+
+
+
 }

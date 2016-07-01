@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -23,6 +24,7 @@ import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.versio
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.database.AssetRedeemPointIdentityDao;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,7 +188,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
     }
 
     @Override
-    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
+    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -194,9 +196,9 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
+            getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
 
-            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage);
+            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, accuracy, frequency);
 
             registerIdentities();
 
@@ -213,7 +215,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
     @Override
     public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,
                                                     String contactInformation, String countryName, String provinceName, String cityName,
-                                                    String postalCode, String streetName, String houseNumber) throws CantCreateNewRedeemPointException {
+                                                    String postalCode, String streetName, String houseNumber, int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException {
 
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -223,10 +225,10 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
             String privateKey = keyPair.getPrivateKey();
 
             getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, contactInformation,
-                    countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+                    countryName, provinceName, cityName, postalCode, streetName, houseNumber, accuracy, frequency);
 
             RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, contactInformation,
-                    countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+                    countryName, provinceName, cityName, postalCode, streetName, houseNumber, accuracy, frequency);
 
             registerIdentities();
 
@@ -242,10 +244,10 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
 
     public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
                                           String contactInformation, String countryName, String provinceName, String cityName,
-                                          String postalCode, String streetName, String houseNumber) throws CantUpdateIdentityRedeemPointException {
+                                          String postalCode, String streetName, String houseNumber,  int accuracy, Frequency frequency) throws CantUpdateIdentityRedeemPointException {
         try {
             getAssetRedeemPointIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, contactInformation,
-                    countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+                    countryName, provinceName, cityName, postalCode, streetName, houseNumber, accuracy, frequency);
 
             registerIdentities();
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
@@ -296,7 +298,9 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
                             identityAssetRedeemPoint.getImage(),
                             identityAssetRedeemPoint.getContactInformation(),
                             identityAssetRedeemPoint.getCountryName(),
-                            identityAssetRedeemPoint.getCityName());
+                            identityAssetRedeemPoint.getCityName(),
+                            identityAssetRedeemPoint.getAccuracy(),
+                            identityAssetRedeemPoint.getFrequency());
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -322,4 +326,15 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
             e.printStackTrace();
         }
     }
+
+    @Override
+        public int getAccuracyDataDefault() {
+            return 0;
+        }
+
+        @Override
+        public Frequency getFrequencyDataDefault() {
+            return Frequency.NORMAL;
+    }
+
 }

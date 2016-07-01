@@ -3,6 +3,7 @@ package com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.develo
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
@@ -113,6 +115,7 @@ public class FanCommunityManager
     public List<FanCommunityInformation> listWorldFan(FanCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListFansException {
         List<FanCommunityInformation> worldFanaticList;
         List<FanActorConnection> actorConnections;
+        List<ArtistActorConnection> artistActorConnections;
 
         try{
             worldFanaticList = getFanaticSearch().getResult(
@@ -124,14 +127,24 @@ public class FanCommunityManager
         }
 
         try {
-
+            //Fan connections
             final FanLinkedActorIdentity linkedActorIdentity = new FanLinkedActorIdentity(
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType());
-            final FanActorConnectionSearch search = fanActorConnectionManager.getSearch(linkedActorIdentity);
+            final FanActorConnectionSearch search = fanActorConnectionManager.getSearch(
+                    linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            //Artist connections
+            final ArtistLinkedActorIdentity artistLinkedActorIdentity = new ArtistLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType());
+            final ArtistActorConnectionSearch artistSearch = artistActorConnectionManager.getSearch(
+                    artistLinkedActorIdentity);
+            artistSearch.addConnectionState(ConnectionState.CONNECTED);
+
+            artistActorConnections = artistSearch.getResult(Integer.MAX_VALUE, 0);
 
         } catch (final CantListActorConnectionsException e) {
             //TODO: to report error
@@ -141,18 +154,40 @@ public class FanCommunityManager
 
 
         FanCommunityInformation worldFanatic;
+        FanCommunityInformation fanCommunityInformation;
         for(int i = 0; i < worldFanaticList.size(); i++)
         {
             worldFanatic = worldFanaticList.get(i);
+            //Check connections from Fan Actor Connection
             for(FanActorConnection connectedFan : actorConnections)
             {
-                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldFanaticList.set(i, new FanCommunityInformationImpl(
+                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey())){
+                    fanCommunityInformation =  new FanCommunityInformationImpl(
                             worldFanatic.getPublicKey(),
                             worldFanatic.getAlias(),
                             worldFanatic.getImage(),
                             connectedFan.getConnectionState(),
-                            connectedFan.getConnectionId()));
+                            connectedFan.getConnectionId());
+                    fanCommunityInformation.setArtExternalPlatform(
+                            worldFanatic.getArtExternalPlatform());
+                    worldFanaticList.set(i,fanCommunityInformation);
+                }
+
+            }
+            //Check connection from Artist Actor connections
+            for(ArtistActorConnection connectedFan : artistActorConnections)
+            {
+                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey())){
+                    fanCommunityInformation =  new FanCommunityInformationImpl(
+                            worldFanatic.getPublicKey(),
+                            worldFanatic.getAlias(),
+                            worldFanatic.getImage(),
+                            connectedFan.getConnectionState(),
+                            connectedFan.getConnectionId());
+                    fanCommunityInformation.setArtExternalPlatform(
+                            worldFanatic.getArtExternalPlatform());
+                    worldFanaticList.set(i,fanCommunityInformation);
+                }
             }
         }
 
@@ -463,8 +498,19 @@ public class FanCommunityManager
     }
 
     @Override
-    public void cancelFan(String fanToCancelPublicKey) throws FanCancellingFailedException {
-        //TODO: to implement
+    public void cancelFan(UUID connectionID) throws FanCancellingFailedException {
+        try {
+            fanActorConnectionManager.cancelConnection(connectionID);
+        } catch (CantCancelActorConnectionRequestException e) {
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new FanCancellingFailedException("", e, "", "Error trying to cancel the actor connection.");
+        } catch (ActorConnectionNotFoundException e) {
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new FanCancellingFailedException("", e, "", "Connection request not found.");
+        } catch (UnexpectedConnectionStateException e) {
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new FanCancellingFailedException("", e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
@@ -685,5 +731,14 @@ public class FanCommunityManager
         }
         //For now, I'll return an ART_FAN
         return PlatformComponentType.ART_ARTIST;
+    }
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    @Override
+    public void checkAllConnections()throws CantHandleNewsEventException {
+        this.fanaticIdentityManager.checkAllConnections();
     }
 }

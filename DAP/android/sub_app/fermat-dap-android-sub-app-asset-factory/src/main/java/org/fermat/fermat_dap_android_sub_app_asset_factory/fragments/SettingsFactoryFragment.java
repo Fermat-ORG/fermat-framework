@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 
 import static android.widget.Toast.makeText;
@@ -119,8 +118,8 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 //        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }

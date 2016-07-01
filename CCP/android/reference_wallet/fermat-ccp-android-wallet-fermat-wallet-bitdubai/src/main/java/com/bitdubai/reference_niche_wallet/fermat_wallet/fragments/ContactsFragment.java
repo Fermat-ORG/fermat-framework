@@ -38,7 +38,12 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -46,18 +51,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.SubActionButton;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.views_contacts_fragment.IndexBarView;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_adapter.WalletContact;
@@ -65,12 +64,9 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.HeaderType
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.CreateContactFragmentDialog;
-
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -337,8 +333,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onCreateOptionsMenu(menu, inflater);
 
 
-        menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.fw_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }
 

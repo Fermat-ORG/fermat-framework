@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -47,12 +48,12 @@ public class IdentityRedeemDialogCropImage extends FermatDialog implements View.
         cropImageView = (CropImageView) findViewById(R.id.CropImageView);
         cropImageView.setImageBitmap(image);
         cropImageView.setGuidelines(2);
-        Button btnCrop = (Button) findViewById(R.id.btnCrop);
-//        Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
-        Button btnCancel = (Button) findViewById(R.id.btnCancel);
+        ImageButton btnCrop = (ImageButton) findViewById(R.id.btnCrop);
+        ImageButton btnRotate = (ImageButton) findViewById(R.id.btnRotateCropper);
+        ImageButton btnCancel = (ImageButton) findViewById(R.id.btnCancel);
         btnCrop.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
-//        btnRotate.setOnClickListener(this);
+        btnRotate.setOnClickListener(this);
     }
 
     @Override
@@ -83,8 +84,8 @@ public class IdentityRedeemDialogCropImage extends FermatDialog implements View.
         if (i == R.id.btnCancel) {
             dismiss();
         }
-//        if (i == R.id.btnRotateCropper) {
-//            cropImageView.rotateImage(90);
-//        }
+        if (i == R.id.btnRotateCropper) {
+            cropImageView.rotateImage(90);
+        }
     }
 }

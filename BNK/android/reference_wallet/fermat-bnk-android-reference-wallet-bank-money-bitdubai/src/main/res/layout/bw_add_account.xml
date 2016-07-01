@@ -10,21 +10,19 @@
         android:layout_height="match_parent"
         android:layout_marginTop="-86dp"
         android:background="@drawable/bw_reflex_image"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:orientation="vertical">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="86dp"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:orientation="vertical">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="25dp"
                 android:gravity="center_horizontal"
                 android:text="ADD ACCOUNT"
                 android:textColor="#fff"
@@ -36,114 +34,132 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:text="Please enter the following account information:"
                 android:textColor="#fff"
                 android:textSize="@dimen/text_size" />
 
-            <LinearLayout
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="center_horizontal"
+                android:text="Account Number:"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp"
+                android:textSize="16sp"
+                android:textColor="#fff"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 >
 
                 <EditText
                     android:id="@+id/account_number"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
+                    android:layout_toLeftOf="@+id/account_number_count"
+                    android:paddingLeft="15dp"
+                    android:layout_marginLeft="15dp"
                     android:hint="Enter account number"
                     android:textColor="#fff"
-                    android:textSize="@dimen/text_size" />
+                    android:textSize="14sp"
+                    />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/account_number_count"
-                    android:layout_width="match_parent"
+                    android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="25"
                     android:textColor="#bbb"
                     android:textSize="12dp" />
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_gravity="center_horizontal"
+                android:text="Account Alias:"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="10dp"
+                android:textSize="16sp"
+                android:textColor="#fff"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
                 >
 
                 <EditText
                     android:id="@+id/account_alias"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
+                    android:layout_toLeftOf="@+id/account_alias_count"
+                    android:paddingLeft="15dp"
+                    android:layout_marginLeft="15dp"
                     android:hint="Enter alias"
                     android:textColor="#fff"
-                    android:textSize="@dimen/text_size" />
+                    android:textSize="14sp"
+                    />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/account_alias_count"
-                    android:layout_width="match_parent"
+                    android:layout_width="25dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:text="10"
+                    android:layout_marginRight="10dp"
+                    android:text="25"
                     android:textColor="#bbb"
                     android:textSize="12dp" />
-            </LinearLayout>
+            </RelativeLayout>
 
 
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="vertical"
-                android:paddingLeft="60dp"
-                android:paddingRight="60dp">
+                android:text="Currency:"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="10dp"
+                android:textSize="16sp"
+                android:textColor="#fff"
+                />
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Currency:"
-                    android:textColor="#fff"
-                    android:textSize="@dimen/text_size" />
 
-                <Spinner
-                    android:id="@+id/bnk_add_account_currency_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawSelectorOnTop="true" />
-
-            </LinearLayout>
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/bnk_add_account_currency_spinner"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:orientation="vertical"
-                android:paddingLeft="60dp"
-                android:paddingRight="60dp">
+                android:drawSelectorOnTop="true" />
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Image:"
-                    android:textColor="#fff"
-                    android:textSize="@dimen/text_size" />
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image:"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="10dp"
+                android:textSize="16sp"
+                android:textColor="#fff"
+                />
 
-                <Spinner
-                    android:id="@+id/bnk_add_account_image_id_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawSelectorOnTop="true" />
-            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/bnk_add_account_image_id_spinner"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true" />
 
         </LinearLayout>
     </LinearLayout>

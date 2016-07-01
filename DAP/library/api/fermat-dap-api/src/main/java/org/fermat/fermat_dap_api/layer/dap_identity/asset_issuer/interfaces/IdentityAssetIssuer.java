@@ -2,6 +2,8 @@ package org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+
 import java.io.Serializable;
 
 /**
@@ -26,4 +28,9 @@ public interface IdentityAssetIssuer extends ActiveActorIdentityInformation, Ser
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException
      */
     String createMessageSignature(String message) /*throws CantSingMessageException*/;
+
+
+    int getAccuracy();
+
+    Frequency getFrequency();
 }

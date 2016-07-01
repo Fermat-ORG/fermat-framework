@@ -17,7 +17,7 @@ public class PluginReference implements Serializable{
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
     private       LayerReference    layerReference;
-    private final FermatPluginsEnum plugin        ;
+    private FermatPluginsEnum plugin        ;
 
     public PluginReference(final Plugins plugin) {
 
@@ -31,6 +31,8 @@ public class PluginReference implements Serializable{
         this.plugin         = plugin        ;
     }
 
+    public PluginReference() {
+    }
 
     public final FermatPluginsEnum getPlugin() {
         return plugin;
@@ -57,8 +59,8 @@ public class PluginReference implements Serializable{
     @Override
     public final int hashCode() {
         int c = 0;
-
-        c += plugin .hashCode();
+        if(plugin!=null)
+            c += plugin .hashCode();
         if (layerReference != null)
             c += layerReference.hashCode();
 

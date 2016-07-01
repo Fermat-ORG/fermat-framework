@@ -135,6 +135,9 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
         } else {
             bindMenuItem(itemMenuViewHolder, position);
         }
+        data.setSelected(false);
+        menuItem.setSelected(false);
+
     }
 
     private void bindMenuItem(NavigationItemMenuViewHolder holder, int position) {

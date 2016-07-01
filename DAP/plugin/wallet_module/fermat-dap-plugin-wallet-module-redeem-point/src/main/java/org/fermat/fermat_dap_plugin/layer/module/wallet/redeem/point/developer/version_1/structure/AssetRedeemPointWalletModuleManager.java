@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
@@ -212,7 +212,9 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img);
+        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img,
+                redeemPointIdentityManager.getAccuracyDataDefault(),
+                redeemPointIdentityManager.getFrequencyDataDefault());
     }
 
 

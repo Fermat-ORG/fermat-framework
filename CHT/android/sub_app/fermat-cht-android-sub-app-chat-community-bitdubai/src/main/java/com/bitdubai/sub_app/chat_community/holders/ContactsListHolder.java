@@ -17,6 +17,7 @@ public class ContactsListHolder extends FermatViewHolder {
 
     public ImageView friendAvatar;
     public TextView friendName;
+    public TextView location;
 
     /**
      * Constructor
@@ -27,5 +28,6 @@ public class ContactsListHolder extends FermatViewHolder {
         super(itemView);
         friendName = (TextView) itemView.findViewById(R.id.username);
         friendAvatar = (ImageView) itemView.findViewById(R.id.imageView_avatar);
+        location = (TextView) itemView.findViewById(R.id.location_text);
     }
 }

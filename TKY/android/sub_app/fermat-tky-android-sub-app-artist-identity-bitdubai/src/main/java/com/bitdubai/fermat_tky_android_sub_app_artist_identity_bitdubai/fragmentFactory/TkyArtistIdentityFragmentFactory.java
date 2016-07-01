@@ -21,7 +21,7 @@ public class TkyArtistIdentityFragmentFactory extends FermatFragmentFactory<TkyI
             case TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE:
                 return TokenlyArtistIdentityCreateProfile.newInstance();
 
-            case TKY_ARTIST_IDENTITY_HOME:
+            case ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT:
                 return TkyIdentityHomeFragment.newInstance();
             default:
                 throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),

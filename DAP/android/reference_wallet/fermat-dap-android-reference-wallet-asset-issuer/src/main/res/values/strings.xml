@@ -77,14 +77,14 @@
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_welcome_subTitle">Use it for distribution of assets.</string>
-    <string name="dap_issuer_wallet_welcome_body">Features:\n Assets storage \n Assets distribution (to Asset Users)\n Statistics \n NOTE: Assets must be created first in Asset Factory.</string>
+    <string name="dap_issuer_wallet_welcome_body">Features: Assets storage, distribution (to Asset Users), statistics.\n\nNOTE: Assets must be created first in Asset Factory.</string>
     <string name="dap_issuer_wallet_welcome_Footer">* You will be able to edit your profile in the Asset Issuer Identity application.</string>
     <string name="dap_issuer_wallet_welcome_name_left">Asset Issuer</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_detail_subTitle">Asset detail section.</string>
-    <string name="dap_issuer_wallet_detail_body">Features: \n Statistics of the distribution\n\n\n Delivery of the asset to any connected user \n\n Appropriation of this asset (recovery of the attached bitcoin value) </string>
+    <string name="dap_issuer_wallet_detail_body">Detailed information of the asset. Displays the value of transaction, status and date-time of them. </string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
@@ -93,8 +93,8 @@
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
-    <string name="dap_issuer_wallet_delivery_list_subTitle">Asset Issuer Delivery List.</string>
-    <string name="dap_issuer_wallet_delivery_list_body">List of users to whom you delivered an asset, of those who received it, and statistics to analyse your campaigns results.</string>
+    <string name="dap_issuer_wallet_delivery_list_subTitle">Statistics.</string>
+    <string name="dap_issuer_wallet_delivery_list_body">Displays a list of assets and the delivery status of them. They can be: Appropriated, Redeemed or Unused.</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
@@ -114,6 +114,6 @@
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_redeemed_users_subTitle">Asset Users selection.</string>
-    <string name="dap_issuer_wallet_redeemed_users_body">Use this screen to select users that you are connected to.\n\nIf no users are available, you need to connect to them from the Asset User Community application.\n\nUse this application to identify and connect to users and they will be permanently available to receive your assets.</string>
+    <string name="dap_issuer_wallet_redeemed_users_body">Use this screen to select users/groups that you are connected to.\n\nIf no users/groups are available, you need to connect to them from the Asset User Community application.\n\nUse this application to identify and connect to users/groups and they will be permanently available to receive your assets.</string>
     <!--Dialog Help - End-->
 </resources>

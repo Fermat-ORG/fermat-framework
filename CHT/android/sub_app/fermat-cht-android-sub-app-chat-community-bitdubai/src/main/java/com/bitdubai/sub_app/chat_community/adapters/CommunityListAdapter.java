@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -18,13 +20,17 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
+import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -35,7 +41,8 @@ import java.util.List;
  */
 
 @SuppressWarnings("unused")
-public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder> /*implements Filterable*/ {
+public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder>
+        implements Filterable {
 
     List<ChatActorCommunityInformation> filteredData;
     private String filterString;
@@ -65,8 +72,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return R.layout.cht_comm_world_item;
     }
 
-    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder){
-
+    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder)
+    {
         if (connectionState != null) {
             switch (connectionState) {
                 case CONNECTED:
@@ -211,11 +218,24 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
             bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
             holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-            if(!data.getCountry().equals("") || !data.getState().equals("") || !data.getCity().equals(""))
-                holder.location_text.setText(data.getCity() + " " + data.getState() + " " + data.getCountry());//TODO: put here location
-            else
-                holder.location_text.setText("Searching...");//TODO: put here location
+        }else
+            holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
+
+        Address address= null;
+        if(data.getLocation() != null ){
+            try {
+                if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
+                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
+            }catch(CantCreateAddressException e){
+                address = null;
+            }catch(Exception e){
+                address = null;
+            }
         }
+        if (address!=null)
+            holder.location_text.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
+        else
+            holder.location_text.setText("Searching...");//TODO: put here location
 
         final ChatActorCommunityInformation dat=data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {
@@ -364,6 +384,10 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
+    public void setData(List<ChatActorCommunityInformation> data) {
+        this.filteredData = data;
+    }
+
 //    @Override
 //    public int getItemCount() {
 //        if(filterString!=null)
@@ -391,15 +415,15 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 //        this.filteredData = data;
 //    }
 //
-//    public Filter getFilter() {
-//        return new CommunityFilter(dataSet, this);
-//    }
-//
-//    public void setFilterString(String filterString) {
-//        this.filterString = filterString;
-//    }
-//
-//    public String getFilterString() {
-//        return filterString;
-//    }
+    public Filter getFilter() {
+        return new CommunityFilter(dataSet, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
 }

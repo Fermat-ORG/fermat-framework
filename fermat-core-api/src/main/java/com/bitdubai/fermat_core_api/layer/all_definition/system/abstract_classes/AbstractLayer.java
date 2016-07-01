@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,11 +33,19 @@ public abstract class AbstractLayer {
     private final Map<PluginReference, AbstractPluginSubsystem> plugins;
 
     private final LayerReference layerReference;
+    private FermatContext fermatContext;
 
     public AbstractLayer(final Layers layerEnum) {
 
         this.layerReference = new LayerReference(layerEnum);
 
+        this.addons  = new ConcurrentHashMap<>();
+        this.plugins = new ConcurrentHashMap<>();
+    }
+
+    public AbstractLayer(Layers layerEnum, FermatContext fermatContext) {
+        this.layerReference = new LayerReference(layerEnum);
+        this.fermatContext = fermatContext;
         this.addons  = new ConcurrentHashMap<>();
         this.plugins = new ConcurrentHashMap<>();
     }
@@ -151,8 +161,17 @@ public abstract class AbstractLayer {
             plugin.getValue().fillVersions(versions);
     }
 
+    public final void fillPluginVersionsMati(final List<PluginVersionReference> versions) {
+
+        for(ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
+            plugin.getValue().fillVersionsMati(versions);
+    }
+
     public final LayerReference getLayerReference() {
         return layerReference;
     }
 
+    public FermatContext getFermatContext() {
+        return fermatContext;
+    }
 }
