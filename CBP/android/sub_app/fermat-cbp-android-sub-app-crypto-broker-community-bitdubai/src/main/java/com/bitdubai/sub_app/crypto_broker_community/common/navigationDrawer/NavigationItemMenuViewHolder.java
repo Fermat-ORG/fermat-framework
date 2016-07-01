@@ -13,7 +13,7 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  * Created by Matias Furszyfer 22/09/2015
  */
 
-
+@Deprecated
 public class NavigationItemMenuViewHolder extends FermatViewHolder {
     private TextView label;
     private ImageView icon;

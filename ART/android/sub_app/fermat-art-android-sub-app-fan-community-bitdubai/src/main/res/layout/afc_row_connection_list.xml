@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFFFF"
+    android:background="@color/bg_color_afc_fragment_connections_world"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -25,7 +25,6 @@
                 android:layout_height="75dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:scaleType="centerCrop"
                 tools:ignore="ContentDescription"
                 android:background="@drawable/circular_friend_list"/>
 
@@ -37,7 +36,7 @@
                 android:layout_height="16dp"
                 android:scaleType="centerCrop"
                 tools:listitem="@layout/afc_row_connection_list"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
         </RelativeLayout>
 

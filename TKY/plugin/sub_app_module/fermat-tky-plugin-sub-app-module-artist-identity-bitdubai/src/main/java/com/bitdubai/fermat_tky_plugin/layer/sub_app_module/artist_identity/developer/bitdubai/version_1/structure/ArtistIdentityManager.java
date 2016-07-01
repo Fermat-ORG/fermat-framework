@@ -40,6 +40,7 @@ public class ArtistIdentityManager
     private final TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
 
+
     /**
      * Default constructor with parameters.
      * @param tokenlyArtistIdentityManager

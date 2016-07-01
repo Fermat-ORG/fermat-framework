@@ -4265,12 +4265,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeHeader = new Header();
+        /*runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
         runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
-        runtimeHeader.setStartCollapsed(true);
+        runtimeHeader.setStartCollapse(true);
         runtimeActivity.setHeader(runtimeHeader);
+        runtimeHeader.setStartCollapsed(true);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
 
         runtimeTabStrip = new TabStrip();
@@ -5763,7 +5765,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Chunck Value detail");
+        runtimeTitleBar.setLabel("Chunk Value detail");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setColor("#073487");
         runtimeTitleBar.setIconName("back");
@@ -6247,7 +6249,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Chunck Values");
+        runtimeMenuItem.setLabel("Chunk Values");
         runtimeMenuItem.setIcon("request");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);

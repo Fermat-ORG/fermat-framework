@@ -17,7 +17,7 @@
         />
 
     <TextView
-        android:id="@+id/state_search"
+        android:id="@+id/cbc_state_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -34,12 +34,12 @@
         android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/country_search"
+        android:id="@+id/cbc_country_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/state_search"
+        android:layout_below="@id/cbc_state_search"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_toEndOf="@id/location_icon"
@@ -54,7 +54,7 @@
         android:id="@+id/separator"
         android:layout_width="match_parent"
         android:layout_height="1dip"
-        android:layout_below="@id/country_search"
+        android:layout_below="@id/cbc_country_search"
         android:layout_marginTop="8dp"
         android:background="@color/color_gray_light"/>
 

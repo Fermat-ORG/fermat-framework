@@ -2,13 +2,14 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
@@ -17,10 +18,22 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDele
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +55,12 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      */
      IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 
+    /**
+     *
+     * @return
+     * @throws CantGetDeviceLocationException
+     */
+    Location getLocationManager() throws CantGetDeviceLocationException;
     /**
      * The method <code>setProfileImage</code> let the current logged in intra user set its profile
      * picture.
@@ -74,7 +93,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
-    List<IntraUserInformation> getSuggestionsToContact(DeviceLocation location, double distance, String alias, int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    List<IntraUserInformation> getSuggestionsToContact(DeviceLocation location, double distance, String alias,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
 
     /**
@@ -234,6 +253,26 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      */
     void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantGetIntraUsersListException;
 
+    HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException;
 
 
-}
+    List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException;
+
+
+    List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException;
+
+    List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException;
+
+    GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException;
+
+
+    Address getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException;
+
+    GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
+
+    Location getLocation() throws CantGetDeviceLocationException;
+
+    List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException;
+
+
+    }

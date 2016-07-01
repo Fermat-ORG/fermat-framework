@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -24,6 +26,7 @@ import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
+import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
@@ -38,7 +41,8 @@ import java.util.List;
  */
 
 @SuppressWarnings("unused")
-public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder> /*implements Filterable*/ {
+public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder>
+        implements Filterable {
 
     List<ChatActorCommunityInformation> filteredData;
     private String filterString;
@@ -68,8 +72,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return R.layout.cht_comm_world_item;
     }
 
-    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder){
-
+    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder)
+    {
         if (connectionState != null) {
             switch (connectionState) {
                 case CONNECTED:
@@ -380,6 +384,10 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
+    public void setData(List<ChatActorCommunityInformation> data) {
+        this.filteredData = data;
+    }
+
 //    @Override
 //    public int getItemCount() {
 //        if(filterString!=null)
@@ -407,15 +415,15 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 //        this.filteredData = data;
 //    }
 //
-//    public Filter getFilter() {
-//        return new CommunityFilter(dataSet, this);
-//    }
-//
-//    public void setFilterString(String filterString) {
-//        this.filterString = filterString;
-//    }
-//
-//    public String getFilterString() {
-//        return filterString;
-//    }
+    public Filter getFilter() {
+        return new CommunityFilter(dataSet, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
 }

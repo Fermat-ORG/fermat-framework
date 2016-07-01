@@ -6,7 +6,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -29,7 +28,7 @@ public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHol
         super(itemView, 0);
 
         this.walletManager = walletManager;
-        merchandiseButton = (FermatButton) itemView.findViewById(R.id.cbw_earning_currency_pair_button);
+        merchandiseButton = (FermatButton) itemView.findViewById(R.id.cbw_stock_management_button);
         merchandiseButton.setEnabled(false);
     }
 
@@ -43,6 +42,7 @@ public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHol
                 availableBalance = BitcoinConverter.convert(availableBalance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
             merchandiseButton.setText(String.format("%1$s %2$s", moneyFormat.format(availableBalance), merchandiseCode));
+            merchandiseButton.invalidate();
         } catch (Exception e) {
             merchandiseButton.setText(String.format("%1$s --", merchandiseCode));
         }

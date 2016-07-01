@@ -2,10 +2,12 @@ package com.bitdubai.sub_app_artist_community.fragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -39,7 +42,7 @@ import java.util.List;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ArtistCommunityInformation> {
+public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ArtistCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ArtCommunityInformation> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
@@ -55,7 +58,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
     private LinearLayout emptyView;
     private ArtistCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<ArtistCommunityInformation> artistCommunityInformationArrayList;
+    private ArrayList<ArtCommunityInformation> artistCommunityInformationArrayList;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
@@ -90,6 +93,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
+        configureToolbar();
         return rootView;
     }
 
@@ -123,12 +127,14 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            artistCommunityInformationArrayList = (ArrayList<ArtistCommunityInformation>) result[0];
+                            artistCommunityInformationArrayList = (ArrayList<ArtCommunityInformation>) result[0];
                             adapter.changeDataSet(artistCommunityInformationArrayList);
                             if (artistCommunityInformationArrayList.isEmpty()) {
-                                showEmpty(true, emptyView);
+                               // showEmpty(true, emptyView);
+                                emptyView.setVisibility(View.VISIBLE);
                             } else {
-                                showEmpty(false, emptyView);
+                                //showEmpty(false, emptyView);
+                                emptyView.setVisibility(View.VISIBLE);
                             }
                         }
                     } else
@@ -180,13 +186,26 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
     }
 
     @Override
-    public void onItemClickListener(ArtistCommunityInformation data, int position) {
+    public void onItemClickListener(ArtCommunityInformation data, int position) {
         appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(ArtistCommunityInformation data, int position) {
+    public void onLongItemClickListener(ArtCommunityInformation data, int position) {
 
+    }
+
+
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 }

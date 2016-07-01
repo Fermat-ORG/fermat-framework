@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:text="Tab"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/txt_tab_title"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/badge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        />
+
+</RelativeLayout>

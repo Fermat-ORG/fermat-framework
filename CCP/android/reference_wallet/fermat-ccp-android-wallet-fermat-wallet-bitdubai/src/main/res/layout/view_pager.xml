@@ -33,14 +33,14 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
 
-
-        <antistatic.spinnerwheel.WheelVerticalView
+        <com.customviews.spinner_wheel.WheelVerticalView
             android:id="@+id/currencies"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_alignParentLeft="false"
+            android:layout_centerVertical="false"
+            android:layout_centerHorizontal="false" />
+
 
     </RelativeLayout>
 
