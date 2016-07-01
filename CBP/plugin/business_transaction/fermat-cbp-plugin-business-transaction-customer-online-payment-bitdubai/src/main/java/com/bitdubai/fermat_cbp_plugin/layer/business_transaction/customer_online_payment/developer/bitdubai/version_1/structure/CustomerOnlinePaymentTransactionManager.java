@@ -84,6 +84,9 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
 
             long cryptoAmount = getCryptoAmount(purchaseNegotiation, paymentCurrency);
 
+//            TODO: Manuel revisar esto para el issue
+//            if(dao.isContractHashInDatabase(contractHash)) throw new CantSendPaymentException();
+
             dao.persistContractInDatabase(
                     contractPurchase,
                     address,
