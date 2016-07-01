@@ -70,7 +70,7 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Refere
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CryptoBrokerNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return new CryptoBrokerNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override

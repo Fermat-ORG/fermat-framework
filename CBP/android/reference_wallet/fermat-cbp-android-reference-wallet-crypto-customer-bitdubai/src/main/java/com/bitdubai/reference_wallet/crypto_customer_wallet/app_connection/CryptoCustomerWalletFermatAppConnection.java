@@ -68,7 +68,7 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Refe
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return new CustomerNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override
