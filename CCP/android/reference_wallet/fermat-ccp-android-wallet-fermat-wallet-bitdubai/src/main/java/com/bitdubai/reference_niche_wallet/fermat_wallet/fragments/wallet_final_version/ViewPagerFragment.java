@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,20 +18,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.WheelCurrencyAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
 
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import antistatic.spinnerwheel.AbstractWheel;
+
 
 /**
  * Created by root on 28/06/16.
@@ -93,14 +86,16 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_pager, container, false);
-        TextView tvLabel = (TextView) view.findViewById(R.id.txt_rate_amount);
-        AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
-        currencies.setVisibleItems(3);
-        currencies.setViewAdapter(new WheelCurrencyAdapter(getContext()));
 
-        tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+        try {
 
-     try {
+           /* AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
+            currencies.setVisibleItems(3);
+            currencies.setViewAdapter(new WheelCurrencyAdapter(getActivity()));*/
+
+            tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+
+
             getAndShowMarketExchangeRateData(container);
         } catch (Exception e) {
             e.printStackTrace();
