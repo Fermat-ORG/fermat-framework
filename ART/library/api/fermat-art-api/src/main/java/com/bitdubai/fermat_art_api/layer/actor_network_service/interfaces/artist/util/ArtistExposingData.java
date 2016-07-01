@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.AbstractExposingData;
 
@@ -22,8 +23,9 @@ public final class ArtistExposingData extends AbstractExposingData {
     public ArtistExposingData(
             final String publicKey,
             final String alias,
-            String extraData) {
-        super(publicKey,alias,extraData);
+            String extraData,
+            Location location) {
+        super(publicKey,alias,extraData,location);
         //External platform information.
         HashMap<ArtExternalPlatform, String> externalPlatformInformationMap=
                 getExternalPlatformInformationMap(data.get(EXTERNAL_DATA_INDEX));

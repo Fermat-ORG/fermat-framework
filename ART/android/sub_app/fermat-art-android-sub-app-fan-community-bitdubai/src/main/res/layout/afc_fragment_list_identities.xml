@@ -3,8 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
+    android:background="#F1F2F2"
     android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+
+        android:background="@drawable/line_coloured"/>
+
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="wrap_content"
@@ -12,12 +21,20 @@
         android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:text="Please, select an identity"
-        android:textColor="#FFFFFF"
+        android:textColor="#6D6F71"
         android:textSize="16sp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#ffffff" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="3dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+
+        android:background="@drawable/line_coloured_300dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

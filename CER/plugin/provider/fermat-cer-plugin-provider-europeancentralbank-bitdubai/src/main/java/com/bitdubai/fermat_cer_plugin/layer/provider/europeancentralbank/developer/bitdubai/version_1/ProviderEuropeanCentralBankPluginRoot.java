@@ -33,7 +33,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.database.EuropeanCentralBankProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.database.EuropeanCentralBankProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.exceptions.CantInitializeEuropeanCentralBankProviderDatabaseException;
@@ -153,7 +153,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         String aux;
 
         try {
-            JSONObject json = new JSONObject(HttpReader.getHTTPContent(url));
+            JSONObject json = new JSONObject(HttpHelper.getHTTPContent(url));
 
             aux = json.getJSONObject("rates").get(currencyPair.getTo().getCode()).toString();
             price = Double.valueOf(aux);
@@ -197,7 +197,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             String aux;
 
             try {
-                JSONObject json = new JSONObject(HttpReader.getHTTPContent(url));
+                JSONObject json = new JSONObject(HttpHelper.getHTTPContent(url));
 
                 aux = json.getJSONObject("rates").get(currencyPair.getTo().getCode()).toString();
                 price = Double.valueOf(aux);
@@ -251,7 +251,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         String aux;
         while (loopTimestamp <= endTimestamp) {
             try {
-                JSONObject json = new JSONObject(HttpReader.getHTTPContent(baseUrl + DateHelper.getDateStringFromTimestamp(loopTimestamp)));
+                JSONObject json = new JSONObject(HttpHelper.getHTTPContent(baseUrl + DateHelper.getDateStringFromTimestamp(loopTimestamp)));
                 aux = json.getJSONObject("rates").get(currencyPair.getTo().getCode()).toString();
                 price = Double.valueOf(aux);
                 requiredExchangeRates.add(new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, loopTimestamp));

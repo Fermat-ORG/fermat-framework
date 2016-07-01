@@ -156,11 +156,8 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction, 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 0, "Help")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override

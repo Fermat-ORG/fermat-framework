@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.excepti
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
@@ -22,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class AcceptDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
+public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<ArtistCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -42,7 +44,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, 
 
     public AcceptDialog(
             Activity a,
-            ArtistSubAppSessionReferenceApp artistSubAppSession,
+            ReferenceAppFermatSession artistSubAppSession,
             SubAppResourcesProviderManager subAppResources,
             ArtistCommunityInformation artistCommunityInformation,
             ArtistCommunitySelectableIdentity identity) {
@@ -55,7 +57,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, 
 
     public AcceptDialog(
             Activity a,
-            ArtistSubAppSessionReferenceApp artistSubAppSession,
+            ReferenceAppFermatSession artistSubAppSession,
             SubAppResourcesProviderManager subAppResources,
             UUID connectionId,
             String alias,
@@ -80,8 +82,8 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, 
         negativeBtn.setOnClickListener(this);
 
         title.setText("Connect");
-        description.setText("Do you want to accept");
-        userName.setText(alias);
+        description.setText("Do you want to accept the connection request from");
+        userName.setText(alias+"?");
 
     }
 
@@ -105,13 +107,13 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, 
                 try {
                     getSession().getModuleManager().acceptArtist(connectionId);
                 } catch (CantAcceptRequestException e) {
-                    Toast.makeText(getContext(), alias + " Can not accept the request.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Can not accept the request from "+alias+".", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 } catch (ConnectionRequestNotFoundException e) {
-                    Toast.makeText(getContext(), alias + "Request ID not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Request ID not found.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                Toast.makeText(getContext(), alias + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Accepted connection with "+alias, Toast.LENGTH_SHORT).show();
                 getSession().setData("connectionresult", 3);
             } else {
                 Toast.makeText(getActivity(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();

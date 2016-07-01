@@ -179,7 +179,7 @@ public class ProvisoryData {
                 AppsStatus.DEV);
 
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.icon_bitcoin_network_active);
+//        item2.setIconResource(R.drawable.subapp_art_artist_icon);
         item2.setPosition(7);
         lstIdentities.add(item2);
 

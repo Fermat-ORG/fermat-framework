@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.app_connection.ChatIdentityFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboAppType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -15,6 +17,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyW
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
+import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_broker_community.app_connection.CryptoBrokerCommunityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_broker_identity.app_connection.CryptoBrokerIdentityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_customer_community.app_connection.CryptoCustomerCommunityFermatAppConnection;
@@ -26,10 +29,6 @@ import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnec
 
 import java.util.HashMap;
 import java.util.Map;
-
-//import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.com.bitdubai.sub_app.art_fan_identity.app_connection.ArtArtistIdentityAppConnection;
-
-//import com.bitdubai.reference_wallet.bank_money_wallet.com.bitdubai.sub_app.art_fan_identity.app_connection.BankMoneyWalletFermatAppConnection;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -81,7 +80,7 @@ public class FermatAppConnectionManager {
             case "main_desktop":
                 fermatAppConnection = new DesktopFermatAppConnection(activity);
                 break;
-            //DAP WALLETS
+//            //DAP WALLETS
 //            case "asset_issuer" :
 //                fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity);
 //                break;
@@ -138,11 +137,11 @@ public class FermatAppConnectionManager {
             case "sub_app_crypto_customer_identity":
                 fermatAppConnection = new CryptoCustomerIdentityFermatAppConnection(activity);
                 break;
-            //CASH WALLET
+//            //CASH WALLET
             case "cash_wallet":
                 fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
                 break;
-            //BANKING WALLET
+//            //BANKING WALLET
             case "banking_wallet":
                 fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
                 break;
@@ -154,15 +153,15 @@ public class FermatAppConnectionManager {
 
 
 //            // CHT Sub Apps
-//            case "public_key_cht_chat":
-//                fermatAppConnection = new ChatFermatAppConnection(activity);
-//                break;
-//            case "public_key_cht_community":
-//                fermatAppConnection = new ChatCommunityFermatAppConnection(activity);
-//                break;
-//            case "public_key_cht_identity_chat":
-//                fermatAppConnection = new ChatIdentityFermatAppConnection(activity);
-//                break;
+            case "public_key_cht_chat":
+                fermatAppConnection = new ChatFermatAppConnection(activity);
+                break;
+            case "public_key_cht_community":
+                fermatAppConnection = new ChatCommunityFermatAppConnection(activity);
+                break;
+            case "public_key_cht_identity_chat":
+                fermatAppConnection = new ChatIdentityFermatAppConnection(activity);
+                break;
 //            //TKY Fan wallet
 //            case "fan_wallet":
 //                fermatAppConnection = new FanWalletFermatAppConnection(activity);

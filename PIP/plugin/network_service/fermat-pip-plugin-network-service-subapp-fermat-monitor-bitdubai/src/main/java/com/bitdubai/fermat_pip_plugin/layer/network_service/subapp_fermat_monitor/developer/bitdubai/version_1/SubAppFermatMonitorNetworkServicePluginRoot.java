@@ -3,7 +3,6 @@ package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monit
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -22,9 +21,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.ComponentDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.ConnectionDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.ServiceDAO;
@@ -41,9 +40,6 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monito
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.DatabaseTransactionFailedException;
-
-
 /**
  * This plugin is designed to look up for the resources needed by a newly installed wallet. We are talking about the
  * navigation structure, plus the images needed by the wallet to be able to run.
@@ -56,7 +52,7 @@ import java.util.List;
  * <p/>
  * Created by Matias Furszyfer on 17/02/15.
  */
-public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements DatabaseManagerForDevelopers {
+public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkService implements DatabaseManagerForDevelopers {
 
     /**
      * Dealing with the repository database
@@ -79,16 +75,13 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
     public SubAppFermatMonitorNetworkServicePluginRoot() {
         super(new PluginVersionReference(new Version()),
                 EventSource.NETWORK_SERVICE_FERMAT_MONITOR,
-                PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.FERMAT_MONITOR,
-                "Fermat Monitor Network Services",
-                null);
+                NetworkServiceType.FERMAT_MONITOR
+        );
     }
 
 
     @Override
-    protected void onStart() throws CantStartPluginException {
-
+    protected void onNetworkServiceStart() throws CantStartPluginException {
 
         try {
             /**
@@ -167,14 +160,7 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
     }
 
     @Override
-    protected void onNetworkServiceRegistered() {
-
-    }
-
-    @Override
     public void stop() {
-
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */

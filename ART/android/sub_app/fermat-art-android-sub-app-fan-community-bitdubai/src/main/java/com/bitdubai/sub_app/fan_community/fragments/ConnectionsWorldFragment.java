@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -27,6 +28,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
@@ -49,7 +52,7 @@ import java.util.List;
  */
 public class ConnectionsWorldFragment extends
         AbstractFermatFragment<
-                FanCommunitySubAppSessionReferenceApp,
+                ReferenceAppFermatSession<FanCommunityModuleManager>,
                 SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<FanCommunityInformation> {
@@ -110,7 +113,8 @@ public class ConnectionsWorldFragment extends
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = moduleManager.loadAndGetSettings("123456789");
+                    appSettings = moduleManager.loadAndGetSettings("public_key_art_fan_community");
+                    //appSettings = settingsManager.loadAndGetSettings("public_key_art_fan_community");
                 }
 
             } catch (Exception e) {
@@ -124,7 +128,8 @@ public class ConnectionsWorldFragment extends
                     if (appSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        moduleManager.persistSettings("123456789", appSettings);
+                        moduleManager.persistSettings("public_key_art_fan_community", appSettings);
+                        //settingsManager.persistSettings("public_key_art_fan_community", appSettings);
                     }
                 }
             }
@@ -314,10 +319,14 @@ public class ConnectionsWorldFragment extends
                 dataSet.addAll(result);
                 offset = dataSet.size();
             }
+            //I'll check all the connections
+            moduleManager.checkAllConnections();
 
         }catch (CantGetSelectedActorIdentityException e){
             //There are no identities in device
             //Nothing to do here.
+        } catch (CantHandleNewsEventException e){
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -353,10 +362,25 @@ public class ConnectionsWorldFragment extends
             updateNotificationsBadge(count);
         }
     }
-
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
         getActivity().invalidateOptionsMenu();
+    }
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try
+        {
+            //update intra user list
+            if(code.equals(FanActorConnectionNotificationType.ACTOR_CONNECTED.getCode())){
+                invalidate();
+                onRefresh();
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 }

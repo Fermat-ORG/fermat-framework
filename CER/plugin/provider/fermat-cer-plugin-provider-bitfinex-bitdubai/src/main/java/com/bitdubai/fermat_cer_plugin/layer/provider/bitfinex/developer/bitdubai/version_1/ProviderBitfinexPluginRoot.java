@@ -33,7 +33,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfo
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.database.BitfinexProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.database.BitfinexProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitfinex.developer.bitdubai.version_1.exceptions.CantInitializeBitfinexProviderDatabaseException;
@@ -173,7 +173,7 @@ public class ProviderBitfinexPluginRoot extends AbstractPlugin implements Databa
         double salePrice = 0;
 
         try {
-            json = new JSONObject(HttpReader.getHTTPContent("https://api.bitfinex.com/v1/pubticker/" + exchangeFrom + exchangeTo));
+            json = new JSONObject(HttpHelper.getHTTPContent("https://api.bitfinex.com/v1/pubticker/" + exchangeFrom + exchangeTo));
             purchasePrice = json.getDouble("bid");
             salePrice = json.getDouble("ask");
 

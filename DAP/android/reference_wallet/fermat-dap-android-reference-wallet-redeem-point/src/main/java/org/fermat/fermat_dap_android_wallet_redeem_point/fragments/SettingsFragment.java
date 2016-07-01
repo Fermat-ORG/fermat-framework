@@ -128,10 +128,8 @@ public class SettingsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS, 0, "Help")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override

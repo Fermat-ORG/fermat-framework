@@ -62,9 +62,9 @@ android {
 }
 dependencies {
     // Fermat
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
     compile project(':fermat-tky-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // Android

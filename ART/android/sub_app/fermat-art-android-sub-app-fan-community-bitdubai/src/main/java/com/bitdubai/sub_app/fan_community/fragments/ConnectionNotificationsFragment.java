@@ -16,13 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -41,7 +42,7 @@ import java.util.List;
  */
 public class ConnectionNotificationsFragment extends
         AbstractFermatFragment<
-                FanCommunitySubAppSessionReferenceApp,
+                ReferenceAppFermatSession<FanCommunityModuleManager>,
                 SubAppResourcesProviderManager>
         implements
         SwipeRefreshLayout.OnRefreshListener,
@@ -57,12 +58,12 @@ public class ConnectionNotificationsFragment extends
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession;
+    //private FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession;
     private LinearLayout emptyView;
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private FanCommunityInformation fanCommunityInformation;
+    private ArtCommunityInformation fanCommunityInformation;
     private List<LinkedFanIdentity> linkedFanIdentities;
 
     /**
@@ -77,9 +78,9 @@ public class ConnectionNotificationsFragment extends
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // setting up  module
-        fanCommunitySubAppSession = appSession;
-        fanCommunityInformation = (FanCommunityInformation) appSession.getData(ACTOR_SELECTED);
-        moduleManager = fanCommunitySubAppSession.getModuleManager();
+        //fanCommunitySubAppSession = appSession;
+        fanCommunityInformation = (ArtCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         linkedFanIdentities = new ArrayList<>();
     }
@@ -206,7 +207,7 @@ public class ConnectionNotificationsFragment extends
         try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    fanCommunitySubAppSession,
+                    appSession,
                     null,
                     data,
                     moduleManager.getSelectedActorIdentity());

@@ -13,6 +13,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -21,16 +22,17 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.classes.BankTransactionParametersImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.BankTransactionParametersImpl;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by memo on 19/01/16.
@@ -154,33 +156,12 @@ public class TransactionDetailFragment extends AbstractFermatFragment<ReferenceA
 
     private void reapplyTransaction() {
         if(transactionRecord.getTransactionType() == TransactionType.DEBIT) {
-            //todo: ver esto, core comentado
-//            BankTransactionParameters transactionParameters = new BankTransactionParametersImpl(
-//                    UUID.randomUUID(),
-//                    null,
-//                    WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
-//                    "pkeyActorRefWallet",
-//                    transactionRecord.getAmount(),
-//                    bankAccountNumber.getAccount(),
-//                    bankAccountNumber.getCurrencyType(),
-//                    transactionRecord.getMemo(),
-//                    TransactionType.DEBIT);
-//
-//            moduleManager.makeAsyncWithdraw(transactionParameters);
-        } else {
-            //todo: ver esto, core comentado
-//            BankTransactionParameters transactionParameters = new BankTransactionParametersImpl(
-//                    UUID.randomUUID(),
-//                    null,
-//                    WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
-//                    "pkeyActorRefWallet",
-//                    transactionRecord.getAmount(),
-//                    bankAccountNumber.getAccount(),
-//                    bankAccountNumber.getCurrencyType(),
-//                    transactionRecord.getMemo(),
-//                    TransactionType.CREDIT);
-//
-//            moduleManager.makeAsyncDeposit(transactionParameters);
+            BankTransactionParametersImpl transactionParameters = new BankTransactionParametersImpl(UUID.randomUUID(), null, WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), "pkeyActorRefWallet", transactionRecord.getAmount(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getMemo(), TransactionType.DEBIT);
+            moduleManager.makeAsyncWithdraw(transactionParameters);
+        }
+        else {
+            BankTransactionParametersImpl transactionParameters = new BankTransactionParametersImpl(UUID.randomUUID(), null, WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), "pkeyActorRefWallet", transactionRecord.getAmount(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getMemo(), TransactionType.CREDIT);
+            moduleManager.makeAsyncDeposit(transactionParameters);
         }
     }
 

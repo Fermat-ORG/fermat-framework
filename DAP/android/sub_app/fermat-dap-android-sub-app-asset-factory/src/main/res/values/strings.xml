@@ -34,8 +34,28 @@
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
-    <string name="dap_asset_factory_published_subTitle">Published Tab of Asset Factory.</string>
+    <string name="dap_asset_factory_published_subTitle">Published Tabll of Asset Factory.</string>
     <string name="dap_asset_factory_published_body">This tab shows all the Assets that you have already created and were  successfully published.\n\nPublished assets are read-only and cannot be changed.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_asset_factory_wizard_multimedia_subTitle">Multimedia</string>
+    <string name="dap_asset_factory_wizard_multimedia_body">On this section you are able to load the image of Asset, you can load it from camera or image gallery of your smartphone.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_asset_factory_wizard_properties_subTitle">Properties</string>
+    <string name="dap_asset_factory_wizard_properties_body">From this section you must provide the Asset information, this fields are: Asset name, description, redeemable, transfereable, exchangeable, and expiration date of Asset.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_asset_factory_wizard_crypto_subTitle">Crypto</string>
+    <string name="dap_asset_factory_wizard_crypto_body">This section contains the crypto currency information of the Asset. You must provide the asset value of each asset, select a fee option, and quantity of assets to generate.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_asset_factory_wizard_verify_subTitle">Verify</string>
+    <string name="dap_asset_factory_wizard_verify_body">This is the final section. From here you can see and verify all the information about the Asset. Finish button save the Asset and return to Home screen.</string>
     <!--Dialog Help - End-->
 
     <string name="dap_asset_factory_welcome_title">Welcome!</string>

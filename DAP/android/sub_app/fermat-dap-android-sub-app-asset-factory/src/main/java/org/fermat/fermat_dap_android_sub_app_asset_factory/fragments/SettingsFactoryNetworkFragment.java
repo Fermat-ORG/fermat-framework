@@ -103,8 +103,8 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment<Refer
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 //        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS_NETWORK, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }

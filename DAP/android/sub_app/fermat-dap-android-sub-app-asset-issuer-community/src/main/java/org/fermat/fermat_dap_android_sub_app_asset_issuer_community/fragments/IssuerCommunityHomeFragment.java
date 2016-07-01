@@ -10,7 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -421,6 +421,55 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
+//        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+//            menuItemSize = menu.size();
+//
+//            searchView = (SearchView) menu.findItem(6).getActionView();
+//            searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
+//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String s) {
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String s) {
+//                    if (s.equals(searchView.getQuery().toString())) {
+//                        adapter.changeDataSet(actors);
+//                        adapter.getFilter().filter(s);
+//                        appSession.setData(SEARCH, s);
+//                    }
+//                    return false;
+//                }
+//            });
+//            if (appSession.getData(SEARCH) != null) {
+//                String s = appSession.getData(SEARCH).toString();
+//                searchView.setQuery(s, true);
+//                if (s.length() > 0) searchView.setIconified(false);
+//            }
+//
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 3, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 4, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//            menuItemConnect = menu.findItem(1);
+//            menuItemCancel = menu.findItem(2);
+//            menuItemSelect = menu.findItem(3);
+//            menuItemUnselect = menu.findItem(4);
+//
+//            restartButtons();
+//        }
+    }
+
+    @Override
+    public void onOptionMenuPrepared(Menu menu){
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();
 

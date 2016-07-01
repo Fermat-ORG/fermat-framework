@@ -3,8 +3,10 @@ package org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
@@ -36,8 +38,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      *
      * @param actorPublicKey The public key of the Asset Actor Redeem Point
      * @return The information associated with the actorPublicKey.
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException
+     * @throws CantGetAssetRedeemPointActorsException
+     * @throws CantAssetRedeemPointActorNotFoundException
      */
     ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 
@@ -46,8 +48,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      *
      * @param actorPublicKey The public key of the Asset Actor Redeem Point
      * @return The information associated with the actorPublicKey.
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException
+     * @throws CantGetAssetRedeemPointActorsException
+     * @throws CantAssetRedeemPointActorNotFoundException
      */
     ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 
@@ -59,7 +61,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      * @param assetRedeemPointActorprofileImage Referred to the Identity profileImage
      * @throws CantCreateActorRedeemPointException
      */
-    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, String contactInformation, String countryName, String cityName) throws CantCreateActorRedeemPointException;
+    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, String contactInformation, String countryName, String cityName, int accuracy, Frequency frequency) throws CantCreateActorRedeemPointException;
 
     /**
      * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
@@ -87,7 +89,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
     /**
      * The method <code>getActorAssetRedeemPoint</code> get All Information about Actor
      *
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException
+     * @throws CantGetAssetRedeemPointActorsException
      */
     ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException;
 
@@ -97,14 +99,14 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
      * and used in Sub App Community
      *
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException
+     * @throws CantGetAssetRedeemPointActorsException
      */
     List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorInTableRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
     /**
      * The method <code>getAllAssetIssuerActorConnected</code> receives All Actors with have CryptoAddress in BD
      *
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException
+     * @throws CantGetAssetRedeemPointActorsException
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
@@ -155,7 +157,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      *
      * @param actorAssetUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorAssetUserToRejectPublicKey The public key of the intra user that sent the request
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException
+     * @throws CantDenyConnectionActorAssetException
      */
     void denyConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException;
 
@@ -164,7 +166,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      * //     * @param actorUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      *
      * @param actorUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException
+     * @throws CantDisconnectAssetActorException
      */
 //    void disconnectToActorAssetRedeemPoint(String actorUserLoggedInPublicKey, String actorUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
     void disconnectToActorAssetRedeemPoint(String actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException;
@@ -190,7 +192,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      *
      * @param actorAssetUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException
+     * @throws CantGetActorAssetWaitingException
      */
     List<DAPActor> getWaitingYourConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 
@@ -200,7 +202,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      *
      * @param actorAssetUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException
+     * @throws CantGetActorAssetWaitingException
      */
     List<DAPActor> getWaitingTheirConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 

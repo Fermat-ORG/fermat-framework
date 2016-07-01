@@ -7,7 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -248,10 +248,10 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 
-        inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
+//        inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
 
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();

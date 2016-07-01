@@ -143,13 +143,8 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, "Redeem")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "Help")
-        //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override
