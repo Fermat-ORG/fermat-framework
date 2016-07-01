@@ -340,13 +340,7 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
         actorsCatalog.setExtraData(actorProfile.getExtraData());
         actorsCatalog.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
         actorsCatalog.setNodeIdentityPublicKey(nodeIdentity);
-
-        //Validate if location are available
-        if (actorProfile.getLocation() != null){
-            actorsCatalog.setLastLocation(actorProfile.getLocation().getLatitude(), actorProfile.getLocation().getLongitude());
-        }else{
-            actorsCatalog.setLastLocation(0.0, 0.0);
-        }
+        actorsCatalog.setLastLocation(actorProfile.getLocation());
 
         ActorsCatalog actorsCatalogRegister = getDaoFactory().getActorsCatalogDao().findById(actorProfile.getIdentityPublicKey());
 

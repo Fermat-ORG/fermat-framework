@@ -83,6 +83,7 @@ public class UpdateActorLastConnectionIntoCatalogProcessor extends PackageProces
 
         } catch (Exception exception){
 
+            exception.printStackTrace();
             try {
 
                 LOG.error(exception.getCause());

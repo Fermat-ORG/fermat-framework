@@ -65,7 +65,7 @@ public class ActorsCatalogTransactionDao extends AbstractBaseDao<ActorsCatalogTr
 
         ActorsCatalogTransaction actorsCatalogTransaction = new ActorsCatalogTransaction();
 
-        try{
+        try {
 
             actorsCatalogTransaction.setHashId(record.getStringValue(ACTOR_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME));
             actorsCatalogTransaction.setIdentityPublicKey(record.getStringValue(ACTOR_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
@@ -107,11 +107,15 @@ public class ActorsCatalogTransactionDao extends AbstractBaseDao<ActorsCatalogTr
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME                     , entity.getAlias());
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME                , entity.getActorType());
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME                     , Base64.encodeBase64String(entity.getPhoto()));
-        databaseTableRecord.setDoubleValue(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME, entity.getLastLocation().getLatitude());
-        databaseTableRecord.setDoubleValue(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME            , entity.getLastLocation().getLongitude());
-        databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME, entity.getExtraData());
-        databaseTableRecord.setLongValue(ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getHostedTimestamp()));
-        databaseTableRecord.setLongValue  (ACTOR_CATALOG_TRANSACTION_LAST_CONNECTION_COLUMN_NAME          , getLongValueFromTimestamp(entity.getLastConnection()));
+
+        if (entity.getLastLocation() != null) {
+            databaseTableRecord.setDoubleValue(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME             , entity.getLastLocation().getLatitude());
+            databaseTableRecord.setDoubleValue(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME            , entity.getLastLocation().getLongitude());
+        }
+
+        databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME                , entity.getExtraData());
+        databaseTableRecord.setLongValue  (ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME          , getLongValueFromTimestamp(entity.getHostedTimestamp()));
+        databaseTableRecord.setLongValue  (ACTOR_CATALOG_TRANSACTION_LAST_CONNECTION_COLUMN_NAME           , getLongValueFromTimestamp(entity.getLastConnection()));
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME  , entity.getNodeIdentityPublicKey());
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getClientIdentityPublicKey());
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME          , entity.getTransactionType());
