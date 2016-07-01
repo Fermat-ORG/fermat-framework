@@ -291,7 +291,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
-
     }
 
     @Override

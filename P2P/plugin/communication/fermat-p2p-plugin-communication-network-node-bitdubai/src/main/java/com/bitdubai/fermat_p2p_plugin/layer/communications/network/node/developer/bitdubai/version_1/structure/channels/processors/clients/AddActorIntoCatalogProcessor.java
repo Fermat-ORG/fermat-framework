@@ -168,7 +168,6 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
             LOG.error(exception.getCause());
 
         }
-
     }
 
     /**
@@ -192,6 +191,7 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
         actorsCatalog.setNodeIdentityPublicKey(nodeIdentity);
         actorsCatalog.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
         actorsCatalog.setLastUpdateTime(currentTimeStamp);
+        actorsCatalog.setLastConnection(currentTimeStamp);
         actorsCatalog.setHostedTimestamp(currentTimeStamp);
 
         //Validate if location are available
@@ -230,6 +230,7 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
         actorsCatalog.setNodeIdentityPublicKey(nodeIdentity);
         actorsCatalog.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
         actorsCatalog.setLastUpdateTime(currentTimeStamp);
+        actorsCatalog.setLastConnection(currentTimeStamp);
 
         // TODO may keep the hosted Timestamp value
 
@@ -284,6 +285,7 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
         transaction.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
         transaction.setTransactionType(transactionType);
         transaction.setGenerationTime(currentMillis);
+        transaction.setLastConnection(currentMillis);
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){

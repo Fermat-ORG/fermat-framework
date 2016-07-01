@@ -186,6 +186,13 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
                     pair = updateLocationActorsCatalog(actorsCatalogTransaction);
                     databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
                     break;
+                case ActorsCatalogTransaction.UPDATE_LAST_CONNECTION_TRANSACTION_TYPE :
+                        /*
+                         * Delete ActorsCatalog into data base
+                         */
+                    pair = updateLastConnectionActorsCatalog(actorsCatalogTransaction);
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                    break;
             }
 
             /*
@@ -283,12 +290,29 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      */
     private DatabaseTransactionStatementPair updateLocationActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
 
-        LOG.info("Executing method updateActorsCatalog");
+        LOG.info("Executing method updateLocationActorsCatalog");
 
         /*
          * Create statement.
          */
         return getDaoFactory().getActorsCatalogDao().createLocationUpdateTransactionStatementPair(actorsCatalogTransaction.getIdentityPublicKey(), actorsCatalogTransaction.getLastLocation(), actorsCatalogTransaction.getGenerationTime());
+    }
+
+    /**
+     * Update a row into the data base
+     *
+     * @param actorsCatalogTransaction
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    private DatabaseTransactionStatementPair updateLastConnectionActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
+
+        LOG.info("Executing method updateLastConnectionActorsCatalog");
+
+        /*
+         * Create statement.
+         */
+        return getDaoFactory().getActorsCatalogDao().createLastConnectionUpdateTransaction(actorsCatalogTransaction.getIdentityPublicKey(), actorsCatalogTransaction.getLastConnection());
     }
 
     /**
