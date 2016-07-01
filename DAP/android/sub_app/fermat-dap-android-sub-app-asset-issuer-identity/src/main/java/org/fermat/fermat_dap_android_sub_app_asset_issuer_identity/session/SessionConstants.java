@@ -9,6 +9,7 @@ public class SessionConstants {
     public static final String IDENTITY_NAME = "identity_name_issuer";
     public static final String FREQUENCY_DATA = "FREQUENCY_DATA_ISSUER";
     public static final String ACCURACY_DATA = "ACCURACY_DATA_ISSUER";
+    public static final String IDENTITY_IMAGE = "identity_image_issuer";
     public static final int IC_ACTION_ISSUER_IDENTITY_HELP_PRESENTATION = 701;
 
 

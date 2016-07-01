@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -311,6 +312,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
+                appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
 
             }
         });
@@ -387,7 +389,12 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
             e.printStackTrace();
         }
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
 
+    }
     private void loadIdentity() {
         if (identitySelected.getImage() != null) {
             Bitmap bitmap;
@@ -402,7 +409,12 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
 
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
-            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            if (appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+                mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            }else{
+                mIdentityImage.setImageDrawable((Drawable) appSession.getData(SessionConstants.IDENTITY_IMAGE));
+                activateButton();
+            }
         }
         isUpdate = true;
         createButton.setText("Update");
@@ -541,7 +553,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                                                     mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
                                                     mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
+                                                    appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     updateProfileImage = true;
+                                                    activateButton();
                                                 } else {
                                                     mIdentityBitmap = null;
                                                 }
@@ -579,7 +593,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                                             mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             updateProfileImage = true;
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
@@ -627,7 +643,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                                             mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             updateProfileImage = true;
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
@@ -955,7 +973,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                         if (identityInfo.getAccuracy() == getAccuracyData()) {
                             deactivatedButton();
 
-                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode())) {
+                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode()) && appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
                                 deactivatedButton();
                             } else {
                                 activateButton();

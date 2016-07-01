@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -473,9 +474,13 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
-
+                appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
             }
         });
+
+
+
+
     }
 
     private void publishResult(final int resultKey) {
@@ -579,6 +584,13 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
+
+    }
+
     private void loadIdentity() {
         if (identitySelected.getImage() != null) {
             Bitmap bitmap;
@@ -593,7 +605,12 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
-            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            if (appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+                mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            }else{
+                mIdentityImage.setImageDrawable((Drawable) appSession.getData(SessionConstants.IDENTITY_IMAGE));
+                activateButton();
+            }
         }
 
         isUpdate = true;
@@ -791,6 +808,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                                     mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     updateProfileImage = true;
+                                                    appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     activateButton();
                                                 } else {
                                                     mIdentityBitmap = null;
@@ -830,6 +848,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             activateButton();
                                         } else {
                                             mIdentityBitmap = null;
@@ -879,6 +898,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             activateButton();
                                         } else {
                                             mIdentityBitmap = null;
@@ -1222,7 +1242,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                         if (identityInfo.getAccuracy() == getAccuracyData()) {
                             deactivatedButton();
 
-                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode())) {
+                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode()) && appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+
                                 deactivatedButton();
                                 } else {
                                 activateButton();
