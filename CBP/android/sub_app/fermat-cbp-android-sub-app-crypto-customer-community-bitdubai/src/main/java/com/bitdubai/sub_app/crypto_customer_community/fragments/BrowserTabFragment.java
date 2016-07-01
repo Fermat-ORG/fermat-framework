@@ -253,7 +253,7 @@ public class BrowserTabFragment
     private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
         final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoCustomerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }

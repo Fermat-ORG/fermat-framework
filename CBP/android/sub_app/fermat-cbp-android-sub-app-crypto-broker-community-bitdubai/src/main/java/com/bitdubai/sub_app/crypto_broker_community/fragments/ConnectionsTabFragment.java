@@ -220,7 +220,7 @@ public class ConnectionsTabFragment
     private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
         final ArrayList<CryptoBrokerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoBrokerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }
