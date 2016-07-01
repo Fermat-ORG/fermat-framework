@@ -71,7 +71,7 @@ public class ConnectionNotificationsFragment
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 20;
+    private static final int MAX = 1000;
     private ChatActorCommunitySelectableIdentity identity;
     protected final String TAG = "ConnectionNotificationsFragment";
 
@@ -109,7 +109,6 @@ public class ConnectionNotificationsFragment
             chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             lstChatUserInformations = new ArrayList<>();
 
@@ -306,6 +305,9 @@ public class ConnectionNotificationsFragment
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     try {
+//                        lstChatUserInformations = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
+//                                identity.getActorType(), MAX, offset);
+//                        adapter.changeDataSet(lstChatUserInformations);
                         onRefresh();
                     }catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
