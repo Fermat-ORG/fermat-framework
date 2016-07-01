@@ -77,7 +77,7 @@
 
     <!--Dialog Help - Init-->
     <string name="dap_issuer_wallet_welcome_subTitle">Use it for distribution of assets.</string>
-    <string name="dap_issuer_wallet_welcome_body">Features:\n Assets storage \n Assets distribution (to Asset Users)\n Statistics \n\nNOTE: Assets must be created first in Asset Factory.</string>
+    <string name="dap_issuer_wallet_welcome_body">Features: Assets storage, distribution (to Asset Users), statistics.\n\nNOTE: Assets must be created first in Asset Factory.</string>
     <string name="dap_issuer_wallet_welcome_Footer">* You will be able to edit your profile in the Asset Issuer Identity application.</string>
     <string name="dap_issuer_wallet_welcome_name_left">Asset Issuer</string>
     <!--Dialog Help - End-->
