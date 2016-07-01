@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Ext
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.GeolocationAdapter;
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +37,9 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
 
     //ATTRIBUTES
     private EditText searchInput;
-    private ChatActorCommunitySubAppModuleManager mChatActorCommunityManager;
+    private IntraUserModuleManager mChatActorCommunityManager;
     private ListView mListView;
-    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
+    private ReferenceAppFermatSession<IntraUserModuleManager> appSession;
     private CitiesImpl cityFromList;
     private ImageView lupaButton;
     private ImageView closeButton;
@@ -57,13 +59,15 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     String State;
     String Input;
 
-    public GeolocationDialog(Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
+    public GeolocationDialog(Activity activity, ReferenceAppFermatSession<IntraUserModuleManager> appSession,
                              ResourceProviderManager resources, AdapterCallback mAdapterCallback){
         super(activity, appSession, null);
         this.appSession = appSession;
         this.activity = activity;
         this.mAdapterCallback = mAdapterCallback;
     }
+
+
 
     public void onClick(View v) {
         int id = v.getId();
