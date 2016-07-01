@@ -9,6 +9,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ArtActorInfo;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtArtistExtraData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
@@ -142,8 +143,10 @@ public class FanIdentityEventActions {
                     actorSearch = artistNetworkService.getSearch();
                     if(actorSearch==null){
                         //TODO: throw an exception
+                        return;
                     }
-                    artistExposingDataList = actorSearch.getResult(PlatformComponentType.ART_ARTIST);
+                    //TODO: to improve
+                    artistExposingDataList = actorSearch.getResult(100,0);
                     switch (externalPlatform){
                         case TOKENLY:
                             updateTKYIdentity(senderPublicKey,fanatic, artistExposingDataList);
@@ -164,8 +167,10 @@ public class FanIdentityEventActions {
                     fanSearch = artistNetworkService.getSearch();
                     if(fanSearch==null){
                         //TODO: throw an exception
+                        return;
                     }
-                    fanExposingDataList = fanSearch.getResult(PlatformComponentType.ART_ARTIST);
+                    //TODO: to improve
+                    fanExposingDataList = fanSearch.getResult(100,0);
                     switch (externalPlatform){
                         case TOKENLY:
                             updateFanTKYIdentity(senderPublicKey, fanatic, fanExposingDataList);
@@ -334,6 +339,15 @@ public class FanIdentityEventActions {
                     "Handling Artist Connection Request Accepted event",
                     "Cannot list the artist.");
         }
+    }
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    public void checkAllConnections() throws CantHandleNewsEventException {
+        //In this version I will to use the following method
+        handleArtistUpdateEvent();
     }
 
 }

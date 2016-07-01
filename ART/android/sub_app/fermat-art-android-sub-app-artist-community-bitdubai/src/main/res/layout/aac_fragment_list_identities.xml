@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
+    android:background="#363636"
     android:orientation="vertical">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

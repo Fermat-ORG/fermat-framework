@@ -26,6 +26,7 @@ public final class FanConnectionRequest {
     private final RequestType requestType         ;
     private final ProtocolState protocolState       ;
     private final ConnectionRequestAction requestAction       ;
+    private int sentCount                                     ;
     private final long                    sentTime            ;
 
     public FanConnectionRequest(final UUID requestId,
@@ -38,6 +39,7 @@ public final class FanConnectionRequest {
                                 final RequestType requestType,
                                 final ProtocolState protocolState,
                                 final ConnectionRequestAction requestAction,
+                                final int sentCount,
                                 final long sentTime) {
 
         this.requestId            = requestId           ;
@@ -50,6 +52,7 @@ public final class FanConnectionRequest {
         this.requestType          = requestType         ;
         this.protocolState        = protocolState       ;
         this.requestAction        = requestAction       ;
+        this.sentCount            = sentCount           ;
         this.sentTime             = sentTime            ;
     }
 
@@ -125,6 +128,14 @@ public final class FanConnectionRequest {
 
     public PlatformComponentType getDestinationActorType() {
         return destinationActorType;
+    }
+
+    public int getSentCount() {
+        return sentCount;
+    }
+
+    public void setSentCount(int sentCount) {
+        this.sentCount = sentCount;
     }
 
     @Override

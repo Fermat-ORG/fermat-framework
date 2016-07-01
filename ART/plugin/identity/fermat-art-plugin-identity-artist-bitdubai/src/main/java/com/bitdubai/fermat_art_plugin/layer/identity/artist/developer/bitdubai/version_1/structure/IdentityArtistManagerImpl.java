@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
@@ -74,6 +76,8 @@ public class IdentityArtistManagerImpl implements ArtistIdentityManager {
 
     private TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
 
+    private LocationManager locationManager;
+
 
     /**
      * Constructor
@@ -89,7 +93,8 @@ public class IdentityArtistManagerImpl implements ArtistIdentityManager {
             UUID pluginId,
             DeviceUserManager deviceUserManager,
             ArtistManager artistManager,
-            TokenlyArtistIdentityManager tokenlyArtistIdentityManager){
+            TokenlyArtistIdentityManager tokenlyArtistIdentityManager,
+            LocationManager locationManager){
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
@@ -97,6 +102,7 @@ public class IdentityArtistManagerImpl implements ArtistIdentityManager {
         this.deviceUserManager = deviceUserManager;
         this.artistManager = artistManager;
         this.tokenlyArtistIdentityManager = tokenlyArtistIdentityManager;
+        this.locationManager = locationManager;
     }
 
     private ArtistIdentityDao getArtistIdentityDao() throws CantInitializeArtistIdentityDatabaseException {
@@ -289,7 +295,8 @@ public class IdentityArtistManagerImpl implements ArtistIdentityManager {
             final ArtistExposingData artistExposingData = new ArtistExposingData(
                     publicKey,
                     alias,
-                    XMLParser.parseObject(data));
+                    XMLParser.parseObject(data),
+                    locationManager.getLocation());
 
             Thread registerToAns = new Thread(new Runnable() {
                 @Override
@@ -303,6 +310,8 @@ public class IdentityArtistManagerImpl implements ArtistIdentityManager {
             registerToAns.start();
 
         } catch (CantInitializeArtistIdentityDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantGetDeviceLocationException e) {
             e.printStackTrace();
         }
     }
@@ -330,9 +339,12 @@ public class IdentityArtistManagerImpl implements ArtistIdentityManager {
             ArtistExposingData artistExposingData = new ArtistExposingData(
                     artist.getPublicKey(),
                     artist.getAlias(),
-                    XMLParser.parseObject(data));
+                    XMLParser.parseObject(data),
+                    locationManager.getLocation());
             artistManager.exposeIdentity(artistExposingData);
         } catch (CantGetArtistIdentityException | CantExposeIdentityException e) {
+            e.printStackTrace();
+        } catch (CantGetDeviceLocationException e) {
             e.printStackTrace();
         }
     }
@@ -353,9 +365,12 @@ public class IdentityArtistManagerImpl implements ArtistIdentityManager {
             ArtistExposingData artistExposingData = new ArtistExposingData(
                     artist.getPublicKey(),
                     artist.getAlias(),
-                    XMLParser.parseObject(data));
+                    XMLParser.parseObject(data),
+                    locationManager.getLocation());
             artistManager.exposeIdentity(artistExposingData);
         } catch (CantGetArtistIdentityException | CantExposeIdentityException e) {
+            e.printStackTrace();
+        } catch (CantGetDeviceLocationException e) {
             e.printStackTrace();
         }
     }

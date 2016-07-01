@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.R;
@@ -23,7 +25,7 @@ import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionRefe
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectDialog extends FermatDialog<FanCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<FanCommunityModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -45,7 +47,7 @@ public class ConnectDialog extends FermatDialog<FanCommunitySubAppSessionReferen
 
 
     public ConnectDialog(final Activity activity,
-                         final FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
+                         final ReferenceAppFermatSession fanCommunitySubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final FanCommunityInformation information,
                          final FanCommunitySelectableIdentity identity) {

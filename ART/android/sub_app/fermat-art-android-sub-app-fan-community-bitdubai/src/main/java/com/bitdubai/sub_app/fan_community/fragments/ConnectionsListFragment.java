@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -40,7 +41,7 @@ import java.util.List;
  */
 public class ConnectionsListFragment extends
         AbstractFermatFragment<
-                FanCommunitySubAppSessionReferenceApp,
+                ReferenceAppFermatSession<FanCommunityModuleManager>,
                 SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ArtCommunityInformation> {

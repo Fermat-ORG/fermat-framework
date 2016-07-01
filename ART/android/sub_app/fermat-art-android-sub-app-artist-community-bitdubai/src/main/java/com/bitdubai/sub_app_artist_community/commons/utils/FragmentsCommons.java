@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app_artist_community.commons.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.artist_community.R;
 import com.squareup.picasso.Picasso;
 
@@ -32,7 +33,8 @@ public class FragmentsCommons {
         if (identity != null) {
             if (identity.getImage() != null) {
                 if (identity.getImage().length > 0) {
-                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length)));
+                    Bitmap mBitmap = (BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length));
+                    imageView.setImageBitmap(mBitmap);
                 } else
                     Picasso.with(activity).load(R.drawable.aac_profile_image).into(imageView);
             } else

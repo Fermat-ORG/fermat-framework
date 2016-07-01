@@ -10,8 +10,6 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-api')
-    compile project(':fermat-pip-api')
     compile project(':fermat-p2p-api')
-    //External platforms to connect
     compile project(':fermat-tky-api')
 }
