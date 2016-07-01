@@ -57,7 +57,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
 
         loadProvisoryData();
 
-        grouperList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        grouperList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0)f;
     }
 
     @Override
