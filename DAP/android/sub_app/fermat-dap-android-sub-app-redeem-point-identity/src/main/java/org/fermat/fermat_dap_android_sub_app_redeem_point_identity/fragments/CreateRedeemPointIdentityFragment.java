@@ -791,6 +791,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                                     mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     updateProfileImage = true;
+                                                    activateButton();
                                                 } else {
                                                     mIdentityBitmap = null;
                                                 }
@@ -829,6 +830,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
@@ -877,6 +879,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
