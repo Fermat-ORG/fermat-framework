@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -41,6 +43,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantSaveProfileImageException;
@@ -222,7 +225,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      */
     @Override
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
-    public List<IntraUserInformation> getSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getSuggestionsToContact(DeviceLocation location, double distance, String alias, int max, int offset) throws CantGetIntraUsersListException {
 
         try {
 
@@ -237,7 +240,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
                 List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset,location);
+                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset, location);
 
 
 
@@ -358,6 +361,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
         }
     }
+
+
 
 
     /**

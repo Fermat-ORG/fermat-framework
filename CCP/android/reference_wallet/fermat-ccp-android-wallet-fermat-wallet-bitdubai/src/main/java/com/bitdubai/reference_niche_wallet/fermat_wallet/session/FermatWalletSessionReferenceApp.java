@@ -3,9 +3,8 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;

@@ -2,6 +2,9 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -14,6 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDele
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 
@@ -70,7 +74,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
-    List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    List<IntraUserInformation> getSuggestionsToContact(DeviceLocation location, double distance, String alias, int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
 
     /**
@@ -229,4 +233,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @throws CantGetIntraUsersListException
      */
     void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantGetIntraUsersListException;
+
+
+
 }

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.customviews.spinner.wheel">
+    package="com.customviews.spinner_wheel">
 
     <application
         android:allowBackup="true"

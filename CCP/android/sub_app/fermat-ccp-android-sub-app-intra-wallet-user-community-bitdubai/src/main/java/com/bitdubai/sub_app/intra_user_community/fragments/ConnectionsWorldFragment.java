@@ -134,7 +134,7 @@ public class ConnectionsWorldFragment
 
     private DeviceLocation location = null;
     private double distance = 0;
-    private ChatActorCommunitySelectableIdentity identity;
+   // private ChatActorCommunitySelectableIdentity identity;
     private String alias;
 
 
@@ -438,8 +438,8 @@ public class ConnectionsWorldFragment
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    //return getMoreData();
-                    return getMoreDataAsync(location, distance, alias, MAX, offset);
+                    return getMoreData();
+                   // return getMoreDataAsync(location, distance, alias, MAX, offset);
 
                 }
             };
@@ -703,7 +703,14 @@ public class ConnectionsWorldFragment
 
          try {
 
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(
+                     identity.getPublicKey(),
+                     identity.getActorType(),
+                     location,
+                     distance,
+                     alias,
+                     MAX,
+                     offset);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
@@ -732,35 +739,6 @@ public class ConnectionsWorldFragment
         }
         return dataSet;
     }
-
-    private List<IntraUserInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias,int max, int offset) {
-        System.out.println("****************** GETMORE DATA SYNCRHINIEZED ENTERING");
-        List<IntraUserInformation> dataSet = new ArrayList<>();
-        try {
-            List<IntraUserInformation> result;
-            if(identity != null) {
-                result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        //null, 0, null, 0, 0);
-                        location, distance, alias, max, offset);
-//              for(ChatActorCommunityInformation chat: result){
-//                if(chat.getConnectionState()!= null){
-//                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
-//                        moduleManager.requestConnectionToChatActor(identity,chat);
-//                        dataSet.add(chat);
-//                    }else dataSet.add(chat);
-//                }
-//                else dataSet.add(chat);
-//            }
-                dataSet.addAll(result);
-                offset = dataSet.size();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("****************** GETMORE DATA SYNCRHINIEZED SALGO BIEN: ");
-        return dataSet;
-    }
-
 
 
     private List<IntraUserInformation> getSuggestionCache() {
