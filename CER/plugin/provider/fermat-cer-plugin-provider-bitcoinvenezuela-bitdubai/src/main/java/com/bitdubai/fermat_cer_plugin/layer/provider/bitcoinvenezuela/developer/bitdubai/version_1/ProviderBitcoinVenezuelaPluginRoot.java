@@ -35,7 +35,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.database.BitcoinVenezuelaProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.database.BitcoinVenezuelaProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bitcoinvenezuela.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinVenezuelaProviderDatabaseException;
@@ -170,7 +170,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
         double price = 0;
 
         try {
-            json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/"));
+            json = new JSONObject(HttpHelper.getHTTPContent("http://api.bitcoinvenezuela.com/"));
             price = json.getJSONObject(exchangeFrom).getDouble(exchangeTo);
 
         } catch (JSONException e) {
@@ -332,7 +332,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
         JSONObject json;
 
         try {
-            json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=" + currencyFrom.getCode() + currencyTo.getCode()));
+            json = new JSONObject(HttpHelper.getHTTPContent("http://api.bitcoinvenezuela.com/historical/?pair=" + currencyFrom.getCode() + currencyTo.getCode()));
             json = json.getJSONObject(currencyTo.getCode() + "_" + currencyFrom.getCode());
 
             Iterator<?> keys = json.keys();
