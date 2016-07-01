@@ -151,7 +151,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                 )
         );
 
-        if (this.getConnection() != null && this.getConnection().isRegistered()) {
+        if (this.getConnection() != null && this.getConnection().isRegistered() && this.isRegistered()) {
 
             try {
 
