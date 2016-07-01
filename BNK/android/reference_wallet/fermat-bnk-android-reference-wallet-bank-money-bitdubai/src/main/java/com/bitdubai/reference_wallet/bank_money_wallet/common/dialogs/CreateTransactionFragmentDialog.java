@@ -22,17 +22,18 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.classes.BankTransactionParametersImpl;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.BankTransactionParametersImpl;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.NumberInputFilter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
-//import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankTransactionParametersImpl;
 
 
 /**
@@ -224,20 +225,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                 if(availableBalance.compareTo(new BigDecimal(amount)) >= 0) {
                     System.out.println("DIALOG = " + TransactionType.DEBIT.getCode());
-
-                    //todo: ver esto, core comentado
-//                    final BankTransactionParameters transactionParameters = new BankTransactionParametersImpl(
-//                            UUID.randomUUID(),
-//                            null,
-//                            WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
-//                            "pkeyActorRefWallet",
-//                            new BigDecimal(amountText.getText().toString()),
-//                            account,
-//                            fiatCurrency,
-//                            memoText.getText().toString(),
-//                            TransactionType.DEBIT);
-//
-//                    moduleManager.makeAsyncWithdraw(transactionParameters);
+                    BankTransactionParametersImpl transactionParameters = new BankTransactionParametersImpl(UUID.randomUUID(), null, WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), "pkeyActorRefWallet", new BigDecimal(amountText.getText().toString()), account, fiatCurrency, memoText.getText().toString(), TransactionType.DEBIT);
+                    moduleManager.makeAsyncWithdraw(transactionParameters);
                     
                 } else {
                     Toast.makeText(activity.getApplicationContext(), "Amount is larger than available funds", Toast.LENGTH_SHORT).show();
@@ -246,19 +235,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             }
             if (transactionType == TransactionType.CREDIT) {
                 System.out.println("DIALOG = " + TransactionType.CREDIT.getCode());
-                //todo: ver esto, core comentado
-//                final BankTransactionParameters transactionParameters = new BankTransactionParametersImpl(
-//                        UUID.randomUUID(),
-//                        null,
-//                        WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
-//                        "pkeyActorRefWallet",
-//                        new BigDecimal(amountText.getText().toString()),
-//                        account,
-//                        fiatCurrency,
-//                        memoText.getText().toString(),
-//                        TransactionType.CREDIT);
-//
-//                moduleManager.makeAsyncDeposit(transactionParameters);
+                BankTransactionParametersImpl transactionParameters = new BankTransactionParametersImpl(UUID.randomUUID(), null, WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), "pkeyActorRefWallet", new BigDecimal(amountText.getText().toString()), account, fiatCurrency, memoText.getText().toString(), TransactionType.CREDIT);
+                moduleManager.makeAsyncDeposit(transactionParameters);
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
