@@ -63,8 +63,23 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.exceptions.CantLoadLoginsFileException;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.utils.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -86,7 +101,9 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
     private LocationManager locationManager;
 
-    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey,LocationManager locationManager) {
+    private GeolocationManager geolocationManager;
+
+    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey,LocationManager locationManager,GeolocationManager geolocationManager) {
         super(pluginFileSystem, pluginId);
         this.intraUserLoginXml = intraUserLoginXml;
         this.intraWalletUser = intraWalletUser;
@@ -96,6 +113,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         this.errorManager = errorManager;
         this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
         this.locationManager = locationManager;
+        this.geolocationManager = geolocationManager;
     }
 
     /**
@@ -237,7 +255,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      */
     @Override
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
-    public List<IntraUserInformation> getSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getSuggestionsToContact(DeviceLocation location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
 
         try {
 
@@ -252,7 +270,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
                 List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset, null);
+                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset, location);
 
 
 
@@ -779,6 +797,56 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         return notifications;
     }
 
+
+    /**
+     * Geolocation Manager methods
+     */
+
+
+    @Override
+    public HashMap<String, com.bitdubai.fermat_api.layer.all_definition.enums.Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
+        return geolocationManager.getCountryList();
+    }
+
+    @Override
+    public List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException {
+        return geolocationManager.getCountryDependencies(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException {
+        return geolocationManager.getCitiesByCountryCode(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException {
+        return geolocationManager.getCitiesByCountryCodeAndDependencyName(countryName, dependencyName);
+    }
+
+    @Override
+    public GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
+        return geolocationManager.getGeoRectangleByLocation(location);
+    }
+
+    @Override
+    public Address getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException {
+        return geolocationManager.getAddressByCoordinate(latitude, longitude);
+    }
+
+    @Override
+    public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
+        return geolocationManager.getRandomGeoLocation();
+    }
+
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
+    }
+
+    @Override
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
+        return geolocationManager.getExtendedCitiesByFilter(filter);
+    }
 
 
 

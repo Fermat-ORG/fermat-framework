@@ -41,6 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -114,6 +115,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
     List<IntraUserInformation> userList = new ArrayList<>();
+
+    private DeviceLocation location;
+    private double distance;
+    private String alias;
 
 
 
@@ -410,7 +415,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return getMoreData();
+                    return getMoreData(location,distance,alias);
                 }
             };
             worker.setContext(getActivity());
@@ -651,12 +656,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     }
 
 
-    private synchronized List<IntraUserInformation> getMoreData() {
+    private synchronized List<IntraUserInformation> getMoreData(DeviceLocation location, double distance, String alias) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
 
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
