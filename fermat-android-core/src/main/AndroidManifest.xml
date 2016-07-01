@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_LOGS"/>
     <!-- to get location using GPS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <!-- Permission to boot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

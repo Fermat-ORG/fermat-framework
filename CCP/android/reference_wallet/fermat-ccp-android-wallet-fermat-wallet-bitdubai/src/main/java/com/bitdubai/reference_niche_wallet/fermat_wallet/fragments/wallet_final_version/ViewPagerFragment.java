@@ -21,9 +21,8 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.WheelCurrencyAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
-import com.customviews.spinner_wheel.AbstractWheel;
+
 
 
 import java.util.UUID;
@@ -76,14 +75,21 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_pager, container, false);
-        TextView tvLabel = (TextView) view.findViewById(R.id.txt_rate_amount);
-        AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
-        currencies.setVisibleItems(3);
-        WheelCurrencyAdapter wheelCurrencyAdapter = new WheelCurrencyAdapter(getActivity());
-        currencies.setViewAdapter(wheelCurrencyAdapter);
-        tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+
+        View view = null;
+
         try {
+             view = inflater.inflate(R.layout.view_pager, container, false);
+            TextView tvLabel = (TextView) view.findViewById(R.id.txt_rate_amount);
+           // AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
+            //currencies.setVisibleItems(3);
+           // WheelCurrencyAdapter wheelCurrencyAdapter = new WheelCurrencyAdapter(getActivity());
+           // currencies.setViewAdapter(wheelCurrencyAdapter);
+
+           // currencies.setCurrentItem(1);
+
+            tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+
             // getAndShowMarketExchangeRateData(container);
         } catch (Exception e) {
             e.printStackTrace();
