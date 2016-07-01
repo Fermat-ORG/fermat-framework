@@ -16,34 +16,36 @@ public enum Actors implements FermatEnum, Serializable {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    DEVICE_USER             ("DUS"),
-    EXTRA_USER              ("EUS"),
-    INTRA_USER              ("IUS"),
-    SHOP                    ("SHP"),
+    DEVICE_USER             ("DUS", null),
+    EXTRA_USER              ("EUS", null),
+    INTRA_USER              ("IUS", null),
+    SHOP                    ("SHP", null),
 
-    CBP_CRYPTO_BROKER       ("CBPCRBR"),
-    CBP_CRYPTO_CUSTOMER     ("CBPCRCU"),
+    CBP_CRYPTO_BROKER       ("CBPCRBR", "Broker Wallet"),
+    CBP_CRYPTO_CUSTOMER     ("CBPCRCU", null),
 
-    CCM_INTRA_WALLET_USER   ("CCMIU"),
-    CCP_INTRA_WALLET_USER   ("CCPIU"),
+    CCM_INTRA_WALLET_USER   ("CCMIU", null),
+    CCP_INTRA_WALLET_USER   ("CCPIU", null),
 
-    DAP_ASSET_ISSUER        ("DAPASIS"),
-    DAP_ASSET_REDEEM_POINT  ("DAPARP"),
-    DAP_ASSET_USER          ("DAPASUS"),
+    DAP_ASSET_ISSUER        ("DAPASIS", null),
+    DAP_ASSET_REDEEM_POINT  ("DAPARP", null),
+    DAP_ASSET_USER          ("DAPASUS", null),
 
-    ART_ARTIST              ("AART"),
-    ART_FAN                 ("AFAN"),
+    ART_ARTIST              ("AART", null),
+    ART_FAN                 ("AFAN", null),
 
-    CHAT                    ("CHT"),
+    CHAT                    ("CHT", null),
 
-    LOSS_PROTECTED_USER     ("LPU"),
-    BITCOIN_BASIC_USER    ("BBW");
+    LOSS_PROTECTED_USER     ("LPU", "Loss Protected Wallet"),
+    BITCOIN_BASIC_USER    ("BBW", "Bitcoin Wallet");
 
 
     private final String code;
+    private final String actorsDefaultWalletName;
 
-    Actors(final String code) {
+    Actors(final String code, final String actorsDefaultWalletName) {
         this.code = code;
+        this.actorsDefaultWalletName = actorsDefaultWalletName;
     }
 
     public static Actors getByCode(String code) throws IllegalArgumentException {
@@ -82,5 +84,9 @@ public enum Actors implements FermatEnum, Serializable {
     @Override
     public String getCode() {
         return this.code;
+    }
+
+    public String getActorsDefaultWalletName() {
+        return this.actorsDefaultWalletName;
     }
 }
