@@ -627,12 +627,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     }
 
+    public void handleActorUnreachableEvent(ActorProfile actorProfile) {
+
+        checkFailedSentMessages(actorProfile.getIdentityPublicKey());
+        onActorUnreachable(actorProfile);
+    }
+
     /**
      * Through this method you can handle the actor found event for the actor trace that you could have done.
      *
      * @param actorProfile an instance of the actor profile
      */
-    public void handleActorUnreachable(ActorProfile actorProfile){
+    public void onActorUnreachable(ActorProfile actorProfile){
 
     }
 
@@ -736,7 +742,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         try {
 
-            System.out.println("*** 12345 case 6:send msg in NS P2P layer not active connection" + new Timestamp(System.currentTimeMillis()));
             /*
              * Created the message
              */
@@ -757,11 +762,67 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              */
             networkServiceConnectionManager.connectTo(destination);
 
-        }catch (Exception e){
+        } catch (Exception e){
 
             System.out.println("Error sending message: " + e.getMessage());
             throw new CantSendMessageException(e, "destination: "+destination+" - message: "+messageContent, "Unhandled error trying to send a message.");
         }
+    }
+
+    /**
+     * Check fail sent messages.
+     * When a call to an actor fails then we update the fail count of the messages sent to it.
+     * Then the message will be sent again after a amount of time defined in the message sender supervisor agent.
+     * If the message stays more than three days not being sent then we're going to delete it.
+     *
+     * @param destinationPublicKey of the actor which we're sending the messages.
+     */
+    private void checkFailedSentMessages(final String destinationPublicKey){
+
+        try {
+
+            /*
+             * Read all pending message from database
+             */
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey                    );
+            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME             , MessagesStatus.PENDING_TO_SEND.getCode());
+
+            List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
+
+            for (NetworkServiceMessage fermatMessageCommunication: messages) {
+
+                /*
+                 * Increment the fail count field
+                 */
+                fermatMessageCommunication.setFailCount(fermatMessageCommunication.getFailCount() + 1);
+
+                if(fermatMessageCommunication.getFailCount() > 10) {
+
+                    /*
+                     * Calculate the date
+                     */
+                    long sentDate = fermatMessageCommunication.getShippingTimestamp().getTime();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                    /*
+                     * if have mora that 3 days
+                     */
+                    if ((int) dias > 3) {
+                        getNetworkServiceConnectionManager().getOutgoingMessagesDao().delete(fermatMessageCommunication.getId().toString());
+                    }
+                } else {
+                    getNetworkServiceConnectionManager().getOutgoingMessagesDao().update(fermatMessageCommunication);
+                }
+
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
