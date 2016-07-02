@@ -170,7 +170,7 @@ public class GeolocationPluginManager implements GeolocationManager {
             PluginTextFile backupFile = pluginFileSystem.getTextFile(
                     pluginId,
                     GeolocationConfiguration.PATH_TO_COUNTRIES_FILE,
-                    GeolocationConfiguration.FILTERED_COUNTRIES_BACKUP_FILE+pathFilter,
+                    GeolocationConfiguration.FILTERED_COUNTRIES_BACKUP_FILE + pathFilter,
                     FILE_PRIVACY,
                     FILE_LIFE_SPAN);
             backupFile.loadFromMedia();
@@ -864,6 +864,7 @@ public class GeolocationPluginManager implements GeolocationManager {
     /**
      * This method returns an address by a given latitude and longitude.
      * The address contains a GeoRectangle object.
+     * The coordinates cannot be [0,0], this coordinates returns a error from Nominatim API
      * @param latitude
      * @param longitude
      * @return
