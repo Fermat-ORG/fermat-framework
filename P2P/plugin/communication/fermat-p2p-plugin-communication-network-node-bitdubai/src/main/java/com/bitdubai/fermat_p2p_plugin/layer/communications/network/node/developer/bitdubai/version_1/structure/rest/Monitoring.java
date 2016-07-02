@@ -33,6 +33,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ public class Monitoring {
     }
 
     @GET
+    @GZIP
     public String isActive() {
         return "The Monitoring WebService is running ...";
     }
@@ -92,6 +94,7 @@ public class Monitoring {
     @GET
     @Path("/current/data")
     @Produces(MediaType.APPLICATION_JSON)
+    @GZIP
     public Response monitoringData() {
 
         LOG.debug("Executing monitoringData()");
@@ -133,6 +136,7 @@ public class Monitoring {
     @GET
     @Path("/system/data")
     @Produces(MediaType.APPLICATION_JSON)
+    @GZIP
     public Response systemData() {
 
         LOG.debug("Executing systemData()");
@@ -169,6 +173,7 @@ public class Monitoring {
     @GET
     @Path("/clients/list")
     @Produces(MediaType.APPLICATION_JSON)
+    @GZIP
     public Response getClientList(){
         LOG.info("Starting geClientList");
         JsonObject jsonObjectRespond = new JsonObject();
@@ -223,6 +228,7 @@ public class Monitoring {
     @GET
     @Path("/client/components/details")
     @Produces(MediaType.APPLICATION_JSON)
+    @GZIP
     public Response getClientComponentsDetails(@QueryParam(JsonAttNamesConstants.NAME_IDENTITY) String clientIdentityPublicKey){
 
         LOG.info("Starting getClientComponentsDetails");
