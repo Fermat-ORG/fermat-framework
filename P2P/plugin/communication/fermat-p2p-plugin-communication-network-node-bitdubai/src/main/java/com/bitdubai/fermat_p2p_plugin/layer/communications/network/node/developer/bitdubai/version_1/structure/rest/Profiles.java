@@ -69,8 +69,6 @@ public class Profiles implements RestFulServices {
         LOG.info("Profiles - Starting listActors");
         JsonObject jsonObjectRespond = new JsonObject();
 
-        System.out.println("Profiles - Starting listActors Profiles - Starting listActors Profiles - Starting listActors");
-
         try{
 
             /*
@@ -81,13 +79,10 @@ public class Profiles implements RestFulServices {
             LOG.info("clientIdentityPublicKey  = " + clientIdentityPublicKey);
             LOG.info("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
 
-            System.out.println("discovery query parameters: **" + discoveryQueryParameters);
-
             /*
              * hold the result list
              */
             List<ActorProfile> resultList = filterActors(discoveryQueryParameters, clientIdentityPublicKey);
-            System.out.println("filteredLis.size() =" + resultList.size());
 
             LOG.info("filteredLis.size() =" + resultList.size());
 
@@ -134,8 +129,6 @@ public class Profiles implements RestFulServices {
 
         Map<String, ActorProfile> profileList = new HashMap<>();
 
-        System.out.println("hello 1");
-
         List<ActorsCatalog> actorsList;
 
         int max    = 10;
@@ -144,15 +137,10 @@ public class Profiles implements RestFulServices {
         if (discoveryQueryParameters.getMax() != null && discoveryQueryParameters.getMax() > 0)
             max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
 
-        System.out.println("hello 2");
         if (discoveryQueryParameters.getOffset() != null && discoveryQueryParameters.getOffset() >= 0)
             offset = discoveryQueryParameters.getOffset();
 
-        System.out.println("hello 3");
-
         actorsList = getDaoFactory().getActorsCatalogDao().findAll(discoveryQueryParameters, clientIdentityPublicKey, max, offset);
-
-        System.out.println("hello 4");
 
         if (discoveryQueryParameters.isOnline() != null && discoveryQueryParameters.isOnline())
             for (ActorsCatalog actorsCatalog : actorsList)
@@ -160,8 +148,6 @@ public class Profiles implements RestFulServices {
         else
             for (ActorsCatalog actorsCatalog : actorsList)
                 profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecord(actorsCatalog));
-
-        System.out.println("hello 5");
 
         return new ArrayList<>(profileList.values());
     }
