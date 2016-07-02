@@ -44,6 +44,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,8 +81,11 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserActorManager intraWalletUserManager;
 
-   // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
-   // private LocationManager locationManager;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
+
+    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .GEOLOCATION)
+    private GeolocationManager geolocationManager;
 
     private IntraWalletUserIdentity intraWalletUser;
 
@@ -276,7 +280,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractModule<IntraUserWal
            // } catch (CantGetDeviceLocationException e) {
                // e.printStackTrace();
             //}
-            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,deviceLocation);
+            intraUserModuleManager = new IntraUserModuleManagerImpl(pluginFileSystem,pluginId,intraUserLoginXml,intraWalletUser,intraWalletUserIdentityManager,intraWalletUserManager,intraUserNertwokServiceManager,errorManager,intraUserLoggedPublicKey,locationManager,geolocationManager);
         }
         return intraUserModuleManager;
     }

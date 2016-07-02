@@ -42,7 +42,7 @@ public interface IntraUserManager extends FermatManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset,DeviceLocation location) throws ErrorSearchingSuggestionsException;
+    List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset,DeviceLocation location) throws ErrorSearchingSuggestionsException;
 
 
     /**
