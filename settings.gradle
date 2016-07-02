@@ -26,7 +26,7 @@ include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer
 
 
 //include ':fermat-android-core'
-include ':fermat-linux-core'
+//include ':fermat-linux-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
