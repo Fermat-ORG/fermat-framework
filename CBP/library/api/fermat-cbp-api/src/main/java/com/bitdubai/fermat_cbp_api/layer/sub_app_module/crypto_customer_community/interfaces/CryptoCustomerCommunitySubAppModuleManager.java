@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
 
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -53,7 +54,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      *
      * @throws CantListCryptoCustomersException if something goes wrong.
      */
-    List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListCryptoCustomersException;
+    List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias,final int max, final int offset) throws CantListCryptoCustomersException;
 
     /**
      * The method <code>listSelectableIdentities</code> returns the list of all local broker identities on the device

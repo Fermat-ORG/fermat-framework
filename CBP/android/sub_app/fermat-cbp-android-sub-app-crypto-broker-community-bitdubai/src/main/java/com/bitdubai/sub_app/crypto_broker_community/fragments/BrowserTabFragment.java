@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -243,6 +242,8 @@ public class BrowserTabFragment
         super.onPrepareOptionsMenu(menu);
 
         final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+        menuItem.setIcon(R.drawable.lupa_blanca);
+
         final SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint("Search here");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -379,7 +380,8 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, MAX, offset);
+            //TODO:Nelson aca debemos de colocar el Location de debemos de traerlo del module de la comunidad donde va haber un metodo para eso, preguntale a cardozo como lo hizo el
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -544,7 +546,8 @@ public class BrowserTabFragment
                     actorInformation.getAlias(),
                     actorInformation.getImage(),
                     newConnectionState,
-                    actorInformation.getConnectionId());
+                    actorInformation.getConnectionId(),
+                    actorInformation.getLocation());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);

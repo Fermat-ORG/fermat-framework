@@ -5,6 +5,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
  */
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.io.Serializable;
 import java.util.List;
@@ -52,5 +53,12 @@ public interface CryptoCustomerCommunityInformation extends Serializable{
      * @return UUID object
      */
     UUID getConnectionId();
+
+    /**
+     * The method <code>getLocation</code> returns the Location this actor has with the selected actor
+     * @return Location object
+     */
+    Location getLocation();
+
 }
 
