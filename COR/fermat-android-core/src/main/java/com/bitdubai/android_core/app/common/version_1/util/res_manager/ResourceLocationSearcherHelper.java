@@ -18,7 +18,7 @@ public class ResourceLocationSearcherHelper {
 
     public static int obtainRes(int resType,Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
         ResourceSearcher resourceSearcher = switchType(context, sourceLocation, publickKeyOwnerOfSource);
-        if(resourceSearcher==null) throw new IllegalArgumentException("ResourceSearcher not found, App owner: "+publickKeyOwnerOfSource+", SourceLocation: "+sourceLocation+", resType: "+resType+", resourceId: "+resourceId);
+        if(resourceSearcher==null) throw new IllegalArgumentException("ResourceSearcher not found, App owner: "+publickKeyOwnerOfSource+", SourceLocation: "+sourceLocation+", resType: "+resType+", resourceId: "+resourceId+",\n Add in the appConnection this functionality");
         return resourceSearcher.obtainRes(resType, context, resourceId);
     }
 
