@@ -50,6 +50,7 @@ import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.GeolocationDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -245,7 +246,17 @@ public class BrowserTabFragment
         menuItem.setIcon(R.drawable.lupa_blanca);
 
         final SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search here");
+        SearchViewStyleHelper.on(searchView)
+                    .setCursorColor(Color.WHITE)
+                    .setTextColor(Color.WHITE)
+                    .setHintTextColor(Color.WHITE)
+                    .setSearchHintDrawable(R.drawable.lupa_blanca)
+                    .setSearchButtonImageResource(R.drawable.lupa_blanca)
+                    .setCloseBtnImageResource(R.drawable.x_blanca)
+                    .setSearchPlateTint(Color.WHITE)
+                    .setSubmitAreaTint(Color.WHITE);
+
+        searchView.setQueryHint("Search...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
