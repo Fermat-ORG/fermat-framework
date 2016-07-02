@@ -15,18 +15,18 @@ dependencies {
      */
     compile project(':fermat-api')
     compile project(':fermat-core-api')
-    //compile project(':fermat-art-core')
+//    compile project(':fermat-art-core')
     compile project(':fermat-cer-core')
     compile project(':fermat-bch-core')
-//    compile project(':fermat-bnk-core')
-//    compile project(':fermat-cbp-core')
+    compile project(':fermat-bnk-core')
+    compile project(':fermat-cbp-core')
     compile project(':fermat-ccp-core')
     compile project(':fermat-cht-core')
-//    compile project(':fermat-csh-core')
+    compile project(':fermat-csh-core')
 //    compile project(':fermat-dap-core')
     compile project(':fermat-p2p-core')
     compile project(':fermat-pip-core')
-    //compile project(':fermat-tky-core')
+//    compile project(':fermat-tky-core')
     compile project(':fermat-wpd-core')
 
     testCompile 'junit:junit:4.11'

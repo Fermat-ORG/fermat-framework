@@ -32,6 +32,7 @@ public final class FanActorNetworkServiceDatabaseConstants {
     public static final String CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME            = "request_type"            ;
     public static final String CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME           = "request_state"           ;
     public static final String CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME          = "request_action"          ;
+    public static final String CONNECTION_NEWS_REQUEST_SENT_COUNT_COLUMN_NAME      = "sent_count"              ;
     public static final String CONNECTION_NEWS_SENT_TIME_COLUMN_NAME               = "sent_time"               ;
 
     public static final String CONNECTION_NEWS_FIRST_KEY_COLUMN                    = "request_id"              ;

@@ -6,8 +6,11 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -24,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -44,7 +49,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ArtistCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements Dialog.OnDismissListener, Button.OnClickListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";
@@ -55,7 +60,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
     private FermatTextView externalPlatform;
     private ArtistCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArtistCommunityInformation artistCommunityInformation;
+    private ArtCommunityInformation artistCommunityInformation;
     private Button connect;
     private Button disconnect;
     private Button cancel;
@@ -79,7 +84,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         // setting up  module
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        artistCommunityInformation = (ArtistCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
+        artistCommunityInformation = (ArtCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
 
     }
 
@@ -213,12 +218,13 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
             else
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.aac_profile_image);
 
-            bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+        //    bitmap = Bitmap.createScaledBitmap(bitmap, 190, 190, true);
             userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
 
         } catch (Exception ex) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
+        configureToolbar();
         return rootView;
     }
 
@@ -238,11 +244,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         if(i == R.id.aac_btn_connect) {
             try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
-                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (ArtistCommunityInformation)artistCommunityInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setDescription("Do you want to send to");
                 connectDialog.setUsername(artistCommunityInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(this);
                 connectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
@@ -252,10 +258,10 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         } else if(i == R.id.aac_btn_disconnect) {
             try {
                 DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(), appSession, null,
-                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (ArtistCommunityInformation)artistCommunityInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(artistCommunityInformation.getAlias());
+                disconnectDialog.setUsername(artistCommunityInformation.getAlias() + "?");
                 disconnectDialog.setOnDismissListener(this);
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
@@ -266,10 +272,10 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
 
             try {
                 CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
-                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (ArtistCommunityInformation)artistCommunityInformation, moduleManager.getSelectedActorIdentity());
                 cancelDialog.setTitle("Cancel");
                 cancelDialog.setDescription("Want to cancel connection with");
-                cancelDialog.setUsername(artistCommunityInformation.getAlias());
+                cancelDialog.setUsername(artistCommunityInformation.getAlias()+"?");
                 cancelDialog.setOnDismissListener(this);
                 cancelDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
@@ -338,6 +344,19 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 changeActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getCode(), appSession.getAppPublicKey());
         }
 
+    }
+
+
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
 }

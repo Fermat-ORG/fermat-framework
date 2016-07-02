@@ -33,6 +33,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * Created by mati on 2015.11.24..
  */
+@Deprecated
 public class BrokerCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;

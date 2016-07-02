@@ -1,27 +1,20 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.TransactionViewHolder;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 

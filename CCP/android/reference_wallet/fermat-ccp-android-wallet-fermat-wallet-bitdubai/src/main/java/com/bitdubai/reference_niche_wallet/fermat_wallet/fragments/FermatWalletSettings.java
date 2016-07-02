@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -36,23 +37,14 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
-
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.SendToLossProtectedWalletDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
-
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -60,6 +52,11 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.showMessage;
 
@@ -443,7 +440,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
 
                         String SetServerString = "";
-                        CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
+                        CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.FERMAT);
                        FermatWalletWalletContact cryptoWalletWalletContact = null;
                         try {
                             cryptoWalletWalletContact = fermatWalletModule.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
@@ -508,7 +505,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                     Actors.EXTRA_USER,
                     Platforms.CRYPTO_CURRENCY_PLATFORM,
                     VaultType.CRYPTO_CURRENCY_VAULT,
-                    "BITV",
+                    CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                     appSession.getAppPublicKey(),
                     ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                     blockchainNetworkType

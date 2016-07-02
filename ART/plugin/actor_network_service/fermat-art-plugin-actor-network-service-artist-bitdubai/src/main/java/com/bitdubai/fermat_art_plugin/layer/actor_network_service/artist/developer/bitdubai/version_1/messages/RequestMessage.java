@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.enums.MessageTypes;
@@ -20,23 +20,21 @@ public class RequestMessage extends NetworkServiceMessage {
 
     private final UUID                    requestId           ;
     private final String                  senderPublicKey     ;
-    private final PlatformComponentType   senderActorType     ;
+    private final Actors senderActorType     ;
     private final String                  senderAlias         ;
     private final byte[]                  senderImage         ;
     private final String                  destinationPublicKey;
-    private final PlatformComponentType destinationActorType;
     private final ConnectionRequestAction requestAction       ;
     private final long                    sentTime            ;
 
-    public RequestMessage(final UUID requestId,
-                          final String senderPublicKey,
-                          final PlatformComponentType senderActorType,
-                          final String senderAlias,
-                          final byte[] senderImage,
-                          final String destinationPublicKey,
-                          PlatformComponentType destinationActorType,
-                          final ConnectionRequestAction requestAction,
-                          final long sentTime) {
+    public RequestMessage(final UUID                    requestId           ,
+                          final String                  senderPublicKey     ,
+                          final Actors                  senderActorType     ,
+                          final String                  senderAlias         ,
+                          final byte[]                  senderImage         ,
+                          final String                  destinationPublicKey,
+                          final ConnectionRequestAction requestAction       ,
+                          final long                    sentTime            ) {
 
         super(MessageTypes.CONNECTION_REQUEST);
 
@@ -46,7 +44,6 @@ public class RequestMessage extends NetworkServiceMessage {
         this.senderAlias          = senderAlias         ;
         this.senderImage          = senderImage         ;
         this.destinationPublicKey = destinationPublicKey;
-        this.destinationActorType = destinationActorType;
         this.requestAction        = requestAction       ;
         this.sentTime             = sentTime            ;
     }
@@ -57,11 +54,10 @@ public class RequestMessage extends NetworkServiceMessage {
 
         this.requestId            = UUID.fromString(jsonObject.get("requestId").getAsString());
         this.senderPublicKey      = jsonObject.get("senderPublicKey").getAsString();
-        this.senderActorType      = gson.fromJson(jsonObject.get("senderActorType").getAsString(), PlatformComponentType.class);
+        this.senderActorType      = gson.fromJson(jsonObject.get("senderActorType").getAsString(), Actors.class);
         this.senderAlias          = jsonObject.get("senderAlias").getAsString();
         this.senderImage          = Base64.decode(jsonObject.get("senderImage").getAsString(), Base64.DEFAULT);
         this.destinationPublicKey = jsonObject.get("destinationPublicKey").getAsString();
-        this.destinationActorType = gson.fromJson(jsonObject.get("destionationActorType").getAsString(), PlatformComponentType.class);
         this.requestAction        = gson.fromJson(jsonObject.get("requestAction").getAsString(), ConnectionRequestAction.class);
         this.sentTime             = jsonObject.get("sentTime").getAsLong();
 
@@ -88,7 +84,6 @@ public class RequestMessage extends NetworkServiceMessage {
         jsonObject.addProperty("senderAlias",          senderAlias);
         jsonObject.addProperty("senderImage",          Base64.encodeToString(senderImage, Base64.DEFAULT));
         jsonObject.addProperty("destinationPublicKey", destinationPublicKey);
-        jsonObject.addProperty("destionationActorType", destinationActorType.toString());
         jsonObject.addProperty("requestAction",        requestAction.toString());
         jsonObject.addProperty("sentTime",             sentTime);
         return gson.toJson(jsonObject);
@@ -110,9 +105,9 @@ public class RequestMessage extends NetworkServiceMessage {
     }
 
     /**
-     * @return an element of PlatformComponentType enum representing the actor type of the sender.
+     * @return an element of actors enum representing the actor type of the sender.
      */
-    public final PlatformComponentType getSenderActorType() {
+    public final Actors getSenderActorType() {
         return senderActorType;
     }
 
@@ -135,10 +130,6 @@ public class RequestMessage extends NetworkServiceMessage {
      */
     public final String getDestinationPublicKey() {
         return destinationPublicKey;
-    }
-
-    public PlatformComponentType getDestinationActorType() {
-        return destinationActorType;
     }
 
     /**

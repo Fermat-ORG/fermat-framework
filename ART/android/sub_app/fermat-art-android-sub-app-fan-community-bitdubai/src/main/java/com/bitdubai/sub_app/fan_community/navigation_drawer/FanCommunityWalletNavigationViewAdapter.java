@@ -61,13 +61,17 @@ public class FanCommunityWalletNavigationViewAdapter extends
     private void bindMenuItem(NavigationItemMenuViewHolder holder, int position) {
         switch (position) {
             case 0:
-                holder.getIcon().setImageResource(R.drawable.icon_users);
+                holder.getIcon().setImageResource(R.drawable.icon_users_inactive);
+                holder.getLine().setVisibility(View.VISIBLE);
                 break;
             case 1:
-                holder.getIcon().setImageResource(R.drawable.icon_connections);
+                holder.getIcon().setImageResource(R.drawable.icon_identities_inactive);
                 break;
             case 2:
-                holder.getIcon().setImageResource(R.drawable.icon_notifications);
+                holder.getIcon().setImageResource(R.drawable.icon_connections_inactive);
+                break;
+            case 3:
+                holder.getIcon().setImageResource(R.drawable.icon_notifications_inactive);
                 break;
         }
     }
@@ -78,24 +82,32 @@ public class FanCommunityWalletNavigationViewAdapter extends
         switch (position) {
             case 0:
                 //holder.getIcon().setImageResource(R.drawable.afc_ic_nav_friends_selected);
-
-                holder.getIcon().setImageResource(R.drawable.icon_users);
+                holder.getLine().setVisibility(View.VISIBLE);
+                holder.getIcon().setImageResource(R.drawable.icon_users_active);
+                holder.getIcon().setBackgroundColor(Color.parseColor("#DEDFDF"));
                 holder.getFullRow().setBackgroundColor(Color.parseColor("#DEDFDF"));
                 holder.getLabel().setBackgroundColor(Color.parseColor("#DEDFDF"));
                 break;
             case 1:
-             //   holder.getIcon().setImageResource(R.drawable.afc_ic_nav_connections_selected);
-                holder.getIcon().setImageResource(R.drawable.icon_connections);
+                //   holder.getIcon().setImageResource(R.drawable.afc_ic_nav_connections_selected);
+                holder.getIcon().setImageResource(R.drawable.icon_identities_active);
+                holder.getIcon().setBackgroundColor(Color.parseColor("#DEDFDF"));
                 holder.getFullRow().setBackgroundColor(Color.parseColor("#DEDFDF"));
                 holder.getLabel().setBackgroundColor(Color.parseColor("#DEDFDF"));
-
                 break;
             case 2:
+             //   holder.getIcon().setImageResource(R.drawable.afc_ic_nav_connections_selected);
+                holder.getIcon().setImageResource(R.drawable.icon_connections_active);
+                holder.getIcon().setBackgroundColor(Color.parseColor("#DEDFDF"));
+                holder.getFullRow().setBackgroundColor(Color.parseColor("#DEDFDF"));
+                holder.getLabel().setBackgroundColor(Color.parseColor("#DEDFDF"));
+                break;
+            case 3:
             //    holder.getIcon().setImageResource(R.drawable.afc_ic_nav_notifications_selected);
                 holder.getIcon().setImageResource(R.drawable.icon_notifications);
                 holder.getFullRow().setBackgroundColor(Color.parseColor("#DEDFDF"));
+                holder.getIcon().setBackgroundColor(Color.parseColor("#DEDFDF"));
                 holder.getLabel().setBackgroundColor(Color.parseColor("#DEDFDF"));
-
                 break;
         }
     }

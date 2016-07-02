@@ -21,8 +21,8 @@ public class CommunityNotificationPainterBuilder {
         NotificationPainter notification = null;
         int lastListIndex;
         if(session!=null){
-            FanCommunitySubAppSessionReferenceApp fanSubAppSession = (FanCommunitySubAppSessionReferenceApp) session;
-            FanCommunityModuleManager moduleManager = fanSubAppSession.getModuleManager();
+            //FanCommunitySubAppSessionReferenceApp fanSubAppSession = (FanCommunitySubAppSessionReferenceApp) session;
+            FanCommunityModuleManager moduleManager = (FanCommunityModuleManager)session.getModuleManager();
             try{
                 FanActorConnectionNotificationType notificationType = FanActorConnectionNotificationType.getByCode(code);
                 if(moduleManager==null){

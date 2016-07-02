@@ -187,7 +187,8 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         if (inProcessStatus == PAYMENT_RECEPTION_IN_PROCESS) {
                             setTextColorToAccepted();
                             textAction.setText("You received:");
-                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+//                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                            textDescriptionDate.setVisibility(View.INVISIBLE);
                             confirmButton.setEnabled(false);
                             confirmButton.setVisibility(View.VISIBLE);
                             confirmButton.setText("Confirmed");
@@ -228,7 +229,8 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                             if (inProcessStatus == MERCHANDISE_DELIVERY_IN_PROCESS) {
                                 setTextColorToAccepted();
                                 textAction.setText("You sent:");
-                                textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+//                                textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                                textDescriptionDate.setVisibility(View.INVISIBLE);
                                 cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_changed));
                                 confirmButton.setEnabled(false);
                                 confirmButton.setText("Confirmed");

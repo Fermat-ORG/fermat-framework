@@ -66,7 +66,6 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_ad
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
-
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 import java.math.BigDecimal;
@@ -372,7 +371,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                 Actors.INTRA_USER,
                                 fermatWallet.getSelectedActorIdentity().getPublicKey(),
                                 appSession.getAppPublicKey(),
-                                CryptoCurrency.BITCOIN,
+                                CryptoCurrency.FERMAT,
                                 blockchainNetworkType);
 
                     } else {
@@ -395,7 +394,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                     cryptoWalletWalletContact.getActorType(),
                                     Platforms.CRYPTO_CURRENCY_PLATFORM,
                                     VaultType.CRYPTO_CURRENCY_VAULT,
-                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                    CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                                     appSession.getAppPublicKey(),
                                     ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                     blockchainNetworkType
@@ -648,7 +647,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    cryptoWalletWalletContact.getActorType(),
                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
                                    VaultType.CRYPTO_CURRENCY_VAULT,
-                                   CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                   CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                                    appSession.getAppPublicKey(),
                                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    blockchainNetworkType
@@ -664,7 +663,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    operator.longValueExact(),
                                    blockchainNetworkType,
                                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
-                                   CryptoCurrency.BITCOIN
+                                   CryptoCurrency.FERMAT
 
                            );
                            Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();

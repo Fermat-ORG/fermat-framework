@@ -124,7 +124,7 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<Refer
                 resId = R.drawable.loos_help_icon;
                 break;
             case 4:
-                resId = R.drawable.ic_actionbar_send;
+                resId = R.drawable.sendbtc_icon;
                 break;
             case 3:
 

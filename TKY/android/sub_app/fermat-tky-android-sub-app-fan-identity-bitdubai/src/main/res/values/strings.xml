@@ -8,7 +8,10 @@
     <string name="broker_name">Broker name</string>
     <string name="identity_img">identity_image</string>
 
-    <!--<string-array name="externalPlatforms">-->
-        <!--<item>Tokenly</item>-->
-    <!--</string-array>-->
+    <!--Dialog Help - Init-->
+    <string name="tky_fan_identity_welcome_subTitle">Welcome to TKY Fan Identity.</string>
+    <string name="tky_fan_identity_welcome_footer">Welcome to TKY Fan Identity.</string>
+    <string name="tky_fan_identity_welcome_body">"This app helps you create your Tokenly identity in Fermat. Its main feature include:\n"
+                            "* Managing your identity.</string>
+    <!--Dialog Help - End-->
 </resources>

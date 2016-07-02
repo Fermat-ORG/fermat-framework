@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:src="@drawable/cbc_no_contacts"
+        android:src="@drawable/no_users"
         android:visibility="gone"/>
 
     <LinearLayout
@@ -97,6 +97,7 @@
             tools:text="Distrito Capital"/>
 
         <ImageView
+            android:id="@+id/cbc_location_filter_footer_bar_close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

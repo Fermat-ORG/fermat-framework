@@ -6,10 +6,10 @@
         android:gravity="left"
         android:text="LOW"
         android:textColor="#616161"
-        android:background="#EAEAEA"
+        android:background="#00000000"
         android:textColorHighlight="#CFCFCF"
         android:paddingLeft="10dip"
         android:paddingTop="10dip"
         android:paddingBottom="10dip"
         android:singleLine="true"
-        android:ellipsize="marquee"/>
+        android:ellipsize="marquee" />

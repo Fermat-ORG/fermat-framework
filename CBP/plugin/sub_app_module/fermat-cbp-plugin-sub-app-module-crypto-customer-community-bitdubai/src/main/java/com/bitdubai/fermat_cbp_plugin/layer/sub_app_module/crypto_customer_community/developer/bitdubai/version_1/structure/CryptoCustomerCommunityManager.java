@@ -366,9 +366,15 @@ public class CryptoCustomerCommunityManager
 
                 CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
 
-                for(CryptoBrokerIdentity i : brokerIdentitiesInDevice) {
-                    if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                        selectedIdentity = new CryptoCustomerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
+                for(CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                    if(identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                        selectedIdentity = new CryptoCustomerCommunitySelectableIdentityImpl(
+                                identity.getPublicKey(),
+                                Actors.CBP_CRYPTO_BROKER,
+                                identity.getAlias(),
+                                identity.getProfileImage(),
+                                identity.getFrequency(),
+                                identity.getAccuracy());
                 }
 
                 if(selectedIdentity == null)
