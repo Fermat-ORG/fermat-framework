@@ -54,7 +54,12 @@ public class TabStrip implements FermatTabStrip {
 
     boolean reduceTabHeight;
 
-    List<Tab> tabs = new ArrayList<>();
+    private List<Tab> tabs = new ArrayList<>();
+
+    /**
+     * Custom view to put as background
+     */
+    private FermatView fermatView;
 
     public void addTab(Tab tab) {
         tabs.add(tab);
@@ -240,6 +245,20 @@ public class TabStrip implements FermatTabStrip {
             throw new Exception(String.format("Type %s is already registered.", type));
         }
         wizards.put(type, wizard);
+    }
+
+
+    /**
+     *  Custom View for the tab
+     *
+     * @return
+     */
+    public FermatView getFermatView() {
+        return fermatView;
+    }
+
+    public void setFermatView(FermatView fermatView) {
+        this.fermatView = fermatView;
     }
 
     public Map<String, Wizard> getWizards() {

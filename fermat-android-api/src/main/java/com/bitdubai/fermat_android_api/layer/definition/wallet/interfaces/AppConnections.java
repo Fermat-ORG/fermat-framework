@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 import android.content.Context;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
@@ -93,6 +94,11 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
      * @return
      */
     public View getSharedView(Context activity, int resourceId) {
+        return null;
+    }
+
+
+    public ResourceSearcher getResourceSearcher(){
         return null;
     }
 }

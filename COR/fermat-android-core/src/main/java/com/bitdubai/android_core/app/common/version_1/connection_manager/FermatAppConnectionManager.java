@@ -124,7 +124,8 @@ public class FermatAppConnectionManager {
             case "crypto_customer_wallet":
                 fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity);
                 break;
-            //CBP Sub Apps
+
+//            //CBP Sub Apps
             case "public_key_crypto_broker_community":
                 fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity);
                 break;
@@ -137,11 +138,11 @@ public class FermatAppConnectionManager {
             case "sub_app_crypto_customer_identity":
                 fermatAppConnection = new CryptoCustomerIdentityFermatAppConnection(activity);
                 break;
-//            //CASH WALLET
+            //CASH WALLET
             case "cash_wallet":
                 fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
                 break;
-//            //BANKING WALLET
+            //BANKING WALLET
             case "banking_wallet":
                 fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
                 break;
@@ -149,8 +150,6 @@ public class FermatAppConnectionManager {
 //            case "public_key_store":
 //                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
 //                break;
-
-
 
 //            // CHT Sub Apps
             case "public_key_cht_chat":

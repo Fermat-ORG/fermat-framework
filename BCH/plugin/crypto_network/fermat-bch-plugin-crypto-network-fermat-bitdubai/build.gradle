@@ -4,12 +4,12 @@ apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
 group = "com.bitdubai.bch.network"
-version = '1'
+version = '3'
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'bch-network',
-                'Implementation-Version': '1'
+                'Implementation-Version': '3'
     }
 }
 
@@ -23,11 +23,9 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile project(':fermat-bch-api'){
-        dependencies{
-            compile project(':fermat-api')
-        }
-    }
+    compile project(':fermat-bch-api')
+    compile files ('libs/fermatj-core-0.13.6.jar')
+//    compile files('src/main/java/com/bitdubai/fermat_bch_plugin/layer/crypto_network/fermat/developer/bitdubai/version_1/fermatj-core-0.13.6.jar')
 }
 
 

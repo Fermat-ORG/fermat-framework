@@ -4,20 +4,20 @@ apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
 group = "com.bitdubai.bch.vault"
-version = '1'
+version = '2'
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'bch-vault',
-                'Implementation-Version': '1'
+                'Implementation-Version': '2'
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-bch-api')
     compile project(':fermat-pip-api')
-
+    compile files('src/main/java/com/bitdubai/fermat_bch_plugin/layer/crypto_vault/fermat/developer/bitdubai/bitdubai/version_1/fermatj-core-0.13.6.jar')
 }
 
 
