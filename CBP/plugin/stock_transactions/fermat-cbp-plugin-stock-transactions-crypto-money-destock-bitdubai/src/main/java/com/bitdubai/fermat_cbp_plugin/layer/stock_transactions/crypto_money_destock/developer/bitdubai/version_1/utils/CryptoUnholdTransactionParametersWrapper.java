@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils;
+package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 18/11/15.
  */
-public class CryptoTransactionParametersWrapper implements CryptoUnholdTransactionParameters {
+public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTransactionParameters {
     private UUID transactionId;
     private CryptoCurrency cryptoCurrency;
     private  String          walletPublicKey;
@@ -20,14 +20,14 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
     private  String          publicKeyPlugin;
     private BlockchainNetworkType blockchainNetworkType;
 
-    public CryptoTransactionParametersWrapper(UUID transactionId,
-                                              CryptoCurrency cryptoCurrency,
-                                              String walletPublicKey,
-                                              String publicActorKey,
-                                              BigDecimal amount,
-                                              String memo,
-                                              String publicKeyPlugin,
-                                              BlockchainNetworkType blockchainNetworkType
+    public CryptoUnholdTransactionParametersWrapper(UUID transactionId,
+                                                    CryptoCurrency cryptoCurrency,
+                                                    String walletPublicKey,
+                                                    String publicActorKey,
+                                                    BigDecimal amount,
+                                                    String memo,
+                                                    String publicKeyPlugin,
+                                                    BlockchainNetworkType blockchainNetworkType
     ){
         this.transactionId   = transactionId;
         this.cryptoCurrency  = cryptoCurrency;
@@ -39,7 +39,7 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
         this.blockchainNetworkType = blockchainNetworkType;
     }
 
-    public CryptoTransactionParametersWrapper(){}
+    public CryptoUnholdTransactionParametersWrapper(){}
 
     @Override
     public UUID getTransactionId() {

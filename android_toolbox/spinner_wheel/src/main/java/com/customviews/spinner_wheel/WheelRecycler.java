@@ -22,13 +22,14 @@
  * limitations under the License.
  */
 
-package antistatic.spinnerwheel;
+package com.customviews.spinner_wheel;
 
 import android.view.View;
 import android.widget.LinearLayout;
 
 import java.util.LinkedList;
 import java.util.List;
+
 
 /**
  * Recycle stored spinnerwheel items to reuse.

@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-package antistatic.spinnerwheel;
+package com.customviews.spinner_wheel;
 
 /**
  * Wheel scrolled listener interface.

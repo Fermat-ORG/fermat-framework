@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.wallet_store.bitdubai.R;
 
@@ -23,9 +22,6 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @version 1.0
  */
 public class MoreDetailsActivityFragment extends AbstractFermatFragment {
-    // MANAGERS
-    private WalletStoreModuleManager moduleManager;
-
     // UI
     private FermatTextView elevatorPitch;
     private FermatTextView description;
@@ -48,15 +44,6 @@ public class MoreDetailsActivityFragment extends AbstractFermatFragment {
     public static MoreDetailsActivityFragment newInstance() {
         return new MoreDetailsActivityFragment();
     }
-
-
-//    @Override
-//    public void setSubAppsSession(SubAppsSession subAppsSession) {
-//        super.setSubAppsSession(subAppsSession);
-//
-//        WalletStoreSubAppSessionReferenceApp session = (WalletStoreSubAppSessionReferenceApp) subAppsSession;
-//        moduleManager = session.getModuleManager();
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

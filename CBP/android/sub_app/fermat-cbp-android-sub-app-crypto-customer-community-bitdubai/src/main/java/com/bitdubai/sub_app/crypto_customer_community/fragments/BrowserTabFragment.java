@@ -70,6 +70,7 @@ public class BrowserTabFragment
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
     private CryptoCustomerCommunitySelectableIdentity identity;
     private DeviceLocation location;
+    private String alias = null;
     private double distance;
     private int offset;
 
@@ -233,6 +234,8 @@ public class BrowserTabFragment
         super.onPrepareOptionsMenu(menu);
 
         final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+        menuItem.setIcon(R.drawable.ccc_search_icon_withe);
+
         final SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint("Search here");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -338,7 +341,7 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias,  MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
