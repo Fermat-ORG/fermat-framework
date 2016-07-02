@@ -308,6 +308,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
             try {
                 dao = new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
                 String contractHash;
+                ContractTransactionStatus contractTransactionStatus;
 
                 /**
                  * Check if there is some crypto to send - Customer Side
@@ -315,6 +316,18 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 List<String> pendingToSubmitCrypto = dao.getPendingToSubmitCryptoList();
                 for (String pendingContractHash : pendingToSubmitCrypto) {
                     BusinessTransactionRecord businessTransactionRecord = dao.getCustomerOnlinePaymentRecord(pendingContractHash);
+
+                    //I'll check if the payment was sent in a previous loop
+                    contractTransactionStatus = businessTransactionRecord
+                            .getContractTransactionStatus();
+                    if(contractTransactionStatus!=ContractTransactionStatus.PENDING_PAYMENT){
+                        /**
+                         * If the contractTransactionStatus is different to PENDING_PAYMENT means
+                         * that tha payment through the Crypto* Wallet was done.
+                         * We don't want to send multiple payments, we will ignore this transaction.
+                         */
+                        continue;
+                    }
 
                     ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
                     IntraWalletUserIdentity intraUser = intraUsers.get(0);
