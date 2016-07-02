@@ -176,7 +176,7 @@ public class CreateCryptoBrokerIdentityFragment
         mBrokerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount));
 
-//        checkGPSOn();
+        checkGPSOn();
 
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);

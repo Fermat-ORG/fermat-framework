@@ -247,7 +247,7 @@ public class EditCryptoBrokerIdentityFragment
             sw.setImageResource(R.drawable.switch_notvisible);
         }
 
-//        checkGPSOn();
+        checkGPSOn();
 
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
