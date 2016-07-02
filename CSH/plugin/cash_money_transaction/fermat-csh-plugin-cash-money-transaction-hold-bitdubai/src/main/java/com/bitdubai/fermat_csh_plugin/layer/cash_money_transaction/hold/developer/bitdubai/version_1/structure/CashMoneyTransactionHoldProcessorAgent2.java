@@ -48,6 +48,10 @@ public class CashMoneyTransactionHoldProcessorAgent2 extends AbstractAgent {
         this.cashMoneyWalletManager = cashMoneyWalletManager;
     }
 
+    /**
+     * This method contains the logic to start this agent
+     * @return
+     */
     @Override
     protected Runnable agentJob() {
         Runnable runnable = new Runnable() {
@@ -67,7 +71,7 @@ public class CashMoneyTransactionHoldProcessorAgent2 extends AbstractAgent {
     }
 
     /**
-     * This method is the same tha we can find in CashMoneyTransactionHoldProcessorAgent.
+     * This method is the same that we can find in CashMoneyTransactionHoldProcessorAgent created by Alejandro Bicelis
      * Contains all the logic for the execution of this agent
      */
     private void doTheMainTask() {
