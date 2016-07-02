@@ -107,9 +107,9 @@ public class NetworkServiceDatabaseFactory {
             table.addColumn(INCOMING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME , DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME , DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(INCOMING_MESSAGES_CONTENT_COLUMN_NAME            , DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME       , DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_STATUS_COLUMN_NAME             , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(INCOMING_MESSAGES_CONTENT_COLUMN_NAME            , DatabaseDataType.STRING, 255, Boolean.FALSE);
 
             try {
                 //Create the table
@@ -128,11 +128,11 @@ public class NetworkServiceDatabaseFactory {
             table.addColumn(OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME       , DatabaseDataType.STRING , 130, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME        , DatabaseDataType.STRING , 255, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME                   , DatabaseDataType.STRING , 255, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME              , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_STATUS_COLUMN_NAME                    , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME         , DatabaseDataType.INTEGER,   0, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME                , DatabaseDataType.INTEGER,  10, Boolean.FALSE);
+            table.addColumn(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME                   , DatabaseDataType.STRING , 255, Boolean.FALSE);
 
             try {
                 //Create the table
