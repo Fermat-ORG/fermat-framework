@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
@@ -20,10 +21,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAdd
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.exceptions.CantInitializeWatchOnlyVaultException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.database.BitcoinWatchOnlyCryptoVaultDao;
-
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinWatchOnlyCryptoVaultDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
@@ -49,7 +50,7 @@ public class BitcoinWatchOnlyVaultManager {
     ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     UUID pluginId;
 
 
@@ -60,7 +61,7 @@ public class BitcoinWatchOnlyVaultManager {
      * @param pluginFileSystem
      * @param bitcoinNetworkManager
      */
-    public BitcoinWatchOnlyVaultManager(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
+    public BitcoinWatchOnlyVaultManager(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;

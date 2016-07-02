@@ -28,9 +28,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainCryptoManager;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -46,9 +48,12 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAd
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +90,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     private LogManager logManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
 
     public CryptoVaultBitcoinCurrencyPluginRoot() {
@@ -293,7 +298,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
         bitcoinCurrencyCryptoVaultManager.importCryptoFromSeed(networkParameters,mnemonicCode,date,userPhrase);
     }
 

@@ -52,6 +52,10 @@ public interface FermatNotification {
      *
      */
 
+    int getId();
+
+    int getPriority();
+
 
 
 }

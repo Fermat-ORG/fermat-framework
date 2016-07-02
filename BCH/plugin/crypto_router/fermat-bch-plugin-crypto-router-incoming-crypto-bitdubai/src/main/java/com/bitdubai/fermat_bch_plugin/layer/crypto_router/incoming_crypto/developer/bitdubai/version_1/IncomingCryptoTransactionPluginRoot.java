@@ -5,6 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -18,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -27,9 +31,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.developerUtils.IncomingCryptoDeveloperDatabaseFactory;
@@ -46,10 +48,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRelayAgent;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,10 +85,10 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
     private CryptoVaultManager cryptoVaultManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK)
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private TransactionSender<CryptoTransaction> bitcoinNetworkManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK)
-    private FermatNetworkManager fermatNetworkManager;
+//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK)
+    private TransactionSender<CryptoTransaction> fermatNetworkManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
