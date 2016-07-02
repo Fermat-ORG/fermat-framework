@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterO
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -89,8 +90,10 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
             table.setFilterTop(max.toString());
             table.setFilterOffSet(offset.toString());
 
+            List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+
             if (cpk != null)
-                table.addStringFilter(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, cpk, DatabaseFilterType.NOT_EQUALS);
+                tableFilters.add(table.getNewFilter(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.NOT_EQUALS, cpk));
 
             if (parameters.getLocation() != null)
                 table.addNearbyLocationOrder(
@@ -102,7 +105,14 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
                 );
 
             // load the data base to memory with filters
-            table.setFilterGroup(buildFilterGroupFromDiscoveryQueryParameters(table, parameters), null, DatabaseFilterOperator.OR);
+            List<DatabaseTableFilterGroup> internalFilterGroups = new ArrayList<>();
+
+            List<DatabaseTableFilter> discoveryQueryFilters = buildFilterGroupFromDiscoveryQueryParameters(table, parameters);
+
+            if (!discoveryQueryFilters.isEmpty())
+                internalFilterGroups.add(table.getNewFilterGroup(discoveryQueryFilters, null, DatabaseFilterOperator.OR));
+
+            table.setFilterGroup(tableFilters, internalFilterGroups, DatabaseFilterOperator.AND);
 
             table.loadToMemory();
 
