@@ -320,6 +320,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             try {
                 dao = new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
                 String contractHash;
+                ContractTransactionStatus contractTransactionStatus;
 
                 /**
                  * Check if there is some transaction to crypto De-stock
@@ -352,6 +353,18 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 List<String> pendingToSubmitCrypto = dao.getPendingToSubmitCryptoList();
                 for (String pendingContractHash : pendingToSubmitCrypto) {
                     BusinessTransactionRecord businessTransactionRecord = dao.getBrokerBusinessTransactionRecord(pendingContractHash);
+
+                    //I'll check if the merchandise was sent in a previous loop
+                    contractTransactionStatus = businessTransactionRecord
+                            .getContractTransactionStatus();
+                    if(contractTransactionStatus!=ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE){
+                        /**
+                         * If the contractTransactionStatus is different to PENDING_SUBMIT_ONLINE_MERCHANDISE means
+                         * that the merchandise submit through the Crypto* Wallet was done.
+                         * We don't want to send multiple payments, we will ignore this transaction.
+                         */
+                        continue;
+                    }
 
                     ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
                     IntraWalletUserIdentity intraUser = intraUsers.get(0);
