@@ -61,6 +61,12 @@ public class TabStrip implements FermatTabStrip {
      */
     private FermatView fermatView;
 
+    /**
+     * Custom drawable
+     */
+    private FermatDrawable backgroundDrawable;
+
+
     public void addTab(Tab tab) {
         tabs.add(tab);
     }
@@ -263,5 +269,13 @@ public class TabStrip implements FermatTabStrip {
 
     public Map<String, Wizard> getWizards() {
         return wizards;
+    }
+
+    public FermatDrawable getBackgroundDrawable() {
+        return backgroundDrawable;
+    }
+
+    public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
     }
 }
