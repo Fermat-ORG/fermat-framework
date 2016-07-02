@@ -35,7 +35,6 @@ import java.util.logging.Logger;
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
-    //TODO: Manejo de Eventos
 
     private Thread agentThread;
 
@@ -140,7 +139,6 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                         break;
 
                     case IN_UNHOLD:
-
                         //Get the status of the hold transaction from the cash wallet
                         CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
 
