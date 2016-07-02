@@ -669,7 +669,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     public final void handleNetworkServiceRegisteredEvent() {
 
-        System.out.println("********** THIS NETWORK SERVICE HAS BEEN REGISTERED: " + this.getProfile());
         this.registered = Boolean.TRUE;
         onNetworkServiceRegistered();
     }
@@ -867,7 +866,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         try {
 
-            System.out.println("*** 12345 case 6:send msg in NS P2P layer not active connection" + new Timestamp(System.currentTimeMillis()));
             /*
              * Created the message
              */
