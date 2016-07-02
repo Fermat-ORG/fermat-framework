@@ -20,6 +20,7 @@ public class FragmentsCommons {
     public static final int SEARCH_FILTER_OPTION_MENU_ID = 1;
     public static final int LOCATION_FILTER_OPTION_MENU_ID = 2;
     public static final int HELP_OPTION_MENU_ID = 3;
+    public static final int CBC_BACKGROUND_TAB_ID = 4;
 
     public static void setUpHeaderScreen(View headerView, Context activity, ActiveActorIdentityInformation identity) throws CantGetActiveLoginIdentityException {
         /**

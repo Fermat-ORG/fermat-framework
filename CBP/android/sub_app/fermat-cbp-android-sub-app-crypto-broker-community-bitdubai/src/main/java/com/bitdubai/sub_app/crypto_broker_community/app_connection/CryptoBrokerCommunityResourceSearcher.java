@@ -24,6 +24,9 @@ public class CryptoBrokerCommunityResourceSearcher extends ResourceSearcher {
             case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
                 return R.drawable.lupa;
 
+            case FragmentsCommons.CBC_BACKGROUND_TAB_ID:
+                return R.drawable.cbc_action_bar_gradient_colors;
+
             default:
                 return 0;
         }
