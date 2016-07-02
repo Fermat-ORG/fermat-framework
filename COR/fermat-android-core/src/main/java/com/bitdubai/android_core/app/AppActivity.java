@@ -44,6 +44,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
+import java.util.Arrays;
+
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 
@@ -325,6 +327,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     fermatStructure = FermatApplication.getInstance().getAppManager().getAppStructure(appBackPublicKey);
                     nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
                 }catch (Exception e1){
+                    e1.printStackTrace();
                     handleExceptionAndRestart();
                 }
             }
@@ -343,7 +346,8 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             }else{
                 Log.e(TAG, "nextActivity null, activity code: " + activityName +
                         ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey()+
-                        " \n Extra info: \n LastActivity: "+lastActivity+" FermatStructure: "+fermatStructure +" AppBackPublicKey: "+appBackPublicKey);
+                        " \n Extra info: \n LastActivity: "+lastActivity+" FermatStructure: "+fermatStructure +" AppBackPublicKey: "+appBackPublicKey+"\n"+
+                        Arrays.toString(FermatApplication.getInstance().getAppManager().getRecentsAppsStack().toArray()));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 handleExceptionAndRestart();
             }

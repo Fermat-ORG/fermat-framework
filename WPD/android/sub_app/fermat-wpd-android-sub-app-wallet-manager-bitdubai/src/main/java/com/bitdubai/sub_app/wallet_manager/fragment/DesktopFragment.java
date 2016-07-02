@@ -632,9 +632,9 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
         AppsStatus appsStatus = AppsStatus.getByCode(code);
         switch (appsStatus){
             case RELEASE:
-                break;
+                return;
             case BETA:
-                break;
+                return;
             case ALPHA:
                 break;
             case DEV:

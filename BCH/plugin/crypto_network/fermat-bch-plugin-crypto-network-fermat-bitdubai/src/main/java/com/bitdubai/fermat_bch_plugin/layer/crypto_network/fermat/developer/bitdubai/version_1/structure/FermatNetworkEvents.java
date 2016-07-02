@@ -4,34 +4,35 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Eve
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.BlockchainDownloadUpToDateEvent;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.FermatNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatTransactionConverter;
 
-import org.bitcoinj.core.AbstractBlockChain;
-import org.bitcoinj.core.Block;
-import org.bitcoinj.core.BlockChainListener;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.FilteredBlock;
-import org.bitcoinj.core.GetDataMessage;
-import org.bitcoinj.core.Message;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Peer;
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.core.PeerEventListener;
-import org.bitcoinj.core.ScriptException;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.VerificationException;
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.core.WalletEventListener;
-import org.bitcoinj.script.Script;
+import org.fermatj.core.AbstractBlockChain;
+import org.fermatj.core.Block;
+import org.fermatj.core.BlockChainListener;
+import org.fermatj.core.Coin;
+import org.fermatj.core.Context;
+import org.fermatj.core.ECKey;
+import org.fermatj.core.FilteredBlock;
+import org.fermatj.core.GetDataMessage;
+import org.fermatj.core.Message;
+import org.fermatj.core.NetworkParameters;
+import org.fermatj.core.Peer;
+import org.fermatj.core.PeerAddress;
+import org.fermatj.core.PeerEventListener;
+import org.fermatj.core.ScriptException;
+import org.fermatj.core.Sha256Hash;
+import org.fermatj.core.StoredBlock;
+import org.fermatj.core.Transaction;
+import org.fermatj.core.VerificationException;
+import org.fermatj.core.Wallet;
+import org.fermatj.core.WalletEventListener;
+import org.fermatj.script.Script;
 
 import java.io.File;
 import java.io.IOException;
@@ -171,7 +172,7 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
         /**
          * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
          */
-        for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, CURRENCY, cryptoNetworkWallet, tx)){
+        for (CryptoTransaction cryptoTransaction : FermatTransactionConverter.getCryptoTransactions(NETWORK_TYPE, CURRENCY, cryptoNetworkWallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
     }
@@ -211,7 +212,7 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
         /**
          * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
          */
-        for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, CURRENCY, cryptoNetworkWallet, tx)){
+        for (CryptoTransaction cryptoTransaction : FermatTransactionConverter.getCryptoTransactions(NETWORK_TYPE, CURRENCY, cryptoNetworkWallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
     }

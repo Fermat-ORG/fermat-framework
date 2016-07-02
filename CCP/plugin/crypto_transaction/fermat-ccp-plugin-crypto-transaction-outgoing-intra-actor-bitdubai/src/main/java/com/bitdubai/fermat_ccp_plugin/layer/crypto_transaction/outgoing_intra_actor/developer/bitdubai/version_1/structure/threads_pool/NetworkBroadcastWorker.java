@@ -1,8 +1,12 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
+
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 /**
  * Created by mati on 2016.01.02..
@@ -10,11 +14,11 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVault
 public class NetworkBroadcastWorker implements Runnable {
 
     String transactionHash;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     CryptoVaultManager cryptoVaultManager;
     NetworkExecutorPool networkExecutorPool;
 
-    public NetworkBroadcastWorker(String transactionHash, BitcoinNetworkManager bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager,NetworkExecutorPool networkExecutorPool) {
+    public NetworkBroadcastWorker(String transactionHash, BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager,NetworkExecutorPool networkExecutorPool) {
         this.transactionHash = transactionHash;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.cryptoVaultManager = cryptoVaultManager;
