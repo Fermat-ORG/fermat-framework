@@ -209,7 +209,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                 case REFERENCE:
                     try {
                         if(pluginVersionReferences==null) throw new CantOpenSessionException("","PluginVersionReference null in app: "+fermatApp.getAppPublicKey());
-                        if(pluginVersionReferences.length!=1) throw new CantOpenSessionException("","ReferenceApp can't have more than one module to assign, check your AppConnections getPluginVersionReference method");
+                        if(pluginVersionReferences.length!=1) throw new CantOpenSessionException("","ReferenceApp can't have more or less than one module to assign, check your AppConnections getPluginVersionReference method");
                         ModuleManager moduleManager = FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference()[0]);
                         referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager,isForSubSession);
                     } catch (CantCreateProxyException e) {
