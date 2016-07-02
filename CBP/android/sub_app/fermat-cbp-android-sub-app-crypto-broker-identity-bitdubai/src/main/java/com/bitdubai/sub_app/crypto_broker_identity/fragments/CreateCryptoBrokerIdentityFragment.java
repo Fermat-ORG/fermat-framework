@@ -111,11 +111,11 @@ public class CreateCryptoBrokerIdentityFragment
         }
 
         //Check if GPS is on and coordinate are fine
-//        try{
-//            location = appSession.getModuleManager().getLocation();
-//        }catch (Exception e){
-//           e.printStackTrace();
-//        }
+        try{
+            location = appSession.getModuleManager().getLocation();
+        }catch (Exception e){
+           e.printStackTrace();
+        }
 
         turnGPSOn();
     }
@@ -428,7 +428,6 @@ public class CreateCryptoBrokerIdentityFragment
     }
 
     private void checkGPSOn(){
-        //TODO call a dialog to request to turn on gps
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
                 turnOnGPSDialog();

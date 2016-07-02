@@ -502,7 +502,6 @@ public class EditCryptoBrokerIdentityFragment
     }
 
     private void checkGPSOn(){
-        //TODO call a dialog to request to turn on gps
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
                 turnOnGPSDialog();
