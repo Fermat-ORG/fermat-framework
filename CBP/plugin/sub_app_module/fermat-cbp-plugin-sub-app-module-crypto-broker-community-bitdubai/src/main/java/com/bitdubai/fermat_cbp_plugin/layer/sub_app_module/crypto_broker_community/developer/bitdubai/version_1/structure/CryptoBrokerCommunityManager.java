@@ -561,7 +561,8 @@ public class CryptoBrokerCommunityManager
 
         //No registered users in device
         if (customerIdentitiesInDevice.size() + brokerIdentitiesInDevice.size() == 0)
-            throw new CantGetSelectedActorIdentityException("", null, "", "");
+            return null;
+//            throw new CantGetSelectedActorIdentityException("", null, "", "");
 
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
@@ -598,16 +599,49 @@ public class CryptoBrokerCommunityManager
                     }
                 }
 
-
                 if (selectedIdentity == null)
                     throw new ActorIdentityNotSelectedException("", null, "", "");
 
                 return selectedIdentity;
             } else
-                throw new ActorIdentityNotSelectedException("", null, "", "");
+                return constructProfile(customerIdentitiesInDevice, brokerIdentitiesInDevice);
+//                throw new ActorIdentityNotSelectedException("", null, "", "");
         }
 
         return null;
+    }
+
+
+    private CryptoBrokerCommunitySelectableIdentityImpl constructProfile(List<CryptoCustomerIdentity> customerIdentitiesInDevice, List<CryptoBrokerIdentity> brokerIdentitiesInDevice) {
+        CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity = null;
+
+        if(customerIdentitiesInDevice.size() > 0) {
+            for (CryptoCustomerIdentity identity : customerIdentitiesInDevice) {
+                if(identity.getPublicKey() != null)
+                    selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(
+                            identity.getPublicKey(),
+                            Actors.CBP_CRYPTO_CUSTOMER,
+                            identity.getAlias(),
+                            identity.getProfileImage(),
+                            identity.getAccuracy(),
+                            identity.getFrequency());
+            }
+        }
+
+        if(brokerIdentitiesInDevice.size() > 0) {
+            for (CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                if(identity.getPublicKey() != null)
+                    selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(
+                            identity.getPublicKey(),
+                            Actors.CBP_CRYPTO_BROKER,
+                            identity.getAlias(),
+                            identity.getProfileImage(),
+                            identity.getAccuracy(),
+                            identity.getFrequency());
+            }
+        }
+
+        return selectedIdentity;
     }
 
     @Override
