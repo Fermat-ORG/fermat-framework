@@ -140,7 +140,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
                         //Set status to IN_UNHOLD
-                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EXECUTION);
+                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         break;
 
                     case IN_UNHOLD:
