@@ -202,7 +202,7 @@ public class BrowserTabFragment
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AvailableActorsListAdapter(getActivity(), cryptoBrokerCommunityInformationList, moduleManager);
+            adapter = new AvailableActorsListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
             adapter.setFermatListEventListener(this);
         }
 
