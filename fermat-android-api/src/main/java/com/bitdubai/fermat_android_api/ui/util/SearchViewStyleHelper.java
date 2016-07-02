@@ -17,6 +17,7 @@
 package com.bitdubai.fermat_android_api.ui.util;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -315,8 +316,16 @@ public class SearchViewStyleHelper {
                 final Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
                 fCursorDrawable.setAccessible(true);
                 final Drawable[] drawables = new Drawable[2];
-                drawables[0] = editText.getContext().getResources().getDrawable(mCursorDrawableRes);
-                drawables[1] = editText.getContext().getResources().getDrawable(mCursorDrawableRes);
+
+                final Resources resources = editText.getContext().getResources();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    drawables[0] = resources.getDrawable(mCursorDrawableRes, null);
+                    drawables[1] = resources.getDrawable(mCursorDrawableRes, null);
+                } else {
+                    drawables[0] = resources.getDrawable(mCursorDrawableRes);
+                    drawables[1] = resources.getDrawable(mCursorDrawableRes);
+                }
+
                 drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
                 drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
                 fCursorDrawable.set(editor, drawables);

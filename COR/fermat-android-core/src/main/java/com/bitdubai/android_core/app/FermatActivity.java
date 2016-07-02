@@ -72,9 +72,9 @@ import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.LogReader;
 import com.bitdubai.android_core.app.common.version_1.util.MainLayoutHelper;
-import com.bitdubai.android_core.app.common.version_1.util.res_manager.ResourceLocationSearcherHelper;
 import com.bitdubai.android_core.app.common.version_1.util.SharedMemory;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
+import com.bitdubai.android_core.app.common.version_1.util.res_manager.ResourceLocationSearcherHelper;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.BuildConfig;
 import com.bitdubai.fermat.R;
@@ -1190,6 +1190,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
                     //  System.out.println("TOOLBARTAMANO:"+heightDp);
                     lp.height = (int) heightDp;
+                }
+
+                if(tabs.getBackgroundDrawable()!=null){
+                    FermatDrawable fermatDrawable = tabs.getBackgroundDrawable();
+                    int res = ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE,this,fermatDrawable.getId(),fermatDrawable.getSourceLocation(),fermatDrawable.getOwner().getOwnerAppPublicKey());
+                    tabLayout.setBackgroundResource(res);
                 }
 
             }
