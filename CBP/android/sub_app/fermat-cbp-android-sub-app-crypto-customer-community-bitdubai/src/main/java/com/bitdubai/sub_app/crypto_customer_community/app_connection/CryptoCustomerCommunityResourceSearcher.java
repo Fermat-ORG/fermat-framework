@@ -24,6 +24,8 @@ public class CryptoCustomerCommunityResourceSearcher extends ResourceSearcher {
             case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
                 return R.drawable.ccc_search_icon_withe;
 
+            case FragmentsCommons.CCC_BACKGROUND_TAB_ID:
+                return R.drawable.ccc_action_bar_gradient_colors;
             default:
                 return 0;
         }
