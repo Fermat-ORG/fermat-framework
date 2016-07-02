@@ -5,6 +5,7 @@ import android.content.Context;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentFactory;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainterBuilder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -102,22 +103,7 @@ public class ChatFermatAppConnection
     }
 
     @Override
-    public int getResource(int id) {
-        int resId = 0;
-        switch (id){
-            case 1:
-                resId = R.drawable.cht_help_icon;
-                break;
-            case 2:
-                resId = R.drawable.cht_ic_action_search;
-                break;
-            case 3:
-                resId = R.drawable.cht_people_conections;
-                break;
-            case 4:
-                resId = R.drawable.cht_notifications;
-                break;
-        }
-        return resId;
+    public ResourceSearcher getResourceSearcher() {
+        return new ChatResourceSearcher();
     }
 }

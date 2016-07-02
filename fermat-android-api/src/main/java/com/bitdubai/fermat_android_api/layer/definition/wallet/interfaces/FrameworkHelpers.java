@@ -13,7 +13,7 @@ public interface FrameworkHelpers {
      * Method to obtain res from framework,other app or internet
      * @return
      */
-    int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey);
+    int obtainRes(int resType,int id,SourceLocation sourceLocation,String appOwnerPublicKey);
 
     /**
      * Method to obtain View from framework, other app or internet

@@ -1,0 +1,54 @@
+package com.bitdubai.android_core.app.common.version_1.util.res_manager;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.View;
+
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
+
+/**
+ * Created by Matias Furszyfer on 2016.06.07..
+ */
+public class ResourceLocationSearcherHelper {
+
+    private static final String TAG = "ResourceLocationHelper";
+
+    public static int obtainRes(int resType,Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+        ResourceSearcher resourceSearcher = switchType(context, sourceLocation, publickKeyOwnerOfSource);
+        if(resourceSearcher==null) throw new IllegalArgumentException("ResourceSearcher not found, App owner: "+publickKeyOwnerOfSource+", SourceLocation: "+sourceLocation+", resType: "+resType+", resourceId: "+resourceId);
+        return resourceSearcher.obtainRes(resType, context, resourceId);
+    }
+
+//    public static int obtainRes(Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+//        return switchType(context, sourceLocation, publickKeyOwnerOfSource).obtainRes(ResourceSearcher.UNKNOWN_TYPE, context, resourceId);
+//    }
+
+    public static View obtainView(Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+        return switchType(context,sourceLocation,publickKeyOwnerOfSource).obtainView(context, resourceId);
+    }
+
+    public static Drawable obtainDrawable(Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+        return switchType(context,sourceLocation,publickKeyOwnerOfSource).obtainDrawable(context, resourceId);
+    }
+
+
+    private static ResourceSearcher switchType(Context context,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+        ResourceSearcher resourceSearcher = null;
+        switch (sourceLocation){
+            case FERMAT_FRAMEWORK:
+                resourceSearcher = ResManager.getInstance();
+                break;
+            case DEVELOPER_RESOURCES:
+                resourceSearcher = FermatAppConnectionManager.getFermatAppConnection(publickKeyOwnerOfSource, context).getResourceSearcher();
+                break;
+            case INTERNET_URL:
+                Log.i(TAG, "Internet request drawable is not supported yet");
+                break;
+        }
+        return resourceSearcher;
+    }
+
+}
