@@ -7,6 +7,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.google.gson.Gson;
@@ -81,18 +82,26 @@ public class Actors implements RestFulServices {
         try {
 
             List<ActorProfile> actorProfilesRegistered = new ArrayList<>();
-            List<CheckedInActor> checkedInActorList = daoFactory.getCheckedInActorDao().findAll(offSet, max);
+            List<ActorsCatalog> actorsCatalogList = daoFactory.getActorsCatalogDao().findAll(offSet, max);
+
+            for (ActorsCatalog actorsCatalog :actorsCatalogList) {
+                actorProfilesRegistered.add(buildActorProfileFromActorsCatalog(actorsCatalog));
+            }
+
+           /* List<CheckedInActor> checkedInActorList = daoFactory.getCheckedInActorDao().findAll(offSet, max);
 
             for (CheckedInActor checkedInActor :checkedInActorList) {
                 actorProfilesRegistered.add(buildActorProfileFromCheckedInActor(checkedInActor));
-            }
+            } */
 
             LOG.info("actorProfilesRegistered.size() = " + actorProfilesRegistered.size());
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("success", Boolean.TRUE);
             jsonObject.addProperty("identities", gson.toJson(actorProfilesRegistered));
-            jsonObject.addProperty("total", daoFactory.getCheckedInActorDao().getAllCount());
+            //jsonObject.addProperty("total", daoFactory.getCheckedInActorDao().getAllCount());
+
+            jsonObject.addProperty("total", daoFactory.getActorsCatalogDao().getAllCount());
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
@@ -124,6 +133,21 @@ public class Actors implements RestFulServices {
         actorProfile.setPhoto(actor.getPhoto());
         actorProfile.setExtraData(actor.getExtraData());
         actorProfile.setLocation(NetworkNodeCommunicationDeviceLocation.getInstance(actor.getLatitude(), actor.getLongitude()));
+
+        return actorProfile;
+    }
+
+
+    private ActorProfile buildActorProfileFromActorsCatalog(ActorsCatalog actor){
+
+        ActorProfile actorProfile = new ActorProfile();
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+        actorProfile.setPhoto(actor.getPhoto());
+        actorProfile.setExtraData(actor.getExtraData());
+        actorProfile.setLocation(NetworkNodeCommunicationDeviceLocation.getInstance(actor.getLastLocation().getLatitude(), actor.getLastLocation().getLongitude()));
 
         return actorProfile;
     }

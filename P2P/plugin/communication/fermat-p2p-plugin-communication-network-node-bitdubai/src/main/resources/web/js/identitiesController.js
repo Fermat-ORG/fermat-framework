@@ -3,7 +3,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
        $scope.offSet = 0;
        $scope.max = 24;
        $scope.identities   = [];
-       $scope.total        = 3;
+       $scope.total        = 0;
        $scope.currentPage  = 1;
 
       var parseJwtToken = function(token) {
@@ -33,6 +33,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
               var data = response.data;
               var success = data.success;
+              alert("success = "+success)
 
               if(success === true){
                 $scope.identities   = angular.fromJson(data.identities);
@@ -63,7 +64,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
      };
 
      $scope.getImage = function(data){
-         return 'data:image/jpeg;base64,' + data.photo;
+         return 'data:image/png;base64,' + data.photo;
      }
 
      if(isAuthenticate() === false){
@@ -75,7 +76,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
                $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
          }
 
-         //requestIdentitiesData();
+         requestIdentitiesData();
      }
 
 }]);
