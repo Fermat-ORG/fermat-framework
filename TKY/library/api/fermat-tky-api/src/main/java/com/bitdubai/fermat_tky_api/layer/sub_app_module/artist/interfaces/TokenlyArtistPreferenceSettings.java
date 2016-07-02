@@ -22,8 +22,6 @@ public class TokenlyArtistPreferenceSettings implements FermatSettings, Serializ
     private String localPublicKey;
     private PlatformComponentType localPlatformComponentType;
 
-    public TokenlyArtistPreferenceSettings() {
-    }
 
     public boolean isHomeTutorialDialogEnabled() {
         return isHomeTutorialDialogEnabled;

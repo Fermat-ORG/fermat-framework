@@ -14,11 +14,15 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
@@ -88,6 +92,7 @@ public class CryptoBrokerCommunityManager
     private final CryptoBrokerManager cryptoBrokerActorNetworkServiceManager;
     private final CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
     private final GeolocationManager geolocationManager;
+    private final LocationManager locationManager;
 
     private String subAppPublicKey;
 
@@ -100,7 +105,8 @@ public class CryptoBrokerCommunityManager
                                         final CryptoBrokerCommunitySubAppModulePluginRoot pluginRoot,
                                         final PluginFileSystem pluginFileSystem,
                                         final UUID pluginId,
-                                        final GeolocationManager geolocationManager) {
+                                        final GeolocationManager geolocationManager,
+                                        LocationManager locationManager) {
 
         super(pluginFileSystem, pluginId);
 
@@ -110,17 +116,18 @@ public class CryptoBrokerCommunityManager
         this.cryptoCustomerIdentityManager = cryptoCustomerIdentityManager;
         this.pluginRoot = pluginRoot;
         this.geolocationManager = geolocationManager;
+        this.locationManager = locationManager;
     }
 
 
     @Override
-    public List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListCryptoBrokersException {
+    public List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListCryptoBrokersException {
 
         List<CryptoBrokerCommunityInformation> worldBrokerList;
         List<CryptoBrokerActorConnection> actorConnections;
 
         try {
-            worldBrokerList = getCryptoBrokerSearch().getResult(max, offset);
+            worldBrokerList = getCryptoBrokerSearch().getResult(selectedIdentity.getPublicKey(), deviceLocation, distance, alias, max, offset);
         } catch (CantGetCryptoBrokerSearchResult e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Error in listWorldCryptoBrokers trying to list world brokers");
@@ -132,7 +139,8 @@ public class CryptoBrokerCommunityManager
             final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
 
-            actorConnections = search.getResult(max, offset);
+            //actorConnections = search.getResult(max, offset);
+            actorConnections = search.getResult(1000, offset);
 
         } catch (final CantListActorConnectionsException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -144,7 +152,7 @@ public class CryptoBrokerCommunityManager
             worldBroker = worldBrokerList.get(i);
             for (CryptoBrokerActorConnection connectedBroker : actorConnections) {
                 if (worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-                    worldBrokerList.set(i, new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
+                    worldBrokerList.set(i, new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId(), worldBroker.getLocation()));
             }
         }
         return worldBrokerList;
@@ -531,6 +539,11 @@ public class CryptoBrokerCommunityManager
     @Override
     public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
         return geolocationManager.getExtendedCitiesByFilter(filter);
+    }
+
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
     }
 
 

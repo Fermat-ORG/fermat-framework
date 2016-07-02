@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +52,7 @@ import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.SearchAliasDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
@@ -79,7 +81,7 @@ public class ContactsListFragment
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 8;
+    private static final int MAX = 1000;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
     private RecyclerView recyclerView;
@@ -87,6 +89,7 @@ public class ContactsListFragment
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout empty;
     private View rootView;
+    private SearchView searchView;
     private ContactsListAdapter adapter;
     private LinearLayout emptyView;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
@@ -377,6 +380,36 @@ public class ContactsListFragment
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public void onOptionMenuPrepared(Menu menu){
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            //searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                     return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(lstChatUserInformations);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -187,7 +188,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
     }
 
     @Override
-    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
+    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -195,9 +196,9 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
+            getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
 
-            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage);
+            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, accuracy, frequency);
 
             registerIdentities();
 
@@ -297,7 +298,9 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
                             identityAssetRedeemPoint.getImage(),
                             identityAssetRedeemPoint.getContactInformation(),
                             identityAssetRedeemPoint.getCountryName(),
-                            identityAssetRedeemPoint.getCityName());
+                            identityAssetRedeemPoint.getCityName(),
+                            identityAssetRedeemPoint.getAccuracy(),
+                            identityAssetRedeemPoint.getFrequency());
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {

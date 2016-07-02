@@ -48,7 +48,9 @@ public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<Re
 
     @Override
     public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
-        return redeemPointIdentityManager.createNewRedeemPoint(alias, profileImage);
+        return redeemPointIdentityManager.createNewRedeemPoint(alias, profileImage,
+                redeemPointIdentityManager.getAccuracyDataDefault(),
+                redeemPointIdentityManager.getFrequencyDataDefault());
     }
 
     @Override
@@ -117,7 +119,9 @@ public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<Re
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img);
+        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img,
+                redeemPointIdentityManager.getAccuracyDataDefault(),
+                redeemPointIdentityManager.getFrequencyDataDefault());
     }
 
     @Override

@@ -31,7 +31,6 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.FERMAT;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
 
-
 /**
  * Created by Alejandro Bicelis on 15/12/2015.
  * Updated by Nelson Ramirez on 20/05/2016.
@@ -60,7 +59,6 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
         this.setting = setting;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +68,13 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             setContentView(R.layout.cbw_create_stock_transaction_dialog);
 
             amountText = (FermatEditText) findViewById(R.id.cbw_ctd_amount);
-            amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
+
+            //If working with BIC, allow a max of 999,999,999.99999999 BTC
+            if(Platforms.CRYPTO_CURRENCY_PLATFORM.equals(setting.getPlatform()))
+                amountText.setFilters(new InputFilter[]{new NumberInputFilter(17, 8)});
+            else
+                amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
+
 
             final View restockBtn = findViewById(R.id.cbw_ctd_restock_transaction_btn);
             final View destockBtn = findViewById(R.id.cbw_ctd_destock_transaction_btn);
@@ -155,8 +159,6 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
 
         final String memo = "Unheld funds, destocked from the Broker Wallet";
 
-        System.out.println("*************DESTOCK DIALOG****************  [" + walletPlatform + "]");
-
         switch (walletPlatform) {
             case BANKING_PLATFORM:
                 moduleManager.createTransactionDestockBank(
@@ -217,9 +219,6 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
         }
 
         final String memo = "Held funds, used to restock the Broker Wallet";
-
-        //TODO:Nelson falta pasar el price de reference en dolar al momento de hacer el restock/destock new BigDecimal(0)
-        System.out.println("*************RESTOCK DIALOG****************   [" + walletPlatform + "]");
 
         switch (walletPlatform) {
             case BANKING_PLATFORM:

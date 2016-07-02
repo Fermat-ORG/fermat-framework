@@ -80,14 +80,11 @@ public class GrouperViewHolder extends ParentViewHolder {
 
         //involved actor is not a wallet contact
         if(cryptoWalletTransaction.getInvolvedActor() != null){
-                photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
-                contactName = cryptoWalletTransaction.getInvolvedActor().getName();
-            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
-                contactName = "Bitcoin Wallet";
-            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
-                    contactName = "Loss Protected Wallet";
-
-            }
+            photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
+            contactName = cryptoWalletTransaction.getInvolvedActor().getName();
+        }else if (cryptoWalletTransaction.getActorToType().getActorsDefaultWalletName() != null) {
+            contactName = cryptoWalletTransaction.getActorToType().getActorsDefaultWalletName();
+        }
 
 
         try {

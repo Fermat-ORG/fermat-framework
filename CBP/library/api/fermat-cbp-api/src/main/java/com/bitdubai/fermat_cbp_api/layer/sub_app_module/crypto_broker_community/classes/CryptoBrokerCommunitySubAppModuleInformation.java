@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
@@ -21,6 +22,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     private final byte[] image    ;
     private final ConnectionState connectionState;
     private final UUID connectionId;
+    private Location location;
 
 
     public CryptoBrokerCommunitySubAppModuleInformation(final String publicKey,
@@ -38,13 +40,15 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
                                                           final String alias,
                                                           final byte[] image,
                                                           final ConnectionState connectionState,
-                                                          final UUID connectionId) {
+                                                          final UUID connectionId,
+                                                          final Location location ) {
 
         this.publicKey          = publicKey      ;
         this.alias              = alias          ;
         this.image              = image          ;
         this.connectionState    = connectionState;
         this.connectionId       = connectionId   ;
+        this.location           = location       ;
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection) {
@@ -63,6 +67,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.image     = exposingData.getImage()    ;
         this.connectionState = null;
         this.connectionId = null;
+        this.location     = exposingData.getLocation();
     }
 
     @Override
@@ -93,6 +98,11 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     @Override
     public UUID getConnectionId() {
         return this.connectionId;
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
     }
 
     @Override

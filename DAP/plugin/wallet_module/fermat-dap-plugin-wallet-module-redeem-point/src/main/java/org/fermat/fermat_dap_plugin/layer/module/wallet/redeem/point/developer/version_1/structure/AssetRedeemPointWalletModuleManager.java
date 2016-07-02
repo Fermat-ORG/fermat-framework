@@ -212,7 +212,9 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img);
+        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img,
+                redeemPointIdentityManager.getAccuracyDataDefault(),
+                redeemPointIdentityManager.getFrequencyDataDefault());
     }
 
 

@@ -7,10 +7,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +39,7 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
-import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.filters.DeveloperLogFilter;
-import com.bitdubai.sub_app.developer.filters.DeveloperPluginFilter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +65,7 @@ public class LogToolsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private ListView listView;
     private SearchView searchView;
     AppListAdapter _adpatrer;
-    //    private GridView gridView;
+    private int menuItemSize;
     Typeface tf;
 
     public static LogToolsFragment newInstance() {
@@ -476,34 +473,33 @@ public class LogToolsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.developer_menu, menu);
+    public void onOptionMenuPrepared(Menu menu) {
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-        searchView = (SearchView) menu.findItem(R.id.developer_search).getActionView();
-//        searchView = (SearchView) menu.findItem(1).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
-//        toolbar = getToolbar();
-//        toolbar.addView(searchView);
-       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+            searchView = (SearchView) menu.findItem(1).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    _adpatrer.getFilter().filter(s);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
-        if (appSession.getData("filterString") != null) {
-            String filterString = (String) appSession.getData("filterString");
-            if (filterString.length() > 0) {
-                searchView.setQuery(filterString, true);
-                searchView.setIconified(false);
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        _adpatrer.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
             }
         }
     }

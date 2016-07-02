@@ -28,6 +28,7 @@
     <string name="cht_chat_identity_subtitle">Welcome to Fermat P2P Chat Identity.</string>
     <string name="cht_chat_body">If you do not have any identity registered, please register one in our Chat Community.</string>
     <string name="cht_chat_identity_body">If you do not have any identity registered, register your identity here!</string>
+    <string name="cht_chat_identity_gps">Please, turn on your GPS to register your location, then others can find you and you can find peers near to you.</string>
 
     <string name="cht_chat_footer">Fermat P2P Chat</string>
 

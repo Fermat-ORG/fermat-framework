@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,12 +9,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -24,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -68,6 +72,7 @@ public class BrowserTabFragment
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
     private CryptoCustomerCommunitySelectableIdentity identity;
     private DeviceLocation location;
+    private String alias = null;
     private double distance;
     private int offset;
 
@@ -227,6 +232,51 @@ public class BrowserTabFragment
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+        menuItem.setIcon(R.drawable.ccc_search_icon_withe);
+
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+        SearchViewStyleHelper.on(searchView)
+                .setCursorColor(Color.WHITE)
+                .setTextColor(Color.WHITE)
+                .setHintTextColor(Color.WHITE)
+                .setSearchHintDrawable(R.drawable.ccc_search_icon_withe)
+                .setSearchButtonImageResource(R.drawable.ccc_search_icon_withe)
+                .setCloseBtnImageResource(R.drawable.ccc_close_icon_white)
+                .setSearchPlateTint(Color.WHITE)
+                .setSubmitAreaTint(Color.WHITE);
+
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<CryptoCustomerCommunityInformation> filteredList = filterList(newText, cryptoCustomerCommunityInformationList);
+                adapter.changeDataSet(filteredList);
+                return true;
+            }
+        });
+    }
+
+    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
+        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoCustomerCommunityInformation item : baseList) {
+            if (item.getAlias().contains(filterText)) {
+                filteredList.add(item);
+            }
+        }
+
+        return filteredList;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case FragmentsCommons.HELP_OPTION_MENU_ID:
@@ -303,7 +353,7 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias,  MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();

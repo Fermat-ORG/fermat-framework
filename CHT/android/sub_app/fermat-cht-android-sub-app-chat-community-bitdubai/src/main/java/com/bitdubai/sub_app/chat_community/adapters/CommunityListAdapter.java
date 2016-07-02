@@ -384,8 +384,6 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
-
-
     public void setData(List<ChatActorCommunityInformation> data) {
         this.filteredData = data;
     }

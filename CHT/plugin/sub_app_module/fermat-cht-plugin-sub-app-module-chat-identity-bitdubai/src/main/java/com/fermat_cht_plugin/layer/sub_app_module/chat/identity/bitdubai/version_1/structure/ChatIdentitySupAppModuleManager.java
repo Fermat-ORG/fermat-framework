@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
@@ -26,14 +28,16 @@ import java.util.UUID;
 public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdentityPreferenceSettings> implements ChatIdentityModuleManager, Serializable {
 
     private ChatIdentityManager chatIdentityManager;
-
+    private final LocationManager locationManager                       ;
 
     public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager,
                                            PluginFileSystem pluginFileSystem,
-                                           UUID pluginId){
+                                           UUID pluginId,
+                                           LocationManager locationManager){
 
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager = chatIdentityManager;
+        this.locationManager = locationManager;
 
     }
     /**
@@ -71,12 +75,14 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
     }
 
     /**
-     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
-     * settings class parametrized.
+     * Through the method <code>getLocation</code> we can get the location coordinates of user.
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
+    }
 
     /**
      * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetA
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
@@ -223,6 +224,12 @@ public interface ArtistCommunitySubAppModuleManager extends
             String linkedIdentityPublicKey,
             Actors linkedIdentityActorType,
             String actorPublicKey) throws CantGetActorConnectionException;
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    void checkAllConnections()throws CantHandleNewsEventException;
 
     /**
      * This method returns the ConnectionState from an actor connection.

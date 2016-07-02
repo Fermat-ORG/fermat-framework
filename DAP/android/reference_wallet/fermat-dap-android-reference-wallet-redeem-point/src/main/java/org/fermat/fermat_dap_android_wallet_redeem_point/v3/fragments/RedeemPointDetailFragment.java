@@ -195,10 +195,8 @@ public class RedeemPointDetailFragment extends AbstractFermatFragment<ReferenceA
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_DETAIL, 0, "Help")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override

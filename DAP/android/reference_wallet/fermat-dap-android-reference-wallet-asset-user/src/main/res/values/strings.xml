@@ -95,14 +95,14 @@
 
     <!--Dialog Help - Init-->
     <string name="dap_user_wallet_welcome_subTitle">Asset User Wallet.</string>
-    <string name="dap_user_wallet_welcome_body">From this wallet you will be able to redeem your assets or even get the monetary value associated with them.</string>
+    <string name="dap_user_wallet_welcome_body">From this wallet you will be able to:\n\n Redeem your assets.\n Transfer assets to your friends.\n Appropriate your assets and get the monetary value associated.\n Sell assets.</string>
     <string name="dap_user_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as an Asset User. You will be able to edit this information at the Asset User Identity application.</string>
     <string name="dap_user_wallet_welcome_name_left">Asset User</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
     <string name="dap_user_wallet_detail_subTitle">Asset detail section.</string>
-    <string name="dap_user_wallet_detail_body">You can review detailed information about the selected asset.\n\nYou can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, use the Redeem Point Community application to search for Redeem Points.\n\nYou can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.</string>
+    <string name="dap_user_wallet_detail_body">Detailed information of the asset. Displays the value of transaction, status and date-time of them.</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->

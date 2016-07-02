@@ -10,13 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -50,6 +50,7 @@ import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.GeolocationDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +127,7 @@ public class BrowserTabFragment
 
         configureToolbar();
 
-        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+//        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         noContacts = (ImageView) rootView.findViewById(R.id.cbc_no_contacts);
         locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
@@ -238,24 +239,37 @@ public class BrowserTabFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
-//        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
-//        final SearchView searchView = (SearchView) menuItem.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                List<CryptoBrokerCommunityInformation> filteredList = filterList(newText, cryptoBrokerCommunityInformationList);
-//                adapter.changeDataSet(filteredList);
-//                return true;
-//            }
-//        });
+        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+        menuItem.setIcon(R.drawable.lupa_blanca);
+
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+        SearchViewStyleHelper.on(searchView)
+                    .setCursorColor(Color.WHITE)
+                    .setTextColor(Color.WHITE)
+                    .setHintTextColor(Color.WHITE)
+                    .setSearchHintDrawable(R.drawable.lupa_blanca)
+                    .setSearchButtonImageResource(R.drawable.lupa_blanca)
+                    .setCloseBtnImageResource(R.drawable.x_blanca)
+                    .setSearchPlateTint(Color.WHITE)
+                    .setSubmitAreaTint(Color.WHITE);
+
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<CryptoBrokerCommunityInformation> filteredList = filterList(newText, cryptoBrokerCommunityInformationList);
+                adapter.changeDataSet(filteredList);
+                return true;
+            }
+        });
     }
 
     private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
@@ -377,7 +391,8 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, MAX, offset);
+            //TODO:Nelson aca debemos de colocar el Location de debemos de traerlo del module de la comunidad donde va haber un metodo para eso, preguntale a cardozo como lo hizo el
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -542,7 +557,8 @@ public class BrowserTabFragment
                     actorInformation.getAlias(),
                     actorInformation.getImage(),
                     newConnectionState,
-                    actorInformation.getConnectionId());
+                    actorInformation.getConnectionId(),
+                    actorInformation.getLocation());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);
