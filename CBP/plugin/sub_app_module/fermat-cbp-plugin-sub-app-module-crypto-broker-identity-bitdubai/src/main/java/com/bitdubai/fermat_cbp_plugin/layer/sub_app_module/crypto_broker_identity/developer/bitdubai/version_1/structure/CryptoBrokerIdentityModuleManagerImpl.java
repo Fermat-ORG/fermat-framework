@@ -85,12 +85,9 @@ public class CryptoBrokerIdentityModuleManagerImpl
     public void publishIdentity(String publicKey) throws CantPublishCryptoBrokerException, CryptoBrokerNotFoundException {
 
         try {
-
             this.identityManager.publishIdentity(publicKey);
-
         } catch (CantPublishIdentityException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            
             throw new CantPublishCryptoBrokerException(e, "", "Problem publishing the identity.");
         } catch (IdentityNotFoundException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
