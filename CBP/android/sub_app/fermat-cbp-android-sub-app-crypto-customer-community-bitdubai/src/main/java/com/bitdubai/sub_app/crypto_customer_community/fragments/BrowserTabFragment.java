@@ -450,8 +450,13 @@ public class BrowserTabFragment
                 listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
+
+                        if(appSettings.getLastSelectedIdentityPublicKey() == null)
+                            getActivity().onBackPressed();
+                        else {
+                            invalidate();
+                        }
+//                        onRefresh();
                     }
                 });
                 listIdentitiesDialog.show();
