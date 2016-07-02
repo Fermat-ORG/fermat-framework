@@ -106,7 +106,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
 
                         LOG.info("Requesting more transactions.");
 
-                        GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest((int) totalRowInDb+1, 250);
+                        GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest((int) totalRowInDb+1, 10);
                         Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                         /*
