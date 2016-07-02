@@ -3,7 +3,7 @@
  */
 rootProject.name = 'Fermat'
 
-apply from: 'ART/settings.gradle'
+//apply from: 'ART/settings.gradle'
 apply from: 'BCH/settings.gradle'
 apply from: 'BNK/settings.gradle'
 apply from: 'CBP/settings.gradle'
@@ -16,7 +16,7 @@ apply from: 'DAP/settings.gradle'
 apply from: 'OSA/settings.gradle'
 apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
-apply from: 'TKY/settings.gradle'
+//apply from: 'TKY/settings.gradle'
 apply from: 'WPD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 

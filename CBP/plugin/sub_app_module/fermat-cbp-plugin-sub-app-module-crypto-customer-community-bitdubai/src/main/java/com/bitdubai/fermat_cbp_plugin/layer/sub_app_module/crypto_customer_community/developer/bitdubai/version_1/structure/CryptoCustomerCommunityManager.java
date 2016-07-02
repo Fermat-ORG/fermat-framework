@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -97,14 +98,13 @@ public class CryptoCustomerCommunityManager
 
 
     @Override
-    public List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListCryptoCustomersException {
+    public List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListCryptoCustomersException {
         List<CryptoCustomerCommunityInformation> worldCustomerList;
         List<CryptoCustomerActorConnection> actorConnections;
 
         try{
-            worldCustomerList = getCryptoCustomerSearch().getResult(max, offset);
+            worldCustomerList = getCryptoCustomerSearch().getResult(selectedIdentity.getPublicKey(), deviceLocation, distance, alias, max, offset);
         } catch (CantGetCryptoCustomerSearchResult e) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoCustomersException(e, "", "Error in listWorldCryptoCustomers trying to list world customers");
         }
@@ -131,7 +131,7 @@ public class CryptoCustomerCommunityManager
             for(CryptoCustomerActorConnection connectedCustomer : actorConnections)
             {
                 if(worldCustomer.getPublicKey().equals(connectedCustomer.getPublicKey()))
-                    worldCustomerList.set(i, new CryptoCustomerCommunitySubAppModuleInformation(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedCustomer.getConnectionState(), connectedCustomer.getConnectionId()));
+                    worldCustomerList.set(i, new CryptoCustomerCommunitySubAppModuleInformation(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedCustomer.getConnectionState(), connectedCustomer.getConnectionId(), worldCustomer.getLocation()));
             }
         }
 

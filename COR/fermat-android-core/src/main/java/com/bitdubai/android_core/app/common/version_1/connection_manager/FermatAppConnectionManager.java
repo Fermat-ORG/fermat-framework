@@ -13,6 +13,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.app_connection.FermatWalletAppConnection;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
 import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
@@ -24,17 +26,6 @@ import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnectio
 import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
 import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
-
-import org.fermat.fermat_dap_android_sub_app_asset_factory.app_connection.AssetFactoryFermatAppConnection;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.app_connection.CommunityAssetIssuerFermatAppConnection;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.app_connection.AssetIssuerFermatAppConnection;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.app_connection.CommunityAssetUserFermatAppConnection;
-import org.fermat.fermat_dap_android_sub_app_asset_user_identity.app_connection.AssetUserFermatAppConnection;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.app_connection.CommunityRedeemPointFermatAppConnection;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.app_connection.RedeemPointFermatAppConnection;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection.WalletAssetIssuerFermatAppConnection;
-import org.fermat.fermat_dap_android_wallet_asset_user.app_connection.WalletAssetUserFermatAppConnection;
-import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRedeemPointFermatAppConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,38 +80,38 @@ public class FermatAppConnectionManager {
             case "main_desktop":
                 fermatAppConnection = new DesktopFermatAppConnection(activity);
                 break;
-            //DAP WALLETS
-            case "asset_issuer" :
-                fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity);
-                break;
-            case "asset_user"   :
-                fermatAppConnection = new WalletAssetUserFermatAppConnection(activity);
-                break;
-            case "redeem_point" :
-                fermatAppConnection = new WalletRedeemPointFermatAppConnection(activity);
-                break;
-            //DAP Sub Apps
-            case "public_key_dap_asset_issuer_identity":
-                fermatAppConnection = new AssetIssuerFermatAppConnection(activity);
-                break;
-            case "public_key_dap_asset_user_identity":
-                fermatAppConnection = new AssetUserFermatAppConnection(activity);
-                break;
-            case "public_key_dap_redeem_point_identity":
-                fermatAppConnection = new RedeemPointFermatAppConnection(activity);
-                break;
-            case "public_key_dap_factory":
-                fermatAppConnection = new AssetFactoryFermatAppConnection(activity);
-                break;
-            case "public_key_dap_issuer_community":
-                fermatAppConnection = new CommunityAssetIssuerFermatAppConnection(activity);
-                break;
-            case "public_key_dap_user_community":
-                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity);
-                break;
-            case "public_key_dap_redeem_point_community":
-                fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
-                break;
+//            //DAP WALLETS
+//            case "asset_issuer" :
+//                fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity);
+//                break;
+//            case "asset_user"   :
+//                fermatAppConnection = new WalletAssetUserFermatAppConnection(activity);
+//                break;
+//            case "redeem_point" :
+//                fermatAppConnection = new WalletRedeemPointFermatAppConnection(activity);
+//                break;
+//            //DAP Sub Apps
+//            case "public_key_dap_asset_issuer_identity":
+//                fermatAppConnection = new AssetIssuerFermatAppConnection(activity);
+//                break;
+//            case "public_key_dap_asset_user_identity":
+//                fermatAppConnection = new AssetUserFermatAppConnection(activity);
+//                break;
+//            case "public_key_dap_redeem_point_identity":
+//                fermatAppConnection = new RedeemPointFermatAppConnection(activity);
+//                break;
+//            case "public_key_dap_factory":
+//                fermatAppConnection = new AssetFactoryFermatAppConnection(activity);
+//                break;
+//            case "public_key_dap_issuer_community":
+//                fermatAppConnection = new CommunityAssetIssuerFermatAppConnection(activity);
+//                break;
+//            case "public_key_dap_user_community":
+//                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity);
+//                break;
+//            case "public_key_dap_redeem_point_community":
+//                fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
+//                break;
 
             //PIP Sub Apps
             case "public_key_pip_developer_sub_app":
@@ -147,13 +138,13 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CryptoCustomerIdentityFermatAppConnection(activity);
                 break;
 //            //CASH WALLET
-//            case "cash_wallet":
-//                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
-//                break;
+            case "cash_wallet":
+                fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
+                break;
 //            //BANKING WALLET
-//            case "banking_wallet":
-//                fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
-//                break;
+            case "banking_wallet":
+                fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
+                break;
 //            // WPD Sub Apps
 //            case "public_key_store":
 //                fermatAppConnection = new WalletStoreFermatAppConnection(activity);

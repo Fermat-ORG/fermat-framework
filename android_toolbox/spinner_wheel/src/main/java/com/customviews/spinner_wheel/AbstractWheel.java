@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-package antistatic.spinnerwheel;
+package com.customviews.spinner_wheel;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -40,7 +40,7 @@ import com.customviews.spinner_wheel.R;
 import java.util.LinkedList;
 import java.util.List;
 
-import antistatic.spinnerwheel.adapters.WheelViewAdapter;
+import com.customviews.spinner_wheel.adapters.WheelViewAdapter;
 
 /**
  * Abstract spinner spinnerwheel view.

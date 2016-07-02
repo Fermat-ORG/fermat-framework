@@ -23,7 +23,10 @@ import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
 
+
+
 import java.util.UUID;
+
 
 
 
@@ -31,7 +34,6 @@ import java.util.UUID;
  * Created by root on 28/06/16.
  */
 public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermatSession<FermatWallet>,ResourceProviderManager> {
-
     // Store instance variables
     private String providerName;
     private UUID providerId;
@@ -40,11 +42,8 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     FermatWallet fermatWalletManager;
     ErrorManager errorManager;
     FiatCurrency fiatCurrency;
-    private  TextView tvLabelRate;
+    private TextView tvLabelRate;
     private static ReferenceAppFermatSession<FermatWallet> fermatSession;
-
-
-
     //newInstance constructor for creating fragment with arguments
     public static ViewPagerFragment newInstance(int page, String providerName,UUID providerId, String fiatCurrency,ReferenceAppFermatSession<FermatWallet> fermatWalletSession ) {
         ViewPagerFragment fragmentFirst = new ViewPagerFragment();
@@ -55,132 +54,100 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
         args.putString("fiatCurrency", fiatCurrency);
         fermatSession = fermatWalletSession;
         fragmentFirst.setArguments(args);
-        return  fragmentFirst;
+        return fragmentFirst;
     }
-
     // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         try {
             fermatWalletManager = fermatSession.getModuleManager();
-            errorManager        = fermatSession.getErrorManager();
-
+            errorManager = fermatSession.getErrorManager();
             page = getArguments().getInt("someInt", 0);
             providerName = getArguments().getString("providerName");
-            providerId  = UUID.fromString(getArguments().getString("providerId"));
-
+            providerId = UUID.fromString(getArguments().getString("providerId"));
             fiatCurrency = FiatCurrency.getByCode(getArguments().getString("fiatCurrency"));
-
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
-
     }
-
     // Inflate the view for the fragment based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_pager, container, false);
+
+        View view = null;
 
         try {
+             view = inflater.inflate(R.layout.view_pager, container, false);
+            TextView tvLabel = (TextView) view.findViewById(R.id.txt_rate_amount);
+           // AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
+            //currencies.setVisibleItems(3);
+           // WheelCurrencyAdapter wheelCurrencyAdapter = new WheelCurrencyAdapter(getActivity());
+           // currencies.setViewAdapter(wheelCurrencyAdapter);
 
-           /* AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
-            currencies.setVisibleItems(3);
-            currencies.setViewAdapter(new WheelCurrencyAdapter(getActivity()));*/
+           // currencies.setCurrentItem(1);
 
             tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
 
-
-            getAndShowMarketExchangeRateData(container);
+            // getAndShowMarketExchangeRateData(container);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
         return view;
     }
-
-
     private void getAndShowMarketExchangeRateData(final View container) {
-
         final int MAX_DECIMAL_FOR_RATE = 2;
         final int MIN_DECIMAL_FOR_RATE = 2;
-
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
-            protected Object doInBackground()  {
-
+            protected Object doInBackground() {
                 ExchangeRate rate = null;
                 try{
-
-                   rate =  fermatWalletManager.getCurrencyExchange(providerId,fiatCurrency);;
+                    rate = fermatWalletManager.getCurrencyExchange(providerId,fiatCurrency);;
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 return rate;
             }
         };
-
         fermatWorker.setCallBack(new FermatWorkerCallBack() {
             @Override
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
-
                     ExchangeRate rate = (ExchangeRate) result[0];
                     if (rate != null) {
-                        // progressBar.setVisibility(View.GONE);
+// progressBar.setVisibility(View.GONE);
                         tvLabelRate.setText(String.valueOf(
                                 WalletUtils.formatAmountStringWithDecimalEntry(
                                         rate.getPurchasePrice(),
                                         MAX_DECIMAL_FOR_RATE,
                                         MIN_DECIMAL_FOR_RATE)));
-
-
                     } else {
-                        //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                        // dialog_error.show();
+//ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+// dialog_error.show();
                         Toast.makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
-
                     }
-
-
                 } else {
-                    // ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                    //dialog_error.show();
+// ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+//dialog_error.show();
                     Toast.makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onErrorOccurred(Exception ex) {
-                //  progressBar.setVisibility(View.GONE);
-
-
+// progressBar.setVisibility(View.GONE);
                 ErrorManager errorManager = appSession.getErrorManager();
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 else
                     Log.e("Exchange Rate", ex.getMessage(), ex);
-
-                //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                // dialog_error.show();
+//ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+// dialog_error.show();
             }
         });
-
         fermatWorker.execute();
     }
-
-
-
-
-
 }

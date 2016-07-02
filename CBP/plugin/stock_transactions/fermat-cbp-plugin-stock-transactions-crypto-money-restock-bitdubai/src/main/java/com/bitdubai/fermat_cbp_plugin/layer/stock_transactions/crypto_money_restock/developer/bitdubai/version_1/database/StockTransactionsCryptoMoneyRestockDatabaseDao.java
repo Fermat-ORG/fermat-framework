@@ -175,7 +175,8 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
             for (DatabaseTableRecord cryptoMoneyRestockRecord : getCryptoMoneyRestockData(filter)) {
                 final CryptoMoneyTransaction cryptoMoneyTransaction = getCryptoMoneyRestockTransaction(cryptoMoneyRestockRecord);
 
-                cryptoMoneyTransactions.add(cryptoMoneyTransaction);
+                if(!cryptoMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                    cryptoMoneyTransactions.add(cryptoMoneyTransaction);
             }
 
             database.closeDatabase();
