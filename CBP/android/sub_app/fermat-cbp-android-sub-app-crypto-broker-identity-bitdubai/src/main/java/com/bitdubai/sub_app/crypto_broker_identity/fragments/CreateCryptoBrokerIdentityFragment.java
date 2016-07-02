@@ -109,15 +109,13 @@ public class CreateCryptoBrokerIdentityFragment
             cryptoBrokerName = (String) appSession.getData(FragmentsCommons.BROKER_NAME);
             appSession.removeData(FragmentsCommons.BROKER_NAME);
         }
-//TODO: get Location in manager to request the user to turn on GPS if location is null
-        //Check if GPS is on and coordinate are fine
-//        try{
-//            location = moduleManager.getLocation();
-//        }catch (Exception e){
-//            if (errorManager!=null)
-//                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-//        }
 
+        //Check if GPS is on and coordinate are fine
+        try{
+            location = appSession.getModuleManager().getLocation();
+        }catch (Exception e){
+           e.printStackTrace();
+        }
 
         turnGPSOn();
     }
@@ -177,6 +175,8 @@ public class CreateCryptoBrokerIdentityFragment
         mBrokerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mBrokerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount));
+
+        checkGPSOn();
 
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -428,7 +428,6 @@ public class CreateCryptoBrokerIdentityFragment
     }
 
     private void checkGPSOn(){
-        //TODO call a dialog to request to turn on gps
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
                 turnOnGPSDialog();
