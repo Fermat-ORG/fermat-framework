@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -185,6 +187,19 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                 if (validateClauses(mapClauses)) {
 
                     clauses = getClause(mapClauses);
+
+                    if(mapClauses.get(ClauseType.BROKER_CURRENCY).getValue().equals("BTC")){
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle("Important Infomatión");
+                        alertDialog.setMessage("The Miner Fee of this transaction is 1500 satochi");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
 
                     if (moduleManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
                         Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();

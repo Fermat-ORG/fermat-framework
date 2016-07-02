@@ -1,7 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negotiation_details;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -98,6 +100,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private float spread = 1;
 
 
+    private Boolean firstTimeConfirmButtonPressed=true;
+
+
     // Fermat Managers
     private ErrorManager errorManager;
     private OpenNegotiationDetailsAdapter adapter;
@@ -148,7 +153,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         final ActorIdentity customer = negotiationInfo.getCustomer();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
+        final String merchandise= clauses.get(CUSTOMER_CURRENCY).getValue();
         final String exchangeAmount = clauses.get(EXCHANGE_RATE).getValue();
         final String paymentCurrency = clauses.get(BROKER_CURRENCY).getValue();
         final String amount = clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue();
@@ -269,6 +274,19 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     public void onConfirmClauseButtonClicked(ClauseInformation clause) {
         final Map<ClauseType, ClauseInformation> clauses = negotiationWrapper.getNegotiationInfo().getClauses();
         final ClauseType type = clause.getType();
+        if(type==EXCHANGE_RATE && clauses.get(CUSTOMER_CURRENCY).getValue().equals("BTC") &&firstTimeConfirmButtonPressed){
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("Important Infomatión");
+            alertDialog.setMessage("The Miner Fee of this transaction is 1500 satochi");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+            firstTimeConfirmButtonPressed=false;
+        }
 
         if (type == EXCHANGE_RATE || type == CUSTOMER_CURRENCY_QUANTITY || type == BROKER_CURRENCY_QUANTITY) {
             try {
@@ -352,9 +370,15 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     @Override
     public void onSendButtonClicked() {
         try {
+
             if (negotiationWrapper.isClausesConfirmed()) {
+
+
+
                 moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+
+
             } else
                 Toast.makeText(getActivity(), "Need to confirm ALL the clauses", Toast.LENGTH_LONG).show();
 
