@@ -276,8 +276,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         final ClauseType type = clause.getType();
         if(type==EXCHANGE_RATE && clauses.get(CUSTOMER_CURRENCY).getValue().equals("BTC") &&firstTimeConfirmButtonPressed){
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Important Infomatión");
-            alertDialog.setMessage("The Miner Fee of this transaction is 1500 satochi");
+            alertDialog.setTitle("Important Information");
+            alertDialog.setMessage("The Miner Fee of this transaction is 0.000015 Bitcoins");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
