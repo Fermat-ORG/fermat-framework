@@ -48,6 +48,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp" />
 
         <EditText
@@ -63,6 +64,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp" />
 
 
@@ -79,6 +81,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp" />
 
 
@@ -95,6 +98,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp"
             android:visibility="gone" />
 
@@ -111,6 +115,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp" />
 
 
@@ -127,6 +132,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp"
             android:visibility="gone" />
 
@@ -143,6 +149,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp"
             android:visibility="gone" />
 
@@ -159,6 +166,7 @@
             android:singleLine="true"
             android:textColor="#009688"
             android:textColorHint="#b3b3b3"
+            android:theme="@style/editTextThemeRedeemPoint"
             android:textSize="15sp"
             android:visibility="gone" />
 
