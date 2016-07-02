@@ -27,11 +27,15 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettingsManager;
+
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 
 /**
@@ -51,7 +55,7 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;

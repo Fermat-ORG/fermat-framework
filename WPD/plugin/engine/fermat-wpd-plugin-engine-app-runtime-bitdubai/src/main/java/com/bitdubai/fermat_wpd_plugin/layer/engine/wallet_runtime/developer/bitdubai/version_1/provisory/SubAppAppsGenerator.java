@@ -3568,6 +3568,7 @@ public class SubAppAppsGenerator {
         final int SEARCH_FILTER_OPTION_MENU_ID = 1;
         final int LOCATION_FILTER_OPTION_MENU_ID = 2;
         final int HELP_OPTION_MENU_ID = 3;
+        final int CBC_BACKGROUND_TAB_ID = 4;
         final String PUBLIC_KEY = SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode();
         final Owner owner = new Owner(PUBLIC_KEY);
 
@@ -3616,7 +3617,7 @@ public class SubAppAppsGenerator {
 
         //TabStrip
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#1291A3");
+        runtimeTabStrip.setBackgroundDrawable(new FermatDrawable(CBC_BACKGROUND_TAB_ID, "cbc_tab_background", owner, SourceLocation.DEVELOPER_RESOURCES));
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
         runtimeActivity.setTabStrip(runtimeTabStrip);
