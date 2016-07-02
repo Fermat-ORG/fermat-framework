@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.notifications.FermatNotification;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 
 import java.io.Serializable;
@@ -34,6 +35,11 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
      * Screens in a AppNavigationStructure
      */
     private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
+
+    /**
+     * Notifications
+     */
+    private Map<String,FermatNotification> notifications;
     /**
      * Last active screen
      */
@@ -191,6 +197,13 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
             appsKeyConsumed = new ArrayList<>();
         }
         this.appsKeyConsumed.add(appPublicKey);
+    }
+
+    public void addNotification(String key,FermatNotification fermatNotification){
+        if(notifications==null){
+            notifications = new HashMap<>();
+        }
+        notifications.put(key,fermatNotification);
     }
 
     @Override
