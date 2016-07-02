@@ -106,7 +106,6 @@ public class CryptoCustomerCommunityManager
             worldCustomerList = getCryptoCustomerSearch().getResult(selectedIdentity.getPublicKey(), deviceLocation, distance, alias, max, offset);
         } catch (CantGetCryptoCustomerSearchResult e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoCustomersException(e, "", "Error in listWorldCryptoCustomers trying to list world customers");
         }
 
