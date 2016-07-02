@@ -94,6 +94,8 @@ public class BrowserTabFragment
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
 
+    CryptoBrokerCommunitySettings appSettings;
+
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
     }
@@ -114,10 +116,18 @@ public class BrowserTabFragment
         //Check if a default identity is configured
         try {
             identity = moduleManager.getSelectedActorIdentity();
+            if(identity == null)
+                launchActorCreationDialog = true;   //There are no identities in device
+            else {
+                if (appSettings.getLastSelectedIdentityPublicKey() == null)
+                    launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            }
         } catch (CantGetSelectedActorIdentityException e) {
-            launchActorCreationDialog = true;  //There are no identities in device
+            e.printStackTrace();
+//            launchActorCreationDialog = true;  //There are no identities in device
         } catch (ActorIdentityNotSelectedException e) {
-            launchListIdentitiesDialog = true; //There are identities in device, but none selected
+            e.printStackTrace();
+//            launchListIdentitiesDialog = true; //There are identities in device, but none selected
         }
     }
 
@@ -429,7 +439,6 @@ public class BrowserTabFragment
      * Obtain Settings or create new Settings if first time opening subApp
      */
     private void loadSettings() {
-        CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -468,15 +477,23 @@ public class BrowserTabFragment
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
-
                         try {
                             identity = moduleManager.getSelectedActorIdentity();
+                            if(identity == null)
+                                getActivity().onBackPressed();
+                            else {
+                                invalidate();
+                            }
+//                        } catch (CantGetSelectedActorIdentityException e) {
+//                            e.printStackTrace();
+//                        } catch (ActorIdentityNotSelectedException e) {
+//                            e.printStackTrace();
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
+//                        invalidate();
+//                        onRefresh();
                     }
                 });
 
@@ -494,9 +511,9 @@ public class BrowserTabFragment
 
                 listIdentitiesDialog.show();
 
-            } else {
-                invalidate();
-                onRefresh();
+//            } else {
+//                invalidate();
+//                onRefresh();
             }
 
         } catch (Exception ex) {
