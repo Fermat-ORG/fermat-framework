@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.common.holders.AvailableActorsViewHolder;
 import com.bitdubai.sub_app.crypto_customer_community.common.holders.LoadingMoreViewHolder;
@@ -26,10 +27,12 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoCustomerComm
     public static final int DATA_ITEM = 1;
     public static final int LOADING_ITEM = 2;
     private boolean loadingData = true;
+    private CryptoCustomerCommunitySubAppModuleManager moduleManager;
 
 
-    public AvailableActorsListAdapter(Context context, List<CryptoCustomerCommunityInformation> dataSet) {
+    public AvailableActorsListAdapter(Context context, List<CryptoCustomerCommunityInformation> dataSet, CryptoCustomerCommunitySubAppModuleManager moduleManager) {
         super(context, dataSet);
+        this.moduleManager = moduleManager;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class AvailableActorsListAdapter extends FermatAdapter<CryptoCustomerComm
     @Override
     protected void bindHolder(FermatViewHolder holder, CryptoCustomerCommunityInformation data, int position) {
         final AvailableActorsViewHolder availableActorsViewHolder = (AvailableActorsViewHolder) holder;
-        availableActorsViewHolder.bind(data);
+        availableActorsViewHolder.bind(data, moduleManager);
     }
 
     @Override

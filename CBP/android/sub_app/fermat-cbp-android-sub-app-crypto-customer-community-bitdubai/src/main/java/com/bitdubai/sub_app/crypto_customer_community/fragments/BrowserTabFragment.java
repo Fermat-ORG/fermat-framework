@@ -212,7 +212,7 @@ public class BrowserTabFragment
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AvailableActorsListAdapter(getActivity(), cryptoCustomerCommunityInformationList);
+            adapter = new AvailableActorsListAdapter(getActivity(), cryptoCustomerCommunityInformationList, moduleManager);
         }
 
         return adapter;

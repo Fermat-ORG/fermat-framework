@@ -8,7 +8,11 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
 
@@ -46,7 +50,8 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         connectionText = (FermatTextView) itemView.findViewById(R.id.cbc_connection_text);
     }
 
-    public void bind(CryptoBrokerCommunityInformation data) {
+    public void bind(CryptoBrokerCommunityInformation data, CryptoBrokerCommunitySubAppModuleManager moduleManager) {
+
         if (data.getConnectionState() != null) {
             switch (data.getConnectionState()) {
                 case CONNECTED:
@@ -70,8 +75,16 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         brokerName.setText(data.getAlias());
-        brokerLocation.setText("-- / --");
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
+
+        final Address address = getAddress(moduleManager, data.getLocation());
+        String locationText = "-- / --";
+        if (address != null) {
+            String place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+            locationText = address.getCountry() + " / " + place;
+        }
+
+        brokerLocation.setText(locationText);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {
@@ -79,5 +92,16 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.ic_profile_male);
+    }
+
+    private Address getAddress(CryptoBrokerCommunitySubAppModuleManager moduleManager, Location location) {
+        if (location.getLatitude() == 0 && location.getLongitude() == 0)
+            return null;
+
+        try {
+            return moduleManager.getAddressByCoordinate(location.getLatitude().floatValue(), location.getLongitude().floatValue());
+        } catch (CantCreateAddressException e) {
+            return null;
+        }
     }
 }
