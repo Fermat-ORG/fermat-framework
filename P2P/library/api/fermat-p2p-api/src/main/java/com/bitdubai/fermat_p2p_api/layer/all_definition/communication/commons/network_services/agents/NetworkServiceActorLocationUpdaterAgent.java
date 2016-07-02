@@ -32,6 +32,11 @@ import java.util.concurrent.TimeUnit;
 public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
 
     /**
+     * Geo-location update high rate limit in seconds.
+     */
+    private static final int GEO_LOCATION_HIGH_RATE_LIMIT = 60;
+
+    /**
      * Represent the networkServiceRoot
      */
     private AbstractActorNetworkService networkServiceRoot;
@@ -114,7 +119,7 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
         try {
             this.scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
 
-            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), 10, 10, TimeUnit.SECONDS);
+            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), GEO_LOCATION_HIGH_RATE_LIMIT, GEO_LOCATION_HIGH_RATE_LIMIT, TimeUnit.SECONDS);
 
             this.status = AgentStatus.STARTED;
 
@@ -132,7 +137,7 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
 
         try {
 
-            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), 10, 10, TimeUnit.SECONDS);
+            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), GEO_LOCATION_HIGH_RATE_LIMIT, GEO_LOCATION_HIGH_RATE_LIMIT, TimeUnit.SECONDS);
 
             this.status = AgentStatus.STARTED;
 
