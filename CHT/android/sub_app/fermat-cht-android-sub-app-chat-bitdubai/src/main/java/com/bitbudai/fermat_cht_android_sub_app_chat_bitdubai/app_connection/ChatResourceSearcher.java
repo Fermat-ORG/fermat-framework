@@ -1,19 +1,22 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
+import com.bitdubai.fermat_android_api.utils.DrawableUtils;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 /**
- * Created by mati on 2016.07.02..
+ * Created by Matias furszyfer on 2016.07.02..
  */
 public class ChatResourceSearcher extends ResourceSearcher {
 
     @Override
-    public int obtainResDrawable(Context context, int id) {
+    public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
         int resId = 0;
-        switch (id){
+        switch (fermatDrawable.getId()){
             case 1:
                 resId = R.drawable.cht_help_icon;
                 break;
@@ -27,6 +30,6 @@ public class ChatResourceSearcher extends ResourceSearcher {
                 resId = R.drawable.cht_notifications;
                 break;
         }
-        return resId;
+        return DrawableUtils.resToDrawable(context, resId);
     }
 }
