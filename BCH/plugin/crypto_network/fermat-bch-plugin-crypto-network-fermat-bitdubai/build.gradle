@@ -24,7 +24,6 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':fermat-bch-api')
-    compile files('src/main/java/com/bitdubai/fermat_bch_plugin/layer/crypto_network/fermat/developer/bitdubai/version_1/fermatj/fermatj-core-0.13.6.jar')
 }
 
 publishing {
