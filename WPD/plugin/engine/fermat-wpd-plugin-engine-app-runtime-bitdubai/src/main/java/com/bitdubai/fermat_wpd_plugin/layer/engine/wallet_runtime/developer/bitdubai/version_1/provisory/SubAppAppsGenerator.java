@@ -3644,13 +3644,13 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(LOCATION_FILTER_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(LOCATION_FILTER_OPTION_MENU_ID, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Location");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -3704,6 +3704,7 @@ public class SubAppAppsGenerator {
         final int SEARCH_FILTER_OPTION_MENU_ID = 1;
         final int LOCATION_FILTER_OPTION_MENU_ID = 2;
         final int HELP_OPTION_MENU_ID = 3;
+        final int CCC_BACKGROUND_TAB_ID = 4;
         final String PUBLIC_KEY = SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode();
         final Owner owner = new Owner(PUBLIC_KEY);
 
@@ -3751,7 +3752,7 @@ public class SubAppAppsGenerator {
 
         //TabStrip
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#a60f7f");
+        runtimeTabStrip.setBackgroundDrawable(new FermatDrawable(CCC_BACKGROUND_TAB_ID, "ccc_tab_background", owner, SourceLocation.DEVELOPER_RESOURCES));
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -3778,13 +3779,13 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(LOCATION_FILTER_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(LOCATION_FILTER_OPTION_MENU_ID, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Location");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
         optionsMenu.addMenuItem(optionMenuItem);
 
         //Tabs Connections
