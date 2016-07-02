@@ -45,6 +45,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransacti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
@@ -216,13 +217,13 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     }
 
     @Override
-    public synchronized String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, FermatTrId, addressTo, satoshis, null, true, blockchainNetworkType);
+    public synchronized String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, CryptoAmount cryptoAmount, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+        return bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, FermatTrId, addressTo, cryptoAmount, null, true, blockchainNetworkType);
     }
 
     @Override
-    public synchronized String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, String op_Return,  BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, FermatTrId, addressTo, satoshis, op_Return, true, blockchainNetworkType);
+    public synchronized String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, CryptoAmount cryptoAmount, String op_Return,  BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+        return bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, FermatTrId, addressTo, cryptoAmount, op_Return, true, blockchainNetworkType);
     }
 
 
@@ -246,15 +247,15 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      * @param walletPublicKey
      * @param fermatTrId
      * @param addressTo
-     * @param satoshis
+     * @param cryptoAmount
      * @return
      * @throws InsufficientCryptoFundsException
      * @throws InvalidSendToAddressException
      * @throws CryptoTransactionAlreadySentException
      */
     @Override
-    public synchronized String generateTransaction(String walletPublicKey, UUID fermatTrId, CryptoAddress addressTo, long satoshis, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException {
-        return generateTransaction(walletPublicKey, fermatTrId, addressTo, satoshis, null, blockchainNetworkType);
+    public synchronized String generateTransaction(String walletPublicKey, UUID fermatTrId, CryptoAddress addressTo, CryptoAmount cryptoAmount, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException {
+        return generateTransaction(walletPublicKey, fermatTrId, addressTo, cryptoAmount, null, blockchainNetworkType);
     }
 
     /**
@@ -270,10 +271,10 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      * @throws CryptoTransactionAlreadySentException
      */
     @Override
-    public synchronized String generateTransaction(String walletPublicKey, UUID fermatTrId, CryptoAddress addressTo, long satoshis, String op_Return,  BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException {
+    public synchronized String generateTransaction(String walletPublicKey, UUID fermatTrId, CryptoAddress addressTo, CryptoAmount cryptoAmount, String op_Return,  BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CryptoTransactionAlreadySentException, CouldNotGenerateTransactionException {
         String trHash=null;
         try {
-            trHash = bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, fermatTrId, addressTo, satoshis, op_Return, false, blockchainNetworkType);
+            trHash = bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, fermatTrId, addressTo, cryptoAmount, op_Return, false, blockchainNetworkType);
         } catch (CouldNotSendMoneyException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CouldNotGenerateTransactionException(CouldNotGenerateTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't be stored at the cryptoNetwork", null);
