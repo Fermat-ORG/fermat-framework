@@ -70,6 +70,7 @@ public class BrowserTabFragment
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
     private CryptoCustomerCommunitySelectableIdentity identity;
     private DeviceLocation location;
+    private String alias = null;
     private double distance;
     private int offset;
 
@@ -338,7 +339,7 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias,  MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
