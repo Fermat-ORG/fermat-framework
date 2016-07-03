@@ -3,8 +3,10 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces
 import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import java.text.NumberFormat;
@@ -18,6 +20,7 @@ public abstract class AbstractBusinessTransactionAgent
         extends AbstractAgent {
 
     protected T pluginRoot;
+    protected EventManager eventManager;
 
     /**
      * Default constructor with parameters
@@ -30,9 +33,11 @@ public abstract class AbstractBusinessTransactionAgent
             long sleepTime,
             TimeUnit timeUnit,
             long initDelayTime,
-            T pluginRoot) {
+            T pluginRoot,
+            EventManager eventManager) {
         super(sleepTime, timeUnit, initDelayTime);
         this.pluginRoot = pluginRoot;
+        this.eventManager = eventManager;
     }
 
     @Override
@@ -71,6 +76,12 @@ public abstract class AbstractBusinessTransactionAgent
      * @param contractHash
      */
     protected abstract void raiseAckConfirmationEvent(String contractHash);
+
+    /**
+     * This method must implement ack confirmation event.
+     * @param contractHash
+     */
+    protected abstract void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType);
 
     /**
      * This method parse a String object to a long object

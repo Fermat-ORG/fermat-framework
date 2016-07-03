@@ -80,7 +80,6 @@ public class BrokerAckOfflinePaymentMonitorAgent2
         extends AbstractBusinessTransactionAgent<BrokerAckOfflinePaymentPluginRoot> {
 
     private final BrokerAckOfflinePaymentBusinessTransactionDao brokerAckOfflinePaymentBusinessTransactionDao;
-    private final EventManager eventManager;
     private final TransactionTransmissionManager transactionTransmissionManager;
     private final CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
@@ -113,9 +112,8 @@ public class BrokerAckOfflinePaymentMonitorAgent2
             CryptoBrokerWalletManager cryptoBrokerWalletManager,
             CashDepositTransactionManager cashDepositTransactionManager,
             UUID pluginId) {
-        super(sleepTime, timeUnit, initDelayTime, pluginRoot);
+        super(sleepTime, timeUnit, initDelayTime, pluginRoot, eventManager);
         this.brokerAckOfflinePaymentBusinessTransactionDao = brokerAckOfflinePaymentBusinessTransactionDao;
-        this.eventManager = eventManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
         this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
@@ -648,6 +646,11 @@ public class BrokerAckOfflinePaymentMonitorAgent2
         brokerAckPaymentConfirmed.setContractHash(contractHash);
         brokerAckPaymentConfirmed.setPaymentType(PaymentType.FIAT_MONEY);
         eventManager.raiseEvent(brokerAckPaymentConfirmed);
+    }
+
+    @Override
+    protected void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType) {
+        //Not implemented in this version.
     }
 
     /**

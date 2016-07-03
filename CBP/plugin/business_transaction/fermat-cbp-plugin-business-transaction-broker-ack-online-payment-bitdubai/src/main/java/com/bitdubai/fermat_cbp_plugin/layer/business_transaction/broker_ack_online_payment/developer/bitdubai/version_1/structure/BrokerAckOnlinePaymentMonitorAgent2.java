@@ -60,10 +60,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 03/07/16.
  */
-public class BrokerAckOnlinePaymentMonitorAgent2 extends AbstractBusinessTransactionAgent<BrokerAckOnlinePaymentPluginRoot> {
+public class BrokerAckOnlinePaymentMonitorAgent2
+        extends AbstractBusinessTransactionAgent<BrokerAckOnlinePaymentPluginRoot> {
 
     private final BrokerAckOnlinePaymentBusinessTransactionDao dao;
-    private final EventManager eventManager;
     private final TransactionTransmissionManager transactionTransmissionManager;
     private final CustomerBrokerContractPurchaseManager contractPurchaseManager;
     private final CustomerBrokerContractSaleManager contractSaleManager;
@@ -92,9 +92,8 @@ public class BrokerAckOnlinePaymentMonitorAgent2 extends AbstractBusinessTransac
             CustomerBrokerContractPurchaseManager contractPurchaseManager,
             CustomerBrokerContractSaleManager contractSaleManager,
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager) {
-        super(sleepTime, timeUnit, initDelayTime, pluginRoot);
+        super(sleepTime, timeUnit, initDelayTime, pluginRoot, eventManager);
         this.dao = dao;
-        this.eventManager = eventManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
         this.contractPurchaseManager = contractPurchaseManager;
         this.contractSaleManager = contractSaleManager;
@@ -333,6 +332,11 @@ public class BrokerAckOnlinePaymentMonitorAgent2 extends AbstractBusinessTransac
         brokerAckPaymentConfirmed.setPaymentType(PaymentType.CRYPTO_MONEY);
 
         eventManager.raiseEvent(brokerAckPaymentConfirmed);
+    }
+
+    @Override
+    protected void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType) {
+        //Not implemented in this version.
     }
 
     private void checkPendingIncomingMoneyEvents(String eventId) throws IncomingOnlinePaymentException, CantUpdateRecordException {
