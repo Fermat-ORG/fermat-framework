@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
@@ -36,16 +39,19 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
 
     private CryptoCustomerIdentityManager identityManager;
     private CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot;
+    private final LocationManager locationManager;
 
 
     public CryptoCustomerIdentityModuleManagerImpl(CryptoCustomerIdentityManager identityManager,
                                                    PluginFileSystem pluginFileSystem,
                                                    UUID pluginId,
-                                                   CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot) {
+                                                   CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot,
+                                                   LocationManager locationManager) {
         super(pluginFileSystem, pluginId);
 
         this.identityManager = identityManager;
         this.pluginRoot = pluginRoot;
+        this.locationManager = locationManager;
     }
 
     @Override
@@ -122,5 +128,10 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
     }
 }

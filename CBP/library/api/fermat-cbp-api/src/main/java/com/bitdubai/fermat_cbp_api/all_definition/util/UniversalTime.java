@@ -12,8 +12,12 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.TimeZone;
 
+
 /**
- * This class can provide a Date object with universal time reference
+ * This class can provide a Date object with universal time reference.
+ * <p/>
+ * THE METHODS OF THIS CLASS NEED TO BE CONSUMED IN THE BACKGROUND THREAD
+ * <p/>
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/07/16.
  */
 public class UniversalTime {
@@ -26,10 +30,12 @@ public class UniversalTime {
 
     /**
      * This method returns a Date object with the local time based on UTC.
+     *
      * @return
+     *
      * @throws CantGetUTCException
      */
-    public static Date getLocatedUniversalTime() throws CantGetUTCException{
+    public static Date getLocatedUniversalTime() throws CantGetUTCException {
         //We get the UTCString
         String utcString = getUTCDateStringFromExternalURL();
         return getLocalDateFromUTCDateString(utcString);
@@ -40,12 +46,15 @@ public class UniversalTime {
      * Please, be sure that the string must respect this format:
      * <b>2016-07-02T16:33:28+01:00</b>
      * Try to use the String that provides from the <code>getUTCDateStringFromExternalURL()</code> method.
+     *
      * @param utcString
+     *
      * @return
+     *
      * @throws CantGetUTCException
      */
-    public static Date getLocalDateFromUTCDateString(String utcString) throws CantGetUTCException{
-        try{
+    public static Date getLocalDateFromUTCDateString(String utcString) throws CantGetUTCException {
+        try {
             //We are going to transform the previous string
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
             //We set the UTC in the previous String
@@ -65,10 +74,12 @@ public class UniversalTime {
 
     /**
      * This method returns the UTC Date.
+     *
      * @return
+     *
      * @throws CantGetUTCException
      */
-    public static Date getUTC() throws CantGetUTCException{
+    public static Date getUTC() throws CantGetUTCException {
         //We get the UTCString
         String utcString = getUTCDateStringFromExternalURL();
         return getUTCDateFromUTCDateString(utcString);
@@ -79,12 +90,15 @@ public class UniversalTime {
      * Please, be sure that the string must respect this format:
      * <b>2016-07-02T16:33:28+01:00</b>
      * Try to use the String that provides from the <code>getUTCDateStringFromExternalURL()</code> method.
+     *
      * @param utcString
+     *
      * @return
+     *
      * @throws CantGetUTCException
      */
-    public static Date getUTCDateFromUTCDateString(String utcString) throws CantGetUTCException{
-        try{
+    public static Date getUTCDateFromUTCDateString(String utcString) throws CantGetUTCException {
+        try {
             //We are going to transform the previous string
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
             //We need to remove this T, is not part of SimpleDateFormat allowed characters
@@ -102,13 +116,15 @@ public class UniversalTime {
 
     /**
      * This method returns a Sting with UTC
+     *
      * @return
+     *
      * @throws CantGetUTCException
      */
     public static String getUTCDateStringFromExternalURL() throws CantGetUTCException {
-        try{
+        try {
             //Create URL
-            URL url=new URL(TIME_ORG_URL);
+            URL url = new URL(TIME_ORG_URL);
             //Consult API
             Scanner scan = new Scanner(url.openStream());
             String stringDate = new String();
@@ -121,7 +137,7 @@ public class UniversalTime {
             throw new CantGetUTCException(
                     FermatException.wrapException(e),
                     "Getting UTC date string from external API",
-                    "The URL "+TIME_ORG_URL+" is malformed");
+                    "The URL " + TIME_ORG_URL + " is malformed");
         } catch (IOException e) {
             throw new CantGetUTCException(
                     FermatException.wrapException(e),
