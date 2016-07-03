@@ -30,10 +30,6 @@ import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnec
 import java.util.HashMap;
 import java.util.Map;
 
-//import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.com.bitdubai.sub_app.art_fan_identity.app_connection.ArtArtistIdentityAppConnection;
-
-//import com.bitdubai.reference_wallet.bank_money_wallet.com.bitdubai.sub_app.art_fan_identity.app_connection.BankMoneyWalletFermatAppConnection;
-
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
@@ -84,7 +80,7 @@ public class FermatAppConnectionManager {
             case "main_desktop":
                 fermatAppConnection = new DesktopFermatAppConnection(activity);
                 break;
-            //DAP WALLETS
+//            //DAP WALLETS
 //            case "asset_issuer" :
 //                fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity);
 //                break;
@@ -128,7 +124,7 @@ public class FermatAppConnectionManager {
             case "crypto_customer_wallet":
                 fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity);
                 break;
-//            //CBP Sub Apps
+            //CBP Sub Apps
             case "public_key_crypto_broker_community":
                 fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity);
                 break;
@@ -153,8 +149,6 @@ public class FermatAppConnectionManager {
 //            case "public_key_store":
 //                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
 //                break;
-
-
 
 //            // CHT Sub Apps
             case "public_key_cht_chat":

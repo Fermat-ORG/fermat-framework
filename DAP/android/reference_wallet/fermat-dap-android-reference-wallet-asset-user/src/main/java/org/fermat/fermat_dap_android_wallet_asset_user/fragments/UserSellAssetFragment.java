@@ -379,12 +379,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override

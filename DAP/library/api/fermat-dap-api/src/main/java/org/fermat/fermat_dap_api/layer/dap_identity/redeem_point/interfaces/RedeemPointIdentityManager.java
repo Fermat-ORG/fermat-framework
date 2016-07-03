@@ -42,7 +42,7 @@ public interface RedeemPointIdentityManager extends FermatManager, Serializable 
      * @throws CantCreateNewRedeemPointException if something goes wrong.
      */
     RedeemPointIdentity createNewRedeemPoint(String alias,
-                                             byte[] profileImage) throws CantCreateNewRedeemPointException;
+                                             byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException;
 
 
     RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,

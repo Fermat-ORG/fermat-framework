@@ -235,7 +235,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         if (address!=null)
             holder.location_text.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
         else
-            holder.location_text.setText("Searching...");//TODO: put here location
+            holder.location_text.setText("Searching...");
 
         final ChatActorCommunityInformation dat=data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {

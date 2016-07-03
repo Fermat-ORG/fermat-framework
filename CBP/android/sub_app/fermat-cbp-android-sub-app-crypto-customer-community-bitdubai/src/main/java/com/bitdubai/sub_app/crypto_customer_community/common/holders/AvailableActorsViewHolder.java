@@ -74,7 +74,7 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         customerName.setText(data.getAlias());
-        customerLocation.setText("-- / --");
+        customerLocation.setText(data.getCountry() + " / " + data.getPlace());
         customerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 

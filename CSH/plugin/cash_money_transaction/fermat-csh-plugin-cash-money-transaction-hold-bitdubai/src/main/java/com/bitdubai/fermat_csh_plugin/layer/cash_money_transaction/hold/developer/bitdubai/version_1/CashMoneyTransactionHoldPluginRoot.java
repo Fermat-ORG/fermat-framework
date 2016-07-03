@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -35,10 +37,12 @@ import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.develope
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure.CashMoneyTransactionHoldProcessorAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.structure.CashMoneyTransactionHoldProcessorAgent2;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -61,8 +65,15 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
     private CashMoneyWalletManager cashMoneyWalletManager;
 
 
-    private CashMoneyTransactionHoldProcessorAgent processorAgent;
+    //private CashMoneyTransactionHoldProcessorAgent processorAgent;
+    //Test new agent
+    private CashMoneyTransactionHoldProcessorAgent2 processorAgent;
     private CashMoneyTransactionHoldManager holdTransactionManager;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     /*
      * PluginRoot Constructor
@@ -129,8 +140,23 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
-        processorAgent = new CashMoneyTransactionHoldProcessorAgent(this, holdTransactionManager, cashMoneyWalletManager);
-        processorAgent.start();
+        //processorAgent = new CashMoneyTransactionHoldProcessorAgent(this, holdTransactionManager, cashMoneyWalletManager);
+        //processorAgent.start();
+        //New Agent
+        try{
+            processorAgent = new CashMoneyTransactionHoldProcessorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    holdTransactionManager,
+                    cashMoneyWalletManager);
+            processorAgent.start();
+        } catch (CantStartAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
 
         serviceStatus = ServiceStatus.STARTED;
        //testCreateCashHoldTransaction();
@@ -138,7 +164,13 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
 
     @Override
     public void stop() {
-        processorAgent.stop();
+        try {
+            processorAgent.stop();
+        } catch (CantStopAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 

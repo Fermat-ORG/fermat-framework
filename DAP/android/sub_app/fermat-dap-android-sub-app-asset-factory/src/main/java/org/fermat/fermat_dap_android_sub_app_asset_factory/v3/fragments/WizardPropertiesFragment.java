@@ -137,8 +137,8 @@ public class WizardPropertiesFragment extends AbstractFermatFragment<ReferenceAp
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
                     .setTextNameLeft(R.string.dap_asset_factory_welcome_name_left)
-                    .setSubTitle(R.string.dap_asset_factory_welcome_subTitle)
-                    .setBody(R.string.dap_asset_factory_welcome_body)
+                    .setSubTitle(R.string.dap_asset_factory_wizard_properties_subTitle)
+                    .setBody(R.string.dap_asset_factory_wizard_properties_body)
                     .setTextFooter(R.string.dap_asset_factory_welcome_Footer)
                     .setTemplateType((moduleManager.getLoggedIdentityAssetIssuer() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
@@ -151,8 +151,8 @@ public class WizardPropertiesFragment extends AbstractFermatFragment<ReferenceAp
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 //        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "Help")
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }

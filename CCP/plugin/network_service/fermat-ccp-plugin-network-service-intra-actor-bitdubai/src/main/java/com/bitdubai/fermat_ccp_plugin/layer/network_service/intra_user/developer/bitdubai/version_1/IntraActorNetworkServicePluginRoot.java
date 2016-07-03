@@ -517,7 +517,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset, DeviceLocation location) throws ErrorSearchingSuggestionsException {
+    public List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset, DeviceLocation location) throws ErrorSearchingSuggestionsException {
 
         final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
@@ -528,8 +528,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
             */
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.INTRA_USER.getCode(),
-                    null,
-                    null,
+                    alias,
+                    distance,
                     null,
                     null,
                     location,

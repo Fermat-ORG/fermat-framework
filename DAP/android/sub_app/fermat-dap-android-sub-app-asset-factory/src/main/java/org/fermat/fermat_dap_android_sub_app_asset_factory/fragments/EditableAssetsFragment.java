@@ -287,7 +287,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
                 handlerTimer.postDelayed(new Runnable() {
                     public void run() {
                         if (assetFactorySettingsTemp.isPresentationHelpEnabled()) {
-                            setUpPresentation(false);
+                            setUpPresentation(true);
                         }
                     }
                 }, 500);

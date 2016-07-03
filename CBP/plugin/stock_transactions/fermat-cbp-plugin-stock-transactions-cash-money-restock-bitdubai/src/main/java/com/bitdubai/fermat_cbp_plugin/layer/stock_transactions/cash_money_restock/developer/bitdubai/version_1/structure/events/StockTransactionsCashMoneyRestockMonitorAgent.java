@@ -43,8 +43,6 @@ import java.util.logging.Logger;
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
-    //TODO: Manejo de Eventos
-
     private Thread agentThread;
 
     private final StockTransactionsCashMoneyRestockPluginRoot pluginRoot;
@@ -129,6 +127,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
 
             //Get unprocessed transactions (All with status != COMPLETED)
             for (CashMoneyTransaction cashMoneyTransaction : stockTransactionCashMoneyRestockFactory.getCashMoneyTransactionList(null)) {
+
                 switch (cashMoneyTransaction.getTransactionStatus()) {
 
                     case INIT_TRANSACTION:
