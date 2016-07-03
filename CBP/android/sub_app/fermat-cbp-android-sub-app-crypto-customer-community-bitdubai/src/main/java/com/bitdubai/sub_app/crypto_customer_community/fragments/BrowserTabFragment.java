@@ -296,7 +296,7 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -420,7 +420,7 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_ccc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_ccc_launch_action_creation_name_right)
-                        .setIsCheckEnabled(true)
+                        .setIsCheckEnabled(false)
                         .build();
 
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

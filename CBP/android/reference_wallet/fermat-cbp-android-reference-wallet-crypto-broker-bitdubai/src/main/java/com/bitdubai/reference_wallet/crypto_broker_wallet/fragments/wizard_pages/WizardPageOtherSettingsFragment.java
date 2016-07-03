@@ -86,7 +86,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
                     .setSubTitle(R.string.cbw_wizard_other_settings_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_other_settings_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                    .setIsCheckEnabled(true)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }

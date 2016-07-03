@@ -109,7 +109,7 @@ public class WizardPageSetLocationsFragment
                     .setSubTitle(R.string.ccw_wizard_locations_dialog_sub_title)
                     .setBody(R.string.ccw_wizard_locations_dialog_body)
                     .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                    .setIsCheckEnabled(true)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }

@@ -104,7 +104,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
                     .setSubTitle(R.string.ccw_wizard_accounts_dialog_sub_title)
                     .setBody(R.string.ccw_wizard_accounts_dialog_body)
                     .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                    .setIsCheckEnabled(true)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }
