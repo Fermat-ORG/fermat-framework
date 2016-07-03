@@ -1,23 +1,18 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
-import com.bitdubai.fermat_android_api.utils.DrawableUtils;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 
 /**
  * Created by nerio on 2/7/2016.
  */
 public class BitcoinWalletSearcher extends ResourceSearcher {
 
-    @Override
-    public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
+    public int obtainResDrawable(Context context,int id){
         int resId = 0;
-
-        switch (fermatDrawable.getId()){
+        switch (id){
             case 1:
 
                 break;
@@ -32,6 +27,6 @@ public class BitcoinWalletSearcher extends ResourceSearcher {
                 break;
 
         }
-        return DrawableUtils.resToDrawable(context, resId);
+        return resId;
     }
 }

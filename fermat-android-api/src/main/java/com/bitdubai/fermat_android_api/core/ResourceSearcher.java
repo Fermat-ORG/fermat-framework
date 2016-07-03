@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.utils.DrawableUtils;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 
@@ -34,12 +35,9 @@ public class ResourceSearcher {
         return resId;
     }
 
-    public Drawable obtainDrawable(Context context,int id){
-        return null;
-    }
-
-    public Drawable obtainDrawable(Context context,FermatDrawable fermatDrawable){
-        return null;
+    public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
+        int resId = obtainResDrawable(context,fermatDrawable.getId());
+        return DrawableUtils.resToDrawable(context, resId);
     }
 
 
