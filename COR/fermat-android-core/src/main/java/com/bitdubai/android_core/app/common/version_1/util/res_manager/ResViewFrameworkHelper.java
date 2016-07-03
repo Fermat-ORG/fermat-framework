@@ -33,7 +33,8 @@ public class ResViewFrameworkHelper {
                 View badgeView = view.findViewById(R.id.badge);
                 badgeView.setBackground(drawable);
                 RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                lps.addRule(RelativeLayout.RIGHT_OF, fermatTextView.getId());
+                lps.addRule(RelativeLayout.RIGHT_OF, R.id.txt_tab_title);
+//                lps.addRule(RelativeLayout.ALIGN_PARENT_END);
                 badgeView.setLayoutParams(lps);
                 break;
         }

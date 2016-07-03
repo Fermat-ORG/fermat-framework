@@ -1,8 +1,11 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.app_connection;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
+import com.bitdubai.fermat_android_api.utils.DrawableUtils;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 /**
@@ -11,9 +14,9 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 public class ChatIdentityResourceSearcher extends ResourceSearcher {
 
     @Override
-    public int obtainResDrawable(Context context, int id) {
+    public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
         int resId = 0;
-        switch (id){
+        switch (fermatDrawable.getId()){
             case 7:
                 resId = R.drawable.cht_ic_back_buttom;;
                 break;
@@ -21,6 +24,6 @@ public class ChatIdentityResourceSearcher extends ResourceSearcher {
                 resId = R.drawable.cht_ic_menu_help;
                 break;
         }
-        return resId;
+        return DrawableUtils.resToDrawable(context, resId);
     }
 }
