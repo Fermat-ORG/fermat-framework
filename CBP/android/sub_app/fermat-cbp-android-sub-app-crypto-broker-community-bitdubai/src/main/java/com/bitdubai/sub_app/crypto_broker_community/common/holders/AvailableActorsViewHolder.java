@@ -70,7 +70,7 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         brokerName.setText(data.getAlias());
-        brokerLocation.setText("-- / --");
+        brokerLocation.setText(data.getCountry() + " / " + data.getPlace());
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 
