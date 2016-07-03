@@ -105,7 +105,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
