@@ -5,12 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
@@ -39,7 +39,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private BlockchainNetworkType blockchainNetworkType;
     private List<String> registeredIssuers;
     private int accuracy;
-    private Frecuency frecuency;
+    private GeoFrequency frequency;
 
     {
         registeredIssuers = new ArrayList<>();

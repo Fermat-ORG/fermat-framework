@@ -54,7 +54,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.IdentityIssuerDialogCropImage;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
@@ -108,7 +108,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
     private boolean contextMenuInUse = false;
 
     private int accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
     ExecutorService executorService;
 
@@ -930,9 +930,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                 (int) appSession.getData(SessionConstants.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
+    private GeoFrequency getFrequencyData() {
         return appSession.getData(SessionConstants.FREQUENCY_DATA) == null ? moduleManager.getFrequencyDataDefault() :
-                (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
+                (GeoFrequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
     }
 
     private void activateButton() {
