@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 
 /**
@@ -26,12 +28,12 @@ public class ResourceLocationSearcherHelper {
 //        return switchType(context, sourceLocation, publickKeyOwnerOfSource).obtainRes(ResourceSearcher.UNKNOWN_TYPE, context, resourceId);
 //    }
 
-    public static View obtainView(Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
-        return switchType(context,sourceLocation,publickKeyOwnerOfSource).obtainView(context, resourceId);
+    public static View obtainView(Context context,FermatView fermatView){
+        return switchType(context, fermatView.getSourceLocation(), (fermatView.getOwner() != null) ? fermatView.getOwner().getOwnerAppPublicKey() : null).obtainView(context, fermatView);
     }
 
-    public static Drawable obtainDrawable(Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
-        return switchType(context,sourceLocation,publickKeyOwnerOfSource).obtainDrawable(context, resourceId);
+    public static Drawable obtainDrawable(Context context,FermatDrawable fermatDrawable){
+        return switchType(context,fermatDrawable.getSourceLocation(),(fermatDrawable.getOwner()!=null)?fermatDrawable.getOwner().getOwnerAppPublicKey():null).obtainDrawable(context, fermatDrawable);
     }
 
 

@@ -158,7 +158,7 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
 
 //                dcl.addClassLoader(mBaseClassLoader);
 
-                String resPath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE).getAbsolutePath() + "/" + title;
+//                String resPath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE).getAbsolutePath() + "/" + title;
 //                PLUGIN_LOADER.put(title, dcl);
 
 

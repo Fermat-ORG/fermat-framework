@@ -11,13 +11,15 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * The interface <code>CryptoCustomerCommunityInformation</code>
  * provides the method to extract information about a crypto customer.
  */
-public interface CryptoCustomerCommunityInformation extends Serializable{
+public interface CryptoCustomerCommunityInformation extends Serializable {
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented crypto broker
+     *
      * @return the public key of the crypto broker
      */
     String getPublicKey();
@@ -38,27 +40,44 @@ public interface CryptoCustomerCommunityInformation extends Serializable{
 
     /**
      * The method <code>listCryptoBrokerWallets</code> returns the list of the public crypto customer wallets
+     *
      * @return
      */
     List listCryptoCustomerWallets();
 
     /**
      * The method <code>getConnectionState</code> returns the Connection State Status
+     *
      * @return ConnectionState object
      */
     ConnectionState getConnectionState();
 
     /**
      * The method <code>getConnectionId</code> returns the Connection UUID this actor has with the selected actor
+     *
      * @return UUID object
      */
     UUID getConnectionId();
 
     /**
      * The method <code>getLocation</code> returns the Location this actor has with the selected actor
+     *
      * @return Location object
      */
     Location getLocation();
 
+    /**
+     * The method <code>getCountry</code> returns the Country name of the actor's location
+     *
+     * @return The Country name
+     */
+    String getCountry();
+
+    /**
+     * The method <code>getPlace</code> returns the City or County name of the actor's location
+     *
+     * @return The City or County name
+     */
+    String getPlace();
 }
 
