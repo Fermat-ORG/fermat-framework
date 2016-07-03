@@ -3,10 +3,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.drawab
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.07.02..
  */
-public class Badge extends FermatDrawable{
+public class Badge extends FermatDrawable implements Serializable {
 
     public enum Position{
         TOP_RIGHT,RIGHT,LEFT,TOP_LEFT,CENTER

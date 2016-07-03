@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -51,10 +52,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
@@ -70,6 +69,13 @@ import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.provisory.SubAppAppsGenerator;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -299,7 +305,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     @Override
     public void recordNAvigationStructure(FermatStructure fermatStructure) {
-        setNavigationStructureXml((AppNavigationStructure)fermatStructure);
+//        setNavigationStructureXml((AppNavigationStructure)fermatStructure);
+        setNavigationStructure(fermatStructure);
     }
 
     @Override
@@ -4385,27 +4392,56 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
                 fermatStructure = navigationStructureOpen.get(walletPublicKey);
             } else {
                 String navigationStructureName = walletPublicKey + ".xml";
+                FileInputStream fileInputStream = null;
+                ObjectInputStream objectInputStream = null;
                 try {
-                    PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                    pluginTextFile.loadFromMedia();
-                    String xml = pluginTextFile.getContent();
-                    fermatStructure = (AppNavigationStructure) XMLParser.parseXML(xml, fermatStructure);
-                    navigationStructureOpen.put(walletPublicKey,fermatStructure);
-                } catch (FileNotFoundException e) {
-                    try {
-                        PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                        layoutFile.setContent("");
-
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
+                    File file = new File(pluginFileSystem.getAppPath() + "/" + NAVIGATION_STRUCTURE_FILE_PATH + "/" + navigationStructureName);
+                    if (file.exists()){
+                        fileInputStream = new FileInputStream(file);
+                        objectInputStream = new ObjectInputStream(fileInputStream);
+                        fermatStructure = (AppNavigationStructure) objectInputStream.readObject();
+                        navigationStructureOpen.put(walletPublicKey,fermatStructure);
                     }
 
-
-                } catch (CantCreateFileException e) {
+                } catch (java.io.FileNotFoundException e) {
                     e.printStackTrace();
-                } catch (CantLoadFileException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        fileInputStream.close();
+                    }catch (Exception e){
+//                        e.printStackTrace();
+                    }
+                    try {
+                        objectInputStream.close();
+                    }catch (Exception e){
+//                        e.printStackTrace();
+                    }
                 }
+//                try {
+//                    PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+//                    pluginTextFile.loadFromMedia();
+//                    String xml = pluginTextFile.getContent();
+//                    fermatStructure = (AppNavigationStructure) XMLParser.parseXML(xml, fermatStructure);
+//                    navigationStructureOpen.put(walletPublicKey,fermatStructure);
+//                } catch (FileNotFoundException e) {
+//                    try {
+//                        PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+//                        layoutFile.setContent("");
+//
+//                    } catch (Exception e1) {
+//                        e1.printStackTrace();
+//                    }
+//
+//
+//                } catch (CantCreateFileException e) {
+//                    e.printStackTrace();
+//                } catch (CantLoadFileException e) {
+//                    e.printStackTrace();
+//                }
             }
         }
     return fermatStructure;
@@ -4431,13 +4467,66 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
                 newFile.setContent(navigationStructureXml);
                 newFile.persistToMedia();
             } catch (CantPersistFileException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't create or overwrite navigation structure file.", "");
             } catch (CantCreateFileException e) {
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
+        }
+    }
+    public void setNavigationStructure(FermatStructure fermatStructure) {
+        String publiKey = fermatStructure.getPublicKey();
+        try {
+            String navigationStructureName = publiKey + ".xml";
+            File file = new File(pluginFileSystem.getAppPath()+System.lineSeparator()+NAVIGATION_STRUCTURE_FILE_PATH+System.lineSeparator()+navigationStructureName);
+//            String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
+            try {
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            OutputStream outputStream = null;
+            ObjectOutputStream objectOutputStream = null;
+            try {
+                outputStream = new FileOutputStream(file);
+                objectOutputStream = new ObjectOutputStream(outputStream);
+                objectOutputStream.writeObject(fermatStructure);
+            }catch (IOException e){
+                e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
+            } finally {
+                try {
+                    outputStream.close();
+                }catch (Exception e){
+                    //nothing to do
+                }
+                try {
+                    objectOutputStream.close();
+                }catch (Exception e){
+                    //nothing to do
+                }
+
+            }
+
+//            try {
+//                PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+//                newFile.setContent(navigationStructureXml);
+//                newFile.persistToMedia();
+//            } catch (CantPersistFileException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't create or overwrite navigation structure file.", "");
+//            } catch (CantCreateFileException e) {
+//                e.printStackTrace();
+//            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
         }
     }
@@ -4447,9 +4536,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         try {
             String navigationStructureXml = parseNavigationStructureXml(appNavigationStructure);
             String navigationStructureName = publiKey + ".xml";
-            if (!pluginFileSystem.isTextFileExist(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)){
-                setNavigationStructureXml(appNavigationStructure);
+            File file = new File(pluginFileSystem.getAppPath()+"/"+NAVIGATION_STRUCTURE_FILE_PATH+"/"+navigationStructureName);
+            if (!file.exists()){
+                setNavigationStructure(appNavigationStructure);
             }
+//            if (!pluginFileSystem.isTextFileExist(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)){
+//                setNavigationStructureXml(appNavigationStructure);
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -3,10 +3,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_me
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.06.07..
  */
-public class FermatBasicNavigationMenu extends SideMenu {
+public class FermatBasicNavigationMenu extends SideMenu implements Serializable {
 
     private FermatView header;
     private FermatBasicNavigationMenuBody body;
