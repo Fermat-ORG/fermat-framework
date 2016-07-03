@@ -30,7 +30,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="https://maps.googleapis.com/maps/api/js?callback=drawMap&key=AIzaSyD7XZsMPlvmv8ifUFTfO3g8HGFDND_o_Tw"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7XZsMPlvmv8ifUFTfO3g8HGFDND_o_Tw"></script>
 
 </head>
 <style>
@@ -60,20 +60,41 @@
     </div>
 </nav>
 <div class="container theme-showcase" role="main" style="width:98%;" >
-
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
     <div>
         <ng-map center="41,-87" zoom="3"></ng-map>
     </div>
 
     <h2>List of connected entities - Total ({{ total }}) </h2>
 
-    <div class="row" ng-show="total > 0" >
-        <div class="col-lg-3" ng-repeat="identity in identities track by $index">
-             <img class="img-circle" src="{{getImage(identity)}}" alt="{{identity.name}}" width="140" height="140">
-             <h2>{{identity.name}}</h2>
-             <p>{{identity.actorType}}</p>
-         </div>
-     </div>
+    <div ng-show="total > 0">
+
+        <div class="row"  >
+
+            <div class="col-lg-1" ng-repeat="identity in identities track by $index" >
+                <div class="thumbnail">
+                    <img class="img-circle" data-ng-src="{{getImage(identity.photo)}}" alt="{{identity.alias}}" width="80" height="80" style="border:1px solid #ddd;">
+                    <div class="caption">
+                        <h6>{{identity.name}}</h6>
+                        <h6 class="alert alert-success text-center" ><small>{{identity.type}}</small></h6>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr/>
+        <div class="row">
+            <button type="button" class="btn btn-primary pull-left" ng-click="previousPage();"  ng-disabled="currentPage == 1" >Previous</button>
+            <span>Page: {{currentPage}} / {{numPages}}</span>
+            <button type="button" class="btn btn-info pull-right"    ng-click="nextPage();"      ng-disabled="currentPage == numPages" >Next</button>
+        </div>
+
+    </div>
 
      <div class="row" ng-show="total === 0" >
          <div class="well">
