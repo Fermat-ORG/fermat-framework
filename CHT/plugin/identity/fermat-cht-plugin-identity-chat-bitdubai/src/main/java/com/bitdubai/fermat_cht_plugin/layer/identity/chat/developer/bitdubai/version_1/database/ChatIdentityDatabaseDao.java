@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
-import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetPrivateKeyException;
@@ -95,7 +95,7 @@ public class ChatIdentityDatabaseDao {
         return database;
     }
 
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -171,7 +171,7 @@ public class ChatIdentityDatabaseDao {
     }
 
 
-    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantUpdateChatIdentityException {
+    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantUpdateChatIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -259,7 +259,7 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
                         record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
-                        Frecuency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME)));
+                        GeoFrequency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME)));
 
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -316,7 +316,7 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
                         record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
-                        Frecuency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME))));
+                        GeoFrequency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME))));
             }
         } catch (CantLoadTableToMemoryException e) {
 

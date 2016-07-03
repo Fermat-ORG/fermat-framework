@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cht_api.layer.identity.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
@@ -43,7 +43,7 @@ public interface ChatIdentityManager extends FermatManager, Serializable {
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     void createNewIdentityChat(String alias,
-                                                 byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantCreateNewChatIdentityException;
+                                                 byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantCreateNewChatIdentityException;
 
     /**
      * The method <code>updateIdentityChat</code> change a identity information data
@@ -53,7 +53,7 @@ public interface ChatIdentityManager extends FermatManager, Serializable {
      * @param profileImage
      * @throws CantUpdateChatIdentityException
      */
-    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantUpdateChatIdentityException;
+    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantUpdateChatIdentityException;
 
 
     /**
