@@ -15,10 +15,9 @@ import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
  */
 public class CryptoCustomerCommunityResourceSearcher extends ResourceSearcher {
 
-
     @Override
     public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
-        int resId = 0;
+        int resId;
         switch (fermatDrawable.getId()) {
             case FragmentsCommons.HELP_OPTION_MENU_ID:
                 resId = R.drawable.ccc_help_icon;

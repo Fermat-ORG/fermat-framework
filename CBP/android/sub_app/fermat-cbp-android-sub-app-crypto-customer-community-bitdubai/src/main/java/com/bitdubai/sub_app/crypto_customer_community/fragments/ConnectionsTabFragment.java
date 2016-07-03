@@ -206,7 +206,7 @@ public class ConnectionsTabFragment
     private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
         final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoCustomerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }
@@ -285,9 +285,11 @@ public class ConnectionsTabFragment
 
         try {
             offset = pos;
-            final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
-            dataSet.addAll(result);
+            if(moduleManager.getSelectedActorIdentity() != null) {
+                final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

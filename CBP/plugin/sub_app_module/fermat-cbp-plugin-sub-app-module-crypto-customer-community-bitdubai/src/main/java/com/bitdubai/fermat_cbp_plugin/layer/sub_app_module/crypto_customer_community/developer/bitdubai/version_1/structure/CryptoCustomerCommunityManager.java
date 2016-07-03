@@ -62,7 +62,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
  * Created by Alejandro Bicelis on 2/2/2016.
  */
@@ -186,9 +185,10 @@ public class CryptoCustomerCommunityManager
         }
 
         //If appSettings exist, save identity
-        if (appSettings != null) {
-            if (identity.getPublicKey() != null)
+        if(appSettings != null){
+            if(identity.getPublicKey() != null) {
                 appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
+            }
             try {
                 persistSettings(this.subAppPublicKey, appSettings);
             } catch (CantPersistSettingsException e) {
@@ -368,39 +368,45 @@ public class CryptoCustomerCommunityManager
         } catch (CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if (brokerIdentitiesInDevice.size() == 0)
-            throw new CantGetSelectedActorIdentityException("", null, "", "");
+        if(brokerIdentitiesInDevice.size() == 0)
+            return null;
+//            throw new CantGetSelectedActorIdentityException("", null, "", "");
 
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
-        if (appSettings != null) {
+        if(appSettings != null) {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
 
+            CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
             if (lastSelectedIdentityPublicKey != null) {
 
-                CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
-
-                for (CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
-                    if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                        selectedIdentity = new CryptoCustomerCommunitySelectableIdentityImpl(
-                                identity.getPublicKey(),
-                                Actors.CBP_CRYPTO_BROKER,
-                                identity.getAlias(),
-                                identity.getProfileImage(),
-                                identity.getFrequency(),
-                                identity.getAccuracy());
+                for(CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                    if(identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                        selectedIdentity = constructProfileCustomer(identity);
                 }
-
-                if (selectedIdentity == null)
+                if(selectedIdentity == null)
                     throw new ActorIdentityNotSelectedException("", null, "", "");
 
                 return selectedIdentity;
-            } else
-                throw new ActorIdentityNotSelectedException("", null, "", "");
+            } else {
+                for(CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                    if(identity.getPublicKey() != null)
+                        return constructProfileCustomer(identity);
+                }
+            }
         }
-
         return null;
+    }
 
+    private CryptoCustomerCommunitySelectableIdentityImpl constructProfileCustomer(CryptoBrokerIdentity identity) {
+
+        return new CryptoCustomerCommunitySelectableIdentityImpl(
+                identity.getPublicKey(),
+                Actors.CBP_CRYPTO_BROKER,
+                identity.getAlias(),
+                identity.getProfileImage(),
+                identity.getFrequency(),
+                identity.getAccuracy());
     }
 
     @Override

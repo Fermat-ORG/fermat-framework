@@ -150,8 +150,6 @@ public class FermatAppConnectionManager {
 //                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
 //                break;
 
-
-
 //            // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 
 
@@ -19,7 +20,7 @@ public class CreateIdentityWorker extends FermatWorker {
     private int accuracy;
     private byte[] imgByteArray;
     private CryptoCustomerIdentityModuleManager moduleManager;
-
+    CryptoCustomerIdentityInformation identityInformation;
 
     public CreateIdentityWorker(Context context, CryptoCustomerIdentityModuleManager moduleManager, FermatWorkerCallBack callBack,
                                 String alias, byte[] imgByteArray, int accuracy, Frequency frequency) {
@@ -34,7 +35,9 @@ public class CreateIdentityWorker extends FermatWorker {
 
     @Override
     protected Object doInBackground() throws Exception {
-        moduleManager.createCryptoCustomerIdentity(alias, imgByteArray, accuracy, frequency);
+        identityInformation = moduleManager.createCryptoCustomerIdentity(alias, imgByteArray, accuracy, frequency);
+        moduleManager.publishCryptoCustomerIdentity(identityInformation.getPublicKey());
+
         return SUCCESS;
     }
 }

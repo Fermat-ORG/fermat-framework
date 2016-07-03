@@ -18,6 +18,7 @@ public class CryptoCustomerIdentityResourceSearcher extends ResourceSearcher {
     @Override
     public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
         int resId = 0;
+
         switch (fermatDrawable.getId()) {
             case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:
                 resId = R.drawable.new_identity_button;

@@ -1,17 +1,17 @@
-package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
+package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.utils.DrawableUtils;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
-import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 /**
- * Created by Matias furszyfer on 2016.07.02..
+ * Created by nerio on 2/7/2016.
  */
-public class ChatResourceSearcher extends ResourceSearcher {
+public class LossProtectedWalletSearcher extends ResourceSearcher {
 
     @Override
     public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
@@ -19,19 +19,19 @@ public class ChatResourceSearcher extends ResourceSearcher {
 
         switch (fermatDrawable.getId()){
             case 1:
-                resId = R.drawable.cht_help_icon;
+
                 break;
             case 2:
-                resId = R.drawable.cht_ic_action_search;
-                break;
-            case 3:
-                resId = R.drawable.cht_people_conections;
+                resId = R.drawable.loos_help_icon;
                 break;
             case 4:
-                resId = R.drawable.cht_notifications;
+                resId = R.drawable.sendbtc_icon;
                 break;
-        }
+            case 3:
 
+                break;
+
+        }
         return DrawableUtils.resToDrawable(context, resId);
     }
 }
