@@ -96,4 +96,11 @@ public abstract class AbstractBusinessTransactionAgent
             }
         }
     }
+
+    protected void reportError(Exception e){
+        pluginRoot.reportError(
+                UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                e);
+        e.printStackTrace();
+    }
 }

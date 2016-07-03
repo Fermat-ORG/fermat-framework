@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -279,10 +278,7 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                         CantCreateDepositTransactionException |
                         CantMakeDepositTransactionException |
                         CantSendContractNewStatusNotificationException e) {
-            pluginRoot.reportError(
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            e.printStackTrace();
+            reportError(e);
         }
     }
 
