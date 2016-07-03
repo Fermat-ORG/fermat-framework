@@ -1,8 +1,11 @@
 package org.fermat.fermat_dap_android_wallet_redeem_point.app_connection;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
+import com.bitdubai.fermat_android_api.utils.DrawableUtils;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
 /**
@@ -11,15 +14,15 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 public class WalletRedeemPointSearcher extends ResourceSearcher {
 
     @Override
-    public int obtainResDrawable(Context context, int id) {
+    public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
         int resId = 0;
 
-        switch (id) {
+        switch (fermatDrawable.getId()){
             case 2:
                 resId = R.drawable.ic_menu_search;
                 break;
         }
 
-        return resId;
+        return DrawableUtils.resToDrawable(context, resId);
     }
 }

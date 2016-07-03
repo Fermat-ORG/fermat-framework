@@ -1,8 +1,11 @@
 package org.fermat.fermat_dap_android_wallet_asset_user.app_connection;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
+import com.bitdubai.fermat_android_api.utils.DrawableUtils;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 /**
@@ -11,10 +14,10 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 public class WalletAssetUserSearcher extends ResourceSearcher {
 
     @Override
-    public int obtainResDrawable(Context context, int id) {
-            int resId = 0;
+    public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
+        int resId = 0;
 
-            switch (id) {
+        switch (fermatDrawable.getId()){
                 case 1:
                     resId = R.drawable.ic_send;
                     break;
@@ -23,6 +26,6 @@ public class WalletAssetUserSearcher extends ResourceSearcher {
                     break;
             }
 
-            return resId;
+        return DrawableUtils.resToDrawable(context, resId);
         }
 }
