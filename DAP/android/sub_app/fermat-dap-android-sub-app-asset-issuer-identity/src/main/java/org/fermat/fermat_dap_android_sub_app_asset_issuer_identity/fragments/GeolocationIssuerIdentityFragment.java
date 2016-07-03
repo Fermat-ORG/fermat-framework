@@ -60,7 +60,7 @@ public class GeolocationIssuerIdentityFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootLayout = inflater.inflate(R.layout.fragment_dap_identity_issuer_geolocation, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_dap_v2_identity_issuer_geolocation, container, false);
         initViews(rootLayout);
         return rootLayout;
     }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f9f9f9"
+    android:orientation="vertical">
+    <!--android:touchscreenBlocksFocus="false"-->
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="ACCURACY"
+        android:textColor="#536DFE"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/accuracy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:fontFamily="sans-serif-light"
+        android:hint="0 - 1000"
+        android:inputType="number"
+        android:maxLength="6"
+        android:textColor="#666666"
+        android:textSize="18sp"
+        android:theme="@style/Base.V7.Widget.AppCompat.EditText" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="FREQUENCY"
+        android:textColor="#536DFE"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinner_frequency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="#f9f9f9"
+        android:textColor="#000000" />
+    <!--android:backgroundTintMode="add"-->
+    <!--android:foregroundTint="#000000"-->
+
+</LinearLayout>

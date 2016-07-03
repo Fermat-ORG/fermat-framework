@@ -52,6 +52,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.dialogs.DialogSelectCamPic;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.IdentityIssuerDialogCropImage;
@@ -167,7 +168,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_dap_create_issuer_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_dap_v2_create_issuer_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
 
@@ -211,12 +212,12 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
      */
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.dap_issuer_button);
-        mIdentityName = (EditText) layout.findViewById(R.id.dap_issuer_name);
-        mIdentityImage = (ImageView) layout.findViewById(R.id.dap_issuer_image);
+        mIdentityName = (EditText) layout.findViewById(R.id.dap_v2_issuer_point_name);
+        mIdentityImage = (ImageView) layout.findViewById(R.id.dap_v2_issuer_point_image);
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
         createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
+        //createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
 
         mIdentityName.requestFocus();
         registerForContextMenu(mIdentityImage);
@@ -314,6 +315,25 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                 createNewIdentity();
                 appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
 
+            }
+        });
+
+        mIdentityImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonLogger.debug(TAG, "Entrando en mIdentityImage.setOnClickListener");
+                final DialogSelectCamPic Dcamgallery = new DialogSelectCamPic(getActivity(), appSession, null);
+                Dcamgallery.show();
+                Dcamgallery.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_CAM) {
+                            dispatchTakePictureIntent();
+                        } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
+                            loadImageFromGallery();
+                        }
+                    }
+                });
             }
         });
     }
@@ -473,7 +493,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                             public void run() {
                                 try {
                                     moduleManager.createNewIdentityAssetIssuer(brokerNameText,
-                                            (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray, accuracy, frequency);
+                                            (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.no_profile_image)) : brokerImageByteArray, accuracy, frequency);
                                     cleanSessions();
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIdentityAssetIssuerException e) {
@@ -955,12 +975,12 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
 
     private void activateButton() {
         createButton.setEnabled(true);
-        createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+        //createButton.setBackgroundColor(Color.parseColor("#0072BC"));
     }
 
     private void deactivatedButton() {
         createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.GRAY);
+        //createButton.setBackgroundColor(Color.GRAY);
     }
 
     private void verifyFieldGeo() {
