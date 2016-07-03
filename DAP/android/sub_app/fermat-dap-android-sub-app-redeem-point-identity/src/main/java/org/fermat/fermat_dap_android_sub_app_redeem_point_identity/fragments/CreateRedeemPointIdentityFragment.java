@@ -477,10 +477,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                 appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
             }
         });
-
-
-
-
     }
 
     private void publishResult(final int resultKey) {
@@ -588,7 +584,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     public void onBackPressed() {
         super.onBackPressed();
         appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
-
     }
 
     private void loadIdentity() {

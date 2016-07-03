@@ -313,7 +313,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
                 appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
-
             }
         });
     }
@@ -322,7 +321,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
     public void onBackPressed() {
         super.onBackPressed();
         appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
-
     }
 
     private void publishResult(final int resultKey) {

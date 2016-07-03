@@ -413,8 +413,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
     public void onBackPressed() {
         super.onBackPressed();
         appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
-
     }
+
     private void loadIdentity() {
         if (identitySelected.getImage() != null) {
             Bitmap bitmap;
