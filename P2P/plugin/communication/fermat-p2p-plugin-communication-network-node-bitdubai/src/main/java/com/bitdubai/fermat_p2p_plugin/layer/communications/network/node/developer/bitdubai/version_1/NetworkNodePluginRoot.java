@@ -660,9 +660,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
             LOG.info("Requesting registration of the node profile in the node catalog...");
 
-            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+       /*     FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
             AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
-            fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+            fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);*/
 
         }catch (Exception e){
             LOG.error("Can't clean request Register Profile In The Node Catalog: "+e.getMessage());
