@@ -401,7 +401,6 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            //TODO:Nelson aca debemos de colocar el Location de debemos de traerlo del module de la comunidad donde va haber un metodo para eso, preguntale a cardozo como lo hizo el
             List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
@@ -580,7 +579,9 @@ public class BrowserTabFragment
                     actorInformation.getImage(),
                     newConnectionState,
                     actorInformation.getConnectionId(),
-                    actorInformation.getLocation());
+                    actorInformation.getLocation(),
+                    actorInformation.getCountry(),
+                    actorInformation.getPlace());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);
