@@ -16,6 +16,7 @@ public class ChatResourceSearcher extends ResourceSearcher {
     @Override
     public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
         int resId = 0;
+
         switch (fermatDrawable.getId()){
             case 1:
                 resId = R.drawable.cht_help_icon;
@@ -30,6 +31,7 @@ public class ChatResourceSearcher extends ResourceSearcher {
                 resId = R.drawable.cht_notifications;
                 break;
         }
+
         return DrawableUtils.resToDrawable(context, resId);
     }
 }

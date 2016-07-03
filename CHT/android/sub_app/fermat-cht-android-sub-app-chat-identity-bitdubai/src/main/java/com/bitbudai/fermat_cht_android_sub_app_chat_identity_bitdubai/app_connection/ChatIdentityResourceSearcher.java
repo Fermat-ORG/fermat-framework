@@ -16,6 +16,7 @@ public class ChatIdentityResourceSearcher extends ResourceSearcher {
     @Override
     public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
         int resId = 0;
+
         switch (fermatDrawable.getId()){
             case 7:
                 resId = R.drawable.cht_ic_back_buttom;;
@@ -24,6 +25,7 @@ public class ChatIdentityResourceSearcher extends ResourceSearcher {
                 resId = R.drawable.cht_ic_menu_help;
                 break;
         }
+
         return DrawableUtils.resToDrawable(context, resId);
     }
 }
