@@ -347,11 +347,11 @@ public class CashMoneyWalletDao {
         BigDecimal heldFunds = new BigDecimal(0);
         BigDecimal unheldFunds = new BigDecimal(0);
 
-        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
-        DatabaseTableFilter walletFilter, actorFilter;
+        //List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+        //DatabaseTableFilter walletFilter, actorFilter;
         DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
 
-        walletFilter = getEmptyTransactionsTableFilter();
+        /*walletFilter = getEmptyTransactionsTableFilter();
         walletFilter.setColumn(CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
         walletFilter.setValue(walletPublicKey);
         walletFilter.setType(DatabaseFilterType.EQUAL);
@@ -363,8 +363,16 @@ public class CashMoneyWalletDao {
         actorFilter.setType(DatabaseFilterType.EQUAL);
         filtersTable.add(actorFilter);
 
-        table.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
+        table.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);*/
+        table.addStringFilter(
+                CashMoneyWalletDatabaseConstants.TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                walletPublicKey,
+                DatabaseFilterType.EQUAL);
 
+        String transactionTypeString;
+        TransactionType transactionType;
+        String amountString;
+        BigDecimal recordAmount;
         try {
             table.loadToMemory();
             records = table.getRecords();
@@ -374,10 +382,37 @@ public class CashMoneyWalletDao {
         }
 
         for (DatabaseTableRecord record : records) {
-            if (record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME).equals(TransactionType.HOLD.getCode()))
+            /*if (record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME).equals(TransactionType.HOLD.getCode()))
                 heldFunds.add(new BigDecimal(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME)));
             else if (record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME).equals(TransactionType.UNHOLD.getCode()))
-                unheldFunds.add(new BigDecimal(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME)));
+                unheldFunds.add(new BigDecimal(record.getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_AMOUNT_COLUMN_NAME)));*/
+            if(record
+                    .getStringValue(CashMoneyWalletDatabaseConstants.TRANSACTIONS_ACTOR_PUBLIC_KEY_COLUMN_NAME)
+                    .equals(actorPublicKey)){
+                transactionTypeString = record.getStringValue(
+                        CashMoneyWalletDatabaseConstants.TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
+                try {
+                    transactionType = TransactionType.getByCode(transactionTypeString);
+                    amountString = record.getStringValue(
+                            CashMoneyWalletDatabaseConstants
+                                    .TRANSACTIONS_AMOUNT_COLUMN_NAME);
+                    recordAmount = new BigDecimal(amountString);
+                    switch (transactionType){
+                        case HOLD:
+                            heldFunds = heldFunds.add(recordAmount);
+                            break;
+                        case UNHOLD:
+                            unheldFunds = unheldFunds.add(recordAmount);
+                            break;
+                        default:
+                            continue;
+                    }
+                } catch (InvalidParameterException e) {
+                    //Invalid parameter in this record, we'll continue.
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,e);
+                    continue;
+                }
+            }
         }
         heldFunds = heldFunds.subtract(unheldFunds);
 
