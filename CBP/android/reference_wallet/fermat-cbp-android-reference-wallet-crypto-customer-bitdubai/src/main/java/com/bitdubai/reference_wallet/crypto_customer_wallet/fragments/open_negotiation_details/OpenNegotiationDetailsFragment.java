@@ -177,11 +177,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == FragmentsCommons.CANCEL_NEGOTIATION_OPTION_MENU_ID) {
 
