@@ -2958,13 +2958,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Option Menu - Open Negotiation details Activity
         optionsMenu = new OptionsMenu();
-        runtimeActivity.setOptionsMenu(optionsMenu);
 
         // Option Menu Item - Cancel Negotiation
         optionMenuItem = new OptionMenuItem(CANCEL_NEGOTIATION_OPTION_MENU_ID);
         optionMenuItem.setLabel("Cancel Negotiation");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
         optionsMenu.addMenuItem(optionMenuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());

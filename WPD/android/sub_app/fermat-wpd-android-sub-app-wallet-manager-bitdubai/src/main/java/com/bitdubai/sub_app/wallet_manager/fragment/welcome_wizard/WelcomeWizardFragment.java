@@ -204,7 +204,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                     public void run() {
                         saveSettings(!checkbox.isChecked());
                         if(checkbox.isChecked()){
-                            getRuntimeManager().changeStartActivity(Activities.CCP_DESKTOP.getCode());
+                            getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),Activities.CCP_DESKTOP.getCode());
                         }
                     }
                 }).start();
