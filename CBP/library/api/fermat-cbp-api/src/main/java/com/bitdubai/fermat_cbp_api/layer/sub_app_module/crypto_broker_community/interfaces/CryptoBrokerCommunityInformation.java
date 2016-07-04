@@ -60,5 +60,18 @@ public interface CryptoBrokerCommunityInformation extends Serializable {
      */
     Location getLocation();
 
+    /**
+     * The method <code>getCountry</code> returns the Country name of the actor's location
+     *
+     * @return The Country name
+     */
+    String getCountry();
+
+    /**
+     * The method <code>getPlace</code> returns the City or County name of the actor's location
+     *
+     * @return The City or County name
+     */
+    String getPlace();
 }
 

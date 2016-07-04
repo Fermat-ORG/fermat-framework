@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
@@ -42,17 +45,20 @@ public class CryptoBrokerIdentityModuleManagerImpl
     private CryptoBrokerIdentityManager identityManager;
     private CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot;
     private PluginVersionReference      pluginVersionReference;
+    private final LocationManager locationManager;
 
     public CryptoBrokerIdentityModuleManagerImpl(
             CryptoBrokerIdentityManager identityManager,
             PluginFileSystem            pluginFileSystem,
             UUID                        pluginId,
-            CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot
+            CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot,
+            LocationManager locationManager
     ){
         super(pluginFileSystem, pluginId);
         this.identityManager        = identityManager;
         this.pluginRoot           = pluginRoot;
         this.pluginVersionReference = pluginVersionReference;
+        this.locationManager = locationManager;
     }
 
     @Override
@@ -79,12 +85,9 @@ public class CryptoBrokerIdentityModuleManagerImpl
     public void publishIdentity(String publicKey) throws CantPublishCryptoBrokerException, CryptoBrokerNotFoundException {
 
         try {
-
             this.identityManager.publishIdentity(publicKey);
-
         } catch (CantPublishIdentityException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            
             throw new CantPublishCryptoBrokerException(e, "", "Problem publishing the identity.");
         } catch (IdentityNotFoundException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -154,5 +157,16 @@ public class CryptoBrokerIdentityModuleManagerImpl
     public int[] getMenuNotifications() {
         return new int[0];
     }
+
+    /**
+     * Through the method <code>getLocation</code> we can get the location coordinates of user.
+     *
+     * @return a new instance of the settings manager for the specified fermat settings object.
+     */
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
+    }
+
 
 }

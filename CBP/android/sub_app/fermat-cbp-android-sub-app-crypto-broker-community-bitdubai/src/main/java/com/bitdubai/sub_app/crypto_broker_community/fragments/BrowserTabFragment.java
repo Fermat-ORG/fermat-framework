@@ -94,6 +94,8 @@ public class BrowserTabFragment
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
 
+    CryptoBrokerCommunitySettings appSettings;
+
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
     }
@@ -114,10 +116,18 @@ public class BrowserTabFragment
         //Check if a default identity is configured
         try {
             identity = moduleManager.getSelectedActorIdentity();
+            if(identity == null)
+                launchActorCreationDialog = true;   //There are no identities in device
+            else {
+                if (appSettings.getLastSelectedIdentityPublicKey() == null)
+                    launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            }
         } catch (CantGetSelectedActorIdentityException e) {
-            launchActorCreationDialog = true;  //There are no identities in device
+            e.printStackTrace();
+//            launchActorCreationDialog = true;  //There are no identities in device
         } catch (ActorIdentityNotSelectedException e) {
-            launchListIdentitiesDialog = true; //There are identities in device, but none selected
+            e.printStackTrace();
+//            launchListIdentitiesDialog = true; //There are identities in device, but none selected
         }
     }
 
@@ -275,7 +285,7 @@ public class BrowserTabFragment
     private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
         final ArrayList<CryptoBrokerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoBrokerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }
@@ -294,7 +304,7 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_broker)
                             .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -391,7 +401,6 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            //TODO:Nelson aca debemos de colocar el Location de debemos de traerlo del module de la comunidad donde va haber un metodo para eso, preguntale a cardozo como lo hizo el
             List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
@@ -442,7 +451,6 @@ public class BrowserTabFragment
      * Obtain Settings or create new Settings if first time opening subApp
      */
     private void loadSettings() {
-        CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -475,21 +483,29 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
-                        .setIsCheckEnabled(true)
+                        .setIsCheckEnabled(false)
                         .build();
 
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
-
                         try {
                             identity = moduleManager.getSelectedActorIdentity();
+                            if(identity == null)
+                                getActivity().onBackPressed();
+                            else {
+                                invalidate();
+                            }
+//                        } catch (CantGetSelectedActorIdentityException e) {
+//                            e.printStackTrace();
+//                        } catch (ActorIdentityNotSelectedException e) {
+//                            e.printStackTrace();
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
+//                        invalidate();
+//                        onRefresh();
                     }
                 });
 
@@ -500,16 +516,21 @@ public class BrowserTabFragment
                 listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
+
+                        if(appSettings.getLastSelectedIdentityPublicKey() == null)
+                            getActivity().onBackPressed();
+                        else {
+                            invalidate();
+                        }
+//                        onRefresh();
                     }
                 });
 
                 listIdentitiesDialog.show();
 
-            } else {
-                invalidate();
-                onRefresh();
+//            } else {
+//                invalidate();
+//                onRefresh();
             }
 
         } catch (Exception ex) {
@@ -558,7 +579,9 @@ public class BrowserTabFragment
                     actorInformation.getImage(),
                     newConnectionState,
                     actorInformation.getConnectionId(),
-                    actorInformation.getLocation());
+                    actorInformation.getLocation(),
+                    actorInformation.getCountry(),
+                    actorInformation.getPlace());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);

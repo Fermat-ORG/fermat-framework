@@ -141,7 +141,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
             CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true, accuracy, frequency);
             cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser, accuracy, frequency);
             //We will expose this identity
-            exposeIdentity(cryptoCustomer);
+//            exposeIdentity(cryptoCustomer);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_customer_creado");
 
             return cryptoCustomer;

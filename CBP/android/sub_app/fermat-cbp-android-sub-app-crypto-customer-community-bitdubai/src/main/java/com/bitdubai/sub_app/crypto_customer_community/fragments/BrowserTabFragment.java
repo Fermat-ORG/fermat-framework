@@ -89,6 +89,8 @@ public class BrowserTabFragment
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
 
+    //Obtain Settings or create new Settings if first time opening subApp
+    CryptoCustomerCommunitySettings appSettings;
 
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
@@ -110,16 +112,23 @@ public class BrowserTabFragment
         //Check if a default identity is configured
         try {
             identity = moduleManager.getSelectedActorIdentity();
+            if(identity == null)
+                launchActorCreationDialog = true;   //There are no identities in device
+            else {
+                if (appSettings.getLastSelectedIdentityPublicKey() == null)
+                    launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            }
+//
         } catch (CantGetSelectedActorIdentityException e) {
-            launchActorCreationDialog = true;   //There are no identities in device
+            e.printStackTrace();
+////            launchActorCreationDialog = true;   //There are no identities in device
         } catch (ActorIdentityNotSelectedException e) {
-            launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            e.printStackTrace();
+////            launchListIdentitiesDialog = true;  //There are identities in device, but none selected
         }
     }
 
     private void loadSettings() {
-        //Obtain Settings or create new Settings if first time opening subApp
-        CryptoCustomerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -268,7 +277,7 @@ public class BrowserTabFragment
     private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
         final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoCustomerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }
@@ -287,7 +296,7 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -411,36 +420,50 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_ccc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_ccc_launch_action_creation_name_right)
-                        .setIsCheckEnabled(true)
+                        .setIsCheckEnabled(false)
                         .build();
 
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
+                        try {
+                            identity = moduleManager.getSelectedActorIdentity();
+                            if(identity == null)
+                                getActivity().onBackPressed();
+                            else {
+                                invalidate();
+                            }
+//                        } catch (CantGetSelectedActorIdentityException e) {
+//                            e.printStackTrace();
+//                        } catch (ActorIdentityNotSelectedException e) {
+//                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+//                        invalidate();
+//                        onRefresh();
                     }
                 });
-
                 presentationDialog.show();
-
             } else if (launchListIdentitiesDialog) {
                 ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
                 listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
+
+                        if(appSettings.getLastSelectedIdentityPublicKey() == null)
+                            getActivity().onBackPressed();
+                        else {
+                            invalidate();
+                        }
+//                        onRefresh();
                     }
                 });
-
                 listIdentitiesDialog.show();
-
-            } else {
-                invalidate();
-                onRefresh();
+//            } else {
+//                invalidate();
+//                onRefresh();
             }
-
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();

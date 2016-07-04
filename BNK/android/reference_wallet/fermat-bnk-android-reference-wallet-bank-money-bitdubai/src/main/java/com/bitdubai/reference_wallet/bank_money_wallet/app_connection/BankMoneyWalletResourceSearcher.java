@@ -13,22 +13,29 @@ import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConst
 public class BankMoneyWalletResourceSearcher extends ResourceSearcher {
 
     @Override
-    public int obtainResDrawable(Context context, int id) {
+    public int obtainResDrawable(Context context,int id){
+        int res = 0;
         switch (id) {
             case ReferenceWalletConstants.ADD_ACCOUNT_ACTION:
-                return R.drawable.bw_add_icon_action_bar;
+                res = R.drawable.bw_add_icon_action_bar;
+                break;
 
             case ReferenceWalletConstants.EDIT_ACCOUNT_ACTION:
-                return R.drawable.bw_ic_action_edit;
+                res = R.drawable.bw_ic_action_edit;
+                break;
 
             case ReferenceWalletConstants.SAVE_ACTION:
-                return R.drawable.bw_ic_action_edit;
+                res = R.drawable.bw_ic_action_edit;
+                break;
 
             case ReferenceWalletConstants.HELP_ACTION:
-                return R.drawable.bw_help_icon_action_bar;
+                res = R.drawable.bw_help_icon_action_bar;
+                break;
 
             default:
-                return 0;
+                res = 0;
+                break;
         }
+        return res;
     }
 }

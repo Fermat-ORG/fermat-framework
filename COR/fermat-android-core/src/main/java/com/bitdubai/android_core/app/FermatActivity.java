@@ -814,10 +814,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 FermatView fermatView = tab.getFermatView();
                 if(fermatView!=null) {
                     //ver esto
-                    if(fermatView.getOwner()!=null) {
-                        View view = ResourceLocationSearcherHelper.obtainView(this, fermatView.getId(), fermatView.getSourceLocation(), fermatView.getOwner().getOwnerAppPublicKey());
-                        tabsViews[i] = view;
-                    }
+                    View view = ResourceLocationSearcherHelper.obtainView(this, fermatView);
+                    tabsViews[i] = view;
+
                 }
             }
             tabLayout.setVisibility(View.VISIBLE);
@@ -851,6 +850,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
             adapter.setStartFragmentPosition(tabStrip.getStartItem());
             pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
             tabLayout.setupWithViewPager(pagertabs);
+
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                if(tabsViews[i]!=null){
+                    tabLayout.getTabAt(i).setCustomView(tabsViews[i]);//.setIcon(ResourceLocationSearcherHelper.obtainDrawable(this,tabsDrawables[i]));
+                }
+            }
 
             // fragment focus
             pagertabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -2194,8 +2199,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
     @Override
-    public View obtainClassView(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainView(this, id, sourceLocation, appOwnerPublicKey);
+    public View obtainClassView(FermatView fermatView) {
+        return ResourceLocationSearcherHelper.obtainView(this, fermatView);
     }
 
     @Override
