@@ -113,7 +113,7 @@ public class CryptoCustomerCommunityManager
 
             final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
-            search.addConnectionState(ConnectionState.CONNECTED);
+//            search.addConnectionState(ConnectionState.CONNECTED);
 
             actorConnections = search.getResult(max, offset);
 
