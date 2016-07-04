@@ -785,6 +785,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             conn.setRequestProperty("Content-Length", Integer.toString(formParameters.length()));
             conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Encoding", "gzip");
 
             OutputStream os = conn.getOutputStream();
             os.write(formParameters.getBytes());
