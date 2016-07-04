@@ -63,7 +63,7 @@ public class DateTimeZone {
             Date dateTimeToday = UniversalTime.getUTC();
             SimpleDateFormat df2 = new SimpleDateFormat(this.formDate);
             dateText = df2.format(dateTimeToday);
-            
+
         } catch (CantGetUTCException e){
             System.out.print("CBP-API-DateTimeZone: ERROR GET DATE TODAY IN UTC");
         }
