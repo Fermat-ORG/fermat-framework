@@ -15,6 +15,7 @@ import java.util.UUID;
 public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
+    private boolean isWizardStartActivity = true;
 
     public boolean isHomeTutorialDialogEnabled() {
         return isHomeTutorialDialogEnabled;
@@ -70,5 +71,13 @@ public class CryptoBrokerWalletPreferenceSettings implements WalletSettings,Seri
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
         isHomeTutorialDialogEnabled=b;
+    }
+
+    public void setIsWizardStartActivity(boolean isWizardStartActivity) {
+        this.isWizardStartActivity = isWizardStartActivity;
+    }
+
+    public boolean isWizardStartActivity() {
+        return isWizardStartActivity;
     }
 }

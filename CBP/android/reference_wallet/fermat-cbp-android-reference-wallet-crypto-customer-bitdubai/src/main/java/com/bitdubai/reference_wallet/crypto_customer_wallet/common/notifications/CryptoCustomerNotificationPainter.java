@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by guillermo on 04/03/16.
  */
-public class CryptoCustomerNotificationPainter implements NotificationPainter {
+public class CryptoCustomerNotificationPainter extends NotificationPainter {
 
     private RemoteViews remoteViews;
     private String title;

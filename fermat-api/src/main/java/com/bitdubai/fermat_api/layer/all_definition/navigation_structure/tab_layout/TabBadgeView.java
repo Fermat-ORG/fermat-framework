@@ -4,10 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatV
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.drawables.Badge;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.06.29..
  */
-public class TabBadgeView extends FermatView {
+public class TabBadgeView extends FermatView implements Serializable {
 
     private String title;
     private Badge badge;

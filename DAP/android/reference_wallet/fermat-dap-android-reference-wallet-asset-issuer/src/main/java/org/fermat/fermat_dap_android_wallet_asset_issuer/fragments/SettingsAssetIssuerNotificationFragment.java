@@ -93,7 +93,7 @@ public class SettingsAssetIssuerNotificationFragment extends FermatPreferenceFra
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

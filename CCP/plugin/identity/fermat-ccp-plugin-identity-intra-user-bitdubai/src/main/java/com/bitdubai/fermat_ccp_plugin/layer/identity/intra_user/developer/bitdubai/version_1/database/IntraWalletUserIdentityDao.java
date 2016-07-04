@@ -24,7 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -130,7 +130,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser (String alias, String phrase,String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantCreateNewDeveloperException {
+    public void createNewUser (String alias, String phrase,String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage, Long accuracy, GeoFrequency frecuency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists (alias)) {
@@ -170,7 +170,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
 
-    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantUpdateIntraUserIdentityException {
+    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage, Long accuracy, GeoFrequency frecuency) throws CantUpdateIntraUserIdentityException {
 
         try {
 
@@ -319,10 +319,10 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
     private com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity buildIdentity(DatabaseTableRecord record) throws CantGetIntraWalletUserIdentityPrivateKeyException, CantGetIntraWalletUserIdentityProfileImageException {
 
-        Frecuency frecuency = Frecuency.NORMAL;
+        GeoFrequency frecuency = GeoFrequency.NORMAL;
 
         try{
-            frecuency = Frecuency.getByCode(record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN));
+            frecuency = GeoFrequency.getByCode(record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN));
         }
         catch(InvalidParameterException e)
         {

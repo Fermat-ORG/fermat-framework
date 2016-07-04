@@ -42,6 +42,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_of
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.event_handler.CustomerAckOfflineMerchandiseRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeCustomerAckOfflineMerchandiseBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.structure.CustomerAckOfflineMerchandiseMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.structure.CustomerAckOfflineMerchandiseMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.structure.CustomerAckOfflineMerchandiseTransactionManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 
@@ -96,6 +98,16 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
     public CustomerAckOfflineMerchandisePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
+
+    /**
+     * Represents the plugin processor agent
+     */
+    CustomerAckOfflineMerchandiseMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
@@ -218,7 +230,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             /**
              * Init monitor Agent
              */
-            CustomerAckOfflineMerchandiseMonitorAgent customerAckOfflineMerchandiseMonitorAgent = new CustomerAckOfflineMerchandiseMonitorAgent(
+            /*CustomerAckOfflineMerchandiseMonitorAgent customerAckOfflineMerchandiseMonitorAgent = new CustomerAckOfflineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     this,
@@ -227,7 +239,22 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,customerBrokerPurchaseNegotiationManager);
-            customerAckOfflineMerchandiseMonitorAgent.start();
+            customerAckOfflineMerchandiseMonitorAgent.start();*/
+
+            //New Agent Starting
+            processorAgent = new CustomerAckOfflineMerchandiseMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    eventManager,
+                    customerAckOfflineMerchandiseBusinessTransactionDao,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    customerBrokerPurchaseNegotiationManager
+            );
+            processorAgent.start();
 
             /**
              * Initialize plugin manager
@@ -304,6 +331,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
     @Override
     public void stop() {
         try {
+            processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

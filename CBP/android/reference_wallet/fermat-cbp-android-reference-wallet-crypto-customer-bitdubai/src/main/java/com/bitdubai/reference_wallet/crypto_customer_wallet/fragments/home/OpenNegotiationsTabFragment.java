@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
@@ -70,6 +68,15 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            CryptoCustomerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            if (settings.isWizardStartActivity()) {
+                changeStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+
+                settings.setIsWizardStartActivity(false);
+                moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+            }
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

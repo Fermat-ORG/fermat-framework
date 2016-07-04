@@ -7,15 +7,23 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.FermatExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionManager;
@@ -24,6 +32,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPrefer
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletModuleManagerImpl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -99,13 +108,16 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
 
     /*CER TEST METHODS*/
     private void testCERPlatform() {
-        System.out.println("CASHMONEYWALLETMODULE - TESTCERPLATFORM START");
+        System.out.println("CASHMONEYWALLETMODULE - CERTEST START");
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
 
                 try {
+
+                    Thread.sleep(15000);
+
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 
@@ -127,29 +139,58 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
                     UUID bter = null;
                     UUID btce = null;
                     UUID ccex = null;
+                    UUID fermatEx = null;
 
 
+                    System.out.println("CERTEST - ---Listing ALL CER Providers and their supported currencies---");
+                    for (Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()) {
+                        System.out.println("CERTEST - Found Provider! ID: " + provider.getKey() + " Name: " + provider.getValue());
 
-//
+                        for (CurrencyPair p : providerFilter.getProviderReference(provider.getKey()).getSupportedCurrencyPairs())
+                            System.out.println("CERTEST -     Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+
+                        if (provider.getValue().toString().equals("BitcoinVenezuela"))
+                            bitcoinVzlaKey = provider.getKey();
+                        if (provider.getValue().toString().equals("EuropeanCentralBank"))
+                            europCentBankKey = provider.getKey();
+                        if (provider.getValue().toString().equals("Yahoo"))
+                            yahooKey = provider.getKey();
+                        if (provider.getValue().toString().equals("Bitfinex"))
+                            bitfinex = provider.getKey();
+                        if (provider.getValue().toString().equals("Bter"))
+                            bter = provider.getKey();
+                        if (provider.getValue().toString().equals("Btce"))
+                            btce = provider.getKey();
+                        if (provider.getValue().toString().equals("Ccex"))
+                            ccex = provider.getKey();
+                        if (provider.getValue().toString().equals("FermatExchange"))
+                            fermatEx = provider.getKey();
+                    }
+                    System.out.println(" ");
+
 //
 //                        try{
 //                            System.out.println("CERTEST - FermEx ---Getting all ExchangeRates from Fermat Exchange Provider");
-//                            CurrencyExchangeRateProviderManager feProvider = providerFilter.getProviderReference(fermatEx);
+//                            FermatExchangeRateProviderManager feProvider = (FermatExchangeRateProviderManager) providerFilter.getProviderReference(fermatEx);
 //                            for(CurrencyPair p : feProvider.getSupportedCurrencyPairs()){
 //
 //                                System.out.println("CERTEST - FermEx    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
 //                                System.out.println("CERTEST - FermEx    Current Exchange: " + feProvider.getCurrentExchangeRate(p).getPurchasePrice());
 //                                System.out.println("CERTEST - FermEx    Exchange for: " + formatter.format(oneYearAgo.getTime()) + " is: " + feProvider.getExchangeRateFromDate(p, oneYearAgo).getPurchasePrice());
 //                                System.out.println("CERTEST - FermEx    Getting daily exchange rates for period: " + formatter.format(startTenDaysAgo.getTime()) + " till " + formatter.format(endToday.getTime()));
-//                                for( ExchangeRate exr : feProvider.getDailyExchangeRatesForPeriod(p, startTenDaysAgo, endToday))
-//                                {
-//                                    System.out.println("CERTEST - FermEx  Day:" + DateHelper.getDateStringFromTimestamp(exr.getTimestamp()) + " Purchase: " + exr.getPurchasePrice() + " Sale: " + exr.getSalePrice());
-//                                }
+//                                //for( ExchangeRate exr : feProvider.getDailyExchangeRatesForPeriod(p, startTenDaysAgo, endToday))
+//                                //{
+//                                //    System.out.println("CERTEST - FermEx  Day:" + DateHelper.getDateStringFromTimestamp(exr.getTimestamp()) + " Purchase: " + exr.getPurchasePrice() + " Sale: " + exr.getSalePrice());
+//                                //}
+//
+//                                System.out.println("CERTEST - FermEx  - Calling postFermatExchangeData():");
+//                                String resp = feProvider.postFermatExchangeData(new CurrencyPairImpl(CryptoCurrency.FERMAT, FiatCurrency.US_DOLLAR), new BigDecimal(10), new BigDecimal(5));
+//                                System.out.println("CERTEST - FermEx    Response was:" + resp);
+//
 //                            }
 //                        }catch (Exception e) {
 //                            System.out.println("CERTEST - FermEx - Exception!!! " + e.toString());
 //                        }
-//
 
 
 

@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.drawables.Badge;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchViewOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
@@ -1169,14 +1171,17 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Issuer Identity");
-        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setColor("#1B1B1B");
         runtimeTitleBar.setTitleColor("#ffffff");
+
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setIsTitleTextStatic(true);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
+        statusBar.setColor("#1B1B1B");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -1211,13 +1216,13 @@ public class SubAppAppsGenerator {
 //        runtimeActivity.setBackgroundColor("#F9F9F9");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
+        statusBar.setColor("#1B1B1B");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Geolocation");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setColor("#1B1B1B");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setLabelSize(18);
@@ -4142,15 +4147,15 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("CHATS");
 
         //Badge in the tab
-//        Badge fermatDrawable = new Badge("ic_badge");
-//        fermatDrawable.setTestSize(32);
-//        fermatDrawable.setNumber(1);
-//        runtimeTab.setFermatDrawable(fermatDrawable);
+        Badge fermatDrawable = new Badge("ic_badge");
+        fermatDrawable.setTestSize(32);
+        fermatDrawable.setNumber(1);
+        runtimeTab.setFermatDrawable(fermatDrawable);
 
-//        TabBadgeView tabBadgeView = new TabBadgeView();
-//        tabBadgeView.setTitle("CHATS");
-//        tabBadgeView.setBadge(fermatDrawable);
-//        runtimeTab.setFermatView(tabBadgeView);
+        TabBadgeView tabBadgeView = new TabBadgeView();
+        tabBadgeView.setTitle("CHATS");
+        tabBadgeView.setBadge(fermatDrawable);
+        runtimeTab.setFermatView(tabBadgeView);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

@@ -2,7 +2,7 @@ apply plugin: 'java'
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
     compile project(':fermat-ccp-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-pip-api')
 }

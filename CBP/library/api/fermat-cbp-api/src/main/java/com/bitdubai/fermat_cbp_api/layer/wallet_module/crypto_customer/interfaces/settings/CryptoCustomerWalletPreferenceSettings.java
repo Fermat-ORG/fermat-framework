@@ -20,6 +20,7 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings, S
     private CryptoCustomerWalletAssociatedSetting bitcoinWallet;
     private List<CryptoCustomerWalletProviderSetting> providers;
     private boolean isWalletConfigured;
+    private boolean isWizardStartActivity = true;
 
     public boolean isHomeTutorialDialogEnabled() {return isHomeTutorialDialogEnabled;}
 
@@ -93,5 +94,13 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings, S
 
     public void setSelectedBitcoinWallet(CryptoCustomerWalletAssociatedSetting walletSetting) {
         this.bitcoinWallet = walletSetting;
+    }
+
+    public boolean isWizardStartActivity() {
+        return isWizardStartActivity;
+    }
+
+    public void setIsWizardStartActivity(boolean isWizardStartActivity) {
+        this.isWizardStartActivity = isWizardStartActivity;
     }
 }

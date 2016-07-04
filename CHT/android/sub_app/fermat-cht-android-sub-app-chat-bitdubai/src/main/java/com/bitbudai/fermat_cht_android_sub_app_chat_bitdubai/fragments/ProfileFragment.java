@@ -184,13 +184,6 @@ public class ProfileFragment extends AbstractFermatFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        // Inflate the menu items
-        //inflater.inflate(R.menu.contact_detail_menu, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         return super.onOptionsItemSelected(item);

@@ -310,8 +310,4 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
     // annotation tells Android lint that they are properly guarded so they won't run on older OS
     // versions and can be ignored by lint.
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
 }

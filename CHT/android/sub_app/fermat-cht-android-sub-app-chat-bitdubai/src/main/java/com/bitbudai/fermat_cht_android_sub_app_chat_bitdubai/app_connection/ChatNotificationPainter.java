@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by miguel payarez on 20/02/16.
  */
-public class ChatNotificationPainter  implements NotificationPainter{
+public class ChatNotificationPainter  extends NotificationPainter{
 
 
 

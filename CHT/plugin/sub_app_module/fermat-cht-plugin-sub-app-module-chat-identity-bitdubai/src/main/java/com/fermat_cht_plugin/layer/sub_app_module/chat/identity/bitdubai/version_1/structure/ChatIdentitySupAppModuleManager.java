@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -57,7 +57,7 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
     }
 
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency) throws CantCreateNewChatIdentityException {
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, GeoFrequency frecuency) throws CantCreateNewChatIdentityException {
         chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city, connectionState, accurancy, frecuency);
     }
 
@@ -70,7 +70,7 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency) throws CantUpdateChatIdentityException {
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, GeoFrequency frecuency) throws CantUpdateChatIdentityException {
         chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState, accurancy, frecuency);
     }
 
@@ -112,7 +112,7 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available", 0, Frecuency.NONE);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available", 0, GeoFrequency.NONE);
     }
 
     @Override

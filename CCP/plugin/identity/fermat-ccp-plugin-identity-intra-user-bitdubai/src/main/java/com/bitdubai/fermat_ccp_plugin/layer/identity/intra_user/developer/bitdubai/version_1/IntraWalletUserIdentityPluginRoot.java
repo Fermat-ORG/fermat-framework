@@ -29,7 +29,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
@@ -152,7 +152,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
      * @throws CantCreateNewIntraWalletUserException
      */
     @Override
-    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantCreateNewIntraWalletUserException {
+    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, GeoFrequency frecuency) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -179,7 +179,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
-    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage, Long accuracy, Frecuency frecuency ) throws CantCreateNewIntraWalletUserException {
+    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage, Long accuracy, GeoFrequency frecuency ) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -220,7 +220,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, GeoFrequency frecuency) throws CantUpdateIdentityException {
             try {
                 intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage, accuracy, frecuency);
                 updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
