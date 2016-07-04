@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTabStrip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
  * Update by Miguel Payarez on 2016.04.08
  */
 
-public class TabStrip implements FermatTabStrip {
+public class TabStrip implements FermatTabStrip,Serializable {
 
     /**
      * WIZARD

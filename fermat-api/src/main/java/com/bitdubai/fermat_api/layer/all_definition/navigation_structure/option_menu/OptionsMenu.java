@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.07.17..
  */
 
-public class OptionsMenu implements FermatMainMenu<OptionMenuItem> {
+public class OptionsMenu implements FermatMainMenu<OptionMenuItem>,Serializable {
 
     /**
      * OptionsMenu class member variables

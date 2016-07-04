@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by miguel payarez on 20/02/16.
  */
-public class FanWalletNotificationPainter implements NotificationPainter{
+public class FanWalletNotificationPainter extends NotificationPainter{
 
 
 

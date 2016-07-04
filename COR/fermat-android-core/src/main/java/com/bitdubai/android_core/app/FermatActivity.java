@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -876,6 +877,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
             });
         } catch (InvalidParameterException e) {
             Log.e(TAG, "Invalid parameter, please check your runtime");
+            e.printStackTrace();
+            handleExceptionAndRestart();
+        }catch (Resources.NotFoundException e){
+            Log.e(TAG,"Resource not found exception, "+e.getMessage());
             e.printStackTrace();
             handleExceptionAndRestart();
         } catch (Exception e){
