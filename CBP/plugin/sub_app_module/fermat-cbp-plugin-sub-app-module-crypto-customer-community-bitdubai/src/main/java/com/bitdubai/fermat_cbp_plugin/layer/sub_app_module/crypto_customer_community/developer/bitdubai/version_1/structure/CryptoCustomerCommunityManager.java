@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -16,7 +17,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
@@ -377,8 +377,10 @@ public class CryptoCustomerCommunityManager
         if (lastSelectedIdentityPublicKey != null) {
 
             for (CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
-                if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey)) {
                     selectedIdentity = constructProfileCustomer(identity);
+                    break;
+                }
             }
 
             if (selectedIdentity == null)
@@ -421,6 +423,7 @@ public class CryptoCustomerCommunityManager
                     }
                 }
             }.start();
+
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
@@ -435,9 +438,10 @@ public class CryptoCustomerCommunityManager
             appSettings = new CryptoCustomerCommunitySettings();
         }
 
-
         //If appSettings exist
-        appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
+        if (createdPublicKey != null)
+            appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
+
         try {
             persistSettings(this.subAppPublicKey, appSettings);
         } catch (CantPersistSettingsException e) {

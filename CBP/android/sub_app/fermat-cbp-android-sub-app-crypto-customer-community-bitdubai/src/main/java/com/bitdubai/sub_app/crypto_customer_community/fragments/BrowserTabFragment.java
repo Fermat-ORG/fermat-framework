@@ -115,14 +115,15 @@ public class BrowserTabFragment
             identity = moduleManager.getSelectedActorIdentity();
             if (identity == null) {
                 List<CryptoCustomerCommunitySelectableIdentity> identities = moduleManager.listSelectableIdentities();
-                if(identities.isEmpty())
+                if (identities.isEmpty())
                     launchActorCreationDialog = true; //There are no identities in device
                 else
                     launchListIdentitiesDialog = true; //There are identities in device, but none selected
             }
 
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException | CantListIdentitiesToSelectException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -453,6 +454,7 @@ public class BrowserTabFragment
             } else {
                 onRefresh();
             }
+
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
