@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
@@ -97,6 +99,9 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.TOKENLY,layer = Layers.IDENTITY, plugin = Plugins.TOKENLY_FAN)
     private TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     public static final String FANATIC_PROFILE_IMAGE_FILE_NAME = "fanaticIdentityProfileImage";
@@ -126,6 +131,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
+
             identityFanaticManager = new IdentityFanaticManagerImpl(
                     this.logManager,
                     this.pluginDatabaseSystem,
@@ -133,10 +139,14 @@ public class FanaticPluginRoot extends AbstractPlugin implements
                     this.pluginId,
                     this.deviceUserManager,
                     this.fanManager,
-                    this.tokenlyFanIdentityManager);
+                    this.tokenlyFanIdentityManager,
+                    this.locationManager);
 
             //Initialize the fan identity event actions.
             initializeFanIdentityEventActions();
+
+            //Set the FanIdentityEventActions to Plugin manager
+            identityFanaticManager.setFanIdentityEventActions(fanIdentityEventActions);
 
             //Initialize event handlers
             FermatEventListener updatesListener = eventManager.getNewListener(
@@ -192,7 +202,8 @@ public class FanaticPluginRoot extends AbstractPlugin implements
                 artistExposingData.add(new FanExposingData(
                         fan.getPublicKey(),
                         fan.getAlias(),
-                        extraDataString
+                        extraDataString,
+                        locationManager.getLocation()
                 ));
             }
             fanManager.exposeIdentities(artistExposingData);
@@ -200,10 +211,12 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         } catch (CantExposeIdentitiesException e) {
             e.printStackTrace();
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
         }
     }
 
-    private void testCreateArtist(){
+    /*private void testCreateArtist(){
         String alias = "perezilla";
         byte[] image = new byte[0];
         String password = "milestone";
@@ -255,7 +268,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
 
-    }
+    }*/
 
 
     @Override

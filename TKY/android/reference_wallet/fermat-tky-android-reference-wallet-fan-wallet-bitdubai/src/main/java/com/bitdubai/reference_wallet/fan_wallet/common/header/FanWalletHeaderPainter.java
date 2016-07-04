@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -26,18 +27,18 @@ import java.lang.ref.WeakReference;
 public class FanWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "FanrWalletHeader";
 
-    private final FanWalletSessionReferenceApp session;
+    private final ReferenceAppFermatSession session;
     private final WeakReference<Context> activity;
     private ErrorManager errorManager;
     private FanWalletModule moduleManager;
 
 
-    public FanWalletHeaderPainter(Context activity, FanWalletSessionReferenceApp fullyLoadedSession) {
+    public FanWalletHeaderPainter(Context activity, ReferenceAppFermatSession fullyLoadedSession) {
         this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 
         try {
-            moduleManager = session.getModuleManager();
+            moduleManager = (FanWalletModule)session.getModuleManager();
             errorManager = session.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)

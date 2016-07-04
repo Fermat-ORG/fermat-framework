@@ -7,4 +7,11 @@
     <string name="fan_name">Fan name</string>
     <string name="identity_img">identity_image</string>
 
+    <!--Dialog Help - Init-->
+    <string name="art_fan_identity_welcome_subTitle">Welcome to TKY Fan Identity.</string>
+    <string name="art_fan_identity_welcome_footer">Welcome to TKY Fan Identity.</string>
+    <string name="art_fan_identity_welcome_body">"This app helps you create your Fermat Fan identity. Its main feature include:\n"
+                            "* Managing your identity.\n"
+                            "* Link your Tokenly identity to a fermat ART identity.</string>
+    <!--Dialog Help - End-->
 </resources>

@@ -22,10 +22,10 @@ public class ArtistCustomeP2PCompletedConnectionRegistrationEventHandler impleme
     @Override
     public void handleEvent(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) throws FermatException {
         if(artistActorNetworkServicePluginRoot.getStatus() == ServiceStatus.STARTED){
-            if(artistActorNetworkServicePluginRoot.getNetworkServiceProfile() != null){
+            if(artistActorNetworkServicePluginRoot.getProfile() != null){
                 if(completeComponentRegistrationNotificationEvent != null){
                     if(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && completeComponentRegistrationNotificationEvent.getSource() == EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN){
-                        artistActorNetworkServicePluginRoot.runExposeIdentityThread();
+                        //artistActorNetworkServicePluginRoot.runExposeIdentityThread();
                     }
                 }else{
                     System.out.println("######################\nwrong event");
@@ -34,7 +34,7 @@ public class ArtistCustomeP2PCompletedConnectionRegistrationEventHandler impleme
                 System.out.println("#####################################\nNetwork Service Profile Null");
             }
         }else{
-            System.out.println("####################################\n"+artistActorNetworkServicePluginRoot.getNetworkServiceProfile().getName()+" no started");
+            System.out.println("####################################\n"+artistActorNetworkServicePluginRoot.getProfile().getNetworkServiceType()+" no started");
         }
     }
 }

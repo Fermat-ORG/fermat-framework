@@ -33,8 +33,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-import com.customviews.spinner_wheel.R;
 
+import com.customviews.spinner_wheel.R;
 
 /**
  * Spinner wheel vertical view.

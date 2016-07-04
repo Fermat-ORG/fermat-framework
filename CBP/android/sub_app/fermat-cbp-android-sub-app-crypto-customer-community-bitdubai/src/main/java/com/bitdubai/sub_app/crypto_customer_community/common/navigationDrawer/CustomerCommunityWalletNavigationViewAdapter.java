@@ -12,6 +12,7 @@ import com.bitdubai.sub_app.crypto_customer_community.R;
  *
  * @since 18/12/2015
  */
+@Deprecated
 public class CustomerCommunityWalletNavigationViewAdapter extends FermatAdapter<MenuItem, NavigationItemMenuViewHolder> {
 
     protected CustomerCommunityWalletNavigationViewAdapter(Context context) {
@@ -78,7 +79,7 @@ public class CustomerCommunityWalletNavigationViewAdapter extends FermatAdapter<
                 holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_friends_selected);
                 break;
             case 1:
-                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_connections_selected);
+                holder.getIcon().setImageResource(R.drawable.ccc_ic_nav_connections_selected);
                 break;
             case 2:
                 holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_notifications_selected);

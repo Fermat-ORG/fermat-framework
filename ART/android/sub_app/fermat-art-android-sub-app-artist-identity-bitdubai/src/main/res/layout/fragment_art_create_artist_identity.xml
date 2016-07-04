@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_my_identity">
+    android:background="@drawable/art_background">
 
 
     <RelativeLayout
         android:id="@+id/aai_layout_user_image"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
 
         android:gravity="center">
 
@@ -22,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/bg_circular_other_profile"
+            android:background="@drawable/art_no_picture_image"
             tools:ignore="ContentDescription"
 
             />
@@ -30,9 +30,34 @@
             android:id="@+id/warning_cirlcle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/warnning_circle"/>
+            android:background="@drawable/warnning_circle"
+            android:layout_alignParentStart="true"
+            android:visibility="gone"
+            />
 
 
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:id="@+id/circle_image"
+            android:src="@drawable/art_picture_frame"
+            android:layout_alignParentStart="false"
+            android:layout_centerInParent="true"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/art_cam_edit_image_button"
+            android:src="@drawable/art_add_picture_button"
+            android:background="@android:color/transparent"
+            android:layout_alignTop="@+id/aai_artist_image"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="false"
+            android:adjustViewBounds="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_alignParentBottom="false" />
 
 
     </RelativeLayout>
@@ -70,10 +95,10 @@
                 android:id="@+id/aai_username_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="3dp"
                 android:background="@android:color/transparent"
                 android:text="Alias"
-                android:textColor="#919090"
+                android:textColor="#31C5F2"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
@@ -83,22 +108,24 @@
                 android:layout_height="wrap_content"
                 android:hint="Username"
                 android:lines="1"
-                android:padding="8dp"
+                android:padding="6dp"
                 android:singleLine="true"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"
+                android:textColor="@android:color/white"
+                android:textColorHint="#999999"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText"
                 android:layout_below="@+id/aai_username_label"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                 />
 
         </RelativeLayout>
 
 
         <RelativeLayout
-            android:layout_width="349dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin">
 
             <!--android:entries="@array/externalPlatforms"/>-->
 
@@ -107,116 +134,109 @@
                 android:layout_height="match_parent"
                 android:id="@+id/aai_external_identity_layout"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="false">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:paddingTop="15dp"
+                    android:paddingTop="6dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/aai_external_platform_label"
                     android:text="External Platform"
-                    android:textColor="#919090"
+                    android:textColor="#31C5F2"
                     tools:ignore="HardcodedText"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true" />
 
                 <Spinner
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:id="@+id/aai_external_platform"
-                    android:spinnerMode="dropdown"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/aai_external_platform_label"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentLeft="false"
                     android:textColor="#919090"
-                    android:background="#0080FF"
-                    android:popupBackground="#0080FF"
+                    android:contextClickable="false"
+                    android:clickable="false"
+                    android:spinnerMode="dropdown"
+
                     />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:paddingTop="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/aai_userIdentityName_label"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:text="External Identity"
-                    android:textColor="#919090"
+                    android:textColor="#31C5F2"
                     tools:ignore="HardcodedText"
                     android:layout_below="@+id/aai_external_platform"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="false" />
 
                 <Spinner
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:id="@+id/aai_userIdentityName"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/aai_userIdentityName_label"
                     android:layout_alignParentLeft="true"
                     android:textColor="#919090"
-                    android:background="#0080FF"
-                    android:popupBackground="#0080FF"/>
+                    />
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/art_exposureLevel_label"
                     android:text="Exposure Level"
                     android:textStyle="bold"
-                    android:textColor="#919090"
+                    android:textColor="#31C5F2"
                     android:layout_below="@+id/aai_userIdentityName"
                     tools:ignore="HardcodedText"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="5dp"/>
+                    android:paddingTop="5dp"
+                    android:layout_alignParentLeft="false" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/art_artistAcceptConnectionsType_label"
                     android:text="Connections Type"
-                    android:textColor="#919090"
+                    android:textColor="#31C5F2"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText"
                     android:layout_alignBaseline="@+id/art_exposureLevel_label"
                     android:layout_toRightOf="@+id/art_exposureLevel_label"
 
-                    android:paddingLeft="15dp"/>
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentRight="false" />
                 <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
                     android:id="@+id/art_exposureLevel"
                     android:textColor="#919090"
-                    android:background="#0080FF"
-                    android:popupBackground="#0080FF"
                     android:layout_below="@+id/art_exposureLevel_label"
 
                     android:spinnerMode="dropdown"
                     />
                 <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
                     android:id="@+id/art_artistAcceptConnectionsType"
                     android:textColor="#919090"
-                    android:background="#0080FF"
-                    android:popupBackground="#0080FF"
                     android:layout_alignBaseline="@+id/art_exposureLevel"
-                    android:layout_toRightOf="@+id/art_exposureLevel"
-                    android:paddingStart="30dp"
 
                     android:spinnerMode="dropdown"
-                    />
+                    android:layout_alignLeft="@+id/art_artistAcceptConnectionsType_label" />
             </RelativeLayout>
         </RelativeLayout>
 
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/create_art_artist_identity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:background="#0072bc"
-        android:text="@string/create"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:background="@android:color/transparent"
+        android:src="@drawable/art_create_button"
+        android:layout_margin="10dp" />
 
 </RelativeLayout>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#010c12"
+    android:background="#363636"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/aac_imageView_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             tools:ignore="ContentDescription" />
@@ -27,7 +27,7 @@
             android:id="@+id/aac_userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#010c12"
+            android:background="#363636"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingLeft="4dp"
@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#010c12"
+            android:background="#363636"
             android:drawableRight="@drawable/ic_profile_connect"
             android:ellipsize="end"
             android:gravity="center_vertical"

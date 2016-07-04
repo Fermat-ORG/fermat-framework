@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 
 import java.util.ArrayList;
@@ -17,11 +18,13 @@ public abstract class AbstractExposingData implements ExposingData {
     private final int IMAGE_DATA_INDEX = 0;
     public final int EXTERNAL_DATA_INDEX = 1;
     public final List data;
+    private final Location location;
 
     public AbstractExposingData(
             final String publicKey,
             final String alias,
-            String extraData){
+            String extraData,
+            Location location){
         this.publicKey = publicKey;
         this.alias     = alias    ;
         //Now, we gonna get the data from extra data string
@@ -29,6 +32,7 @@ public abstract class AbstractExposingData implements ExposingData {
         //Image
         image = getImageArrayByte(data.get(IMAGE_DATA_INDEX));
         //The external platform information must be implemented in this class implementations.
+        this.location = location;
     }
 
     /**
@@ -64,7 +68,7 @@ public abstract class AbstractExposingData implements ExposingData {
         }
         try{
             HashMap<ArtExternalPlatform,String> externalPlatformInformationMap =
-                    (HashMap<ArtExternalPlatform, String>) data;
+                    (HashMap) data;
             return externalPlatformInformationMap;
         } catch (ClassCastException e){
             //In this case, the data submitted is wrong
@@ -92,17 +96,25 @@ public abstract class AbstractExposingData implements ExposingData {
     }
 
     /**
-     * @return a string representing the alias of the crypto broker.
+     * @return a string representing the alias of the actor.
      */
     public final String getAlias() {
         return alias;
     }
 
     /**
-     * @return an array of bytes with the image exposed by the Crypto Broker.
+     * @return an array of bytes with the image exposed by the Actor.
      */
     public final byte[] getImage() {
         return image;
+    }
+
+    /**
+     * This method returns the Actor location
+     * @return
+     */
+    public Location getLocation() {
+        return location;
     }
 
     /**

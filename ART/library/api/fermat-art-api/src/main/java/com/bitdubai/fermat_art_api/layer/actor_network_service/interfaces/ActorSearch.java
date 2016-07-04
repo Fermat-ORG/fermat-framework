@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 
 import java.util.ArrayList;
@@ -29,27 +30,37 @@ public abstract class ActorSearch<V extends ExposingData> {
         this.aliasList.add(alias);
     }
 
-    /**
-     * Through the method <code>getResult</code> we can get the results of the search,
-     * Like we're not setting max and offset we will return all the crypto brokers that match
-     * with the parameters set.
-     *
-     * @return a list of crypto brokers with their information.
-     *
-     * @throws CantListArtistsException  if something goes wrong.
-     */
-    public abstract List<V> getResult() throws CantListArtistsException;
+    public abstract List<V> getResult(
+            Integer max,
+            Integer offset)
+            throws CantListArtistsException;
 
-    /**
-     * Through the method <code>getResult</code> we can get the results of the search,
-     * Like we're not setting max and offset we will return all the crypto brokers that match
-     * with the parameters set.
-     *
-     * @param actorTypeToLookFor
-     * @return
-     * @throws CantListArtistsException
-     */
-    public abstract List<V> getResult(PlatformComponentType actorTypeToLookFor) throws CantListArtistsException;
+    public abstract List<V> getResult(
+            String publicKey,
+            DeviceLocation deviceLocation,
+            double distance,
+            String alias,
+            Integer max,
+            Integer offset)
+            throws CantListArtistsException;
+
+    public abstract List<V> getResultLocation(
+            DeviceLocation deviceLocation,
+            Integer max,
+            Integer offset)
+            throws CantListArtistsException;
+
+    public abstract List<V> getResultDistance(
+            double distance,
+            Integer max,
+            Integer offset)
+            throws CantListArtistsException;
+
+    public abstract List<V> getResultAlias(
+            String alias,
+            Integer max,
+            Integer offset)
+            throws CantListArtistsException;
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
      * filtered by the parameters set.

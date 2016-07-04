@@ -51,8 +51,8 @@ include ':fermat-wpd-plugin-network-service-wallet-store-bitdubai'
 project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-store-bitdubai')
 
 // Milestone 2 project network service:
-include ':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai'
-project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
+//include ':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai'
+//project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
 
 //SUB APP MODULE
 //include ':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai'

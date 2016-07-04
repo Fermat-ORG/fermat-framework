@@ -1,7 +1,6 @@
 package com.mati.fermat_osa_addon_android_loader;
 
-import android.app.Application;
-
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_api.FermatContext;
 import com.mati.fermat_osa_addon_android_loader.structure.ObjectInvocationHandler;
 
@@ -11,7 +10,7 @@ import java.lang.reflect.Proxy;
 /**
  * Created by Matias Furszyfer on 2016.06.24..
  */
-public class LoaderManager<O extends Application & FermatContext> {
+public class LoaderManager<O extends FermatApplicationSession & FermatContext> {
 
     private ClassLoaderManager<O> classLoaderManager;
 

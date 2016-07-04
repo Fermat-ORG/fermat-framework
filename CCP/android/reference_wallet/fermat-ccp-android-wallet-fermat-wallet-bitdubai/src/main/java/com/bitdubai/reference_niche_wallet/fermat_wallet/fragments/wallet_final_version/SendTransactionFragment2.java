@@ -454,34 +454,38 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                     exchangeProviderList.add(lst);
                 }
 
+
+
+            FragmentStatePagerAdapter adapterViewPager;
+            adapterViewPager = new ViewPagerAdapter(getFragmentManager(),exchangeProviderList,appSession);
+            vpPager.setAdapter(adapterViewPager);
+
+
+            vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            // Give the TabLayout the ViewPager
+            tabLayout.setupWithViewPager(vpPager);
+
         } catch (CantGetCurrencyExchangeProviderException e) {
             e.printStackTrace();
         }
 
-        FragmentStatePagerAdapter adapterViewPager;
-        adapterViewPager = new ViewPagerAdapter(getFragmentManager(),exchangeProviderList,appSession);
-        vpPager.setAdapter(adapterViewPager);
 
-
-        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        // Give the TabLayout the ViewPager
-        tabLayout.setupWithViewPager(vpPager);
 
 
 

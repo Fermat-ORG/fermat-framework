@@ -24,8 +24,6 @@
 
 package com.customviews.spinner_wheel;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -37,6 +35,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.customviews.spinner_wheel.R;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * Abstract spinner spinnerwheel view.
@@ -187,9 +187,16 @@ public abstract class AbstractWheelView extends AbstractWheel {
      */
     @Override
     protected void recreateAssets(int width, int height) {
-        mSpinBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        mSeparatorsBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        setSelectorPaintCoeff(0);
+        try
+        {
+            mSpinBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            mSeparatorsBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            setSelectorPaintCoeff(0);
+        }
+        catch(Exception e)
+        {
+
+        }
     }
 
     /**

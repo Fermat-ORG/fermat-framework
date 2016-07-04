@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
@@ -35,6 +36,9 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
 
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM      , addon  = Addons .PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .GEOLOCATION)
     private GeolocationManager geolocationManager;
@@ -71,7 +75,8 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
                     pluginFileSystem,
                     pluginId,
                     getPluginVersionReference(),
-                    geolocationManager
+                    geolocationManager,
+                    locationManager
             );
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -95,7 +100,8 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
                     pluginFileSystem,
                     pluginId,
                     getPluginVersionReference(),
-                    geolocationManager
+                    geolocationManager,
+                    locationManager
             );
         }
         return fermatManager;
