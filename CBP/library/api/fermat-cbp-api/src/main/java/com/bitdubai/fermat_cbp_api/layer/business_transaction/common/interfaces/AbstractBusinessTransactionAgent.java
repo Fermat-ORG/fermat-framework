@@ -5,11 +5,14 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,18 +75,6 @@ public abstract class AbstractBusinessTransactionAgent
             throws UnexpectedResultReturnedFromDatabaseException;
 
     /**
-     * This method must implement ack confirmation event.
-     * @param contractHash
-     */
-    protected abstract void raiseAckConfirmationEvent(String contractHash);
-
-    /**
-     * This method must implement ack confirmation event.
-     * @param contractHash
-     */
-    protected abstract void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType);
-
-    /**
      * This method parse a String object to a long object
      *
      * @param stringValue
@@ -106,6 +97,36 @@ public abstract class AbstractBusinessTransactionAgent
                         "Cannot parse " + stringValue + " string value to long");
             }
         }
+    }
+
+    /**
+     * Return a Satoshi representation of the given String amount for the given currency
+     *
+     * @param cryptoAmountString the crypto amount in String
+     * @param currencyCode       the crypto currency code
+     *
+     * @return the crypto amount in satoshi
+     */
+    protected long getCryptoAmount(String cryptoAmountString, String currencyCode) {
+        try {
+            Number number = DecimalFormat.getInstance().parse(cryptoAmountString);
+
+            if (CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+                return (long) BitcoinConverter.convert(
+                        number.doubleValue(),
+                        BitcoinConverter.Currency.BITCOIN,
+                        BitcoinConverter.Currency.SATOSHI);
+            if (CryptoCurrency.FERMAT.getCode().equals(currencyCode))
+                return (long) BitcoinConverter.convert(
+                        number.doubleValue(),
+                        BitcoinConverter.Currency.FERMAT,
+                        BitcoinConverter.Currency.SATOSHI);
+
+        } catch (ParseException e) {
+            reportError(e);
+        }
+
+        return 0;
     }
 
     protected void reportError(Exception e){

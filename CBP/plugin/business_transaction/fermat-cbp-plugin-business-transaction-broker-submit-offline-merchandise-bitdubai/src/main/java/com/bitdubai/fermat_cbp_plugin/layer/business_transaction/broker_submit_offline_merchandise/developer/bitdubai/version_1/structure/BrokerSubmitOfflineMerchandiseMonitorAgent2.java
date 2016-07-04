@@ -379,12 +379,6 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
 
     }
 
-    @Override
-    protected void raiseAckConfirmationEvent(String contractHash) {
-        //Not implememted in this version
-    }
-
-    @Override
     protected void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType) {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
         BrokerSubmitMerchandiseConfirmed brokerSubmitMerchandiseConfirmed = (BrokerSubmitMerchandiseConfirmed) fermatEvent;

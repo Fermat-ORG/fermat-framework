@@ -648,11 +648,6 @@ public class BrokerAckOfflinePaymentMonitorAgent2
         eventManager.raiseEvent(brokerAckPaymentConfirmed);
     }
 
-    @Override
-    protected void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType) {
-        //Not implemented in this version.
-    }
-
     /**
      * This method returns the currency type from a contract
      *

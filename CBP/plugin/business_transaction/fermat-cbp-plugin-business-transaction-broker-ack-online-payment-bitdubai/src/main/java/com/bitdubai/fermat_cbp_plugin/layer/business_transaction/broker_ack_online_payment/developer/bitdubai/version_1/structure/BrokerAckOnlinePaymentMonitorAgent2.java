@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -323,7 +322,6 @@ public class BrokerAckOnlinePaymentMonitorAgent2
         }
     }
 
-    @Override
     protected void raiseAckConfirmationEvent(String contractHash) {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_ACK_PAYMENT_CONFIRMED);
         BrokerAckPaymentConfirmed brokerAckPaymentConfirmed = (BrokerAckPaymentConfirmed) fermatEvent;
@@ -332,11 +330,6 @@ public class BrokerAckOnlinePaymentMonitorAgent2
         brokerAckPaymentConfirmed.setPaymentType(PaymentType.CRYPTO_MONEY);
 
         eventManager.raiseEvent(brokerAckPaymentConfirmed);
-    }
-
-    @Override
-    protected void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType) {
-        //Not implemented in this version.
     }
 
     private void checkPendingIncomingMoneyEvents(String eventId) throws IncomingOnlinePaymentException, CantUpdateRecordException {
@@ -385,32 +378,5 @@ public class BrokerAckOnlinePaymentMonitorAgent2
         }
     }
 
-    /**
-     * Return a Satoshi representation of the given String amount for the given currency
-     *
-     * @param cryptoAmountString the crypto amount in String
-     * @param currencyCode       the crypto currency code
-     *
-     * @return the crypto amount in satoshi
-     */
-    private long getCryptoAmount(String cryptoAmountString, String currencyCode) {
-        try {
-            Number number = DecimalFormat.getInstance().parse(cryptoAmountString);
 
-            if (CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
-                return (long) BitcoinConverter.convert(
-                        number.doubleValue(),
-                        BitcoinConverter.Currency.BITCOIN,
-                        BitcoinConverter.Currency.SATOSHI);
-            if (CryptoCurrency.FERMAT.getCode().equals(currencyCode))
-                return (long) BitcoinConverter.convert(
-                        number.doubleValue(),
-                        BitcoinConverter.Currency.FERMAT,
-                        BitcoinConverter.Currency.SATOSHI);
-
-        } catch (ParseException ignore) {
-        }
-
-        return 0;
-    }
 }
