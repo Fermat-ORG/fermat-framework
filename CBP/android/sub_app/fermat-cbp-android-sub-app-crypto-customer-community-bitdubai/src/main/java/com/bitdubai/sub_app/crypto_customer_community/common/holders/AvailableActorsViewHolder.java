@@ -76,6 +76,9 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
                     connectionText.setVisibility(View.INVISIBLE);
                     break;
             }
+        } else {
+            connectionState.setVisibility(View.INVISIBLE);
+            connectionText.setVisibility(View.INVISIBLE);
         }
 
         customerName.setText(data.getAlias());
