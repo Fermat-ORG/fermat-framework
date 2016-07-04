@@ -5,8 +5,11 @@ import android.widget.Toast;
 import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 
 import java.lang.ref.WeakReference;
 
@@ -36,6 +39,19 @@ public class RuntimeStructureManager implements FermatRuntime {
         try {
             FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getAppStructure(appPublicKey);
             fermatStructure.changeActualStartActivity(activityCode);
+            FermatApplication.getInstance().getAppManager().selectRuntimeManager(FermatApplication.getInstance().getAppManager().getApp(fermatStructure.getPublicKey()).getAppType()).recordNAvigationStructure(fermatStructure);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(fermatActivity.get().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void changeTabNumber(String appPublicKey,String appActivityCode,int number){
+        try {
+            FermatStructure fermatStructure = FermatApplication.getInstance().getAppManager().getAppStructure(appPublicKey);
+            Activity activities = fermatStructure.getActivity(Activities.getValueFromString(appActivityCode));
+            ((TabBadgeView)activities.getTabStrip().getFermatView()).getBadge().setNumber(number);
             FermatApplication.getInstance().getAppManager().selectRuntimeManager(FermatApplication.getInstance().getAppManager().getApp(fermatStructure.getPublicKey()).getAppType()).recordNAvigationStructure(fermatStructure);
         }catch (Exception e){
             e.printStackTrace();
