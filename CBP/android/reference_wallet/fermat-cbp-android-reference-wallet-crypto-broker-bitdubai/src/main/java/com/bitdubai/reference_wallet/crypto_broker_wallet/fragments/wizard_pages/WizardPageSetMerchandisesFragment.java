@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -185,20 +184,8 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             }
         });
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //If wallet already configured, go directly to wallet
-                if (walletConfigured) {
-                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-                } else {  //otherwise, show wizard page
-                    fragmentContainer.setVisibility(View.VISIBLE);
-                    showHelpDialog();
-                }
-            }
-        }, 250);
-
+        fragmentContainer.setVisibility(View.VISIBLE);
+        showHelpDialog();
 
         return layout;
     }
@@ -288,7 +275,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                                     public void onDismiss(DialogInterface dialog) {
                                         if (!containWallet(selectedItem)) {
                                             FiatCurrency cashCurrency = getCashCurrency(WalletsPublicKeys.CSH_MONEY_WALLET.getCode());
-                                            if(cashCurrency != null) {
+                                            if (cashCurrency != null) {
                                                 selectedItem.setCurrency(cashCurrency);
                                                 stockWallets.add(selectedItem);
                                                 adapter.changeDataSet(stockWallets);
@@ -369,7 +356,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                     public void onDismiss(DialogInterface dialog) {
                         if (!containWallet(selectedWallet)) {
 
-                            if(inputDialogCBP.getCreatedBankAccount() != null) {
+                            if (inputDialogCBP.getCreatedBankAccount() != null) {
 
                                 FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
                                 String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
