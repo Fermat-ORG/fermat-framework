@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by Nerio on 12/03/16.
  */
-public class WalletAssetUserNotificationPainter implements NotificationPainter, Serializable {
+public class WalletAssetUserNotificationPainter extends NotificationPainter implements Serializable {
 
     private String title;
     private String textBody;
@@ -24,37 +24,31 @@ public class WalletAssetUserNotificationPainter implements NotificationPainter, 
         this.image = image;
     }
 
-    @Override
     public RemoteViews getNotificationView(String code) {
         return this.remoteViews;
     }
 
-    @Override
     public String getNotificationTitle() {
         return this.title;
     }
 
-    @Override
     public String getNotificationImageText() {
         return this.image;
     }
 
-    @Override
+
     public String getNotificationTextBody() {
         return this.textBody;
     }
 
-    @Override
     public int getIcon() {
         return 0;
     }
 
-    @Override
     public String getActivityCodeResult() {
         return null;
     }
 
-    @Override
     public boolean showNotification() {
         return true;
     }

@@ -34,7 +34,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         String code = intent.getStringExtra(ApplicationConstants.INTENT_EXTRA_DATA);
         FermatBundle data = (FermatBundle) intent.getSerializableExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE);
         try {
-            weakSession.get().getNotificationService().notificate(appPublicKey, code);
+            if(data!=null) weakSession.get().getNotificationService().notificate(appPublicKey, data);
+            else weakSession.get().getNotificationService().notificate(appPublicKey, code);
         }catch (Exception e){
             Log.e(TAG,"Process name: "+getCurrentProcess().processName);
             e.printStackTrace();
