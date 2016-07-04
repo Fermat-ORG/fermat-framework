@@ -3,7 +3,7 @@ package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.versi
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 import java.io.Serializable;
@@ -18,9 +18,9 @@ public class IdentityAssetIssuerImpl implements IdentityAssetIssuer, Serializabl
     private byte[] profileImage;
     private String privateKey;
     private int accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
-    public IdentityAssetIssuerImpl(String alias, String publicKey, String privateKey, byte[] profileImage, int accuracy, Frequency frequency) {
+    public IdentityAssetIssuerImpl(String alias, String publicKey, String privateKey, byte[] profileImage, int accuracy, GeoFrequency frequency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -29,7 +29,7 @@ public class IdentityAssetIssuerImpl implements IdentityAssetIssuer, Serializabl
         this.frequency = frequency;
     }
 
-    public IdentityAssetIssuerImpl(String alias, String publicKey, byte[] profileImage, int accuracy, Frequency frequency) {
+    public IdentityAssetIssuerImpl(String alias, String publicKey, byte[] profileImage, int accuracy, GeoFrequency frequency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -80,7 +80,7 @@ public class IdentityAssetIssuerImpl implements IdentityAssetIssuer, Serializabl
     }
 
     @Override
-    public Frequency getFrequency() {
+    public GeoFrequency getFrequency() {
         return frequency;
     }
 

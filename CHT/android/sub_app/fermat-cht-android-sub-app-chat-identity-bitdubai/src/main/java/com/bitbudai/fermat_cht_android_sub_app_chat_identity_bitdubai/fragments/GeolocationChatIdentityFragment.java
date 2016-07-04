@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.Chat
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
@@ -55,7 +56,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
     Spinner frequency;
     Toolbar toolbar;
     long acurracydata;
-    Frecuency frecuencydata;
+    GeoFrequency frequencyData;
     ChatIdentity identity;
 
     private ChatIdentityPreferenceSettings chatIdentitySettings;
@@ -125,11 +126,8 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
 
     private void initViews(View layout) {
         // Spinner Drop down elements
-        List<Frecuency> dataspinner = new ArrayList<Frecuency>();
-        dataspinner.add(Frecuency.NONE);
-        dataspinner.add(Frecuency.LOW);
-        dataspinner.add(Frecuency.NORMAL);
-        dataspinner.add(Frecuency.HIGH);
+        List<GeoFrequency> dataSpinner = new ArrayList<GeoFrequency>();
+        dataSpinner.addAll(Arrays.asList(GeoFrequency.values()));
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
@@ -137,8 +135,8 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
         frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
         try {
-            ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
-                    R.layout.cht_iden_spinner_item, dataspinner);
+            ArrayAdapter<GeoFrequency> dataAdapter = new ArrayAdapter<GeoFrequency>(getActivity(),
+                    R.layout.cht_iden_spinner_item, dataSpinner);
             //android.R.layout.simple_spinner_item, dataspinner);
             dataAdapter.setDropDownViewResource(R.layout.cht_iden_spinner_item);
 //        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -150,7 +148,9 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString());
+//                        frequencyData = GeoFrequency.getByCode(parent.getItemAtPosition(position).toString());
+                        frequencyData = (GeoFrequency) parent.getItemAtPosition(position);
+                        frequencyData = GeoFrequency.getByCode(frequencyData.getCode());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
@@ -200,7 +200,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                 executor = new GeolocationIdentityExecutor(appSession, identity.getPublicKey(), identity.getAlias(),
                         identity.getImage(), identity.getConnectionState(),
                         identity.getCountry(), identity.getState(),
-                        identity.getCity(), frecuencydata, acurracydata);
+                        identity.getCity(), frequencyData, acurracydata);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -232,7 +232,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
         return false;
     }
 
-    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
+    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<GeoFrequency> dataAdapter) throws CantGetChatIdentityException {
         checkIdentity();
         if(identity!=null){
             accuracy.setText(""+identity.getAccuracy());

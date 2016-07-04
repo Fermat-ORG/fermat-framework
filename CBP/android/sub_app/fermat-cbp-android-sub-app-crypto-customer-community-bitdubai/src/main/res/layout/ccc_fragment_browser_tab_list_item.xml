@@ -30,6 +30,7 @@
         android:layout_marginTop="-15dp"
         android:layout_toLeftOf="@+id/ccc_connection_text"
         android:layout_toStartOf="@+id/ccc_connection_text"
+        android:visibility="gone"
         android:src="@drawable/ccc_add_contact"/>
 
     <View

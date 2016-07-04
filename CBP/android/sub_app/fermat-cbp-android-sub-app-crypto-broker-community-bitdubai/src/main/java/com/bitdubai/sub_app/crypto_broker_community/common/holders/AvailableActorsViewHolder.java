@@ -50,27 +50,32 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         if (data.getConnectionState() != null) {
             switch (data.getConnectionState()) {
                 case CONNECTED:
+                    connectionState.setVisibility(View.VISIBLE);
                     connectionState.setImageResource(R.drawable.contacto_activo);
                     connectionText.setText(R.string.cbc_connection_state_connected);
                     connectionText.setVisibility(View.VISIBLE);
                     break;
                 case PENDING_REMOTELY_ACCEPTANCE:
+                    connectionState.setVisibility(View.VISIBLE);
                     connectionState.setImageResource(R.drawable.agregar_contacto);
                     connectionText.setText(R.string.cbc_connection_state_pending_acceptance);
                     connectionText.setVisibility(View.VISIBLE);
+                    break;
                 case PENDING_LOCALLY_ACCEPTANCE:
+                    connectionState.setVisibility(View.VISIBLE);
                     connectionState.setImageResource(R.drawable.agregar_contacto);
                     connectionText.setText(R.string.cbc_connection_state_pending_acceptance);
                     connectionText.setVisibility(View.VISIBLE);
+                    break;
                 default:
-                    connectionState.setImageResource(R.drawable.agregar_contacto);
+                    connectionState.setVisibility(View.INVISIBLE);
                     connectionText.setVisibility(View.INVISIBLE);
                     break;
             }
         }
 
         brokerName.setText(data.getAlias());
-        brokerLocation.setText(data.getCountry() + " / " + data.getPlace());
+        brokerLocation.setText(String.format("%s / %s", data.getCountry(), data.getPlace()));
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 

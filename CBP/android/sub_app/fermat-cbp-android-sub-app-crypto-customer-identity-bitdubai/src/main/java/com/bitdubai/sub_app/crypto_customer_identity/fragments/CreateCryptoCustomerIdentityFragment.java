@@ -46,7 +46,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CreateIdentityWorker;
@@ -197,11 +197,6 @@ implements FermatWorkerCallBack{
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final int menuItemId = item.getItemId();
 
@@ -288,7 +283,7 @@ implements FermatWorkerCallBack{
 
         } else {
             final int accuracy = getAccuracyData();
-            final Frequency frequency = getFrequencyData();
+            final GeoFrequency frequency = getFrequencyData();
 
             FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
                     customerAlias, identityImageByteArray, accuracy, frequency);
@@ -379,9 +374,9 @@ implements FermatWorkerCallBack{
                 (int) appSession.getData(FragmentsCommons.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
-        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
-                (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    private GeoFrequency getFrequencyData() {
+        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? GeoFrequency.NONE :
+                (GeoFrequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
     }
 
     public void turnGPSOn() {

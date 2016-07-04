@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetSelectedActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
@@ -24,12 +24,12 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     private String city;
     private String connectionState;
     private long   accuracy;
-    private Frecuency frecuency;
+    private GeoFrequency frecuency;
 
     ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias,
                                              byte[] image, String status, String country,
                                              String state, String city, String connectionState,
-                                             long accuracy, Frecuency frecuency){
+                                             long accuracy, GeoFrequency frecuency){
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
@@ -112,7 +112,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     }
 
 
-    public Frecuency getFrequency() {
+    public GeoFrequency getFrequency() {
         return frecuency;
     }
 

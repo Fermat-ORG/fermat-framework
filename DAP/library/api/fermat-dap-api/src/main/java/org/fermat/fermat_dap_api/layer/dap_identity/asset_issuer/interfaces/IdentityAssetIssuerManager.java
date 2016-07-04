@@ -2,7 +2,7 @@ package org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
@@ -50,7 +50,7 @@ public interface IdentityAssetIssuerManager extends FermatManager, Serializable 
     IdentityAssetIssuer createNewIdentityAssetIssuer(String alias,
                                                      byte[] profileImage,
                                                      int accuracy,
-                                                     Frequency frequency) throws CantCreateNewIdentityAssetIssuerException;
+                                                     GeoFrequency frequency) throws CantCreateNewIdentityAssetIssuerException;
 
     /**
      * The method <code>updateIdentityAssetIssuer</code> change a identity information data
@@ -64,7 +64,7 @@ public interface IdentityAssetIssuerManager extends FermatManager, Serializable 
                                    String identityAlias,
                                    byte[] profileImage,
                                    int accuracy,
-                                   Frequency frequency) throws CantUpdateIdentityAssetIssuerException;
+                                   GeoFrequency frequency) throws CantUpdateIdentityAssetIssuerException;
 
     /**
      * The method <code>hasIntraIssuerIdentity</code> returns if has a intra user identity created
@@ -76,5 +76,5 @@ public interface IdentityAssetIssuerManager extends FermatManager, Serializable 
 
     int getAccuracyDataDefault();
 
-    Frequency getFrequencyDataDefault();
+    GeoFrequency getFrequencyDataDefault();
 }

@@ -275,7 +275,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
