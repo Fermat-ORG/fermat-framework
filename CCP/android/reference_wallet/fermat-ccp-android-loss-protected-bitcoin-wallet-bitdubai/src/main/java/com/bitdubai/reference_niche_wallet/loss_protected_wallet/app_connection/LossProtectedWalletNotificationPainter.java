@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by natalia on 12/02/16.
  */
-public class LossProtectedWalletNotificationPainter implements NotificationPainter {
+public class LossProtectedWalletNotificationPainter extends NotificationPainter {
 
     private String title;
     private String textBody;
