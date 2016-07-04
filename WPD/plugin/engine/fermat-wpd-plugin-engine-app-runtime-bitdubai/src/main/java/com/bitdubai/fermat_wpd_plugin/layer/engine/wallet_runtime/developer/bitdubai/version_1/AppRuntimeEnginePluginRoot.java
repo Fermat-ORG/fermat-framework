@@ -98,6 +98,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
      */
     final String NAVIGATION_STRUCTURE_FILE_PATH = "navigation_structure";
     List<FermatEventListener> listenersAdded = new ArrayList<>();
+    private String LINE_SEPARATOR = System.getProperty("line.separator");
+
     /**
      * WalletRuntimeManager Interface member variables.
      */
@@ -2735,7 +2737,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         runtimeAppNavigationStructure.setPublicKey(PUBLIC_KEY);
-        navigationStructureOpen.put(PUBLIC_KEY, runtimeAppNavigationStructure);
+//        navigationStructureOpen.put(PUBLIC_KEY, runtimeAppNavigationStructure);
 
 
         // Side Menu
@@ -4395,7 +4397,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
                 FileInputStream fileInputStream = null;
                 ObjectInputStream objectInputStream = null;
                 try {
-                    File file = new File(pluginFileSystem.getAppPath() + "/" + NAVIGATION_STRUCTURE_FILE_PATH + "/" + navigationStructureName);
+                    File file = new File(pluginFileSystem.getAppPath() +LINE_SEPARATOR + NAVIGATION_STRUCTURE_FILE_PATH + LINE_SEPARATOR+ navigationStructureName);
                     if (file.exists()){
                         fileInputStream = new FileInputStream(file);
                         objectInputStream = new ObjectInputStream(fileInputStream);
@@ -4456,7 +4458,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         return xml;
     }
 
-    @Override
+
     public void setNavigationStructureXml(AppNavigationStructure walletNavigationStructure) {
         String publiKey = walletNavigationStructure.getPublicKey();
         try {
@@ -4477,11 +4479,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
             //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
         }
     }
+
+    @Override
     public void setNavigationStructure(FermatStructure fermatStructure) {
         String publiKey = fermatStructure.getPublicKey();
         try {
             String navigationStructureName = publiKey + ".xml";
-            File file = new File(pluginFileSystem.getAppPath()+System.lineSeparator()+NAVIGATION_STRUCTURE_FILE_PATH+System.lineSeparator()+navigationStructureName);
+            File file = new File(pluginFileSystem.getAppPath()+LINE_SEPARATOR+NAVIGATION_STRUCTURE_FILE_PATH+LINE_SEPARATOR+navigationStructureName);
 //            String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
             try {
                 if (!file.exists()) {
@@ -4534,9 +4538,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     private void recordNavigationStructureIsNotExist(AppNavigationStructure appNavigationStructure){
         String publiKey = appNavigationStructure.getPublicKey();
         try {
-            String navigationStructureXml = parseNavigationStructureXml(appNavigationStructure);
+//            String navigationStructureXml = parseNavigationStructureXml(appNavigationStructure);
             String navigationStructureName = publiKey + ".xml";
-            File file = new File(pluginFileSystem.getAppPath()+"/"+NAVIGATION_STRUCTURE_FILE_PATH+"/"+navigationStructureName);
+            File file = new File(pluginFileSystem.getAppPath()+LINE_SEPARATOR+NAVIGATION_STRUCTURE_FILE_PATH+LINE_SEPARATOR+navigationStructureName);
             if (!file.exists()){
                 setNavigationStructure(appNavigationStructure);
             }
@@ -7632,4 +7636,206 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         return runtimeSideMenu;
     }
+
+
+//    private void createDesktop() {
+//        AppNavigationStructure runtimeDesktopObject;
+//        TitleBar runtimeTitleBar;
+//        FermatRuntimeFragment runtimeFragment;
+//        String publicKey = "main_desktop";
+//
+//        runtimeDesktopObject = new AppNavigationStructure();
+//        runtimeDesktopObject.setPublicKey(publicKey);
+//        runtimeDesktopObject.setAppStructureType(AppStructureType.REFERENCE);
+//        //this is APD
+//        runtimeDesktopObject.setPlatform(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
+////        lastDesktopObject = publicKey;
+//
+//        runtimeDesktopObject.changeActualStartActivity(Activities.CCP_DESKTOP.getCode());
+//
+//        Activity activity = new Activity();
+//        activity.setActivityType(Activities.CCP_DESKTOP.getCode());
+//        activity.setType(Activities.CCP_DESKTOP);
+//        activity.setFullScreen(true);
+//        activity.setBottomNavigationMenu(new BottomNavigation());
+//
+////            Wizard wizard = new Wizard();
+////            WizardPage wizardPage = new WizardPage();
+////            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+////            wizard.addPage(wizardPage);
+////
+////            wizardPage = new WizardPage();
+////            wizardPage.setFragment(Fragments.WELCOME_WIZARD_SECOND_SCREEN_FRAGMENT.getKey());
+////            wizard.addPage(wizardPage);
+////
+////            wizardPage = new WizardPage();
+////            wizardPage.setFragment(Fragments.WELCOME_WIZARD_THIRD_SCREEN_FRAGMENT.getKey());
+////            wizard.addPage(wizardPage);
+////
+////            wizardPage = new WizardPage();
+////            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FOURTH_SCREEN_FRAGMENT.getKey());
+////            wizard.addPage(wizardPage);
+////
+////            activity.addWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey(),wizard);
+//
+//
+//        /**
+//         * set type home
+//         */
+//        //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
+//        //activity.setType(Activities.dmp_DESKTOP_HOME);
+//        //   activity.setActivityType("CCPDHA");
+//        FermatRuntimeFragment fragment = new FermatRuntimeFragment();
+//        fragment.setFragmentCode(Fragments.DESKTOP_APPS_MAIN.getKey());
+//        activity.addFragment(Fragments.DESKTOP_APPS_MAIN.getKey(), fragment);
+//        activity.setStartFragment(Fragments.DESKTOP_APPS_MAIN.getKey());
+//        runtimeDesktopObject.addActivity(activity);
+//        activity.setColor("#fff");
+//
+//
+//        // activity
+//        fragment = new FermatRuntimeFragment();
+//        fragment.setFragmentCode(Fragments.DESKTOP_P2P_MAIN.getKey());
+//        activity.addFragment(Fragments.DESKTOP_P2P_MAIN.getKey(), fragment);
+//
+//        fragment = new FermatRuntimeFragment();
+//        fragment.setFragmentCode(Fragments.DESKTOP_SOCIAL_MAIN.getKey());
+//        activity.addFragment(Fragments.DESKTOP_SOCIAL_MAIN.getKey(), fragment);
+//
+//
+//        //
+//
+//        /**
+//         * Wizard
+//         */
+//        activity = new Activity();
+//        activity.setActivityType(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
+//        activity.setType(Activities.DESKTOP_WIZZARD_WELCOME);
+//        activity.setFullScreen(true);
+//        activity.setBackgroundColor("#ffffff");
+//        activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+//        runtimeDesktopObject.changeActualStartActivity(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
+//
+//        fragment = new FermatRuntimeFragment();
+//        fragment.setFragmentCode(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+//        activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(), fragment);
+//        runtimeDesktopObject.addActivity(activity);
+//
+//
+//        //settings bitcoin network
+//        activity = new Activity();
+//        activity.setBackgroundColor("#000000");
+//        activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
+//        activity.setType(Activities.DESKTOP_SETTING_FERMAT_NETWORK);
+//        activity.setStartFragment(Fragments.DESKTOP_SETTINGS.getKey());
+//        activity.setBackActivity(Activities.CCP_DESKTOP);
+//        activity.setBackPublicKey(publicKey);
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setColor("#000000");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeTitleBar.setLabel("Network Settings");
+//        runtimeTitleBar.setLabelSize(18);
+//        runtimeTitleBar.setTitleColor("#ffffff");
+//        activity.setTitleBar(runtimeTitleBar);
+//
+//
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.DESKTOP_SETTINGS.getKey());
+//        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
+//        activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
+//        runtimeDesktopObject.addActivity(activity);
+//
+//        //settings import key
+//        activity = new Activity();
+//        activity.setBackgroundColor("#000000");
+//        activity.setActivityType(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode());
+//        activity.setType(Activities.DESKTOP_SETTING_IMPORT_KEY);
+//        activity.setStartFragment(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
+//        activity.setBackActivity(Activities.CCP_DESKTOP);
+//        activity.setBackPublicKey(publicKey);
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setColor("#000000");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeTitleBar.setLabel("Import Key");
+//        runtimeTitleBar.setLabelSize(18);
+//        runtimeTitleBar.setTitleColor("#ffffff");
+//        activity.setTitleBar(runtimeTitleBar);
+//
+//
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
+//        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
+//        activity.addFragment(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey(), runtimeFragment);
+//        runtimeDesktopObject.addActivity(activity);
+//
+//        //settings export key
+//        activity = new Activity();
+//        activity.setBackgroundColor("#011000");
+//        activity.setActivityType(Activities.DESKTOP_SETTING_EXPORT_KEY.getCode());
+//        activity.setType(Activities.DESKTOP_SETTING_EXPORT_KEY);
+//        activity.setStartFragment(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey());
+//        activity.setBackActivity(Activities.CCP_DESKTOP);
+//        activity.setBackPublicKey(publicKey);
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setColor("#011000");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeTitleBar.setLabel("Export Key");
+//        runtimeTitleBar.setLabelSize(18);
+//        runtimeTitleBar.setTitleColor("#ffffff");
+//        activity.setTitleBar(runtimeTitleBar);
+//
+//
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey());
+//        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
+//        activity.addFragment(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey(), runtimeFragment);
+//        runtimeDesktopObject.addActivity(activity);
+//
+//        //more settings
+//        activity = new Activity();
+//        activity.setBackgroundColor("#011000");
+//        activity.setActivityType(Activities.DESKTOP_MORE_SETTINGS.getCode());
+//        activity.setType(Activities.DESKTOP_MORE_SETTINGS);
+//        activity.setStartFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey());
+//        activity.setBackActivity(Activities.CCP_DESKTOP);
+//        activity.setBackPublicKey(publicKey);
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setColor("#011000");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeTitleBar.setLabel("Export Key");
+//        runtimeTitleBar.setLabelSize(18);
+//        runtimeTitleBar.setTitleColor("#ffffff");
+//        activity.setTitleBar(runtimeTitleBar);
+//
+//
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.DESKTOP_MORE_SETTINGS.getKey());
+//        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
+//        activity.addFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey(), runtimeFragment);
+//        runtimeDesktopObject.addActivity(activity);
+//
+//        // community
+//        activity = new Activity();
+//        activity.setActivityType(Activities.DESKTOP_COMMUNITY_ACTIVITY.getCode());
+//        activity.setType(Activities.DESKTOP_COMMUNITY_ACTIVITY);
+//        activity.setStartFragment(Fragments.COMMUNITIES_FRAGMENT.getKey());
+//        activity.setBackActivity(Activities.CCP_DESKTOP);
+//        activity.setBackPublicKey(publicKey);
+//        activity.setFullScreen(true);
+//        activity.setBackgroundColor("#ffffff");
+//        activity.setColor("#ffffff");
+//
+//
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.COMMUNITIES_FRAGMENT.getKey());
+//        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
+//        activity.addFragment(Fragments.COMMUNITIES_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeDesktopObject.addActivity(activity);
+//
+//        navigationStructureOpen.put(publicKey, runtimeDesktopObject);
+//    }
 }
