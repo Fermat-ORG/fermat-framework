@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
@@ -81,10 +82,12 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
     List<String> getMnemonicCode() throws CantLoadExistingVaultSeed;
 
     /**
-     *
-     * @throws CantLoadExistingVaultSeed
+     * Imports the passed seed into the vault.
+     * @param mnemonicCode the mnemonic Code passed by the user
+     * @param date the date this seed was generated.
+     * @throws CantImportSeedException
      */
-    void importSeedFromMnemonicCode(List<String> mnemonicCode,long date,@Nullable String userPhrase,BlockchainNetworkType blockchainNetworkType) throws CantLoadExistingVaultSeed;
+    void importSeedFromMnemonicCode(List<String> mnemonicCode,long date) throws CantImportSeedException;
 
     /**
      * Signs the owned inputs of the passed Draft transaction

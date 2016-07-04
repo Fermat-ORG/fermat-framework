@@ -237,48 +237,6 @@ public abstract class CryptoVault {
             throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
         }
     }
-//
-//    public DeterministicSeed getVaultSeed(String seedName) throws InvalidSeedException,CantFounSeedException{
-//        try{
-//            VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, seedName);
-//            if (!vaultSeedGenerator.seedExists()){
-//                throw new CantFounSeedException(new Exception("Seed not found"));
-//            } else
-//                vaultSeedGenerator.load();
-//            DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
-//            seed.check();
-//            return seed;
-//        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
-//            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantLoadExistingVaultSeed, "there was an error trying to load an existing seed.", null);
-//        } catch (MnemonicException e) {
-//            throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
-//        }
-//    }
-
-
-//    public void importMnemonicSeed(List<String> mnemonicCode,long creationTime,@Nullable String userPhrase) throws InvalidSeedException {
-//        try{
-//            VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
-//            if (!vaultSeedGenerator.seedExists()) {
-//                vaultSeedGenerator.createFrom(mnemonicCode, creationTime, userPhrase);
-//            }
-//        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
-//            throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantCreateAssetVaultSeed, "there was an error trying to create a new seed.", null);
-//        }
-//    }
-
-    private Wallet tempWallet;
-    AtomicBoolean booleanProperty;
-    SPVBlockStore chainStore;
-    BlockChain chain;
-
-
-
-    public void importCryptoFromSeed(final NetworkParameters networkParameters,List<String> mnemonicCode,long creationTimeSeconds,@Nullable String userPhrase){
-
-
-
-    }
 
 
 

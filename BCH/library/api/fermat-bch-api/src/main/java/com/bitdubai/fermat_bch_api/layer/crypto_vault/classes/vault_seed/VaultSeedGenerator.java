@@ -11,10 +11,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantDeleteExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
+import com.google.common.base.Splitter;
 
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.crypto.MnemonicCode;
+import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.util.Arrays;
@@ -84,7 +90,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
      * Creates a new Seed and saves it to disk.
      * @throws com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed
      */
-    public void create() throws com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed {
+    public void create() throws CantCreateAssetVaultSeed {
         /**
          * The Wallet class of bitcoinJ has a great entrophy level to generate a random seed.
          */
@@ -98,6 +104,11 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         this.creationTimeSeconds = seed.getCreationTimeSeconds();
         this.seedBytes = seed.getSeedBytes();
 
+
+        storeSeedInFile();
+    }
+
+    private void storeSeedInFile() throws CantCreateAssetVaultSeed {
         /**
          * I save the seed value into the file
          */
@@ -107,7 +118,21 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
             seedFile.setContent(generateFileContent());
             seedFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
-            throw new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + this.filePath + " " + this.fileName, "file might already exists.");
+            throw new CantCreateAssetVaultSeed(CantCreateAssetVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + this.filePath + " " + this.fileName, "file might already exists.");
+        }
+    }
+
+    /**
+     * validates if the passed seed is valid or not.
+     * @param seed
+     * @return
+     */
+    private boolean isSeedValid(DeterministicSeed seed){
+        try {
+            seed.check();
+            return true;
+        } catch (MnemonicException e) {
+            return false;
         }
     }
 
@@ -174,6 +199,59 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
             throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "There was an error trying to load the content from the Seed File.", "Corrupted File.");
         }
 
+    }
+
+    public void importSeed(String mnemonicCode, long seedCreationTimeSeconds) throws CantImportSeedException{
+        importSeed(getmNemonicAsList(mnemonicCode), seedCreationTimeSeconds);
+    }
+
+    /**
+     * Gets the mnemonic code as a list of strings.
+     * @param mnemonicCode
+     * @return
+     */
+    private List<String> getmNemonicAsList(String mnemonicCode){
+        return Splitter.on(" ").splitToList(mnemonicCode);
+    }
+
+
+    /**
+     * Imports and overwrite a new seed for the vault.
+     * @param mnemonicCode
+     * @param seedCreationTimeSeconds
+     * @throws CantImportSeedException
+     */
+    public void importSeed(List<String> mnemonicCode, long seedCreationTimeSeconds) throws CantImportSeedException{
+        DeterministicSeed importedSeed = null;
+        importedSeed = new DeterministicSeed(mnemonicCode, null, "", seedCreationTimeSeconds);
+
+        if (!isSeedValid(importedSeed))
+            throw new CantImportSeedException(null, "Importing new seed from " + mnemonicCode, "incorrect seed format");
+
+        /**
+         * I will delete existing seed
+         */
+        try {
+            this.delete();
+        } catch (CantDeleteExistingVaultSeed cantDeleteExistingVaultSeed) {
+            throw new CantImportSeedException(cantDeleteExistingVaultSeed, "Unable to delete previous seed", "IO Error");
+        }
+
+        /**
+         * I set the seed values of the class
+         */
+        this.mnemonicCode = importedSeed.getMnemonicCode();
+        this.creationTimeSeconds = importedSeed.getCreationTimeSeconds();
+        this.seedBytes = importedSeed.getSeedBytes();
+
+        /**
+         * and Store the new seed.
+         */
+        try {
+            storeSeedInFile();
+        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
+            throw new CantImportSeedException(cantCreateAssetVaultSeed, "unable to save new seed into disk.", "IO Error");
+        }
     }
 
     /**
