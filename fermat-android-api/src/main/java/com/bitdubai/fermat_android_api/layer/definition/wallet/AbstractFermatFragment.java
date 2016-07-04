@@ -11,13 +11,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.support.v7.widget.Toolbar;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
@@ -47,7 +47,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.11.21..
@@ -74,7 +73,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     /**
      * OptionMenuListeners
      */
-    private Map<Integer,?> optionMenuListeners;
+//    private Map<Integer,?> optionMenuListeners;
 
     /**
      * ViewInflater

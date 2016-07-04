@@ -204,6 +204,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                     public void run() {
                         saveSettings(!checkbox.isChecked());
                         if(checkbox.isChecked()){
+                            Log.i(TAG,"Starting desktop");
                             getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),Activities.CCP_DESKTOP.getCode());
                         }
                     }
