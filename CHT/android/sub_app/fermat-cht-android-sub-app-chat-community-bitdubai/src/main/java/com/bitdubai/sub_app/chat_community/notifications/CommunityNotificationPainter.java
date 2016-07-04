@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
  * @author franklinmarcano1970
  * @version 1.0.0
  */
-public class CommunityNotificationPainter implements NotificationPainter {
+public class CommunityNotificationPainter extends NotificationPainter {
 
     private String title;
     private String textBody;

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.lang.ref.WeakReference;
 
@@ -46,6 +47,10 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
 
     public NotificationPainter getNotificationPainter(String code){
+        return null;
+    }
+
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
         return null;
     }
 

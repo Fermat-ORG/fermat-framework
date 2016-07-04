@@ -3,10 +3,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.notifi
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.06.20..
  */
-public class BasicNotification implements FermatNotification{
+public class BasicNotification implements FermatNotification,Serializable{
 
     private int id;
     private int priority;
