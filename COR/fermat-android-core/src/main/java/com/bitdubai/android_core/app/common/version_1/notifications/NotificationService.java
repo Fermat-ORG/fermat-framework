@@ -7,9 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
-import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -108,26 +106,21 @@ public class NotificationService extends Service {
 
     public void notificate(String publicKey,String code){
         Notification.Builder builder = null;
+        int notificationId = 0;
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
         if (publicKey != null) {
-
-
             if (lstNotifications.containsKey(publicKey)){
-                int notificationId = lstNotifications.get(publicKey);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    for (StatusBarNotification statusBarNotification : notificationManager.getActiveNotifications()) {
-                        if(statusBarNotification.getId()==notificationId){
-
-                        }
-                    }
-                }else{
-
+                notificationId = lstNotifications.get(publicKey);
+            }else {
+                synchronized (this) {
+                    notificationId = lstNotifications.size() + 1;
+                    lstNotifications.put(publicKey,notificationId);
                 }
-
             }
-            // notificationIdCount++;
-            // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
+                        // notificationIdCount++;
+                        // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
+
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
             NotificationPainter notificationPainter = null;
             try {
@@ -183,7 +176,7 @@ public class NotificationService extends Service {
                         .setContentIntent(pi)
                         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.YELLOW, 3000, 3000);
-                Log.i(LOG_TAG,"Launcher: "+publicKey);
+                Log.i(LOG_TAG, "Launcher: " + publicKey);
             }
 
         } else {
@@ -199,7 +192,7 @@ public class NotificationService extends Service {
         if(builder!=null) {
             Notification notification = builder.build();
 //            mapNotifications.put()
-            notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, notification);
+            notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/notificationId, notification);
         }
     }
 

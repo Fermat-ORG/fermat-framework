@@ -379,9 +379,10 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
     private void saveSettingAndGoNextStep() {
 
-        if (selectedProviders.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
-        }
+        //TODO: no tiene sentido de estar activo si no es requisito para avanzar en los Steps
+//        if (selectedProviders.isEmpty()) {
+//            Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
+//        }
 
         try {
             moduleManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());

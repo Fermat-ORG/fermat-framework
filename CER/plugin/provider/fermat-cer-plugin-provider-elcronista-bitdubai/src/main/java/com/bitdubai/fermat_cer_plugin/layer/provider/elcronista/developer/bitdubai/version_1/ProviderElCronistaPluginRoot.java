@@ -30,7 +30,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfo
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.database.ElCronistaProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.database.ElCronistaProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.elcronista.developer.bitdubai.version_1.exceptions.CantInitializeElCronistaProviderDatabaseException;
@@ -139,7 +139,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
         double purchasePrice = 0;
         double salePrice = 0;
         try {
-            content = HttpReader.getHTTPContent("http://api.bluelytics.com.ar/json/last_price");
+            content = HttpHelper.getHTTPContent("http://api.bluelytics.com.ar/json/last_price");
             json = new JSONObject("{\"indexes\": " + content + "}");
             jsonArr = json.getJSONArray("indexes");
 

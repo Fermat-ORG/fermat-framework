@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -38,10 +39,12 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     private static final String TAG = "CustomerNavigationView";
 
     private CryptoCustomerIdentity actorIdentity;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
     private CryptoCustomerWalletModuleManager moduleManager;
     private WeakReference<Context> activity;
 
-    public CustomerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> session) {
+    public CustomerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> session,
+                                         FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<>(activity);
 
         ErrorManager errorManager = session.getErrorManager();
@@ -49,6 +52,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
         try {
             moduleManager = session.getModuleManager();
             actorIdentity = moduleManager.getAssociatedIdentity(session.getAppPublicKey());
+            this.applicationsHelper = new WeakReference<>(applicationsHelper);
 
         } catch (FermatException ex) {
             if (errorManager == null)
@@ -63,7 +67,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

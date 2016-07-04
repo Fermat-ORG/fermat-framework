@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_community.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -16,10 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 
 /**
@@ -29,6 +28,9 @@ import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
  * @version 1.0.0
  */
 public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>> {
+
+    private CryptoBrokerCommunityResourceSearcher resourceSearcher;
+
 
     public CryptoBrokerCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -81,19 +83,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
     }
 
     @Override
-    public int getResource(int id) {
-        switch (id) {
-            case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.interrogacion_blanco;
-
-            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
-                return R.drawable.localizacion_blanco;
-
-            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                return R.drawable.lupa;
-
-            default:
-                return 0;
-        }
+    public ResourceSearcher getResourceSearcher() {
+        if (resourceSearcher == null)
+            resourceSearcher = new CryptoBrokerCommunityResourceSearcher();
+        return resourceSearcher;
     }
 }

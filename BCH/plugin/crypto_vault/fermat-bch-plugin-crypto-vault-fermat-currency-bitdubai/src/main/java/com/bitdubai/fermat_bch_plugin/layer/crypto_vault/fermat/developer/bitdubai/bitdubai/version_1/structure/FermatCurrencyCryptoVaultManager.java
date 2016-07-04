@@ -12,18 +12,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
-
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.FermatNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
@@ -36,6 +28,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAd
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.database.FermatCurrencyCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.exceptions.CantInitializeFermatCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.CryptoVault;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.vault_seed.exceptions.InvalidSeedException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -78,7 +77,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
     /**
      * platform interfaces definition
      */
-    FermatNetworkManager fermatNetworkManager;
+    BlockchainManager<ECKey, Transaction> fermatNetworkManager;
     PluginFileSystem pluginFileSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
     ErrorManager errorManager;
@@ -93,7 +92,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
                                              PluginFileSystem pluginFileSystem,
                                              PluginDatabaseSystem pluginDatabaseSystem,
                                              String seedFileName,
-                                             FermatNetworkManager fermatNetworkManager,
+                                            BlockchainManager<ECKey, Transaction> fermatNetworkManager,
                                              ErrorManager errorManager) throws InvalidSeedException {
         super(pluginFileSystem, pluginId, fermatNetworkManager, "FermatVaultSeed", seedFileName);
 
@@ -123,7 +122,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          * I create the account manually instead of getting it from the database because this method always returns addresses
          * from the Fermat Vault account with Id 0.
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 
@@ -180,17 +179,17 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+        if (FermatBlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
             try {
                 // If only one network is enabled, then I will return the default
                 if (getDao().getActiveNetworkTypes().size() == 1)
-                    return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    return FermatBlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else {
                     // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
                     return networkParameters;
                 }
             } catch (CantExecuteDatabaseOperationException e) {
-                return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return FermatBlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
         } else
             return networkParameters;
@@ -221,7 +220,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * I extract the network Parameter from the address
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * If the address is correct, then no exception raised.
@@ -285,7 +284,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -302,12 +301,12 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = fermatNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = fermatNetworkManager.getBlockchainProviderTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
         Context walletContext = new Context(networkParameters);
@@ -333,7 +332,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
+        Coin fee = Coin.valueOf(FermatNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = Coin.valueOf(satoshis);
 
         if (coinToSend.isNegative() || coinToSend.isZero()){
@@ -404,8 +403,8 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          * I will store the transaction in the crypto network
          */
         try {
-            fermatNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
-        } catch (CantStoreBitcoinTransactionException e) {
+            fermatNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
+        } catch (CantStoreTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
 
@@ -522,7 +521,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -538,12 +537,12 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = fermatNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = fermatNetworkManager.getBlockchainProviderTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
 
@@ -572,7 +571,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
+        Coin fee = Coin.valueOf(FermatNetworkConfiguration.FIXED_FEE_VALUE);
         final Coin coinToSend = Coin.valueOf(valueToSend);
 
         if (coinToSend.isNegative() || coinToSend.isZero()){
@@ -633,8 +632,8 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          * I will store the transaction in the crypto network
          */
         try {
-            fermatNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
-        } catch (CantStoreBitcoinTransactionException e) {
+            fermatNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
+        } catch (CantStoreTransactionException e) {
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
 

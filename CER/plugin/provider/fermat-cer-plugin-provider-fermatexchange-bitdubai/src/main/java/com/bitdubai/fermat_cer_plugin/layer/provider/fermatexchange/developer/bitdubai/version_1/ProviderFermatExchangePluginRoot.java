@@ -33,7 +33,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRat
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.exceptions.CantInitializeFermatExchangeProviderDatabaseException;
@@ -48,7 +48,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @PluginInfo(createdBy = "abicelis", maintainerMail = "abicelis@gmail.com", platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.FERMAT_EXCHANGE)
@@ -95,6 +97,8 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             dao = new FermatExchangeProviderDao(pluginDatabaseSystem, pluginId, this);
             dao.initialize();
             dao.initializeProvider("FermatExchange");
+
+            postFermatExchangeData();
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
@@ -133,6 +137,21 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
         return false;
     }
 
+    public void postFermatExchangeData() {
+
+        String url = "http://httpbin.org/post";
+
+        Map<String,Object> params = new LinkedHashMap<>();
+        params.put("base_currency", "FER");
+        params.put("quote_currency", "BTC");
+        params.put("amount", 10);
+        params.put("price", 0.09283);
+        params.put("timestamp", new Date().getTime());
+
+        String response = HttpHelper.postHTTPContent(url, params);
+        System.out.println("postFermatExchangeData!!" + response);
+    }
+
     @Override
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
@@ -150,7 +169,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
         try{
 
             //TODO: uncomment / kill these two lines when FermatExchange is done
-            //json =  new JSONObject(HttpReader.getHTTPContent(url));
+            //json =  new JSONObject(HttpHelper.getHTTPContent(url));
             json = new JSONObject("{\""+currPairParam+"\":{\"timestamp\":\"1463844159\",\"purchase\":\"123.45\",\"sale\":\"456.78\"}}");
 
             purchase = json.getJSONObject(currPairParam).getDouble("purchase");
@@ -203,7 +222,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             try{
 
                 //TODO: MOCK, uncomment / kill these lines when FermatExchange is done
-                //json =  new JSONObject(HttpReader.getHTTPContent(url));
+                //json =  new JSONObject(HttpHelper.getHTTPContent(url));
                 json = new JSONObject("{\"" + currPairParam + "\":{\"" + dateParam + "\":{\"purchase\": \"123.45\",\"sale\": \"456.78\"}}}");
 
                 purchase = json.getJSONObject(currPairParam).getJSONObject(dateParam).getDouble("purchase");
@@ -267,7 +286,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
 
         try{
 
-            json =  new JSONObject(HttpReader.getHTTPContent(url));
+            json =  new JSONObject(HttpHelper.getHTTPContent(url));
             json = json.getJSONObject(currPairParam);
 
             Iterator<?> keys = json.keys();

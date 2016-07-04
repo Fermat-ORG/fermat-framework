@@ -219,17 +219,9 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 
-//        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME, 0, "Rename Group").setIcon(R.drawable.dap_community_user_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE, 0, "Delete Group").setIcon(R.drawable.dap_community_user_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS, 0, "Delete Selected Users").setIcon(R.drawable.dap_community_user_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();
 

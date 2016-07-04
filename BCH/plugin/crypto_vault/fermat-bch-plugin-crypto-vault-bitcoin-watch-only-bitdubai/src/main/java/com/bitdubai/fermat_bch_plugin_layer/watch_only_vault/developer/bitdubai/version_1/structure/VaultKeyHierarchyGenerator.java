@@ -2,16 +2,15 @@ package com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.database.BitcoinWatchOnlyCryptoVaultDao;
-
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinWatchOnlyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
 
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -67,7 +66,7 @@ class VaultKeyHierarchyGenerator implements Runnable{
      * Platform services
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     UUID pluginId;
 
     /**
@@ -75,7 +74,7 @@ class VaultKeyHierarchyGenerator implements Runnable{
 
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicKey rootKey, HierarchyAccount hierarchyAccount, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyGenerator(DeterministicKey rootKey, HierarchyAccount hierarchyAccount, PluginDatabaseSystem pluginDatabaseSystem, BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
         this.rootKey = rootKey;
         this.hierarchyAccount = hierarchyAccount;
         this.pluginDatabaseSystem = pluginDatabaseSystem;

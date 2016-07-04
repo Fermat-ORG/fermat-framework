@@ -65,12 +65,14 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
     /**
      * Constructor
      */
-    public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage) {
+    public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage, int accuracy, Frequency frequency) {
 
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.privateKey = privateKey;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
     }
 
     public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage,

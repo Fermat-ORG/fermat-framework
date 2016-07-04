@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -36,11 +37,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
@@ -52,6 +55,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.util.EditCustomerIdentityWo
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 
 
@@ -65,7 +69,6 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
-
     // DATA
     private Bitmap cryptoCustomerBitmap = null;
     private byte[] identityImgByteArray = null;
@@ -73,6 +76,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private boolean actualizable;
     private byte[] profileImage;
     private String cryptoCustomerPublicKey;
+    Location location;
+    private Uri imageToUploadUri;
 
     // UI
     private EditText mCustomerName;
@@ -111,6 +116,13 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         if (appSession.getData(FragmentsCommons.CUSTOMER_NAME) != null) {
             cryptoCustomerName = (String) appSession.getData(FragmentsCommons.CUSTOMER_NAME);
             appSession.removeData(FragmentsCommons.CUSTOMER_NAME);
+        }
+
+        //Check if GPS is on and coordinate are fine
+        try{
+            location = appSession.getModuleManager().getLocation();
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         turnGPSOn();
@@ -193,6 +205,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             }
         });
 
+        checkGPSOn();
+
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
@@ -235,8 +249,27 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    cryptoCustomerBitmap = (Bitmap) extras.get("data");
+                    // grant all three uri permissions!
+                    if (imageToUploadUri != null) {
+                        String provider = "com.android.providers.media.MediaProvider";
+                        Uri selectedImage = imageToUploadUri;
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                                getActivity().requestPermissions(
+                                        new String[]{Manifest.permission.CAMERA},
+                                        REQUEST_IMAGE_CAPTURE);
+                            }
+                        }
+                        getActivity().getContentResolver().notifyChange(selectedImage, null);
+                        Bundle extras = data.getExtras();
+                        cryptoCustomerBitmap = (Bitmap) extras.get("data");
+                    }
                     break;
 
                 case REQUEST_LOAD_IMAGE:
@@ -318,10 +351,43 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
     private void dispatchTakePictureIntent() {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        // Check permission for CAMERA
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    getActivity().requestPermissions(
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_IMAGE_CAPTURE);
+                } else {
+                    getActivity().requestPermissions(
+                            new String[]{Manifest.permission.CAMERA},
+                            REQUEST_IMAGE_CAPTURE);
+                }
+            } else {
+                if (checkWriteExternalPermission()) {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    imageToUploadUri = Uri.fromFile(f);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            imageToUploadUri = Uri.fromFile(f);
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//        }
     }
 
     private void loadImageFromGallery() {
@@ -403,5 +469,34 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         String permission = "android.permission.ACCESS_FINE_LOCATION";
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean checkWriteExternalPermission() {
+        String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void checkGPSOn(){
+        if(location!= null){
+            if(location.getLongitude()==0 || location.getLatitude()==0){
+                turnOnGPSDialog();
+            }
+        }else
+            turnOnGPSDialog();
+    }
+
+    public void turnOnGPSDialog() {
+        try {
+            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
+                    .setBody(R.string.cbp_customer_identity_gps)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.banner_identity_customer)
+                    .build();
+            pd.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

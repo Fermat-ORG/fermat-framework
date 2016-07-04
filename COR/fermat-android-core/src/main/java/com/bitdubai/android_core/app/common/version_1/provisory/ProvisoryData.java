@@ -383,7 +383,7 @@ public class ProvisoryData {
                 AppsStatus.ALPHA);
 
         item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.banner_artist_community);
+        item1.setIconResource(R.drawable.artist_banner);
         item1.setPosition(6);
         lstCommunities.add(item1);
 

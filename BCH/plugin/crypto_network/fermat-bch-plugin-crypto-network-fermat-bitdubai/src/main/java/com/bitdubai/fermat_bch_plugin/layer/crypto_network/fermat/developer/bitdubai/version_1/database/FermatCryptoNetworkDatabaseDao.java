@@ -28,9 +28,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
@@ -39,6 +38,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantInitializeFermatCryptoNetworkDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatTransactionConverter;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.TransactionProtocolData;
 
 import org.apache.commons.lang.StringUtils;
@@ -268,19 +269,19 @@ public class FermatCryptoNetworkDatabaseDao {
         switch (cryptoTransaction.getCryptoStatus()){
             case ON_BLOCKCHAIN:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = FermatTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 break;
             case IRREVERSIBLE:
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_CRYPTO_NETWORK, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingCryptoTransaction = FermatTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingCryptoTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     saveNewTransaction(missingCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingCryptoTransaction));
                 }
                 if (isNewTransaction(cryptoTransaction.getTransactionHash(), CryptoStatus.ON_BLOCKCHAIN, cryptoTransaction.getAddressTo(), cryptoTransaction.getCryptoTransactionType())){
-                    CryptoTransaction missingOBCCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
+                    CryptoTransaction missingOBCCryptoTransaction = FermatTransactionConverter.copyCryptoTransaction(cryptoTransaction);
                     missingOBCCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     saveNewTransaction(missingOBCCryptoTransaction, UUID.randomUUID(), calculateProtocolStatus(missingOBCCryptoTransaction));
                 }
@@ -902,7 +903,7 @@ public class FermatCryptoNetworkDatabaseDao {
             /**
              * I will form the address from the public key and the network so I can insert it.
              */
-            NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+            NetworkParameters networkParameters = FermatBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
             Address address = null;
             try {
                 address = new Address(networkParameters, key.toAddress(networkParameters).toString());

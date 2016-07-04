@@ -8,7 +8,7 @@ android {
 
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '21.1.2'
 
 
     packagingOptions {
@@ -132,27 +132,25 @@ dependencies {
 //    compile project(':fermat-dap-android-sub-app-redeem-point-community')
 //    compile project(':fermat-dap-android-sub-app-asset-issuer-identity')
 //    compile project(':fermat-dap-android-sub-app-asset-user-identity')
-//    compile (project(':fermat-dap-android-sub-app-redeem-point-identity')){
-//        exclude group: 'com.githang', module:'com.edmodo.cropper'
-//    }
+//    compile project(':fermat-dap-android-sub-app-redeem-point-identity')
     //BNK wallets
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
     //CHT
-//    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
-//    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-//    compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
+    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
+    compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
     //TKY
-    compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
-    compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
-    compile project(':fermat-tky-android-sub-app-fan-identity-bitdubai')
+//    compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
+//    compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
+//    compile project(':fermat-tky-android-sub-app-fan-identity-bitdubai')
     //ART
-    compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
-    compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
-    compile project(':fermat-art-android-sub-app-fan-community-bitdubai')
-    compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
-    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
+//    compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
+//    compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
+//    compile project(':fermat-art-android-sub-app-fan-community-bitdubai')
+//    compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
+//    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
     //WPD
     compile project(':fermat-wpd-android-sub-app-store-bitdubai')
     compile project(':fermat-wpd-android-sub-app-wallet-manager-bitdubai')

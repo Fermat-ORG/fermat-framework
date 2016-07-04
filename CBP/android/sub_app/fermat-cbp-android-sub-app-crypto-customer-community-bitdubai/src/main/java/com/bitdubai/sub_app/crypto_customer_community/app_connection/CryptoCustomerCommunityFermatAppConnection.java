@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_customer_community.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -16,10 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
-import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.common.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
 
 /**
@@ -29,6 +28,9 @@ import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
  * @version 1.0.0
  */
 public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>> {
+
+    private CryptoCustomerCommunityResourceSearcher resourceSearcher;
+
 
     public CryptoCustomerCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -79,19 +81,9 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
     }
 
     @Override
-    public int getResource(int id) {
-        switch (id) {
-            case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.ccc_help_icon;
-
-            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
-                return R.drawable.ccc_location_icon_white;
-
-            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                return R.drawable.ccc_search_icon_withe;
-
-            default:
-                return 0;
-        }
+    public ResourceSearcher getResourceSearcher() {
+        if (resourceSearcher == null)
+            resourceSearcher = new CryptoCustomerCommunityResourceSearcher();
+        return resourceSearcher;
     }
 }
