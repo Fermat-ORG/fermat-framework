@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.structure.VaultKeyHierarchyMaintainer</code>
@@ -42,7 +44,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchyMaintainer implements Agent {
+class VaultKeyHierarchyMaintainer extends AbstractAgent {
     /**
      * controller of the agent execution thread
      */
@@ -81,25 +83,22 @@ class VaultKeyHierarchyMaintainer implements Agent {
      * @param pluginDatabaseSystem
      */
     public VaultKeyHierarchyMaintainer(VaultKeyHierarchy vaultKeyHierarchy, PluginDatabaseSystem pluginDatabaseSystem, BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
+        super(2, TimeUnit.MINUTES);
         this.vaultKeyHierarchy = vaultKeyHierarchy;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.pluginId = pluginId;
     }
 
+
     @Override
-    public void start() throws CantStartAgentException {
-        isSupposedToRun = true;
-        vaultKeyHierarchyMaintainerAgent = new VaultKeyHierarchyMaintainerAgent();
-        Thread agentThread = new Thread(vaultKeyHierarchyMaintainerAgent);
-        agentThread.start();
+    protected Runnable agentJob() {
+        return new VaultKeyHierarchyMaintainerAgent();
     }
 
     @Override
-    public void stop() {
-        isSupposedToRun = false;
-        vaultKeyHierarchyMaintainerAgent.interrupProcess();
-        vaultKeyHierarchyMaintainerAgent = null;
+    protected void onErrorOccur() {
+
     }
 
     private class VaultKeyHierarchyMaintainerAgent implements Runnable {
@@ -113,34 +112,17 @@ class VaultKeyHierarchyMaintainer implements Agent {
          */
         List<ECKey> allAccountsKeyList;
 
-        /**
-         * Sleep time of the agent between iterations
-         */
-        final long AGENT_SLEEP_TIME = 120000; //default time is 2 minutes
-
-
         @Override
         public void run() {
-            while (isSupposedToRun) {
-                try {
-                    doTheMainTask();
-                    Thread.sleep(AGENT_SLEEP_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (CantLoadHierarchyAccountsException e) {
-                    e.printStackTrace();
-                } catch (KeyMaintainerStatisticException e) {
-                    e.printStackTrace();
-                }
+            try {
+                doTheMainTask();
+            } catch (CantLoadHierarchyAccountsException e) {
+                e.printStackTrace();
+            } catch (KeyMaintainerStatisticException e) {
+                e.printStackTrace();
             }
         }
 
-        /**
-         * stop the current thread.
-         */
-        public void interrupProcess(){
-            Thread.currentThread().interrupt();
-        }
 
         /**
          * main executor of the agent

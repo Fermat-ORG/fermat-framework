@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
@@ -71,6 +72,8 @@ class VaultKeyHierarchyGenerator implements Runnable {
     private PluginDatabaseSystem pluginDatabaseSystem;
     private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     UUID pluginId;
+
+
 
     /**
      * Constructor

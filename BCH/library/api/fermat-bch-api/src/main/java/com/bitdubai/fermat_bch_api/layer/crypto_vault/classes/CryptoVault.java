@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 2/26/16.
  */
-public abstract class CryptoVault {
+public abstract class CryptoVault{
     /**
      * Platform variables
      */
