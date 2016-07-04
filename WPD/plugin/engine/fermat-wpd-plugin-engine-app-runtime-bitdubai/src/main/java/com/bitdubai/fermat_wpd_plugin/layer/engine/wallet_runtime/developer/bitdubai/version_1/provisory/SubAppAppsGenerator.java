@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.drawables.Badge;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.search_view.SearchViewOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
@@ -4145,15 +4147,15 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("CHATS");
 
         //Badge in the tab
-//        Badge fermatDrawable = new Badge("ic_badge");
-//        fermatDrawable.setTestSize(32);
-//        fermatDrawable.setNumber(1);
-//        runtimeTab.setFermatDrawable(fermatDrawable);
+        Badge fermatDrawable = new Badge("ic_badge");
+        fermatDrawable.setTestSize(32);
+        fermatDrawable.setNumber(1);
+        runtimeTab.setFermatDrawable(fermatDrawable);
 
-//        TabBadgeView tabBadgeView = new TabBadgeView();
-//        tabBadgeView.setTitle("CHATS");
-//        tabBadgeView.setBadge(fermatDrawable);
-//        runtimeTab.setFermatView(tabBadgeView);
+        TabBadgeView tabBadgeView = new TabBadgeView();
+        tabBadgeView.setTitle("CHATS");
+        tabBadgeView.setBadge(fermatDrawable);
+        runtimeTab.setFermatView(tabBadgeView);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

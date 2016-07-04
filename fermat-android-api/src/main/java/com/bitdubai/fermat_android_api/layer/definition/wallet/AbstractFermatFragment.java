@@ -409,6 +409,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return ((FermatActivityManager)getActivity()).getRuntimeManager();
     }
 
+    protected final void changeStartActivity(String activityCode){
+        ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
+    }
+
     protected final FermatActivityManager getFermatActivityManager(){
         return ((FermatActivityManager)getActivity());
     }

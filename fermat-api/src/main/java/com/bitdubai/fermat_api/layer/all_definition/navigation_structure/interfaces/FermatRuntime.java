@@ -22,5 +22,5 @@ public interface FermatRuntime {
      * @return
      */
 
-    void changeStartActivity(String activityCode);
+    void changeStartActivity(String appPublicKey,String activityCode);
 }
