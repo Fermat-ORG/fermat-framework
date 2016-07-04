@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -134,5 +135,21 @@ public abstract class AbstractBusinessTransactionAgent
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                 e);
         e.printStackTrace();
+    }
+
+    /**
+     * Return the reference wallet associated with the crypto currency
+     *
+     * @param cryptoCurrency the crypto currency
+     *
+     * @return the reference wallet or null
+     */
+    protected ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {
+        if (cryptoCurrency == CryptoCurrency.BITCOIN)
+            return ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
+        if (cryptoCurrency == CryptoCurrency.FERMAT)
+            return ReferenceWallet.BASIC_WALLET_FERMAT_WALLET;
+
+        return null;
     }
 }

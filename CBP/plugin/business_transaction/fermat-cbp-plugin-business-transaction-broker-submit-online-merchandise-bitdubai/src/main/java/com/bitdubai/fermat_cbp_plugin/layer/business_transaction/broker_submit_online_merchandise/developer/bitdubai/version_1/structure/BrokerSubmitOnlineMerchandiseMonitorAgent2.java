@@ -448,22 +448,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
     }
 
     /**
-     * Return the reference wallet associated with the crypto currency
-     *
-     * @param cryptoCurrency the crypto currency
-     *
-     * @return the reference wallet or null
-     */
-    private ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {
-        if (cryptoCurrency == CryptoCurrency.BITCOIN)
-            return ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
-        if (cryptoCurrency == CryptoCurrency.FERMAT)
-            return ReferenceWallet.BASIC_WALLET_FERMAT_WALLET;
-
-        return null;
-    }
-
-    /**
      * Rise an event indicating that the incoming money is in the crypto wallet.
      * Call this method when the crypto status is ON_BLOCKCHAIN and beyond
      *
