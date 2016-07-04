@@ -90,7 +90,7 @@ public class Actors implements RestFulServices {
                 actorProfilesRegistered.add(buildActorProfileFromCheckedInActor(actor));
             }
 
-            LOG.info("actorProfilesRegistered.size() = " + actorProfilesRegistered.size());
+            LOG.info("CheckInActors.size() = " + actorProfilesRegistered.size());
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("success", Boolean.TRUE);
@@ -136,7 +136,7 @@ public class Actors implements RestFulServices {
                 actorProfilesRegistered.add(buildActorProfileFromActorsCatalog(actorsCatalog));
             }
 
-            LOG.info("actorProfilesRegistered.size() = " + actorProfilesRegistered.size());
+            LOG.info("ActorsCatalog.size() = " + actorProfilesRegistered.size());
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("success", Boolean.TRUE);

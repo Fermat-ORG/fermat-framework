@@ -380,8 +380,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
                 LOG.info(">>>> Trying to get the location of the node...");
                 location = locationManager.getLocation();
-                ConfigurationManager.updateValue(ConfigurationManager.LATITUDE, nodeProfile.getLocation().getLatitude().toString());
-                ConfigurationManager.updateValue(ConfigurationManager.LONGITUDE, nodeProfile.getLocation().getLongitude().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.LATITUDE, location.getLatitude().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.LONGITUDE, location.getLongitude().toString());
 
             }else {
 
@@ -679,9 +679,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
             LOG.info("Requesting update of the profile on the node catalog...");
 
-            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+       /*     FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
             UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
-            fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
+            fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST); */
 
         }catch (Exception e){
             LOG.error("Can't clean request Update Profile In The Node Catalog: "+e.getMessage());

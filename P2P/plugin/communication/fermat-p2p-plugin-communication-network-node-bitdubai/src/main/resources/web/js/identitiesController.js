@@ -1,12 +1,13 @@
 angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$interval', '$filter', '$window', '$location', '$timeout', 'NgMap', function($scope, $http, $interval, $filter, $window, $location, $timeout, NgMap) {
 
-      $scope.online      = false;
+      $scope.onlineIdentities = false;
       $scope.offSet      = 0;
       $scope.max         = 24;
       $scope.total       = 0;
       $scope.currentPage = 1;
       $scope.identities  = [];
       $scope.geoPoints   = [];
+      $scope.markers     = [];
 
       var parseJwtToken = function(token) {
            var base64Url = token.split('.')[1];
@@ -27,8 +28,11 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
       };
 
      var requestIdentitiesData = function() {
-
-        if($scope.online === true){
+        console.log("online = "+$scope.onlineIdentities);
+        $scope.total       = 0;
+        $scope.identities.splice(0, $scope.identities.length);
+        clearMarkers();
+        if($scope.onlineIdentities === true){
             requestCheckInData();
         }else{
             requestCatalogData();
@@ -46,8 +50,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
           var success = data.success;
 
           if(success === true){
-            $scope.identities.splice(0, $scope.identities.length);
-            $scope.geoPoints.splice(0, $scope.geoPoints.length);
+
             angular.forEach(angular.fromJson(data.identities), function(value, key) {
 
               var identity = angular.fromJson(value);
@@ -55,7 +58,13 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
               var location = angular.fromJson(identity.location);
               if(location.latitude != 0 && location.longitude != 0){
-                $scope.geoPoints.push(new google.maps.LatLng(location.latitude, location.longitude));
+
+                   $scope.markers.push(new google.maps.Marker({
+                                                              position: new google.maps.LatLng(parseFloat(location.latitude), parseFloat(location.longitude)),
+                                                              title: identity.name,
+                                                              animation: google.maps.Animation.DROP
+                                                            }));
+
               }
 
             });
@@ -82,12 +91,11 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
              url: '/fermat/rest/api/v1/admin/actors/check_in?offSet='+$scope.offSet+'&max='+$scope.max
          }).then(function successCallback(response) {
 
-           var data = response.data;
-           var success = data.success;
+             var data = response.data;
+             var success = data.success;
 
-            if(success === true){
-               $scope.identities.splice(0, $scope.identities.length);
-               $scope.geoPoints.splice(0, $scope.geoPoints.length);
+             if(success === true){
+
                angular.forEach(angular.fromJson(data.identities), function(value, key) {
 
                  var identity = angular.fromJson(value);
@@ -95,7 +103,13 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
                  var location = angular.fromJson(identity.location);
                  if(location.latitude != 0 && location.longitude != 0){
-                   $scope.geoPoints.push(new google.maps.LatLng(location.latitude, location.longitude));
+
+                      $scope.markers.push(new google.maps.Marker({
+                                                                 position: new google.maps.LatLng(parseFloat(location.latitude), parseFloat(location.longitude)),
+                                                                 title: identity.name,
+                                                                 animation: google.maps.Animation.DROP
+                                                               }));
+
                  }
 
                });
@@ -103,7 +117,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
                $scope.total        = data.total;
                $scope.numPages = Math.ceil($scope.total/$scope.max);
                addMarkers();
-            }
+             }
 
         }, function errorCallback(response) {
              var message = "";
@@ -137,21 +151,25 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
      }
 
+     var clearMarkers = function() {
+       for (var i = 0; i < $scope.markers.length; i++) {
+         $scope.markers[i].setMap(null);
+       }
+       $scope.markers = [];
+     }
 
      var addMarkers = function() {
-
          NgMap.getMap().then(function(map) {
-            for (var i=0; i < $scope.geoPoints.length; i++) {
-                $timeout(function() {
-                  new google.maps.Marker({
-                    position: $scope.geoPoints[i],
-                    map: map,
-                    draggable: false,
-                    animation: google.maps.Animation.DROP
-                  });
-                }, i * 200);
+            for (var i=0; i < $scope.markers.length; i++) {
+               addMarkerWithTimeout($scope.markers[i],  i * 200, map);
             }
          });
+     }
+
+      var addMarkerWithTimeout = function (mark, timeout, map) {
+           $timeout(function() {
+                mark.setMap(map);
+           }, timeout);
      }
 
 
@@ -166,5 +184,10 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
          requestIdentitiesData();
      }
+
+
+       $scope.reloadOnlineChange = function() {
+         requestIdentitiesData();
+       };
 
 }]);
