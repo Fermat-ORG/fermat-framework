@@ -46,7 +46,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateIdentityWorker;
@@ -261,7 +261,7 @@ public class CreateCryptoBrokerIdentityFragment
 
         } else {
             final int accuracy = getAccuracyData();
-            final Frequency frequency = getFrequencyData();
+            final GeoFrequency frequency = getFrequencyData();
 
             FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
                     brokerAlias, identityImgByteArray, accuracy, frequency);
@@ -354,9 +354,9 @@ public class CreateCryptoBrokerIdentityFragment
                 (int) appSession.getData(FragmentsCommons.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
-        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
-                (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    private GeoFrequency getFrequencyData() {
+        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? GeoFrequency.NONE :
+                (GeoFrequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
     }
 
     private boolean checkWriteExternalPermission() {

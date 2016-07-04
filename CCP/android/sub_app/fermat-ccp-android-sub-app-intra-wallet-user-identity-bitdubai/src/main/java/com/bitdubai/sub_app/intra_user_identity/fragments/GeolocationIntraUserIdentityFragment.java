@@ -33,7 +33,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.I
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationGeolocationIntraUserIdentityDialog;
@@ -53,7 +53,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     Spinner frequency;
     Toolbar toolbar;
     long acurracydata;
-    Frecuency frecuencydata;
+    GeoFrequency frequencyData;
     IntraWalletUserIdentity identity;
 
 
@@ -116,11 +116,11 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
 
     private void initViews(View layout) {
         // Spinner Drop down elements
-        List<Frecuency> dataspinner = new ArrayList<Frecuency>();
-        dataspinner.add(Frecuency.NONE);
-        dataspinner.add(Frecuency.LOW);
-        dataspinner.add(Frecuency.NORMAL);
-        dataspinner.add(Frecuency.HIGH);
+        List<GeoFrequency> dataspinner = new ArrayList<GeoFrequency>();
+        dataspinner.add(GeoFrequency.NONE);
+        dataspinner.add(GeoFrequency.LOW);
+        dataspinner.add(GeoFrequency.NORMAL);
+        dataspinner.add(GeoFrequency.HIGH);
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
@@ -128,7 +128,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         frequency.setBackgroundColor(Color.parseColor("#00000000"));
 
         try {
-            ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
+            ArrayAdapter<GeoFrequency> dataAdapter = new ArrayAdapter<GeoFrequency>(getActivity(),
                     R.layout.frecuency_iden_spinner_item, dataspinner);
             //android.R.layout.simple_spinner_item, dataspinner);
             dataAdapter.setDropDownViewResource(R.layout.frecuency_iden_spinner_item);
@@ -141,7 +141,9 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString().toLowerCase());
+//                        frequencyData = GeoFrequency.getByCode(parent.getItemAtPosition(position).toString().toLowerCase());
+                        frequencyData = (GeoFrequency) parent.getItemAtPosition(position);
+                        frequencyData = GeoFrequency.getByCode(frequencyData.getCode());
              //           ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                //         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
@@ -208,7 +210,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
                 moduleManager.updateIntraUserIdentity(identity.getPublicKey(), identity.getAlias(),identity.getPhrase(),
-                        identity.getImage(),acurracydata,frecuencydata );
+                        identity.getImage(),acurracydata,frequencyData );
 
                 Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated OK.", Toast.LENGTH_LONG).show();
 
@@ -234,7 +236,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         return false;
     }
 
-    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetIntraUserIdentityException {
+    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<GeoFrequency> dataAdapter) throws CantGetIntraUserIdentityException {
         checkIdentity();
         if(identity!=null){
             accuracy.setText(""+identity.getAccuracy());

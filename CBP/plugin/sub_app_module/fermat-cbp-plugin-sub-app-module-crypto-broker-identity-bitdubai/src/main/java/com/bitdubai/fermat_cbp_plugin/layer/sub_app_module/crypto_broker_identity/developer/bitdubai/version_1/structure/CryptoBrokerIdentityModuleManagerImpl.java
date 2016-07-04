@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
@@ -62,7 +62,7 @@ public class CryptoBrokerIdentityModuleManagerImpl
     }
 
     @Override
-    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image, long accuracy, Frequency frequency) throws CantCreateCryptoBrokerException {
+    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image, long accuracy, GeoFrequency frequency) throws CantCreateCryptoBrokerException {
 
         try {
 

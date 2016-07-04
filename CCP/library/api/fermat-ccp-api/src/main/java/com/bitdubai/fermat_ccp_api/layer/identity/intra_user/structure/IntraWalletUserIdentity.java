@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
@@ -30,14 +30,14 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
     private String privateKey;
 
     private long accuracy;
-    private Frecuency frecuency;
+    private GeoFrequency frecuency;
 
 
     /**
      * Constructor
      */
 
-    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image,long accuracy,Frecuency frecuency) {
+    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image,long accuracy,GeoFrequency frecuency) {
 
         this.alias = alias;
         this.phrase = phrase;
@@ -68,7 +68,7 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
     }
 
     @Override
-    public Frecuency getFrecuency() {
+    public GeoFrequency getFrecuency() {
         return frecuency;
     }
 
@@ -177,7 +177,7 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
                 ", publicKey='" + publicKey + '\'' +
                 ", privateKey='" + privateKey + '\'' +
                 ", Accuracy='" + accuracy + '\'' +
-                ", Frecuency='" + frecuency.getCode() + '\'' +
+                ", GeoFrequency='" + frecuency.getCode() + '\'' +
                 '}';
     }
 }

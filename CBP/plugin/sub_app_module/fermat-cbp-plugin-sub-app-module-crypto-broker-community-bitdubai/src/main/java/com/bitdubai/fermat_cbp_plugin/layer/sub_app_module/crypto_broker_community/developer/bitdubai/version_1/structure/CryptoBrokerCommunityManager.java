@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
@@ -683,7 +683,7 @@ public class CryptoBrokerCommunityManager
         if(name.equals("Customer"))
         {
             try{
-                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, Frequency.NONE);
+                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, GeoFrequency.NONE);
 
                 createdPublicKey = createdIdentity.getPublicKey();
                 new Thread() {
@@ -704,7 +704,7 @@ public class CryptoBrokerCommunityManager
         else if( name.equals("Broker"))
         {
             try{
-                final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frequency.NONE);
+                final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, GeoFrequency.NONE);
 
                 createdPublicKey = createdIdentity.getPublicKey();
 

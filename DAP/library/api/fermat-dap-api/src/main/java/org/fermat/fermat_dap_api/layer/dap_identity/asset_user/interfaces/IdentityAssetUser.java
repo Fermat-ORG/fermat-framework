@@ -2,7 +2,7 @@ package org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantSingMessageException;
 
 import java.io.Serializable;
@@ -32,5 +32,5 @@ public interface IdentityAssetUser extends ActiveActorIdentityInformation, Seria
 
     int getAccuracy();
 
-    Frequency getFrequency();
+    GeoFrequency getFrequency();
 }
