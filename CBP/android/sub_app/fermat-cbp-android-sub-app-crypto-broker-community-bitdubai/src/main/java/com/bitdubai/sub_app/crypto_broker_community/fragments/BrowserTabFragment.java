@@ -334,20 +334,21 @@ public class BrowserTabFragment
     @Override
     public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
         try {
-            ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, identity);
+            if(data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
+                ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, identity);
 
-            connectDialog.setTitle("Connection Request");
-            connectDialog.setSubtitle("New Request");
-            connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", data.getAlias()));
-            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateSelectedActorInList(data, position);
-                }
-            });
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setSubtitle("New Request");
+                connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", data.getAlias()));
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateSelectedActorInList(data, position);
+                    }
+                });
 
-            connectDialog.show();
-
+                connectDialog.show();
+            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
             Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
