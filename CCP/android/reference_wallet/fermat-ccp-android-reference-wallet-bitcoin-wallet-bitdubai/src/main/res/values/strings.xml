@@ -107,6 +107,7 @@
     <string name="bits_text">[bits]</string>
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
+    <string name="feed_amount_text">Feed</string>
     <!-- setting_base.xml -->
     <string name="empty_transactions_text">Empty transactions</string>
     <!-- wallet_manager_transaction_view.xml -->
@@ -255,6 +256,8 @@
         <item>TestNet</item>
         <item>RegTest</item>
     </array>
-
+    <string name="feed_low">Low</string>
+    <string name="feed_Medium">Medium</string>
+    <string name="feed_High">High</string>
 </resources>
 

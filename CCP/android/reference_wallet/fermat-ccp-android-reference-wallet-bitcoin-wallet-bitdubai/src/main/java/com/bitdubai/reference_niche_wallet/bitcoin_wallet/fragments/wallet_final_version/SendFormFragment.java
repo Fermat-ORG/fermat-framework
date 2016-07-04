@@ -107,6 +107,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private View rootView;
     private AutoCompleteTextView contactName;
     private EditText editTextAmount;
+    private EditText editFeedamount;
     private ImageView imageView_contact;
     private FermatButton send_button;
     private TextView txt_notes;
@@ -127,8 +128,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private boolean connectionDialogIsShow;
     private boolean onFocus;
     private Spinner spinner;
+    private Spinner feed_spinner;
     private FermatTextView txt_type;
     private ImageView spinnerArrow;
+    private ImageView feed_spinnerArrow;
     BlockchainNetworkType blockchainNetworkType;
 
 
@@ -245,10 +248,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
+        editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
         imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        feed_spinner = (Spinner) rootView.findViewById(R.id.feed_spinner);
+        feed_spinnerArrow = (ImageView) rootView.findViewById(R.id.feed_spinner_open);
 
         editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11,8)});
 
@@ -266,17 +272,22 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 String text = "";
                 String txtType = txt_type.getText().toString();
                 String amount = editTextAmount.getText().toString();
+                String feedAmount = editFeedamount.getText().toString();
                 String newAmount = "";
+                String newFeed = "";
                 if(bitcoinConverter != null) {
                     switch (position) {
                         case 0:
                             text = "[btc]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                                newFeed = bitcoinConverter.getBitcoinsFromBits(feedAmount);
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = bitcoinConverter.getBTC(amount);
+                                newFeed = bitcoinConverter.getBTC(feedAmount);
                             } else {
                                 newAmount = amount;
+                                newFeed = feedAmount;
                             }
 
                             break;
@@ -286,8 +297,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = bitcoinConverter.getBits(amount);
+                                newFeed = bitcoinConverter.getBits(feedAmount);
                             } else {
                                 newAmount = amount;
+                                newFeed = feedAmount;
                             }
 
                             break;
@@ -295,10 +308,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                newFeed = bitcoinConverter.getSathoshisFromBits(amount);
                             } else if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                newFeed = bitcoinConverter.getSathoshisFromBTC(amount);
                             } else {
                                 newAmount = amount;
+                                newFeed = feedAmount;
                             }
                             break;
                     }
@@ -310,11 +326,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     newAmount = "";
 
                 final String finalAmount = newAmount;
+                final String finalFeed = newFeed;
                 alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
                         txt_type.setText(finalText);
                         editTextAmount.setText(finalAmount);
+                        editFeedamount.setText(finalFeed);
                     }
 
                     @Override
@@ -340,6 +358,96 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             @Override
             public void onClick(View v) {
                 spinner.performClick();
+            }
+        });
+
+        //spinner feed type
+
+        List<String> listFeed = new ArrayList<String>();
+        listFeed.add("Added to Amount");
+        listFeed.add("Deducted to Amount");
+        ArrayAdapter<String> dataFeedAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.list_item_spinner, listFeed);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        feed_spinner.setAdapter(dataFeedAdapter);
+        feed_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String text = "";
+                String txtType = txt_type.getText().toString();
+                String amount = editTextAmount.getText().toString();
+                String feed_amount = editFeedamount.getText().toString();
+                String newAmount = "";
+                double total = 0;
+
+                if(bitcoinConverter != null) {
+
+
+                    switch (position) {
+                        case 0: //added
+                            if (txtType.equals("[btc]")) {
+                                total = Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(amount)) + Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(feed_amount));
+                                newAmount = String.valueOf(total);
+                            } else if (txtType.equals("[satoshis]")) {
+                                total = Double.parseDouble(amount) + Double.parseDouble(feed_amount);
+                                newAmount = String.valueOf(total);
+                            } else if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBits(amount) + bitcoinConverter.getSathoshisFromBits(feed_amount);
+                                newAmount = String.valueOf(total);
+                            }
+
+                            break;
+                        case 1: //descount
+                            if (txtType.equals("[btc]")) {
+                                total = Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(amount)) - Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(feed_amount)) ;
+                                newAmount = String.valueOf(total);
+                            } else if (txtType.equals("[satoshis]")) {
+                                total = Double.parseDouble(amount) - Double.parseDouble(feed_amount) ;
+                                newAmount = String.valueOf(total);
+                            } else if (txtType.equals("[bits]")) {
+                                total = Double.parseDouble(bitcoinConverter.getSathoshisFromBits(amount)) - Double.parseDouble(bitcoinConverter.getSathoshisFromBits(feed_amount));
+                                newAmount = String.valueOf(total);
+                            }
+
+                            break;
+
+                    }
+                }
+                AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
+                alphaAnimation.setDuration(300);
+                final String finalText = text;
+
+                final String finalAmount = newAmount;
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                        editTextAmount.setText(finalAmount);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                txt_type.startAnimation(alphaAnimation);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        feed_spinnerArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                feed_spinner.performClick();
             }
         });
 
