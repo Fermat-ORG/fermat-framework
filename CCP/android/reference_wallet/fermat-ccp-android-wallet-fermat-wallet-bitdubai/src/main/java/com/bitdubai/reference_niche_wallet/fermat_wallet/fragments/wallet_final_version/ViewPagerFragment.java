@@ -91,16 +91,18 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_pager, container, false);
-        TextView tvLabel = (TextView) view.findViewById(R.id.txt_rate_amount);
-        AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
-        currencies.setVisibleItems(3);
-        WheelCurrencyAdapter wheelCurrencyAdapter = new WheelCurrencyAdapter(getActivity());
-        currencies.setViewAdapter(wheelCurrencyAdapter);
-
-        tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
 
      try {
-           // getAndShowMarketExchangeRateData(container);
+
+         tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+
+         /*AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
+         currencies.setVisibleItems(3);
+         WheelCurrencyAdapter wheelCurrencyAdapter = new WheelCurrencyAdapter(getActivity());
+         currencies.setViewAdapter(wheelCurrencyAdapter);*/
+
+
+         getAndShowMarketExchangeRateData(container);
         } catch (Exception e) {
             e.printStackTrace();
         }
