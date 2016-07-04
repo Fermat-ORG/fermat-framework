@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.developer.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -66,15 +67,7 @@ public class DeveloperFermatAppConnection extends AppConnections<ReferenceAppFer
     }
 
     @Override
-    public int getResource(int id) {
-        int resId = 0;
-
-        switch (id){
-            case 1:
-                resId = R.drawable.ic_menu_search;
-                break;
-        }
-
-        return resId;
+    public ResourceSearcher getResourceSearcher() {
+        return new DeveloperSearcher();
     }
 }

@@ -48,7 +48,7 @@ public class TabsPagerAdapter2<F extends Fragment & AbstractFermatFragmentInterf
         if(drawables!=null) {
             FermatDrawable fermatDrawable = drawables[position];
             if(fermatDrawable!=null) {
-                Drawable drawable = ResourceLocationSearcherHelper.obtainDrawable(contextWeakReference.get(), fermatDrawable.getId(), fermatDrawable.getSourceLocation(), fermatDrawable.getOwner().getOwnerAppPublicKey());
+                Drawable drawable = ResourceLocationSearcherHelper.obtainDrawable(contextWeakReference.get(),fermatDrawable);
                 // Generate title based on item position
 //        Drawable image = context.getResources().getDrawable(imageResId[position]);
                 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
@@ -57,7 +57,7 @@ public class TabsPagerAdapter2<F extends Fragment & AbstractFermatFragmentInterf
                 if (title != null) {
                     sb = new SpannableString("   " + title);
                 } else sb = new SpannableString("   ");
-                ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
+                ImageSpan imageSpan = new ImageSpan(drawable);
                 sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 return sb;
             }

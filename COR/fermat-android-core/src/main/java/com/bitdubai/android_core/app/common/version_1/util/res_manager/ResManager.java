@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 
 /**
  * Created by Matias Furszyfer on 2016.07.02..
@@ -16,21 +18,19 @@ public class ResManager extends ResourceSearcher {
 
     public static ResourceSearcher getInstance() {
         if(instance==null){
-            synchronized (instance){
-                instance = new ResManager();
-            }
+            instance = new ResManager();
         }
         return instance;
     }
 
     @Override
-    public Drawable obtainDrawable(Context context,int id) {
-        return ResDrawableFrameworkHelper.obtainDrawable(context,id);
+    public Drawable obtainDrawable(Context context,FermatDrawable fermatDrawable) {
+        return ResDrawableFrameworkHelper.obtainDrawable(context,fermatDrawable);
     }
 
     @Override
-    public View obtainView(Context context,int id) {
-        return null;
+    public View obtainView(Context context,FermatView fermatView) {
+        return ResViewFrameworkHelper.obtainView(context,fermatView);
     }
 
     @Override

@@ -3994,7 +3994,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem = new OptionMenuItem(HELP_ACTION);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_ACTION, "bw_action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
         //optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -4580,7 +4580,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          optionMenuItem = new OptionMenuItem(2);
          optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -4740,7 +4740,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -5375,7 +5375,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 //
 //        /**
@@ -5559,7 +5559,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -5710,7 +5710,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -6590,7 +6590,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(99);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -6806,7 +6806,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          optionMenuItem = new OptionMenuItem(2);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -6919,7 +6919,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem = new OptionMenuItem(3);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -7006,7 +7006,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
 

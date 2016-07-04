@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
@@ -231,8 +232,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * Method to obtain view class from framework
      * @return
      */
-    private final View obtainFrameworkView(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainClassView(id, sourceLocation, appOwnerPublicKey);
+    private final View obtainFrameworkView(FermatView fermatView){
+        return getFrameworkHelpers().obtainClassView(fermatView);
     }
     private final View obtainFrameworkViewOptionMenuAvailable(int id,SourceLocation sourceLocation){
         return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation);

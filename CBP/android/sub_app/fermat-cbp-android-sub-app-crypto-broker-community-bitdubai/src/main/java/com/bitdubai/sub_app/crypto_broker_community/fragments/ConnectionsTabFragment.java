@@ -231,7 +231,7 @@ public class ConnectionsTabFragment
     private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
         final ArrayList<CryptoBrokerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoBrokerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }
@@ -250,7 +250,7 @@ public class ConnectionsTabFragment
                             .setIconRes(R.drawable.crypto_broker)
                             .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -310,9 +310,11 @@ public class ConnectionsTabFragment
 
         try {
             offset = pos;
-            final CryptoBrokerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listAllConnectedCryptoBrokers(selectedActorIdentity, MAX, offset);
-            dataSet.addAll(result);
+            if(moduleManager.getSelectedActorIdentity() != null) {
+                final CryptoBrokerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<CryptoBrokerCommunityInformation> result = moduleManager.listAllConnectedCryptoBrokers(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

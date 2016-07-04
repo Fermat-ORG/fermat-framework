@@ -77,6 +77,11 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         onRefresh();
     }
 
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
 
     @Override
     protected void initViews(View layout) {
@@ -100,11 +105,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         toolbar.setTitleTextColor(Color.WHITE);
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
-    }
-
-    @Override
-    protected boolean hasMenu() {
-        return false;
     }
 
     @Override

@@ -24,6 +24,11 @@ public class FermatDrawable extends Artifact {
         this.resName = resName;
     }
 
+    public FermatDrawable(int id,String resName, SourceLocation sourceLocation) {
+        super(id, null, sourceLocation);
+        this.resName = resName;
+    }
+
     public String getResName() {
         return resName;
     }
