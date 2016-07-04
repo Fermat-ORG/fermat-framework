@@ -62,6 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by Alejandro Bicelis on 2/2/2016.
  */
@@ -139,11 +140,10 @@ public class CryptoCustomerCommunityManager
                 final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
                 country = address.getCountry();
                 place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-            } catch (CantCreateAddressException e) {
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            } catch (CantCreateAddressException ignore) {
             }
 
-           customer.setCountry(country);
+            customer.setCountry(country);
             customer.setPlace(place);
         }
 
@@ -181,19 +181,18 @@ public class CryptoCustomerCommunityManager
         try {
             appSettings = loadAndGetSettings(this.subAppPublicKey);
         } catch (Exception e) {
-            appSettings = null;
+            appSettings = new CryptoCustomerCommunitySettings();
         }
 
         //If appSettings exist, save identity
-        if(appSettings != null){
-            if(identity.getPublicKey() != null) {
-                appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
-            }
-            try {
-                persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e) {
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        if (identity.getPublicKey() != null) {
+            appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
+        }
+
+        try {
+            persistSettings(this.subAppPublicKey, appSettings);
+        } catch (CantPersistSettingsException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -368,33 +367,26 @@ public class CryptoCustomerCommunityManager
         } catch (CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if(brokerIdentitiesInDevice.size() == 0)
+        if (brokerIdentitiesInDevice.size() == 0)
             return null;
-//            throw new CantGetSelectedActorIdentityException("", null, "", "");
-
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
-        if(appSettings != null) {
-            String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
+        String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
 
-            CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
-            if (lastSelectedIdentityPublicKey != null) {
+        CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
+        if (lastSelectedIdentityPublicKey != null) {
 
-                for(CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
-                    if(identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                        selectedIdentity = constructProfileCustomer(identity);
-                }
-                if(selectedIdentity == null)
-                    throw new ActorIdentityNotSelectedException("", null, "", "");
-
-                return selectedIdentity;
-            } else {
-                for(CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
-                    if(identity.getPublicKey() != null)
-                        return constructProfileCustomer(identity);
-                }
+            for (CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                    selectedIdentity = constructProfileCustomer(identity);
             }
+
+            if (selectedIdentity == null)
+                throw new ActorIdentityNotSelectedException("", null, "", "");
+
+            return selectedIdentity;
         }
+
         return null;
     }
 
@@ -440,18 +432,16 @@ public class CryptoCustomerCommunityManager
         try {
             appSettings = loadAndGetSettings(this.subAppPublicKey);
         } catch (Exception e) {
-            appSettings = null;
+            appSettings = new CryptoCustomerCommunitySettings();
         }
 
 
         //If appSettings exist
-        if (appSettings != null) {
-            appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
-            try {
-                persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e) {
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
+        try {
+            persistSettings(this.subAppPublicKey, appSettings);
+        } catch (CantPersistSettingsException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
