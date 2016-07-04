@@ -215,7 +215,6 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                 doNext();
 
             }
-        } else if(id==R.id.checkbox){
         }
     }
 
