@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,10 +22,14 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.StringWheelAdapter;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.custom_view.WheelView;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.interfaces.OnWheelChangedListener;
 
 
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -38,6 +43,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     private String providerName;
     private UUID providerId;
     private int page;
+
     //Managers
     FermatWallet fermatWalletManager;
     ErrorManager errorManager;
@@ -61,12 +67,14 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+
             fermatWalletManager = fermatSession.getModuleManager();
             errorManager = fermatSession.getErrorManager();
             page = getArguments().getInt("someInt", 0);
             providerName = getArguments().getString("providerName");
             providerId = UUID.fromString(getArguments().getString("providerId"));
             fiatCurrency = FiatCurrency.getByCode(getArguments().getString("fiatCurrency"));
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -75,26 +83,38 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.view_pager, container, false);
-
      try {
-
+         View view = inflater.inflate(R.layout.view_pager, container, false);
          tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
+         WheelView wheel = (WheelView) view.findViewById(R.id.wheel_picker);
 
-         /*AbstractWheel currencies = (AbstractWheel) view.findViewById(R.id.currencies);
-         currencies.setVisibleItems(3);
-         WheelCurrencyAdapter wheelCurrencyAdapter = new WheelCurrencyAdapter(getActivity());
-         currencies.setViewAdapter(wheelCurrencyAdapter);*/
+         List<String> lstCurrencies = new ArrayList<>();
+         lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
+         lstCurrencies.add(FiatCurrency.EURO.getCode());
+         lstCurrencies.add(FiatCurrency.ARGENTINE_PESO.getCode());
+         lstCurrencies.add(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
 
+         StringWheelAdapter wheelAdapter = new StringWheelAdapter(lstCurrencies);
+         wheel.setAdapter(wheelAdapter);
+
+         wheel.addChangingListener(new OnWheelChangedListener() {
+             @Override
+             public void onChanged(WheelView wheel, int oldValue, int newValue) {
+                 Log.i("Valor ","oldValue: "+oldValue+": newValue: "+newValue);
+             }
+         });
 
          getAndShowMarketExchangeRateData(container);
+
+         return view;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return view;
+       return null;
     }
+
     private void getAndShowMarketExchangeRateData(final View container) {
         final int MAX_DECIMAL_FOR_RATE = 2;
         final int MIN_DECIMAL_FOR_RATE = 2;
@@ -103,7 +123,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
             protected Object doInBackground() {
                 ExchangeRate rate = null;
                 try{
-                    rate = fermatWalletManager.getCurrencyExchange(providerId,fiatCurrency);;
+                    rate = fermatWalletManager.getCurrencyExchange(providerId,fiatCurrency);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
