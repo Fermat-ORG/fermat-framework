@@ -46,7 +46,11 @@ public enum ClauseType implements FermatEnum {
     /** Lugar donde el customer recibira la mercancia */
     CUSTOMER_PLACE_TO_DELIVER("CUSPLADEL"),
     /** Fecha y hora en la que el customer recibira la mercancia */
-    CUSTOMER_DATE_TIME_TO_DELIVER("CUSDATDEL");
+    CUSTOMER_DATE_TIME_TO_DELIVER("CUSDATDEL"),
+
+    /*TIME ZONE*/
+    BROKER_TIME_ZONE("BROTIMZON"),
+    CUSTOMER_TIME_ZONE("CUSTIMZON");
 
     private final String code;
 
@@ -103,6 +107,10 @@ public enum ClauseType implements FermatEnum {
                 return CUSTOMER_PLACE_TO_DELIVER;
             case "CUSDATDEL":
                 return CUSTOMER_DATE_TIME_TO_DELIVER;
+            case "BROTIMZON":
+                return BROKER_TIME_ZONE;
+            case "CUSTIMZON":
+                return CUSTOMER_TIME_ZONE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseType enum");
         }
