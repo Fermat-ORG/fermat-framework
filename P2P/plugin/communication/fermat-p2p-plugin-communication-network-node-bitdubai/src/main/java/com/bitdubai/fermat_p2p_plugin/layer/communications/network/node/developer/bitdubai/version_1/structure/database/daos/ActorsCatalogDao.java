@@ -95,6 +95,11 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
             if (cpk != null)
                 tableFilters.add(table.getNewFilter(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.NOT_EQUALS, cpk));
 
+            /*
+             * set Actortype to avoid duplicate platform consults
+             */
+              tableFilters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, parameters.getActorType()));
+
             if (parameters.getLocation() != null)
                 table.addNearbyLocationOrder(
                         ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME,
@@ -156,8 +161,8 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
         if (params.getAlias() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_ALIAS_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getAlias()));
 
-        if (params.getActorType() != null)
-            filters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getActorType()));
+//        if (params.getActorType() != null)
+//            filters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getActorType()));
 
         if (params.getExtraData() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getExtraData()));
