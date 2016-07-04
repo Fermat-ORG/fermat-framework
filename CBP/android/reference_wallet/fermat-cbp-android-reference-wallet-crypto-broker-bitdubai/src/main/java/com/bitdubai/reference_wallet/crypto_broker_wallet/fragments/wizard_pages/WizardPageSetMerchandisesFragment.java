@@ -29,6 +29,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CBPInstalledWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -110,7 +111,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
-            com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings walletSettings;
+            CryptoBrokerWalletPreferenceSettings walletSettings;
             try {
                 walletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
@@ -118,7 +119,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             }
 
             if (walletSettings == null) {
-                walletSettings = new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings();
+                walletSettings = new CryptoBrokerWalletPreferenceSettings();
                 walletSettings.setIsPresentationHelpEnabled(true);
                 moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
             } else {
@@ -202,7 +203,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             if (haveAssociatedIdentity)
                 return;
 
-            PresentationDialog presentationDialog;
+            final PresentationDialog presentationDialog;
 
             List list = moduleManager.getListOfIdentities();
             if (list != null) {
@@ -231,18 +232,15 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                             .build();
                 }
 
-
                 presentationDialog.setOnDismissListener(this);
 
-
-                final com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                final CryptoBrokerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
-                final PresentationDialog presentationDialogTemp = presentationDialog;
                 if (showDialog){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            presentationDialogTemp.show();
+                            presentationDialog.show();
                         }
                     });
                 }
