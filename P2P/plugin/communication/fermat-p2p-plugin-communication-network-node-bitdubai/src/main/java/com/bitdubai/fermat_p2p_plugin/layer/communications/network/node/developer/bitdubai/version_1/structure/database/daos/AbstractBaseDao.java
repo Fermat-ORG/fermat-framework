@@ -61,9 +61,12 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @param tableName
      * @param idTableName
      */
-    public AbstractBaseDao(final Database dataBase, final String tableName, final String idTableName) {
-        this.dataBase  = dataBase;
-        this.tableName = tableName;
+    public AbstractBaseDao(final Database dataBase   ,
+                           final String   tableName  ,
+                           final String   idTableName) {
+
+        this.dataBase    = dataBase   ;
+        this.tableName   = tableName  ;
         this.idTableName = idTableName;
     }
 

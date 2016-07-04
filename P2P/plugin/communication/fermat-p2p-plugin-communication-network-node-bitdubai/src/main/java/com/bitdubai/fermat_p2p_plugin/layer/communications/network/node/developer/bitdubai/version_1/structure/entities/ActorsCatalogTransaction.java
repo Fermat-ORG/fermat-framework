@@ -26,6 +26,8 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	public static final String UPDATE_GEOLOCATION_TRANSACTION_TYPE = "GEO";
 
+	public static final String UPDATE_LAST_CONNECTION_TRANSACTION_TYPE = "LST";
+
 	private String hashId;
 
 	private String actorType;
@@ -58,10 +60,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		super();
 
 		this.hashId         = UUID.randomUUID().toString();
-		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
 		this.generationTime = new Timestamp(System.currentTimeMillis());
-		this.lastConnection = new Timestamp(System.currentTimeMillis());
-        this.lastLocation   = new NetworkNodeCommunicationDeviceLocation();
 	}
 
 	public void setGenerationTime(Timestamp generationTime) {

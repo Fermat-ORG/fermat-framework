@@ -261,7 +261,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             container.connectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getCause());
         }
     }
 

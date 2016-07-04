@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.p
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.google.gson.JsonObject;
 
@@ -38,11 +39,17 @@ public abstract class Profile implements Serializable {
     private ProfileTypes type;
 
     /**
+     * Represent the status of the profile
+     */
+    private ProfileStatus status;
+
+    /**
      * Constructor
      */
     public Profile(final ProfileTypes type){
 
-        this.type = type;
+        this.type   = type;
+        this.status = ProfileStatus.UNKNOWN;
     }
 
     /**
@@ -61,6 +68,14 @@ public abstract class Profile implements Serializable {
      */
     public void setIdentityPublicKey(String identityPublicKey) {
         this.identityPublicKey = identityPublicKey;
+    }
+
+    public ProfileStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProfileStatus status) {
+        this.status = status;
     }
 
     /**
@@ -151,6 +166,7 @@ public abstract class Profile implements Serializable {
                 "identityPublicKey='" + identityPublicKey + '\'' +
                 ", location=" + location +
                 ", type=" + type +
+                ", status=" + status +
                 '}';
     }
 }

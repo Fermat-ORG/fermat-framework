@@ -169,8 +169,13 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                     pair = deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
                     databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
                     break;
+
                 case ActorsCatalogTransaction.UPDATE_GEOLOCATION_TRANSACTION_TYPE:
                     pair = updateLocationActorsCatalog(actorsCatalogTransaction);
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                    break;
+                case ActorsCatalogTransaction.UPDATE_LAST_CONNECTION_TRANSACTION_TYPE:
+                    pair = updateLastConnectionActorsCatalog(actorsCatalogTransaction);
                     databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
                     break;
             }
@@ -181,6 +186,23 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
             databaseTransaction.execute();
         }
 
+    }
+
+    /**
+     * Update a row into the data base
+     *
+     * @param actorsCatalogTransaction
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    private DatabaseTransactionStatementPair updateLastConnectionActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
+
+        LOG.info("Executing method updateLastConnectionActorsCatalog");
+
+        /*
+         * Create statement.
+         */
+        return getDaoFactory().getActorsCatalogDao().createLastConnectionUpdateTransaction(actorsCatalogTransaction.getIdentityPublicKey(), actorsCatalogTransaction.getLastConnection());
     }
 
     /**

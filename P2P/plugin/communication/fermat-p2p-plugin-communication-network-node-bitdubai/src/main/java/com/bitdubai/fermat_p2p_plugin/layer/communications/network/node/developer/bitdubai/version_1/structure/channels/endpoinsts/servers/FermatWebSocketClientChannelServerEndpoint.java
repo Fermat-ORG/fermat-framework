@@ -24,6 +24,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutNetworkServiceRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.MessageTransmitProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.UpdateActorLastConnectionIntoCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.UpdateActorProfileIntoCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.UpdateProfileLocationIntoCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
@@ -48,7 +49,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.websocket.CloseReason;
-import javax.websocket.EncodeException;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -117,6 +117,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
         registerMessageProcessor(new CheckOutNetworkServiceRequestProcessor(this));
         registerMessageProcessor(new MessageTransmitProcessor(this));
         registerMessageProcessor(new NearNodeListRequestProcessor(this));
+        registerMessageProcessor(new UpdateActorLastConnectionIntoCatalogProcessor(this));
         registerMessageProcessor(new UpdateActorProfileIntoCatalogProcessor(this));
         registerMessageProcessor(new UpdateProfileLocationIntoCatalogProcessor(this));
 
