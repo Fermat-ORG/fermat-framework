@@ -26,6 +26,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -53,7 +54,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
     private static final String TAG = "WizardPageSetEarning";
 
     //UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
 
     //Data
     private List<EarningsWizardData> earningDataList;
@@ -85,11 +86,8 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             //So that they can be reconfigured cleanly
             moduleManager.clearEarningPairsFromEarningSettings(appSession.getAppPublicKey());
 
-
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if (aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
+            CryptoBrokerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
             List<EarningsWizardData> _earningDataList = createEarningDataList();
             earningDataList = new ArrayList<>();
@@ -145,7 +143,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
         });
 
 
-        if (!hideHelperDialogs) {
+        if (isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)

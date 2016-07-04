@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -55,7 +56,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
     private List<Currency> currencies;
 
     // UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
 
@@ -84,10 +85,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
             //So that they can be reconfigured cleanly
             moduleManager.clearCryptoBrokerWalletProviderSetting(appSession.getAppPublicKey());
 
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if(aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
+            CryptoBrokerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -131,7 +130,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
             }
         });
 
-        if(!hideHelperDialogs) {
+        if(isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)

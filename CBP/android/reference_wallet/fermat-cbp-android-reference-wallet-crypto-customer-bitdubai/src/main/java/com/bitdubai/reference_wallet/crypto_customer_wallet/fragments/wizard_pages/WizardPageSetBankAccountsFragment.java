@@ -46,7 +46,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
     private List<BankAccountNumber> bankAccountList;
 
     // UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
     private RecyclerView recyclerView;
     private BankAccountsAdapter adapter;
     private View emptyView;
@@ -72,10 +72,8 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
             //So that they can be reconfigured cleanly
             moduleManager.clearAllBankAccounts();
 
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if(aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
+            CryptoCustomerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
             Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             if (data == null) {
@@ -96,7 +94,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Re
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if(!hideHelperDialogs) {
+        if(isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
