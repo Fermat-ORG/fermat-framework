@@ -32,6 +32,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -54,11 +56,13 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.adapters.GeolocationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
+import com.bitdubai.sub_app.intra_user_community.common.popups.SearchAliasDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
@@ -79,7 +83,7 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>  implements
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation>, GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias {
 
 
     public static final String INTRA_USER_SELECTED = "intra_user";
@@ -501,8 +505,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (id == 2)
                 try {
-                    GeolocationDialog geolocationDialog =
-                            new GeolocationDialog(getActivity(),appSession, null, (GeolocationDialog.AdapterCallback) this);
+                    GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
                     geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
@@ -515,6 +518,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     window.setAttributes(wlp);
                     geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     geolocationDialog.show();
+
+
+
                 } catch ( Exception e) {
                     e.printStackTrace();
                 }
@@ -928,6 +934,46 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
     }
 
+
+    @Override
+    public void onMethodCallback(ExtendedCity city) {
+
+/*
+        greenBar = (RelativeLayout) rootView.findViewById(R.id.green_bar_layout);
+        closeGreenBar = (ImageView) rootView.findViewById(R.id.close_green_bar);
+        greenBarCountry = (TextView) rootView.findViewById(R.id.country_green_bar);
+        greenBarCity = (TextView) rootView.findViewById(R.id.city_green_bar);
+
+        greenBarCountry.setText(city.getCountryName());
+        greenBarCity.setText(city.getName());
+
+        //greenBar.bringToFront();
+        greenBar.setVisibility(View.VISIBLE);
+
+        location=new DeviceLocation();
+        location.setLatitude((double) city.getLatitude());
+        location.setLongitude((double) city.getLongitude());
+        //distance=identity.getAccuracy();
+        //location.setAccuracy((long) distance);
+        offset=0;
+        onRefresh();
+
+        closeGreenBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                greenBar.setVisibility(View.GONE);
+                location = null;
+                offset=0;
+                onRefresh();
+            }
+        });     */
+    }
+
+    @Override
+    public void onMethodCallbackAlias(String aliasSearch) {
+        alias=aliasSearch;
+        onRefresh();
+    }
 }
 
 
