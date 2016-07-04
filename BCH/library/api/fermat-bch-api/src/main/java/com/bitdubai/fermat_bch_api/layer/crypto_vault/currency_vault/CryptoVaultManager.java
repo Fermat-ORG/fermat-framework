@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExportCryptoVaultSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
@@ -80,7 +81,7 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @return
      * @throws CantLoadExistingVaultSeed
      */
-    CryptoVaultSeed getCryptoVaultSeed() throws CantLoadExistingVaultSeed;
+    CryptoVaultSeed exportCryptoVaultSeed();
 
     /**
      * Imports the passed seed into the vault.

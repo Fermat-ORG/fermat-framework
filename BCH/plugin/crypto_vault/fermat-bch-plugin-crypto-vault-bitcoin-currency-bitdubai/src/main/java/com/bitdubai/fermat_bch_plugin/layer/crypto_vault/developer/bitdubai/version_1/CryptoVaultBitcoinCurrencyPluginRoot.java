@@ -33,10 +33,12 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExportCryptoVaultSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
@@ -283,15 +285,9 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         return trHash;
     }
 
-    /**
-     * Gets the Mnemonic code generated for this vault.
-     * It can be used to export and import it somewhere else.
-     * @return
-     * @throws CantLoadExistingVaultSeed
-     */
     @Override
-    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
-        return bitcoinCurrencyCryptoVaultManager.getMnemonicCode();
+    public CryptoVaultSeed exportCryptoVaultSeed() {
+        return bitcoinCurrencyCryptoVaultManager.exportCryptoVaultSeed();
     }
 
     @Override

@@ -83,7 +83,7 @@ public abstract class CryptoVault {
      * Gets the Seed for this vault.
      * @return
      */
-    public CryptoVaultSeed getCryptoVaultSeed(){
+    public CryptoVaultSeed exportCryptoVaultSeed(){
         DeterministicSeed seed = null;
         try {
             seed = getVaultSeed();
@@ -263,10 +263,9 @@ public abstract class CryptoVault {
      * This will erase the previous seed and created a new one based on the passed information.
      * @param mNemonicCode
      * @param seedCreationTimeInSeconds
-     * @return the new created seed.
      * @throws CantImportSeedException
      */
-    public DeterministicSeed importNewVaultSeed(String mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException {
+    public void importNewVaultSeed(String mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException {
         VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
         vaultSeedGenerator.importSeed(mNemonicCode, seedCreationTimeInSeconds);
 
@@ -276,7 +275,6 @@ public abstract class CryptoVault {
         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
             throw new CantImportSeedException(cantLoadExistingVaultSeed, "new seed was created and saved. But we are unable to re load it from disk." , "IO error");
         }
-        return new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
     }
 
 
