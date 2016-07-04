@@ -37,9 +37,9 @@ pmd {
 
 dependencies {
 
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
     compile project(':fermat-ccp-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-pip-api')
 
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
     testCompile 'org.powermock:powermock-module-junit4:1.5.2'

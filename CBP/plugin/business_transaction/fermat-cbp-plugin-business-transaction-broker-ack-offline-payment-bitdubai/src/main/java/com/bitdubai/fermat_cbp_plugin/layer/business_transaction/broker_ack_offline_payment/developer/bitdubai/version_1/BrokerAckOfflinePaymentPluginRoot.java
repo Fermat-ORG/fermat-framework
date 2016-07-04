@@ -48,6 +48,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offl
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.event_handler.BrokerAckOfflinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentTransactionManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 
@@ -109,6 +111,16 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
      * Represents the database
      */
     Database database;
+
+    /**
+     * Represents the plugin processor agent
+     */
+    BrokerAckOfflinePaymentMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public BrokerAckOfflinePaymentPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -238,7 +250,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             //TODO: mock manager only for testing, please, comment the following line when finish the test.
             //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
             //customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
-            BrokerAckOfflinePaymentMonitorAgent brokerAckOfflinePaymentMonitorAgent = new BrokerAckOfflinePaymentMonitorAgent(
+            /*BrokerAckOfflinePaymentMonitorAgent brokerAckOfflinePaymentMonitorAgent = new BrokerAckOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     this,
@@ -251,7 +263,26 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
                     depositManager,
                     cryptoBrokerWalletManager,
                     CashDepositTransactionManager);
-            brokerAckOfflinePaymentMonitorAgent.start();
+            brokerAckOfflinePaymentMonitorAgent.start();*/
+
+            //New Agent starting
+            processorAgent =
+                    new BrokerAckOfflinePaymentMonitorAgent2(
+                            SLEEP_TIME,
+                            TIME_UNIT,
+                            DELAY_TIME,
+                            this,
+                            brokerAckOfflinePaymentBusinessTransactionDao,
+                            eventManager,
+                            transactionTransmissionManager,
+                            customerBrokerContractPurchaseManager,
+                            customerBrokerContractSaleManager,
+                            customerBrokerSaleNegotiationManager,
+                            depositManager,
+                            cryptoBrokerWalletManager,
+                            CashDepositTransactionManager,
+                            pluginId);
+            processorAgent.start();
 
             /**
              * Initialize plugin manager
@@ -322,6 +353,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public void stop() {
         try {
+            processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
