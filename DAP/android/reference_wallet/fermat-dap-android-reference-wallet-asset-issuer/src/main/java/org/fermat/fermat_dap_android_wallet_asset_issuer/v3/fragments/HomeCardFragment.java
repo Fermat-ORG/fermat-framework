@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,7 +67,7 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
     // Data
     private List<DigitalAsset> digitalAssets;
 
-    private android.support.v7.widget.Toolbar toolbar;
+    private Toolbar toolbar;
 
     //UI
     private View noAssetsView;
@@ -156,14 +156,10 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
             noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
             onRefresh();
-//            digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-//            appSession.setData("asset_data", digitalAssets);
-//            showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        onRefresh();
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -212,9 +208,9 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
 
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();
@@ -372,7 +368,7 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
             try {
                 digitalAssets = Data.getAllDigitalAssetsDateSorted(moduleManager);
 
-                appSession.setData("asset_data", digitalAssets);
+                //appSession.setData("asset_data", digitalAssets);
 
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
 

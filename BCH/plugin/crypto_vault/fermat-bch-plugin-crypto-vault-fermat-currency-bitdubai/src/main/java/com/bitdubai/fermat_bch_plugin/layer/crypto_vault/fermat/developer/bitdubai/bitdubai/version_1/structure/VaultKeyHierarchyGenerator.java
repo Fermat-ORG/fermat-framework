@@ -2,15 +2,16 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdu
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.database.FermatCurrencyCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.exceptions.CantInitializeFermatCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.refactor.classes.HierarchyAccount.HierarchyAccountType;
 
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -58,7 +59,7 @@ public class VaultKeyHierarchyGenerator implements Runnable {
      * Platform services
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private FermatNetworkManager fermatNetworkManager;
+    private BlockchainManager<ECKey, Transaction> fermatNetworkManager;
     UUID pluginId;
 
     /**
@@ -66,7 +67,7 @@ public class VaultKeyHierarchyGenerator implements Runnable {
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, FermatNetworkManager fermatNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BlockchainManager<ECKey, Transaction> fermatNetworkManager, UUID pluginId) {
         this.seed = seed;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.fermatNetworkManager = fermatNetworkManager;
@@ -104,7 +105,7 @@ public class VaultKeyHierarchyGenerator implements Runnable {
          * I will get from the database the list of accounts to create
          * and add them to the hierarchy
          */
-        for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
+        for (HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
             vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
         }
 
@@ -133,8 +134,8 @@ public class VaultKeyHierarchyGenerator implements Runnable {
      * Gets the list of stored HierarchyAccounts. If no accounts exists, it will create the zero account.
      * @return the store list of accounts
      */
-    private List<com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
-        List<com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount> hierarchyAccounts = new ArrayList<>();
+    private List<HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
+        List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
 
         /**
          * Gets the Hierarchy accouns from the database
@@ -157,7 +158,7 @@ public class VaultKeyHierarchyGenerator implements Runnable {
          * the account 0 that will be used by the Fermat Vault.
          */
         if (hierarchyAccounts.size() == 0){
-            com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount accountZero = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+            HierarchyAccount accountZero = new HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
             hierarchyAccounts.add(accountZero);
 
             /**

@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.support.v7.widget.Toolbar;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
@@ -147,7 +149,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                                 MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
                                 FermatDrawable icon = menuItem.getFermatDrawable();
                                 if (icon != null) {
-                                    int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    int iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE,icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
                                     item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
                                 }
@@ -222,16 +224,16 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     /**
      * Method to obtain res from other apps
      */
-    private final int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(id, sourceLocation, appOwnerPublicKey);
+    private final int obtainRes(int resType,int id,SourceLocation sourceLocation,String appOwnerPublicKey){
+        return getFrameworkHelpers().obtainRes(resType,id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
      * Method to obtain view class from framework
      * @return
      */
-    private final View obtainFrameworkView(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainClassView(id, sourceLocation, appOwnerPublicKey);
+    private final View obtainFrameworkView(FermatView fermatView){
+        return getFrameworkHelpers().obtainClassView(fermatView);
     }
     private final View obtainFrameworkViewOptionMenuAvailable(int id,SourceLocation sourceLocation){
         return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation);

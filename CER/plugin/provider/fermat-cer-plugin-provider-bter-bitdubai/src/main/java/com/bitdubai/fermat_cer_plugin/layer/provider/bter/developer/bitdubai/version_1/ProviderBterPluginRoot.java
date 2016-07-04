@@ -33,7 +33,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfo
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bter.developer.bitdubai.version_1.database.BterProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bter.developer.bitdubai.version_1.database.BterProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.bter.developer.bitdubai.version_1.exceptions.CantInitializeBterProviderDatabaseException;
@@ -175,7 +175,7 @@ public class ProviderBterPluginRoot extends AbstractPlugin implements DatabaseMa
         double salePrice = 0;
 
         try {
-            json = new JSONObject(HttpReader.getHTTPContent("http://data.bter.com/api/1/ticker/" + exchangeFrom + "_" + exchangeTo));
+            json = new JSONObject(HttpHelper.getHTTPContent("http://data.bter.com/api/1/ticker/" + exchangeFrom + "_" + exchangeTo));
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");
 

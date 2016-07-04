@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_android_sub_app_asset_issuer_community.app_connect
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -117,18 +118,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Refe
     }
 
     @Override
-    public int getResource(int id) {
-        int resId = 0;
-
-        switch (id) {
-            case 1:
-                resId = R.drawable.ic_geolacation;
-                break;
-            case 2:
-                resId = R.drawable.ic_menu_search;
-                break;
-        }
-
-        return resId;
+    public ResourceSearcher getResourceSearcher() {
+        return new IssuerAssetCommunitySearcher();
     }
 }

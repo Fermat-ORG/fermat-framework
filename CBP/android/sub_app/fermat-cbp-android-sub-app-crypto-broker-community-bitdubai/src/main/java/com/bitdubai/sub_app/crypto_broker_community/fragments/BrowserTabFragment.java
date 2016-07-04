@@ -10,13 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -50,6 +50,7 @@ import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.GeolocationDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,8 @@ public class BrowserTabFragment
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
 
+    CryptoBrokerCommunitySettings appSettings;
+
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
     }
@@ -113,10 +116,18 @@ public class BrowserTabFragment
         //Check if a default identity is configured
         try {
             identity = moduleManager.getSelectedActorIdentity();
+            if(identity == null)
+                launchActorCreationDialog = true;   //There are no identities in device
+            else {
+                if (appSettings.getLastSelectedIdentityPublicKey() == null)
+                    launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            }
         } catch (CantGetSelectedActorIdentityException e) {
-            launchActorCreationDialog = true;  //There are no identities in device
+            e.printStackTrace();
+//            launchActorCreationDialog = true;  //There are no identities in device
         } catch (ActorIdentityNotSelectedException e) {
-            launchListIdentitiesDialog = true; //There are identities in device, but none selected
+            e.printStackTrace();
+//            launchListIdentitiesDialog = true; //There are identities in device, but none selected
         }
     }
 
@@ -126,7 +137,7 @@ public class BrowserTabFragment
 
         configureToolbar();
 
-        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+//        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         noContacts = (ImageView) rootView.findViewById(R.id.cbc_no_contacts);
         locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
@@ -238,30 +249,43 @@ public class BrowserTabFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
-//        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
-//        final SearchView searchView = (SearchView) menuItem.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                List<CryptoBrokerCommunityInformation> filteredList = filterList(newText, cryptoBrokerCommunityInformationList);
-//                adapter.changeDataSet(filteredList);
-//                return true;
-//            }
-//        });
+        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+        menuItem.setIcon(R.drawable.lupa_blanca);
+
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+        SearchViewStyleHelper.on(searchView)
+                    .setCursorColor(Color.WHITE)
+                    .setTextColor(Color.WHITE)
+                    .setHintTextColor(Color.WHITE)
+                    .setSearchHintDrawable(R.drawable.lupa_blanca)
+                    .setSearchButtonImageResource(R.drawable.lupa_blanca)
+                    .setCloseBtnImageResource(R.drawable.x_blanca)
+                    .setSearchPlateTint(Color.WHITE)
+                    .setSubmitAreaTint(Color.WHITE);
+
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<CryptoBrokerCommunityInformation> filteredList = filterList(newText, cryptoBrokerCommunityInformationList);
+                adapter.changeDataSet(filteredList);
+                return true;
+            }
+        });
     }
 
     private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
         final ArrayList<CryptoBrokerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoBrokerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }
@@ -377,7 +401,7 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, MAX, offset);
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -427,7 +451,6 @@ public class BrowserTabFragment
      * Obtain Settings or create new Settings if first time opening subApp
      */
     private void loadSettings() {
-        CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -466,15 +489,23 @@ public class BrowserTabFragment
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
-
                         try {
                             identity = moduleManager.getSelectedActorIdentity();
+                            if(identity == null)
+                                getActivity().onBackPressed();
+                            else {
+                                invalidate();
+                            }
+//                        } catch (CantGetSelectedActorIdentityException e) {
+//                            e.printStackTrace();
+//                        } catch (ActorIdentityNotSelectedException e) {
+//                            e.printStackTrace();
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
+//                        invalidate();
+//                        onRefresh();
                     }
                 });
 
@@ -485,16 +516,21 @@ public class BrowserTabFragment
                 listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
+
+                        if(appSettings.getLastSelectedIdentityPublicKey() == null)
+                            getActivity().onBackPressed();
+                        else {
+                            invalidate();
+                        }
+//                        onRefresh();
                     }
                 });
 
                 listIdentitiesDialog.show();
 
-            } else {
-                invalidate();
-                onRefresh();
+//            } else {
+//                invalidate();
+//                onRefresh();
             }
 
         } catch (Exception ex) {
@@ -542,7 +578,10 @@ public class BrowserTabFragment
                     actorInformation.getAlias(),
                     actorInformation.getImage(),
                     newConnectionState,
-                    actorInformation.getConnectionId());
+                    actorInformation.getConnectionId(),
+                    actorInformation.getLocation(),
+                    actorInformation.getCountry(),
+                    actorInformation.getPlace());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);

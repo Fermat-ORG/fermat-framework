@@ -2,8 +2,9 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bit
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.BlockchainException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 
 
 import org.bitcoinj.core.BlockChain;
@@ -48,7 +49,7 @@ public class FermatCryptoNetworkBlockChain extends DownloadProgressTracker imple
         this.context = context;
         this.networkParameters= this.context.getParams();
 
-        this.BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkSelector.getBlockchainNetworkType(this.networkParameters);
+        this.BLOCKCHAIN_NETWORK_TYPE = FermatBlockchainNetworkSelector.getBlockchainNetworkType(this.networkParameters);
         this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();
         this.BLOCKCHAIN_FILENAME = "fermat_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
         this.CHECKPOINT_FILENAME = "checkpoints-" + BLOCKCHAIN_NETWORK_TYPE.getCode();

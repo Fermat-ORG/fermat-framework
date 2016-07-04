@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.factory.ChatIdentityFragmentFactory;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -69,12 +70,7 @@ public class ChatIdentityFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public int getResource(int id) {
-        if(id==7){
-            return R.drawable.cht_ic_back_buttom;
-        }else if (id==1){
-            return R.drawable.cht_ic_menu_help;
-        }
-        return super.getResource(id);
+    public ResourceSearcher getResourceSearcher() {
+        return new ChatIdentityResourceSearcher();
     }
 }

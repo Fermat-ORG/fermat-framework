@@ -259,12 +259,11 @@ public class ChatActorNetworkServicePluginRoot extends AbstractActorNetworkServi
 
         try {
 
-            if (chatActorNetworkServiceDao.existsConnectionRequest(requestMessage.getRequestId()))
-                return;
+//            if (chatActorNetworkServiceDao.existsConnectionRequest(requestMessage.getRequestId()))
+//                return;
 
-
-            final ProtocolState           state  = ProtocolState.PENDING_LOCAL_ACTION;
-            final RequestType type   = RequestType  .RECEIVED             ;
+            final ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
+            final RequestType type = RequestType.RECEIVED;
 
             final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
                     requestMessage.getRequestId(),

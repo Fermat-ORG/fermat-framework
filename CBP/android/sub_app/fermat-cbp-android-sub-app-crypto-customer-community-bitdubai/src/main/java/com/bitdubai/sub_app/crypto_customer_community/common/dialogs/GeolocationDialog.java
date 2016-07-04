@@ -107,7 +107,10 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, R
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dismiss();
+                    if (searchInput.getText().toString().isEmpty())
+                        dismiss();
+                    else
+                        searchInput.getText().clear();
                 }
             });
 

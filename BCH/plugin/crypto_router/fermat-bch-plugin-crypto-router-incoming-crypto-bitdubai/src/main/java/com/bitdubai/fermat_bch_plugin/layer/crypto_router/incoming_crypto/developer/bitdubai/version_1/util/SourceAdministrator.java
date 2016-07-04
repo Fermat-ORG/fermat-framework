@@ -2,9 +2,9 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
 
@@ -19,12 +19,12 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.develo
  */
 public class SourceAdministrator {
 
-    private final BitcoinNetworkManager bitcoinNetworkManager;
-    private final FermatNetworkManager fermatNetworkManager;
+    private final TransactionSender bitcoinNetworkManager;
+    private final TransactionSender fermatNetworkManager;
     private final CryptoVaultManager cryptoVaultManager   ;
 
-  public SourceAdministrator(BitcoinNetworkManager bitcoinNetworkManager,
-                             FermatNetworkManager fermatNetworkManager,
+  public SourceAdministrator(TransactionSender bitcoinNetworkManager,
+                             TransactionSender fermatNetworkManager,
                              CryptoVaultManager cryptoVaultManager   ) {
 
         this.bitcoinNetworkManager = bitcoinNetworkManager;

@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,13 +61,11 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<ReferenceAppFe
     View rootView;
 
     private ArrayList<Resource> mlist;
-
     private ListView listView;
-
     private SearchView searchView;
-
     private AppListAdapter adapter;
     Toolbar toolbar;
+    private int menuItemSize;
 
     public static DatabaseToolsFragment newInstance() {
         return new DatabaseToolsFragment();
@@ -281,34 +279,33 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<ReferenceAppFe
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.developer_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-        searchView = (SearchView) menu.findItem(R.id.developer_search).getActionView();
-//        searchView = (SearchView) menu.findItem(1).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
-//        toolbar = getToolbar();
-//        toolbar.addView(searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+            searchView = (SearchView) menu.findItem(1).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapter.getFilter().filter(s);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
-        if (appSession.getData("filterString") != null) {
-            String filterString = (String) appSession.getData("filterString");
-            if (filterString.length() > 0) {
-                searchView.setQuery(filterString, true);
-                searchView.setIconified(false);
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
             }
         }
     }

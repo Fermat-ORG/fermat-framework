@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -77,10 +75,6 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         onRefresh();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
 
     @Override
     protected void initViews(View layout) {
@@ -111,7 +105,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

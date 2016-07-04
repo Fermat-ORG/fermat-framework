@@ -3,6 +3,7 @@
 include ':fermat-android-core'
 project(':fermat-android-core').projectDir = new File('COR/fermat-android-core')
 
+//
+//include ':fermat-android-framework'
+//project(':fermat-android-framework').projectDir = new File('COR/fermat-android-framework')
 
-include ':fermat-android-framework'
-project(':fermat-android-framework').projectDir = new File('COR/fermat-android-framework')

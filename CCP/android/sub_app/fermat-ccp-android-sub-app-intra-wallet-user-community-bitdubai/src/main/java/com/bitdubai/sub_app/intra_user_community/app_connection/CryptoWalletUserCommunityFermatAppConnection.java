@@ -1,6 +1,8 @@
 package com.bitdubai.sub_app.intra_user_community.app_connection;
 
 import android.content.Context;
+
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
@@ -87,17 +89,8 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
         return null;
     }
 
-
     @Override
-    public int getResource(int id) {
-         if (id==3)
-            return R.drawable.search_icon;
-
-             if (id==2)
-                 return R.drawable.cht_id_geolocation_icon;
-       if (id==1)
-            return R.drawable.help_icon;
-
-        return super.getResource(id);
+    public ResourceSearcher getResourceSearcher() {
+        return new CryptoWalletUserSearcher();
     }
 }

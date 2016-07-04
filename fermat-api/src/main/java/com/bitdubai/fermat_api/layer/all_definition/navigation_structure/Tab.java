@@ -22,6 +22,10 @@ public class Tab implements FermatTab {
 
     private FermatDrawable drawable;
 
+    /**
+     * Custom View for the tab
+     * eg: you can use frameworks view or your custom view
+     */
     private FermatView fermatView;
 
     /**
@@ -79,6 +83,10 @@ public class Tab implements FermatTab {
 
     public void setFermatView(FermatView fermatView) {
         this.fermatView = fermatView;
+    }
+
+    public boolean hasCustomView(){
+        return fermatView!=null;
     }
 
     @Override

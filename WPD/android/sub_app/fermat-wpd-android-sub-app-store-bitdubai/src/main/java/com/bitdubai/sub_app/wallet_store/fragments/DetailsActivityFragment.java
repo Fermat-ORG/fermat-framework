@@ -11,31 +11,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
-import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorker;
-import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorkerCallback;
-import com.bitdubai.sub_app.wallet_store.common.workers.UninstallWalletWorker;
-import com.bitdubai.sub_app.wallet_store.common.workers.UninstallWalletWorkerCallback;
 import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
-import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
-import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
-import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.BASIC_DATA;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.DEVELOPER_NAME;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.PREVIEW_IMGS;
@@ -48,14 +36,6 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @version 1.0
  */
 public class DetailsActivityFragment extends AbstractFermatFragment {
-    private final String TAG = "DetailsActivityFragment";
-
-    // MODULE
-    private WalletStoreModuleManager moduleManager;
-
-    private ErrorManager errorManager;
-
-    private ExecutorService executor;
 
     private WalletStoreListItem catalogItem;
 
@@ -147,13 +127,6 @@ public class DetailsActivityFragment extends AbstractFermatFragment {
         installButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (installStatus == INSTALLED || installStatus == NOT_UNINSTALLED) {
-                    // open wallet
-                } else if (installStatus == UPGRADE_AVAILABLE) {
-                    // upgrade wallet
-                } else {
-                    installWallet();
-                }
             }
         });
 
@@ -163,8 +136,6 @@ public class DetailsActivityFragment extends AbstractFermatFragment {
             uninstallButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UUID catalogueId = catalogItem.getId();
-                    uninstallWallet(catalogueId);
                 }
             });
         }
@@ -183,40 +154,6 @@ public class DetailsActivityFragment extends AbstractFermatFragment {
         }
     }
 
-    private void installWallet() {
-        dialog = UtilsFuncs.INSTANCE.showProgressDialog(dialog, getActivity(),
-                R.string.installing_message, R.string.wait_please_message);
-
-        InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(
-                getActivity(), errorManager, dialog, installButton, uninstallButton);
-
-        InstallWalletWorker installWalletWorker = new InstallWalletWorker(
-                getActivity(), callback, moduleManager, (FermatSession) appSession);
-
-        if (executor != null) {
-            executor.shutdownNow();
-        }
-
-        executor = null;
-        executor = installWalletWorker.execute();
-    }
-
-    private void uninstallWallet(UUID catalogueId) {
-        UtilsFuncs.INSTANCE.showProgressDialog(dialog, getActivity(),
-                R.string.uninstalling_message, R.string.wait_please_message);
-
-        UninstallWalletWorkerCallback callback = new UninstallWalletWorkerCallback(getActivity(), errorManager);
-
-        UninstallWalletWorker uninstallWalletWorker = new UninstallWalletWorker(
-                getActivity(), callback, moduleManager, catalogueId);
-
-        if (executor != null) {
-            executor.shutdownNow();
-        }
-
-        executor = null;
-        executor = uninstallWalletWorker.execute();
-    }
 }
 
 
