@@ -424,25 +424,6 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     }
 
     /**
-     * Gets the Mnemonic code generated for this vault.
-     * It can be used to export and import it somewhere else.
-     * @return
-     * @throws CantLoadExistingVaultSeed
-     */
-    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
-        try {
-            DeterministicSeed deterministicSeed = getVaultSeed();
-            List<String> mnemonicCode = deterministicSeed.getMnemonicCode();
-            ArrayList<String> mnemonicPlusDate = new ArrayList<>(mnemonicCode);
-            mnemonicPlusDate.add(String.valueOf(deterministicSeed.getCreationTimeSeconds()));
-            return mnemonicPlusDate;
-        } catch (InvalidSeedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
-        }
-    }
-
-    /**
      * Signs the owned inputs of the passed Draft transaction
      * @param draftTransaction the transaction to sign
      * @return the signed Transaction

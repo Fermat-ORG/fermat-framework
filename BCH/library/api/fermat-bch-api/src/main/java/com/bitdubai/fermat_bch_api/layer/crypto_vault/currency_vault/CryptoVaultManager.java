@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
@@ -79,7 +80,7 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @return
      * @throws CantLoadExistingVaultSeed
      */
-    List<String> getMnemonicCode() throws CantLoadExistingVaultSeed;
+    CryptoVaultSeed getCryptoVaultSeed() throws CantLoadExistingVaultSeed;
 
     /**
      * Imports the passed seed into the vault.

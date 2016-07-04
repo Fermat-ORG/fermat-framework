@@ -1,14 +1,18 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.InvalidSeedException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 
 import org.bitcoinj.core.Address;
@@ -29,6 +33,7 @@ import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.store.SPVBlockStore;
 import org.bitcoinj.wallet.DeterministicSeed;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +77,21 @@ public abstract class CryptoVault {
         this.blockchainCryptoManager = blockchainCryptoManager;
         this.CRYPTO_VAULT_SEED_FILEPATH = CRYPTO_VAULT_SEED_FILEPATH;
         this.CRYPTO_VAULT_SEED_FILENAME = CRYPTO_VAULT_SEED_FILENAME;
+    }
+
+    /**
+     * Gets the Seed for this vault.
+     * @return
+     */
+    public CryptoVaultSeed getCryptoVaultSeed(){
+        DeterministicSeed seed = null;
+        try {
+            seed = getVaultSeed();
+        } catch (InvalidSeedException e) {
+            return null;
+        }
+        CryptoVaultSeed cryptoVaultSeed = new CryptoVaultSeed(seed.getMnemonicCode(), seed.getCreationTimeSeconds(), seed.getSeedBytes());
+        return cryptoVaultSeed;
     }
 
 
@@ -236,6 +256,27 @@ public abstract class CryptoVault {
         } catch (MnemonicException e) {
             throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
         }
+    }
+
+    /**
+     * Imports a new seed for the specified vault.
+     * This will erase the previous seed and created a new one based on the passed information.
+     * @param mNemonicCode
+     * @param seedCreationTimeInSeconds
+     * @return the new created seed.
+     * @throws CantImportSeedException
+     */
+    public DeterministicSeed importNewVaultSeed(String mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException {
+        VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
+        vaultSeedGenerator.importSeed(mNemonicCode, seedCreationTimeInSeconds);
+
+
+        try {
+            vaultSeedGenerator.load();
+        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            throw new CantImportSeedException(cantLoadExistingVaultSeed, "new seed was created and saved. But we are unable to re load it from disk." , "IO error");
+        }
+        return new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
     }
 
 
