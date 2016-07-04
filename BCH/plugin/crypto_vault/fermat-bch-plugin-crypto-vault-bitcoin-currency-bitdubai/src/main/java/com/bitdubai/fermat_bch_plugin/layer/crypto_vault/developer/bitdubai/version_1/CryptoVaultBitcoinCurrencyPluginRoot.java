@@ -267,7 +267,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      * @param walletPublicKey
      * @param fermatTrId
      * @param addressTo
-     * @param satoshis
+     * @param cryptoAmount
      * @return
      * @throws InsufficientCryptoFundsException
      * @throws InvalidSendToAddressException

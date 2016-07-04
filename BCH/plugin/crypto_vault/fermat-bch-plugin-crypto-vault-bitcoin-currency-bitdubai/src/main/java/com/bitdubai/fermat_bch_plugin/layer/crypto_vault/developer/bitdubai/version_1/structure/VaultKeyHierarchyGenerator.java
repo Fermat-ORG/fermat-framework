@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
@@ -65,6 +66,12 @@ class VaultKeyHierarchyGenerator implements Runnable {
      */
     private VaultKeyHierarchy vaultKeyHierarchy;
 
+    /**
+     * if the hierarhcy we are creating and maintaining is from an imported seed, then we are not maintining it. just execute
+     * the Maintainer agent once.
+     */
+    private final boolean isSeedImported;
+
 
     /**
      * Platform services
@@ -80,8 +87,9 @@ class VaultKeyHierarchyGenerator implements Runnable {
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem,  BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, boolean isSeedImported, PluginDatabaseSystem pluginDatabaseSystem,  BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
         this.seed = seed;
+        this.isSeedImported = isSeedImported;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.pluginId = pluginId;
@@ -128,8 +136,13 @@ class VaultKeyHierarchyGenerator implements Runnable {
         vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
             vaultKeyHierarchyMaintainer.start();
+
+            if (!this.isSeedImported)
+                vaultKeyHierarchyMaintainer.stop();
         } catch (CantStartAgentException e) {
             // I will log this error for now.
+            e.printStackTrace();
+        } catch (CantStopAgentException e) {
             e.printStackTrace();
         }
     }

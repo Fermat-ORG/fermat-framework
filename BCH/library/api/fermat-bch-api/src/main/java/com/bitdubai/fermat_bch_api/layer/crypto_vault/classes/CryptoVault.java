@@ -243,9 +243,9 @@ public abstract class CryptoVault{
                 /**
                  * I reload it to make sure I'm using the seed I will start using from now on. Issue #3330
                  */
-                vaultSeedGenerator.load();
+                vaultSeedGenerator.load(CRYPTO_VAULT_SEED_FILENAME);
             } else
-                vaultSeedGenerator.load();
+                vaultSeedGenerator.load(CRYPTO_VAULT_SEED_FILENAME);
             DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
             seed.check();
             return seed;
@@ -257,6 +257,19 @@ public abstract class CryptoVault{
             throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
         }
     }
+
+    public List<DeterministicSeed> getImportedSeeds(){
+        List<DeterministicSeed> importedSeedList = new ArrayList<>();
+        VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
+
+        /**
+         * if no main seed exists, then there is no imported seeds to retrieve
+         */
+        if (!vaultSeedGenerator.seedExists())
+            return importedSeedList;
+
+        return vaultSeedGenerator.getImportedSeeds();
+        }
 
     /**
      * Imports a new seed for the specified vault.
@@ -271,12 +284,11 @@ public abstract class CryptoVault{
 
 
         try {
-            vaultSeedGenerator.load();
+            vaultSeedGenerator.load(CRYPTO_VAULT_SEED_FILENAME);
         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
             throw new CantImportSeedException(cantLoadExistingVaultSeed, "new seed was created and saved. But we are unable to re load it from disk." , "IO error");
         }
     }
-
 
 
     /**
