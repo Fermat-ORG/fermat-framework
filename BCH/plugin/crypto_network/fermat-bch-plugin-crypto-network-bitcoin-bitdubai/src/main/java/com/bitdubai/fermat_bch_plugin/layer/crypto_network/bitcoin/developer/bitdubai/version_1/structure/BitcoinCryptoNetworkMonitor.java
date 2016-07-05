@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -45,6 +46,7 @@ import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
@@ -175,11 +177,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         }
     }
 
-    public void downloadBlockchain() {
-        monitorAgent.peerGroup.downloadBlockChain();
-    }
-
-
     /**
      * private class that runs on a separate thread
      */
@@ -240,11 +237,46 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             this.dao = bitcoinCryptoNetworkDatabaseDao;
         }
 
+        /**
+         * Internal private class to make sure we are downloading the blockchain from any peer.
+         */
+        private class BlockchainDownloadController extends AbstractAgent implements Runnable{
+            private final PeerGroup peerGroup;
+            private final PeerEventListener peerEventListener;
+            public BlockchainDownloadController(PeerGroup peerGroup, PeerEventListener peerEventListener){
+                super(1, TimeUnit.MINUTES);
+                this.peerGroup = peerGroup;
+                this.peerEventListener = peerEventListener;
+            }
+
+            @Override
+            protected Runnable agentJob() {
+                return this;
+            }
+
+            @Override
+            protected void onErrorOccur() {
+
+            }
+
+            @Override
+            public void run() {
+                System.out.println("***CryptoNetwork*** BlockchainDownloader Agent control.");
+                System.out.println("Peers connected: " + peerGroup.getConnectedPeers().size());
+
+
+                peerGroup.startBlockChainDownload(this.peerEventListener);
+            }
+        }
+
         @Override
         public void run() {
             try {
                 // start it all
                 doTheMainTask();
+
+                BlockchainDownloadController blockchainDownloadController = new BlockchainDownloadController(this.peerGroup, this.events);
+                blockchainDownloadController.start();
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
@@ -312,7 +344,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 peerGroup.setDownloadTxDependencies(true);
                 peerGroup.start();
-                peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+               // peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+                peerGroup.downloadBlockChain();
 
                 System.out.println("***CryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
                 System.out.println("***CryptoNetwork*** PeerGroup running?: " + peerGroup.isRunning() + " with " + peerGroup.getConnectedPeers().size() + " connected peers.");

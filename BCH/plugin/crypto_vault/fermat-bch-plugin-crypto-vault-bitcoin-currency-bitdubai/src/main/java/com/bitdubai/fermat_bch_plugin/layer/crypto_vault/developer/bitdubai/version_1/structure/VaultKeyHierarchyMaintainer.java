@@ -44,12 +44,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchyMaintainer extends AbstractAgent {
-    /**
-     * controller of the agent execution thread
-     */
-    private boolean isSupposedToRun;
-
+class VaultKeyHierarchyMaintainer implements Agent{
     /**
      * This will hold all the keys that I need to pass to bitcoin network for monitoring.
      */
@@ -68,7 +63,7 @@ class VaultKeyHierarchyMaintainer extends AbstractAgent {
      * The vault complete key hierarchy
      */
     private VaultKeyHierarchy vaultKeyHierarchy;
-
+    private boolean isRunning;
 
     /**
      * platform services variables
@@ -83,7 +78,6 @@ class VaultKeyHierarchyMaintainer extends AbstractAgent {
      * @param pluginDatabaseSystem
      */
     public VaultKeyHierarchyMaintainer(VaultKeyHierarchy vaultKeyHierarchy, PluginDatabaseSystem pluginDatabaseSystem, BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
-        super(2, TimeUnit.MINUTES);
         this.vaultKeyHierarchy = vaultKeyHierarchy;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
@@ -92,13 +86,20 @@ class VaultKeyHierarchyMaintainer extends AbstractAgent {
 
 
     @Override
-    protected Runnable agentJob() {
-        return new VaultKeyHierarchyMaintainerAgent();
+    public void start() throws CantStartAgentException {
+        VaultKeyHierarchyMaintainerAgent agent = new VaultKeyHierarchyMaintainerAgent();
+        Thread agentThread = new Thread(agent, VaultKeyHierarchyMaintainer.class.getName());
+        agentThread.start();
+        this.isRunning = true;
     }
 
     @Override
-    protected void onErrorOccur() {
+    public void stop() {
 
+    }
+
+    public boolean isRunning(){
+        return this.isRunning;
     }
 
     private class VaultKeyHierarchyMaintainerAgent implements Runnable {
@@ -114,13 +115,19 @@ class VaultKeyHierarchyMaintainer extends AbstractAgent {
 
         @Override
         public void run() {
-            try {
-                doTheMainTask();
-            } catch (CantLoadHierarchyAccountsException e) {
-                e.printStackTrace();
-            } catch (KeyMaintainerStatisticException e) {
-                e.printStackTrace();
+            while (true){
+                try {
+                    doTheMainTask();
+                    Thread.sleep(1000 * 60 * 2);
+                } catch (CantLoadHierarchyAccountsException e) {
+                    e.printStackTrace();
+                } catch (KeyMaintainerStatisticException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
         }
 
 

@@ -136,13 +136,13 @@ class VaultKeyHierarchyGenerator implements Runnable {
         vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
             vaultKeyHierarchyMaintainer.start();
+            if (!vaultKeyHierarchyMaintainer.isRunning())
+                throw new CantLoadHierarchyAccountsException(CantLoadHierarchyAccountsException.DEFAULT_MESSAGE, null, "Maintainer Agent not started.", "Agent issue");
 
             if (!this.isSeedImported)
                 vaultKeyHierarchyMaintainer.stop();
         } catch (CantStartAgentException e) {
             // I will log this error for now.
-            e.printStackTrace();
-        } catch (CantStopAgentException e) {
             e.printStackTrace();
         }
     }
