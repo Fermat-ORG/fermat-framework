@@ -4,14 +4,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 
@@ -24,6 +27,14 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private TextView buyingText;
     private FermatButton buyingValue;
     private boolean paymentBuy;
+    private TextView currency_total;
+    private TextView currency_fee_miner;
+    private TextView feeMiner;
+    private TextView total_after_fee;
+    private RadioButton send_speed_low;
+    private RadioButton send_speed_medium;
+    private RadioButton send_speed_high;
+
 
     public AmountToBuyViewHolder(View itemView) {
         super(itemView);
@@ -33,24 +44,43 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         currencyToBuyTextValue  = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
         buyingText              = (TextView) itemView.findViewById(R.id.ccw_buying_text);
         buyingValue             = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
+
         buyingValue.setOnClickListener(this);
     }
 
     @Override
     public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause, int position) {
         super.bindData(data, clause, position);
+        ClauseType currencyType = ClauseType.CUSTOMER_CURRENCY;
 
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
+        final ClauseInformation currencyToBuy = clauses.get(currencyType);
+        BigDecimal totalToPay;
 
-        ClauseType currencyType = ClauseType.CUSTOMER_CURRENCY;
+
         int buyingTextValue = R.string.buying_text;
 
         if (!paymentBuy) {
             currencyType = ClauseType.BROKER_CURRENCY;
             buyingTextValue = R.string.paying_text;
+            //Notification of fee miner when customer pay with BTC
+            if(CryptoCurrency.codeExists(clauses.get(currencyType).getValue())){
+
+                feeMiner=(TextView) itemView.findViewById(R.id.ccw_miner_fee);
+                currency_fee_miner=(TextView) itemView.findViewById(R.id.ccw_currency_fee_miner);
+                currency_total=(TextView) itemView.findViewById(R.id.ccw_currency_total);
+                total_after_fee=(TextView) itemView.findViewById(R.id.ccw_total_after_fee);
+
+                feeMiner.setText(new BigDecimal("0.00001500").toString());
+                currency_fee_miner.setText(currencyToBuy.getValue());
+                currency_total.setText(currencyToBuy.getValue());
+                totalToPay = new BigDecimal(clause.getValue()).add(new BigDecimal("0.00001500"));
+                total_after_fee.setText(totalToPay.toString());
+
+            }
         }
 
-        final ClauseInformation currencyToBuy = clauses.get(currencyType);
+
 
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
         buyingText.setText(buyingTextValue);

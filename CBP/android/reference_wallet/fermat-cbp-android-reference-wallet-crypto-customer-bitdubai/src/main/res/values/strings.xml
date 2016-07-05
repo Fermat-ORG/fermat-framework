@@ -177,6 +177,7 @@
     <string name="ccw_your_exchange_rate_title">Selected Rate:</string>
     <string name="ccw_currency_to_pay">Currency to Pay</string>
     <string name="ccw_amount_to_pay">Amount to Pay</string>
+
     <string name="ccw_currency_to_buy">Currency to Buy</string>
     <string name="selected_currency">Selected Currency</string>
     <string name="ccw_currency_description">Currency:</string>
@@ -184,6 +185,13 @@
     <string name="cancel">Cancel</string>
     <string name="hint">hint</string>
     <string name="title">Title</string>
+
+
+    <!-- Crypto Pay Fee  -->
+
+    <string name="ccw_fee_miner">Fee miner:</string>
+    <string name="ccw_miner_confirmation_time">Send Speed:</string>
+    <string name="ccw_total_to_pay_after_fee">Total to pay:</string>
 
 
 
