@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
@@ -29,7 +29,7 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
      */
     CryptoCustomerIdentity createCryptoCustomerIdentity(final String alias, final byte[] profileImage,
                                                         long accuracy,
-                                                        Frequency frequency) throws CantCreateCryptoCustomerIdentityException;
+                                                        GeoFrequency frequency) throws CantCreateCryptoCustomerIdentityException;
 
     /**
      * The method <code>listAllCryptoCustomerFromCurrentDeviceUser</code> is used to list all the Customer Identity
@@ -46,7 +46,7 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
      */
     void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
                                       long accuracy,
-                                      Frequency frequency) throws CantUpdateCustomerIdentityException;
+                                      GeoFrequency frequency) throws CantUpdateCustomerIdentityException;
 
     /**
      * The method <code>getCryptoCustomerIdentity</code> is used to get an specific customer Identity

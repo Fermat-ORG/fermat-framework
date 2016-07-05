@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * If fee comes from the amount, then we are sending a total of 10000 satoshis, 5000 to user and 5000 fee..
  * If the fee comes from the funds, then we are sending a total of 15000 satothis, 10000 to user and 5000 fee.
  */
+
 public enum FeeOrigin {
     SUBSTRACT_FEE_FROM_AMOUNT("AMOUNT"),
     SUBSTRACT_FEE_FROM_FUNDS("FUNDS");

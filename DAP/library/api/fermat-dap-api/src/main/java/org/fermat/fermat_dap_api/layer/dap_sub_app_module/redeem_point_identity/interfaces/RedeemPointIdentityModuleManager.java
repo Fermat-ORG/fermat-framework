@@ -10,7 +10,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public interface RedeemPointIdentityModuleManager extends ModuleManager<RedeemPo
     RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,
                                              String contactInformation, String countryName, String provinceName, String cityName,
                                              String postalCode, String streetName, String houseNumber,
-                                             int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException;
+                                             int accuracy, GeoFrequency frequency) throws CantCreateNewRedeemPointException;
 
     /**
      * The method <code>updateIdentityAssetIssuer</code> change a identity information data
@@ -73,7 +73,7 @@ public interface RedeemPointIdentityModuleManager extends ModuleManager<RedeemPo
     void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
                                    String contactInformation, String countryName, String provinceName, String cityName,
                                    String postalCode, String streetName, String houseNumber,
-                                   int accuracy, Frequency frequency) throws CantUpdateIdentityRedeemPointException;
+                                   int accuracy, GeoFrequency frequency) throws CantUpdateIdentityRedeemPointException;
 
     /**
      * The method <code>hasAssetUserIdentity</code> returns if has a intra user identity created
@@ -85,7 +85,7 @@ public interface RedeemPointIdentityModuleManager extends ModuleManager<RedeemPo
 
     int getAccuracyDataDefault();
 
-    Frequency getFrequencyDataDefault();
+    GeoFrequency getFrequencyDataDefault();
 
 
     void createIdentity(String name, byte[] profile_img,

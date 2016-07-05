@@ -6,7 +6,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 
 import java.io.Serializable;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 /**
  * Created by Nerio on 07/09/15.
@@ -47,5 +47,5 @@ public interface RedeemPointIdentity extends ActiveActorIdentityInformation, Ser
 
     int getAccuracy();
 
-    Frequency getFrequency();
+    GeoFrequency getFrequency();
 }

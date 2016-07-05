@@ -14,9 +14,9 @@ repositories {
 
 dependencies {
 
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
     compile project(':fermat-ccp-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-pip-api')
 
     testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
 

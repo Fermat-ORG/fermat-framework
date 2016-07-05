@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 
@@ -66,7 +66,7 @@ public class CryptoCustomerWalletActorIdentity implements ActorIdentity, Seriali
     }
 
     @Override
-    public Frequency getFrequency() {
+    public GeoFrequency getFrequency() {
         return null;
     }
 }

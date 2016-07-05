@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -16,7 +17,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by Alejandro Bicelis on 2/2/2016.
@@ -113,7 +114,7 @@ public class CryptoCustomerCommunityManager
 
             final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
-            search.addConnectionState(ConnectionState.CONNECTED);
+//            search.addConnectionState(ConnectionState.CONNECTED);
 
             actorConnections = search.getResult(max, offset);
 
@@ -139,11 +140,10 @@ public class CryptoCustomerCommunityManager
                 final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
                 country = address.getCountry();
                 place = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-            } catch (CantCreateAddressException e) {
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            } catch (CantCreateAddressException ignore) {
             }
 
-           customer.setCountry(country);
+            customer.setCountry(country);
             customer.setPlace(place);
         }
 
@@ -181,19 +181,18 @@ public class CryptoCustomerCommunityManager
         try {
             appSettings = loadAndGetSettings(this.subAppPublicKey);
         } catch (Exception e) {
-            appSettings = null;
+            appSettings = new CryptoCustomerCommunitySettings();
         }
 
         //If appSettings exist, save identity
-        if(appSettings != null){
-            if(identity.getPublicKey() != null) {
-                appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
-            }
-            try {
-                persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e) {
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+        if (identity.getPublicKey() != null) {
+            appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
+        }
+
+        try {
+            persistSettings(this.subAppPublicKey, appSettings);
+        } catch (CantPersistSettingsException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -368,33 +367,28 @@ public class CryptoCustomerCommunityManager
         } catch (CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if(brokerIdentitiesInDevice.size() == 0)
+        if (brokerIdentitiesInDevice.size() == 0)
             return null;
-//            throw new CantGetSelectedActorIdentityException("", null, "", "");
-
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
-        if(appSettings != null) {
-            String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
+        String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
 
-            CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
-            if (lastSelectedIdentityPublicKey != null) {
+        CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
+        if (lastSelectedIdentityPublicKey != null) {
 
-                for(CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
-                    if(identity.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                        selectedIdentity = constructProfileCustomer(identity);
-                }
-                if(selectedIdentity == null)
-                    throw new ActorIdentityNotSelectedException("", null, "", "");
-
-                return selectedIdentity;
-            } else {
-                for(CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
-                    if(identity.getPublicKey() != null)
-                        return constructProfileCustomer(identity);
+            for (CryptoBrokerIdentity identity : brokerIdentitiesInDevice) {
+                if (identity.getPublicKey().equals(lastSelectedIdentityPublicKey)) {
+                    selectedIdentity = constructProfileCustomer(identity);
+                    break;
                 }
             }
+
+            if (selectedIdentity == null)
+                throw new ActorIdentityNotSelectedException("", null, "", "");
+
+            return selectedIdentity;
         }
+
         return null;
     }
 
@@ -415,7 +409,7 @@ public class CryptoCustomerCommunityManager
         String createdPublicKey;
 
         try {
-            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frequency.NONE);
+            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, GeoFrequency.NONE);
             createdPublicKey = createdIdentity.getPublicKey();
 
             new Thread() {
@@ -429,6 +423,7 @@ public class CryptoCustomerCommunityManager
                     }
                 }
             }.start();
+
         } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
@@ -440,18 +435,17 @@ public class CryptoCustomerCommunityManager
         try {
             appSettings = loadAndGetSettings(this.subAppPublicKey);
         } catch (Exception e) {
-            appSettings = null;
+            appSettings = new CryptoCustomerCommunitySettings();
         }
 
-
         //If appSettings exist
-        if (appSettings != null) {
+        if (createdPublicKey != null)
             appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
-            try {
-                persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e) {
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
+
+        try {
+            persistSettings(this.subAppPublicKey, appSettings);
+        } catch (CantPersistSettingsException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
-import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListIdentitiesException;
@@ -135,7 +135,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantCreateNewChatIdentityException {
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantCreateNewChatIdentityException {
         try {
             Location location = locationManager.getLocation();
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -164,7 +164,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantUpdateChatIdentityException {
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantUpdateChatIdentityException {
         try {
             chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState, accuracy, frecuency);
             Location location = locationManager.getLocation();
