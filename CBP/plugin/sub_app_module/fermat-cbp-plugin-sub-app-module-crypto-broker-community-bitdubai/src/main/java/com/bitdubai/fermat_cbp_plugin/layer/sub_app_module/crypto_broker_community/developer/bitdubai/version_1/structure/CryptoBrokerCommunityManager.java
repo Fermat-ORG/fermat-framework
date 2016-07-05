@@ -74,7 +74,9 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -398,14 +400,14 @@ public class CryptoBrokerCommunityManager
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<CryptoBrokerActorConnection> actorConnections = search.getResult(max, offset);
+            final List<CryptoBrokerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
+            final Set<CryptoBrokerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+            for (CryptoBrokerActorConnection connectedActor : connectedActors)
+                filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor));
 
-            return cryptoBrokerCommunityInformationList;
+            return new ArrayList<>(filteredConnectedActors);
 
         } catch (final CantListActorConnectionsException e) {
 

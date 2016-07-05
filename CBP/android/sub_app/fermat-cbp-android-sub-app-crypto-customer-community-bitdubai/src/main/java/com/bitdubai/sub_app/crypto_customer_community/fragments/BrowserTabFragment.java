@@ -63,7 +63,7 @@ public class BrowserTabFragment
         implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreDataListener, GeolocationDialog.AdapterCallback {
 
     //Constants
-    private static final int MAX = 15;
+    private static final int MAX = 100;
     protected static final String TAG = "BrowserTabFragment";
 
     //Managers

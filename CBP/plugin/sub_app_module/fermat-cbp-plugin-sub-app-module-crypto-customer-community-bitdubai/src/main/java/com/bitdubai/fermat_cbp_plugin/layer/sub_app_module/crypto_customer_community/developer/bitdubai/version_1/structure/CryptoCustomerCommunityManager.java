@@ -59,7 +59,9 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -277,17 +279,28 @@ public class CryptoCustomerCommunityManager
             );
 
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
-
             search.addConnectionState(ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+            final List<CryptoCustomerActorConnection> actorsWithPendingRequest = search.getResult(max, offset);
 
-            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+            search.resetFilters();
+            search.addConnectionState(ConnectionState.CONNECTED);
+            final List<CryptoCustomerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<LinkedCryptoCustomerIdentity> linkedCryptoCustomerIdentityList = new ArrayList<>();
+            final HashMap<String, Boolean> connectedActorsPublicKeys = new HashMap<>();
+            for (CryptoCustomerActorConnection connectedCryptoCustomer : connectedActors) {
+                connectedActorsPublicKeys.put(connectedCryptoCustomer.getPublicKey(), true);
+            }
 
-            for (CryptoCustomerActorConnection ccac : actorConnections)
-                linkedCryptoCustomerIdentityList.add(new LinkedCryptoCustomerIdentityImpl(ccac));
+            final Set<LinkedCryptoCustomerIdentity> filteredActorsWihPendingRequest = new LinkedHashSet<>();
+            for (CryptoCustomerActorConnection actorWithPendingRequest : actorsWithPendingRequest) {
+                if (connectedActorsPublicKeys.get(actorWithPendingRequest.getPublicKey()) != null)
+                    acceptCryptoCustomer(actorWithPendingRequest.getConnectionId());
+                else
+                    filteredActorsWihPendingRequest.add(new LinkedCryptoCustomerIdentityImpl(actorWithPendingRequest));
+            }
 
-            return linkedCryptoCustomerIdentityList;
+
+            return new ArrayList<>(filteredActorsWihPendingRequest);
 
         } catch (final CantListActorConnectionsException e) {
 
@@ -314,14 +327,14 @@ public class CryptoCustomerCommunityManager
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+            final List<CryptoCustomerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+            final Set<CryptoCustomerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoCustomerActorConnection ccac : actorConnections)
-                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac));
+            for (CryptoCustomerActorConnection connectedActor : connectedActors)
+                filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor));
 
-            return cryptoCustomerCommunityInformationList;
+            return new ArrayList<>(filteredConnectedActors);
 
         } catch (final CantListActorConnectionsException e) {
 
