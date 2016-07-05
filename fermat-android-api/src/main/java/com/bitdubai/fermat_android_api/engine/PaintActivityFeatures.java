@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_android_api.engine;
 
+import android.app.Notification;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -24,6 +25,10 @@ public interface PaintActivityFeatures {
     void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
 
     void setTabCustomImageView(int position,View view);
+
+    void cancelNotification(String appPublicKey);
+
+    void pushNotification(String appPublicKey,Notification notification);
 
     // TODO - This shouldn't be here
     void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback);

@@ -3,7 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="description_search">Search</string>
+    <string name="description_search">Search...</string>
     <string name="notifications">Notifications</string>
     <string name="wallet_icon">wallet icon</string>
     <string name="wallet_installs">Installed</string>

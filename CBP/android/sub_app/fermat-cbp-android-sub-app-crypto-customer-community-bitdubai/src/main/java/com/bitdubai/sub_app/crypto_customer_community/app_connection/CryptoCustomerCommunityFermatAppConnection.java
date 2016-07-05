@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_customer_community.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -16,9 +17,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
+import com.bitdubai.sub_app.crypto_customer_community.common.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_customer_community.navigationDrawer.CustomerCommunityNavigationViewPainter;
-import com.bitdubai.sub_app.crypto_customer_community.notifications.CommunityNotificationPainterBuilder;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -27,6 +28,9 @@ import com.bitdubai.sub_app.crypto_customer_community.notifications.CommunityNot
  * @version 1.0.0
  */
 public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>> {
+
+    private CryptoCustomerCommunityResourceSearcher resourceSearcher;
+
 
     public CryptoCustomerCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -39,7 +43,7 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return  new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CRYPTO_CUSTOMER_COMMUNITY,
@@ -56,8 +60,9 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
-
+        //TODO: Deshabilitado hasta nuevo aviso
+        // return new CustomerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return null;
     }
 
     @Override
@@ -72,9 +77,13 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
 
     @Override
     public NotificationPainter getNotificationPainter(final String code) {
+        return CommunityNotificationPainterBuilder.getNotification(code);
+    }
 
-        return CommunityNotificationPainterBuilder.getNotification(
-                code
-        );
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        if (resourceSearcher == null)
+            resourceSearcher = new CryptoCustomerCommunityResourceSearcher();
+        return resourceSearcher;
     }
 }

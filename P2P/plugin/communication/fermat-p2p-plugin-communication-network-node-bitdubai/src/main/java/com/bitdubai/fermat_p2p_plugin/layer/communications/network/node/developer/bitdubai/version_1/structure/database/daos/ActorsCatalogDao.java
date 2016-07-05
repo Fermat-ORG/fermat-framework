@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterO
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -89,8 +90,15 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
             table.setFilterTop(max.toString());
             table.setFilterOffSet(offset.toString());
 
+            List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+
             if (cpk != null)
-                table.addStringFilter(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, cpk, DatabaseFilterType.NOT_EQUALS);
+                tableFilters.add(table.getNewFilter(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.NOT_EQUALS, cpk));
+
+            /*
+             * set Actortype to avoid duplicate platform consults
+             */
+              tableFilters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, parameters.getActorType()));
 
             if (parameters.getLocation() != null)
                 table.addNearbyLocationOrder(
@@ -102,7 +110,14 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
                 );
 
             // load the data base to memory with filters
-            table.setFilterGroup(buildFilterGroupFromDiscoveryQueryParameters(table, parameters), null, DatabaseFilterOperator.OR);
+            List<DatabaseTableFilterGroup> internalFilterGroups = new ArrayList<>();
+
+            List<DatabaseTableFilter> discoveryQueryFilters = buildFilterGroupFromDiscoveryQueryParameters(table, parameters);
+
+            if (!discoveryQueryFilters.isEmpty())
+                internalFilterGroups.add(table.getNewFilterGroup(discoveryQueryFilters, null, DatabaseFilterOperator.AND));
+
+            table.setFilterGroup(tableFilters, internalFilterGroups, DatabaseFilterOperator.AND);
 
             table.loadToMemory();
 
@@ -141,16 +156,16 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
             filters.add(table.getNewFilter(ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getIdentityPublicKey()));
 
         if (params.getName() != null)
-            filters.add(table.getNewFilter(ACTOR_CATALOG_NAME_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getName()));
+            filters.add(table.getNewFilter(ACTOR_CATALOG_NAME_COLUMN_NAME, DatabaseFilterType.LIKE, params.getName()));
 
         if (params.getAlias() != null)
-            filters.add(table.getNewFilter(ACTOR_CATALOG_ALIAS_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getAlias()));
+            filters.add(table.getNewFilter(ACTOR_CATALOG_ALIAS_COLUMN_NAME, DatabaseFilterType.LIKE, params.getAlias()));
 
         if (params.getActorType() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getActorType()));
 
         if (params.getExtraData() != null)
-            filters.add(table.getNewFilter(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getExtraData()));
+            filters.add(table.getNewFilter(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, DatabaseFilterType.LIKE, params.getExtraData()));
 
         if (params.getLastConnectionTime() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME, DatabaseFilterType.GREATER_OR_EQUAL_THAN, params.getLastConnectionTime().toString()));

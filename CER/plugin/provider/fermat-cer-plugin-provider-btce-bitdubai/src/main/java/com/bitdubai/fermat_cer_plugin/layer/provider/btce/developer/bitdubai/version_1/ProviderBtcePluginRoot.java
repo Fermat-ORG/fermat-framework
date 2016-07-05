@@ -33,11 +33,11 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfo
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database.BtceProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.database.BtceProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.version_1.exceptions.CantInitializeBtceProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,7 +172,7 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
 
         try{
             String currencyString = exchangeFrom.toLowerCase() + "_" + exchangeTo.toLowerCase();
-            json =  new JSONObject(HttpReader.getHTTPContent("https://btc-e.com/api/3/ticker/" + currencyString));
+            json =  new JSONObject(HttpHelper.getHTTPContent("https://btc-e.com/api/3/ticker/" + currencyString));
             json =  json.getJSONObject(currencyString);
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");

@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -43,6 +45,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import java.io.Serializable;
@@ -120,12 +123,14 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
     GeoRectangle getGeoRectangleByLocation(String location)
             throws CantCreateGeoRectangleException;
 
-    Address getAddressByCoordinate(float latitude, float longitude)
+    Address getAddressByCoordinate(double latitude, double longitude)
             throws CantCreateAddressException;
 
     GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
 
-    List<Cities> getCities(String filter);
+    Location getLocation() throws CantGetDeviceLocationException;
+
+    List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException;
 
     @Override
     ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;

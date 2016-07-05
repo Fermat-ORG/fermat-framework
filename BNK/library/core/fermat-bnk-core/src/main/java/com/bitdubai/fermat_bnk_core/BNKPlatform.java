@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bnk_core;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_bnk_core.layer.wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
@@ -16,6 +17,10 @@ public class BNKPlatform extends AbstractPlatform {
 
     public BNKPlatform() {
         super(new PlatformReference(Platforms.BANKING_PLATFORM));
+    }
+
+    public BNKPlatform(FermatContext fermatContext) {
+        super(new PlatformReference(Platforms.BANKING_PLATFORM),fermatContext);
     }
 
     @Override

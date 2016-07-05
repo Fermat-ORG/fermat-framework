@@ -46,7 +46,6 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 		this.hostedTimestamp = new Timestamp(currentMillis);
 		this.lastUpdateTime = new Timestamp(currentMillis);
 		this.lastConnection = new Timestamp(currentMillis);
-        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
 	public Timestamp getLastConnection() {
@@ -176,12 +175,6 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 			return false;
 		if (getExtraData() != null ? !getExtraData().equals(that.getExtraData()) : that.getExtraData() != null)
 			return false;
-		if (getHostedTimestamp() != null ? !getHostedTimestamp().equals(that.getHostedTimestamp()) : that.getHostedTimestamp() != null)
-			return false;
-		if (getLastConnection() != null ? !getLastConnection().equals(that.getLastConnection()) : that.getLastConnection() != null)
-			return false;
-		if (getLastLocation() != null ? !getLastLocation().equals(that.getLastLocation()) : that.getLastLocation() != null)
-			return false;
 		if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
 			return false;
 		if (getNodeIdentityPublicKey() != null ? !getNodeIdentityPublicKey().equals(that.getNodeIdentityPublicKey()) : that.getNodeIdentityPublicKey() != null)
@@ -198,9 +191,6 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 		result = 31 * result + (getActorType() != null ? getActorType().hashCode() : 0);
 		result = 31 * result + (getAlias() != null ? getAlias().hashCode() : 0);
 		result = 31 * result + (getExtraData() != null ? getExtraData().hashCode() : 0);
-		result = 31 * result + (getHostedTimestamp() != null ? getHostedTimestamp().hashCode() : 0);
-		result = 31 * result + (getLastConnection() != null ? getLastConnection().hashCode() : 0);
-		result = 31 * result + (getLastLocation() != null ? getLastLocation().hashCode() : 0);
 		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
 		result = 31 * result + (getNodeIdentityPublicKey() != null ? getNodeIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getClientIdentityPublicKey() != null ? getClientIdentityPublicKey().hashCode() : 0);

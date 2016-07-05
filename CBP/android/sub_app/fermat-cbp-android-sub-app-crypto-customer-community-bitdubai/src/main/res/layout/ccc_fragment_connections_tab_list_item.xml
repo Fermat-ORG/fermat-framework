@@ -1,0 +1,91 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="10dp">
+
+    <ImageView
+        android:id="@+id/ccc_customer_image"
+        android:layout_width="67dp"
+        android:layout_height="67dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/ccc_customer_image_border_background"
+        android:padding="2dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/ic_app"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/ccc_customer_image"
+        android:layout_marginTop="10dp"
+        android:background="@color/ccc_separator"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccc_customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ccc_location_container"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignStart="@+id/ccc_location_container"
+        android:layout_alignTop="@+id/ccc_customer_image"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:maxLines="2"
+        android:textColor="@color/color_black_light"
+        android:textSize="17sp"
+        tools:text="Broker Name"/>
+
+    <RelativeLayout
+        android:id="@+id/ccc_location_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ccc_customer_name"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/ccc_customer_image"
+        android:layout_toRightOf="@+id/ccc_customer_image"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@+id/ccc_location_text"
+            android:layout_toStartOf="@+id/ccc_location_text"
+            android:src="@drawable/ccc_location_icon_purple"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/ccc_location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="3"
+            android:text="-- / --"
+            android:textColor="@color/ccc_location_text"
+            android:textSize="15sp"
+            tools:ignore="HardcodedText"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

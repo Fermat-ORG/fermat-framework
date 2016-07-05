@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
@@ -45,13 +46,13 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
     }
 
     @Override
-    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetUserException {
-        return identityAssetUserManager.createNewIdentityAssetUser(alias, profileImage);
+    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetUserException {
+        return identityAssetUserManager.createNewIdentityAssetUser(alias, profileImage, accuracy, frequency);
     }
 
     @Override
-    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetUserException {
-        identityAssetUserManager.updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetUserException {
+        identityAssetUserManager.updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
     }
 
     @Override
@@ -72,7 +73,10 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetUserManager.createNewIdentityAssetUser(name, profile_img);
+        identityAssetUserManager.createNewIdentityAssetUser(name,
+                profile_img,
+                identityAssetUserManager.getAccuracyDataDefault(),
+                identityAssetUserManager.getFrequencyDataDefault());
     }
 
     @Override
@@ -83,5 +87,15 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public int getAccuracyDataDefault() {
+        return identityAssetUserManager.getAccuracyDataDefault();
+    }
+
+    @Override
+    public Frequency getFrequencyDataDefault() {
+        return identityAssetUserManager.getFrequencyDataDefault();
     }
 }

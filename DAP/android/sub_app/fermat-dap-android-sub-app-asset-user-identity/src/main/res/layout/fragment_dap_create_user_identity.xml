@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:background="#0072bc"
+        android:background="@color/color_blue"
         android:text="@string/create"
         android:textColor="@android:color/white"
         android:textSize="16sp" />

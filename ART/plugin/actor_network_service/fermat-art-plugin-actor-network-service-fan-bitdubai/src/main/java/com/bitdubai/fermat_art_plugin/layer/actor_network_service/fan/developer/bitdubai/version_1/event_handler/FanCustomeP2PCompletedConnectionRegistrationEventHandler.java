@@ -22,10 +22,10 @@ public class FanCustomeP2PCompletedConnectionRegistrationEventHandler implements
     @Override
     public void handleEvent(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) throws FermatException {
         if(fanActorNetworkServicePluginRoot.getStatus() == ServiceStatus.STARTED){
-            if(fanActorNetworkServicePluginRoot.getNetworkServiceProfile() != null){
+            if(fanActorNetworkServicePluginRoot.getProfile() != null){
                 if(completeComponentRegistrationNotificationEvent != null){
                     if(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && completeComponentRegistrationNotificationEvent.getSource() == EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN){
-                        fanActorNetworkServicePluginRoot.runExposeIdentityThread();
+                        //fanActorNetworkServicePluginRoot.runExposeIdentityThread();
                     }
                 }else{
                     System.out.println("######################\nwrong event");
@@ -34,7 +34,7 @@ public class FanCustomeP2PCompletedConnectionRegistrationEventHandler implements
                 System.out.println("#####################################\nNetwork Service Profile Null");
             }
         }else{
-            System.out.println("####################################\n"+ fanActorNetworkServicePluginRoot.getNetworkServiceProfile().getName()+" no started");
+            System.out.println("####################################\n"+ fanActorNetworkServicePluginRoot.getProfile().getNetworkServiceType()+" no started");
         }
     }
 }

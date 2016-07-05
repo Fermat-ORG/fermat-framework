@@ -632,7 +632,8 @@ public final class ArtistActorNetworkServiceDao {
             if (!records.isEmpty())
                 return Collections.singletonList(buildConnectionNewRecord(records.get(0)));
             else
-                throw new ConnectionRequestNotFoundException(null, "publickey: "+publickey, "Cannot find an actor Connection request with that requestId.");
+                return getConnectionRequestBySenderPublicKey(publickey);
+                //throw new ConnectionRequestNotFoundException(null, "publickey: "+publickey, "Cannot find an actor Connection request with that requestId.");
 
         } catch (final CantLoadTableToMemoryException e) {
 
@@ -640,6 +641,71 @@ public final class ArtistActorNetworkServiceDao {
         } catch (final InvalidParameterException e) {
 
             throw new CantFindRequestException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
+        }
+    }
+
+    public List<ArtistConnectionRequest> getConnectionRequestBySenderPublicKey(
+            final String publicKey)
+            throws CantFindRequestException,
+            ConnectionRequestNotFoundException {
+
+        if (publicKey == null)
+            throw new CantFindRequestException(null, "", "The requestId is required, can not be null");
+
+        try {
+
+            final DatabaseTable connectionRequestTable = database.getTable(
+                    ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionRequestTable.addStringFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME,
+                    publicKey,
+                    DatabaseFilterType.EQUAL);
+
+            connectionRequestTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionRequestTable.getRecords();
+
+            if (!records.isEmpty()){
+                ArtistConnectionRequest artistConnectionRequest =
+                        buildConnectionNewRecord(records.get(0));
+                String senderDAOPublicKey = artistConnectionRequest.getSenderPublicKey();
+                String receiverDAOPublicKey = artistConnectionRequest.getDestinationPublicKey();
+                ArtistConnectionRequest connectionRequest = new ArtistConnectionRequest(
+                        artistConnectionRequest.getRequestId(),
+                        receiverDAOPublicKey,
+                        artistConnectionRequest.getDestinationActorType(),
+                        "Artist sender",
+                        artistConnectionRequest.getSenderImage(),
+                        senderDAOPublicKey,
+                        artistConnectionRequest.getSenderActorType(),
+                        artistConnectionRequest.getRequestType(),
+                        artistConnectionRequest.getProtocolState(),
+                        artistConnectionRequest.getRequestAction(),
+                        artistConnectionRequest.getSentCount(),
+                        artistConnectionRequest.getSentTime()
+                );
+                return Collections.singletonList(connectionRequest);
+            }
+
+            else
+                throw new ConnectionRequestNotFoundException(
+                        null,
+                        "publickey: "+publicKey,
+                        "Cannot find an actor Connection request with that requestId.");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantFindRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantFindRequestException(
+                    e,
+                    "",
+                    "Exception reading records of the table Cannot recognize the codes of the currencies.");
         }
     }
 

@@ -14,13 +14,19 @@ public class Tab implements FermatTab {
     /**
      * Tab class member variables
      */
-    String label;
+    private String label;
 
-    byte[] icon;
+    private byte[] icon;
 
-    FermatFragment fragment;
+    private FermatFragment fragment;
 
-    FermatDrawable drawable;
+    private FermatDrawable drawable;
+
+    /**
+     * Custom View for the tab
+     * eg: you can use frameworks view or your custom view
+     */
+    private FermatView fermatView;
 
     /**
      * Tab class constructors
@@ -69,6 +75,18 @@ public class Tab implements FermatTab {
 
     public FermatDrawable getDrawable() {
         return drawable;
+    }
+
+    public FermatView getFermatView() {
+        return fermatView;
+    }
+
+    public void setFermatView(FermatView fermatView) {
+        this.fermatView = fermatView;
+    }
+
+    public boolean hasCustomView(){
+        return fermatView!=null;
     }
 
     @Override

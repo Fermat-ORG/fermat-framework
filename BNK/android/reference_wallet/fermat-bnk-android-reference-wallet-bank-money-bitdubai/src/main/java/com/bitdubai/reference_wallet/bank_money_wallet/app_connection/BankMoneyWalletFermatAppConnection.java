@@ -1,11 +1,12 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.app_connection;
 
 import android.content.Context;
+
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -17,10 +18,13 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragmentFactory.BankMoneyWalletFragmentFactory;
 
+
 /**
  * Created by memo on 22/12/15.
  */
 public class BankMoneyWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession<BankMoneyWalletModuleManager>> {
+
+    private BankMoneyWalletResourceSearcher resourceSearcher;
 
     public BankMoneyWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -33,7 +37,7 @@ public class BankMoneyWalletFermatAppConnection extends AppConnections<Reference
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.BANKING_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE,
@@ -43,7 +47,9 @@ public class BankMoneyWalletFermatAppConnection extends AppConnections<Reference
     }
 
     @Override
-    public ReferenceAppFermatSession<BankMoneyWalletModuleManager> getSession() { return getFullyLoadedSession(); }
+    public ReferenceAppFermatSession<BankMoneyWalletModuleManager> getSession() {
+        return getFullyLoadedSession();
+    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
@@ -60,4 +66,10 @@ public class BankMoneyWalletFermatAppConnection extends AppConnections<Reference
         return null;
     }
 
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        if (resourceSearcher == null)
+            resourceSearcher = new BankMoneyWalletResourceSearcher();
+        return resourceSearcher;
+    }
 }

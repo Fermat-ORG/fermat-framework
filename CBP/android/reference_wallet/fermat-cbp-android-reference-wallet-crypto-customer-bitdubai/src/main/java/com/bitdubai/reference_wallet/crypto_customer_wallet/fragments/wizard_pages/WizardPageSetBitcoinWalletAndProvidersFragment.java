@@ -379,9 +379,10 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
     private void saveSettingAndGoNextStep() {
 
-        if (selectedProviders.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
-        }
+        //TODO: no tiene sentido de estar activo si no es requisito para avanzar en los Steps
+//        if (selectedProviders.isEmpty()) {
+//            Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
+//        }
 
         try {
             moduleManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
@@ -532,7 +533,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     }
 
     private List<InstalledWallet> getFermatWallets(CryptoCustomerWalletModuleManager moduleManager) {
-        ArrayList<InstalledWallet> data2 = new ArrayList<>();
+        ArrayList<InstalledWallet> data = new ArrayList<>();
 
         try {
             List<InstalledWallet> installedWallets = moduleManager.getInstallWallets();
@@ -542,7 +543,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
                     if (wallet.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
                         if (wallet.getCryptoCurrency() == CryptoCurrency.FERMAT) {
-                            data2.add(wallet);
+                            data.add(wallet);
                         }
                     }
 
@@ -555,7 +556,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
-        return data2;
+        return data;
     }
 
     private List<String> getFormattedBitcoinWallets(List<InstalledWallet> bitcoinWallets) {

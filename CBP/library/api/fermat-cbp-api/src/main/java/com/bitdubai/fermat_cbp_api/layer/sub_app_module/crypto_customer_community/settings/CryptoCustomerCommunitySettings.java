@@ -23,40 +23,32 @@ public class CryptoCustomerCommunitySettings implements SubAppSettings, Serializ
     private String lastSelectedIdentityPublicKey;
     private boolean presentationHelpEnabled;
 
-
     public CryptoCustomerCommunitySettings() {}
 
-
-
     public String getLastSelectedIdentityPublicKey() { return this.lastSelectedIdentityPublicKey; }
+
     public void setLastSelectedIdentityPublicKey(String identityPublicKey) { this.lastSelectedIdentityPublicKey = identityPublicKey; }
-
-
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
         this.presentationHelpEnabled = b;
     }
+
     public boolean isPresentationHelpEnabled() {
         return this.presentationHelpEnabled;
     }
 
-
-
     @Override
     public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {}
+
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {return null;}
-
-
 
     @Override
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {}
 
     @Override
     public UUID getDefaultSkin() throws CantGetDefaultSkinException {return null;}
-
-
 
     //TODO: Deprecated?
     @Override

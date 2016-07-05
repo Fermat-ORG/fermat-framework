@@ -399,9 +399,9 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     }*/
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        menu.clear();
     }
 
     @Override

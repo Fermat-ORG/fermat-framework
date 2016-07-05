@@ -48,9 +48,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by Yordin Alayn on 09.10.15.
- *
  */
 public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseSystem {
 
@@ -86,17 +86,17 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
     public void createNewCryptoBrokerIdentity(final CryptoBrokerIdentity cryptoBroker, final String privateKey, final DeviceUser deviceUser) throws CantCreateNewDeveloperException {
         try {
-            if (aliasExists (cryptoBroker.getAlias())) {
-                throw new CantCreateNewDeveloperException ("Cant create new Crypto Broker Identity, alias exists.", "Crypto Broker Identity", "Cant create new Crypto Broker Identity, alias exists.");
+            if (aliasExists(cryptoBroker.getAlias())) {
+                throw new CantCreateNewDeveloperException("Cant create new Crypto Broker Identity, alias exists.", "Crypto Broker Identity", "Cant create new Crypto Broker Identity, alias exists.");
             }
 
             persistNewCryptoBrokerIdentityPrivateKeysFile(cryptoBroker.getPublicKey(), privateKey);
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
             DatabaseTableRecord record = table.getEmptyRecord();
-            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME            , cryptoBroker.getPublicKey()    );
-            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME                 , cryptoBroker.getAlias()        );
-            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser  .getPublicKey()    );
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, cryptoBroker.getPublicKey());
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, cryptoBroker.getAlias());
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
             record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME, cryptoBroker.getExposureLevel());
             record.setLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME, cryptoBroker.getAccuracy());
             record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME, cryptoBroker.getFrequency());
@@ -105,12 +105,12 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
             persistNewCryptoBrokerIdentityProfileImage(cryptoBroker.getPublicKey(), cryptoBroker.getProfileImage());
 
-        } catch (CantInsertRecordException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity, insert database problems.");
-        } catch (CantPersistPrivateKeyException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity,persist private key error.");
+        } catch (CantInsertRecordException e) {
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity, insert database problems.");
+        } catch (CantPersistPrivateKeyException e) {
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity,persist private key error.");
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "Cant create new Crypto Broker Identity, unknown failure.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "Cant create new Crypto Broker Identity, unknown failure.");
         }
     }
 
@@ -138,11 +138,11 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
     public final List<CryptoBrokerIdentity> listIdentitiesFromDeviceUser(final DeviceUser deviceUser) throws CantListCryptoBrokerIdentitiesException {
         try {
-            final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+            final DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             final List<CryptoBrokerIdentity> list = new ArrayList<>();
-            for (DatabaseTableRecord record : table.getRecords ())
+            for (DatabaseTableRecord record : table.getRecords())
                 list.add(getIdentityFromRecord(record));
             return list;
         } catch (final CantGetCryptoBrokerIdentityProfileImageException e) {
@@ -156,10 +156,10 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    public final void changeExposureLevel(final String        publicKey    ,
+    public final void changeExposureLevel(final String publicKey,
                                           final ExposureLevel exposureLevel) throws CantChangeExposureLevelException, IdentityNotFoundException {
         try {
-            final DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+            final DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
@@ -168,7 +168,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
                 record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel);
                 table.updateRecord(record);
             } else
-                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
+                throw new IdentityNotFoundException("publicKey: " + publicKey, "Cannot find an Identity with that publicKey.");
         } catch (final CantUpdateRecordException e) {
             throw new CantChangeExposureLevelException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (final CantLoadTableToMemoryException e) {
@@ -185,13 +185,15 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             if (!records.isEmpty())
                 return getIdentityFromRecord(records.get(0));
             else
-                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
-        } catch (final CantGetCryptoBrokerIdentityProfileImageException |
-                       CantGetCryptoBrokerIdentityPrivateKeyException   |
-                       InvalidParameterException                        e) {
-            throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (final CantLoadTableToMemoryException e) {
-            throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+                throw new IdentityNotFoundException("publicKey: " + publicKey, "Cannot find a Broker Identity with that publicKey.");
+
+        } catch (CantGetCryptoBrokerIdentityProfileImageException |
+                CantGetCryptoBrokerIdentityPrivateKeyException |
+                InvalidParameterException e) {
+            throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and I cannot update the record.");
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and  cannot load the table.");
         }
     }
 
@@ -208,10 +210,10 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             profileImage = file.getContent();
         } catch (CantLoadFileException e) {
             throw new CantGetCryptoBrokerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
-        } catch (FileNotFoundException |CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetCryptoBrokerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
-            throw  new CantGetCryptoBrokerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ",FermatException.wrapException(e),"", "");
+            throw new CantGetCryptoBrokerIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
         }
         return profileImage;
     }
@@ -221,7 +223,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    private void  persistNewCryptoBrokerIdentityPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
+    private void persistNewCryptoBrokerIdentityPrivateKeysFile(String publicKey, String privateKey) throws CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
@@ -238,7 +240,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    private void  persistNewCryptoBrokerIdentityProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
+    private void persistNewCryptoBrokerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
@@ -279,9 +281,9 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
-            return table.getRecords ().size () > 0;
+            return table.getRecords().size() > 0;
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Crypto Broker Identity", "Cant load " + CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME + " table in memory.");
+            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Crypto Broker Identity", "Cant load " + CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME + " table in memory.");
         }
     }
 
@@ -292,7 +294,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         ExposureLevel published = ExposureLevel.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME));
         KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
         long accuracy = record.getLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME);
-        Frequency frequency = Frequency.getByCode(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME);
+        Frequency frequency = Frequency.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME));
         return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published, accuracy, frequency);
 
     }

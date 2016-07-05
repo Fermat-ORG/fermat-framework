@@ -1,10 +1,13 @@
 package com.mati.fermat_osa_addon_android_loader;
 
+import android.util.Log;
+
 /**
  * Created by Matias Furszyfer on 2016.06.22..
  */
 public class FermatClassLoader extends ClassLoader{
 
+    private static final String TAG = "FermatClassLoader";
     private ClassLoader classLoader;
     private ClassLoader classLoaderParent;
 
@@ -31,6 +34,7 @@ public class FermatClassLoader extends ClassLoader{
             }
         }catch (ClassNotFoundException e){
             e.printStackTrace();
+//            Log.i(TAG,"Clase no encontrada");
             try{
                 if (classLoaderParent != null) {
                     Class<?> c = classLoaderParent.loadClass(className);
@@ -39,6 +43,7 @@ public class FermatClassLoader extends ClassLoader{
                 }
             }catch (ClassNotFoundException e1){
                 e1.printStackTrace();
+//                Log.i(TAG,"Clase padre no encontrada");
                 try {
                     Class<?> c = getSystemClassLoader().loadClass(className);
                     if (c != null)
@@ -46,6 +51,7 @@ public class FermatClassLoader extends ClassLoader{
                     else
                         return super.loadClass(className);
                 }catch (Exception e2){
+                    Log.i(TAG,"Clase base no encontrada");
                     e2.printStackTrace();
                 }
             }

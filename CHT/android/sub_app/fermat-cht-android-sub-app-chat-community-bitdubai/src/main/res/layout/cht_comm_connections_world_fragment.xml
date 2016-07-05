@@ -5,25 +5,90 @@
     android:layout_height="match_parent"
     android:background="#F9F9F9"
     android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/green_bar_layout"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#09D260"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            >
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                />
+            <TextView
+                android:id="@+id/country_green_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Country"
+                android:textColor="#f9f9f9"
+                android:textSize="18sp"
+                android:paddingStart="15dp"
+                android:paddingLeft="15dp"
+                />
 
+            <TextView
+                android:id="@+id/city_green_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="City"
+                android:textSize="15sp"
+                android:textColor="#f9f9f9"
+                android:paddingStart="15dp"
+                android:paddingLeft="15dp"
+                />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                />
+
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/close_green_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/cht_comm_cancel_icon"
+            android:layout_alignParentRight="true"
+            android:paddingRight="10dp"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F9F9F9"
+        android:layout_below="@+id/green_bar_layout"
+        android:orientation="vertical">
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#F9F9F9" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gridView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:divider="@drawable/cht_list_divider"
+            tools:listitem="@layout/cht_comm_world_item"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/gridView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@drawable/cht_list_divider"
-                tools:listitem="@layout/cht_comm_world_item" />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
     <!--Empty view-->
     <LinearLayout
         android:id="@+id/empty_view"
@@ -88,8 +153,6 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
-
-
     <LinearLayout
         android:id="@+id/no_connection_view"
         android:layout_width="match_parent"
@@ -174,4 +237,5 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
+</RelativeLayout>
 </RelativeLayout>

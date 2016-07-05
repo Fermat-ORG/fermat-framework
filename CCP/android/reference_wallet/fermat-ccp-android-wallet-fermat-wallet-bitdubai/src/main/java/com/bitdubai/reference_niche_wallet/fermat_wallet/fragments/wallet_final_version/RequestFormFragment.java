@@ -25,10 +25,8 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
@@ -52,14 +50,12 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetFermatWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListFermatWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
@@ -70,10 +66,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_ad
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
-import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -378,7 +371,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                 Actors.INTRA_USER,
                                 fermatWallet.getSelectedActorIdentity().getPublicKey(),
                                 appSession.getAppPublicKey(),
-                                CryptoCurrency.BITCOIN,
+                                CryptoCurrency.FERMAT,
                                 blockchainNetworkType);
 
                     } else {
@@ -401,7 +394,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                     cryptoWalletWalletContact.getActorType(),
                                     Platforms.CRYPTO_CURRENCY_PLATFORM,
                                     VaultType.CRYPTO_CURRENCY_VAULT,
-                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                    CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                                     appSession.getAppPublicKey(),
                                     ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                     blockchainNetworkType
@@ -654,7 +647,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    cryptoWalletWalletContact.getActorType(),
                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
                                    VaultType.CRYPTO_CURRENCY_VAULT,
-                                   CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                   CryptoCurrencyVault.FERMAT_VAULT.getCode(),
                                    appSession.getAppPublicKey(),
                                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    blockchainNetworkType
@@ -670,7 +663,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    operator.longValueExact(),
                                    blockchainNetworkType,
                                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
-                                   CryptoCurrency.BITCOIN
+                                   CryptoCurrency.FERMAT
 
                            );
                            Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();

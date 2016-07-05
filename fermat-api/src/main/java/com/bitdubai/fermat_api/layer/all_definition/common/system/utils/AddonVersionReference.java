@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class AddonVersionReference {
+public class AddonVersionReference implements Serializable{
 
     private static final String KEY_SEPARATOR = "+";
 
@@ -23,11 +24,14 @@ public class AddonVersionReference {
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
     private AddonDeveloperReference addonDeveloperReference;
-    private final Version                 version                ;
+    private  Version                 version                ;
 
     public AddonVersionReference(final Version version) {
 
         this.version = version;
+    }
+
+    public AddonVersionReference() {
     }
 
     public AddonVersionReference(final AddonDeveloperReference addonDeveloperReference,
@@ -115,12 +119,31 @@ public class AddonVersionReference {
                 ((addonDeveloperReference == null && that.getAddonDeveloperReference() == null) || (addonDeveloperReference != null && addonDeveloperReference.equals(that.getAddonDeveloperReference())));
     }
 
+
+    public Platforms getPlatform(){
+        return addonDeveloperReference.getAddonReference().getLayerReference().getPlatformReference().getPlatform();
+    }
+
+    public Layers getLayers(){
+        return addonDeveloperReference.getAddonReference().getLayerReference().getLayer();
+    }
+
+    public Addons getAddon(){
+        return addonDeveloperReference.getAddonReference().getAddon();
+    }
+
+    public Developers getDeveloper(){
+        return addonDeveloperReference.getDeveloper();
+
+    }
+
     @Override
     public final int hashCode() {
         int c = 0;
         if(addonDeveloperReference != null)
             c+= addonDeveloperReference.hashCode();
-        c += version.hashCode();
+        if(version!=null)
+            c += version.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 

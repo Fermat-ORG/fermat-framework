@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,7 @@ public class AvailableNodes implements RestFulServices {
     }
 
     @POST
+    @GZIP
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAvailableNodesProfile(@FormParam("latitude") String latitudeString, @FormParam("longitude") String longitudeString){
 

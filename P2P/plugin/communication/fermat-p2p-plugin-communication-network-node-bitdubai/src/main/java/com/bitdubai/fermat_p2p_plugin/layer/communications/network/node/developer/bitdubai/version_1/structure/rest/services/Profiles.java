@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -62,6 +63,7 @@ public class Profiles implements RestFulServices {
     private NetworkNodePluginRoot pluginRoot;
 
     @POST
+    @GZIP
     @Path("/actors")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getList(@FormParam("client_public_key") String clientIdentityPublicKey, @FormParam("discovery_params") String discoveryParam){
@@ -103,9 +105,10 @@ public class Profiles implements RestFulServices {
 
         } catch (Exception e){
 
+            e.printStackTrace();
+
             LOG.warn("requested list is not available");
             jsonObjectRespond.addProperty("failure", "Requested list is not available");
-            e.printStackTrace();
         }
 
         String jsonString = GsonProvider.getGson().toJson(jsonObjectRespond);
@@ -142,7 +145,7 @@ public class Profiles implements RestFulServices {
 
         actorsList = getDaoFactory().getActorsCatalogDao().findAll(discoveryQueryParameters, clientIdentityPublicKey, max, offset);
 
-        if (discoveryQueryParameters.isOnline())
+        if (discoveryQueryParameters.isOnline() != null && discoveryQueryParameters.isOnline())
             for (ActorsCatalog actorsCatalog : actorsList)
              profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecordAndSetStatus(actorsCatalog));
         else

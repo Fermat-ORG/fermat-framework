@@ -26,7 +26,7 @@ public class GeolocationIdentityExecutor {
     private String Publickey;
     private String identityConnectionState;
     private Frecuency frecuency;
-    private int accuracy;
+    private long accuracy;
     private String identityName;
     private byte[] imageInBytes;
     private String country, state, city;
@@ -40,7 +40,7 @@ public class GeolocationIdentityExecutor {
      * @param accuracy
      * @param frecuency
      */
-    public GeolocationIdentityExecutor(byte[] imageInBytes, String Publickey, String identityName, String identityConnectionState, String country, String state, String city, int accuracy, Frecuency frecuency) {
+    public GeolocationIdentityExecutor(byte[] imageInBytes, String Publickey, String identityName, String identityConnectionState, String country, String state, String city, long accuracy, Frecuency frecuency) {
         this.imageInBytes = imageInBytes;
         this.Publickey = Publickey;
         this.identityName = identityName;
@@ -63,8 +63,9 @@ public class GeolocationIdentityExecutor {
      * @param acuraccy
      */
 
-    public GeolocationIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState, String country, String state, String city, Frecuency frecuency, int acuraccy) {
-        this(imageInBytes, Publickey ,identityName, identityConnectionState, country, state, city, acuraccy,frecuency);
+    public GeolocationIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState, String country, String state, String city, Frecuency frecuency, long acuraccy) {
+        this(imageInBytes, Publickey ,
+                identityName, identityConnectionState, country, state, city, acuraccy,frecuency);
         identity = null;
         if (session != null) {
             this.moduleManager = session.getModuleManager();
@@ -75,8 +76,7 @@ public class GeolocationIdentityExecutor {
     public int execute() {
 
         try {
-            //TODO:Jose colocar el Location
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, country, state, city, identityConnectionState, accuracy, frecuency, null);
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, country, state, city, identityConnectionState, accuracy, frecuency);
         } catch (CantUpdateChatIdentityException e) {
 
         } catch (Exception e) {

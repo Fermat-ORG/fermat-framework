@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +42,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.common.adapters.DeliverUserAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.common.filters.DeliverUserAdapterFilter;
@@ -166,9 +165,9 @@ public class DeliverUserFragment extends FermatWalletListFragment<User, Referenc
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_asset_issuer_deliver_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        inflater.inflate(R.menu.dap_asset_issuer_deliver_menu, menu);
 //        searchView = (SearchView) menu.findItem(R.id.action_wallet_issuer_deliver_search).getActionView();
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();

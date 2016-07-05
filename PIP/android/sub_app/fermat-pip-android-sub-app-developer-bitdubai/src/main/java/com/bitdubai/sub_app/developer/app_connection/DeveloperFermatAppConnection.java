@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.developer.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -16,8 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperSubAppModuleManager;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
+import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 /**
@@ -63,5 +64,10 @@ public class DeveloperFermatAppConnection extends AppConnections<ReferenceAppFer
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new DeveloperSearcher();
     }
 }

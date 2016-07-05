@@ -12,6 +12,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
+import java.text.DecimalFormat;
+
 
 /**
  * Created by guillermo on 16/02/16.
@@ -19,14 +21,15 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHolder {
     private FermatButton merchandiseButton;
     CryptoBrokerWalletModuleManager walletManager;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
 
     public SettingsStockManagementMerchandisesViewHolder(View itemView, CryptoBrokerWalletModuleManager walletManager) {
         super(itemView, 0);
 
         this.walletManager = walletManager;
-        merchandiseButton = (FermatButton) itemView.findViewById(R.id.cbw_earning_currency_pair_button);
+        merchandiseButton = (FermatButton) itemView.findViewById(R.id.cbw_stock_management_button);
         merchandiseButton.setEnabled(false);
-        merchandiseButton.setBackgroundColor(itemView.getResources().getColor(R.color.cbw_wizard_color));
     }
 
     public void bind(CryptoBrokerWalletAssociatedSetting data) {
@@ -38,7 +41,8 @@ public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHol
             if (merchandise.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(merchandiseCode))
                 availableBalance = BitcoinConverter.convert(availableBalance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
-            merchandiseButton.setText(String.format("%1$s %2$s", merchandiseCode, availableBalance));
+            merchandiseButton.setText(String.format("%1$s %2$s", moneyFormat.format(availableBalance), merchandiseCode));
+            merchandiseButton.invalidate();
         } catch (Exception e) {
             merchandiseButton.setText(String.format("%1$s --", merchandiseCode));
         }

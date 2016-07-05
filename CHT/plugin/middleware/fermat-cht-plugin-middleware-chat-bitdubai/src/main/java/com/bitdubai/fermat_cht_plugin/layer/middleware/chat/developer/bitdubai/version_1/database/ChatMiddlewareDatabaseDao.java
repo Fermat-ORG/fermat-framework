@@ -807,19 +807,22 @@ public class ChatMiddlewareDatabaseDao {
     }
 
     public void purifyMessage(Message message){
-        String text = message.getMessage();
-        char a = 39;
-        char b = 182;
-        text = text.replace(a,b);
-        message.setMessage(text);
+//        String text = message.getMessage();
+//        char a = 39;
+//        char b = 182;
+//        text = text.replace(a,b);
+//        message.setMessage(text);
+        message.setMessage(message.getMessage().replace("'","@alt+39#"));
     }
 
     public void despurifyMessage(Message message){
-        String text = message.getMessage();
-        char a = 39;
-        char b = 182;
-        text = text.replace(b,a);
-        message.setMessage(text);
+//        String text = message.getMessage();
+//        char a = 39;
+//        char b = 182;
+//        text = text.replace(b,a);
+//        message.setMessage(text);
+        //code to decode apostrophe
+        message.setMessage(message.getMessage().replace("@alt+39#","'"));
     }
 
     public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
@@ -892,6 +895,7 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             despurifyMessage(message);
+
             return message;
         }
         catch (Exception e) {
