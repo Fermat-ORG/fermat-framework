@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -29,11 +28,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationGeolocationIntraUserIdentityDialog;
@@ -53,7 +51,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     Spinner frequency;
     Toolbar toolbar;
     long acurracydata;
-    GeoFrequency frequencyData;
+    Frequency frecuencydata;
     IntraWalletUserIdentity identity;
 
 
@@ -116,11 +114,11 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
 
     private void initViews(View layout) {
         // Spinner Drop down elements
-        List<GeoFrequency> dataspinner = new ArrayList<GeoFrequency>();
-        dataspinner.add(GeoFrequency.NONE);
-        dataspinner.add(GeoFrequency.LOW);
-        dataspinner.add(GeoFrequency.NORMAL);
-        dataspinner.add(GeoFrequency.HIGH);
+        List<Frequency> dataspinner = new ArrayList<Frequency>();
+        dataspinner.add(Frequency.NONE);
+        dataspinner.add(Frequency.LOW);
+        dataspinner.add(Frequency.NORMAL);
+        dataspinner.add(Frequency.HIGH);
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
@@ -128,7 +126,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         frequency.setBackgroundColor(Color.parseColor("#00000000"));
 
         try {
-            ArrayAdapter<GeoFrequency> dataAdapter = new ArrayAdapter<GeoFrequency>(getActivity(),
+            ArrayAdapter<Frequency> dataAdapter = new ArrayAdapter<Frequency>(getActivity(),
                     R.layout.frecuency_iden_spinner_item, dataspinner);
             //android.R.layout.simple_spinner_item, dataspinner);
             dataAdapter.setDropDownViewResource(R.layout.frecuency_iden_spinner_item);
@@ -141,9 +139,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-//                        frequencyData = GeoFrequency.getByCode(parent.getItemAtPosition(position).toString().toLowerCase());
-                        frequencyData = (GeoFrequency) parent.getItemAtPosition(position);
-                        frequencyData = GeoFrequency.getByCode(frequencyData.getCode());
+                        frecuencydata = Frequency.getByCode(parent.getItemAtPosition(position).toString().toLowerCase());
              //           ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                //         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
@@ -210,7 +206,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
                 moduleManager.updateIntraUserIdentity(identity.getPublicKey(), identity.getAlias(),identity.getPhrase(),
-                        identity.getImage(),acurracydata,frequencyData );
+                        identity.getImage(),acurracydata,frecuencydata );
 
                 Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated OK.", Toast.LENGTH_LONG).show();
 
@@ -236,12 +232,12 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         return false;
     }
 
-    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<GeoFrequency> dataAdapter) throws CantGetIntraUserIdentityException {
+    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetIntraUserIdentityException {
         checkIdentity();
         if(identity!=null){
             accuracy.setText(""+identity.getAccuracy());
-            if (!identity.getFrecuency().equals(null)) {
-                int spinnerPosition = dataAdapter.getPosition(identity.getFrecuency());
+            if (!identity.getFrequency().equals(null)) {
+                int spinnerPosition = dataAdapter.getPosition(identity.getFrequency());
                 frequency.setSelection(spinnerPosition);
             }
         }

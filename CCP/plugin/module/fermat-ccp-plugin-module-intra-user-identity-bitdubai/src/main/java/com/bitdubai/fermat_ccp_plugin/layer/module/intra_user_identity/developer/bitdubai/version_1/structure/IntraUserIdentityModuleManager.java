@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -80,10 +80,10 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
 
 
     @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, long accuracy, GeoFrequency frecuency) throws CantCreateNewIntraUserIdentityException {
+    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, long accuracy, Frequency frequency) throws CantCreateNewIntraUserIdentityException {
         try {
 
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage,  accuracy, frecuency);
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage,  accuracy, frequency);
 
             return new IntraUserIdentity( alias,  phrase,intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
@@ -96,10 +96,10 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage, long accuracy, GeoFrequency frecuency) throws CantCreateNewIntraUserIdentityException {
+    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage, long accuracy, Frequency frequency) throws CantCreateNewIntraUserIdentityException {
         try {
 
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage,accuracy,frecuency);
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage,accuracy, frequency);
 
             return new IntraUserIdentity( alias, "",intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
@@ -126,11 +126,11 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, long accuracy, GeoFrequency frecuency) throws CantUpdateIntraUserIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, long accuracy, Frequency frequency) throws CantUpdateIntraUserIdentityException {
 
         try
         {
-            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, phrase, profileImage, accuracy, frecuency);
+            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, phrase, profileImage, accuracy, frequency);
 
 
         } catch (CantUpdateIdentityException e) {
@@ -196,7 +196,7 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        createNewIntraWalletUser(name,phrase,profile_img, (long)0, GeoFrequency.NORMAL);
+        createNewIntraWalletUser(name,phrase,profile_img, (long)0, Frequency.NORMAL);
     }
 
     @Override

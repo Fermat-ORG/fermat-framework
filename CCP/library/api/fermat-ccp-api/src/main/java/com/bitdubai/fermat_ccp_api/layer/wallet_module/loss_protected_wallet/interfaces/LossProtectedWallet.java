@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -324,7 +325,9 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
               BlockchainNetworkType blockchainNetworkType,
-              CryptoCurrency cryptoCurrency
+              CryptoCurrency cryptoCurrency,
+              long fee,
+              FeeOrigin feeOrigin
               ) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
