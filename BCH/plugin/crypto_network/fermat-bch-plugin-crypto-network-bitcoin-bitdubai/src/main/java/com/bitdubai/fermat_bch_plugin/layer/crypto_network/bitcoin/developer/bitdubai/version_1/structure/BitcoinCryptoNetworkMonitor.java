@@ -175,6 +175,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         }
     }
 
+    public void downloadBlockchain() {
+        monitorAgent.peerGroup.downloadBlockChain();
+    }
+
 
     /**
      * private class that runs on a separate thread
