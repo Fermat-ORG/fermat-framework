@@ -130,9 +130,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.btn_left) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+
                     try {
                         getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
                         getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
@@ -143,16 +141,12 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
                     }
                     saveSettings();
 
-                }
-            }).start();
-            dismiss();
+                    dismiss();
         } else if(id == R.id.btn_right) {
             try {
                 final CryptoWallet cryptoWallet = getSession().getModuleManager();
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
+
                                 try {
                                     //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
                                     getSession().getModuleManager().createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
@@ -161,20 +155,16 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
                                     e.printStackTrace();
                                 }
                                 saveSettings();
-                            }
-                        }).start();
+                                dismiss();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            dismiss();
+
         } else if (id == R.id.btn_dismiss) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+
                     saveSettings();
-                }
-            }).start();
-            dismiss();
+                    dismiss();
         }
     }
 
@@ -202,7 +192,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 

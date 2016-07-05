@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +32,10 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
@@ -58,7 +61,6 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     private ChatActorCommunitySubAppModuleManager mChatActorCommunityManager;
     private ListView mListView;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
-    private CitiesImpl cityFromList;
     private ImageView lupaButton;
     private ImageView closeButton;
 
@@ -122,12 +124,13 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                         @Override
                         public void onClick(View v) {
                             try {
-                                lstChatUserInformations = mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
-                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
-                                mListView.setAdapter(adapter);
-                                adapter.refreshEvents(lstChatUserInformations);
-                              // onRefresh();
-                            }catch (CantGetCitiesListException e){
+                                getMoreData();
+//                                lstChatUserInformations = mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
+//                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
+//                                mListView.setAdapter(adapter);
+//                                adapter.refreshEvents(lstChatUserInformations);
+//                              // onRefresh();
+                            }catch (Exception e){
                                 if (getActivity() != null)
                                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                             UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -137,7 +140,8 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             );
             showEmpty(true, emptyView);
         }catch (Exception e){
-            System.out.println("Exception at Geolocation Dialog");
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -192,18 +196,40 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
 //        }
 //    }
 
-    private synchronized List<ExtendedCity> getMoreData(String filter) {
-        System.out.println("****************** GETMORE DATA SYNCHRONIZED ENTERING");
-        List<ExtendedCity> dataSet = new ArrayList<>();
+    private void getMoreData() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Please wait");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-        try {
-            List<ExtendedCity> result = mChatActorCommunityManager.getExtendedCitiesByFilter(filter);
-            dataSet.addAll(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("****************** GETMORE DATA SYNCRHONIZED SALIO BIEN: ");
-        return dataSet;
+        final FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                return mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                progressDialog.dismiss();
+                if (result != null && result.length > 0) {
+                    adapter = new GeolocationAdapter(getActivity(), (List<ExtendedCity>) result[0], errorManager, mAdapterCallback, GeolocationDialog.this);
+                    mListView.setAdapter(adapter);
+                    adapter.refreshEvents((List<ExtendedCity>) result[0]);
+                    showEmpty(false, emptyView);
+                }else showEmpty(true,emptyView);
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                progressDialog.dismiss();
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            }
+        });
+
+        fermatWorker.execute();
     }
 
     public void showEmpty(boolean show, View emptyView) {

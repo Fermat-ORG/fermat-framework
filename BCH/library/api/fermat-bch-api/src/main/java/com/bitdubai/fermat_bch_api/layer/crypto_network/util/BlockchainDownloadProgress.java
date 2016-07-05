@@ -49,6 +49,12 @@ public class BlockchainDownloadProgress implements Serializable{
     }
 
     public void setPendingBlocks(int pendingBlocks) {
+        /**
+         * If is first time, then this is the total amount of blocks to download.
+         */
+        if (totalBlocks == 0)
+            totalBlocks = pendingBlocks;
+
         this.pendingBlocks = pendingBlocks;
 
         downloadedBlocks = totalBlocks - pendingBlocks;

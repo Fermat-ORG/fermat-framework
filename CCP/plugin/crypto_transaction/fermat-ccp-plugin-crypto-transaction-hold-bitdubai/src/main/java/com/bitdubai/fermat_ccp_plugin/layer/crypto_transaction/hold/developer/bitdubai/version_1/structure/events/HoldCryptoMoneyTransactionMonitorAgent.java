@@ -158,7 +158,9 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                             (long)cryptoHoldTransaction.getAmount(),
                             new Date().getTime(),
                             cryptoHoldTransaction.getMemo(),
-                            cryptoHoldTransaction.getBlockchainNetworkType(), cryptoHoldTransaction.getCurrency()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
+                            cryptoHoldTransaction.getBlockchainNetworkType(), cryptoHoldTransaction.getCurrency(),
+                            cryptoHoldTransaction.getFeeOrigin(),
+                            cryptoHoldTransaction.getFee()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
 
                     cryptoWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionRecord);
                     cryptoHoldTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
