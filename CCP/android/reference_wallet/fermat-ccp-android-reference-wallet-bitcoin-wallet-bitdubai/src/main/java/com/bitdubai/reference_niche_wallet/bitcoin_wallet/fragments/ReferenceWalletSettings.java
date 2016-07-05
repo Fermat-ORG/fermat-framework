@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
@@ -47,6 +48,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     private ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
+    private String previousSelectedFee = "SLOW";
     private CryptoWallet moduleManager;
 
 
@@ -102,6 +104,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
             }
 
+            if (bitcoinWalletSettings.getFeedLevel() != null)
+                previousSelectedFee = bitcoinWalletSettings.getFeedLevel();
+
 
             final Bundle dataDialog = new Bundle();
             dataDialog.putInt("items", R.array.items);
@@ -111,6 +116,23 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
             dataDialog.putString("mode", "single_option");
             dataDialog.putString("previous_selected_item", previousSelectedItem);
             list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
+
+            //feed level options
+
+            String feedLevel[] = new String[BitcoinFee.values().length];
+
+            feedLevel[0] = BitcoinFee.SLOW.toString();
+            feedLevel[1] = BitcoinFee.NORMAL.toString();
+            feedLevel[2] = BitcoinFee.FAST.toString();
+
+            final Bundle dataDialogFeed = new Bundle();
+            dataDialogFeed.putStringArray("items_array", feedLevel);
+            dataDialogFeed.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            dataDialogFeed.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            dataDialogFeed.putString("title", getResources().getString(R.string.title_Feed));
+            dataDialogFeed.putString("mode", "single_option");
+            dataDialogFeed.putString("previous_selected_item", previousSelectedFee);
+            list.add(new PreferenceSettingsOpenDialogText(13, "Feed Level", dataDialogFeed));
 
 
             list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
@@ -307,7 +329,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     @Override
     public void dialogOptionSelected(String item, int position) {
 
-        BlockchainNetworkType blockchainNetworkType;
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+        String feedLevel = "SLOW";
 
         switch (item) {
 
@@ -325,7 +349,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
                 break;
 
             default:
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                feedLevel = item;
+                bitcoinWalletSettings.setFeedLevel(feedLevel);
                 break;
 
         }

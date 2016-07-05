@@ -58,6 +58,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
+import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
@@ -110,6 +113,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
+    private String feedLevel = "";
+    private String feeOrigin = "";
 
     private List<WalletContact> walletContactList = new ArrayList<>();
     /**
@@ -151,9 +156,16 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
+
+                if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
+                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                else
+                    feedLevel = bitcoinWalletSettings.getFeedLevel();
+
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
             }
+
 
             blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
 
@@ -253,6 +265,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         feed_spinner = (Spinner) rootView.findViewById(R.id.feed_spinner);
         feed_spinnerArrow = (ImageView) rootView.findViewById(R.id.feed_spinner_open);
+
+        editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feedLevel).getFee())));
 
         editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11,8)});
 
@@ -362,8 +376,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         //spinner feed type
 
         List<String> listFeed = new ArrayList<String>();
-        listFeed.add("Added to Amount");
-        listFeed.add("Deducted to Amount");
+        listFeed.add("Added");
+        listFeed.add("Deducted");
         ArrayAdapter<String> dataFeedAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, listFeed);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -379,11 +393,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 double total = 0;
 
                 if(bitcoinConverter != null) {
-
-
                     switch (position) {
                         case 0: //added
-                            if (txtType.equals("[btc]")) {
+
+                            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode();
+                           /* if (txtType.equals("[btc]")) {
                                 total = Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(amount)) + Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(feed_amount));
                                 newAmount = String.valueOf(total);
                             } else if (txtType.equals("[satoshis]")) {
@@ -392,11 +406,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount) + bitcoinConverter.getSathoshisFromBits(feed_amount);
                                 newAmount = String.valueOf(total);
-                            }
+                            }*/
 
                             break;
                         case 1: //descount
-                            if (txtType.equals("[btc]")) {
+
+                            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode();
+                           /* if (txtType.equals("[btc]")) {
                                 total = Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(amount)) - Double.parseDouble(bitcoinConverter.getSathoshisFromBTC(feed_amount)) ;
                                 newAmount = String.valueOf(total);
                             } else if (txtType.equals("[satoshis]")) {
@@ -405,7 +421,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else if (txtType.equals("[bits]")) {
                                 total = Double.parseDouble(bitcoinConverter.getSathoshisFromBits(amount)) - Double.parseDouble(bitcoinConverter.getSathoshisFromBits(feed_amount));
                                 newAmount = String.valueOf(total);
-                            }
+                            }*/
 
                             break;
 
@@ -754,6 +770,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                     String amount = txtAmount.getText().toString();
 
+                    EditText txtFee= (EditText) rootView.findViewById(R.id.feed_amount);
+                    String fee = txtFee.getText().toString();
+
                     BigDecimal money;
 
                     if (amount.equals(""))
@@ -770,21 +789,27 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                             String txtType = txt_type.getText().toString();
                             String newAmount = "";
+                            String newFee = "";
                             String msg = "";
 
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                newFee = bitcoinConverter.getSathoshisFromBTC(fee);
                                 msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
+                                newFee = fee;
                                 msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                newFee = bitcoinConverter.getSathoshisFromBits(fee);
                                 msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                             }
 
+                            BigDecimal decimalFeed = new BigDecimal(newFee);
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);
+
                            if(operator.compareTo(minSatoshis) == 1 )
                             {
                                 cryptoWallet.send(
@@ -798,9 +823,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         cryptoWalletWalletContact.getActorType(),
                                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                         blockchainNetworkType,
-                                        CryptoCurrency.BITCOIN
-
-                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
+                                        CryptoCurrency.BITCOIN,
+                                        decimalFeed.longValueExact(),
+                                        FeeOrigin.getByCode(feeOrigin)
                                 );
                                 Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                 onBack(null);

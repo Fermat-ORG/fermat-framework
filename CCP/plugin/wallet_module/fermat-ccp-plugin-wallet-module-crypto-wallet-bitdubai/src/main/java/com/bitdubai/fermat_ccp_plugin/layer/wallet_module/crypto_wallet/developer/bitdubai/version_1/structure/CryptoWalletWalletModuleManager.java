@@ -30,6 +30,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
@@ -1022,18 +1023,20 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     @Override
     public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet,
                      BlockchainNetworkType blockchainNetworkType,
-                     CryptoCurrency cryptoCurrency) throws CantSendCryptoException, InsufficientFundsException {
+                     CryptoCurrency cryptoCurrency,
+                     long fee,
+                     FeeOrigin feeOrigin) throws CantSendCryptoException, InsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType, cryptoCurrency);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType, cryptoCurrency,fee,feeOrigin);
 
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,cryptoCurrency);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,cryptoCurrency,fee,feeOrigin);
                     break;
             }
 
