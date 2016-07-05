@@ -155,6 +155,8 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
             CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
             int                                 timeConfirmSend     = 20;
 
+            iterationConfirmSend++;
+
             //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
             negotiationPendingToSubmitList = dao.getPendingToSubmitNegotiation();
             if (!negotiationPendingToSubmitList.isEmpty()) {
