@@ -304,7 +304,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                 if (transactionId.equals(negotiationId) && transactionStatus != CANCELLED) {
 
                     long timeToDelivery = 0;
-                    long timeStampToday = new Date().getTime();
+//                    long timeStampToday = new Date().getTime();
                     Negotiation negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                     Collection<Clause> negotiationClause = negotiation.getClauses();
                     String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
@@ -312,21 +312,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
-                    String dateTimeDelivery     = dateTimeZoneDelivery.getDate();
-                    String dateTimeDeliveryUTC  = dateTimeZoneDelivery.getDateUTC();
-                    String dateTimeToday        = dateTimeZoneDelivery.getDateTodayUTC();
-
-                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
-                            "\n - Date:" + dateTimeDelivery +
-                            "\n - Date UTC:" + dateTimeDeliveryUTC +
-                            "\n - DateToday: " + dateTimeToday +
-                            "\n - CompareTo: " + dateTimeDeliveryUTC.compareTo(dateTimeToday) + "\n" +
-                            "\n - Compare Long: today = " + timeStampToday + " >= Delivery = " + timeToDelivery);
-
-                    if(dateTimeDeliveryUTC.compareTo(dateTimeToday) == 0){
-
-//                    if (timeStampToday >= timeToDelivery) {
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
+                    if (getDateTimeUTC() >= timeToDelivery) {
 
                         //UPDATE CONTRACT STATUS
                         customerBrokerContractSaleManager.cancelContract(contract.getContractId(),
@@ -502,7 +489,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                 if (transactionId.equals(negotiationId) && transactionStatus != CANCELLED) {
 
                     long timeToDelivery = 0;
-                    long timeStampToday = new Date().getTime();
+//                    long timeStampToday = new Date().getTime();
                     Negotiation negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                     Collection<Clause> negotiationClause = negotiation.getClauses();
                     String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
@@ -510,20 +497,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
-                    String dateTimeDelivery     = dateTimeZoneDelivery.getDate();
-                    String dateTimeDeliveryUTC  = dateTimeZoneDelivery.getDateUTC();
-                    String dateTimeToday        = dateTimeZoneDelivery.getDateTodayUTC();
-
-                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
-                            "\n - Date:" + dateTimeDelivery +
-                            "\n - Date UTC:" + dateTimeDeliveryUTC +
-                            "\n - DateToday: " + dateTimeToday +
-                            "\n - CompareTo: " + dateTimeDeliveryUTC.compareTo(dateTimeToday) + "\n" +
-                            "\n - Compare Long: today = " + timeStampToday + " >= Delivery = " + timeToDelivery);
-
-                    if(dateTimeDeliveryUTC.compareTo(dateTimeToday) == 0){
-//                    if (timeStampToday >= timeToDelivery) {
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
+                    if (getDateTimeUTC() >= timeToDelivery) {
 
                         //UPDATE CONTRACT STATUS
                         customerBrokerContractSaleManager.cancelContract(contract.getContractId(),
