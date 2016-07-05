@@ -975,12 +975,14 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
 
     private void activateButton() {
         createButton.setEnabled(true);
-        //createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+        createButton.setBackgroundResource(R.drawable.bg_v2_create_button_active);
+        createButton.setTextColor(Color.WHITE);
     }
 
     private void deactivatedButton() {
         createButton.setEnabled(false);
-        //createButton.setBackgroundColor(Color.GRAY);
+        createButton.setBackgroundResource(R.drawable.bg_v2_create_button);
+        createButton.setTextColor(Color.parseColor("#b3b3b3"));
     }
 
     private void verifyFieldGeo() {
