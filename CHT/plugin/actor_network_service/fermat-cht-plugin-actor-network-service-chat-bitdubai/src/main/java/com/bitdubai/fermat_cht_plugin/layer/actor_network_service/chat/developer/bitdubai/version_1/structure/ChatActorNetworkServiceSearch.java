@@ -109,6 +109,8 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
         try {
 
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    //TODO:Hay que pasarle null porque no esta implementado de esa forma en p2p
+                    //Actors.CHAT.getCode(),
                     null,
                     null,
                     null,
@@ -179,7 +181,8 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
                     alias,
                     distance,
                     null,
-                    publicKey,
+                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
+                    null,//publicKey,
                     deviceLocation,
                     max,
                     null,

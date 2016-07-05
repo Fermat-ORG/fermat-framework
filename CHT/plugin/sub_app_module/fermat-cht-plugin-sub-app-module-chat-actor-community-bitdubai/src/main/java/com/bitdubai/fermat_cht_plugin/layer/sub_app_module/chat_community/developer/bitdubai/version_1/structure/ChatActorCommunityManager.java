@@ -343,7 +343,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                     if (chatExposingData != null )
                         chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, chatExposingData.getLocation()));
                     else
-                    //TODO:Que location debemos usar si esto no se persiste en la Tabla de los actores Connection
+                        //TODO:Que location debemos usar si esto no se persiste en la Tabla de los actores Connection
                         chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
                 }
             }
