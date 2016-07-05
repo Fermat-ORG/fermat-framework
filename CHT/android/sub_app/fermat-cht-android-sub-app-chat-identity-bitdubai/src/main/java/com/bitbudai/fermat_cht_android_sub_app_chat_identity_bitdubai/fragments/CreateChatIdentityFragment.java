@@ -171,9 +171,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
         placeholdImg = (ImageView) layout.findViewById(R.id.placeholdImg);
         Bitmap bitmap = null;
-        if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
-            setUpDialog();
-        }
         checkGPSOn();
         try {
             if (ExistIdentity() == false) {
@@ -953,6 +950,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
                 turnOnGPSDialog();
+            }else
+            {
+                if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
+                    setUpDialog();
+                }
             }
         }else
             turnOnGPSDialog();
