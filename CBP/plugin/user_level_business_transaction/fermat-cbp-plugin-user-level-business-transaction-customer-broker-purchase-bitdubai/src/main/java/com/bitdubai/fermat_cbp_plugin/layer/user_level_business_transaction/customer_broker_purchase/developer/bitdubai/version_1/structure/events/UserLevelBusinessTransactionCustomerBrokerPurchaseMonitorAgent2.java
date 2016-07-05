@@ -271,9 +271,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
 
             long timeStampToday = ((contract.getDateTime() - getDateTimeUTC()) / 3600000);
 
-            System.out.print("\n *** TIME ZONE NEGOTIATION: " + contract.getNegotiatiotId() + " ***" +
-                    "\n - Compare alert: " + contract.getDateTime()+" - "+getDateTimeUTC()+"\n" +
-                    "\n - timeStampToday: "+timeStampToday+" <= "+DELAY_HOURS);
+//            System.out.print("\n *** TIME ZONE NEGOTIATION: " + contract.getNegotiatiotId() + " ***" +
+//                    "\n - Compare alert: " + contract.getDateTime()+" - "+getDateTimeUTC()+"\n" +
+//                    "\n - timeStampToday: "+timeStampToday+" <= "+DELAY_HOURS);
 
             if (timeStampToday <= DELAY_HOURS) {
                 contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
@@ -382,8 +382,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
                     String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
 
-                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
-                            "\n - " + dateDelivery + " compareTo " + dateToday);
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
+//                            "\n - " + dateDelivery + " compareTo " + dateToday);
 
                     if(dateDelivery.compareTo(dateToday) == 0){
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
@@ -460,8 +460,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
                     String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
 
-                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
-                            "\n - " +dateDelivery+" compareTo "+dateToday);
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
+//                            "\n - " +dateDelivery+" compareTo "+dateToday);
 
                     if(dateDelivery.compareTo(dateToday) == 0){
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
@@ -501,9 +501,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
 
 //            long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
             long timeStampToday = ((contract.getDateTime() - getDateTimeUTC()) / 3600000);
-            System.out.print("\n *** TIME ZONE NEGOTIATION: " + contract.getNegotiatiotId() + " ***" +
-                    "\n - Compare alert: " + contract.getDateTime()+" - "+getDateTimeUTC()+"\n" +
-                    "\n - timeStampToday: "+timeStampToday+" <= "+DELAY_HOURS);
+//            System.out.print("\n *** TIME ZONE NEGOTIATION: " + contract.getNegotiatiotId() + " ***" +
+//                    "\n - Compare alert: " + contract.getDateTime()+" - "+getDateTimeUTC()+"\n" +
+//                    "\n - timeStampToday: "+timeStampToday+" <= "+DELAY_HOURS);
 
             if (timeStampToday <= DELAY_HOURS) {
                 contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
