@@ -11,28 +11,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+
+
+import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingFee;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SettingsStockManagementMerchandisesAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,19 +47,19 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 public class SettingsFeeManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting,ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>,ResourceProviderManager>  {
 
     // Constants
-    private static final String TAG = "SettingsStockManagement";
+    private static final String TAG = "SettingsFeeManagement";
 
     //DATA
-    private int spreadValue = 0;
-    private boolean automaticRestock = false;
-    private List<CryptoBrokerWalletAssociatedSetting> associatedSettings = new ArrayList<>();
-    private CryptoBrokerWalletSettingSpread spreadSettings;
+    private long bitoinFee=0;
+    private String feeOrigin="";
+
+    private CryptoBrokerWalletSettingFee feeSettings;
 
     //UI
-    private SettingsStockManagementMerchandisesAdapter merchandisesAdapter;
+
     private RadioGroup radioButtonGroup;
     private FermatTextView feeMinerAmount;
-    private Spinner feeOrigin;
+    private Spinner feeOriginSpinner;
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
@@ -81,14 +82,14 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, ex);
         }
 
-        //Get associated Settings and Spread Settings
+        //Get Fee Settings
         try {
-            associatedSettings = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            spreadSettings = moduleManager.getCryptoBrokerWalletSpreadSetting("walletPublicKeyTest");
 
-            if (spreadSettings != null) {
-                spreadValue = (int) spreadSettings.getSpread();
-                automaticRestock = spreadSettings.getRestockAutomatic();
+            feeSettings = moduleManager.getCryptoBrokerWalletSettingFee("walletPublicKeyTest");
+
+            if (feeSettings != null) {
+                feeOrigin=feeSettings.getFeeOrigin();
+                bitoinFee=feeSettings.getBitcoinFee();
             }
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -110,12 +111,10 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
 
         radioButtonGroup = (RadioGroup)layout.findViewById(R.id.cbw_radio_button_group);
         feeMinerAmount=(FermatTextView) layout.findViewById(R.id.cbw_fee_miner_amount);
+        feeOriginSpinner=(Spinner)layout.findViewById(R.id.cbw_country_spinner);
 
-
-
-        final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
-        spreadTextView.setText(String.format("%1$s %%", spreadValue));
-
+        feeMinerAmount.setText(String.valueOf(BitcoinFee.SLOW.getFee() / 100000000) + "BTC");
+        bitoinFee=BitcoinFee.SLOW.getFee();
 
         radioButtonGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -123,19 +122,35 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 if (checkedId == R.id.cbw_radio_button_slow) {
-
-                    feeMinerAmount.setText("Ha pulsado el botón 1");
+                    feeMinerAmount.setText(String.valueOf(BitcoinFee.SLOW.getFee() / 100000000) + "BTC");
+                    BitcoinFee.SLOW.getFee();
                 } else if (checkedId == R.id.cbw_radio_button_normal) {
-                    feeMinerAmount.setText("Ha pulsado el botón 2");
-                } else if (checkedId ==  R.id.cbw_radio_button_fast) {
-                    feeMinerAmount.setText("Ha pulsado el botón 3");
+                    feeMinerAmount.setText(String.valueOf(BitcoinFee.NORMAL.getFee() / 100000000) + "BTC");
+                    BitcoinFee.NORMAL.getFee();
+                } else if (checkedId == R.id.cbw_radio_button_fast) {
+                    BitcoinFee.FAST.getFee();
+                    feeMinerAmount.setText(String.valueOf(BitcoinFee.FAST.getFee() / 100000000) + "BTC");
                 }
 
             }
 
         });
 
-        final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
+
+        List<String> feeOriginValues = new ArrayList<String>();
+        feeOriginValues.add(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode());
+        feeOriginValues.add(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode());
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
+                (getActivity(), android.R.layout.simple_spinner_item,feeOriginValues);
+
+        dataAdapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+
+        feeOriginSpinner.setAdapter(dataAdapter);
+
+
+        final View nextStepButton = layout.findViewById(R.id.cbw_save_fee_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +160,11 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
         });
 
 
+        if(feeSettings!=null){
+
+            feeOriginSpinner.setSelection(dataAdapter.getPosition(feeOrigin));
+            feeMinerAmount.setText(String.valueOf(bitoinFee/100000000)+"BTC");
+        }
 
 
         return layout;
@@ -168,11 +188,11 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
     private void saveSettingsAndGoBack() {
 
         try {
-            CryptoBrokerWalletSettingSpread walletSetting = moduleManager.newEmptyCryptoBrokerWalletSetting();
-            walletSetting.setId(null);
-            walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
-            walletSetting.setSpread(spreadValue);
-            walletSetting.setRestockAutomatic(automaticRestock);
+            CryptoBrokerWalletSettingFee walletSetting = moduleManager.newCryptoBrokerWalletSettingFee();
+            walletSetting.setBitcoinFee(bitoinFee);
+            walletSetting.setFeeOrigin(feeOriginSpinner.getSelectedItem().toString());
+            walletSetting.setFeeOrigin(appSession.getAppPublicKey());
+
             moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
         } catch (FermatException ex) {
@@ -196,7 +216,7 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.cbw_settings_stock_management;
+        return 0;
     }
 
     @Override
@@ -206,7 +226,7 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.cbw_selected_stock_wallets_recycler_view;
+        return 0;
     }
 
     @Override
@@ -227,16 +247,6 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
 
 
     @Override
-    public List<CryptoBrokerWalletAssociatedSetting> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        try {
-            return moduleManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
-        } catch (Exception e) {
-            return null;
-        }
-
-    }
-
-    @Override
     public FermatAdapter getAdapter() {
         return null;
     }
@@ -246,3 +256,4 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
         return null;
     }
 }
+

@@ -20,6 +20,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockSt
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsBankAccountsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsFeeManagementFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsMylocationsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SetttingsStockManagementFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageOtherSettingsFragment;

@@ -166,7 +166,7 @@
     <!--Fee setting -->
 
 
-    <string name="cbw_fee_miner_speed_1"> LOW</string>
+    <string name="cbw_fee_miner_speed_1"> SLOW</string>
     <string name="cbw_fee_miner_speed_2"> NORMAL</string>
     <string name="cbw_fee_miner_speed_3"> FAST</string>
     <string name="cbw_fee_miner_value">Fee miner:</string>
