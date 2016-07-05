@@ -115,7 +115,7 @@ public class RedeemHomeCardFragment extends FermatWalletListFragment<DigitalAsse
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

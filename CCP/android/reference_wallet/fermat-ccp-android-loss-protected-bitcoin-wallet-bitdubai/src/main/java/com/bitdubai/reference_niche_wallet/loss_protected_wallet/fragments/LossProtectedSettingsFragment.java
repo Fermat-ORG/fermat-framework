@@ -94,7 +94,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Refe
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

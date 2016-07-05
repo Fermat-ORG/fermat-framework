@@ -95,8 +95,8 @@
 
     <!--Dialog Help - Init-->
     <string name="dap_user_wallet_welcome_subTitle">Asset User Wallet.</string>
-    <string name="dap_user_wallet_welcome_body">From this wallet you will be able to:\n\n Redeem your assets.\n Transfer assets to your friends.\n Appropriate your assets and get the monetary value associated.\n Sell assets.</string>
-    <string name="dap_user_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as an Asset User. You will be able to edit this information at the Asset User Identity application.</string>
+    <string name="dap_user_wallet_welcome_body">From this wallet you will be able to: redeem, transfer, sell, and appropriate your assets to get the monetary value associated.</string>
+    <string name="dap_user_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as an Asset User.</string>
     <string name="dap_user_wallet_welcome_name_left">Asset User</string>
     <!--Dialog Help - End-->
 

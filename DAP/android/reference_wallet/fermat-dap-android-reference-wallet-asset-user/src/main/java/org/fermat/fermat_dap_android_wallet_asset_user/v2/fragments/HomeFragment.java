@@ -113,7 +113,7 @@ public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

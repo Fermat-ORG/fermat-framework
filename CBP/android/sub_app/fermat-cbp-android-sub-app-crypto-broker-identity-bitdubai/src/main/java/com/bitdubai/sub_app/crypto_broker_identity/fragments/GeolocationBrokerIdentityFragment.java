@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -29,6 +29,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -45,7 +46,7 @@ public class GeolocationBrokerIdentityFragment
     Spinner frequency;
     Toolbar toolbar;
     int accuracyData;
-    Frequency frequencyData;
+    GeoFrequency frequencyData;
 
 
     public static GeolocationBrokerIdentityFragment newInstance() {
@@ -77,10 +78,8 @@ public class GeolocationBrokerIdentityFragment
 
     private void initViews(View layout) {
         // Spinner Drop down elements
-        List<Frequency> dataSpinner = new ArrayList<>();
-        dataSpinner.add(Frequency.LOW);
-        dataSpinner.add(Frequency.NORMAL);
-        dataSpinner.add(Frequency.HIGH);
+        List<GeoFrequency> dataSpinner = new ArrayList<>();
+        dataSpinner.addAll(Arrays.asList(GeoFrequency.values()));
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
@@ -88,7 +87,7 @@ public class GeolocationBrokerIdentityFragment
         frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
         try {
-            ArrayAdapter<Frequency> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbp_iden_spinner_item, dataSpinner);
+            ArrayAdapter<GeoFrequency> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbp_iden_spinner_item, dataSpinner);
             dataAdapter.setDropDownViewResource(R.layout.cbp_iden_spinner_item);
             frequency.setAdapter(dataAdapter);
 
@@ -98,7 +97,9 @@ public class GeolocationBrokerIdentityFragment
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        frequencyData = Frequency.getByCode(parent.getItemAtPosition(position).toString());
+//                        frequencyData = GeoFrequency.getByCode(parent.getItemAtPosition(position).toString());
+                        frequencyData = (GeoFrequency) parent.getItemAtPosition(position);
+                        frequencyData = GeoFrequency.getByCode(frequencyData.getCode());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException ex) {
@@ -134,7 +135,7 @@ public class GeolocationBrokerIdentityFragment
         }
     }
 
-    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetCryptoBrokerIdentityException {
+    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<GeoFrequency> dataAdapter) throws CantGetCryptoBrokerIdentityException {
         final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         if (identityInfo != null) {

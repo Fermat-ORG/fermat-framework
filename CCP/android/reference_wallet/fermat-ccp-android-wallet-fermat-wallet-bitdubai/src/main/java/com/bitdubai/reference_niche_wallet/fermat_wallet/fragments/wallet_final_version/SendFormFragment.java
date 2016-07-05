@@ -56,6 +56,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException;
@@ -696,7 +697,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         cryptoWalletWalletContact.getActorType(),
                                         ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType,
-                                        CryptoCurrency.FERMAT
+                                        CryptoCurrency.FERMAT,
+                                        0,
+                                        FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
 
                                         // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                                 );

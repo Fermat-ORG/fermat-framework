@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 /**
@@ -13,6 +14,6 @@ public interface XML {
 
     String parseNavigationStructureXml(AppNavigationStructure walletNavigationStructure);
 
-    void setNavigationStructureXml(AppNavigationStructure walletNavigationStructure) ;
+    void setNavigationStructure(FermatStructure walletNavigationStructure) ;
 
 }

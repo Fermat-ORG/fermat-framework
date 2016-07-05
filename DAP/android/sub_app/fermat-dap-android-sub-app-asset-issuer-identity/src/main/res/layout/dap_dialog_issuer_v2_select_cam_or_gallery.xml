@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="276dp"
+    android:layout_height="128dp"
+android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:background="#383636"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="sans-serif-medium"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Profile picture"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:background="#00000000"
+    android:orientation="vertical">
+</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#701b1b1b"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/relativeLayout2">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="27dp"
+            android:id="@+id/img_cam"
+            android:src="@drawable/cam_icon"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_toLeftOf="@+id/view"
+            android:layout_toStartOf="@+id/view"
+            android:layout_marginRight="47dp"
+            android:layout_marginEnd="47dp" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="1dp"
+            android:background="#cfcfcf"
+            android:id="@+id/view"
+            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="23dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/img_gallery"
+            android:src="@drawable/icon_pic"
+            android:layout_toRightOf="@+id/view"
+            android:layout_toEndOf="@+id/view"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

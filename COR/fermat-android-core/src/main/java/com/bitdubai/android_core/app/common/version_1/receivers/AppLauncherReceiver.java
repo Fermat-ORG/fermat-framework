@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.AppActivity;
-import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.DesktopActivity;
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -27,6 +27,7 @@ public class AppLauncherReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG,"onReceive");
         String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
+        String activityToOpen = null;
         FermatApp fermatApp = null;
         try {
              fermatApp = FermatApplication.getInstance().getAppManager().getApp(appPublicKey);
@@ -42,11 +43,13 @@ public class AppLauncherReceiver extends BroadcastReceiver {
                 clazz = AppActivity.class;
                 break;
             case DESKTOP:
+                activityToOpen = intent.getStringExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
                 clazz = DesktopActivity.class;
         }
         Intent data = new Intent(context,clazz);
         data.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
         data.putExtra(ApplicationConstants.INTENT_APP_TYPE, fermatAppType);
+        if(activityToOpen!=null) data.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,activityToOpen);
         data.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(data);
         if(context instanceof FermatActivity){

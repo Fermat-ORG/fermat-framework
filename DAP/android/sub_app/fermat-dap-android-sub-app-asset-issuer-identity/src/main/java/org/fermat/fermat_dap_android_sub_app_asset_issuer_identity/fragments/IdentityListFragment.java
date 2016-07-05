@@ -98,7 +98,7 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetIssuer
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
