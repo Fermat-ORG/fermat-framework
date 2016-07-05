@@ -108,14 +108,15 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
                 previousSelectedFee = bitcoinWalletSettings.getFeedLevel();
 
 
-            final Bundle dataDialog = new Bundle();
-            dataDialog.putInt("items", R.array.items);
-            dataDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
-            dataDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
-            dataDialog.putString("title", getResources().getString(R.string.title_label));
-            dataDialog.putString("mode", "single_option");
-            dataDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
+            final Bundle networkDialog = new Bundle();
+            String items[] = new String[]{"MainNet", "TestNet", "RegTest"};
+            networkDialog.putStringArray("items_array", items);
+            networkDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            networkDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            networkDialog.putString("title", getResources().getString(R.string.title_label));
+            networkDialog.putString("mode", "single_option");
+            networkDialog.putString("previous_selected_item", previousSelectedItem);
+            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", networkDialog));
 
             //feed level options
 
@@ -139,7 +140,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
             //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
+           // list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
 
            // list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
 

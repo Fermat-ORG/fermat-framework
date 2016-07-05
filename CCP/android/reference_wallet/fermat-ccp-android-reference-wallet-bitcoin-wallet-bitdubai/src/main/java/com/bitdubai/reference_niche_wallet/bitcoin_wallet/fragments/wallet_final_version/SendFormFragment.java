@@ -320,10 +320,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                                newFeed = bitcoinConverter.getSathoshisFromBits(amount);
+                                newFeed = bitcoinConverter.getSathoshisFromBits(feedAmount);
                             } else if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                newFeed = bitcoinConverter.getSathoshisFromBTC(amount);
+                                newFeed = bitcoinConverter.getSathoshisFromBTC(feedAmount);
                             } else {
                                 newAmount = amount;
                                 newFeed = feedAmount;
