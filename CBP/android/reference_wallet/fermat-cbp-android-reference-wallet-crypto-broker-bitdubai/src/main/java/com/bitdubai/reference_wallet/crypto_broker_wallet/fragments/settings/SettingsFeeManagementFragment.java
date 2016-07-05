@@ -123,6 +123,7 @@ public class SettingsFeeManagementFragment extends FermatWalletListFragment<Cryp
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 if (checkedId == R.id.cbw_radio_button_slow) {
+
                     feeMinerAmount.setText("Ha pulsado el botón 1");
                 } else if (checkedId == R.id.cbw_radio_button_normal) {
                     feeMinerAmount.setText("Ha pulsado el botón 2");
