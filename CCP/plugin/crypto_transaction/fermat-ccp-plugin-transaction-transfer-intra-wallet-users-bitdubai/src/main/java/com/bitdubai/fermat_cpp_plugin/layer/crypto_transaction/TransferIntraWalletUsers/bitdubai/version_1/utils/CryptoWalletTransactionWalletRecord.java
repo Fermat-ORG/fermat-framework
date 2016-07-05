@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
 import java.util.UUID;
@@ -43,6 +44,9 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
 
     CryptoCurrency cryptoCurrency;
 
+    private long fee ;
+    private FeeOrigin feeOrigin;
+
 
     public CryptoWalletTransactionWalletRecord(UUID transactionId,
                                                CryptoAddress addressFrom,
@@ -57,7 +61,9 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
                                                Actors actorToType,
                                                Actors actorFromType,
                                                com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType,
-                                               CryptoCurrency cryptoCurrency) {
+                                               CryptoCurrency cryptoCurrency,
+                                               long fee,
+                                               FeeOrigin feeOrigin) {
         TransactionId = transactionId;
         AddressFrom = addressFrom;
         RequestId = requestId;
@@ -72,6 +78,8 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
         ActorFromType = actorFromType;
         BlockchainNetworkType = blockchainNetworkType;
         this.cryptoCurrency = cryptoCurrency;
+        this.fee = fee;
+        this.feeOrigin = feeOrigin;
     }
 
     @Override
@@ -142,5 +150,15 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
     @Override
     public CryptoCurrency getCryptoCurrency() {
         return this.cryptoCurrency;
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return this.feeOrigin;
+    }
+
+    @Override
+    public long getFee() {
+        return this.fee;
     }
 }

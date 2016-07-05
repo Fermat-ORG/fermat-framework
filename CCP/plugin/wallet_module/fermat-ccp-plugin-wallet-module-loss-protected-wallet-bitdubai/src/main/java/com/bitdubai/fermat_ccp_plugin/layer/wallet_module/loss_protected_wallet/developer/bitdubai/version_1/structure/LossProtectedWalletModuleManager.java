@@ -23,7 +23,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVault
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -1504,7 +1505,9 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
     @Override
     public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet,
                      BlockchainNetworkType blockchainNetworkType,
-                     CryptoCurrency cryptoCurrency) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
+                     CryptoCurrency cryptoCurrency,
+                     long fee,
+                     FeeOrigin feeOrigin) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
@@ -1512,14 +1515,18 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                     System.out.println("Sending throw outgoing Extra User ...");
                     outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey,
                             deliveredToActorType, referenceWallet,blockchainNetworkType,
-                            cryptoCurrency);
+                            cryptoCurrency,
+                            fee,
+                            feeOrigin);
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
                     outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress,
                             cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType,
                             deliveredToActorType,referenceWallet,blockchainNetworkType,
-                            cryptoCurrency);
+                            cryptoCurrency,
+                            fee,
+                            feeOrigin);
 
                     break;
             }
@@ -2020,7 +2027,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
-        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("0"), GeoFrequency.NONE);
+        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("0"), Frequency.NONE);
     }
 
 

@@ -383,7 +383,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             Actors.INTRA_USER,
                             getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
                             businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
-                            businessTransactionRecord.getCryptoCurrency());
+                            businessTransactionRecord.getCryptoCurrency(),
+                            businessTransactionRecord.getFee(),
+                            businessTransactionRecord.getFeeOrigin());
 
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());
