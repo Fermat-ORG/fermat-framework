@@ -98,7 +98,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             dao.initialize();
             dao.initializeProvider("FermatExchange");
 
-            postFermatExchangeData();
+//            postFermatExchangeData();
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);

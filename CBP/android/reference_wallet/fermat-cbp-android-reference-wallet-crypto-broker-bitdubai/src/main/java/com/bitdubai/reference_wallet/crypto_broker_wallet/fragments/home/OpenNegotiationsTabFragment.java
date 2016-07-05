@@ -67,6 +67,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            changeStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

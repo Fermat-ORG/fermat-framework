@@ -3184,7 +3184,7 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -3409,7 +3409,7 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -4144,15 +4144,15 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("CHATS");
 
         //Badge in the tab
-//        Badge fermatDrawable = new Badge("ic_badge");
-//        fermatDrawable.setTestSize(32);
-//        fermatDrawable.setNumber(1);
-//        runtimeTab.setFermatDrawable(fermatDrawable);
+        Badge fermatDrawable = new Badge("ic_badge");
+        fermatDrawable.setTestSize(32);
+        fermatDrawable.setNumber(1);
+        runtimeTab.setFermatDrawable(fermatDrawable);
 
-//        TabBadgeView tabBadgeView = new TabBadgeView();
-//        tabBadgeView.setTitle("CHATS");
-//        tabBadgeView.setBadge(fermatDrawable);
-//        runtimeTab.setFermatView(tabBadgeView);
+        TabBadgeView tabBadgeView = new TabBadgeView();
+        tabBadgeView.setTitle("CHATS");
+        tabBadgeView.setBadge(fermatDrawable);
+        runtimeTab.setFermatView(tabBadgeView);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

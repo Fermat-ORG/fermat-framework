@@ -3,12 +3,13 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatMenuItem;
 
+import java.io.Serializable;
 
 
 /**
  * Created by Matias Furszyfer on 2015.07.17..
  */
-public class MenuItem implements FermatMenuItem {
+public class MenuItem implements FermatMenuItem,Serializable {
 
     /**
      * MenuItem class member variables

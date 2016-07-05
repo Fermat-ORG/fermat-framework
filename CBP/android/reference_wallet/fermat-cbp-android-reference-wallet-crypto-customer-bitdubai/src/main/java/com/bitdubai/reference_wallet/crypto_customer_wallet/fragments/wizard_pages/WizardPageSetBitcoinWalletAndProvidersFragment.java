@@ -251,7 +251,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .setBody(R.string.ccw_wizard_providers_dialog_body)
                         .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
                         .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                        .setIsCheckEnabled(true)
+                        .setIsCheckEnabled(false)
                         .build();
                 presentationDialog.setOnDismissListener(this);
                 presentationDialog.show();
@@ -266,7 +266,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
                         .setBody(R.string.ccw_wizard_providers_dialog_body)
                         .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                        .setIsCheckEnabled(true)
+                        .setIsCheckEnabled(false)
                         .build();
                 presentationDialog.setOnDismissListener(this);
 

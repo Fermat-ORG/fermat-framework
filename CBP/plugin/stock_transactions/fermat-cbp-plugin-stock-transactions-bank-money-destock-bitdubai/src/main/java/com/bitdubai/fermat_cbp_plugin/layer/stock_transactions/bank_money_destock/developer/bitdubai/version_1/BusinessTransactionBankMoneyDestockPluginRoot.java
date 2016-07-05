@@ -37,8 +37,10 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyDestockMonitorAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyDestockMonitorAgent2;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by franklin on 16/11/15.
@@ -70,6 +72,11 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     Broadcaster broadcaster;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -134,7 +141,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
         return developerDatabaseTableRecordList;
     }
 
-    private BusinessTransactionBankMoneyDestockMonitorAgent businessTransactionBankMoneyDestockMonitorAgent;
+    private BusinessTransactionBankMoneyDestockMonitorAgent2 businessTransactionBankMoneyDestockMonitorAgent;
 
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
@@ -143,7 +150,10 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
      */
     private void startMonitorAgent() throws CantStartAgentException {
         if (businessTransactionBankMoneyDestockMonitorAgent == null) {
-            businessTransactionBankMoneyDestockMonitorAgent = new BusinessTransactionBankMoneyDestockMonitorAgent(
+            businessTransactionBankMoneyDestockMonitorAgent = new BusinessTransactionBankMoneyDestockMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     this,
                     stockTransactionBankMoneyDestockManager,
                     cryptoBrokerWalletManager,
