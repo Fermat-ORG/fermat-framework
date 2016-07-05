@@ -82,6 +82,7 @@ public class ActorConnectionDatabaseFactory {
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LAST_LOCATION                         , DatabaseDataType.STRING      , 130, Boolean.FALSE);
 
             table.addIndex(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_FIRST_KEY_COLUMN);
 
