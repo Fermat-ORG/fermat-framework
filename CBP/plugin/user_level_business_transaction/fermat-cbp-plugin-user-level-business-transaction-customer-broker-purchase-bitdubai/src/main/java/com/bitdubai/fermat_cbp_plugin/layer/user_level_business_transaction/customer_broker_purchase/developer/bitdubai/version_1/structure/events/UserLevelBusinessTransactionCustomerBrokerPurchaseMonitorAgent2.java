@@ -376,8 +376,18 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    String dateDelivery = dateTimeZoneDelivery.getDate();
+
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
+
+                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
+                            "\n - " + dateDelivery + " compareTo " + dateToday);
+
+                    if(dateDelivery.compareTo(dateToday) == 0){
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
-                    if (getDateTimeUTC() >= timeToDelivery) {
+//                    if (getDateTimeUTC() >= timeToDelivery) {
 
                         //UPDATE CONTRACT STATUS
                         contractPurchaseManager.cancelContract(contract.getContractId(),
@@ -443,8 +453,19 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
+
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    String dateDelivery = dateTimeZoneDelivery.getDate();
+
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
+
+                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
+                            "\n - " +dateDelivery+" compareTo "+dateToday);
+
+                    if(dateDelivery.compareTo(dateToday) == 0){
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
-                    if (getDateTimeUTC() >= timeToDelivery) {
+//                    if (getDateTimeUTC() >= timeToDelivery) {
 //                    if(dateTimeDeliveryUTC.compareTo(dateTimeToday) == 0){
 
                         contractPurchaseManager.cancelContract(contract.getContractId(),
