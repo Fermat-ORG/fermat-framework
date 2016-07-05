@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -61,6 +62,7 @@ public class Profiles implements RestFulServices {
     private NetworkNodePluginRoot pluginRoot;
 
     @POST
+    @GZIP
     @Path("/actors")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getList(@FormParam("client_public_key") String clientIdentityPublicKey, @FormParam("discovery_params") String discoveryParam){
