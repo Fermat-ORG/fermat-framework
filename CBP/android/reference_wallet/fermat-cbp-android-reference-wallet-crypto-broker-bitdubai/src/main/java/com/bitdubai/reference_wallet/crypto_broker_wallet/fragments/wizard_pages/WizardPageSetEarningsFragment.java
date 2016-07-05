@@ -263,6 +263,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             }
 
             final SimpleListDialogFragment<InstalledWallet> dialogFragment = new SimpleListDialogFragment<>();
+            dialogFragment.setCancelable(false);
             dialogFragment.configure("Select a Wallet", filteredList);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
                 @Override
