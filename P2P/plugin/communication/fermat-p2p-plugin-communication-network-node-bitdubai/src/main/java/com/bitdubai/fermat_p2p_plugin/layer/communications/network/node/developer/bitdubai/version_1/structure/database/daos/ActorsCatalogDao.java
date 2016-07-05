@@ -156,16 +156,16 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
             filters.add(table.getNewFilter(ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getIdentityPublicKey()));
 
         if (params.getName() != null)
-            filters.add(table.getNewFilter(ACTOR_CATALOG_NAME_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getName()));
+            filters.add(table.getNewFilter(ACTOR_CATALOG_NAME_COLUMN_NAME, DatabaseFilterType.LIKE, params.getName()));
 
         if (params.getAlias() != null)
-            filters.add(table.getNewFilter(ACTOR_CATALOG_ALIAS_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getAlias()));
+            filters.add(table.getNewFilter(ACTOR_CATALOG_ALIAS_COLUMN_NAME, DatabaseFilterType.LIKE, params.getAlias()));
 
         if (params.getActorType() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getActorType()));
 
         if (params.getExtraData() != null)
-            filters.add(table.getNewFilter(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getExtraData()));
+            filters.add(table.getNewFilter(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, DatabaseFilterType.LIKE, params.getExtraData()));
 
         if (params.getLastConnectionTime() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME, DatabaseFilterType.GREATER_OR_EQUAL_THAN, params.getLastConnectionTime().toString()));
