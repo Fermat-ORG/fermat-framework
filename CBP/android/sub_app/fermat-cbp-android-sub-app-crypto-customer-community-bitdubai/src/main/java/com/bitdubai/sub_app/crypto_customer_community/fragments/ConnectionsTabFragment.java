@@ -25,6 +25,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -176,7 +177,17 @@ public class ConnectionsTabFragment
 
         final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
         final SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search here");
+        SearchViewStyleHelper.on(searchView)
+                .setCursorColor(Color.WHITE)
+                .setTextColor(Color.WHITE)
+                .setHintTextColor(Color.WHITE)
+                .setSearchHintDrawable(R.drawable.ccc_search_icon_withe)
+                .setSearchButtonImageResource(R.drawable.ccc_search_icon_withe)
+                .setCloseBtnImageResource(R.drawable.ccc_close_icon_white)
+                .setSearchPlateTint(Color.WHITE)
+                .setSubmitAreaTint(Color.WHITE);
+
+        searchView.setQueryHint("Search...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -195,7 +206,7 @@ public class ConnectionsTabFragment
     private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
         final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
         for (CryptoCustomerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
                 filteredList.add(item);
             }
         }
@@ -274,9 +285,11 @@ public class ConnectionsTabFragment
 
         try {
             offset = pos;
-            final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
-            dataSet.addAll(result);
+            if(moduleManager.getSelectedActorIdentity() != null) {
+                final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

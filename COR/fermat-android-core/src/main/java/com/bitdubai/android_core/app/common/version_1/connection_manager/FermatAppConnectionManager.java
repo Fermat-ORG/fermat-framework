@@ -126,7 +126,6 @@ public class FermatAppConnectionManager {
                 break;
 
             //CBP Sub Apps
-
             case "public_key_crypto_broker_community":
                 fermatAppConnection = new CryptoBrokerCommunityFermatAppConnection(activity);
                 break;
@@ -151,8 +150,6 @@ public class FermatAppConnectionManager {
 //            case "public_key_store":
 //                fermatAppConnection = new WalletStoreFermatAppConnection(activity);
 //                break;
-
-
 
 //            // CHT Sub Apps
             case "public_key_cht_chat":

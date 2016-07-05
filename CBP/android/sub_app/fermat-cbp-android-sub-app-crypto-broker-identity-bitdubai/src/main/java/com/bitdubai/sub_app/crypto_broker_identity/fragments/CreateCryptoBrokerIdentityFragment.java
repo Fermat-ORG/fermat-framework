@@ -4,13 +4,16 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -32,11 +35,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -44,8 +52,8 @@ import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateIdentityWorker;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
-
 
 /**
  * This Fragment let you create a Broker Identity
@@ -62,6 +70,8 @@ public class CreateCryptoBrokerIdentityFragment
     private Bitmap cryptoBrokerBitmap = null;
     private byte[] identityImgByteArray = null;
     private String cryptoBrokerName = null;
+    Location location;
+    private Uri imageToUploadUri;
 
     private EditText mBrokerName;
     private View progressBar;
@@ -98,6 +108,13 @@ public class CreateCryptoBrokerIdentityFragment
         if (appSession.getData(FragmentsCommons.BROKER_NAME) != null) {
             cryptoBrokerName = (String) appSession.getData(FragmentsCommons.BROKER_NAME);
             appSession.removeData(FragmentsCommons.BROKER_NAME);
+        }
+
+        //Check if GPS is on and coordinate are fine
+        try{
+            location = appSession.getModuleManager().getLocation();
+        }catch (Exception e){
+           e.printStackTrace();
         }
 
         turnGPSOn();
@@ -159,6 +176,8 @@ public class CreateCryptoBrokerIdentityFragment
         mBrokerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount));
 
+        checkGPSOn();
+
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
@@ -183,8 +202,27 @@ public class CreateCryptoBrokerIdentityFragment
             switch (requestCode) {
 
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    cryptoBrokerBitmap = (Bitmap) extras.get("data");
+                    // grant all three uri permissions!
+                    if (imageToUploadUri != null) {
+                        String provider = "com.android.providers.media.MediaProvider";
+                        Uri selectedImage = imageToUploadUri;
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                                        != PackageManager.PERMISSION_GRANTED) {
+                                    getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                    getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                    getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                                    getActivity().requestPermissions(
+                                            new String[]{Manifest.permission.CAMERA},
+                                            REQUEST_IMAGE_CAPTURE);
+                                }
+                            }
+                            getActivity().getContentResolver().notifyChange(selectedImage, null);
+                            Bundle extras = data.getExtras();
+                            cryptoBrokerBitmap = (Bitmap) extras.get("data");
+                        }
                     break;
 
                 case REQUEST_LOAD_IMAGE:
@@ -264,10 +302,45 @@ public class CreateCryptoBrokerIdentityFragment
 
     private void dispatchTakePictureIntent() {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        // Check permission for CAMERA
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    getActivity().requestPermissions(
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_IMAGE_CAPTURE);
+                } else {
+                    getActivity().requestPermissions(
+                            new String[]{Manifest.permission.CAMERA},
+                            REQUEST_IMAGE_CAPTURE);
+                }
+            } else {
+                if (checkWriteExternalPermission()) {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    imageToUploadUri = Uri.fromFile(f);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            imageToUploadUri = Uri.fromFile(f);
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
+
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//        }
     }
 
     private void loadImageFromGallery() {
@@ -284,6 +357,12 @@ public class CreateCryptoBrokerIdentityFragment
     private Frequency getFrequencyData() {
         return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
                 (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    }
+
+    private boolean checkWriteExternalPermission() {
+        String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 
     public void turnGPSOn() {
@@ -346,5 +425,29 @@ public class CreateCryptoBrokerIdentityFragment
         String permission = "android.permission.ACCESS_FINE_LOCATION";
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void checkGPSOn(){
+        if(location!= null){
+            if(location.getLongitude()==0 || location.getLatitude()==0){
+                turnOnGPSDialog();
+            }
+        }else
+            turnOnGPSDialog();
+    }
+
+    public void turnOnGPSDialog() {
+        try {
+            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+                    .setBody(R.string.cbp_broker_identity_gps)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIconRes(R.drawable.bi_icon)
+                    .setBannerRes(R.drawable.banner_identity)
+                    .build();
+            pd.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

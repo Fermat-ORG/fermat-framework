@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -35,6 +36,9 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<I
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
+
     private CryptoBrokerIdentityModuleManager moduleManager;
 
     public CryptoBrokerIdentitySubAppModulePluginRoot() {
@@ -48,7 +52,7 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<I
                     identityManager,
                     pluginFileSystem,
                     pluginId,
-                    this);
+                    this, locationManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
         }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -54,8 +55,10 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private WeakReference<Context> activity;
     private ErrorManager errorManager;
     private NumberFormat numberFormat;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    public CryptoBrokerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session) {
+    public CryptoBrokerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session,
+                                             FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<>(activity);
         this.session = session;
 
@@ -64,6 +67,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         try {
             moduleManager = session.getModuleManager();
             actorIdentity = this.moduleManager.getAssociatedIdentity(session.getAppPublicKey());
+            this.applicationsHelper = new WeakReference<>(applicationsHelper);
 
         } catch (FermatException ex) {
             if (errorManager == null)
@@ -78,7 +82,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

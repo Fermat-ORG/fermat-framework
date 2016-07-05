@@ -926,6 +926,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setStringValue(ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME, purchaseContract.getContractId());
         record.setStringValue(ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, purchaseContract.getPublicKeyCustomer());
         record.setStringValue(ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME, purchaseContract.getPublicKeyBroker());
+        //This state is the initial in this type of transaction
         record.setStringValue(ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, PENDING_PAYMENT.getCode());
         record.setStringValue(ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress);
         record.setStringValue(ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME, intraActorReceiverPublicKey);

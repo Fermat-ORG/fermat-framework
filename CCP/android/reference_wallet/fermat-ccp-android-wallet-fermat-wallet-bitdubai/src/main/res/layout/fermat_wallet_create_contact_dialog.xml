@@ -116,7 +116,7 @@
         >
 
         <LinearLayout
-            android:layout_width="380dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/background_white_gradient"
@@ -151,14 +151,16 @@
                 android:layout_width="28dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_copy"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="5dp"/>
 
             <ImageView
                 android:id="@+id/scan_qr"
                 android:layout_width="28dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_qr"
-                android:layout_marginLeft="12dp"/>
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="10dp"
+                />
         </LinearLayout>
 
     </RelativeLayout>

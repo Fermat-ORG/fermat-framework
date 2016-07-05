@@ -28,6 +28,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.util.UniversalTime;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
@@ -66,6 +67,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,6 +255,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @Override
     public void start() throws CantStartPluginException {
         super.start();
+        //universalTimeTest();
         //preConfigureWallet();
     }
 
@@ -439,4 +442,21 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
         }
         return null;
     }
+
+    /*private void universalTimeTest(){
+        try{
+            Date date=UniversalTime.getLocatedUniversalTime();
+            System.out.println("UNIVERSAL TIME - local: "+date);
+            date=UniversalTime.getUTC();
+            System.out.println("UNIVERSAL TIME - UTC: "+date);
+            String stringDate = UniversalTime.getUTCDateStringFromExternalURL();
+            System.out.println("UNIVERSAL TIME - String: "+stringDate);
+            date = UniversalTime.getLocalDateFromUTCDateString(stringDate);
+            System.out.println("UNIVERSAL TIME - Local String parse: "+date);
+            date = UniversalTime.getUTCDateFromUTCDateString(stringDate);
+            System.out.println("UNIVERSAL TIME - UTC String parse: "+date);
+        } catch (Exception e){
+            System.out.println("UNIVERSAL TIME: "+e);
+        }
+    }*/
 }
