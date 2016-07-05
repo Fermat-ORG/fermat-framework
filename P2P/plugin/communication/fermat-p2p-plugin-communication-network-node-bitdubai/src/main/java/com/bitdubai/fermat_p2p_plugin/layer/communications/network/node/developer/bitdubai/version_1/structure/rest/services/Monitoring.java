@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
@@ -107,14 +107,18 @@ public class Monitoring {
 
             Map<NetworkServiceType, Long> networkServiceData = new HashMap<>();
             for (NetworkServiceType networkServiceType : NetworkServiceType.values()) {
-                networkServiceData.put(networkServiceType, daoFactory.getCheckedInNetworkServiceDao().getAllCount(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME, networkServiceType.toString()));
+
+                if (networkServiceType != NetworkServiceType.UNDEFINED){
+                    networkServiceData.put(networkServiceType, daoFactory.getCheckedInNetworkServiceDao().getAllCount(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME, networkServiceType.getCode()));
+                }
+
             }
             globalData.addProperty("registeredNetworkServiceTotal", daoFactory.getCheckedInNetworkServiceDao().getAllCount());
             globalData.addProperty("registeredNetworkServiceDetail", gson.toJson(networkServiceData, Map.class));
 
             Map<Actors, Long> otherComponentData = new HashMap<>();
             for (Actors actorsType : Actors.values()) {
-                otherComponentData.put(actorsType, daoFactory.getCheckedInActorDao().getAllCount(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME, actorsType.toString()));
+                otherComponentData.put(actorsType, daoFactory.getCheckedInActorDao().getAllCount(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME, actorsType.getCode()));
             }
 
             globalData.addProperty("registerActorsTotal", daoFactory.getCheckedInActorDao().getAllCount());
