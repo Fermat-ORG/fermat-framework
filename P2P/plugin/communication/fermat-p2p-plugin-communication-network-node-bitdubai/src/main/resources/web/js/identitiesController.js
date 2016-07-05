@@ -2,7 +2,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
       $scope.onlineIdentities = false;
       $scope.offSet      = 0;
-      $scope.max         = 24;
+      $scope.max         = 20;
       $scope.total       = 0;
       $scope.currentPage = 1;
       $scope.identities  = [];
