@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
@@ -44,7 +44,7 @@ public interface AssetUserIdentityModuleManager extends ModuleManager<UserIdenti
      * @return the intra user created
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException if something goes wrong.
      */
-    IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetUserException;
+    IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewIdentityAssetUserException;
 
     /**
      * The method <code>updateIdentityAssetUser</code> change a identity information data
@@ -54,7 +54,7 @@ public interface AssetUserIdentityModuleManager extends ModuleManager<UserIdenti
      * @param profileImage
      * @throws CantUpdateIdentityAssetUserException
      */
-    void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetUserException;
+    void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityAssetUserException;
 
     /**
      * The method <code>hasAssetUserIdentity</code> returns if has a intra user identity created
@@ -66,5 +66,5 @@ public interface AssetUserIdentityModuleManager extends ModuleManager<UserIdenti
 
     int getAccuracyDataDefault();
 
-    Frequency getFrequencyDataDefault();
+    GeoFrequency getFrequencyDataDefault();
 }

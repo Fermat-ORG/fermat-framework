@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 
 
-public enum Frecuency  implements FermatEnum{
+public enum Frequency implements FermatEnum{
 
     LOW ("low"),
     NORMAL("normal"),
@@ -21,11 +21,11 @@ public enum Frecuency  implements FermatEnum{
 
     private final String code;
 
-    Frecuency(String code) {
+    Frequency(String code) {
         this.code = code;
     }
 
-    public static Frecuency getByCode(final String code) throws InvalidParameterException {
+    public static Frequency getByCode(final String code) throws InvalidParameterException {
 
         switch (code) {
 
@@ -36,8 +36,8 @@ public enum Frecuency  implements FermatEnum{
 
             default:
                 throw new InvalidParameterException(
-                        "Frecuency Value: " + code,
-                        "This is an invalid Frecuency"
+                        "Frequency Value: " + code,
+                        "This is an invalid Frequency"
                 );
         }
 

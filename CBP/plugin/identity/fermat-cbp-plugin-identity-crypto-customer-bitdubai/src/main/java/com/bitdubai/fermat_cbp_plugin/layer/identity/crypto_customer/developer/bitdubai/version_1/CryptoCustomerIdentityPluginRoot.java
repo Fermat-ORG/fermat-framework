@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
@@ -133,7 +133,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
     public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage,
                                                                long accuracy,
-                                                               Frequency frequency) throws CantCreateCryptoCustomerIdentityException {
+                                                               GeoFrequency frequency) throws CantCreateCryptoCustomerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
@@ -160,7 +160,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
     }
 
     @Override
-    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile, long accuracy, Frequency frequency) throws CantUpdateCustomerIdentityException {
+    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile, long accuracy, GeoFrequency frequency) throws CantUpdateCustomerIdentityException {
         cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile, accuracy, frequency);
 
         try {

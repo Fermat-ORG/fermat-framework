@@ -180,7 +180,7 @@ public class StatsFragment extends FermatWalletListFragment<UserDelivery, Refere
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

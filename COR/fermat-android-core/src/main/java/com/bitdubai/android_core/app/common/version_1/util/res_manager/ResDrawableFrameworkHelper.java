@@ -26,7 +26,7 @@ public class ResDrawableFrameworkHelper  {
                 break;
             case IC_BADGE:
                 Badge badge = (Badge) fermatDrawable;
-                drawable = new BadgeDrawable.BadgeDrawableBuilder(context).setCount(badge.getNumber()).setPosition(BadgeDrawable.Position.CENTER).setTextSize(badge.getTestSize()).build();
+                drawable = new BadgeDrawable.BadgeDrawableBuilder(context).setCount(badge.getNumber()).setPosition(BadgeDrawable.Position.TOP_RIGHT).setTextSize(badge.getTestSize()).build();
                 break;
         }
         return drawable;

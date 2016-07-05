@@ -124,7 +124,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

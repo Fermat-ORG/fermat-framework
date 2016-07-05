@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
 import java.util.UUID;
@@ -39,6 +40,10 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
     private long timestamp;
 
     private String memo;
+
+    private FeeOrigin feeOrigin;
+
+    private long        fee;
 
     private BlockchainNetworkType blockchainNetworkType;
 
@@ -123,6 +128,16 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
     @Override
     public CryptoCurrency getCryptoCurrency() {
         return this.cryptoCurrency;
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return this.feeOrigin;
+    }
+
+    @Override
+    public long getFee() {
+        return this.fee;
     }
 
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
