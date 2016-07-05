@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.common.AbstractCB
  * represents a crypto broker and exposes all the functionality of it.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
+ * Updated by Manuel Perez on (darkpriestrelative@gmail.com) on 05/07/16.
  */
 public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData {
 
