@@ -133,8 +133,7 @@ public class CustomerOnlinePaymentMonitorAgent2
                 BusinessTransactionRecord businessTransactionRecord = dao.getCustomerOnlinePaymentRecord(pendingContractHash);
 
                 //I'll check if the payment was sent in a previous loop
-                contractTransactionStatus = businessTransactionRecord
-                        .getContractTransactionStatus();
+                contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
                 if(contractTransactionStatus!=ContractTransactionStatus.PENDING_PAYMENT){
                     /**
                      * If the contractTransactionStatus is different to PENDING_PAYMENT means
@@ -162,7 +161,9 @@ public class CustomerOnlinePaymentMonitorAgent2
                         Actors.INTRA_USER,
                         getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
                         businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
-                        businessTransactionRecord.getCryptoCurrency());
+                        businessTransactionRecord.getCryptoCurrency(),
+                        businessTransactionRecord.getFee(),
+                        businessTransactionRecord.getFeeOrigin());
 
                 dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
                 dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);
