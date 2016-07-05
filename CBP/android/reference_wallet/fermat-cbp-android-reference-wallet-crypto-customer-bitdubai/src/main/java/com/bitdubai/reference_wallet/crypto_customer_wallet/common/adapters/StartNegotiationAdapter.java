@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -37,10 +38,13 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private static final int TYPE_ITEM_AMOUNT_TO_PAY = 6;
     private static final int TYPE_FOOTER = 5;
 
+
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
     private List <IndexInfoSummary> marketRateList;
+
+    private View specialView;
 
 
     public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation ) {
@@ -61,6 +65,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     @Override
     public FermatViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
+        specialView=LayoutInflater.from(context).inflate(R.layout.ccw_amount_to_buy_item_single_crypto, viewGroup, false);
         return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(type), viewGroup, false), type);
     }
 
@@ -80,9 +85,17 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 return new AmountToBuyViewHolder(itemView);
 
             case TYPE_ITEM_AMOUNT_TO_PAY:
-                final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
-                amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
-                return amountToPayViewHolder;
+
+                if(CryptoCurrency.codeExists((negotiationInformation.getClauses().get(ClauseType.BROKER_CURRENCY)).getValue())){
+                    final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(specialView);
+                    amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
+                    return amountToPayViewHolder;
+                }else{
+                    final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
+                    amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
+                    return amountToPayViewHolder;
+                }
+
 
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);

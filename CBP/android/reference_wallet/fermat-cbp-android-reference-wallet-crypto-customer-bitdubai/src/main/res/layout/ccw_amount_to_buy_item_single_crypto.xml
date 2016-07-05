@@ -108,26 +108,26 @@ tools:visibility="visible">
             android:layout_marginRight="8dp"
             android:layout_marginBottom="5dp" />
         <RadioGroup
-            android:id="@+id/rdgGrupo"
+            android:id="@+id/ccw_fee_speed_group"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkedButton="@+id/send_speed_low">
+            android:checkedButton="@+id/ccw_send_speed_low">
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Low"
-            android:id="@+id/send_speed_low" />
+            android:id="@+id/ccw_send_speed_low" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium"
-            android:id="@+id/send_speed_medium" />
+            android:text="Normal"
+            android:id="@+id/ccw_send_speed_normal" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="High"
-            android:id="@+id/send_speed_high" />
+            android:text="Fast"
+            android:id="@+id/ccw_send_speed_fast" />
         </RadioGroup>
     </LinearLayout>
 

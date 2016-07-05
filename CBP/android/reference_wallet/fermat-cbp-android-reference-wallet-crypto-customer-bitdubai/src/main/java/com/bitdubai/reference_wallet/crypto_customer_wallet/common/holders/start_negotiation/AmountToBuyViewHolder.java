@@ -5,10 +5,13 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionFee;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -31,9 +34,8 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private TextView currency_fee_miner;
     private TextView feeMiner;
     private TextView total_after_fee;
-    private RadioButton send_speed_low;
-    private RadioButton send_speed_medium;
-    private RadioButton send_speed_high;
+    private RadioGroup fee_speed_group;
+    private String feeAmount;
 
 
     public AmountToBuyViewHolder(View itemView) {
@@ -44,6 +46,8 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         currencyToBuyTextValue  = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
         buyingText              = (TextView) itemView.findViewById(R.id.ccw_buying_text);
         buyingValue             = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
+
+
 
         buyingValue.setOnClickListener(this);
     }
@@ -57,6 +61,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         final ClauseInformation currencyToBuy = clauses.get(currencyType);
         BigDecimal totalToPay;
 
+        clauses.get(ClauseType.CUSTOMER_CURRENCY)
 
         int buyingTextValue = R.string.buying_text;
 
@@ -70,11 +75,29 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
                 currency_fee_miner=(TextView) itemView.findViewById(R.id.ccw_currency_fee_miner);
                 currency_total=(TextView) itemView.findViewById(R.id.ccw_currency_total);
                 total_after_fee=(TextView) itemView.findViewById(R.id.ccw_total_after_fee);
+                fee_speed_group=(RadioGroup)itemView.findViewById(R.id.ccw_fee_speed_group);
 
-                feeMiner.setText(new BigDecimal("0.00001500").toString());
+                fee_speed_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                        if (checkedId == R.id.ccw_send_speed_low){
+                            feeAmount= TransactionFee.getByCode("LOW"+currencyToBuy.getValue());
+                        }else if (checkedId == R.id.ccw_send_speed_normal){
+                            feeAmount= TransactionFee.getByCode("NORMAL"+currencyToBuy.getValue());
+                        }else if (checkedId == R.id.ccw_send_speed_fast){
+                            feeAmount= TransactionFee.getByCode("FAST"+currencyToBuy.getValue());
+                        }
+
+                    }
+
+                });
+
+                feeMiner.setText(new BigDecimal(feeAmount).toString());
                 currency_fee_miner.setText(currencyToBuy.getValue());
                 currency_total.setText(currencyToBuy.getValue());
-                totalToPay = new BigDecimal(clause.getValue()).add(new BigDecimal("0.00001500"));
+                totalToPay = new BigDecimal(clause.getValue()).add(new BigDecimal(feeAmount));
                 total_after_fee.setText(totalToPay.toString());
 
             }
