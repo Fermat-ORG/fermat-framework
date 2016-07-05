@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -62,6 +61,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
@@ -544,7 +544,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage,Long.parseLong("0"), GeoFrequency.NONE);
+            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage,Long.parseLong("0"), Frequency.NONE);
 
         }
         catch( CantCreateNewIntraWalletUserException e)

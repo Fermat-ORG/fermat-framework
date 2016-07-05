@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
@@ -137,7 +138,9 @@ public class Confirm_send_dialog extends Dialog implements
                             this.deliveredToActorType,
                             this.referenceWallet,
                             blockchainNetworkType,
-                            CryptoCurrency.BITCOIN
+                            CryptoCurrency.BITCOIN,
+                            0,
+                            FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
 
                     );
                 }

@@ -8,14 +8,14 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.FermatNetworkConfiguration;
 
-import org.fermatj.core.Address;
-import org.fermatj.core.Sha256Hash;
-import org.fermatj.core.Transaction;
-import org.fermatj.core.TransactionConfidence;
-import org.fermatj.core.TransactionInput;
-import org.fermatj.core.TransactionOutput;
-import org.fermatj.core.Wallet;
-import org.fermatj.script.ScriptChunk;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.Wallet;
+import org.bitcoinj.script.ScriptChunk;
 
 import java.util.ArrayList;
 import java.util.List;

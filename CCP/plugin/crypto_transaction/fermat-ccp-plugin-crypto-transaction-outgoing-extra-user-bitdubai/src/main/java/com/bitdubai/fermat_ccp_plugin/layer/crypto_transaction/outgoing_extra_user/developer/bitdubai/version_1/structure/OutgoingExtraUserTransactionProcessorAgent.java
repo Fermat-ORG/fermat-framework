@@ -23,6 +23,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVault
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.exceptions.CantRevertTransactionException;
@@ -211,7 +212,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
         for(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper transaction : transactionList) {
             // Now we apply it in the vault
             try {
-                String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getBlockchainNetworkType());
+                String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount()), transaction.getBlockchainNetworkType());
                 dao.setTransactionHash(transaction,hash);
                 dao.setToSTCV(transaction);
 

@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
@@ -377,7 +378,9 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                     transaction.getTimestamp(),
                     transaction.getMemo(),
                     transaction.getBlockchainNetworkType(),
-                    transaction.getCryptoCurrency()
+                    transaction.getCryptoCurrency(),
+                    transaction.getFee(),
+                    transaction.getFeeOrigin()
             );
         }
 
@@ -392,7 +395,9 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                                                        final long timeStamp,
                                                                        final String memo,
                                                                        final BlockchainNetworkType blockchainNetworkType,
-                                                                       final CryptoCurrency cryptoCurrency) {
+                                                                       final CryptoCurrency cryptoCurrency,
+                                                                      final long fee,
+                                                                      final FeeOrigin feeOrigin) {
             return new CryptoWalletTransactionRecord() {
                 @Override
                 public CryptoAddress getAddressFrom() {
@@ -462,6 +467,16 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                 @Override
                 public CryptoCurrency getCryptoCurrency() {
                     return cryptoCurrency;
+                }
+
+                @Override
+                public FeeOrigin getFeeOrigin(){
+                    return feeOrigin;
+                }
+
+                @Override
+                public long getFee(){
+                    return fee;
                 }
             };
         }

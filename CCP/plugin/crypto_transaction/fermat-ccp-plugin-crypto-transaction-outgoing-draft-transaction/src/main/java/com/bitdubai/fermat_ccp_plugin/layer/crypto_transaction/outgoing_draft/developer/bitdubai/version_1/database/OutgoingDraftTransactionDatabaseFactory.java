@@ -95,6 +95,9 @@ public class OutgoingDraftTransactionDatabaseFactory implements DealsWithPluginD
             table.addColumn(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME, DatabaseDataType.STRING, 6, Boolean.FALSE);
+            table.addColumn(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_FEE_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+
+            table.addColumn(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_FEE_ORIGIN_COLUMN, DatabaseDataType.STRING, 6, Boolean.FALSE);
 
             table.addIndex(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_FIRST_KEY_COLUMN);
 
