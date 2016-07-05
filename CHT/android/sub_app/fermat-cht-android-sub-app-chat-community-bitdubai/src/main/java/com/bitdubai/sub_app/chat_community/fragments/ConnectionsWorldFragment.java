@@ -620,6 +620,20 @@ public class ConnectionsWorldFragment
             int id = item.getItemId();
             switch (id) {
                 case 3:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 4:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 5:
                     showDialogHelp();
                     break;
                 case 1:
