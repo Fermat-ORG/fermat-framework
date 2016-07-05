@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -207,6 +206,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -214,11 +214,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle("Prueba");
-
-        System.out.println("toolbar: "+toolbar.toString());
     }
 
     private void showHelpDialog() {
@@ -489,8 +484,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         FiatCurrency[] fiatCurrencies = FiatCurrency.values();
         Collections.addAll(data, fiatCurrencies);
 
-        CryptoCurrency[] cryptoCurrencies = CryptoCurrency.values();
-        Collections.addAll(data, cryptoCurrencies);
+        data.add(CryptoCurrency.BITCOIN);
 
         return data;
     }

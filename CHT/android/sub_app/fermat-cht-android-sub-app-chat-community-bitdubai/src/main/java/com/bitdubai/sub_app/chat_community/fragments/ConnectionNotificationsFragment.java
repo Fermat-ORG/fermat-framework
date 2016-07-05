@@ -205,9 +205,7 @@ public class ConnectionNotificationsFragment
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
         return rootView;
     }
 
@@ -216,10 +214,8 @@ public class ConnectionNotificationsFragment
         //onRefresh();
     }
 
-    private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
-
+    private ArrayList<ChatActorCommunityInformation> getMoreData() {
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-
         try {
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
@@ -233,7 +229,6 @@ public class ConnectionNotificationsFragment
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return dataSet;
     }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetChatUserIdentityException {
@@ -301,14 +296,25 @@ public class ConnectionNotificationsFragment
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, identity);
+            final ChatActorCommunityInformation dataNow  = data;
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
+                    ArrayList<ChatActorCommunityInformation> dataNew = new ArrayList<>();
                     try {
-//                        lstChatUserInformations = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
-//                                identity.getActorType(), MAX, offset);
-//                        adapter.changeDataSet(lstChatUserInformations);
-                        onRefresh();
+                        for (ChatActorCommunityInformation dat: lstChatUserInformations){
+                            if(!dataNow.getPublicKey().equals(dat.getPublicKey()))
+                            {
+                                dataNew.add(dat);
+                            }
+                        }
+                        lstChatUserInformations=dataNew;
+                        adapter.changeDataSet(lstChatUserInformations);
+                        if (lstChatUserInformations.isEmpty()) {
+                            showEmpty(true, emptyView);
+                        } else {
+                            showEmpty(false, emptyView);
+                        }
                     }catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                 UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
