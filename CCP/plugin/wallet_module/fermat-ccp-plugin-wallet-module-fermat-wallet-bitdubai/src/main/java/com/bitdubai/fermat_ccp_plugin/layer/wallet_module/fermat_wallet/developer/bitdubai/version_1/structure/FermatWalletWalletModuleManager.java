@@ -351,19 +351,62 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
         try {
 
-
             //looking all providers
 
-            Map<UUID, String> providers = exchangeProviderFilterManagerproviderFilter.getProviderNames();
 
-            Iterator entries = providers.entrySet().iterator();
-            while (entries.hasNext()) {
-                Map.Entry thisEntry = (Map.Entry) entries.next();
-                Object key = thisEntry.getKey();
-                Object value = thisEntry.getValue();
+            Map<UUID, String> providerARG = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.ARGENTINE_PESO));
+            if (providerARG.size()>0){
+                Iterator entries = providerARG.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
 
-                filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
 
+
+            Map<UUID, String> providerUSD = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.US_DOLLAR));
+            if (providerUSD.size()>0){
+                Iterator entries = providerUSD.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
+
+            Map<UUID, String> providerVEN = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.VENEZUELAN_BOLIVAR));
+            if (providerVEN.size()>0){
+                Iterator entries = providerVEN.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
+
+
+
+            Map<UUID, String> providerEUR = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.FERMAT, FiatCurrency.EURO));
+            if (providerEUR.size()>0){
+                Iterator entries = providerEUR.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
             }
 
         }
