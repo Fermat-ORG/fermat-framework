@@ -29,6 +29,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfac
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.agent.crypto_broker.interfaces.CryptoBroker;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -396,6 +398,7 @@ public class CryptoBrokerCommunityManager
                     selectedIdentity.getActorType()
             );
 
+
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
 
             search.addConnectionState(ConnectionState.CONNECTED);
@@ -404,8 +407,16 @@ public class CryptoBrokerCommunityManager
 
             final Set<CryptoBrokerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoBrokerActorConnection connectedActor : connectedActors)
-                filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor));
+            CryptoBrokerExposingData cryptoBrokerExposingData = null;
+
+            for (CryptoBrokerActorConnection connectedActor : connectedActors){
+                cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
+                if (cryptoBrokerExposingData != null)
+                    filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation()));
+                else
+                    filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, null));
+            }
+
 
             return new ArrayList<>(filteredConnectedActors);
 
@@ -441,7 +452,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -476,7 +487,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
 
             return cryptoBrokerCommunityInformationList;
 
