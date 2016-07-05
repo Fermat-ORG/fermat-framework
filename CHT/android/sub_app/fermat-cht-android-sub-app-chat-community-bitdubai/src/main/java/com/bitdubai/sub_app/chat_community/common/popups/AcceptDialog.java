@@ -109,7 +109,6 @@ public class AcceptDialog
                 } else {
                     super.toastDefaultError();
                 }
-                dismiss();
             } catch (final CantAcceptChatRequestException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
@@ -127,7 +126,6 @@ public class AcceptDialog
                 }else {
                     super.toastDefaultError();
                 }
-                dismiss();
             } catch (final ChatActorConnectionDenialFailedException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
