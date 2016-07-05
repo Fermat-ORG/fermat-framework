@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
 
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 
 import java.io.Serializable;
@@ -25,4 +26,6 @@ public interface CryptoCustomerCommunitySearch extends Serializable {
     List<CryptoCustomerCommunityInformation> getResultDistance(double distance, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult;
 
     List<CryptoCustomerCommunityInformation> getResultAlias(String alias, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult;
+
+    CryptoCustomerExposingData getResult(final String publicKey) throws CantGetCryptoCustomerSearchResult;
 }
