@@ -12,9 +12,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -79,19 +76,6 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
                 otheTimeZone.setText("Broker Date: " + dateTimeZoneOther.getDate() + " ( " + otheTimeZoneValue + " )");
 
             }
-
-
-//            DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeInMillis,"MM/dd/yyyy hh:mm a");
-//            String dateTimeDelivery = dateTimeZoneDelivery.getDate();
-//            String dateTimeDeliveryUTC = dateTimeZoneDelivery.getDateUTC();
-//            String dateTimeToday    = dateTimeZoneDelivery.getDateTodayUTC();
-//
-//            System.out.print("\n *** TIME ZONE " +
-//                    "\n - Date:" +dateTimeDelivery+
-//                    "\n - Date UTC:" +dateTimeDeliveryUTC+
-//                    "\n - DateToday: "+dateTimeToday+
-//                    "\n - CompareTo: " + dateTimeDelivery.compareTo(dateTimeToday)+"\n");
-
         }
 
     }
@@ -141,28 +125,4 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
                 break;
         }
     }
-
-    /*private String getDateTimeOther(String timeZone, String date){
-
-        String dateTime = "";
-        String formatDate = "MM/dd/yyyy hh:mm a";
-
-        try {
-            SimpleDateFormat sourceFormat = new SimpleDateFormat(formatDate);
-            sourceFormat.setTimeZone(TimeZone.getDefault());
-            Date parsed = sourceFormat.parse(date);
-
-            TimeZone tz = TimeZone.getTimeZone(timeZone);
-            SimpleDateFormat destFormat = new SimpleDateFormat(formatDate);
-            destFormat.setTimeZone(tz);
-
-            dateTime = destFormat.format(parsed);
-
-        } catch (ParseException e){
-            System.out.print("error.");
-        }
-
-        return dateTime;
-
-    }*/
 }
