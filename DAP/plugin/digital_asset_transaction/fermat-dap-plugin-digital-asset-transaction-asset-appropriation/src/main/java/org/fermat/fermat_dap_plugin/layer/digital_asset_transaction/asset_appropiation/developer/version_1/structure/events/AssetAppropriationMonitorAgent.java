@@ -24,7 +24,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -348,7 +348,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                 if (identity.getAlias().equals(alias)) assetIdentity = identity;
             }
             if (assetIdentity == null)
-                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null, Long.parseLong("0"), Frecuency.NONE);
+                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null, Long.parseLong("0"), Frequency.NONE);
             return assetIdentity;
         }
 

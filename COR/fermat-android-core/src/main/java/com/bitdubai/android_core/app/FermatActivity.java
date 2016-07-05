@@ -1813,7 +1813,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
     private void invalidateTabs(TabStrip tabStrip) {
-        if(tabLayout!=null || tabStrip!=null) {
+        if(tabLayout!=null && tabStrip!=null) {
             List<Tab> tabs = tabStrip.getTabs();
             int size = tabs.size();
             String[] tabTitles = new String[size];
