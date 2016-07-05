@@ -237,46 +237,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             this.dao = bitcoinCryptoNetworkDatabaseDao;
         }
 
-        /**
-         * Internal private class to make sure we are downloading the blockchain from any peer.
-         */
-        private class BlockchainDownloadController extends AbstractAgent implements Runnable{
-            private final PeerGroup peerGroup;
-            private final PeerEventListener peerEventListener;
-            public BlockchainDownloadController(PeerGroup peerGroup, PeerEventListener peerEventListener){
-                super(1, TimeUnit.MINUTES);
-                this.peerGroup = peerGroup;
-                this.peerEventListener = peerEventListener;
-            }
-
-            @Override
-            protected Runnable agentJob() {
-                return this;
-            }
-
-            @Override
-            protected void onErrorOccur() {
-
-            }
-
-            @Override
-            public void run() {
-                System.out.println("***CryptoNetwork*** BlockchainDownloader Agent control.");
-                System.out.println("Peers connected: " + peerGroup.getConnectedPeers().size());
-
-
-                peerGroup.startBlockChainDownload(this.peerEventListener);
-            }
-        }
-
         @Override
         public void run() {
             try {
                 // start it all
                 doTheMainTask();
-
-                BlockchainDownloadController blockchainDownloadController = new BlockchainDownloadController(this.peerGroup, this.events);
-                blockchainDownloadController.start();
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
