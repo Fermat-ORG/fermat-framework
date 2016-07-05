@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,7 @@ public class Databases implements RestFulServices {
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
+    @GZIP
     public Response listTables(){
 
         JsonObject result = new JsonObject();
@@ -99,6 +101,7 @@ public class Databases implements RestFulServices {
     @GET
     @Path("/data")
     @Produces(MediaType.APPLICATION_JSON)
+    @GZIP
     public Response getTableData(@QueryParam("tableName") String tableName, @QueryParam("offSet") Integer offSet, @QueryParam("max") Integer max){
 
         LOG.info("Executing getTableData");

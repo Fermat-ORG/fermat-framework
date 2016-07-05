@@ -1,10 +1,13 @@
-angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$interval', '$filter', '$window', '$location', function($scope, $http, $interval, $filter, $window, $location) {
+angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$interval', '$filter', '$window', '$location', '$timeout', 'NgMap', function($scope, $http, $interval, $filter, $window, $location, $timeout, NgMap) {
 
-       $scope.offSet = 0;
-       $scope.max = 24;
-       $scope.identities   = [];
-       $scope.total        = 3;
-       $scope.currentPage  = 1;
+      $scope.onlineIdentities = false;
+      $scope.offSet      = 0;
+      $scope.max         = 24;
+      $scope.total       = 0;
+      $scope.currentPage = 1;
+      $scope.identities  = [];
+      $scope.geoPoints   = [];
+      $scope.markers     = [];
 
       var parseJwtToken = function(token) {
            var base64Url = token.split('.')[1];
@@ -25,28 +28,104 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
       };
 
      var requestIdentitiesData = function() {
+        console.log("online = "+$scope.onlineIdentities);
+        $scope.total       = 0;
+        $scope.identities.splice(0, $scope.identities.length);
+        clearMarkers();
+        if($scope.onlineIdentities === true){
+            requestCheckInData();
+        }else{
+            requestCatalogData();
+        }
+     }
 
-            $http({
-                method: 'GET',
-                url: '/fermat/rest/api/v1/admin/actors/check_in?offSet='+$scope.offSet+'&max='+$scope.max
-            }).then(function successCallback(response) {
+     var requestCatalogData = function() {
 
-              var data = response.data;
-              var success = data.success;
+        $http({
+            method: 'GET',
+            url: '/fermat/rest/api/v1/admin/actors/catalog?offSet='+$scope.offSet+'&max='+$scope.max
+        }).then(function successCallback(response) {
 
-              if(success === true){
-                $scope.identities   = angular.fromJson(data.identities);
-                $scope.total        = data.total;
-                $scope.numPages = Math.ceil($scope.totalRows/$scope.max);
+          var data = response.data;
+          var success = data.success;
+
+          if(success === true){
+
+            angular.forEach(angular.fromJson(data.identities), function(value, key) {
+
+              var identity = angular.fromJson(value);
+              $scope.identities.push(identity);
+
+              var location = angular.fromJson(identity.location);
+              if(location.latitude != 0 && location.longitude != 0){
+
+                   $scope.markers.push(new google.maps.Marker({
+                                                              position: new google.maps.LatLng(parseFloat(location.latitude), parseFloat(location.longitude)),
+                                                              title: identity.name,
+                                                              animation: google.maps.Animation.DROP
+                                                            }));
+
               }
 
-           }, function errorCallback(response) {
-                var message = "";
-                if(response.status === -1){message = "Server no available";}
-                if(response.status === 401){message = "You must authenticate again";}
-                alert(response.status+" - Identities Service error 1: "+response.statusText+" "+message);
-                $window.location.href = '../index.html';
-           });
+            });
+
+            $scope.total        = data.total;
+            $scope.numPages = Math.ceil($scope.total/$scope.max);
+            addMarkers();
+          }
+
+       }, function errorCallback(response) {
+            var message = "";
+            if(response.status === -1){message = "Server no available";}
+            if(response.status === 401){message = "You must authenticate again";}
+            alert(response.status+" - Identities Service error 1: "+response.statusText+" "+message);
+            $window.location.href = '../index.html';
+       });
+
+     };
+
+     var requestCheckInData = function() {
+
+         $http({
+             method: 'GET',
+             url: '/fermat/rest/api/v1/admin/actors/check_in?offSet='+$scope.offSet+'&max='+$scope.max
+         }).then(function successCallback(response) {
+
+             var data = response.data;
+             var success = data.success;
+
+             if(success === true){
+
+               angular.forEach(angular.fromJson(data.identities), function(value, key) {
+
+                 var identity = angular.fromJson(value);
+                 $scope.identities.push(identity);
+
+                 var location = angular.fromJson(identity.location);
+                 if(location.latitude != 0 && location.longitude != 0){
+
+                      $scope.markers.push(new google.maps.Marker({
+                                                                 position: new google.maps.LatLng(parseFloat(location.latitude), parseFloat(location.longitude)),
+                                                                 title: identity.name,
+                                                                 animation: google.maps.Animation.DROP
+                                                               }));
+
+                 }
+
+               });
+
+               $scope.total        = data.total;
+               $scope.numPages = Math.ceil($scope.total/$scope.max);
+               addMarkers();
+             }
+
+        }, function errorCallback(response) {
+             var message = "";
+             if(response.status === -1){message = "Server no available";}
+             if(response.status === 401){message = "You must authenticate again";}
+             alert(response.status+" - Identities Service error 1: "+response.statusText+" "+message);
+             $window.location.href = '../index.html';
+        });
 
      };
 
@@ -62,9 +141,37 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
         requestIdentitiesData();
      };
 
-     $scope.getImage = function(data){
-         return 'data:image/jpeg;base64,' + data.photo;
+     $scope.getImage = function(photo){
+
+        if(photo){
+            return 'data:image/JPEG;base64,' + photo;
+        }else {
+            return 'https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png';
+        }
+
      }
+
+     var clearMarkers = function() {
+       for (var i = 0; i < $scope.markers.length; i++) {
+         $scope.markers[i].setMap(null);
+       }
+       $scope.markers = [];
+     }
+
+     var addMarkers = function() {
+         NgMap.getMap().then(function(map) {
+            for (var i=0; i < $scope.markers.length; i++) {
+               addMarkerWithTimeout($scope.markers[i],  i * 200, map);
+            }
+         });
+     }
+
+      var addMarkerWithTimeout = function (mark, timeout, map) {
+           $timeout(function() {
+                mark.setMap(map);
+           }, timeout);
+     }
+
 
      if(isAuthenticate() === false){
          alert("Service error: You must authenticate again");
@@ -75,7 +182,12 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
                $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
          }
 
-         //requestIdentitiesData();
+         requestIdentitiesData();
      }
+
+
+       $scope.reloadOnlineChange = function() {
+         requestIdentitiesData();
+       };
 
 }]);

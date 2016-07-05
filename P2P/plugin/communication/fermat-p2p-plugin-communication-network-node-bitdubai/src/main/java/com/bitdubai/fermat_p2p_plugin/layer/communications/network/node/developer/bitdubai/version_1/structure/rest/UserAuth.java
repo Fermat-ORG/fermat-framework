@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 import java.util.Date;
 
@@ -62,6 +63,7 @@ public class UserAuth {
     }
 
     @GET
+    @GZIP
     public String isActive() {
         return "The User WebService is running ...";
     }

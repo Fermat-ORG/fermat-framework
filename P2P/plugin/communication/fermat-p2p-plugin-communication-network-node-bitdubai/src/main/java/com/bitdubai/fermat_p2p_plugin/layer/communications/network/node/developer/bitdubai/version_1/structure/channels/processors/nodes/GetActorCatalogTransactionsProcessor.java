@@ -136,7 +136,7 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
         }else {
 
-            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(0, 50);
+            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(0, 20);
 
         }
 

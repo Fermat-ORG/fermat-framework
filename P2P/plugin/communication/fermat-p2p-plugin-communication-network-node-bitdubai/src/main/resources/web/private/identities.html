@@ -11,7 +11,7 @@
     <meta name="author" content="Fermat.org">
     <!-- <link rel="icon" href="http://getbootstrap.com/favicon.ico"> -->
 
-    <title>Fermat - Cloud Server</title>
+    <title>Fermat - Network Node</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -30,8 +30,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="https://maps.googleapis.com/maps/api/js?callback=drawMap&key=AIzaSyD7XZsMPlvmv8ifUFTfO3g8HGFDND_o_Tw"></script>
-
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=AIzaSyD7XZsMPlvmv8ifUFTfO3g8HGFDND_o_Tw"></script>
 </head>
 <style>
 
@@ -45,7 +44,7 @@
         <div class="navbar-header">
             <ul class="nav navbar-nav">
                 <li><img src="https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png" class="img-responsive" alt="Fermat.org" width="95px" height="95px" /></li>
-                <li><a class="navbar-brand" href="#">Cloud Server</a></li>
+                <li><a class="navbar-brand">Fermat Node</a></li>
             </ul>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -60,20 +59,50 @@
     </div>
 </nav>
 <div class="container theme-showcase" role="main" style="width:98%;" >
-
+    <br/>
+    <br/>
+    <br/>
     <div>
-        <ng-map center="41,-87" zoom="3"></ng-map>
+        <ng-map zoom="1"></ng-map>
     </div>
+    <br/>
+    <div class="row"  >
+        <strong>List of {{onlineIdentities === true ? "online identities" : "all register identities in catalog" }} - Total ({{ total }})</strong>
+        <div class="checkbox pull-right">
+            <label class="text-success" >
+                <input id="isOnline" type="checkbox" ng-model="onlineIdentities"  ng-change="reloadOnlineChange()" > <strong>Show Online</strong>
+            </label>
+        </div>
+    </div>
+    <hr/>
 
-    <h2>List of connected entities - Total ({{ total }}) </h2>
+    <div ng-show="total > 0">
 
-    <div class="row" ng-show="total > 0" >
-        <div class="col-lg-3" ng-repeat="identity in identities track by $index">
-             <img class="img-circle" data-ng-src="{{getImage(identity)}}" alt="Generic placeholder image" width="140" height="140">
-             <h2>{{identity.name}}</h2>
-             <p>{{identity.actorType}}</p>
-         </div>
-     </div>
+        <div class="row"  >
+
+            <div class="col-lg-1" ng-repeat="identity in identities track by $index" >
+                <div class="thumbnail">
+                    <img class="img-thumbnail" data-ng-src="{{getImage(identity.photo)}}" alt="{{identity.alias}}" title="Alias: {{identity.alias}}" width="60" height="60" style="border:1px solid #ddd;">
+                    <div class="caption">
+                        <strong>{{identity.name}}</strong><br/>
+                        <small class="text-danger text-center" >{{identity.type}}</small><br/>
+                        <span class="glyphicon glyphicon-info-sign  text-primary" data-toggle="tooltip" data-placement="top" title="Public Key: {{identity.ipk}}" ></span>
+                        <span class="glyphicon glyphicon-map-marker text-success" data-toggle="tooltip" data-placement="top" title="Location: {{identity.location}}" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-paperclip  text-warning" data-toggle="tooltip" data-placement="top" title="ExtraData: {{identity.extraData}}" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr/>
+        <div class="row">
+            <button type="button" class="btn btn-primary pull-left" ng-click="previousPage();"  ng-disabled="currentPage == 1" >Previous</button>
+            <span>Page: {{currentPage}} / {{numPages}}</span>
+            <button type="button" class="btn btn-info pull-right"    ng-click="nextPage();"      ng-disabled="currentPage == numPages" >Next</button>
+        </div>
+
+    </div>
 
      <div class="row" ng-show="total === 0" >
          <div class="well">
