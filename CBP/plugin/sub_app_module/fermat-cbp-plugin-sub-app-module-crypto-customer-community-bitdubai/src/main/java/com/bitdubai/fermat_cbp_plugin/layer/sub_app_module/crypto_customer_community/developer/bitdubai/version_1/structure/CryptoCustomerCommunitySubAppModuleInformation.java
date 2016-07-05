@@ -57,13 +57,14 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
         this.place = place;
     }
 
-    public CryptoCustomerCommunitySubAppModuleInformation(final CryptoCustomerActorConnection actorConnection) {
+    public CryptoCustomerCommunitySubAppModuleInformation(final CryptoCustomerActorConnection actorConnection, Location location) {
 
         this.publicKey = actorConnection.getPublicKey();
         this.alias = actorConnection.getAlias();
         this.image = actorConnection.getImage();
         this.connectionState = actorConnection.getConnectionState();
         this.connectionId = actorConnection.getConnectionId();
+        this.location = location;
 
     }
 

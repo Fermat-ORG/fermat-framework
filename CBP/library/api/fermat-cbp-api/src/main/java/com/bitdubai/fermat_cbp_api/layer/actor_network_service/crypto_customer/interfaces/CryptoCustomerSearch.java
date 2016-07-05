@@ -49,6 +49,8 @@ public abstract class CryptoCustomerSearch {
 
     public abstract List<CryptoCustomerExposingData> getResultAlias(String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException;
 
+    public abstract CryptoCustomerExposingData getResult(String publicKey) throws CantListCryptoCustomersException;
+
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
      * filtered by the parameters set.

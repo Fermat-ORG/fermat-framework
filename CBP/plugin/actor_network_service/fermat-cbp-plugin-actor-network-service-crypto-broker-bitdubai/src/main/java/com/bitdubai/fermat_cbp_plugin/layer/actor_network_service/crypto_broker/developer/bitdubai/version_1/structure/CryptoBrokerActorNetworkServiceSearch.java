@@ -263,8 +263,6 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            //final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
-
             CryptoBrokerExposingData cryptoBrokerExposingData = null;
 
             for (final ActorProfile actorProfile : list) {

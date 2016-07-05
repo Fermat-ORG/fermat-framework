@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -318,8 +319,16 @@ public class CryptoCustomerCommunityManager
 
             final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoCustomerActorConnection ccac : actorConnections)
-                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac));
+            CryptoCustomerExposingData cryptoCustomerExposingData = null;
+
+            for (CryptoCustomerActorConnection ccac : actorConnections){
+                cryptoCustomerExposingData = getCryptoCustomerSearch().getResult(ccac.getPublicKey());
+                if (cryptoCustomerExposingData != null)
+                    cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac, cryptoCustomerExposingData.getLocation()));
+                else
+                //TODO: Esperar por el cambio de Manuel
+                    cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac, null));
+            }
 
             return cryptoCustomerCommunityInformationList;
 

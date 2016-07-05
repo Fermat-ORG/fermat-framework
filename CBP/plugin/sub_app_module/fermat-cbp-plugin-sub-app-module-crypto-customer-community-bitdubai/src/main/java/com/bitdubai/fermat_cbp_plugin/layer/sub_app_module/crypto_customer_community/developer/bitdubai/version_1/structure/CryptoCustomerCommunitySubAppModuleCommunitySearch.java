@@ -138,4 +138,18 @@ public class CryptoCustomerCommunitySubAppModuleCommunitySearch implements Crypt
             throw new CantGetCryptoCustomerSearchResult("", exception, "", "Unhandled Error.");
         }
     }
+
+    @Override
+    public CryptoCustomerExposingData getResult(String publicKey) throws CantGetCryptoCustomerSearchResult {
+        CryptoCustomerSearch cryptoCustomerSearchSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
+
+        CryptoCustomerExposingData cryptoCustomerExposingData = null;
+
+        try {
+            cryptoCustomerExposingData = cryptoCustomerSearchSearch.getResult(publicKey);
+        } catch (Exception e) {
+            throw new CantGetCryptoCustomerSearchResult("Unhandled Error.", e, "", "");
+        }
+        return cryptoCustomerExposingData;
+    }
 }
