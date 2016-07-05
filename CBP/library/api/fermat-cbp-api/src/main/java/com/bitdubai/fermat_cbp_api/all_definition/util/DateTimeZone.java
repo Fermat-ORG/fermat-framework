@@ -34,7 +34,20 @@ public class DateTimeZone {
      */
     public String getDate(){
 
-        Date parsed = getDateTimeDefaul();
+        Date parsed = getDateTimeDefaul(TimeZone.getDefault());
+        SimpleDateFormat destFormt = getDateTimeZone(this.timeZone);
+        return destFormt.format(parsed);
+
+    }
+
+    /**
+     * This method returns a date in String of the time zone indicate
+     * @param timeZone
+     * @return to String of date
+     */
+    public String getDate(TimeZone timeZone){
+
+        Date parsed = getDateTimeDefaul(timeZone);
         SimpleDateFormat destFormt = getDateTimeZone(this.timeZone);
         return destFormt.format(parsed);
 
@@ -44,7 +57,7 @@ public class DateTimeZone {
 
         String timeZoneUTC = TimeZone.getTimeZone("UTC").getID();
 
-        Date parsed = getDateTimeDefaul();
+        Date parsed = getDateTimeDefaul(TimeZone.getDefault());
         SimpleDateFormat destFormt = getDateTimeZone(timeZoneUTC);
         return destFormt.format(parsed);
 
@@ -89,14 +102,14 @@ public class DateTimeZone {
      * This method returns a date in time zone default
      * @return to Date in Time Zone Default
      */
-    private Date getDateTimeDefaul(){
+    private Date getDateTimeDefaul(TimeZone timeZone){
 
         Date parsed = null;
 
         try {
 
             SimpleDateFormat sourceFormat = new SimpleDateFormat(this.formDate);
-            sourceFormat.setTimeZone(TimeZone.getDefault());
+            sourceFormat.setTimeZone(timeZone);
             parsed = sourceFormat.parse(this.dateTime);
 
         } catch (ParseException e){
