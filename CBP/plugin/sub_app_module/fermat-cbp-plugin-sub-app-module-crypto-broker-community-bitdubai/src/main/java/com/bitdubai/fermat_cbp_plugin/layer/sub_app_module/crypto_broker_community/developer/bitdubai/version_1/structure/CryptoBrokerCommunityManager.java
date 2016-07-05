@@ -76,7 +76,9 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -401,10 +403,11 @@ public class CryptoBrokerCommunityManager
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<CryptoBrokerActorConnection> actorConnections = search.getResult(max, offset);
+            final List<CryptoBrokerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
+            final Set<CryptoBrokerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
+<<<<<<< HEAD
             CryptoBrokerExposingData cryptoBrokerExposingData = null;
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
@@ -416,8 +419,12 @@ public class CryptoBrokerCommunityManager
                     //TODO:Por ahora le pasamos null pero eso debe ser el objeto Location que debe de venie actor connections el refactor de Manuel
                     cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
             }
+=======
+            for (CryptoBrokerActorConnection connectedActor : connectedActors)
+                filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor));
+>>>>>>> 2381168460f5045a616ed6ca062d3f2c515e47b0
 
-            return cryptoBrokerCommunityInformationList;
+            return new ArrayList<>(filteredConnectedActors);
 
         } catch (final CantListActorConnectionsException e) {
 
