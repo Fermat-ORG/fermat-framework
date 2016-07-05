@@ -108,7 +108,7 @@
             android:layout_marginBottom="10dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/see_your_balance_text"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/grey_900" />
 
         <View
@@ -133,7 +133,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/no_id_dont_show_this_again_text"
                 android:textColor="@color/grey_600"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/checkbox_not_show"
@@ -172,7 +172,9 @@
                     android:layout_height="46dp"
                     android:text="@string/be_john_doe_text"
                     android:textSize="12sp"
-                    android:background="#2481BA"/>
+                    android:background="#3c95cc"
+                    android:textColor="@color/color_white"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -194,7 +196,9 @@
                     android:layout_height="46dp"
                     android:text="@string/be_jane_doe__text"
                     android:textSize="12sp"
-                    android:background="#2481BA"/>
+                    android:background="#3c95cc"
+                    android:textColor="@color/color_white"
+                    />
             </LinearLayout>
 
         </LinearLayout>
