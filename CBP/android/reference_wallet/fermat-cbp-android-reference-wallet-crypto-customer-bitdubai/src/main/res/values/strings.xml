@@ -187,11 +187,12 @@
     <string name="title">Title</string>
 
 
-    <!-- Crypto Pay Fee  -->
+    <!-- Settings Fee Management -->
 
-    <string name="ccw_fee_miner">Fee miner:</string>
-    <string name="ccw_miner_confirmation_time">Send Speed:</string>
-    <string name="ccw_total_to_pay_after_fee">Total to pay:</string>
+    <string name="ccw_fee_miner">Send BTC speed</string>
+    <string name="ccw_fee_miner_value">Fee miner value:</string>
+    <string name="ccw_miner_confirmation_time">Fee origin</string>
+
 
 
 

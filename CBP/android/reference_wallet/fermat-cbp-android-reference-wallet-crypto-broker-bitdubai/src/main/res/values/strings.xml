@@ -163,7 +163,18 @@
     <string name="cbw_no_earnings">No Earnings</string>
     <string name="sending_to_the_customer">Sending to the Customer</string>
 
+    <!--Fee setting -->
 
+
+    <string name="cbw_fee_miner_speed_1"> LOW</string>
+    <string name="cbw_fee_miner_speed_2"> NORMAL</string>
+    <string name="cbw_fee_miner_speed_3"> FAST</string>
+    <string name="cbw_fee_miner_value">Fee miner:</string>
+
+    <string name="cbw_fee_speed_text">Select the speed of the confirmation transaction, more speed increse the fee amount </string>
+    <string name="cbw_fee_origin_text">Set if the fee will be take of the bitcoin wallet or include in the transaction</string>
+    <string name="cbw_fee_transaction">FEE TYPE</string>
+    <string name="cbw_fee_confirmation_time">FEE ORIGIN</string>
 
 
     <!--These needs to be commented on where they're used or be deleted -->

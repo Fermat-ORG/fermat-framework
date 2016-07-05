@@ -84,6 +84,8 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Ref
                 return SettingsBankAccountsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES:
                 return SetttingsStockManagementFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SETTINGS_FEE_MANAGEMENT:
+                return SettingsFeeManagementFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS:
                 return ContractDetailActivityFragment.newInstance();
             default:
