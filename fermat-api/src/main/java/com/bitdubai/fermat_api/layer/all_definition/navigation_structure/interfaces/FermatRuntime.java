@@ -23,4 +23,6 @@ public interface FermatRuntime {
      */
 
     void changeStartActivity(String appPublicKey,String activityCode);
+
+    void changeTabNumber(String appPublicKey,String appActivityCode,int number);
 }
