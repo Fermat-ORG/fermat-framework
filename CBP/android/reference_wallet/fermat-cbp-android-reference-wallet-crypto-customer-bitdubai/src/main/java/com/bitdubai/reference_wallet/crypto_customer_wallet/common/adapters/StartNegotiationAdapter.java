@@ -44,7 +44,6 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     ClauseViewHolder.Listener clauseListener;
     private List <IndexInfoSummary> marketRateList;
 
-    private View specialView;
 
 
     public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation ) {
@@ -65,7 +64,6 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     @Override
     public FermatViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
-        specialView=LayoutInflater.from(context).inflate(R.layout.ccw_amount_to_buy_item_single_crypto, viewGroup, false);
         return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(type), viewGroup, false), type);
     }
 
@@ -86,15 +84,9 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
             case TYPE_ITEM_AMOUNT_TO_PAY:
 
-                if(CryptoCurrency.codeExists((negotiationInformation.getClauses().get(ClauseType.BROKER_CURRENCY)).getValue())){
-                    final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(specialView);
-                    amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
-                    return amountToPayViewHolder;
-                }else{
                     final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
                     amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
                     return amountToPayViewHolder;
-                }
 
 
             case TYPE_FOOTER:

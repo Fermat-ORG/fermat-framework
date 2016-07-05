@@ -30,12 +30,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private TextView buyingText;
     private FermatButton buyingValue;
     private boolean paymentBuy;
-    private TextView currency_total;
-    private TextView currency_fee_miner;
-    private TextView feeMiner;
-    private TextView total_after_fee;
-    private RadioGroup fee_speed_group;
-    private String feeAmount;
+
 
 
     public AmountToBuyViewHolder(View itemView) {
@@ -58,52 +53,19 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         ClauseType currencyType = ClauseType.CUSTOMER_CURRENCY;
 
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
-        final ClauseInformation currencyToBuy = clauses.get(currencyType);
-        BigDecimal totalToPay;
 
-        clauses.get(ClauseType.CUSTOMER_CURRENCY)
+
+
 
         int buyingTextValue = R.string.buying_text;
 
         if (!paymentBuy) {
             currencyType = ClauseType.BROKER_CURRENCY;
             buyingTextValue = R.string.paying_text;
-            //Notification of fee miner when customer pay with BTC
-            if(CryptoCurrency.codeExists(clauses.get(currencyType).getValue())){
 
-                feeMiner=(TextView) itemView.findViewById(R.id.ccw_miner_fee);
-                currency_fee_miner=(TextView) itemView.findViewById(R.id.ccw_currency_fee_miner);
-                currency_total=(TextView) itemView.findViewById(R.id.ccw_currency_total);
-                total_after_fee=(TextView) itemView.findViewById(R.id.ccw_total_after_fee);
-                fee_speed_group=(RadioGroup)itemView.findViewById(R.id.ccw_fee_speed_group);
-
-                fee_speed_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
-
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                        if (checkedId == R.id.ccw_send_speed_low){
-                            feeAmount= TransactionFee.getByCode("LOW"+currencyToBuy.getValue());
-                        }else if (checkedId == R.id.ccw_send_speed_normal){
-                            feeAmount= TransactionFee.getByCode("NORMAL"+currencyToBuy.getValue());
-                        }else if (checkedId == R.id.ccw_send_speed_fast){
-                            feeAmount= TransactionFee.getByCode("FAST"+currencyToBuy.getValue());
-                        }
-
-                    }
-
-                });
-
-                feeMiner.setText(new BigDecimal(feeAmount).toString());
-                currency_fee_miner.setText(currencyToBuy.getValue());
-                currency_total.setText(currencyToBuy.getValue());
-                totalToPay = new BigDecimal(clause.getValue()).add(new BigDecimal(feeAmount));
-                total_after_fee.setText(totalToPay.toString());
-
-            }
         }
 
-
+        final ClauseInformation currencyToBuy = clauses.get(currencyType);
 
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
         buyingText.setText(buyingTextValue);
