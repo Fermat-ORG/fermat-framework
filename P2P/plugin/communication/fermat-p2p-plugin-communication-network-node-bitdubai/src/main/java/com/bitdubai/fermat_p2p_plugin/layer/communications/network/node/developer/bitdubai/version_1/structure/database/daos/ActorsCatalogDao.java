@@ -115,7 +115,7 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
             List<DatabaseTableFilter> discoveryQueryFilters = buildFilterGroupFromDiscoveryQueryParameters(table, parameters);
 
             if (!discoveryQueryFilters.isEmpty())
-                internalFilterGroups.add(table.getNewFilterGroup(discoveryQueryFilters, null, DatabaseFilterOperator.OR));
+                internalFilterGroups.add(table.getNewFilterGroup(discoveryQueryFilters, null, DatabaseFilterOperator.AND));
 
             table.setFilterGroup(tableFilters, internalFilterGroups, DatabaseFilterOperator.AND);
 
@@ -161,8 +161,8 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
         if (params.getAlias() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_ALIAS_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getAlias()));
 
-//        if (params.getActorType() != null)
-//            filters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getActorType()));
+        if (params.getActorType() != null)
+            filters.add(table.getNewFilter(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getActorType()));
 
         if (params.getExtraData() != null)
             filters.add(table.getNewFilter(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, DatabaseFilterType.EQUAL, params.getExtraData()));
