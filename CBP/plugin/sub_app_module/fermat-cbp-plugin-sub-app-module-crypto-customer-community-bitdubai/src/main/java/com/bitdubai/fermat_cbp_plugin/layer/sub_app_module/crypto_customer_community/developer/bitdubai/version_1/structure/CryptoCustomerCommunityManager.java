@@ -332,17 +332,15 @@ public class CryptoCustomerCommunityManager
 
             final Set<CryptoCustomerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoCustomerActorConnection connectedActor : connectedActors)
-                filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor));
             CryptoCustomerExposingData cryptoCustomerExposingData = null;
 
-            for (CryptoCustomerActorConnection ccac : actorConnections){
-                cryptoCustomerExposingData = getCryptoCustomerSearch().getResult(ccac.getPublicKey());
+            for (CryptoCustomerActorConnection connectedActor : connectedActors)
+            {
+                cryptoCustomerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
                 if (cryptoCustomerExposingData != null)
-                    cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac, cryptoCustomerExposingData.getLocation()));
+                    filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoCustomerExposingData.getLocation()));
                 else
-                //TODO: Esperar por el cambio de Manuel
-                    cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac, null));
+                    filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, null));
             }
 
             return new ArrayList<>(filteredConnectedActors);

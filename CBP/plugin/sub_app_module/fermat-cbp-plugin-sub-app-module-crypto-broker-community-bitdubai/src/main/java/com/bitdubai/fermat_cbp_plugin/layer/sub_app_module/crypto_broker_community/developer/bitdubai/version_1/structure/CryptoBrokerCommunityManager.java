@@ -407,22 +407,16 @@ public class CryptoBrokerCommunityManager
 
             final Set<CryptoBrokerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-<<<<<<< HEAD
             CryptoBrokerExposingData cryptoBrokerExposingData = null;
 
-            for (CryptoBrokerActorConnection cbac : actorConnections)
-            {
-                cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(cbac.getPublicKey());
+            for (CryptoBrokerActorConnection connectedActor : connectedActors){
+                cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
                 if (cryptoBrokerExposingData != null)
-                    cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, cryptoBrokerExposingData.getLocation()));
+                    filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation()));
                 else
-                    //TODO:Por ahora le pasamos null pero eso debe ser el objeto Location que debe de venie actor connections el refactor de Manuel
-                    cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
+                    filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, null));
             }
-=======
-            for (CryptoBrokerActorConnection connectedActor : connectedActors)
-                filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor));
->>>>>>> 2381168460f5045a616ed6ca062d3f2c515e47b0
+
 
             return new ArrayList<>(filteredConnectedActors);
 
