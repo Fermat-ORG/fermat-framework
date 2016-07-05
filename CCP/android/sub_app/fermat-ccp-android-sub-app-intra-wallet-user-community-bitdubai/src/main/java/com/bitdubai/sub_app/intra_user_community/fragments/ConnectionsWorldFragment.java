@@ -130,6 +130,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private double distance;
     private String alias;
 
+    //flags
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+
 
 
     private ExecutorService _executor;
@@ -234,10 +237,31 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
-          setUpReferences();
 
+            //Set up RecyclerView
+            setUpReferences();
             showEmpty(true, emptyView);
-            showEmpty(false, searchEmptyView);
+
+
+            //adapter.setFermatListEventListener(this);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (dy > 0) {
+                        visibleItemCount = layoutManager.getChildCount();
+                        totalItemCount = layoutManager.getItemCount();
+                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                        offset = totalItemCount;
+                        final int lastItem = pastVisiblesItems + visibleItemCount;
+                        if (lastItem == totalItemCount) {
+                            onRefresh();
+                        }
+                    }
+                }
+            });
+
+
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -264,7 +288,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+       // adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations,  appSession, moduleManager);
         recyclerView.setAdapter(adapter);
         adapter.setFermatListEventListener(this);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -417,10 +442,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-          /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+           final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
             notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
             notificationsProgressDialog.setCancelable(true);
-            notificationsProgressDialog.show();*/
+
+            notificationsProgressDialog.show();
 
             worker = new FermatWorker() {
                 @Override
@@ -514,9 +540,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     Window window = geolocationDialog.getWindow();
                     WindowManager.LayoutParams wlp = window.getAttributes();
                     wlp.gravity = Gravity.TOP;
-                    wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                    //wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                     window.setAttributes(wlp);
-                    geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    //geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     geolocationDialog.show();
 
 
@@ -937,7 +963,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
     @Override
     public void onMethodCallback(ExtendedCity city) {
+        location = new DeviceLocation();
+        location.setLongitude((double) city.getLongitude());
+        location.setLatitude((double) city.getLatitude());
+        location.setAccuracy((long) distance);
 
+        onRefresh();
 /*
         greenBar = (RelativeLayout) rootView.findViewById(R.id.green_bar_layout);
         closeGreenBar = (ImageView) rootView.findViewById(R.id.close_green_bar);
@@ -955,8 +986,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         location.setLongitude((double) city.getLongitude());
         //distance=identity.getAccuracy();
         //location.setAccuracy((long) distance);
-        offset=0;
-        onRefresh();
+
 
         closeGreenBar.setOnClickListener(new View.OnClickListener() {
             @Override
