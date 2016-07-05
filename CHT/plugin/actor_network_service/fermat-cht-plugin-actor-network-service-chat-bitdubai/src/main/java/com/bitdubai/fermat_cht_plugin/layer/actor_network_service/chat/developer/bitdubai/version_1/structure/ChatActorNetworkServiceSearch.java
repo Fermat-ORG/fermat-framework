@@ -109,7 +109,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
         try {
 
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    Actors.CHAT.getCode(),
+                    null,
                     null,
                     null,
                     null,
