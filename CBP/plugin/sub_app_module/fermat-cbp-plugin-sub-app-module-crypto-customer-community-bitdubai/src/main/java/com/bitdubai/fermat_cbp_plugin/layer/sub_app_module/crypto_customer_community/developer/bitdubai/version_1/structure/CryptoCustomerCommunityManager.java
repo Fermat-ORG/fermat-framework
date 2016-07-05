@@ -327,14 +327,14 @@ public class CryptoCustomerCommunityManager
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+            final List<CryptoCustomerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+            final Set<CryptoCustomerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoCustomerActorConnection ccac : actorConnections)
-                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac));
+            for (CryptoCustomerActorConnection connectedActor : connectedActors)
+                filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor));
 
-            return cryptoCustomerCommunityInformationList;
+            return new ArrayList<>(filteredConnectedActors);
 
         } catch (final CantListActorConnectionsException e) {
 
