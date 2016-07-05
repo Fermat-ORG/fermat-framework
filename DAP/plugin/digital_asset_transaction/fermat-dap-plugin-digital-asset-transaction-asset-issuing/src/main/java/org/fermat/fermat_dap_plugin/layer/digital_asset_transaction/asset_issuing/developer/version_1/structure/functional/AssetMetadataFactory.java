@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
@@ -120,7 +121,9 @@ public class AssetMetadataFactory implements Callable<Boolean> {
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                 true,
                 issuingRecord.getNetworkType(),
-                CryptoCurrency.BITCOIN);
+                CryptoCurrency.BITCOIN,
+                0,
+                FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
     }
     //GETTER AND SETTERS
 

@@ -43,6 +43,8 @@ public class OutgoingDraftTransactionDatabaseConstants {
     public static final String OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME = "same_device";
     public static final String OUTGOING_DRAFT_RUNNING_NETWORK_TYPE = "runningNetworkType";
     public static final String OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME = "read_mark";
+    public static final String OUTGOING_DRAFT_TRANSACTION_FEE_COLUMN = "transaction_fee";
+    public static final String OUTGOING_DRAFT_TRANSACTION_FEE_ORIGIN_COLUMN = "transaction_feeOrigin";
     public static final String OUTGOING_DRAFT_FIRST_KEY_COLUMN = "transaction_id";
 
 

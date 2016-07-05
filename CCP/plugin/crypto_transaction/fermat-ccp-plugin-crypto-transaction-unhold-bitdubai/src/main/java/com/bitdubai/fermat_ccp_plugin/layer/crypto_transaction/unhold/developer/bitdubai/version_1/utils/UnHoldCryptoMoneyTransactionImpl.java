@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransaction;
 
@@ -22,6 +23,8 @@ public class UnHoldCryptoMoneyTransactionImpl implements CryptoUnholdTransaction
     private CryptoCurrency          currency;
     private String                  memo;
     private BlockchainNetworkType blockChainNetworkType;
+    private long fee ;
+    private FeeOrigin feeOrigin;
 
     public UnHoldCryptoMoneyTransactionImpl(){
 
@@ -65,6 +68,26 @@ public class UnHoldCryptoMoneyTransactionImpl implements CryptoUnholdTransaction
     @Override
     public void setBlockChainNetworkType(BlockchainNetworkType blockChainNetworkType) {
     this.blockChainNetworkType = blockChainNetworkType;
+    }
+
+    @Override
+    public long getFee() {
+        return  fee;
+    }
+
+    @Override
+    public void setFee(long fee) {
+        this.fee = fee;
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return this.feeOrigin;
+    }
+
+    @Override
+    public void setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
     }
 
     @Override

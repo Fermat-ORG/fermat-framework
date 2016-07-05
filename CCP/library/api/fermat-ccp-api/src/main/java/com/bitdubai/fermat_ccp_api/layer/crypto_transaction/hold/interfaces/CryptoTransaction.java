@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 
 import java.util.UUID;
 
@@ -65,5 +66,11 @@ public interface CryptoTransaction {
      */
     BlockchainNetworkType getBlockchainNetworkType();
     void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType);
+
+    long getFee();
+    void setFee(long fee);
+
+    FeeOrigin getFeeOrigin();
+    void setFeeOrigin(FeeOrigin feeOrigin);
 
 }

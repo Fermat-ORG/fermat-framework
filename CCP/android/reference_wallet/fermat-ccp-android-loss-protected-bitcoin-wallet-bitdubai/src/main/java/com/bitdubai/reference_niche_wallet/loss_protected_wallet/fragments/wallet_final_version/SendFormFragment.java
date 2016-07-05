@@ -58,6 +58,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
@@ -797,7 +798,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                     lossProtectedWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                                     blockchainNetworkType,
-                                                    CryptoCurrency.BITCOIN
+                                                    CryptoCurrency.BITCOIN,
+                                                    0,
+                                                    FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                             onBack(null);
