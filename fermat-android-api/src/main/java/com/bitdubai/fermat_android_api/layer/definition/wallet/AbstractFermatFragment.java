@@ -412,6 +412,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
     }
 
+    public void changeTabNotification(String activityCode, int number) throws InvalidParameterException {
+        ((FermatActivityManager)getActivity()).getRuntimeManager().changeTabNumber(appSession.getAppPublicKey(), activityCode, number);
+    }
+
     protected final FermatActivityManager getFermatActivityManager(){
         return ((FermatActivityManager)getActivity());
     }
@@ -560,7 +564,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     public void pushNotification(Notification notification){
-        getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(),notification);
+        getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(), notification);
     }
 
     public void cancelNotification(){
@@ -581,7 +585,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * @throws InvalidParameterException
      */
     public void changeOptionMenuVisibility(int id,boolean visibility) throws InvalidParameterException {
-        changeOptionMenuVisibility(id,visibility,false);
+        changeOptionMenuVisibility(id, visibility, false);
     }
 
     /**
@@ -596,4 +600,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         else getPaintActivtyFeactures().changeOptionMenuVisibility(id,visibility,appSession.getAppPublicKey());
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
+
+
 }
