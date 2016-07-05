@@ -34,24 +34,20 @@ public class DateTimeZone {
      */
     public String getDate(){
 
-        /*String dateTime = "";
-        try {
-            SimpleDateFormat sourceFormat = new SimpleDateFormat(this.formDate);
-            sourceFormat.setTimeZone(TimeZone.getDefault());
-            Date parsed = sourceFormat.parse(this.dateTime);
+        Date parsed = getDateTimeDefaul(TimeZone.getDefault());
+        SimpleDateFormat destFormt = getDateTimeZone(this.timeZone);
+        return destFormt.format(parsed);
 
-            TimeZone tz = TimeZone.getTimeZone(this.timeZone);
-            SimpleDateFormat destFormat = new SimpleDateFormat(this.formDate);
-            destFormat.setTimeZone(tz);
+    }
 
-            dateTime = destFormat.format(parsed);
-        } catch (ParseException e){
-            System.out.print("CBP-API-DateTimeZone: ERROR IN PARSE DATE");
-        }
+    /**
+     * This method returns a date in String of the time zone indicate
+     * @param timeZone
+     * @return to String of date
+     */
+    public String getDate(TimeZone timeZone){
 
-        return dateTime;*/
-
-        Date parsed = getDateTimeDefaul();
+        Date parsed = getDateTimeDefaul(timeZone);
         SimpleDateFormat destFormt = getDateTimeZone(this.timeZone);
         return destFormt.format(parsed);
 
@@ -60,7 +56,8 @@ public class DateTimeZone {
     public String getDateUTC(){
 
         String timeZoneUTC = TimeZone.getTimeZone("UTC").getID();
-        Date parsed = getDateTimeDefaul();
+
+        Date parsed = getDateTimeDefaul(TimeZone.getDefault());
         SimpleDateFormat destFormt = getDateTimeZone(timeZoneUTC);
         return destFormt.format(parsed);
 
@@ -72,16 +69,19 @@ public class DateTimeZone {
      */
     public String getDateTodayUTC(){
 
-        String dateTime = "";
+        String dateText = "";
 
         try {
+
             Date dateTimeToday = UniversalTime.getUTC();
-            dateTime = dateTimeToday.toString();
+            SimpleDateFormat df2 = new SimpleDateFormat(this.formDate);
+            dateText = df2.format(dateTimeToday);
+            
         } catch (CantGetUTCException e){
             System.out.print("CBP-API-DateTimeZone: ERROR GET DATE TODAY IN UTC");
         }
 
-        return dateTime;
+        return dateText;
     }
 
     /**
@@ -102,14 +102,14 @@ public class DateTimeZone {
      * This method returns a date in time zone default
      * @return to Date in Time Zone Default
      */
-    private Date getDateTimeDefaul(){
+    private Date getDateTimeDefaul(TimeZone timeZone){
 
         Date parsed = null;
 
         try {
 
             SimpleDateFormat sourceFormat = new SimpleDateFormat(this.formDate);
-            sourceFormat.setTimeZone(TimeZone.getDefault());
+            sourceFormat.setTimeZone(timeZone);
             parsed = sourceFormat.parse(this.dateTime);
 
         } catch (ParseException e){
