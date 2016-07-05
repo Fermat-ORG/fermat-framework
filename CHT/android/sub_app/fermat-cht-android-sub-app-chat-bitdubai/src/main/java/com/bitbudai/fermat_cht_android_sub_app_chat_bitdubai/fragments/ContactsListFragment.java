@@ -55,6 +55,8 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -224,7 +226,16 @@ public class ContactsListFragment
             if(chatIdentity != null) {
                 List<ChatActorCommunityInformation> con = chatManager
                         .listAllConnectedChatActor(chatIdentity, MAX, offset); //null;//chatManager.getContacts();
+
+                Collections.sort(con, new Comparator<ChatActorCommunityInformation>() {
+                    @Override
+                    public int compare(ChatActorCommunityInformation actorA, ChatActorCommunityInformation actorB) {
+                        return (actorA.getAlias().trim().compareTo(actorB.getAlias().trim()));
+
+                    }
+                });
                 if (con != null) {
+
                     int size = con.size();
                     if (size > 0) {
                         for (ChatActorCommunityInformation conta:con) {
