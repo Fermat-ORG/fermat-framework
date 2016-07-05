@@ -1799,6 +1799,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         public void run() {
                             paintSideMenu(activity, activity.getSideMenu(), appsConnections);
                             paintFooter(activity.getFooter(), appsConnections.getFooterViewPainter());
+                            invalidateTabs(activity.getTabStrip());
                         }
                     });
                 }catch (Exception e){
@@ -1809,6 +1810,38 @@ public abstract class FermatActivity extends AppCompatActivity implements
         });
 
 
+    }
+
+    private void invalidateTabs(TabStrip tabStrip) {
+        if(tabLayout!=null || tabStrip!=null) {
+            List<Tab> tabs = tabStrip.getTabs();
+            int size = tabs.size();
+            String[] tabTitles = new String[size];
+            FermatDrawable[] tabsDrawables = new FermatDrawable[size];
+            final View[] tabsViews = new View[size];
+            for (int i = 0; i < tabs.size(); i++) {
+                Tab tab = tabs.get(i);
+                tabTitles[i] = tab.getLabel();
+                tabsDrawables[i] = tab.getDrawable();
+                FermatView fermatView = tab.getFermatView();
+                if (fermatView != null) {
+                    //ver esto
+                    View view = ResourceLocationSearcherHelper.obtainView(this, fermatView);
+                    tabsViews[i] = view;
+                }
+            }
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                if (tabsViews[i] != null) {
+                    final int finalI = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tabLayout.getTabAt(finalI).setCustomView(tabsViews[finalI]);//.setIcon(ResourceLocationSearcherHelper.obtainDrawable(this,tabsDrawables[i]));
+                        }
+                    });
+                }
+            }
+        }
     }
 
     protected void refreshSideMenu(final AppConnections appConnections){
