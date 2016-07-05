@@ -205,9 +205,9 @@
 
     <!-- Earnings Wizard and Settings pages-->
     <string name="cbw_wizard_earnings_dialog_sub_title">Configure your earnings!</string>
-    <string name="cbw_wizard_earnings_dialog_body">This page lets you assign wallets where your earnings will be deposited</string>
+    <string name="cbw_wizard_earnings_dialog_body">This page lets you assign wallets where your earnings will be deposited while also set the Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
     <string name="cbw_wizard_earning_merchandise_title">Select Earning Wallets</string>
-    <string name="cbw_wizard_earning_merchandise_description">Assign a wallet to <b>every currency pair in the list</b>, your <b>earnings</b> will be deposited in them.</string>
+    <string name="cbw_wizard_earning_merchandise_description">Assign a wallet to <b>every currency pair in the list</b>, your <b>earnings</b> will be deposited in them. Also, set a spread</string>
     <string name="cbw_select_earnings_merchandise">ASSIGN A WALLET TO EACH ITEM</string>
 
     <!-- Providers Wizard and Settings pages -->
@@ -219,9 +219,9 @@
 
     <!-- 'Other Settings' Wizard and Settings pages -->
     <string name="cbw_wizard_other_settings_dialog_sub_title">Configure additional settings!</string>
-    <string name="cbw_wizard_other_settings_dialog_body">This page allows you to configure: \n* Automatic restock of funds to the broker wallet. \n* The Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
+    <string name="cbw_wizard_other_settings_dialog_body">This page allows you to configure the Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
     <string name="cbw_wizard_other_settings_title">Other settings</string>
-    <string name="cbw_wizard_other_settings_description">Set a Spread and Automatic Restock. These settings can be changed later.</string>
+    <string name="cbw_wizard_other_settings_description">Set a value for the Spread. These settings can be changed later.</string>
     <string name="cbw_transaction">Transaction</string>
     <string name="cbw_restock_title">Restock</string>
     <string name="cbw_destock_title">Destock</string>
