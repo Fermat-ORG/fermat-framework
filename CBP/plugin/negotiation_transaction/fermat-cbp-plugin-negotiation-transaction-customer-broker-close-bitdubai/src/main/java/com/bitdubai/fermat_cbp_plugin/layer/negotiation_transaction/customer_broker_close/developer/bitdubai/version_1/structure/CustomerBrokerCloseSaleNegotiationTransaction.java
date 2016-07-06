@@ -168,7 +168,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             }
 
             //CLOSE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.waitForClosing(customerBrokerSaleNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
@@ -220,7 +220,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             System.out.print("\n\n**** 29) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION ****\n");
 
             //CLOSE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.waitForClosing(customerBrokerSaleNegotiation);
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

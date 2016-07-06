@@ -237,7 +237,7 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
             actorConnectionsTable.addFermatEnumFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, linkedIdentity.getActorType(), DatabaseFilterType.EQUAL);
             actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             actorConnectionsTable.addStringFilter    (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
-
+            //TODO: Solucion temporal para el estado de connection del Actor CONNECTED, ya que los datos no se borran de la tabla si existio alguna ves una conexion anterior
             actorConnectionsTable.loadToMemory();
 
             final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();

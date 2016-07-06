@@ -14,24 +14,20 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
-
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,39 +36,39 @@ import java.util.List;
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
 
+
 /**
- * Created by Miguel Payarez (miguel_payarez@hotmail.com) on 7/5/16.
+ * Created by Miguel Payarez (miguel_payarez@hotmail.com) on 05/07/16.
+ * Updated by Nelson Ramirez (nelsonalfo@gmail.com) on 06/07/2016
  */
-public class SettingsFeeManagementFragment extends
-        AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
+public class SettingsFeeManagementFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "SettingsFeeManagement";
 
     //
 
-    private long bitoinFee=0;
-    private String feeOrigin="";
-    private DecimalFormat df=new DecimalFormat("0.00000000");
-
-
+    private long bitcoinFee = 0;
+    private DecimalFormat df = new DecimalFormat("0.00000000");
     CryptoCustomerWalletPreferenceSettings feeSettings;
+
     //UI
-
-
-    private RadioGroup radioButtonGroup;
     private RadioButton radioButtonSlow;
     private RadioButton radioButtonNormal;
     private RadioButton radioButtonFast;
     private FermatTextView feeMinerAmount;
     private Spinner feeOriginSpinner;
+    private Spinner blockchainNetworkSpinner;
 
     // Fermat Managers
     private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
-    public static SettingsFeeManagementFragment newInstance() { return new SettingsFeeManagementFragment(); }
+    public static SettingsFeeManagementFragment newInstance() {
+        return new SettingsFeeManagementFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,73 +83,66 @@ public class SettingsFeeManagementFragment extends
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET, DISABLES_THIS_FRAGMENT, ex);
         }
-        feeSettings=null;
 
         try {
             feeSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-
         } catch (Exception e) {
-            feeSettings = null;
-        }
-
-        if ( feeSettings== null) {
             feeSettings = new CryptoCustomerWalletPreferenceSettings();
-
-
         }
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         configureToolbar();
-
         View layout = inflater.inflate(R.layout.ccw_settings_fee_management, container, false);
 
 
-        radioButtonGroup = (RadioGroup)layout.findViewById(R.id.ccw_radio_button_group);
-        feeMinerAmount=(FermatTextView) layout.findViewById(R.id.ccw_fee_miner_amount);
-        feeOriginSpinner=(Spinner)layout.findViewById(R.id.ccw_fee_origin_spinner);
+        final RadioGroup radioButtonGroup = (RadioGroup) layout.findViewById(R.id.ccw_radio_button_group);
+        feeMinerAmount = (FermatTextView) layout.findViewById(R.id.ccw_fee_miner_amount);
+        feeOriginSpinner = (Spinner) layout.findViewById(R.id.ccw_fee_origin_spinner);
+        blockchainNetworkSpinner = (Spinner) layout.findViewById(R.id.ccw_blockchain_network_type);
 
-        radioButtonSlow=(RadioButton)layout.findViewById(R.id.ccw_radio_button_slow);
-        radioButtonNormal=(RadioButton)layout.findViewById(R.id.ccw_radio_button_normal);
-        radioButtonFast=(RadioButton)layout.findViewById(R.id.ccw_radio_button_fast);
+        radioButtonSlow = (RadioButton) layout.findViewById(R.id.ccw_radio_button_slow);
+        radioButtonNormal = (RadioButton) layout.findViewById(R.id.ccw_radio_button_normal);
+        radioButtonFast = (RadioButton) layout.findViewById(R.id.ccw_radio_button_fast);
 
         feeMinerAmount.setText(satoshiToBtcFormat(BitcoinFee.SLOW.getFee()) + "BTC");
-        bitoinFee=BitcoinFee.SLOW.getFee();
+        bitcoinFee = BitcoinFee.SLOW.getFee();
 
         radioButtonGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 if (checkedId == R.id.ccw_radio_button_slow) {
-                    feeMinerAmount.setText(" "+satoshiToBtcFormat(BitcoinFee.SLOW.getFee()) + " BTC");
-                    bitoinFee=BitcoinFee.SLOW.getFee();
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.SLOW.getFee()) + " BTC");
+                    bitcoinFee = BitcoinFee.SLOW.getFee();
                 } else if (checkedId == R.id.ccw_radio_button_normal) {
-                    feeMinerAmount.setText(" "+satoshiToBtcFormat(BitcoinFee.NORMAL.getFee()) + " BTC");
-                    bitoinFee=BitcoinFee.NORMAL.getFee();
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.NORMAL.getFee()) + " BTC");
+                    bitcoinFee = BitcoinFee.NORMAL.getFee();
                 } else if (checkedId == R.id.ccw_radio_button_fast) {
-                    feeMinerAmount.setText(" "+satoshiToBtcFormat(BitcoinFee.FAST.getFee()) + " BTC");
-                    bitoinFee=BitcoinFee.FAST.getFee();
+                    feeMinerAmount.setText(" " + satoshiToBtcFormat(BitcoinFee.FAST.getFee()) + " BTC");
+                    bitcoinFee = BitcoinFee.FAST.getFee();
                 }
-
             }
-
         });
 
 
-        List<String> feeOriginValues = new ArrayList<String>();
+        List<String> feeOriginValues = new ArrayList<>();
         feeOriginValues.add(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode());
         feeOriginValues.add(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode());
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
-                (getActivity(), R.layout.ccw_spinner_item,feeOriginValues);
-
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.ccw_spinner_item, feeOriginValues);
         dataAdapter.setDropDownViewResource(R.layout.ccw_simple_spinner_dropdown_item);
-
         feeOriginSpinner.setAdapter(dataAdapter);
+
+
+        List<String> blockchainNetworkType = new ArrayList<>();
+        blockchainNetworkType.add(BlockchainNetworkType.REG_TEST.getCode());
+        blockchainNetworkType.add(BlockchainNetworkType.TEST_NET.getCode());
+        blockchainNetworkType.add(BlockchainNetworkType.PRODUCTION.getCode());
+
+        dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.ccw_spinner_item, blockchainNetworkType);
+        dataAdapter.setDropDownViewResource(R.layout.ccw_simple_spinner_dropdown_item);
+        blockchainNetworkSpinner.setAdapter(dataAdapter);
 
 
         final View nextStepButton = layout.findViewById(R.id.ccw_save_fee_button);
@@ -166,29 +155,28 @@ public class SettingsFeeManagementFragment extends
         });
 
 
-        if(feeSettings!=null) {
-
+        if (feeSettings != null) {
             feeOriginSpinner.setSelection(dataAdapter.getPosition(feeSettings.getFeeOrigin().getCode()));
+            blockchainNetworkSpinner.setSelection(dataAdapter.getPosition(feeSettings.getBlockchainNetworkType().getCode()));
             feeMinerAmount.setText(satoshiToBtcFormat(feeSettings.getBitcoinFee().getFee()) + " BTC");
-            selectSpinnerValue(feeSettings.getBitcoinFee().getFee());
-
+            selectRadioButtonsValue(feeSettings.getBitcoinFee().getFee());
         }
 
 
         return layout;
     }
 
-    private void selectSpinnerValue(long bitCoinFee){
+    private void selectRadioButtonsValue(long bitCoinFee) {
 
         if (bitCoinFee == BitcoinFee.SLOW.getFee()) {
             radioButtonSlow.setChecked(true);
             radioButtonNormal.setChecked(false);
             radioButtonFast.setChecked(false);
-        } else if (bitCoinFee == BitcoinFee.NORMAL.getFee()){
+        } else if (bitCoinFee == BitcoinFee.NORMAL.getFee()) {
             radioButtonSlow.setChecked(false);
             radioButtonNormal.setChecked(true);
             radioButtonFast.setChecked(false);
-        }else if(bitCoinFee==BitcoinFee.FAST.getFee()) {
+        } else if (bitCoinFee == BitcoinFee.FAST.getFee()) {
             radioButtonSlow.setChecked(false);
             radioButtonNormal.setChecked(false);
             radioButtonFast.setChecked(true);
@@ -196,13 +184,12 @@ public class SettingsFeeManagementFragment extends
     }
 
 
-
-    private String satoshiToBtcFormat(Long satoshi){
-
+    private String satoshiToBtcFormat(Long satoshi) {
         return df.format(Double.valueOf(satoshi) / 100000000);
 
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -216,32 +203,24 @@ public class SettingsFeeManagementFragment extends
     }
 
     private void saveSettingsAndGoBack() {
-
         try {
-            feeSettings.setBitcoinFee(BitcoinFee.getByFee(bitoinFee));
+            feeSettings.setBitcoinFee(BitcoinFee.getByFee(bitcoinFee));
             feeSettings.setFeeOrigin(FeeOrigin.getByCode(feeOriginSpinner.getSelectedItem().toString()));
-            try {
-                moduleManager.persistSettings(appSession.getAppPublicKey(), feeSettings);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        e);}
+            feeSettings.setBlockchainNetworkType(BlockchainNetworkType.getByCode(blockchainNetworkSpinner.getSelectedItem().toString()));
+
+            moduleManager.persistSettings(appSession.getAppPublicKey(), feeSettings);
 
         } catch (FermatException ex) {
             Toast.makeText(SettingsFeeManagementFragment.this.getActivity(), "There was a problem saving your settings", Toast.LENGTH_SHORT).show();
 
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             else
                 Log.e(TAG, ex.getMessage(), ex);
         }
 
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
-
-
-
-
 }
 
