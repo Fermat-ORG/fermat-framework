@@ -36,12 +36,12 @@ import io.jsonwebtoken.impl.TextCodec;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class SecurityFilter implements Filter {
+public class AdminSecurityFilter implements Filter {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(SecurityFilter.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(AdminSecurityFilter.class));
 
     /**
      * (non-javadoc)
@@ -69,6 +69,7 @@ public class SecurityFilter implements Filter {
         if (authHeader == null || !authHeader.contains("Bearer ")) {
             LOG.error("Missing or invalid Authorization header.");
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
+            return;
         }
 
         try {
@@ -85,6 +86,7 @@ public class SecurityFilter implements Filter {
         catch (final SignatureException e) {
             LOG.error( "Invalid token: "+e.getMessage());
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
+            return;
         }
     }
 
