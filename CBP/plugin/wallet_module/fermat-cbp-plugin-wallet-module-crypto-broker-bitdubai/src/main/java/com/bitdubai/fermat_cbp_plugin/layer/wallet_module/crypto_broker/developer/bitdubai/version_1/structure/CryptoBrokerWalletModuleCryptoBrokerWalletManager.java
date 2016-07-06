@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
@@ -1274,7 +1276,24 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                 final String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
                 final BigDecimal referencePrice = BigDecimal.TEN; //TODO: this is a hardcoded reference price
 
-                this.brokerSubmitOnlineMerchandiseManager.submitMerchandise(referencePrice, cryptoBrokerPublicKey, contractHash, merchandiseCurrency);
+                /**
+                 * SUPER TODO for Nelson or Payarez:
+                 * I will set default values in the transaction, but, this values are required from
+                 * Wallet settings.
+                 */
+                //Predefined values:
+                BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                FeeOrigin feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+                long fee = BitcoinFee.SLOW.getFee();
+                //End of predefined values
+                this.brokerSubmitOnlineMerchandiseManager.submitMerchandise(
+                        referencePrice,
+                        cryptoBrokerPublicKey,
+                        contractHash,
+                        merchandiseCurrency,
+                        blockchainNetworkType,
+                        feeOrigin,
+                        fee);
 
             } else {
                 String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
