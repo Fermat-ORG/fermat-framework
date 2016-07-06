@@ -199,11 +199,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         nodeCatalog.setName(nodeProfile.getName());
         nodeCatalog.setOfflineCounter(0);
         nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-        //Validate if location are available
-        if (nodeProfile.getLocation() != null){
-            nodeCatalog.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
-        }
+        nodeCatalog.setLastLocation(nodeProfile.getLocation());
 
         /*
          * Create statement.

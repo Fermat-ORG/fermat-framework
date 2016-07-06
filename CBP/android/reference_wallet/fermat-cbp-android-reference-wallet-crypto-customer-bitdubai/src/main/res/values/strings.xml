@@ -177,6 +177,7 @@
     <string name="ccw_your_exchange_rate_title">Selected Rate:</string>
     <string name="ccw_currency_to_pay">Currency to Pay</string>
     <string name="ccw_amount_to_pay">Amount to Pay</string>
+
     <string name="ccw_currency_to_buy">Currency to Buy</string>
     <string name="selected_currency">Selected Currency</string>
     <string name="ccw_currency_description">Currency:</string>
@@ -184,6 +185,20 @@
     <string name="cancel">Cancel</string>
     <string name="hint">hint</string>
     <string name="title">Title</string>
+
+
+    <!-- Settings Fee Management -->
+
+    <string name="ccw_fee_miner_speed_1"> SLOW</string>
+    <string name="ccw_fee_miner_speed_2"> NORMAL</string>
+    <string name="ccw_fee_miner_speed_3"> FAST</string>
+    <string name="ccw_fee_miner_value">Fee miner:</string>
+
+    <string name="ccw_fee_speed_text">Select the speed of the confirmation transaction, more speed increse the fee amount </string>
+    <string name="ccw_fee_origin_text">Set if the fee will be take of the bitcoin wallet or include in the transaction</string>
+    <string name="ccw_fee_transaction">FEE TYPE</string>
+    <string name="ccw_fee_confirmation_time">FEE ORIGIN</string>
+
 
 
 

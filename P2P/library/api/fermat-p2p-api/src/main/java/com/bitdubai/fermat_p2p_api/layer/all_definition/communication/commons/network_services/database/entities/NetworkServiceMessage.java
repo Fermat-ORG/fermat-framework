@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication</code> is
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage</code> is
  * the implementation of the message<p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 13/05/2016.
  *
@@ -21,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkServiceMessage extends PackageContent implements Serializable {
+public class NetworkServiceMessage extends PackageContent implements AbstractBaseEntity, Serializable {
 
     private static final long serialVersionUID = 1L;
 
