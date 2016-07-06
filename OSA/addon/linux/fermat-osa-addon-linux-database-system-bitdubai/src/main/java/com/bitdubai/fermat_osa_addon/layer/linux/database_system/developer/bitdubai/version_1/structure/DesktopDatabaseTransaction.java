@@ -80,6 +80,7 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
 
         } catch (CantInsertRecordException | CantUpdateRecordException | CantDeleteRecordException exception) {
 
+            exception.printStackTrace();
             try {
                 if (connection != null)
                     connection.rollback();
@@ -93,6 +94,7 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
             );
         } catch (SQLException exception) {
 
+            exception.printStackTrace();
             try {
                 if (connection != null)
                     connection.rollback();
@@ -107,6 +109,7 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
             );
         } catch (Exception exception) {
 
+            exception.printStackTrace();
             try {
                 if (connection != null)
                     connection.rollback();

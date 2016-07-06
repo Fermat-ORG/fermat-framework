@@ -6,13 +6,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorCallMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorListMsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
@@ -67,15 +67,14 @@ public class ActorListRequestProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        LOG.info("Processing new package received "+packageReceived.getPackageType());
+        LOG.info("Processing new package received " + packageReceived.getPackageType());
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
 
-        ActorListMsgRequest messageContent = null;
-        try {
+        ActorListMsgRequest messageContent = ActorListMsgRequest.parseContent(packageReceived.getContent());
 
-            messageContent = ActorListMsgRequest.parseContent(packageReceived.getContent());
+        try {
 
             /*
              * Create the method call history
@@ -102,7 +101,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
 
             }
 
-        }catch (Exception exception){
+        } catch (Exception exception){
 
             try {
 
@@ -117,7 +116,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
                         exception.getLocalizedMessage(),
                         null,
                         null,
-                        messageContent == null ? null : messageContent.getQueryId()
+                        (messageContent == null ? null : messageContent.getQueryId())
                 );
                 Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_LIST_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
@@ -133,113 +132,119 @@ public class ActorListRequestProcessor extends PackageProcessor {
 
     }
 
-    private List<ActorsCatalog> filterActorsOnline(List<ActorsCatalog>  actorsCatalogs){
-
-        List<ActorsCatalog> actors = new ArrayList<>();
-
-        for(ActorsCatalog actorsCatalog : actorsCatalogs){
-
-            try {
-
-                if(actorsCatalog.getNodeIdentityPublicKey().equals(getNetworkNodePluginRoot().getIdentity().getPublicKey())) {
-
-                    if (getDaoFactory().getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
-                        actors.add(actorsCatalog);
-
-                } else if(isActorOnline(actorsCatalog))
-                    actors.add(actorsCatalog);
-
-            } catch (CantReadRecordDataBaseException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return actors;
-    }
-
     /**
-     * Filter all network service from data base that mach
-     * with the parameters
+     * Filter all actor component profiles from database that match with the given parameters.
+     * We'll use the @clientIdentityPublicKey param to filter the actors who belongs to the client asking.
      *
-     * @param discoveryQueryParameters
-     * @return List<ActorProfile>
+     * @param discoveryQueryParameters parameters of the discovery done by the user.
+     *
+     * @return a list of actor profiles.
      */
-    private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
+    private List<ActorProfile> filterActors(final DiscoveryQueryParameters discoveryQueryParameters,
+                                            final String                   clientIdentityPublicKey ) throws CantReadRecordDataBaseException, InvalidParameterException {
 
-        List<ActorProfile> profileList = new ArrayList<>();
+        Map<String, ActorProfile> profileList = new HashMap<>();
 
-        Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actorsList;
 
         int max    = 10;
         int offset =  0;
 
-        if( discoveryQueryParameters.getMax() != null &&
-                discoveryQueryParameters.getOffset() != null &&
-                discoveryQueryParameters.getMax() > 0 &&
-                discoveryQueryParameters.getOffset() >= 0) {
+        if (discoveryQueryParameters.getMax() != null && discoveryQueryParameters.getMax() > 0)
             max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+
+        if (discoveryQueryParameters.getOffset() != null && discoveryQueryParameters.getOffset() >= 0)
             offset = discoveryQueryParameters.getOffset();
-        }
 
-        if (discoveryQueryParameters.getLocation() != null)
-            actorsList = getDaoFactory().getActorsCatalogDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
+        actorsList = getDaoFactory().getActorsCatalogDao().findAll(discoveryQueryParameters, clientIdentityPublicKey, max, offset);
+
+        if (discoveryQueryParameters.isOnline())
+            for (ActorsCatalog actorsCatalog : actorsList)
+                profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecordAndSetStatus(actorsCatalog));
         else
-            actorsList = getDaoFactory().getActorsCatalogDao().findAll(filters, max, offset);
+            for (ActorsCatalog actorsCatalog : actorsList)
+                profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecord(actorsCatalog));
 
-        List<ActorsCatalog> actors = filterActorsOnline(actorsList);
-
-        for (ActorsCatalog actorsCatalog : actors) {
-
-            if (clientIdentityPublicKey == null || actorsCatalog.getClientIdentityPublicKey() == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
-                ActorProfile actorProfile = new ActorProfile();
-                actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
-                actorProfile.setAlias(actorsCatalog.getAlias());
-                actorProfile.setName(actorsCatalog.getName());
-                actorProfile.setActorType(actorsCatalog.getActorType());
-                actorProfile.setPhoto(actorsCatalog.getPhoto());
-                actorProfile.setExtraData(actorsCatalog.getExtraData());
-                actorProfile.setLocation(actorsCatalog.getLastLocation());
-
-                profileList.add(actorProfile);
-            }
-        }
-
-        return profileList;
-
+        return new ArrayList<>(profileList.values());
     }
 
     /**
-     * Construct data base filter from discovery query parameters
-     *
-     * @param discoveryQueryParameters
-     *
-     * @return Map<String, Object> filters
+     * Build an Actor Profile from an Actor Catalog record.
      */
-    private Map<String, Object> constructFiltersActorTable(DiscoveryQueryParameters discoveryQueryParameters){
+    private ActorProfile buildActorProfileFromActorCatalogRecord(final ActorsCatalog actor){
 
-        Map<String, Object> filters = new HashMap<>();
+        ActorProfile actorProfile = new ActorProfile();
 
-        if (discoveryQueryParameters.getIdentityPublicKey() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, discoveryQueryParameters.getIdentityPublicKey());
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias            (actor.getAlias());
+        actorProfile.setName             (actor.getName());
+        actorProfile.setActorType        (actor.getActorType());
+        actorProfile.setPhoto            (actor.getPhoto());
+        actorProfile.setExtraData        (actor.getExtraData());
+        actorProfile.setLocation         (actor.getLastLocation());
 
-        if (discoveryQueryParameters.getName() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NAME_COLUMN_NAME, discoveryQueryParameters.getName());
-
-        if (discoveryQueryParameters.getAlias() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ALIAS_COLUMN_NAME, discoveryQueryParameters.getAlias());
-
-        if (discoveryQueryParameters.getActorType() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME, discoveryQueryParameters.getActorType());
-
-        if (discoveryQueryParameters.getExtraData() != null)
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME, discoveryQueryParameters.getExtraData());
-
-        return filters;
+        return actorProfile;
     }
 
-    private Boolean isActorOnline(ActorsCatalog actorsCatalog){
+    /**
+     * Build an Actor Profile from an Actor Catalog record and set its status.
+     */
+    private ActorProfile buildActorProfileFromActorCatalogRecordAndSetStatus(final ActorsCatalog actor){
+
+        ActorProfile actorProfile = new ActorProfile();
+
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias            (actor.getAlias());
+        actorProfile.setName             (actor.getName());
+        actorProfile.setActorType        (actor.getActorType());
+        actorProfile.setPhoto            (actor.getPhoto());
+        actorProfile.setExtraData        (actor.getExtraData());
+        actorProfile.setLocation         (actor.getLastLocation());
+
+        actorProfile.setStatus           (isActorOnline(actor));
+
+        return actorProfile;
+    }
+
+    /**
+     * Through this method we're going to determine a status for the actor profile.
+     * First we'll check if the actor belongs to this node:
+     *   if it belongs we'll check directly if he is online in the check-ins table
+     *   if not we'll call to the other node.
+     *
+     * @param actorsCatalog  the record of the profile from the actors catalog table.
+     *
+     * @return an element of the ProfileStatus enum.
+     */
+    private ProfileStatus isActorOnline(ActorsCatalog actorsCatalog) {
+
+        try {
+
+            if(actorsCatalog.getNodeIdentityPublicKey().equals(getNetworkNodePluginRoot().getIdentity().getPublicKey())) {
+
+                if (getDaoFactory().getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
+                    return ProfileStatus.ONLINE;
+                else
+                    return ProfileStatus.OFFLINE;
+
+            } else {
+
+                return isActorOnlineInOtherNode(actorsCatalog);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ProfileStatus.UNKNOWN;
+        }
+    }
+
+    /**
+     * Through this method we're going to determine a status for the actor profile calling another node.
+     *
+     * @param actorsCatalog  the record of the profile from the actors catalog table.
+     *
+     * @return an element of the ProfileStatus enum.
+     */
+    private ProfileStatus isActorOnlineInOtherNode(final ActorsCatalog actorsCatalog) {
 
         try {
 
@@ -258,18 +263,25 @@ public class ActorListRequestProcessor extends PackageProcessor {
                 JsonParser parser = new JsonParser();
                 JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
-                return respondJsonObject.get("isOnline").getAsBoolean();
+                return respondJsonObject.get("isOnline").getAsBoolean() ? ProfileStatus.ONLINE : ProfileStatus.OFFLINE;
 
             } else {
-                return false;
+                return ProfileStatus.UNKNOWN;
             }
 
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
+            return ProfileStatus.UNKNOWN;
         }
-
     }
 
+    /**
+     * Through this method we'll get the node url having in count its node catalog record.
+     *
+     * @param publicKey  of the node.
+     *
+     * @return node's url string.
+     */
     private String getNodeUrl(final String publicKey) {
 
         try {
@@ -283,5 +295,4 @@ public class ActorListRequestProcessor extends PackageProcessor {
             throw new RuntimeException("Problem trying to find the node in the catalog: "+exception.getMessage());
         }
     }
-
 }

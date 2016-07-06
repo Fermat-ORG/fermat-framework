@@ -777,7 +777,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
     }
 
     @Override
-    public void handleActorUnreachable(ActorProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         System.out.println("************ Crypto Payment Request -> FAILURE CONNECTION.");
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());

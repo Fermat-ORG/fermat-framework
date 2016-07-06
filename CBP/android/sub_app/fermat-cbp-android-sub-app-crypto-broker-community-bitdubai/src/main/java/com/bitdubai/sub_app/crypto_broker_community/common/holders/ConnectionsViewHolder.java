@@ -41,7 +41,7 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     public void bind(CryptoBrokerCommunityInformation data) {
         brokerName.setText(data.getAlias());
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
-        brokerLocation.setText("-- / --");
+        brokerLocation.setText(data.getPlace()+" / "+data.getCountry());
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

@@ -19,16 +19,24 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.enums.CryptoCustomerActorConnectionNotificationType;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerSearch;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorConnectionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorConnectionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.exceptions.CantHandleNewsEventException;
@@ -54,18 +62,21 @@ public final class ActorConnectionEventActions {
     private final CryptoCustomerActorConnectionPluginRoot pluginRoot;
     private final Broadcaster                      broadcaster               ;
     private final PluginVersionReference           pluginVersionReference    ;
+    private final CryptoCustomerManager            cryptoCustomerManager;
 
     public ActorConnectionEventActions(final CryptoBrokerManager                     cryptoBrokerNetworkService,
                                        final CryptoCustomerActorConnectionDao        dao                       ,
                                        final CryptoCustomerActorConnectionPluginRoot pluginRoot              ,
                                        final Broadcaster                             broadcaster               ,
-                                       final PluginVersionReference                  pluginVersionReference    ) {
+                                       final PluginVersionReference                  pluginVersionReference,
+                                       final CryptoCustomerManager                   cryptoCustomerManager) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao                        = dao                       ;
         this.pluginRoot = pluginRoot              ;
         this.broadcaster                = broadcaster               ;
         this.pluginVersionReference     = pluginVersionReference    ;
+        this.cryptoCustomerManager      = cryptoCustomerManager     ;
     }
 
     public void handleCryptoBrokerNewsEvent() throws CantHandleNewsEventException {
@@ -73,9 +84,29 @@ public final class ActorConnectionEventActions {
         try {
 
             final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews(Actors.CBP_CRYPTO_CUSTOMER);
+            //I need to know the location of the actors, so I'll need the actors list
+            CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerManager.getSearch();
+            String actorAlias;
+            Location location;
+            List<CryptoCustomerExposingData> cryptoCustomerExposingDataList;
+            for (final CryptoBrokerConnectionRequest request : list){
+                actorAlias = request.getSenderAlias();
+                location = null;
+                try{
+                    cryptoCustomerExposingDataList = cryptoCustomerSearch.getResultAlias(actorAlias,10,0);
+                    for(CryptoCustomerExposingData cryptoCustomerExposingData : cryptoCustomerExposingDataList){
+                        if(cryptoCustomerExposingData.getAlias().equals(actorAlias)){
+                            location = cryptoCustomerExposingData.getLocation();
+                            break;
+                        }
+                    }
+                } catch (CantListCryptoCustomersException e) {
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,e);
+                    location=null;
+                }
+                this.handleRequestConnection(request, Actors.CBP_CRYPTO_BROKER, location);
+            }
 
-            for (final CryptoBrokerConnectionRequest request : list)
-                this.handleRequestConnection(request, Actors.CBP_CRYPTO_BROKER);
 
         } catch(CantListPendingConnectionRequestsException |
                 CantRequestActorConnectionException |
@@ -87,7 +118,7 @@ public final class ActorConnectionEventActions {
 
     }
 
-    public void handleRequestConnection(final CryptoBrokerConnectionRequest request, Actors actorType) throws CantRequestActorConnectionException ,
+    public void handleRequestConnection(final CryptoBrokerConnectionRequest request, Actors actorType, Location location) throws CantRequestActorConnectionException ,
                                                                                                               UnsupportedActorTypeException       ,
                                                                                                               ConnectionAlreadyRequestedException {
 
@@ -98,7 +129,6 @@ public final class ActorConnectionEventActions {
                     actorType
             );
             final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
-
             final CryptoCustomerActorConnection actorConnection = new CryptoCustomerActorConnection(
                     request.getRequestId()       ,
                     linkedIdentity               ,
@@ -107,16 +137,20 @@ public final class ActorConnectionEventActions {
                     request.getSenderImage()     ,
                     connectionState              ,
                     request.getSentTime()        ,
-                    request.getSentTime()
+                    request.getSentTime(),
+                    location
             );
 
             dao.registerActorConnection(actorConnection);
+            dao.persistLocation(actorConnection);
 
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CryptoCustomerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(), fermatBundle);
+
+            //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(), CryptoCustomerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
             cryptoBrokerNetworkService.confirm(request.getRequestId());
 

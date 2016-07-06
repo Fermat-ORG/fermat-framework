@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -493,8 +494,22 @@ public class ChatAdapterView extends LinearLayout {
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
-                contactIconCircular = new BitmapDrawable(getResources(), Utils.getRoundedShape(contactIcon, 100));
+                contactIconCircular = new BitmapDrawable(getResources(), Utils.getRoundedShape(contactIcon, 300));
                 toolbar.setLogo(contactIconCircular);
+
+                for (int i = 0; i < toolbar.getChildCount(); i++) {
+                    View child = toolbar.getChildAt(i);
+                    if (child != null)
+                        if (child.getClass() == ImageView.class) {
+                            ImageView iv2 = (ImageView) child;
+                            if ( iv2.getDrawable() == contactIconCircular ) {
+                                iv2.setAdjustViewBounds(true);
+                                int padding = (int) (5 * getResources().getDisplayMetrics().density);
+                                iv2.setPadding(padding, padding, padding, padding);
+                                break;
+                            }
+                        }
+                }
             }
         }
         //companionLabel.setText(leftName);
