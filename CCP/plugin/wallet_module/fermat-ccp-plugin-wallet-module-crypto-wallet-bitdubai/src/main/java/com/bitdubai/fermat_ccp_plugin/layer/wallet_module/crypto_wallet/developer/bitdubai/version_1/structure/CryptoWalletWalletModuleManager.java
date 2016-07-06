@@ -1548,8 +1548,13 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     @Override
     public List<String> getMnemonicText() throws CantGetMnemonicTextException {
+        //todo this needs to be improved.
         try {
-            return cryptoVaultManager.exportCryptoVaultSeed().getMnemonicCode();
+            List<String> textToShow = new ArrayList<>();
+            textToShow.add("mNemonic code: " + cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase());
+            textToShow.add("Date: " + cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds());
+
+            return textToShow;
         } catch (Exception e) {
             throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
         }
