@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
@@ -42,12 +41,7 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     public void bind(CryptoBrokerCommunityInformation data) {
         brokerName.setText(data.getAlias());
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
-        Location location = data.getLocation();
-        if(location!=null){
-            brokerLocation.setText(location.getLatitude()+" / "+location.getLongitude());
-        } else{
-            brokerLocation.setText("-- / --");
-        }
+        brokerLocation.setText("-- / --");
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {
