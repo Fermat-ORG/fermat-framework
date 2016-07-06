@@ -1,12 +1,14 @@
 package com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.provisory;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatTextViewRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -4147,15 +4149,22 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("CHATS");
 
         //Badge in the tab
-//        Badge fermatDrawable = new Badge("ic_badge");
-//        fermatDrawable.setTestSize(32);
-//        fermatDrawable.setNumber(1);
-//        runtimeTab.setFermatDrawable(fermatDrawable);
-//
-//        TabBadgeView tabBadgeView = new TabBadgeView();
-//        tabBadgeView.setTitle("CHATS");
-//        tabBadgeView.setBadge(fermatDrawable);
-//        runtimeTab.setFermatView(tabBadgeView);
+        Badge fermatDrawable = new Badge("ic_badge");
+        fermatDrawable.setTestSize(32);
+        fermatDrawable.setNumber(1);
+        runtimeTab.setFermatDrawable(fermatDrawable);
+
+        //FermatTextView
+        //todo: josé acá agregale lo tuyo
+        FermatTextViewRuntime fermatTextViewRuntime = new FermatTextViewRuntime();
+        fermatTextViewRuntime.setTitle("CHAT");
+        fermatTextViewRuntime.setFontType(FontType.ROBOTO_REGULAR);
+        fermatTextViewRuntime.setTitleSize(20);
+
+        TabBadgeView tabBadgeView = new TabBadgeView();
+        tabBadgeView.setFermatTextViewRuntime(fermatTextViewRuntime);
+        tabBadgeView.setBadge(fermatDrawable);
+        runtimeTab.setFermatView(tabBadgeView);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

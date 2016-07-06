@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
+
 
 
 /**
