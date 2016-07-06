@@ -22,6 +22,7 @@ import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.d
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_TABLE_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME;
 
 /**
@@ -73,6 +74,7 @@ public class ActorsCatalogTransactionDao extends AbstractBaseDao<ActorsCatalogTr
             actorsCatalogTransaction.setAlias(record.getStringValue(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME));
             actorsCatalogTransaction.setActorType(record.getStringValue(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME));
             actorsCatalogTransaction.setPhoto(Base64.decodeBase64(record.getStringValue(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME)));
+            actorsCatalogTransaction.setThumbnail(Base64.decodeBase64(record.getStringValue(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME)));
             actorsCatalogTransaction.setLastLocation(record.getDoubleValue(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME), record.getDoubleValue(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME));
             actorsCatalogTransaction.setExtraData(record.getStringValue(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME));
             actorsCatalogTransaction.setHostedTimestamp(getTimestampFromLongValue(record.getLongValue(ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME)));
@@ -107,6 +109,7 @@ public class ActorsCatalogTransactionDao extends AbstractBaseDao<ActorsCatalogTr
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME                     , entity.getAlias());
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME                , entity.getActorType());
         databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME                     , Base64.encodeBase64String(entity.getPhoto()));
+        databaseTableRecord.setStringValue(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME                 , Base64.encodeBase64String(entity.getThumbnail()));
 
         if (entity.getLastLocation() != null) {
             databaseTableRecord.setDoubleValue(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME             , entity.getLastLocation().getLatitude());
