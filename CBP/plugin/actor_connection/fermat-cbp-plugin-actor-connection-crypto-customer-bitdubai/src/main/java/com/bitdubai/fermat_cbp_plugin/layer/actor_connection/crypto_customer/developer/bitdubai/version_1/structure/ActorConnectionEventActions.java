@@ -142,14 +142,15 @@ public final class ActorConnectionEventActions {
             );
 
             dao.registerActorConnection(actorConnection);
+            dao.persistLocation(actorConnection);
 
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CryptoCustomerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(), fermatBundle);
-            dao.persistLocation(actorConnection);
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(), CryptoCustomerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+
+            //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(), CryptoCustomerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
             cryptoBrokerNetworkService.confirm(request.getRequestId());
 
