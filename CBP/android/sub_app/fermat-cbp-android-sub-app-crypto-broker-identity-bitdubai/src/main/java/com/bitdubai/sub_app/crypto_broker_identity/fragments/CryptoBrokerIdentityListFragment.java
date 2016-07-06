@@ -17,10 +17,15 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
@@ -66,9 +71,43 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+        registerReceiver(fermatIntentFilter,new MyReceiver());
+
         cleanSessionData();
 
         onRefresh();
+    }
+
+    /**
+     * Receiver class implemented
+     */
+    private class MyReceiver extends FermatBroadcastReceiver{
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
+                    onRefresh();
+                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+
+                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
+                    onRefresh();
+                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+
+            } catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
     }
 
     @Override
@@ -235,19 +274,19 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public void onUpdateViewOnUIThread(String code) {
 
-        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)){
-            onRefresh();
-            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-            emptyListViewsContainer.setVisibility(View.INVISIBLE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-
-        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)){
-            onRefresh();
-            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-            emptyListViewsContainer.setVisibility(View.INVISIBLE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+//        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)){
+//            onRefresh();
+//            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+//            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+//            recyclerView.setVisibility(View.VISIBLE);
+//        }
+//
+//        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)){
+//            onRefresh();
+//            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+//            emptyListViewsContainer.setVisibility(View.INVISIBLE);
+//            recyclerView.setVisibility(View.VISIBLE);
+//        }
 
     }
 
@@ -270,4 +309,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         if(appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null)
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
     }
+
+
 }

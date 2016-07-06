@@ -48,6 +48,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,6 +72,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     protected FermatFragment fermatFragmentType;
     protected S appSession;
     protected R appResourcesProviderManager;
+
+    /**
+     * Receivers
+     */
+    private List<FermatBroadcastReceiver> receivers;
 
     /**
      * OptionMenuListeners
@@ -381,6 +387,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
 
     protected void destroy(){
+        unregisterAllReceivers();
         onDestroy();
         System.gc();
     }
@@ -590,15 +597,28 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
 
+
+
     /**
      * Receivers
      */
     protected void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver){
-        getFrameworkHelpers().registerReceiver(fermatIntentFilter,fermatBroadcastReceiver,appSession.getAppPublicKey());
+        if(receivers==null)receivers = new ArrayList<>();
+        receivers.add(fermatBroadcastReceiver);
+        getFrameworkHelpers().registerReceiver(fermatIntentFilter, fermatBroadcastReceiver, appSession.getAppPublicKey());
     }
 
     protected void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver){
-        getFrameworkHelpers().unregisterReceiver(fermatBroadcastReceiver,appSession.getAppPublicKey());
+        if(receivers!=null) receivers.remove(fermatBroadcastReceiver);
+        getFrameworkHelpers().unregisterReceiver(fermatBroadcastReceiver, appSession.getAppPublicKey());
+    }
+
+    protected void unregisterAllReceivers(){
+        if(receivers!=null) {
+            for (FermatBroadcastReceiver receiver : receivers) {
+                getFrameworkHelpers().unregisterReceiver(receiver, appSession.getAppPublicKey());
+            }
+        }
     }
 
 }
