@@ -38,9 +38,11 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 
 
 /**
- * Created by Miguel Payarez (miguel_payarez@hotmail.com) on 7/5/16.
+ * Created by Miguel Payarez (miguel_payarez@hotmail.com) on 05/07/16.
+ * Updated by Nelson Ramirez (nelsonalfo@gmail.com) on 06/07/2016
  */
-public class SettingsFeeManagementFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> {
+public class SettingsFeeManagementFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "SettingsFeeManagement";
@@ -187,6 +189,7 @@ public class SettingsFeeManagementFragment extends AbstractFermatFragment<Refere
 
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -205,12 +208,7 @@ public class SettingsFeeManagementFragment extends AbstractFermatFragment<Refere
             feeSettings.setFeeOrigin(FeeOrigin.getByCode(feeOriginSpinner.getSelectedItem().toString()));
             feeSettings.setBlockchainNetworkType(BlockchainNetworkType.getByCode(blockchainNetworkSpinner.getSelectedItem().toString()));
 
-            try {
-                moduleManager.persistSettings(appSession.getAppPublicKey(), feeSettings);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+            moduleManager.persistSettings(appSession.getAppPublicKey(), feeSettings);
 
         } catch (FermatException ex) {
             Toast.makeText(SettingsFeeManagementFragment.this.getActivity(), "There was a problem saving your settings", Toast.LENGTH_SHORT).show();
