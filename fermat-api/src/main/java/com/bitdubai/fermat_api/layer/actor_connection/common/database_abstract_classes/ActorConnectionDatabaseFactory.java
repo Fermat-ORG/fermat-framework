@@ -82,6 +82,13 @@ public class ActorConnectionDatabaseFactory {
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
             table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            //Location fields
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE                              , DatabaseDataType.REAL        ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE                             , DatabaseDataType.REAL        ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACCURACY                              , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME                                  , DatabaseDataType.LONG_INTEGER,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE                              , DatabaseDataType.REAL        ,  10, Boolean.FALSE);
+            table.addColumn(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE                       , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
 
             table.addIndex(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_FIRST_KEY_COLUMN);
 

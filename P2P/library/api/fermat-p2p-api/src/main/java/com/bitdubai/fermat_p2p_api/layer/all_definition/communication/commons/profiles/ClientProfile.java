@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.p
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.JsonObject;
 
 /**
  * The Class <code>ClientProfile</code>
@@ -41,6 +42,40 @@ public class ClientProfile extends Profile {
      */
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
+    }
+
+    public static Profile deserialize(final JsonObject jsonObject) {
+
+        ClientProfile clientProfile = new ClientProfile();
+
+        Double latitude = 0.0;
+        Double longitude = 0.0;
+
+        if (jsonObject.get("ipk") != null)
+            clientProfile.setIdentityPublicKey(jsonObject.get("ipk").getAsString());
+
+        if (jsonObject.get("lat") != null)
+            latitude = jsonObject.get("lat").getAsDouble();
+
+        if (jsonObject.get("lng") != null)
+            longitude = jsonObject.get("lng").getAsDouble();
+
+        if (jsonObject.get("det") != null)
+            clientProfile.setDeviceType(jsonObject.get("det").getAsString());
+
+        clientProfile.setLocation(latitude, longitude);
+
+        return clientProfile;
+    }
+
+    @Override
+    public JsonObject serialize() {
+
+        JsonObject jsonObject = super.serialize();
+
+        jsonObject.addProperty("det", deviceType);
+
+        return jsonObject;
     }
 
     /**

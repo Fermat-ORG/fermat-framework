@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

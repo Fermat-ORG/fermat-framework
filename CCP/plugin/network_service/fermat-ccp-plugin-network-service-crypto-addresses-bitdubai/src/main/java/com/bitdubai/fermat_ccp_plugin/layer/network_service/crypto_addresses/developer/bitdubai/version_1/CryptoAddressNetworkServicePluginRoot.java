@@ -505,7 +505,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 //    }
 
     @Override
-    public void handleActorUnreachable(ActorProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         System.out.println("************ Crypto Addresses -> FAILURE CONNECTION.");
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());

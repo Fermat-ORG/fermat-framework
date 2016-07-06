@@ -417,7 +417,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     @Override
-    public void handleActorUnreachable(ActorProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         System.out.println("----------------------------------\n" +
                 "CRYPTO TRANSMISSION FAILED CONNECTION " + "\n" +
                 "--------------------------------------------------------");

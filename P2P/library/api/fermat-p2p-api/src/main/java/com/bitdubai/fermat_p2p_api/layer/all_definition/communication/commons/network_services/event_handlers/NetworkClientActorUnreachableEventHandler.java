@@ -49,7 +49,7 @@ public class NetworkClientActorUnreachableEventHandler implements FermatEventHan
         if (this.networkService.isStarted() &&
                 this.networkService.getProfile().getNetworkServiceType() == fermatEvent.getNetworkServiceType()) {
 
-            this.networkService.handleActorUnreachable(fermatEvent.getActorProfile());
+            this.networkService.handleActorUnreachableEvent(fermatEvent.getActorProfile());
         }
 
     }

@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
@@ -234,14 +235,14 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public void onUpdateViewOnUIThread(String code) {
 
-        if(code.equalsIgnoreCase("cambios_en_el_identity_broker_creado")){
+        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)){
             onRefresh();
             View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
             emptyListViewsContainer.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        if(code.equalsIgnoreCase("cambios_en_el_identity_broker_editado")){
+        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)){
             onRefresh();
             View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
             emptyListViewsContainer.setVisibility(View.INVISIBLE);

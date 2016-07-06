@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	private String ip;
 
-    private NetworkNodeCommunicationDeviceLocation lastLocation;
+    private Location lastLocation;
 
 	private Timestamp lastConnectionTimestamp;
 
@@ -39,7 +40,6 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.lastConnectionTimestamp  = new Timestamp(System.currentTimeMillis());
 		this.offlineCounter           = null;
 		this.lateNotificationsCounter = null;
-        //this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
 	public String getIdentityPublicKey() {
@@ -106,7 +106,7 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.registeredTimestamp = registeredTimestamp;
 	}
 
-    public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+    public Location getLastLocation() {
 
         return lastLocation;
     }
@@ -123,7 +123,7 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
     }
 
 
-    public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+    public void setLastLocation(Location lastLocation) {
         this.lastLocation = lastLocation;
     }
 
