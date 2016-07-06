@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.devel
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
@@ -140,6 +141,22 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
         } catch (final Exception exception) {
 
             throw new CantGetChtActorSearchResult(CantGetChtActorSearchResult.CONTEXT_CONTENT_SEPARATOR, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public ChatExposingData getResult(String publicKey) throws CantListChatException {
+        try {
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            final ChatExposingData chatActorConnections = chatActorSearch.getResult(publicKey);
+
+            return chatActorConnections;
+
+        } catch (final Exception exception) {
+
+            throw new CantListChatException(CantGetChtActorSearchResult.CONTEXT_CONTENT_SEPARATOR, FermatException.wrapException(exception), null, null);
         }
     }
 

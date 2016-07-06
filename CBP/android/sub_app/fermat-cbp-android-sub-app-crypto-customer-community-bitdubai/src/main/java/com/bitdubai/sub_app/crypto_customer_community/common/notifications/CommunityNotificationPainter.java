@@ -3,6 +3,8 @@ package com.bitdubai.sub_app.crypto_customer_community.common.notifications;
 import android.widget.RemoteViews;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+
 
 /**
  * This class contains the basic functionality of the crypto customer community notification painter.
@@ -60,7 +62,7 @@ public class CommunityNotificationPainter extends NotificationPainter {
 
     @Override
     public String getActivityCodeResult() {
-        return null;
+        return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode();
     }
 
     @Override

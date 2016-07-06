@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -327,14 +328,22 @@ public class CryptoCustomerCommunityManager
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+            final List<CryptoCustomerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+            final Set<CryptoCustomerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoCustomerActorConnection ccac : actorConnections)
-                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac));
+            CryptoCustomerExposingData cryptoCustomerExposingData = null;
 
-            return cryptoCustomerCommunityInformationList;
+            for (CryptoCustomerActorConnection connectedActor : connectedActors)
+            {
+                cryptoCustomerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
+                if (cryptoCustomerExposingData != null)
+                    filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoCustomerExposingData.getLocation()));
+                else
+                    filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, null));
+            }
+
+            return new ArrayList<>(filteredConnectedActors);
 
         } catch (final CantListActorConnectionsException e) {
 
