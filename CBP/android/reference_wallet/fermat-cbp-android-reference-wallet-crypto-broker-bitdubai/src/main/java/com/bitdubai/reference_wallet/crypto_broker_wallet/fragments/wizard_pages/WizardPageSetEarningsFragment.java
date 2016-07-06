@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -26,6 +28,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -34,6 +37,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Earnin
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleCheckableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsWizardData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +64,8 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
     private List<EarningsWizardData> earningDataList;
     private List<EarningsWizardData> earningDataListSelected;
     private Map<String, EarningsWizardData> currencyEarningWallet;
+    private int spreadValue = 0;
+
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
@@ -85,6 +91,10 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             //Delete potential previous configurations made by this wizard page
             //So that they can be reconfigured cleanly
             moduleManager.clearEarningPairsFromEarningSettings(appSession.getAppPublicKey());
+
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            moduleManager.clearWalletSetting(appSession.getAppPublicKey());
 
             CryptoBrokerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
@@ -142,6 +152,27 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             }
         });
 
+
+        final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
+        spreadTextView.setText(String.format("%1$s %%", spreadValue));
+
+        final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
+        spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                spreadValue = progress;
+                spreadTextView.setText(String.format("%1$s %%", spreadValue));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
         if (isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -232,6 +263,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             }
 
             final SimpleListDialogFragment<InstalledWallet> dialogFragment = new SimpleListDialogFragment<>();
+            dialogFragment.setCancelable(false);
             dialogFragment.configure("Select a Wallet", filteredList);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
                 @Override
@@ -261,26 +293,45 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
 
     private void saveSettingAndGoNextStep() {
 
-        for (EarningsWizardData data : earningDataListSelected) {
-            if (data.getWalletPublicKey() != null) {
-                try {
+
+        try {
+
+            //Save spread settings
+            CryptoBrokerWalletSettingSpread walletSetting = moduleManager.newEmptyCryptoBrokerWalletSetting();
+            walletSetting.setId(null);
+            walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
+            walletSetting.setSpread(spreadValue);
+            walletSetting.setRestockAutomatic(false);                       //Automatic restock no longer used
+
+            moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
+
+            //Save earning wallets data
+            for (EarningsWizardData data : earningDataListSelected) {
+                if (data.getWalletPublicKey() != null) {
                     moduleManager.addEarningsPairToEarningSettings(
                             data.getEarningCurrency(),
                             data.getLinkedCurrency(),
                             data.getWalletPublicKey(),
                             appSession.getAppPublicKey());
-                } catch (FermatException ex) {
-                    Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-                    if (errorManager != null)
-                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                    else
-                        Log.e(TAG, ex.getMessage(), ex);
                 }
             }
+
+            //Go to next wizard page
+            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
+        } catch (FermatException ex) {
+            Toast.makeText(WizardPageSetEarningsFragment.this.getActivity(), "There was a problem saving the settings. Try again later.", Toast.LENGTH_SHORT).show();
+
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+            else
+                Log.e(TAG, ex.getMessage(), ex);
         }
 
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
     }
 
 

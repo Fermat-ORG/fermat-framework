@@ -34,6 +34,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -220,6 +221,9 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                 moduleManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
 
+            //Set CONFIGURED_DATA to true so that wizard knows its completed.
+            appSession.setData(FragmentsCommons.CONFIGURED_DATA, true);
+
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -227,8 +231,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
-        // TODO
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+        //Go home
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
     }
 
     @Override
@@ -290,8 +294,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
         FiatCurrency[] fiatCurrencies = FiatCurrency.values();
         Collections.addAll(data, fiatCurrencies);
 
-        CryptoCurrency[] cryptoCurrencies = CryptoCurrency.values();
-        Collections.addAll(data, cryptoCurrencies);
+        data.add(CryptoCurrency.BITCOIN);
 
         return data;
     }

@@ -4147,15 +4147,15 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("CHATS");
 
         //Badge in the tab
-        Badge fermatDrawable = new Badge("ic_badge");
-        fermatDrawable.setTestSize(32);
-        fermatDrawable.setNumber(1);
-        runtimeTab.setFermatDrawable(fermatDrawable);
-
-        TabBadgeView tabBadgeView = new TabBadgeView();
-        tabBadgeView.setTitle("CHATS");
-        tabBadgeView.setBadge(fermatDrawable);
-        runtimeTab.setFermatView(tabBadgeView);
+//        Badge fermatDrawable = new Badge("ic_badge");
+//        fermatDrawable.setTestSize(32);
+//        fermatDrawable.setNumber(1);
+//        runtimeTab.setFermatDrawable(fermatDrawable);
+//
+//        TabBadgeView tabBadgeView = new TabBadgeView();
+//        tabBadgeView.setTitle("CHATS");
+//        tabBadgeView.setBadge(fermatDrawable);
+//        runtimeTab.setFermatView(tabBadgeView);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

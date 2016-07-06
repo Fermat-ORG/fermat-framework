@@ -165,6 +165,8 @@ public class CryptoTransaction{
         this.fee = fee;
     }
 
+
+
     public long getBtcAmount() {
         return btcAmount;
     }

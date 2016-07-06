@@ -142,4 +142,23 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
     public void setPlace(String place) {
         this.place = place;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+
+        if (!CryptoCustomerCommunityInformation.class.isAssignableFrom(obj.getClass())) return false;
+
+        final CryptoCustomerCommunitySubAppModuleInformation other = (CryptoCustomerCommunitySubAppModuleInformation) obj;
+
+        return !((this.publicKey == null) ? (other.publicKey != null) : !this.publicKey.equals(other.publicKey));
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.publicKey != null ? this.publicKey.hashCode() : 0);
+        return hash;
+    }
 }

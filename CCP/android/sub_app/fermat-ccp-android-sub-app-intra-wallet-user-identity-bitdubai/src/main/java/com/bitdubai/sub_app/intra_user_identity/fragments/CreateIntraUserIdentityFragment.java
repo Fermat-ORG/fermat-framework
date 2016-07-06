@@ -43,7 +43,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
@@ -541,7 +541,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             public void run() {
                                 try {
 
-                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)0, GeoFrequency.NORMAL);
+                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)0, Frequency.NORMAL);
 
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
@@ -558,10 +558,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                 try {
                                     if (updateProfileImage)
 
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)0,GeoFrequency.NORMAL);
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)0, Frequency.NORMAL);
 
                                     else
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)0,GeoFrequency.NORMAL);
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)0, Frequency.NORMAL);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();

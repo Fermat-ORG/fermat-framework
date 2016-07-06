@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.util.FermatBlockchainNetworkSelector;
 
 
-import org.fermatj.core.Transaction;
-import org.fermatj.core.TransactionOutput;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,7 +109,7 @@ public class DraftTransaction {
      * @return
      */
     public byte[] serialize(){
-        return bitcoinTransaction.fermatSerialize();
+        return bitcoinTransaction.bitcoinSerialize();
     }
 
     @Override
