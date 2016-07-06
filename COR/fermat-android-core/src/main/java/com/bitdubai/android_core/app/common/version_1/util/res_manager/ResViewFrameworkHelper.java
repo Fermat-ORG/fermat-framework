@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatTextViewRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout.TabBadgeView;
 
@@ -28,8 +29,10 @@ public class ResViewFrameworkHelper {
                 LayoutInflater inflater = (LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.custom_tab, null);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_tab_title);
-                fermatTextView.setText(tabBadgeView.getTitle());
-                fermatTextView.setTextSize(tabBadgeView.getTitleSize());
+                FermatTextViewRuntime fermatTextViewRuntime = tabBadgeView.getFermatTextViewRuntime();
+                fermatTextView.setText(fermatTextViewRuntime.getTitle());
+                fermatTextView.setTextSize(fermatTextViewRuntime.getTitleSize());
+                fermatTextView.setFont(fermatTextViewRuntime.getFontType());
                 Drawable drawable = ResourceLocationSearcherHelper.obtainDrawable(context, tabBadgeView.getBadge());
                 View badgeView = view.findViewById(R.id.badge);
                 badgeView.setBackground(drawable);

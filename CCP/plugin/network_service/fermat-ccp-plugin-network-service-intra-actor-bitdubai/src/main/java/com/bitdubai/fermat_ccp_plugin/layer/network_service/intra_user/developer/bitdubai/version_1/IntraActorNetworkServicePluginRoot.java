@@ -55,6 +55,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraActorNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
@@ -308,7 +309,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public void handleActorUnreachable(ActorProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
@@ -888,7 +889,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
             final ActorProfile actorProfile = constructActorProfile(actor);
 
             updateRegisteredActor(
-                    actorProfile
+                    actorProfile,
+                    UpdateTypes.FULL
             );
 
         } catch (final CantUpdateRegisteredActorException e) {

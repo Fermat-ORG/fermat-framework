@@ -254,6 +254,19 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
         }
     }
 
+    public void waitForClosing(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        try {
+            DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
+            DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
+            PurchaseNegotiationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+            recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME, NegotiationStatus.WAITING_FOR_CLOSING.getCode());
+            PurchaseNegotiationTable.updateRecord(recordToUpdate);
+            waitForBrokerUpdateStatusClause(negotiation);
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
     public void waitForBrokerUpdateStatusClause(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
             DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME);
@@ -349,6 +362,10 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                         CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
                         " = '" +
                         NegotiationStatus.WAITING_FOR_BROKER.getCode() +
+                        "' OR " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.WAITING_FOR_CLOSING.getCode() +
                         "' ORDER BY " +
                         CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME +
                         " DESC";

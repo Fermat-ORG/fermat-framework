@@ -73,13 +73,14 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.place = place;
     }
 
-    public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection) {
+    public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection, Location location) {
 
         this.publicKey = actorConnection.getPublicKey();
         this.alias = actorConnection.getAlias();
         this.image = actorConnection.getImage();
         this.connectionState = actorConnection.getConnectionState();
         this.connectionId = actorConnection.getConnectionId();
+        this.location = location;
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerExposingData exposingData) {

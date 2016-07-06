@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -331,8 +332,24 @@ public class CryptoCustomerCommunityManager
 
             final Set<CryptoCustomerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoCustomerActorConnection connectedActor : connectedActors)
-                filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor));
+            CryptoCustomerExposingData cryptoBrokerExposingData;
+            CryptoCustomerCommunitySubAppModuleInformation cryptoCustomerCommunitySubAppModuleInformation;
+
+            for (CryptoCustomerActorConnection connectedActor : connectedActors){
+                cryptoBrokerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
+                if (cryptoBrokerExposingData != null){
+                    cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
+                } else{
+                    cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
+                }
+
+                Location actorLocation = cryptoCustomerCommunitySubAppModuleInformation.getLocation();
+                final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(),actorLocation.getLongitude());
+                cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
+                filteredConnectedActors.add(cryptoCustomerCommunitySubAppModuleInformation);
+
+            }
 
             return new ArrayList<>(filteredConnectedActors);
 
