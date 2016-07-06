@@ -6,6 +6,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile project(':fermat-bch-api')
-    compile project(':fermat-dap-api')
+//    compile project(':fermat-dap-api')
     compile project(':fermat-pip-api')
 }
