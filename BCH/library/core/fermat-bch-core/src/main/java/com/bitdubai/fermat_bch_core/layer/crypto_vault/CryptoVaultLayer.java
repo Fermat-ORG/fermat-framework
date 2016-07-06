@@ -26,9 +26,9 @@ public class CryptoVaultLayer extends AbstractLayer {
 
         try {
 
-            //registerPlugin(new BitcoinAssetVaultPluginSubsystem());
+            registerPlugin(new BitcoinAssetVaultPluginSubsystem());
             registerPlugin(new BitcoinVaultPluginSubsystem());
-            //registerPlugin(new BitcoinWatchOnlyVaultPluginSubsystem());
+            registerPlugin(new BitcoinWatchOnlyVaultPluginSubsystem());
             //registerPlugin(new FermatVaultPluginSubsystem(getFermatContext()));
 
         } catch(CantRegisterPluginException e) {

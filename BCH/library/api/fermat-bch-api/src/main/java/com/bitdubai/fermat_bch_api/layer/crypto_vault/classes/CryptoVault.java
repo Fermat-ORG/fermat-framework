@@ -278,7 +278,7 @@ public abstract class CryptoVault{
      * @param seedCreationTimeInSeconds
      * @throws CantImportSeedException
      */
-    public void importNewVaultSeed(String mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException {
+    public void importSeedFromMnemonicCode(String mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException {
         VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
         vaultSeedGenerator.importSeed(mNemonicCode, seedCreationTimeInSeconds);
 
@@ -288,6 +288,12 @@ public abstract class CryptoVault{
         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
             throw new CantImportSeedException(cantLoadExistingVaultSeed, "new seed was created and saved. But we are unable to re load it from disk." , "IO error");
         }
+
+    }
+
+    public void importSeedFromMnemonicCode(List<String> mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException{
+        String mNemonicPrhase = VaultSeedGenerator.getmNemonicAsString(mNemonicCode);
+        this.importSeedFromMnemonicCode(mNemonicPrhase, seedCreationTimeInSeconds);
     }
 
 

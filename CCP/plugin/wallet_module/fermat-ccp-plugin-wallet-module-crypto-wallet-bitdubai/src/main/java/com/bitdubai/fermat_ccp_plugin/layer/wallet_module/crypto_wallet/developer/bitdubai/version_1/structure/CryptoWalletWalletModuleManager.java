@@ -30,6 +30,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
@@ -1548,8 +1549,13 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     @Override
     public List<String> getMnemonicText() throws CantGetMnemonicTextException {
+        //todo this needs to be improved.
         try {
-            return cryptoVaultManager.exportCryptoVaultSeed().getMnemonicCode();
+            List<String> textToShow = new ArrayList<>();
+            textToShow.add("mNemonic code: " + cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase());
+            textToShow.add("Date: " + cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds());
+
+            return textToShow;
         } catch (Exception e) {
             throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
         }
@@ -1601,8 +1607,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed {
-        //cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
+    public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantImportSeedException {
+       cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date);
     }
 
     @Override

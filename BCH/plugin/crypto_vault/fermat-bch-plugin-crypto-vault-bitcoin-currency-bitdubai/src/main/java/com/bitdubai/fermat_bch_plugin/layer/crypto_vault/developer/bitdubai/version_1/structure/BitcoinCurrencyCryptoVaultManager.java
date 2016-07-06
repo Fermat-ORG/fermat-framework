@@ -112,14 +112,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), false, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         new Thread(vaultKeyHierarchyGenerator).start();
 
-        /**
-         * I will start the process for imported seeds.
-         */
-        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
-            VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
-            new Thread(importedSeedHierarchyGenerator).start();
-
-        }
+        forceImportedSeedToCryptoNetwork();
     }
 
     /**
@@ -695,5 +688,21 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     public ECKey getPrivateKey(Address address) {
         ECKey privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(address);
         return privateKey;
+    }
+
+    /**
+     * Gets previously imported Seeds and request the HierarchyMaintainer to generate keys and pass them to the crypto network
+     * for monitoring.
+     */
+    public void forceImportedSeedToCryptoNetwork() {
+        /**
+         * I will start the process for imported seeds. This will create the VaultHierarchy for each imported seed I found
+         * derive the keys and then passed them to the crypto network.
+         */
+        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
+            VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+            new Thread(importedSeedHierarchyGenerator).start();
+
+        }
     }
 }

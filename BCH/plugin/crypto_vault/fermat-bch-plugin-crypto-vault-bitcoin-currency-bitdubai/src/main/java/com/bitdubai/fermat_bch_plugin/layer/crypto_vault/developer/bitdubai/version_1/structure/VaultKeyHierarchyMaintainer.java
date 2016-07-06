@@ -64,6 +64,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
      */
     private VaultKeyHierarchy vaultKeyHierarchy;
     private boolean isRunning;
+    private boolean shouldRun;
 
     /**
      * platform services variables
@@ -91,11 +92,14 @@ class VaultKeyHierarchyMaintainer implements Agent{
         Thread agentThread = new Thread(agent, VaultKeyHierarchyMaintainer.class.getName());
         agentThread.start();
         this.isRunning = true;
+        //flag to control running status
+        this.shouldRun = true;
     }
 
     @Override
     public void stop() {
-
+        //flag to control running status
+        this.shouldRun = false;
     }
 
     public boolean isRunning(){
@@ -115,7 +119,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
 
         @Override
         public void run() {
-            while (true){
+            while (shouldRun){
                 try {
                     doTheMainTask();
                     Thread.sleep(1000 * 60 * 2);
