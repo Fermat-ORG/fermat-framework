@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
@@ -25,6 +26,7 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings, S
     private boolean isWizardStartActivity = true;
     private BitcoinFee bitcoinFee = BitcoinFee.NORMAL;
     private FeeOrigin feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+    private BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
     public boolean isHomeTutorialDialogEnabled() {return isHomeTutorialDialogEnabled;}
 
@@ -122,5 +124,13 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings, S
 
     public void setFeeOrigin(FeeOrigin feeOrigin) {
         this.feeOrigin = feeOrigin;
+    }
+
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 }
