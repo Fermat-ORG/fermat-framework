@@ -8,7 +8,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -16,6 +18,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
@@ -28,7 +31,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -1271,10 +1273,28 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                 final String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_CURRENCY);
 
                 final CryptoCurrency merchandiseCurrency = CryptoCurrency.getByCode(merchandiseCurrencyCode);
-                final String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+                final String cryptoBrokerPublicKey = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
                 final BigDecimal referencePrice = BigDecimal.TEN; //TODO: this is a hardcoded reference price
 
-                this.brokerSubmitOnlineMerchandiseManager.submitMerchandise(referencePrice, cryptoBrokerPublicKey, contractHash, merchandiseCurrency);
+                CryptoBrokerWalletPreferenceSettings preferenceSettings;
+                try {
+                    preferenceSettings = loadAndGetSettings(cryptoBrokerPublicKey);
+                } catch (Exception e) {
+                    preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+                }
+
+                BlockchainNetworkType blockchainNetworkType = preferenceSettings.getBlockchainNetworkType();
+                FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+                long fee = preferenceSettings.getBitcoinFee().getFee();
+
+                this.brokerSubmitOnlineMerchandiseManager.submitMerchandise(
+                        referencePrice,
+                        cryptoBrokerPublicKey,
+                        contractHash,
+                        merchandiseCurrency,
+                        blockchainNetworkType,
+                        feeOrigin,
+                        fee);
 
             } else {
                 String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key

@@ -70,8 +70,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="ContentDescription"
-                    android:src="@drawable/cht_banner" />
-                <!-- android:src="@drawable/community_banner" -->
+                    android:src="@drawable/cht_banner"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"/>
+
             </RelativeLayout>
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"

@@ -166,7 +166,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
         adapter.setMarketRateList(getActualExchangeRates());
 
-        if (negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER) {
+        if (negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CLOSING) {
             adapter.setFooterListener(this);
             adapter.setClauseListener(this);
         }

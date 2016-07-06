@@ -36,6 +36,9 @@ public class ContactsListAdapter
     private ChatActorCommunitySubAppModuleManager moduleManager;
     List<ChatActorCommunityInformation> filteredData;
     private String filterString;
+    private String cityAddress;
+    private String stateAddress;
+    private String countryAddress;
 
     public ContactsListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
@@ -72,13 +75,20 @@ public class ContactsListAdapter
                     address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
                 }catch(CantCreateAddressException e){
                     address = null;
+                }catch(Exception e){
+                    address = null;
                 }
             }
-            if (address!=null)
-                holder.location.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
-            else
+            if (address!=null){
+                if (address.getState().equals("null")) stateAddress = "";
+                else stateAddress = address.getState() + " ";
+                if (address.getCity().equals("null")) cityAddress = "";
+                else cityAddress = address.getCity() + " ";
+                if (address.getCountry().equals("null")) countryAddress = "";
+                else countryAddress = address.getCountry();
+                holder.location.setText(cityAddress + stateAddress + countryAddress);
+            } else
                 holder.location.setText("Searching...");
-
         }
     }
 
