@@ -44,22 +44,23 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     private Database database;
 
-    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
+    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId) {
+//        public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
         this.pluginDatabaseSystem   = pluginDatabaseSystem;
         this.pluginId               = pluginId;
-        this.database               = database;
+//        this.database               = database;
     }
 
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException {
         try {
-//            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
+//            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
             try {
                 CustomerBrokerNewNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerNewNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
-//                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
-                database = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+//                database = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
