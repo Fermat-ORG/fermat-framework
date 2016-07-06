@@ -55,17 +55,20 @@ dependencies {
    // compile 'org.jboss.weld.servlet:weld-servlet:2.3.1.Final'
    // compile 'org.jboss.weld.se:weld-se-core:2.3.1.Final'
 
-    compile ('javax:javaee-api:7.0')
+    compile 'javax:javaee-api:7.0'
     compile 'org.slf4j:slf4j-log4j12:1.7.13'
 
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-configuration:commons-configuration:1.10'
 
-    compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12')
+    compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12'
     compile 'org.bitlet:weupnp:0.1.4'
 
     compile 'io.jsonwebtoken:jjwt:0.6.0'
     compile 'org.jsoup:jsoup:1.8.3'
+
+    compile 'net.coobird:thumbnailator:0.4.8'
+
 
     // compile 'org.xerial:sqlite-jdbc:3.7.2'
    // compile 'net.kemitix:sqlite-dialect:0.1.0'
