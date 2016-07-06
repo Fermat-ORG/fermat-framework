@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
@@ -53,7 +54,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     // Data
     private List<GrouperItem> openNegotiationList;
 
-    private  View emptyListViewsContainer;
+    private View emptyListViewsContainer;
 
 
     public static OpenNegotiationsTabFragment newInstance() {
@@ -67,6 +68,15 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            CryptoBrokerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            if (settings.isWizardStartActivity()) {
+                changeStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+
+                settings.setIsWizardStartActivity(false);
+                moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+            }
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -231,11 +241,11 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     }
 
-    private void showOrHideEmptyView(){
+    private void showOrHideEmptyView() {
         if (openNegotiationList == null || openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             emptyListViewsContainer.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }

@@ -30,7 +30,6 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
-    private BankMoneyWalletPreferenceSettings walletSettings;
 
     EditText bankName;
 
@@ -52,22 +51,18 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
         //Obtain walletSettings or create new wallet settings if first time opening wallet
-        walletSettings = null;
+        BankMoneyWalletPreferenceSettings walletSettings = null;
         try {
             walletSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
-            walletSettings = null;
-            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+            walletSettings = new BankMoneyWalletPreferenceSettings();
         }
 
-        if (walletSettings == null) {
-            walletSettings = new BankMoneyWalletPreferenceSettings();
-            walletSettings.setIsPresentationHelpEnabled(true);
-            try {
-                moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-            }
+        walletSettings.setIsPresentationHelpEnabled(true);
+        try {
+            moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
 

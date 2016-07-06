@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocati
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
@@ -62,7 +63,7 @@ public class BrowserTabFragment
         implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreDataListener, GeolocationDialog.AdapterCallback {
 
     //Constants
-    private static final int MAX = 15;
+    private static final int MAX = 100;
     protected static final String TAG = "BrowserTabFragment";
 
     //Managers
@@ -112,19 +113,17 @@ public class BrowserTabFragment
         //Check if a default identity is configured
         try {
             identity = moduleManager.getSelectedActorIdentity();
-            if(identity == null)
-                launchActorCreationDialog = true;   //There are no identities in device
-            else {
-                if (appSettings.getLastSelectedIdentityPublicKey() == null)
-                    launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            if (identity == null) {
+                List<CryptoCustomerCommunitySelectableIdentity> identities = moduleManager.listSelectableIdentities();
+                if (identities.isEmpty())
+                    launchActorCreationDialog = true; //There are no identities in device
+                else
+                    launchListIdentitiesDialog = true; //There are identities in device, but none selected
             }
-//
-        } catch (CantGetSelectedActorIdentityException e) {
-            e.printStackTrace();
-////            launchActorCreationDialog = true;   //There are no identities in device
-        } catch (ActorIdentityNotSelectedException e) {
-            e.printStackTrace();
-////            launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException | CantListIdentitiesToSelectException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -171,7 +170,10 @@ public class BrowserTabFragment
             }
         });
 
-        launchPresentationDialog();
+        if (identity == null)
+            launchPresentationDialog();
+        else
+            onRefresh();
     }
 
     @SuppressWarnings("deprecation")
@@ -296,7 +298,7 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -362,7 +364,7 @@ public class BrowserTabFragment
 
         try {
             offset = pos;
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias,  MAX, offset);
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias, MAX, offset);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -410,6 +412,23 @@ public class BrowserTabFragment
 
     private void launchPresentationDialog() {
         try {
+            DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    try {
+                        identity = moduleManager.getSelectedActorIdentity();
+                        if (identity == null)
+                            getActivity().onBackPressed();
+                        else {
+                            invalidate();
+                            onRefresh();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
             if (launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
@@ -420,50 +439,22 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_ccc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_ccc_launch_action_creation_name_right)
-                        .setIsCheckEnabled(true)
+                        .setIsCheckEnabled(false)
                         .build();
 
-                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            identity = moduleManager.getSelectedActorIdentity();
-                            if(identity == null)
-                                getActivity().onBackPressed();
-                            else {
-                                invalidate();
-                            }
-//                        } catch (CantGetSelectedActorIdentityException e) {
-//                            e.printStackTrace();
-//                        } catch (ActorIdentityNotSelectedException e) {
-//                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-//                        invalidate();
-//                        onRefresh();
-                    }
-                });
+                presentationDialog.setOnDismissListener(onDismissListener);
                 presentationDialog.show();
+
             } else if (launchListIdentitiesDialog) {
                 ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-                listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
 
-                        if(appSettings.getLastSelectedIdentityPublicKey() == null)
-                            getActivity().onBackPressed();
-                        else {
-                            invalidate();
-                        }
-//                        onRefresh();
-                    }
-                });
+                listIdentitiesDialog.setOnDismissListener(onDismissListener);
                 listIdentitiesDialog.show();
-//            } else {
-//                invalidate();
-//                onRefresh();
+
+            } else {
+                onRefresh();
             }
+
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();

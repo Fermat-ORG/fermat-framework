@@ -3,10 +3,10 @@ package org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
@@ -61,7 +61,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager, Serializabl
      * @param assetRedeemPointActorprofileImage Referred to the Identity profileImage
      * @throws CantCreateActorRedeemPointException
      */
-    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, String contactInformation, String countryName, String cityName, int accuracy, Frequency frequency) throws CantCreateActorRedeemPointException;
+    void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, String contactInformation, String countryName, String cityName, int accuracy, GeoFrequency frequency) throws CantCreateActorRedeemPointException;
 
     /**
      * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service

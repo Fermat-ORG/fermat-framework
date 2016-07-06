@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
@@ -20,7 +20,7 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     private final byte[] profileImage;
     private final ExposureLevel exposureLevel;
     private long   accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
 
     public CryptoCustomerIdentityInformationImpl(final String alias,
@@ -28,7 +28,7 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
                                                  final byte[] profileImage,
                                                  final ExposureLevel exposureLevel,
                                                  final long accuracy,
-                                                 final Frequency frequency){
+                                                 final GeoFrequency frequency){
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -37,7 +37,7 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
         this.frequency = frequency;
     }
 
-    public CryptoCustomerIdentityInformationImpl(CryptoCustomerIdentityInformation identityInfo, int accuracy, Frequency frequency) {
+    public CryptoCustomerIdentityInformationImpl(CryptoCustomerIdentityInformation identityInfo, int accuracy, GeoFrequency frequency) {
         this.alias = identityInfo.getAlias();
         this.publicKey = identityInfo.getPublicKey();
         this.profileImage = identityInfo.getProfileImage();
@@ -72,7 +72,7 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     }
 
     @Override
-    public Frequency getFrequency() {
+    public GeoFrequency getFrequency() {
         return frequency;
     }
 

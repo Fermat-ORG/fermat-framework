@@ -2,7 +2,7 @@ package org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
@@ -44,7 +44,7 @@ public interface IdentityAssetUserManager extends FermatManager, Serializable {
     IdentityAssetUser createNewIdentityAssetUser(String alias,
                                                  byte[] profileImage,
                                                  int accuracy,
-                                                 Frequency frequency) throws CantCreateNewIdentityAssetUserException;
+                                                 GeoFrequency frequency) throws CantCreateNewIdentityAssetUserException;
 
     /**
      * The method <code>updateIdentityAssetUser</code> change a identity information data
@@ -58,7 +58,7 @@ public interface IdentityAssetUserManager extends FermatManager, Serializable {
                                  String identityAlias,
                                  byte[] profileImage,
                                  int accuracy,
-                                 Frequency frequency) throws CantUpdateIdentityAssetUserException;
+                                 GeoFrequency frequency) throws CantUpdateIdentityAssetUserException;
 
     /**
      * The method <code>hasAssetUserIdentity</code> returns if has a intra user identity created
@@ -70,6 +70,6 @@ public interface IdentityAssetUserManager extends FermatManager, Serializable {
 
     int getAccuracyDataDefault();
 
-    Frequency getFrequencyDataDefault();
+    GeoFrequency getFrequencyDataDefault();
 
 }

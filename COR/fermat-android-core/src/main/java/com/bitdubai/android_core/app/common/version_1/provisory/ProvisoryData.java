@@ -68,51 +68,51 @@ public class ProvisoryData {
         item2.setPosition(0);
         lstIdentities.add(item2);
 
-        installedSubApp = new InstalledSubApp(
-                SubApps.DAP_ASSETS_IDENTITY_ISSUER,
-                null,
-                null,
-                "sub-app-asset-identity-issuer",
-                "Asset Issuers",
-                SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode(),
-                "sub-app-asset-identity-issuer",
-                new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
-
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.asset_issuer_identity);
-        item2.setPosition(1);
-        lstIdentities.add(item2);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER,
-                null,
-                null,
-                "sub-app-asset-identity-user",
-                "Asset Users",
-                SubAppsPublicKeys.DAP_IDENTITY_USER.getCode(),
-                "sub-app-asset-identity-user",
-                new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
-
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.asset_user_identity);
-        item2.setPosition(2);
-        lstIdentities.add(item2);
-        installedSubApp = new InstalledSubApp(
-                SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY,
-                null,
-                null,
-                "sub-app-asset-identity-redeem-point",
-                "Redeem Points",
-                SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode(),
-                "sub-app-asset-identity-redeem-point",
-                new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
-
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.redeem_point_identity);
-        item2.setPosition(3);
-        lstIdentities.add(item2);
-
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.DAP_ASSETS_IDENTITY_ISSUER,
+//                null,
+//                null,
+//                "sub-app-asset-identity-issuer",
+//                "Asset Issuers",
+//                SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode(),
+//                "sub-app-asset-identity-issuer",
+//                new Version(1, 0, 0),
+//                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
+//
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.asset_issuer_identity);
+//        item2.setPosition(1);
+//        lstIdentities.add(item2);
+//        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_IDENTITY_USER,
+//                null,
+//                null,
+//                "sub-app-asset-identity-user",
+//                "Asset Users",
+//                SubAppsPublicKeys.DAP_IDENTITY_USER.getCode(),
+//                "sub-app-asset-identity-user",
+//                new Version(1, 0, 0),
+//                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
+//
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.asset_user_identity);
+//        item2.setPosition(2);
+//        lstIdentities.add(item2);
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.DAP_ASSETS_REDEEM_POINT_IDENTITY,
+//                null,
+//                null,
+//                "sub-app-asset-identity-redeem-point",
+//                "Redeem Points",
+//                SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode(),
+//                "sub-app-asset-identity-redeem-point",
+//                new Version(1, 0, 0),
+//                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
+//
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.redeem_point_identity);
+//        item2.setPosition(3);
+//        lstIdentities.add(item2);
+//
         installedSubApp = new InstalledSubApp(
                 SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                 null,
@@ -166,77 +166,77 @@ public class ProvisoryData {
 
 
         //ART Identities
-        installedSubApp = new InstalledSubApp(
-                SubApps.ART_ARTIST_IDENTITY,
-                null,
-                null,
-                "sub_app_art_artist_identity",
-                "Artist Identity",
-                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
-                "sub_app_art_artist_identity",
-                new Version(1, 0, 0),
-                Platforms.ART_PLATFORM,
-                AppsStatus.DEV);
-
-        item2 = new Item(installedSubApp);
-//        item2.setIconResource(R.drawable.subapp_art_artist_icon);
-        item2.setPosition(7);
-        lstIdentities.add(item2);
-
-        installedSubApp = new InstalledSubApp(
-                SubApps.ART_FAN_IDENTITY,
-                null,
-                null,
-                "sub_app_art_fan_identity",
-                "Art Fan Identity",
-                SubAppsPublicKeys.ART_FAN_IDENTITY.getCode(),
-                "sub_app_art_fan_identity",
-                new Version(1,0,0),
-                Platforms.ART_PLATFORM,
-                AppsStatus.DEV);
-
-
-
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.subapp_art_fan_icon);
-        item2.setPosition(8);
-        lstIdentities.add(item2);
-
-
-        installedSubApp = new InstalledSubApp(
-                SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
-                null,
-                null,
-                "sub_app_tky_artist_identity",
-                "Tokenly Artist",
-                SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(),
-                "sub_app_tky_artist_identity",
-                new Version(1, 0, 0),
-                Platforms.TOKENLY,
-                AppsStatus.DEV);
-
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.subapp_tky_artist_icon);
-        item2.setPosition(9);
-        lstIdentities.add(item2);
-
-
-
-        installedSubApp = new InstalledSubApp(
-                SubApps.TKY_FAN_IDENTITY_SUB_APP,
-                null,
-                null,
-                "tky_fan_sub_app",
-                "Tokenly Fan",
-                "sub_app_tky_fan_create_identity",
-                "tky_fan_sub_app",
-                new Version(1,0,0),
-                Platforms.TOKENLY,
-                AppsStatus.DEV);
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.subapp_tky_fan_icon);
-        item2.setPosition(10);
-        lstIdentities.add(item2);
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.ART_ARTIST_IDENTITY,
+//                null,
+//                null,
+//                "sub_app_art_artist_identity",
+//                "Artist Identity",
+//                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+//                "sub_app_art_artist_identity",
+//                new Version(1, 0, 0),
+//                Platforms.ART_PLATFORM,
+//                AppsStatus.DEV);
+//
+//        item2 = new Item(installedSubApp);
+////        item2.setIconResource(R.drawable.subapp_art_artist_icon);
+//        item2.setPosition(7);
+//        lstIdentities.add(item2);
+//
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.ART_FAN_IDENTITY,
+//                null,
+//                null,
+//                "sub_app_art_fan_identity",
+//                "Art Fan Identity",
+//                SubAppsPublicKeys.ART_FAN_IDENTITY.getCode(),
+//                "sub_app_art_fan_identity",
+//                new Version(1,0,0),
+//                Platforms.ART_PLATFORM,
+//                AppsStatus.DEV);
+//
+//
+//
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.subapp_art_fan_icon);
+//        item2.setPosition(8);
+//        lstIdentities.add(item2);
+//
+//
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
+//                null,
+//                null,
+//                "sub_app_tky_artist_identity",
+//                "Tokenly Artist",
+//                SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(),
+//                "sub_app_tky_artist_identity",
+//                new Version(1, 0, 0),
+//                Platforms.TOKENLY,
+//                AppsStatus.DEV);
+//
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.subapp_tky_artist_icon);
+//        item2.setPosition(9);
+//        lstIdentities.add(item2);
+//
+//
+//
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.TKY_FAN_IDENTITY_SUB_APP,
+//                null,
+//                null,
+//                "tky_fan_sub_app",
+//                "Tokenly Fan",
+//                "sub_app_tky_fan_create_identity",
+//                "tky_fan_sub_app",
+//                new Version(1,0,0),
+//                Platforms.TOKENLY,
+//                AppsStatus.DEV);
+//        item2 = new Item(installedSubApp);
+//        item2.setIconResource(R.drawable.subapp_tky_fan_icon);
+//        item2.setPosition(10);
+//        lstIdentities.add(item2);
 
 
 
@@ -273,52 +273,52 @@ public class ProvisoryData {
         item1.setPosition(0);
         lstCommunities.add(item1);
 
-        installedSubApp = new InstalledSubApp(
-                SubApps.DAP_ASSETS_COMMUNITY_ISSUER,
-                null,
-                null,
-                "sub-app-asset-community-issuer",
-                "Asset Issuers",
-                SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(),
-                "sub-app-asset-community-issuer",
-                new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
-
-        item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.asset_issuer_comunity);
-        item1.setPosition(1);
-        lstCommunities.add(item1);
-
-        installedSubApp = new InstalledSubApp(
-                SubApps.DAP_ASSETS_COMMUNITY_USER,
-                null,
-                null,
-                "sub-app-asset-community-user",
-                "Asset Users",
-                SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode(),
-                "sub-app-asset-community-user",
-                new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
-
-        item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.asset_user_comunity);
-        item1.setPosition(2);
-        lstCommunities.add(item1);
-        installedSubApp = new InstalledSubApp(
-                SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT,
-                null,
-                null,
-                "sub-app-asset-community-redeem-point",
-                "Redeem Points",
-                SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode(),
-                "sub-app-asset-community-redeem-point",
-                new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
-
-        item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.reddem_point_community);
-        item1.setPosition(3);
-        lstCommunities.add(item1);
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.DAP_ASSETS_COMMUNITY_ISSUER,
+//                null,
+//                null,
+//                "sub-app-asset-community-issuer",
+//                "Asset Issuers",
+//                SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(),
+//                "sub-app-asset-community-issuer",
+//                new Version(1, 0, 0),
+//                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
+//
+//        item1 = new Item(installedSubApp);
+//        item1.setIconResource(R.drawable.asset_issuer_comunity);
+//        item1.setPosition(1);
+//        lstCommunities.add(item1);
+//
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.DAP_ASSETS_COMMUNITY_USER,
+//                null,
+//                null,
+//                "sub-app-asset-community-user",
+//                "Asset Users",
+//                SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode(),
+//                "sub-app-asset-community-user",
+//                new Version(1, 0, 0),
+//                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
+//
+//        item1 = new Item(installedSubApp);
+//        item1.setIconResource(R.drawable.asset_user_comunity);
+//        item1.setPosition(2);
+//        lstCommunities.add(item1);
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT,
+//                null,
+//                null,
+//                "sub-app-asset-community-redeem-point",
+//                "Redeem Points",
+//                SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode(),
+//                "sub-app-asset-community-redeem-point",
+//                new Version(1, 0, 0),
+//                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
+//
+//        item1 = new Item(installedSubApp);
+//        item1.setIconResource(R.drawable.reddem_point_community);
+//        item1.setPosition(3);
+//        lstCommunities.add(item1);
 
         installedSubApp = new InstalledSubApp(
                 SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
@@ -353,39 +353,39 @@ public class ProvisoryData {
         lstCommunities.add(item1);
 
         //ART communities
-        installedSubApp = new InstalledSubApp(
-                SubApps.ART_FAN_COMMUNITY,
-                null,
-                null,
-                "sub_app_art_fan_community",
-                "Fans",
-                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
-                "sub_app_art_fan_community",
-                new Version(1, 0, 0),
-                Platforms.ART_PLATFORM,
-                AppsStatus.DEV);
-
-        item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.communities_bar);
-        item1.setPosition(6);
-        lstCommunities.add(item1);
-
-        installedSubApp = new InstalledSubApp(
-                SubApps.ART_ARTIST_COMMUNITY,
-                null,
-                null,
-                "sub_app_art_artist_community",
-                "Artist",
-                SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
-                "sub_app_art_artist_community",
-                new Version(1, 0, 0),
-                Platforms.ART_PLATFORM,
-                AppsStatus.ALPHA);
-
-        item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.artist_banner);
-        item1.setPosition(6);
-        lstCommunities.add(item1);
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.ART_FAN_COMMUNITY,
+//                null,
+//                null,
+//                "sub_app_art_fan_community",
+//                "Fans",
+//                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
+//                "sub_app_art_fan_community",
+//                new Version(1, 0, 0),
+//                Platforms.ART_PLATFORM,
+//                AppsStatus.DEV);
+//
+//        item1 = new Item(installedSubApp);
+//        item1.setIconResource(R.drawable.communities_bar);
+//        item1.setPosition(6);
+//        lstCommunities.add(item1);
+//
+//        installedSubApp = new InstalledSubApp(
+//                SubApps.ART_ARTIST_COMMUNITY,
+//                null,
+//                null,
+//                "sub_app_art_artist_community",
+//                "Artist",
+//                SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
+//                "sub_app_art_artist_community",
+//                new Version(1, 0, 0),
+//                Platforms.ART_PLATFORM,
+//                AppsStatus.ALPHA);
+//
+//        item1 = new Item(installedSubApp);
+//        item1.setIconResource(R.drawable.artist_banner);
+//        item1.setPosition(6);
+//        lstCommunities.add(item1);
 
 
         //CHT communities

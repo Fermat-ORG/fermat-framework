@@ -341,7 +341,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

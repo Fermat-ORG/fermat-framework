@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
@@ -530,6 +532,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
 
             businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
+
+            businessTransactionRecord.setFee(BitcoinFee.NORMAL.getFee()); // TODO: Por favor sacar esto de las clausulas de la negociacion
+            businessTransactionRecord.setFeeOrigin(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT); // TODO: Por favor sacar esto de las clausulas de la negociacion
 
             return businessTransactionRecord;
 

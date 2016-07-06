@@ -204,7 +204,8 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                     public void run() {
                         saveSettings(!checkbox.isChecked());
                         if(checkbox.isChecked()){
-                            getRuntimeManager().changeStartActivity(Activities.CCP_DESKTOP.getCode());
+                            Log.i(TAG,"Starting desktop");
+                            getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),Activities.CCP_DESKTOP.getCode());
                         }
                     }
                 }).start();
@@ -214,7 +215,6 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                 doNext();
 
             }
-        } else if(id==R.id.checkbox){
         }
     }
 
