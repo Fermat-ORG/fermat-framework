@@ -29,6 +29,7 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
     private final CryptoCurrency cryptoCurrency;
     private long fee ;
     private FeeOrigin feeOrigin;
+    private final long total;
 
     public CryptoWalletTransactionRecordImpl(final UUID transactionId,
                                              final UUID requestId,
@@ -44,7 +45,7 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
                                              final String memo,
                                              final BlockchainNetworkType blockchainNetworkType, CryptoCurrency cryptoCurrency,
                                              final long fee,
-                                             final FeeOrigin feeOrigin ) {
+                                             final FeeOrigin feeOrigin, long total) {
 
         this.transactionId      = transactionId     ;
         this.requestId          = requestId         ;
@@ -63,6 +64,7 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
         this.fee = fee;
         this.feeOrigin = feeOrigin;
 
+        this.total = total;
     }
 
     @Override
@@ -113,6 +115,11 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
     @Override
     public long getAmount() {
         return amount;
+    }
+
+    @Override
+    public long getTotal() {
+        return this.total;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class TransactionCompleteInformation {
                     cryptoTransaction.getBlockchainNetworkType(),
                     cryptoTransaction.getCryptoCurrency(),
                     FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS,
-                    cryptoTransaction.getFee());
+                    cryptoTransaction.getFee(), cryptoTransaction.getCryptoAmount());
 
         } catch (CantGetCryptoAddressBookRecordException e) {
 

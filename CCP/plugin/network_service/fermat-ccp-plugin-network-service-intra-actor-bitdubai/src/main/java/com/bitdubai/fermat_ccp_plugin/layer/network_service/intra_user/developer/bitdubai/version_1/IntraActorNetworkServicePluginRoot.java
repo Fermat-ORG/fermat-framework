@@ -179,10 +179,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
 
-                    System.out.println("----------------------------\n" +
-                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:"
-                            + "\n-------------------------------------------------");
-
                     actorNetworkServiceRecord.setFlagReadead(false);
                     incomingNotificationsDao.createNotification(actorNetworkServiceRecord);
 

@@ -36,6 +36,7 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord,Bitcoin
     private final CryptoCurrency cryptoCurrency;
     private long fee ;
     private FeeOrigin feeOrigin;
+    private  long Total;
 
     public TransactionWrapper(final UUID transactionId,
                               final String actorFromPublicKey,
@@ -53,7 +54,8 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord,Bitcoin
                               final CryptoStatus cryptoStatus,
                               final BlockchainNetworkType blockchainNetworkType, CryptoCurrency cryptoCurrency,
                               final long fee,
-                              final FeeOrigin feeOrigin) {
+                              final FeeOrigin feeOrigin,
+                              final long Total) {
 
         this.transactionId      = transactionId     ;
         this.actorFromPublicKey = actorFromPublicKey;
@@ -73,6 +75,7 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord,Bitcoin
         this.cryptoCurrency = cryptoCurrency;
         this.feeOrigin = feeOrigin;
         this.fee = fee;
+        this.Total = Total;
     }
 
     @Override
@@ -146,6 +149,11 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord,Bitcoin
     @Override
     public long getAmount() {
         return amount;
+    }
+
+    @Override
+    public long getTotal() {
+        return Total;
     }
 
     @Override
