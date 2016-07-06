@@ -1,5 +1,5 @@
 <resources>
-<style name="cbw_radionbutton"
+<style name="ccw_radionbutton"
     parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
     <item name="android:button">@drawable/ccw_radiobutton_drawable</item>
 </style>

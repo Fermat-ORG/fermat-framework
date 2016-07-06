@@ -68,7 +68,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatInd
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingFee;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyBankAccountException;
@@ -252,13 +251,6 @@ public interface CryptoBrokerWalletModuleManager
     CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting()
             throws CantNewEmptyCryptoBrokerWalletSettingException;
 
-    /**
-     * @return
-     *
-     * @throws CantNewEmptyCryptoBrokerWalletSettingException
-     */
-    CryptoBrokerWalletSettingFee newCryptoBrokerWalletSettingFee()
-            throws CantNewEmptyCryptoBrokerWalletSettingException;
 
     /**
      * @return
@@ -322,21 +314,6 @@ public interface CryptoBrokerWalletModuleManager
     void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread, String publicKeyWalletCryptoBrokerInstall)
             throws CantSaveCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
-
-    /**
-     * @param cryptoBrokerWalletSettingfee
-     * @param publicKeyWalletCryptoBrokerInstall
-     *
-     * @throws CantSaveCryptoBrokerWalletSettingException
-     * @throws CryptoBrokerWalletNotFoundException
-     * @throws CantGetCryptoBrokerWalletSettingException
-     */
-    void saveWalletSetting(CryptoBrokerWalletSettingFee cryptoBrokerWalletSettingfee, String publicKeyWalletCryptoBrokerInstall)
-            throws CantSaveCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
-
-
-
-
     /**
      * @param publicKeyWalletCryptoBrokerInstall
      *
@@ -344,10 +321,6 @@ public interface CryptoBrokerWalletModuleManager
      * @throws CryptoBrokerWalletNotFoundException
      * @throws CantGetCryptoBrokerWalletSettingException
      */
-
-
-
-
     void clearWalletSetting(String publicKeyWalletCryptoBrokerInstall)
             throws CantClearCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
@@ -616,18 +589,6 @@ public interface CryptoBrokerWalletModuleManager
             throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
 
-    /**
-     * This method load the instance saveCryptoBrokerWalletSettingFee
-     *
-     * @param walletPublicKey the broker wallet public key
-     *
-     * @return the object with the spread and other wallet settings
-     *
-     * @throws CantGetCryptoBrokerWalletSettingException
-     * @throws CryptoBrokerWalletNotFoundException
-     */
-    CryptoBrokerWalletSettingFee getCryptoBrokerWalletSettingFee(String walletPublicKey)
-            throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
 
     /**

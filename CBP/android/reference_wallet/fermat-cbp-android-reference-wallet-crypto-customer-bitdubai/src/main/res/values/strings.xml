@@ -189,9 +189,15 @@
 
     <!-- Settings Fee Management -->
 
-    <string name="ccw_fee_miner">Send BTC speed</string>
-    <string name="ccw_fee_miner_value">Fee miner value:</string>
-    <string name="ccw_miner_confirmation_time">Fee origin</string>
+    <string name="ccw_fee_miner_speed_1"> SLOW</string>
+    <string name="ccw_fee_miner_speed_2"> NORMAL</string>
+    <string name="ccw_fee_miner_speed_3"> FAST</string>
+    <string name="ccw_fee_miner_value">Fee miner:</string>
+
+    <string name="ccw_fee_speed_text">Select the speed of the confirmation transaction, more speed increse the fee amount </string>
+    <string name="ccw_fee_origin_text">Set if the fee will be take of the bitcoin wallet or include in the transaction</string>
+    <string name="ccw_fee_transaction">FEE TYPE</string>
+    <string name="ccw_fee_confirmation_time">FEE ORIGIN</string>
 
 
 

@@ -28,10 +28,12 @@ public interface CryptoBrokerWalletSetting {
     /**
      * This method load the instance saveCryptoBrokerWalletSpreadSetting
      * @param
-     * @return CryptoBrokerWalletSettingSpread
+     * @return CryptoBrokerWalletSetting
      * @exception CantSaveCryptoBrokerWalletSettingException
      */
     CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting() throws CantGetCryptoBrokerWalletSettingException;
+
+
 
     /**
      * This method save the instance CryptoBrokerWalletAssociatedSetting
