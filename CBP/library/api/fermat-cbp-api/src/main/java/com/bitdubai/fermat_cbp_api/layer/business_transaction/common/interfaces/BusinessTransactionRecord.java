@@ -63,6 +63,7 @@ public class BusinessTransactionRecord {
     private String actorPublicKey;
 
     private long fee ;
+
     private FeeOrigin feeOrigin;
 
     //Getters

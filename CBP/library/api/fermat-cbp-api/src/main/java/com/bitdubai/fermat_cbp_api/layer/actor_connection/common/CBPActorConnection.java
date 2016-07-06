@@ -1,19 +1,21 @@
-package com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils;
+package com.bitdubai.fermat_cbp_api.layer.actor_connection.common;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.common.CBPActorConnection;
 
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoCustomerActorConnection</code>
- * represents an actor connection for the crypto broker actor.
- * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/07/16.
  */
-public final class CryptoCustomerActorConnection
-        extends CBPActorConnection<CryptoCustomerLinkedActorIdentity> {
+public abstract class CBPActorConnection<T extends LinkedActorIdentity> extends ActorConnection<T> {
+
+    /**
+     * Represents the actor last known connection
+     */
+    private final Location location;
 
     /**
      * Default constructor with parameters
@@ -27,9 +29,9 @@ public final class CryptoCustomerActorConnection
      * @param updateTime
      * @param location
      */
-    public CryptoCustomerActorConnection(
+    protected CBPActorConnection(
             UUID connectionId,
-            CryptoCustomerLinkedActorIdentity linkedIdentity,
+            T linkedIdentity,
             String publicKey,
             String alias,
             byte[] image,
@@ -45,12 +47,15 @@ public final class CryptoCustomerActorConnection
                 image,
                 connectionState,
                 creationTime,
-                updateTime,
-                location);
+                updateTime);
+        this.location = location;
     }
 
     /**
-     * This class only extends CBPActorConnection, it can be changed in future versions
+     * This method returns the ActorConnection Location
+     * @return
      */
-
+    public Location getLocation() {
+        return location;
+    }
 }

@@ -268,9 +268,12 @@ public class CryptoBrokerCommunityManager
                     cryptoBrokerToContact.getImage()
             );
 
+            final Location location = cryptoBrokerToContact.getLocation();
+
             cryptoBrokerActorConnectionManager.requestConnection(
                     actorSending,
-                    actorReceiving
+                    actorReceiving,
+                    location
             );
 
         } catch (final CantRequestActorConnectionException e) {
@@ -407,14 +410,23 @@ public class CryptoBrokerCommunityManager
 
             final Set<CryptoBrokerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            CryptoBrokerExposingData cryptoBrokerExposingData = null;
+            CryptoBrokerExposingData cryptoBrokerExposingData;
+            CryptoBrokerCommunitySubAppModuleInformation cryptoBrokerCommunitySubAppModuleInformation;
 
             for (CryptoBrokerActorConnection connectedActor : connectedActors){
                 cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
-                if (cryptoBrokerExposingData != null)
-                    filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation()));
-                else
-                    filteredConnectedActors.add(new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, null));
+                if (cryptoBrokerExposingData != null){
+                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
+                } else{
+                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
+                }
+
+                Location actorLocation = cryptoBrokerCommunitySubAppModuleInformation.getLocation();
+                final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(),actorLocation.getLongitude());
+                cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity());
+                filteredConnectedActors.add(cryptoBrokerCommunitySubAppModuleInformation);
+
             }
 
 
