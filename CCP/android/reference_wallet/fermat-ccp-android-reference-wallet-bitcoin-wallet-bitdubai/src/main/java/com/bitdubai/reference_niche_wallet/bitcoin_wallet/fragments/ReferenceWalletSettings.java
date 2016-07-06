@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -242,7 +243,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
                         try {
                             appSession.getModuleManager().importMnemonicCode(tempList,date, blockchainNetworkType);
                             showMessage(getActivity(), "Import Mnemonic code OK ");
-                        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+                        } catch (CantImportSeedException cantLoadExistingVaultSeed) {
                             showMessage(getActivity(), "Import Mnemonic code ERROR " + cantLoadExistingVaultSeed.getMessage());
                             cantLoadExistingVaultSeed.printStackTrace();
                         }
