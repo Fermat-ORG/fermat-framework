@@ -88,7 +88,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 10;
+    private static final int MAX = 12;
     /**
      * MANAGERS
      */
@@ -439,15 +439,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     @Override
     public void onRefresh() {
 
-        offset = 0;
+        //offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
+
           // final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
            // notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
            // notificationsProgressDialog.setCancelable(true);
 
            // notificationsProgressDialog.show();
 
+
+           /* if (offset>0) {
+                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
+                notificationsProgressDialog.setCancelable(true);
+                notificationsProgressDialog.show();
+            }*/
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -459,7 +466,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                 //   notificationsProgressDialog.dismiss();
+
+                    //notificationsProgressDialog.dismiss();
+
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -488,7 +497,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                  // notificationsProgressDialog.dismiss();
+
+                   // notificationsProgressDialog.dismiss();
+
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -498,6 +509,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 }
             });
+            offset=0;
             worker.execute();
         }
     }
