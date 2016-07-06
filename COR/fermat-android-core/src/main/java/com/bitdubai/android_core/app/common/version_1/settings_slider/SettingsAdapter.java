@@ -5,8 +5,8 @@ import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 
 import java.util.List;
 

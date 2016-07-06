@@ -27,6 +27,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Framew
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
@@ -91,7 +93,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         super.onCreate(savedInstanceState);
         //if(fermatFragmentType.getOptionsMenu()!=null)
             setHasOptionsMenu(true);
-
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -433,13 +434,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    public final void onUpdateViewHandler(final String appCode,final String code){
-        if(appSession.getAppPublicKey().equals(appCode)){
-            onUpdateView(code);
-        }
-
-    }
-
     public final void onUpdateViewUIThred(final String code){
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -454,9 +448,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      *
      * @param code is a code for update some part of the fragment or everything
      */
-    public void onUpdateView(String code) {
-        return;
-    }
+
 
     /**
      * This class have to be ovverride if someone wants to get broadcast on UI Thread
@@ -471,9 +463,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     public void onUpdateView(FermatBundle bundle) {
-
-    }
-    public void onUpdateViewUIThred(FermatBundle bundle) {
 
     }
 
@@ -601,5 +590,15 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
 
+    /**
+     * Receivers
+     */
+    protected void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver){
+        getFrameworkHelpers().registerReceiver(fermatIntentFilter,fermatBroadcastReceiver,appSession.getAppPublicKey());
+    }
+
+    protected void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver){
+        getFrameworkHelpers().unregisterReceiver(fermatBroadcastReceiver,appSession.getAppPublicKey());
+    }
 
 }
