@@ -3,7 +3,11 @@ package org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+<<<<<<< HEAD
 
+=======
+//import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
+>>>>>>> 288bd3169ac3ec08b5c663872ee768e3f9adfb81
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
