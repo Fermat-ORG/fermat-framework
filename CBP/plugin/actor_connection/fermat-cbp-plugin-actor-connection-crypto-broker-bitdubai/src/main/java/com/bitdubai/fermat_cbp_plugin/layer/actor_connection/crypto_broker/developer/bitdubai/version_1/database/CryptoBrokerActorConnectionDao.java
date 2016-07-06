@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetA
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 
@@ -54,12 +56,38 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
             UUID   connectionId                  = record.getUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME);
             String linkedIdentityPublicKey       = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
             String linkedIdentityActorTypeString = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME);
-            String publicKey                     = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                );
+            String publicKey                     = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME);
             String alias                         = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME);
             String connectionStateString         = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME);
             long   creationTime                  = record.getLongValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME);
             long   updateTime                    = record.getLongValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME);
-            String locationString                = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LAST_LOCATION);
+
+            //Location data
+            Double latitude = record.getDoubleValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE);
+            Double longitude = record.getDoubleValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE);
+            //long accuracy = record.getLongValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACCURACY);
+            Long time = record.getLongValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME);
+            Double altitude = record.getDoubleValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE);
+            String locationSourceString = record.getStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE);
+            LocationSource locationSource;
+            if(locationSourceString==null||locationSourceString.isEmpty()){
+                //I'll set a default value in this case
+                locationSource = LocationSource.UNKNOWN;
+            } else{
+                try{
+                    locationSource = LocationSource.getByCode(locationSourceString);
+                } catch (InvalidParameterException ex){
+                    //There was an error, I'll set a default value
+                    locationSource = LocationSource.UNKNOWN;
+                }
+            }
+            DeviceLocation deviceLocation = new DeviceLocation(
+                    latitude,
+                    longitude,
+                    time,
+                    altitude,
+                    locationSource);
+
 
             ConnectionState connectionState         = ConnectionState.getByCode(connectionStateString);
 
@@ -69,15 +97,6 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
                     linkedIdentityPublicKey,
                     linkedIdentityActorType
             );
-
-            //Transform XML String Location to Location object
-            Location location = null;
-            Object object = XMLParser.parseXML(locationString, location);
-            try{
-                location = (Location) object;
-            } catch (Exception e){
-                location = null;
-            }
 
             byte[] profileImage;
 
@@ -96,7 +115,7 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
                     connectionState,
                     creationTime   ,
                     updateTime,
-                    location
+                    deviceLocation
 
             );
 
@@ -113,8 +132,13 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
     public final void persistLocation(
             CryptoBrokerActorConnection actorConnection) throws CantUpdateRecordException {
 
+        Location location = actorConnection.getLocation();
+        if(location == null){
+            //In this version I'll can't handle with this situation
+            return;
+        }
         try{
-            boolean connectionExists = actorConnectionExists(
+            /*boolean connectionExists = actorConnectionExists(
                     actorConnection.getLinkedIdentity(),
                     actorConnection.getPublicKey());
 
@@ -122,7 +146,7 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
                 throw new CantGetActorConnectionException(
                         "Actor Connection alias: "+actorConnection.getAlias(),
                         "The actor connection with "+actorConnection.getConnectionId()+" is not persisted in database");
-            }
+            }*/
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
@@ -140,40 +164,72 @@ public class CryptoBrokerActorConnectionDao extends ActorConnectionDao<CryptoBro
                     ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME,
                     actorConnection.getPublicKey(),
                     DatabaseFilterType.EQUAL);
-            actorConnectionsTable.addStringFilter(
+            /*actorConnectionsTable.addStringFilter(
                     ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME,
                     ConnectionState.CONNECTED.getCode(),
-                    DatabaseFilterType.EQUAL);
+                    DatabaseFilterType.EQUAL);*/
 
             actorConnectionsTable.loadToMemory();
 
             final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+            if(records.isEmpty()){
+                return;
+            }
             DatabaseTableRecord record = records.get(0);
-            record.setStringValue(
-                    ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LAST_LOCATION,
-                    getLocationXMLString(actorConnection.getLocation()));
+
+            //Latitude
+            Double latitude = location.getLatitude();
+            if(latitude==null){
+                latitude=0.0;
+            }
+            record.setDoubleValue(
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE,
+                    latitude);
+            //Longitude
+            Double longitude = location.getLongitude();
+            if(longitude==null){
+                longitude=0.0;
+            }
+            record.setDoubleValue(
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE,
+                    longitude);
+            //Time
+            Long time = location.getTime();
+            if(time==null){
+                time=0L;
+            }
+            record.setLongValue(
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME,
+                    time);
+            //Longitude
+            Double altitude = location.getAltitude();
+            if(altitude==null){
+                altitude=0.0;
+            }
+            record.setDoubleValue(
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE,
+                    altitude);
+            //Location source
+            LocationSource locationSource = location.getSource();
+            if(locationSource==null){
+                locationSource=LocationSource.UNKNOWN;
+            }
+            record.setFermatEnum(
+                    ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE,
+                    locationSource);
+            //Updating record
             actorConnectionsTable.updateRecord(record);
 
-        } catch (CantGetActorConnectionException e) {
+        } /*catch (CantGetActorConnectionException e) {
             throw new CantUpdateRecordException(
                     e,
                     "Updating actor connection record",
                     "Cannot get actor connection from database");
-        } catch (CantLoadTableToMemoryException e) {
+        }*/ catch (CantLoadTableToMemoryException e) {
             throw new CantUpdateRecordException(
                     e,
                     "Updating actor connection record",
                     "Cannot database table");
         }
-
-
     }
-
-    private String getLocationXMLString(Location location){
-        if(Validate.isObjectNull(location)){
-            return "";
-        }
-        return XMLParser.parseObject(location);
-    }
-
 }

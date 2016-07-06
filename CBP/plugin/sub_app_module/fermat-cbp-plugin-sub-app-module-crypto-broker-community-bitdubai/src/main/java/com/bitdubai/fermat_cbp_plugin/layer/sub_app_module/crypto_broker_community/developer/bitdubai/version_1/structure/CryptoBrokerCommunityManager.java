@@ -264,9 +264,12 @@ public class CryptoBrokerCommunityManager
                     cryptoBrokerToContact.getImage()
             );
 
+            final Location location = cryptoBrokerToContact.getLocation();
+
             cryptoBrokerActorConnectionManager.requestConnection(
                     actorSending,
-                    actorReceiving
+                    actorReceiving,
+                    location
             );
 
         } catch (final CantRequestActorConnectionException e) {

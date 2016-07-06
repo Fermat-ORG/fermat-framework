@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
@@ -118,6 +119,7 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
              * I register the actor connection.
              */
             dao.registerActorConnection(actorConnection);
+            dao.persistLocation(actorConnection);
 
             final CryptoBrokerConnectionInformation connectionInformation = new CryptoBrokerConnectionInformation(
                     newConnectionId              ,
@@ -159,6 +161,12 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
             throw new CantRequestActorConnectionException(exception, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Unhandled error.");
         }
 
+    }
+
+    @Override
+    public void persistLocation(CryptoBrokerActorConnection actorConnection)
+            throws CantUpdateRecordException {
+        dao.persistLocation(actorConnection);
     }
 
     @Override

@@ -30,7 +30,13 @@ public final class ActorConnectionDatabaseConstants {
     public static final String ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME           = "connection_state"          ;
     public static final String ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME              = "creation_time"             ;
     public static final String ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME                = "update_time"               ;
-    public static final String ACTOR_CONNECTIONS_LAST_LOCATION                          = "last_location"             ;
+    //Location Fields
+    public static final String ACTOR_CONNECTIONS_LATITUDE                               = "latitude"                  ;
+    public static final String ACTOR_CONNECTIONS_LONGITUDE                              = "longitude"                 ;
+    public static final String ACTOR_CONNECTIONS_ACCURACY                               = "accuracy"                  ;
+    public static final String ACTOR_CONNECTIONS_TIME                                   = "time"                      ;
+    public static final String ACTOR_CONNECTIONS_ALTITUDE                               = "altitude"                  ;
+    public static final String ACTOR_CONNECTIONS_LOCATION_SOURCE                        = "source"                    ;
 
     public static final String ACTOR_CONNECTIONS_FIRST_KEY_COLUMN                       = "connection_id"             ;
 

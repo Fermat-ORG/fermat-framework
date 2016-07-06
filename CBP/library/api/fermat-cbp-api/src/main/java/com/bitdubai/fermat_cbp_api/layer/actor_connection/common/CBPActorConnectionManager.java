@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.interfaces.ActorCon
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 /**
@@ -32,5 +33,12 @@ public interface CBPActorConnectionManager
             throws CantRequestActorConnectionException,
             UnsupportedActorTypeException,
             ConnectionAlreadyRequestedException;
+
+    /**
+     * This method persist the location within an actor connection
+     * @param actorConnection
+     * @throws CantUpdateRecordException
+     */
+    void persistLocation(Z actorConnection) throws CantUpdateRecordException;
 
 }

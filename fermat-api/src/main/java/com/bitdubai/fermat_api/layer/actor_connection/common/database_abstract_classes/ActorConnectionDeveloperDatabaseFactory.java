@@ -134,7 +134,13 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               );
-        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LAST_LOCATION                         );
+        //Location fields
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE                              );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE                             );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACCURACY                              );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME                                  );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE                              );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE                       );
 
         /**
          * Table Actor Connections addition.
