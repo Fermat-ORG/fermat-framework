@@ -6,11 +6,10 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 
 import com.bitdubai.android_api.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 
 /**
  * Created by Yordin Alayn on 31.05.16.
