@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetCryptoBrokerSearchResult;
 
 import java.io.Serializable;
@@ -24,4 +25,5 @@ public interface CryptoBrokerCommunitySearch extends Serializable {
 
     List<CryptoBrokerCommunityInformation> getResultAlias(String alias, Integer max, Integer offset) throws CantGetCryptoBrokerSearchResult;
 
+    CryptoBrokerExposingData getResult(final String publicKey) throws CantGetCryptoBrokerSearchResult;
 }
