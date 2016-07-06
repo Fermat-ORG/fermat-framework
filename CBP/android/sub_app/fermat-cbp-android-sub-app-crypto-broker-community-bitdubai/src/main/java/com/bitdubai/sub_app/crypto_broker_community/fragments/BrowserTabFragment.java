@@ -68,7 +68,7 @@ public class BrowserTabFragment
         implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener, GeolocationDialog.AdapterCallback {
 
     //Constants
-    private static final int MAX = 20;
+    private static final int MAX = 100;
     private static final int SPAN_COUNT = 2;
     protected static final String TAG = "BrowserTabFragment";
 

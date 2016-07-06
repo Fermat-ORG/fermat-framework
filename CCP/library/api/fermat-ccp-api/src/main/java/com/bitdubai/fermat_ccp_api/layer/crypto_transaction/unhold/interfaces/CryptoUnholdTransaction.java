@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 
 
@@ -34,4 +35,12 @@ public interface CryptoUnholdTransaction extends CryptoTransaction {
     BlockchainNetworkType getBlockChainNetworkType();
 
     void setBlockChainNetworkType(BlockchainNetworkType blockChainNetworkType);
+
+    long getFee();
+
+    void setFee(long blockChainNetworkType);
+
+    FeeOrigin getFeeOrigin();
+
+    void setFeeOrigin(FeeOrigin feeOrigin);
 }

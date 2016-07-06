@@ -31,6 +31,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransacti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
@@ -251,7 +252,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @param walletPublicKey
      * @param FermatTrId
      * @param addressTo
-     * @param satoshis
+     * @param cryptoAmount
      * @param op_Return
      * @return
      * @throws InsufficientCryptoFundsException
@@ -259,7 +260,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast, BlockchainNetworkType blockchainNetworkType)
+    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, CryptoAmount cryptoAmount, String op_Return, boolean broadcast, BlockchainNetworkType blockchainNetworkType)
             throws InsufficientCryptoFundsException,
             InvalidSendToAddressException,
             CouldNotSendMoneyException,
@@ -268,8 +269,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * validates we are not sending less than permited.
          */
-        if (isDustySend(satoshis))
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more bitcoins!");
+        if (isDustySend(cryptoAmount.getAmount()))
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + cryptoAmount.getAmount(), "send more bitcoins!");
 
 
         /**
@@ -332,13 +333,13 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
-        final Coin coinToSend = Coin.valueOf(satoshis);
+        Coin fee = Coin.valueOf(cryptoAmount.getFee());
+        final Coin coinToSend = Coin.valueOf(cryptoAmount.getAmount());
 
         if (coinToSend.isNegative() || coinToSend.isZero()){
             StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
             output.append(System.lineSeparator());
-            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + satoshis + " - " + fee.getValue() + ")");
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + cryptoAmount.getAmount() + " - " + fee.getValue() + ")");
 
 
             CouldNotSendMoneyException exception = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, output.toString(), null);

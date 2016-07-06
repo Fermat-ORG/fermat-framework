@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
@@ -356,7 +357,9 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
               BlockchainNetworkType blockchainNetworkType,
-              CryptoCurrency cryptoCurrency) throws CantSendFermatException, InsufficientFundsException;
+              CryptoCurrency cryptoCurrency,
+              long fee,
+              FeeOrigin feeOrigin) throws CantSendFermatException, InsufficientFundsException;
 
 
     /**
