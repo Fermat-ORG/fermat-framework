@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -10,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -25,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
@@ -56,7 +59,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.UPNPService;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -164,9 +166,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private NodeProfile nodeProfile;
 
     /**
-     * Represent the server ip
+     * Represent the server public ip
      */
-    private String serverIp;
+    private String serverPublicIp;
 
     /**
      * Constructor
@@ -205,25 +207,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp developerDatabaseFactory = new CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp(pluginDatabaseSystem, pluginId);
 
             /*
-             * Delete all checked in components
-             * when node starts
+             * Initialize the configuration file
              */
-            daoFactory.getCheckedInActorDao().deleteAll();
-            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
-            daoFactory.getCheckedInClientDao().deleteAll();
-            daoFactory.getCheckedNetworkServicesHistoryDao().deleteAll();
-            daoFactory.getCheckedActorsHistoryDao().deleteAll();
+            initializeConfigurationFile();
 
             /*
              * Get the server ip
              */
-            serverIp = IPAddressHelper.getCurrentIPAddress();
-            LOG.info("Server ip: " + serverIp);
-
-            /*
-             * Initialize the configuration file
-             */
-            initializeConfigurationFile();
+            generateNodePublicIp();
 
             /*
              * Generate the profile of the node
@@ -291,7 +282,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         } catch (Exception exception) {
 
-
             exception.printStackTrace();
 
             String context = "Plugin ID: " + pluginId;
@@ -299,11 +289,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
             super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-
             throw pluginStartException;
         }
-
     }
 
     @Override
@@ -352,6 +339,69 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
+     * Generate de node public ip
+     */
+    private void generateNodePublicIp() {
+
+        try {
+
+            if (ConfigurationManager.getValue(ConfigurationManager.PUBLIC_IP).equals(FermatEmbeddedNodeServer.DEFAULT_IP)){
+
+                serverPublicIp = IPAddressHelper.getCurrentIPAddress();
+                LOG.info(">>>> Server public ip: " + serverPublicIp + " get by online service");
+                ConfigurationManager.updateValue(ConfigurationManager.PUBLIC_IP, serverPublicIp);
+
+            }else {
+
+                serverPublicIp = ConfigurationManager.getValue(ConfigurationManager.PUBLIC_IP);
+                LOG.info(">>>> Server public ip: " + serverPublicIp + " get from configuration file");
+            }
+
+        }catch (Exception e){
+
+            LOG.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            LOG.warn("! Could not get the external ip with the online service, it must be configured manually in the configuration file !");
+            LOG.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            serverPublicIp = ConfigurationManager.getValue(ConfigurationManager.PUBLIC_IP);
+        }
+    }
+
+    /**
+     * Generate the node location
+     * @return Location
+     */
+    private Location generateNodeLocation(){
+
+        Location location = null;
+
+        try {
+
+            if (ConfigurationManager.getValue(ConfigurationManager.LATITUDE).equals("0.0") && ConfigurationManager.getValue(ConfigurationManager.LONGITUDE).equals("0.0")){
+
+                LOG.info(">>>> Trying to get the location of the node...");
+                location = locationManager.getLocation();
+                ConfigurationManager.updateValue(ConfigurationManager.LATITUDE, location.getLatitude().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.LONGITUDE, location.getLongitude().toString());
+
+            }else {
+
+                LOG.info(">>>> Getting the location from the configuration file");
+                location = NetworkNodeCommunicationDeviceLocation.getInstance(new Double(ConfigurationManager.getValue(ConfigurationManager.LATITUDE)), new Double(ConfigurationManager.getValue(ConfigurationManager.LONGITUDE)));
+            }
+
+        }catch (Exception e){
+
+            LOG.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            LOG.warn("! Could not get the location with the online service, it must be configured manually in the configuration file !");
+            LOG.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            location = NetworkNodeCommunicationDeviceLocation.getInstance(new Double(ConfigurationManager.getValue(ConfigurationManager.LATITUDE)), new Double(ConfigurationManager.getValue(ConfigurationManager.LONGITUDE)));
+        }
+
+        return location;
+
+    }
+
+    /**
      * Generate the node profile of this node
      */
     private void generateNodeProfile() throws CantGetDeviceLocationException {
@@ -360,10 +410,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         nodeProfile = new NodeProfile();
         nodeProfile.setIdentityPublicKey(identity.getPublicKey());
-        nodeProfile.setIp(serverIp);
+        nodeProfile.setIp(serverPublicIp);
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
-        nodeProfile.setLocation(locationManager.getLocation());
+        nodeProfile.setLocation(generateNodeLocation());
 
         LOG.info("Node Profile = "+nodeProfile);
 
@@ -383,7 +433,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         }else {
 
             LOG.info("Configuration file doesn't exit");
-            ConfigurationManager.create(identity.getPublicKey(), isSeedServer(serverIp));
+            ConfigurationManager.create(identity.getPublicKey());
             ConfigurationManager.load();
         }
 
@@ -605,12 +655,18 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void requestRegisterProfileInTheNodeCatalog(){
 
-        LOG.info("Requesting registration of the node profile in the node catalog...");
+        try {
 
-        FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
-        AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
-        fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+            LOG.info("Requesting registration of the node profile in the node catalog...");
 
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+            AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+            fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+
+        }catch (Exception e){
+            LOG.error("Can't clean request Register Profile In The Node Catalog: "+e.getMessage());
+
+        }
     }
 
     /**
@@ -619,12 +675,17 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void requestUpdateProfileInTheNodeCatalog(){
 
-        LOG.info("Requesting update of the profile on the node catalog...");
+        try {
 
-        FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
-        UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
-        fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
+            LOG.info("Requesting update of the profile on the node catalog...");
 
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+            UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
+            fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
+
+        }catch (Exception e){
+            LOG.error("Can't clean request Update Profile In The Node Catalog: "+e.getMessage());
+        }
     }
 
     /**
@@ -635,14 +696,19 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void requestNodesCatalogTransactions() throws CantReadRecordDataBaseException {
 
-        if (daoFactory.getNodesCatalogDao().getAllCount() <= 0){
-            LOG.info("Request the list of transactions in the node catalog");
+        try {
 
-            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
-            GetNodeCatalogTransactionsMsjRequest getNodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(0, 250);
-            fermatWebSocketClientNodeChannel.sendMessage(getNodeCatalogTransactionsMsjRequest.toJson(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST);
+            if (daoFactory.getNodesCatalogDao().getAllCount() <= 0){
+                LOG.info("Request the list of transactions in the node catalog");
+
+                FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+                GetNodeCatalogTransactionsMsjRequest getNodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(0, 250);
+                fermatWebSocketClientNodeChannel.sendMessage(getNodeCatalogTransactionsMsjRequest.toJson(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST);
+            }
+
+        }catch (Exception e){
+            LOG.error("Can't clean request Nodes Catalog Transactions: "+e.getMessage());
         }
-
     }
 
     /**
@@ -652,12 +718,17 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void requestActorsCatalogTransactions() throws CantReadRecordDataBaseException {
 
-        if (daoFactory.getActorsCatalogDao().getAllCount() <= 0) {
-            LOG.info("Request the list of transactions in the actors catalog");
+        try {
+            if (daoFactory.getActorsCatalogDao().getAllCount() <= 0) {
+                LOG.info("Request the list of transactions in the actors catalog");
 
-            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
-            GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest(0, 250);
-            fermatWebSocketClientNodeChannel.sendMessage(getActorCatalogTransactionsMsjRequest.toJson(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_REQUEST);
+                FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+                GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest(1, 10);
+                fermatWebSocketClientNodeChannel.sendMessage(getActorCatalogTransactionsMsjRequest.toJson(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_REQUEST);
+            }
+
+        }catch (Exception e){
+            LOG.error("Can't clean request Actors Catalog Transactions: "+e.getMessage());
         }
 
     }
@@ -669,7 +740,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private void initializeNodeCatalog() throws Exception {
 
         LOG.info("Initialize node catalog");
-        boolean isSeedServer = isSeedServer(this.serverIp);
+        boolean isSeedServer = isSeedServer(this.serverPublicIp);
         Boolean isRegister = isRegisterInNodeCatalog(isSeedServer);
 
         LOG.info("Is Register? = " + isRegister);
@@ -930,16 +1001,28 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void cleanCheckInTables() throws CantReadRecordDataBaseException, CantDeleteRecordDataBaseException {
 
-        LOG.info("Executing the clean check in tables");
+        try {
 
-        LOG.info("Deleting CHECK_IN_CLIENT records");
-        daoFactory.getCheckedInClientDao().deleteAll();
+            LOG.info("Executing the clean check in tables");
 
-        LOG.info("Deleting CHECK_IN_NETWORK_SERVICE records");
-        daoFactory.getCheckedInNetworkServiceDao().deleteAll();
+            LOG.info("Deleting CHECK_IN_CLIENT records");
+            daoFactory.getCheckedInClientDao().deleteAll();
 
-        LOG.info("Deleting CHECK_IN_ACTORS records");
-        daoFactory.getCheckedInActorDao().deleteAll();
+            LOG.info("Deleting CHECK_IN_NETWORK_SERVICE records");
+            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
+
+            LOG.info("Deleting CHECK_IN_ACTORS records");
+            daoFactory.getCheckedInActorDao().deleteAll();
+
+            LOG.info("Deleting CHECK_IN_NETWORK_SERVICES_HISTORY records");
+            daoFactory.getCheckedNetworkServicesHistoryDao().deleteAll();
+
+            LOG.info("Deleting CHECK_IN_ACTORS_HISTORY records");
+            daoFactory.getCheckedActorsHistoryDao().deleteAll();
+
+        }catch (Exception e){
+            LOG.error("Can't clean Check In Tables: "+e.getMessage());
+        }
 
     }
 

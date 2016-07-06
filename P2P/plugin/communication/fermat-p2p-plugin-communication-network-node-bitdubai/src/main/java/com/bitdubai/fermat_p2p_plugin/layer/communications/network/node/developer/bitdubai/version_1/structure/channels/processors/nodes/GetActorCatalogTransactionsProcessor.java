@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetActorCatalogTransactionsMsjRequest;
@@ -24,7 +24,7 @@ import javax.websocket.Session;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
@@ -88,10 +88,10 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
             }
 
-
         } catch (Exception exception){
 
             try {
+                exception.printStackTrace();
 
                 LOG.error(exception.getMessage());
 
@@ -107,11 +107,10 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
                 session.getAsyncRemote().sendObject(packageRespond);
 
             } catch (Exception e) {
+                e.printStackTrace();
                 LOG.error(e.getMessage());
             }
-
         }
-
     }
 
     /**
@@ -119,7 +118,10 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
      *
      * @param offset
      * @param max
-     * @return List<NodeProfile>
+     *
+     * @return List<ActorsCatalogTransaction>
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
      */
     public List<ActorsCatalogTransaction> loadData(Integer offset, Integer max) throws CantReadRecordDataBaseException {
 
@@ -128,13 +130,13 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
         List<ActorsCatalogTransaction> transactionList = null;
 
-        if (offset > 0 && max > 0){
+        if (offset >= 0 && max > 0){
 
             transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(offset, max);
 
         }else {
 
-            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll();
+            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(0, 20);
 
         }
 
