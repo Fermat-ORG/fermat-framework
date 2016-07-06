@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,11 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsL
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ProfileDialog;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -36,15 +39,14 @@ import java.util.ArrayList;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16.
  * @version 1.0
- *
  */
 
 public class ContactListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
-    ArrayList<String> contactInfo=new ArrayList<>();
-    ArrayList<Bitmap> contactIcon=new ArrayList<>();
-    ArrayList<String> contactStatus=new ArrayList<>();
-    ArrayList<String> contactId=new ArrayList<>();
+    ArrayList<String> contactInfo = new ArrayList<>();
+    ArrayList<Bitmap> contactIcon = new ArrayList<>();
+    ArrayList<String> contactStatus = new ArrayList<>();
+    ArrayList<String> contactId = new ArrayList<>();
     private ChatManager chatManager;
     private FermatSession appSession;
     private ErrorManager errorManager;
@@ -55,30 +57,29 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
     private Context mContext;
     ImageView imagen;
     TextView contactName;
-    private AdapterCallback mAdapterCallback;
+    private ContactsListFragment mAdapterCallback;
 
     ArrayList<String> filteredData;
     private String filterString;
 
     public ContactListAdapter(Context context, ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId, ArrayList contactStatus,
                               ChatManager chatManager, ChatModuleManager moduleManager,
-                              ErrorManager errorManager, ChatSessionReferenceApp chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
+                              ErrorManager errorManager, ChatSessionReferenceApp chatSession, FermatSession appSession, ContactsListFragment mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactInfo);
         this.contactInfo = contactInfo;
         this.contactIcon = contactIcon;
         this.contactStatus = contactStatus;
         this.contactId = contactId;
-        this.chatManager=chatManager;
-        this.moduleManager=moduleManager;
-        this.errorManager=errorManager;
-        this.chatSession=chatSession;
-        this.appSession=appSession;
-        this.mContext=context;
+        this.chatManager = chatManager;
+        this.moduleManager = moduleManager;
+        this.errorManager = errorManager;
+        this.chatSession = chatSession;
+        this.appSession = appSession;
+        this.mContext = context;
         try {
             this.mAdapterCallback = mAdapterCallback;
-        }catch (Exception e)
-        {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -87,7 +88,7 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
         try {
             imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
-            if(contactIcon.get(position)!=null)
+            if (contactIcon.get(position) != null)
                 imagen.setImageBitmap(Utils.getRoundedShape(contactIcon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
             else
                 imagen.setImageResource(R.drawable.cht_center_profile_icon_center);//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
@@ -96,17 +97,26 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
             contactName.setText(contactInfo.get(position));
             //contactname.setTypeface(tf, Typeface.NORMAL);
 
-            final int pos=position;
+            final int pos = position;
             imagen.setOnClickListener(new View.OnClickListener() {
-               // int pos = position;
+                // int pos = position;
                 @Override
                 public void onClick(View v) {
                     try {
 
-                        ProfileDialog profile = new ProfileDialog (getContext(), appSession, null);
+                        final ProfileDialog profile = new ProfileDialog(getContext(), appSession, null);
                         profile.setProfileName(contactInfo.get(pos));
                         profile.setProfilePhoto(contactIcon.get(pos));
                         profile.show();
+
+                        profile.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                if (profile.getButtonTouch() == profile.TOUCH_CHAT) {
+                                    mAdapterCallback.displayChat(pos);
+                                }
+                            }
+                        });
 
 //                        Contact contact=new ContactImpl();
 //                        contact.setRemoteActorPublicKey(contactId.get(pos));
@@ -122,9 +132,9 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 //                        mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
 //                        //} catch (CantGetContactException e) {
 //                        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        } catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
+                    } catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
                 }
             });
 
@@ -139,9 +149,9 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
     }
 
     public void refreshEvents(ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId) {
-        this.contactInfo=contactInfo;
-        this.contactIcon=contactIcon;
-        this.contactId=contactId;
+        this.contactInfo = contactInfo;
+        this.contactIcon = contactIcon;
+        this.contactId = contactId;
         notifyDataSetChanged();
     }
 
@@ -154,7 +164,7 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
                 } else {
                     return contactInfo.size();
                 }
-            }else{
+            } else {
                 return contactInfo.size();
             }
         } else {
@@ -185,9 +195,9 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
     }
 
     public void setData(ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId) {
-        this.contactInfo=contactInfo;
-        this.contactIcon=contactIcon;
-        this.contactId=contactId;
+        this.contactInfo = contactInfo;
+        this.contactIcon = contactIcon;
+        this.contactId = contactId;
         this.filteredData = contactInfo;
     }
 
