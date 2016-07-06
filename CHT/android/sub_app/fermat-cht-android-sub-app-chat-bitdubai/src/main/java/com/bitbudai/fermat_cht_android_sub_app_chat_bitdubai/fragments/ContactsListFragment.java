@@ -97,7 +97,7 @@ public class ContactsListFragment
     TextView nochatssubtitle1;
     TextView nochatssubtitle2;
     List<ChatActorCommunityInformation> con;
-    private static final int MAX = 20;
+    private static final int MAX = 1000;
     private int offset = 0;
     private SearchView searchView;
 
@@ -235,7 +235,6 @@ public class ContactsListFragment
                     }
                 });
                 if (con != null) {
-
                     int size = con.size();
                     if (size > 0) {
                         for (ChatActorCommunityInformation conta:con) {
@@ -535,34 +534,36 @@ public class ContactsListFragment
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId()==R.id.list) {
-            if (Build.VERSION.SDK_INT < 23) {
-                MenuInflater inflater = new MenuInflater(getActivity());
-                inflater.inflate(R.menu.contact_list_context_menu, menu);
-            }else{
-                MenuInflater inflater = new MenuInflater(getContext());
-                inflater.inflate(R.menu.contact_list_context_menu, menu);
-            }
-        }
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-    }
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        if (v.getId()==R.id.list) {
+//            if (Build.VERSION.SDK_INT < 23) {
+//                MenuInflater inflater = new MenuInflater(getActivity());
+//                inflater.inflate(R.menu.contact_list_context_menu, menu);
+//            }else{
+//                MenuInflater inflater = new MenuInflater(getContext());
+//                inflater.inflate(R.menu.contact_list_context_menu, menu);
+//            }
+//        }
+//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+//    }
+//
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//        int id =item.getItemId();
+//        if (id == R.id.menu_view_contact) {
+//            try {
+//                appSessionSetDataContact(info.position);
+//                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+//            }catch (Exception e){
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
+//            return true;
+//        }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int id =item.getItemId();
-        if (id == R.id.menu_view_contact) {
-            try {
-                appSessionSetDataContact(info.position);
-                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
-        }
+
 //        if (id == R.id.menu_edit_contact) {
 //            try {
 //                appSessionSetDataContact(info.position);
@@ -576,8 +577,9 @@ public class ContactsListFragment
 //            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
 //            return true;
 //        }
-        return super.onContextItemSelected(item);
-    }
+
+//        return super.onContextItemSelected(item);
+//    }
 
     public void appSessionSetDataContact (int position){
         Contact contact=new ContactImpl();
