@@ -76,7 +76,11 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                         android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                         clipboard.setText(copiedMessage);
                     }
-                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
+                    if(copiedMessage.length() <= 10){
+                        Toast.makeText(context, "Copied: " + copiedMessage, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(context, "Copied: " + copiedMessage.substring(0,11) + "...", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 }
             });
