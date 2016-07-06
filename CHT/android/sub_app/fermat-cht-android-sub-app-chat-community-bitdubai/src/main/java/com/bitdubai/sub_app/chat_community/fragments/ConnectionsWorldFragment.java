@@ -414,16 +414,19 @@ public class ConnectionsWorldFragment
                             progressDialog.dismiss();
                             if (getActivity() != null && adapter != null) {
                                 if (offset == 0) {
-                                    if(lstChatUserInformations!=null){
+                                    if (lstChatUserInformations != null) {
                                         lstChatUserInformations.clear();
                                         lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                    }
-                                    else{
-                                        lstChatUserInformations=(ArrayList<ChatActorCommunityInformation>) result[0];
+                                    } else {
+                                        lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     }
                                     adapter.changeDataSet(lstChatUserInformations);
                                 } else {
-                                    lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
+                                    ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                    for (ChatActorCommunityInformation info : temp)
+                                        if (notInList(info)) {
+                                            lstChatUserInformations.add(info);
+                                        }
                                     adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
                                 }
                                 if (lstChatUserInformations.isEmpty()) {
@@ -449,6 +452,15 @@ public class ConnectionsWorldFragment
             });
             worker.execute();
         }
+    }
+
+    private boolean notInList(ChatActorCommunityInformation info) {
+        for (ChatActorCommunityInformation contact : lstChatUserInformations)
+        {
+            if (contact.getPublicKey().equals(info.getPublicKey()))
+            return false;
+        }
+        return true;
     }
 
     public void showEmpty(boolean show, View emptyView) {
