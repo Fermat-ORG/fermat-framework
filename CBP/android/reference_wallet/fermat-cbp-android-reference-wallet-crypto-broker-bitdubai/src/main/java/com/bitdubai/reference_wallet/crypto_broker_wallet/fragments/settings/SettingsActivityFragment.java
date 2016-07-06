@@ -80,6 +80,13 @@ public class SettingsActivityFragment extends AbstractFermatFragment<ReferenceAp
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES, appSession.getAppPublicKey());
             }
         });
+        View feeButton = layout.findViewById(R.id.settings_fee_management);
+        feeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_FEE_MANAGEMENT, appSession.getAppPublicKey());
+            }
+        });
 
 
 

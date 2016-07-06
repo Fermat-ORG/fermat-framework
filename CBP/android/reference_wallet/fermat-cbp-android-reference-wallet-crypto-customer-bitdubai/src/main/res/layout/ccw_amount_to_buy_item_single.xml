@@ -91,6 +91,8 @@
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
 
+
+
             </LinearLayout>
 
             <LinearLayout
