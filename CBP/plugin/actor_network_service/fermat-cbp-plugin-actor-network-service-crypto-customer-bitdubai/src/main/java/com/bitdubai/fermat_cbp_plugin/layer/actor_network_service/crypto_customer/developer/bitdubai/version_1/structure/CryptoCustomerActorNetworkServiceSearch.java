@@ -256,6 +256,51 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
+    public CryptoCustomerExposingData getResult(String publicKey) throws CantListCryptoCustomersException {
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    //TODO:Hay que pasarle null porque no esta implementado de esa forma en p2p
+                    null,//Actors.CBP_CRYPTO_CUSTOMER.getCode(),
+                    null,
+                    null,
+                    null,
+                    publicKey,
+                    null,
+                    null,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    null,
+                    NetworkServiceType.CRYPTO_CUSTOMER
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            CryptoCustomerExposingData cryptoCustomerExposingData = null;
+
+            for (final ActorProfile actorProfile : list) {
+
+                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
+                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+
+                cryptoCustomerExposingData = new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0);
+            }
+
+            return cryptoCustomerExposingData;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
     public List<CryptoCustomerExposingData> getResult(final Integer max) throws CantListCryptoCustomersException {
         return null;
     }

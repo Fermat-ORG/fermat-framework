@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
 
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 import java.io.Serializable;
@@ -34,7 +34,7 @@ public class DiscoveryQueryParameters implements Serializable {
     /**
      * Represent the location
      */
-    private DeviceLocation location;
+    private Location location;
 
     /**
      * Represent the distance
@@ -72,6 +72,59 @@ public class DiscoveryQueryParameters implements Serializable {
     private String actorType;
 
     /**
+     * Represent the lastConnectionTime
+     */
+    private Long lastConnectionTime;
+
+    /**
+     * Represent the isOnline
+     */
+    private Boolean isOnline;
+
+    /**
+     * Constructor with params
+     *
+     * @param identityPublicKey    represents the identity public key of the component to discover.
+     * @param networkServiceType   if we're looking for network services we'll set this value with the type of network service.
+     * @param actorType            if we're looking for actors we'll set this value with the type of the actor.
+     * @param name                 we can set here the name of the component to search or discover.
+     * @param alias                we can set here the alias of the component to search or discover.
+     * @param extraData            we can set here the extraData of the actor component to search or discover.
+     * @param location             this param indicates a point for doing the discovery near it.
+     * @param distance             this param indicates the distance to the point to look around.
+     * @param isOnline             with this param we ask to the node the status of the profiles to discover.
+     * @param lastConnectionTime   with this param we'll ask to the node only the profiles connected after the long timestamp.
+     * @param max                  this param will be used with the pagination stuff.
+     * @param offset               this param will be used with the pagination stuff.
+     */
+    public DiscoveryQueryParameters(final String             identityPublicKey ,
+                                    final NetworkServiceType networkServiceType,
+                                    final String             actorType         ,
+                                    final String             name              ,
+                                    final String             alias             ,
+                                    final String             extraData         ,
+                                    final Location           location          ,
+                                    final Double             distance          ,
+                                    final Boolean            isOnline          ,
+                                    final Long               lastConnectionTime,
+                                    final Integer            max               ,
+                                    final Integer            offset            ) {
+
+        this.identityPublicKey  = identityPublicKey ;
+        this.networkServiceType = networkServiceType;
+        this.actorType          = actorType         ;
+        this.name               = name              ;
+        this.alias              = alias             ;
+        this.extraData          = extraData         ;
+        this.location           = location          ;
+        this.distance           = distance          ;
+        this.isOnline           = isOnline          ;
+        this.lastConnectionTime = lastConnectionTime;
+        this.max                = max               ;
+        this.offset             = offset            ;
+    }
+
+    /**
      * Constructor with parameters
      *
      * @param actorType
@@ -91,7 +144,7 @@ public class DiscoveryQueryParameters implements Serializable {
                                     final Double             distance          ,
                                     final String             extraData         ,
                                     final String             identityPublicKey ,
-                                    final DeviceLocation     location          ,
+                                    final Location           location          ,
                                     final Integer            max               ,
                                     final String             name              ,
                                     final NetworkServiceType networkServiceType,
@@ -161,7 +214,7 @@ public class DiscoveryQueryParameters implements Serializable {
      *
      * @return location
      */
-    public DeviceLocation getLocation() {
+    public Location getLocation() {
         return location;
     }
 
@@ -209,6 +262,14 @@ public class DiscoveryQueryParameters implements Serializable {
         return networkServiceTypeIntermediate;
     }
 
+    public Boolean isOnline() {
+        return isOnline;
+    }
+
+    public Long getLastConnectionTime() {
+        return lastConnectionTime;
+    }
+
     /**
      * Generate the json representation
      * @return String
@@ -240,6 +301,7 @@ public class DiscoveryQueryParameters implements Serializable {
                 ", offset=" + offset +
                 ", max=" + max +
                 ", actorType='" + actorType + '\'' +
+                ", isOnline='" + isOnline + '\'' +
                 '}';
     }
 }

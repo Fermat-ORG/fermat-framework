@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,5 +140,37 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp {
             return new ArrayList<>();
         }
     }
+
+    public final List<DatabaseTableRecord> getTableContent(final String tableName, final Integer offset, final Integer max ){
+
+        try {
+
+            this.initializeDatabase();
+            final DatabaseTable table =  database.getTable(tableName);
+            table.setFilterOffSet(offset.toString());
+            table.setFilterTop(max.toString());
+            table.loadToMemory();
+
+            return table.getRecords();
+
+        } catch (final Exception e){
+
+            return new ArrayList<>();
+        }
+    }
+
+    public final long count(final String tableName){
+
+        try {
+
+            DatabaseTable table =  database.getTable(tableName);
+            return table.getCount();
+
+        } catch (final Exception e){
+
+            return 0;
+        }
+    }
+
 
 }

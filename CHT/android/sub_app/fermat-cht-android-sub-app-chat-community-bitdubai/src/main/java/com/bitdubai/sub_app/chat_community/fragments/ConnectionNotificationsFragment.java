@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -28,6 +30,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -73,6 +76,7 @@ public class ConnectionNotificationsFragment
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 1000;
     private ChatActorCommunitySelectableIdentity identity;
+    FermatApplicationCaller applicationsHelper;
     protected final String TAG = "ConnectionNotificationsFragment";
 
     private RecyclerView recyclerView;
@@ -110,6 +114,7 @@ public class ConnectionNotificationsFragment
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
             lstChatUserInformations = new ArrayList<>();
 
             //Obtain Settings or create new Settings if first time opening subApp
@@ -205,9 +210,7 @@ public class ConnectionNotificationsFragment
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
         return rootView;
     }
 
@@ -216,10 +219,8 @@ public class ConnectionNotificationsFragment
         //onRefresh();
     }
 
-    private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
-
+    private ArrayList<ChatActorCommunityInformation> getMoreData() {
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-
         try {
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
@@ -233,7 +234,6 @@ public class ConnectionNotificationsFragment
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return dataSet;
     }
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetChatUserIdentityException {
@@ -301,14 +301,25 @@ public class ConnectionNotificationsFragment
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, identity);
+            final ChatActorCommunityInformation dataNow  = data;
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
+                    ArrayList<ChatActorCommunityInformation> dataNew = new ArrayList<>();
                     try {
-//                        lstChatUserInformations = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
-//                                identity.getActorType(), MAX, offset);
-//                        adapter.changeDataSet(lstChatUserInformations);
-                        onRefresh();
+                        for (ChatActorCommunityInformation dat: lstChatUserInformations){
+                            if(!dataNow.getPublicKey().equals(dat.getPublicKey()))
+                            {
+                                dataNew.add(dat);
+                            }
+                        }
+                        lstChatUserInformations=dataNew;
+                        adapter.changeDataSet(lstChatUserInformations);
+                        if (lstChatUserInformations.isEmpty()) {
+                            showEmpty(true, emptyView);
+                        } else {
+                            showEmpty(false, emptyView);
+                        }
                     }catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                 UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -372,7 +383,22 @@ public class ConnectionNotificationsFragment
         try {
             int id = item.getItemId();
             switch (id) {
+
                 case 1:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 2:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 3:
                     showDialogHelp();
                     break;
             }

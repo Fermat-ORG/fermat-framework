@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -59,7 +60,9 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -277,17 +280,28 @@ public class CryptoCustomerCommunityManager
             );
 
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
-
             search.addConnectionState(ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+            final List<CryptoCustomerActorConnection> actorsWithPendingRequest = search.getResult(max, offset);
 
-            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+            search.resetFilters();
+            search.addConnectionState(ConnectionState.CONNECTED);
+            final List<CryptoCustomerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<LinkedCryptoCustomerIdentity> linkedCryptoCustomerIdentityList = new ArrayList<>();
+            final HashMap<String, Boolean> connectedActorsPublicKeys = new HashMap<>();
+            for (CryptoCustomerActorConnection connectedCryptoCustomer : connectedActors) {
+                connectedActorsPublicKeys.put(connectedCryptoCustomer.getPublicKey(), true);
+            }
 
-            for (CryptoCustomerActorConnection ccac : actorConnections)
-                linkedCryptoCustomerIdentityList.add(new LinkedCryptoCustomerIdentityImpl(ccac));
+            final Set<LinkedCryptoCustomerIdentity> filteredActorsWihPendingRequest = new LinkedHashSet<>();
+            for (CryptoCustomerActorConnection actorWithPendingRequest : actorsWithPendingRequest) {
+                if (connectedActorsPublicKeys.get(actorWithPendingRequest.getPublicKey()) != null)
+                    acceptCryptoCustomer(actorWithPendingRequest.getConnectionId());
+                else
+                    filteredActorsWihPendingRequest.add(new LinkedCryptoCustomerIdentityImpl(actorWithPendingRequest));
+            }
 
-            return linkedCryptoCustomerIdentityList;
+
+            return new ArrayList<>(filteredActorsWihPendingRequest);
 
         } catch (final CantListActorConnectionsException e) {
 
@@ -314,14 +328,30 @@ public class CryptoCustomerCommunityManager
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+            final List<CryptoCustomerActorConnection> connectedActors = search.getResult(max, offset);
 
-            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+            final Set<CryptoCustomerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            for (CryptoCustomerActorConnection ccac : actorConnections)
-                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac));
+            CryptoCustomerExposingData cryptoBrokerExposingData;
+            CryptoCustomerCommunitySubAppModuleInformation cryptoCustomerCommunitySubAppModuleInformation;
 
-            return cryptoCustomerCommunityInformationList;
+            for (CryptoCustomerActorConnection connectedActor : connectedActors){
+                cryptoBrokerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
+                if (cryptoBrokerExposingData != null){
+                    cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
+                } else{
+                    cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
+                }
+
+                Location actorLocation = cryptoCustomerCommunitySubAppModuleInformation.getLocation();
+                final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(),actorLocation.getLongitude());
+                cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
+                filteredConnectedActors.add(cryptoCustomerCommunitySubAppModuleInformation);
+
+            }
+
+            return new ArrayList<>(filteredConnectedActors);
 
         } catch (final CantListActorConnectionsException e) {
 

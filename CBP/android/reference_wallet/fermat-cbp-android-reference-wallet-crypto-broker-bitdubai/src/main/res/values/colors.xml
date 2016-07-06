@@ -34,6 +34,7 @@
     <color name="waiting_for_text">#6b7378</color>
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#f3f3f3</color>
+    <color name="waiting_for_closing_list_item_background">#acdef9</color>
     <color name="contract_paused_list_item_background">#a4a4a4</color>
 
     <color name="option_button_background">#75222222</color>
