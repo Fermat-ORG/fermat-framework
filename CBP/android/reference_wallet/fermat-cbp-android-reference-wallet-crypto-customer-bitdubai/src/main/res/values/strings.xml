@@ -170,6 +170,7 @@
     <string name="about_to_expire">About to expire</string>
     <string name="waiting_for_you">Waiting for you</string>
     <string name="waiting_for_broker">Waiting for the Broker</string>
+    <string name="waiting_for_closing">Negotiation is Closing</string>
     <string name="wizard_locations_title">Add Your Locations</string>
 
     <string name="you_will_have_to_pay_amount">You will have to pay: </string>
