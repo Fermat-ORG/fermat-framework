@@ -105,5 +105,12 @@ public class DesktopDatabaseTableFilter implements DatabaseTableFilter {
         return this.column;
     }
 
-
+    @Override
+    public String toString() {
+        return "DesktopDatabaseTableFilter{" +
+                "column='" + column + '\'' +
+                ", type=" + type +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }

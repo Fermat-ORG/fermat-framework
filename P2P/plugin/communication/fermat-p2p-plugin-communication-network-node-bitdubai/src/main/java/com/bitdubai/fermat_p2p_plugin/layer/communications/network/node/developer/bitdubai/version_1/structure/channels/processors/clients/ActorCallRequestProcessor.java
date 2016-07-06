@@ -132,7 +132,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
      */
     private ResultDiscoveryTraceActor getActor(String publicKey) throws CantReadRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
-        ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(publicKey);
+            ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(publicKey);
 
             ActorProfile actorProfile = new ActorProfile();
             actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());

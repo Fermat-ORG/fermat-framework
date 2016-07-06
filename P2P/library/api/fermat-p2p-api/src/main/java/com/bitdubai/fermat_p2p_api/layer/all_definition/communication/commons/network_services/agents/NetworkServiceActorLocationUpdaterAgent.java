@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationUtils;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.utils.RefreshParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
@@ -29,6 +30,11 @@ import java.util.concurrent.TimeUnit;
  * @since   Java JDK 1.7
  */
 public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
+
+    /**
+     * Geo-location update high rate limit in seconds.
+     */
+    private static final int GEO_LOCATION_HIGH_RATE_LIMIT = 60;
 
     /**
      * Represent the networkServiceRoot
@@ -73,7 +79,7 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
                     try {
                         long nextExecution = actor.getValue().getLastExecution() + actor.getValue().getRefreshInterval();
 
-                        if (nextExecution >= currentTime) {
+                        if (nextExecution <= currentTime) {
 
                             actor.getValue().setLastExecution(currentTime);
 
@@ -84,7 +90,8 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
                             actor.getKey().setLocation(location);
 
                             networkServiceRoot.updateRegisteredActor(
-                                    actor.getKey()
+                                    actor.getKey(),
+                                    UpdateTypes.GEOLOCATION
                             );
                         }
                     } catch (Exception e) {
@@ -112,7 +119,7 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
         try {
             this.scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
 
-            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), 10, 10, TimeUnit.SECONDS);
+            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), GEO_LOCATION_HIGH_RATE_LIMIT, GEO_LOCATION_HIGH_RATE_LIMIT, TimeUnit.SECONDS);
 
             this.status = AgentStatus.STARTED;
 
@@ -130,7 +137,7 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
 
         try {
 
-            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), 10, 10, TimeUnit.SECONDS);
+            scheduledFuture = scheduledThreadPool.scheduleAtFixedRate(new ActorUpdateTask(), GEO_LOCATION_HIGH_RATE_LIMIT, GEO_LOCATION_HIGH_RATE_LIMIT, TimeUnit.SECONDS);
 
             this.status = AgentStatus.STARTED;
 

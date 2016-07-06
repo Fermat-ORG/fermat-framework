@@ -68,6 +68,9 @@ public abstract class AbstractLayer {
 
         AddonReference addonReference = abstractAddonSubsystem.getAddonReference();
 
+        if (addonReference == null)
+            throw new CantRegisterAddonException("addonReference=null", "The addon does not contain a addon reference to recognize it.");
+
         addonReference.setLayerReference(this.layerReference);
 
         try {
@@ -100,6 +103,9 @@ public abstract class AbstractLayer {
     protected final void registerPlugin(AbstractPluginSubsystem abstractPluginSubsystem) throws CantRegisterPluginException {
 
         PluginReference pluginReference = abstractPluginSubsystem.getPluginReference();
+
+        if (pluginReference == null)
+            throw new CantRegisterPluginException("pluginReference=null", "The plugin does not contain a plugin reference to recognize it.");
 
         pluginReference.setLayerReference(this.layerReference);
 

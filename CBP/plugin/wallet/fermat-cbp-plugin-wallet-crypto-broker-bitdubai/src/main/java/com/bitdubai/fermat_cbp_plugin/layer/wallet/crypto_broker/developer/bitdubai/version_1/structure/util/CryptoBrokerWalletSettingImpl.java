@@ -48,6 +48,8 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
             cryptoBrokerWalletDatabaseDao.saveCryptoBrokerWalletSpreadSetting(cryptoBrokerWalletSettingSpread);
     }
 
+
+
     /**
      * {@inheritDoc}
      */

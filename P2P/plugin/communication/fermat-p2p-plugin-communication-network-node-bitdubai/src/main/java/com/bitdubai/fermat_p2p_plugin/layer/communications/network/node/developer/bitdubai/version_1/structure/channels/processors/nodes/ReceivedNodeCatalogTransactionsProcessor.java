@@ -111,6 +111,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
         } catch (Exception exception){
 
             try {
+                exception.printStackTrace();
 
                 LOG.error(exception.getMessage());
 
@@ -126,6 +127,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
                 session.getAsyncRemote().sendObject(packageRespond);
 
             } catch (Exception e) {
+                e.printStackTrace();
                 LOG.error(e.getMessage());
             }
 
