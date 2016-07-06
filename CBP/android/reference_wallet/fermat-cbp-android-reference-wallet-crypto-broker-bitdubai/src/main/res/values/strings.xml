@@ -17,6 +17,7 @@
     <string name="waiting_for_you">Waiting for you</string>
     <string name="about_to_expire">About to expire</string>
     <string name="waiting_for_the_customer">Waiting for the Customer</string>
+    <string name="waiting_for_closing">Negotiation is Closing</string>
     <string name="negotiation_closed">Close</string>
     <string name="negotiation_cancelled">Cancelled</string>
     <string name="negotiation_cancel">CANCEL</string>
