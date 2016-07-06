@@ -775,7 +775,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/profiles/actors");
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/profiles/actors");
 
             String formParameters = "client_public_key=" + URLEncoder.encode(clientIdentity.getPublicKey(), "UTF-8") + "&discovery_params=" + URLEncoder.encode(discoveryQueryParameters.toJson(), "UTF-8");
 
