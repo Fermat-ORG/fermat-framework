@@ -30,6 +30,14 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -51,6 +59,8 @@ public class OpenContractMonitorAgent2
     private final TransactionTransmissionManager transactionTransmissionManager;
     private final CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    private final CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private final CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
      * Default constructor with parameters
@@ -73,12 +83,17 @@ public class OpenContractMonitorAgent2
             OpenContractBusinessTransactionDao openContractBusinessTransactionDao,
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager) {
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager) {
         super(sleepTime, timeUnit, initDelayTime, pluginRoot, eventManager);
         this.openContractBusinessTransactionDao = openContractBusinessTransactionDao;
         this.transactionTransmissionManager = transactionTransmissionManager;
         this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+
     }
 
     @Override
@@ -348,6 +363,10 @@ public class OpenContractMonitorAgent2
                                     if(!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
                                         customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
                                                 ContractStatus.PENDING_PAYMENT);
+
+                                        //CLOSE NEGOTIATION
+                                        closeNegotiation(contractType, contractPurchase.getNegotiatiotId());
+
                                     }
                                     break;
                                 case SALE:
@@ -355,6 +374,9 @@ public class OpenContractMonitorAgent2
                                     if(!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
                                         customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
                                                 ContractStatus.PENDING_PAYMENT);
+
+                                        //CLOSE NEGOTIATION
+                                        closeNegotiation(contractType, contractSale.getNegotiatiotId());
                                     }
                                     break;
                             }
@@ -415,6 +437,55 @@ public class OpenContractMonitorAgent2
                     e,
                     "Sending Confirm contract",
                     "Error in Transaction Transmission Network Service");
+        }
+    }
+
+    private void closeNegotiation(ContractType contractType, String negotiationId) throws UnexpectedResultReturnedFromDatabaseException{
+
+        try {
+
+            if(contractType.equals(ContractType.PURCHASE)) {
+
+                //CLOSE PURCHASE NEGOTIATION
+                CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                customerBrokerPurchaseNegotiationManager.closeNegotiation(purchaseNegotiation);
+
+            } else if(contractType.equals(ContractType.SALE)) {
+
+                //CLOSE SALE NEGOTIATION
+                CustomerBrokerSaleNegotiation purchaseNegotiation = customerBrokerSaleNegotiationManager.
+                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                customerBrokerSaleNegotiationManager.closeNegotiation(purchaseNegotiation);
+
+            } else {
+
+                throw new UnexpectedResultReturnedFromDatabaseException("Error Close Negotiation Contract Type not exist");
+
+            }
+
+
+
+        } catch (CantGetListPurchaseNegotiationsException e){
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Close Purchase Negotiation",
+                    "Error in get negotiation");
+        } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e){
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Close Purchase Negotiation",
+                    "Error Closing negotiation");
+        } catch (CantGetListSaleNegotiationsException e){
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Close Purchase Negotiation",
+                    "Error in get negotiation");
+        } catch (CantUpdateCustomerBrokerSaleException e){
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    e,
+                    "Close Negotiation",
+                    "Error Closing negotiation");
         }
     }
 }
