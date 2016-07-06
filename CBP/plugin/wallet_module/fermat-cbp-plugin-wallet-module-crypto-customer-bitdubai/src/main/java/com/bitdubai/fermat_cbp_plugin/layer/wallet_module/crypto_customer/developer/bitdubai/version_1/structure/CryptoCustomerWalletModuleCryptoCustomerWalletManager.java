@@ -1286,6 +1286,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             String brokerPublickey = customerBrokerSaleNegotiation.getBrokerPublicKey();
             ActorIdentity brokerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(brokerPublickey, "Not Alias", new byte[0]);
             long expirationDate = customerBrokerSaleNegotiation.getNegotiationExpirationDate();
+            NegotiationStatus statusNegotiation = customerBrokerSaleNegotiation.getStatus();
             String note = "";
             String cancelReason = "";
 
@@ -1305,7 +1306,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                     customerIdentity,
                     brokerIdentity,
                     negotiationId,
-                    status,
+                    statusNegotiation,
                     clauses,
                     note,
                     lastUpdateDate,
