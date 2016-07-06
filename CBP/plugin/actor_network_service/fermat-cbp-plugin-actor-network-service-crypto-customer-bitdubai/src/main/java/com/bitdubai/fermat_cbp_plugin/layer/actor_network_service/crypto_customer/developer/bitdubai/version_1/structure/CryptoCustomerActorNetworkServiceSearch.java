@@ -85,7 +85,8 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     alias,
                     distance,
                     null,
-                    publicKey,
+                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
+                    null,///publicKey,
                     deviceLocation,
                     max,
                     null,
