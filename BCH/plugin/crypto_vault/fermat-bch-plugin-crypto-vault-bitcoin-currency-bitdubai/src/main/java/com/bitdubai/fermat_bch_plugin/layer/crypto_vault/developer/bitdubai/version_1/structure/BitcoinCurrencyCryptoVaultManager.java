@@ -110,9 +110,17 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
         vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), false, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
-        new Thread(vaultKeyHierarchyGenerator).start();
+        vaultKeyHierarchyGenerator.run();
 
-        forceImportedSeedToCryptoNetwork();
+        /**
+         * I will start the process for imported seeds. This will create the VaultHierarchy for each imported seed I found
+         * derive the keys and then passed them to the crypto network.
+         */
+        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
+            VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+            new Thread(importedSeedHierarchyGenerator).start();
+
+        }
     }
 
     /**
@@ -695,14 +703,12 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * for monitoring.
      */
     public void forceImportedSeedToCryptoNetwork() {
-        /**
-         * I will start the process for imported seeds. This will create the VaultHierarchy for each imported seed I found
-         * derive the keys and then passed them to the crypto network.
-         */
-        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
-            VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
-            new Thread(importedSeedHierarchyGenerator).start();
-
+        vaultKeyHierarchyGenerator = null;
+        try {
+            vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), false, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+        } catch (InvalidSeedException e) {
+            e.printStackTrace();
         }
+        new Thread(vaultKeyHierarchyGenerator).start();
     }
 }

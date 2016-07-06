@@ -228,7 +228,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         }
 
         //remove the last space
-        return phrase.substring(0, phrase.length());
+        return phrase.substring(0, phrase.length()-1);
     }
 
 
@@ -277,6 +277,11 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
 
     private void archiveExistingSeed() throws CantCreateAssetVaultSeed {
         int seedOrder = getNextSeedFileOrder();
+        try {
+            this.load(this.fileName);
+        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            throw new CantCreateAssetVaultSeed(CantCreateAssetVaultSeed.DEFAULT_MESSAGE, cantLoadExistingVaultSeed, "unable to replace seed with ned one", "IO error");
+        }
         storeSeedInFile(this.fileName + "_" + seedOrder);
     }
 

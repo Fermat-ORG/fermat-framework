@@ -64,7 +64,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
      */
     private VaultKeyHierarchy vaultKeyHierarchy;
     private boolean isRunning;
-    private boolean shouldRun;
+    private boolean shouldRun = true;
 
     /**
      * platform services variables
@@ -90,10 +90,12 @@ class VaultKeyHierarchyMaintainer implements Agent{
     public void start() throws CantStartAgentException {
         VaultKeyHierarchyMaintainerAgent agent = new VaultKeyHierarchyMaintainerAgent();
         Thread agentThread = new Thread(agent, VaultKeyHierarchyMaintainer.class.getName());
-        agentThread.start();
-        this.isRunning = true;
         //flag to control running status
         this.shouldRun = true;
+
+        agentThread.start();
+        this.isRunning = true;
+
     }
 
     @Override

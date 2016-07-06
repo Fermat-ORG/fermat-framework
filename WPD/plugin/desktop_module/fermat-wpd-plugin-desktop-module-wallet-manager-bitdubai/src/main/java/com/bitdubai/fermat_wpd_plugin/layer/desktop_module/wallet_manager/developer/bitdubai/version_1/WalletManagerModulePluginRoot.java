@@ -413,7 +413,11 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     @Override
     public List<String> getMnemonicCode() throws Exception {
         try {
-            return cryptoVaultManager.exportCryptoVaultSeed().getMnemonicCode();
+            List<String> textToShow = new ArrayList<>();
+            textToShow.add("mNemonic code: " + cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase());
+            textToShow.add("Date: " + cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds());
+
+            return textToShow;
         } catch (Exception cantLoadExistingVaultSeed) {
             throw new Exception(cantLoadExistingVaultSeed);
         }
@@ -421,7 +425,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
-        //cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,blockchainNetworkType);
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date);
     }
 
     /**
