@@ -211,8 +211,24 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
      * @param mnemonicCode
      * @return
      */
-    private List<String> getmNemonicAsList(String mnemonicCode){
+    public static List<String> getmNemonicAsList(String mnemonicCode){
         return Splitter.on(" ").splitToList(mnemonicCode);
+    }
+
+    /**
+     * Gets the mnemonic code as a phrase in a single string.
+     * @param mnemonicCode
+     * @return
+     */
+    public static String getmNemonicAsString(List<String> mnemonicCode){
+        StringBuilder phrase = new StringBuilder();
+        for (String word : mnemonicCode){
+            phrase.append(word);
+            phrase.append(" ");
+        }
+
+        //remove the last space
+        return phrase.substring(0, phrase.length());
     }
 
 

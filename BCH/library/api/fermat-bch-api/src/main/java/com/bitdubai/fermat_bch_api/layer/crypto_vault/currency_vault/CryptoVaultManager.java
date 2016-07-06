@@ -91,6 +91,7 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      */
     void importSeedFromMnemonicCode(List<String> mnemonicCode,long date) throws CantImportSeedException;
 
+
     /**
      * Signs the owned inputs of the passed Draft transaction
      * @param draftTransaction the transaction to sign
