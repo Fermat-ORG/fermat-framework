@@ -161,7 +161,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias, phrase, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
+            intraWalletUserIdentityDao.createNewUser(alias, phrase, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency, location);
 
             IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, accuracy, frequency,location);
 
@@ -188,7 +188,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
+            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage, accuracy, frequency, location);
             com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage, accuracy, frequency,location);
 
             registerIdentities();
@@ -221,9 +221,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException {
             try {
-                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage, accuracy, frequency);
+                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage, accuracy, frequency, location);
                 updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
 
             }
@@ -395,26 +395,26 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
 
-    private long getFrecuency(Frecuency frecuency)
+    private long getFrecuency(Frequency frecuency)
     {
-        long frecuency = 10;
+        long refresh = 10;
 
         switch (frecuency){
             case LOW:
-                frecuency = 60;
+                refresh = 60;
                 break;
             case NORMAL:
-                frecuency = 20;
+                refresh = 20;
                 break;
             case HIGH:
-                frecuency = 5;
+                refresh = 5;
                 break;
             case NONE:
-                frecuency = 0;
+                refresh = 0;
                 break;
         }
 
-        return frecuency;
+        return refresh;
 
     }
 

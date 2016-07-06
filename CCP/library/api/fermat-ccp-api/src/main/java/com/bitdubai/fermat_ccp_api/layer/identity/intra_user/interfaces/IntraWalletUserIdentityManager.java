@@ -69,7 +69,7 @@ public interface IntraWalletUserIdentityManager  extends ModuleManager<FermatSet
      * @param profileImage
      * @throws CantUpdateIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage, Long accuracy, Frequency frequency) throws CantUpdateIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException;
 
     /**
      *The method <code>deleteIntraUserIdentity</code> change identity status to inactive

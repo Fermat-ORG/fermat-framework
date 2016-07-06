@@ -53,7 +53,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return the login identity generated for the said intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException
      */
-     IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
+     IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage,Location location) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 
     /**
      *
@@ -215,7 +215,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param profileImage
      * @throws CantUpdateIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase,byte[] profileImage, Long accuracy, Frequency frequency) throws CantUpdateIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase,byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException;
 
 
     /**

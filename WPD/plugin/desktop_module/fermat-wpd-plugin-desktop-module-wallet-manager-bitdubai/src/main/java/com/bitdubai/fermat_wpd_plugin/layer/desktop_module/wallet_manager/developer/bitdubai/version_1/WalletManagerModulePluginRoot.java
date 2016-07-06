@@ -544,7 +544,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage,Long.parseLong("0"), Frequency.NONE);
+            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage,Long.parseLong("100"), Frequency.NORMAL, null);
 
         }
         catch( CantCreateNewIntraWalletUserException e)

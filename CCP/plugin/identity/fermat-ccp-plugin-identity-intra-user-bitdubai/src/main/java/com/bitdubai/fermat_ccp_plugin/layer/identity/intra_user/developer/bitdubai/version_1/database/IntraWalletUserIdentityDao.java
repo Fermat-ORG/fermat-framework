@@ -133,7 +133,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser (String alias, String phrase,String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage, Long accuracy, Frequency frequency) throws CantCreateNewDeveloperException {
+    public void createNewUser (String alias, String phrase,String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists (alias)) {
@@ -152,6 +152,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "true");
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN, String.valueOf(accuracy));
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN, frequency.getCode());
+            record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN, location.getLatitude());
+            record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN, location.getLongitude());
 
             table.insertRecord(record);
 
@@ -173,7 +175,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
 
-    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage, Long accuracy, Frequency frequency) throws CantUpdateIntraUserIdentityException {
+    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIntraUserIdentityException {
 
         try {
 
@@ -202,6 +204,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN, String.valueOf(accuracy));
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN, frequency.getCode());
+                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN, location.getLatitude());
+                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN, location.getLongitude());
 
                 table.updateRecord(record);
             }
