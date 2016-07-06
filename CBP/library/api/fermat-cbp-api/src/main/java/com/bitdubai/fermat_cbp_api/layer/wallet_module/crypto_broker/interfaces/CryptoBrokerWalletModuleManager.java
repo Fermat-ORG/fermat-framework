@@ -251,6 +251,7 @@ public interface CryptoBrokerWalletModuleManager
     CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting()
             throws CantNewEmptyCryptoBrokerWalletSettingException;
 
+
     /**
      * @return
      *
@@ -586,6 +587,9 @@ public interface CryptoBrokerWalletModuleManager
      */
     CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey)
             throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+
+
 
     /**
      * Returns an exchange rate of a given date, for a specific currencyPair

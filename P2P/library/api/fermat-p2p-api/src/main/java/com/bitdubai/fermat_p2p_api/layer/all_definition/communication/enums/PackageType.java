@@ -44,6 +44,8 @@ public enum PackageType {
 
     UPDATE_ACTOR_PROFILE_REQUEST,
 
+    UPDATE_PROFILE_GEOLOCATION_REQUEST,
+
     /*
      * Respond packet types
      */

@@ -601,7 +601,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
      */
     private void takeCloseNegotiationsAndCreateTransactionInProgress() throws CantGetListPurchaseNegotiationsException, DatabaseOperationException, InvalidParameterException, MissingCustomerBrokerPurchaseDataException {
         Collection<CustomerBrokerPurchaseNegotiation> closedNegotiations = purchaseNegotiationManager.
-                getNegotiationsByStatus(NegotiationStatus.CLOSED);
+                getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CLOSING);
 
         for (CustomerBrokerPurchaseNegotiation negotiation : closedNegotiations) {
             UUID negotiationId = negotiation.getNegotiationId();

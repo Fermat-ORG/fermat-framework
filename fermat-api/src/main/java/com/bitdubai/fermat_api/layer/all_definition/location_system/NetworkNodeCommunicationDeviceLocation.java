@@ -134,4 +134,21 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
                 ", source=" + source +
                 '}';
     }
+
+    /**
+     * Create a instance whit the parameters
+     * @param latitude
+     * @param longitude
+     * @return NetworkNodeCommunicationDeviceLocation
+     */
+    public static NetworkNodeCommunicationDeviceLocation getInstance(final Double latitude, final Double longitude){
+        return new NetworkNodeCommunicationDeviceLocation(latitude,
+                                                          longitude,
+                                                          null,
+                                                          0,
+                                                          null,
+                                                          0,
+                                                          LocationSource.UNKNOWN
+        );
+    }
 }
