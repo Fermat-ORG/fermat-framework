@@ -351,16 +351,16 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
                     //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
             FermatBundle fermatBundle = new FermatBundle();
-            FermatBundle fermatBundle2 = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-            fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, BROADCAST_CODE);
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, BROADCAST_CODE);
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
+            //TODO matias, este fue el q comente, explota, y al llegar la notificacion abre es la comunidad en api > 21
+            //broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle);
 
 //            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {
             throw new CantGetPendingTransactionException(
