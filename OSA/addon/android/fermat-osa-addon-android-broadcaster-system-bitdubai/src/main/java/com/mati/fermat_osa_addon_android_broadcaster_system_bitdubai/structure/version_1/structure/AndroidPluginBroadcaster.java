@@ -22,8 +22,8 @@ public class AndroidPluginBroadcaster implements Broadcaster{
     }
 
     @Override
-    public void publish(BroadcasterType broadcasterType, String appCode, String code) {
-        androidCoreBroadcasterUtil.publish(broadcasterType,appCode,code);
+    public void publish(BroadcasterType broadcasterType, String appPublicKeyToOpen, String code) {
+        androidCoreBroadcasterUtil.publish(broadcasterType, appPublicKeyToOpen,code);
     }
 
     @Override

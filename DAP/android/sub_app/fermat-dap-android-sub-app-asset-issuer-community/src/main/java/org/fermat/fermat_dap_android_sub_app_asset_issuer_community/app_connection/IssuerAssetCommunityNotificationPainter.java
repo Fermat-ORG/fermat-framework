@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by natalia on 11/02/16.
  */
-public class IssuerAssetCommunityNotificationPainter implements NotificationPainter, Serializable {
+public class IssuerAssetCommunityNotificationPainter extends NotificationPainter implements Serializable {
 
     private String title;
     private String textBody;

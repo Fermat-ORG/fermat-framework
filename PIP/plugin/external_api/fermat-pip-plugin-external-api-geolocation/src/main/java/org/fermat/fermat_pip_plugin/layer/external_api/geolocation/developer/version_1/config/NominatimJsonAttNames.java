@@ -51,6 +51,11 @@ public class NominatimJsonAttNames {
     public static final String CITY = "city";
 
     /**
+     * Represents the Nominatim Town
+     */
+    public static final String TOWN = "town";
+
+    /**
      * Represents the Nominatim County
      */
     public static final String COUNTY = "county";

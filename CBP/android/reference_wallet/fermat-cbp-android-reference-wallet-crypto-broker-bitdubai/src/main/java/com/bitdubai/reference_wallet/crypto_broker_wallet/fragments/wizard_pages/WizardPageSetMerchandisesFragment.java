@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -123,7 +122,12 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                 walletSettings.setIsPresentationHelpEnabled(true);
                 moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
             } else {
-                selectedIdentity = moduleManager.getListOfIdentities().get(0);
+                List<CryptoBrokerIdentity> list = moduleManager.getListOfIdentities();
+                if(list!=null){
+                    if(!list.isEmpty())
+                        selectedIdentity = list.get(0);
+                }
+
             }
 
         } catch (Exception ex) {
@@ -185,20 +189,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
             }
         });
 
+        fragmentContainer.setVisibility(View.VISIBLE);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //If wallet already configured, go directly to wallet
-                if (walletConfigured) {
-                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-                } else {  //otherwise, show wizard page
-                    fragmentContainer.setVisibility(View.VISIBLE);
-                    showHelpDialog();
-                }
-            }
-        }, 250);
 
+        showHelpDialog();
 
         return layout;
     }
@@ -223,7 +217,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                             .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                             .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                             .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 } else {
@@ -235,7 +229,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                             .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                             .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                             .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
                 }
 
@@ -245,8 +239,16 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
 
                 final com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
-                if (showDialog)
-                    presentationDialog.show();
+                final PresentationDialog presentationDialogTemp = presentationDialog;
+                if (showDialog){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            presentationDialogTemp.show();
+                        }
+                    });
+                }
+
             }
 
         } catch (FermatException ex) {

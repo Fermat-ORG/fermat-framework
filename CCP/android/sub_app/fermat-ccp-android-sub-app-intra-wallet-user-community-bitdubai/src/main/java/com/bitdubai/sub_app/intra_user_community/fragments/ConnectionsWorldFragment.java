@@ -442,11 +442,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-           final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-            notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
-            notificationsProgressDialog.setCancelable(true);
+          // final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+         //   notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
+          //  notificationsProgressDialog.setCancelable(true);
 
-            notificationsProgressDialog.show();
+           // notificationsProgressDialog.show();
 
             worker = new FermatWorker() {
                 @Override
