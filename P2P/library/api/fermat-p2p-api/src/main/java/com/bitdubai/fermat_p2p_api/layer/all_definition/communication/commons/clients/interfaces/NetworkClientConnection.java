@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
@@ -39,12 +39,15 @@ public interface NetworkClientConnection {
     /**
      * Through the method <code>updateRegisteredProfile</code> we can update registered profile
      * in the server.
+     * We must to indicate which type of update we're trying to do.
      *
      * @param profile  of the component that we're trying to update.
+     * @param type     of the update.
      *
      * @throws CantUpdateRegisteredProfileException      if something goes wrong.
      */
-    void updateRegisteredProfile(Profile profile) throws CantUpdateRegisteredProfileException;
+    void updateRegisteredProfile(Profile     profile,
+                                 UpdateTypes type   ) throws CantUpdateRegisteredProfileException;
 
     /**
      * Through the method <code>unregisterProfile</code> we can unregister a profile in the server.

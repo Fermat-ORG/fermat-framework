@@ -1,7 +1,13 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
+import com.google.gson.JsonObject;
+
+import org.apache.commons.lang.NotImplementedException;
 
 import java.io.Serializable;
 
@@ -33,11 +39,17 @@ public abstract class Profile implements Serializable {
     private ProfileTypes type;
 
     /**
+     * Represent the status of the profile
+     */
+    private ProfileStatus status;
+
+    /**
      * Constructor
      */
     public Profile(final ProfileTypes type){
 
-        this.type = type;
+        this.type   = type;
+        this.status = ProfileStatus.UNKNOWN;
     }
 
     /**
@@ -58,6 +70,14 @@ public abstract class Profile implements Serializable {
         this.identityPublicKey = identityPublicKey;
     }
 
+    public ProfileStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProfileStatus status) {
+        this.status = status;
+    }
+
     /**
      * Gets the value of location and returns
      *
@@ -76,8 +96,45 @@ public abstract class Profile implements Serializable {
         this.location = location;
     }
 
+    public void setLocation(final Double latitude ,
+                            final Double longitude) {
+
+        this.location = new NetworkNodeCommunicationDeviceLocation(
+                latitude,
+                longitude,
+                null,
+                0,
+                null,
+                0,
+                LocationSource.UNKNOWN
+        );
+    }
+
     public ProfileTypes getType() {
         return type;
+    }
+
+    public static Profile deserialize(final JsonObject jsonObject) {
+
+        throw new NotImplementedException();
+    }
+
+    public JsonObject serialize() {
+
+        JsonObject jsonObject = new JsonObject();
+
+        if (type != null)
+            jsonObject.addProperty("typ", type.getCode());
+
+        if (identityPublicKey != null)
+        jsonObject.addProperty("ipk", identityPublicKey);
+
+        if (location != null) {
+            jsonObject.addProperty("lat", location.getLatitude());
+            jsonObject.addProperty("lng", location.getLongitude());
+        }
+
+        return jsonObject;
     }
 
     /**
@@ -109,6 +166,7 @@ public abstract class Profile implements Serializable {
                 "identityPublicKey='" + identityPublicKey + '\'' +
                 ", location=" + location +
                 ", type=" + type +
+                ", status=" + status +
                 '}';
     }
 }
