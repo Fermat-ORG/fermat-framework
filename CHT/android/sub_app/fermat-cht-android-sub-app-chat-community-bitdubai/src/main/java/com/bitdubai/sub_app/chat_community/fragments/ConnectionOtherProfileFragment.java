@@ -376,9 +376,4 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetChatUserIdentityException {
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-    }
 }

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2016.06.07.
  * Edited by Nelson Ramirez (nelsoalfo@gmail.com) on 2016.06.18.
  */
-public class OptionMenuItem extends MenuItem {
+public class OptionMenuItem extends MenuItem implements Serializable {
     /*
      * These should be kept in sync with MenuItem android class constants for showAsAction
      */

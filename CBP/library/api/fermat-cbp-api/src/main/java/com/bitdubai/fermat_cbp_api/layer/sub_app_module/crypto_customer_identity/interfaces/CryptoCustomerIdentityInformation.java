@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identit
  * Created by natalia on 16/09/15.
  */
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.io.Serializable;
 
@@ -24,6 +24,6 @@ public interface CryptoCustomerIdentityInformation extends Serializable{
 
     long getAccuracy();
 
-    Frequency getFrequency();
+    GeoFrequency getFrequency();
 }
 

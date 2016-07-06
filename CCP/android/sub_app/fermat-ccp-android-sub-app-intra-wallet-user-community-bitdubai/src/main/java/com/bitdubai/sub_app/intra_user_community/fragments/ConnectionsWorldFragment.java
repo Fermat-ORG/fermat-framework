@@ -4,6 +4,7 @@ package com.bitdubai.sub_app.intra_user_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,12 +24,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -50,9 +56,13 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.adapters.GeolocationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
+import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
+import com.bitdubai.sub_app.intra_user_community.common.popups.SearchAliasDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
@@ -73,12 +83,12 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>  implements
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation>, GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias {
 
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 10;
+    private static final int MAX = 12;
     /**
      * MANAGERS
      */
@@ -119,6 +129,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private DeviceLocation location;
     private double distance;
     private String alias;
+
+    //flags
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
 
 
 
@@ -224,10 +237,31 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
-          setUpReferences();
 
+            //Set up RecyclerView
+            setUpReferences();
             showEmpty(true, emptyView);
-            showEmpty(false, searchEmptyView);
+
+
+            //adapter.setFermatListEventListener(this);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (dy > 0) {
+                        visibleItemCount = layoutManager.getChildCount();
+                        totalItemCount = layoutManager.getItemCount();
+                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                        offset = totalItemCount;
+                        final int lastItem = pastVisiblesItems + visibleItemCount;
+                        if (lastItem == totalItemCount) {
+                            onRefresh();
+                        }
+                    }
+                }
+            });
+
+
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -254,7 +288,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+       // adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations,  appSession, moduleManager);
         recyclerView.setAdapter(adapter);
         adapter.setFermatListEventListener(this);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -404,14 +439,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     @Override
     public void onRefresh() {
 
-        offset = 0;
+        //offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-          /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-            notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
-            notificationsProgressDialog.setCancelable(true);
-            notificationsProgressDialog.show();*/
 
+          // final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+           // notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
+           // notificationsProgressDialog.setCancelable(true);
+
+           // notificationsProgressDialog.show();
+
+
+           /* if (offset>0) {
+                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
+                notificationsProgressDialog.setCancelable(true);
+                notificationsProgressDialog.show();
+            }*/
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -423,7 +466,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                 //   notificationsProgressDialog.dismiss();
+
+                    //notificationsProgressDialog.dismiss();
+
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -452,7 +497,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                  // notificationsProgressDialog.dismiss();
+
+                   // notificationsProgressDialog.dismiss();
+
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -462,6 +509,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 }
             });
+            offset=0;
             worker.execute();
         }
     }
@@ -493,8 +541,27 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             if (id == 3)
                 showDialogHelp();
 
-           // if (id == 2)
-                //showDialogHelp();
+            if (id == 2)
+                try {
+                    GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
+                    geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    });
+                    Window window = geolocationDialog.getWindow();
+                    WindowManager.LayoutParams wlp = window.getAttributes();
+                    wlp.gravity = Gravity.TOP;
+                    //wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                    window.setAttributes(wlp);
+                    //geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    geolocationDialog.show();
+
+
+
+                } catch ( Exception e) {
+                    e.printStackTrace();
+                }
 
             if (id == 1)
                 searchIntraUsers();
@@ -905,6 +972,50 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
     }
 
+
+    @Override
+    public void onMethodCallback(ExtendedCity city) {
+        location = new DeviceLocation();
+        location.setLongitude((double) city.getLongitude());
+        location.setLatitude((double) city.getLatitude());
+        location.setAccuracy((long) distance);
+
+        onRefresh();
+/*
+        greenBar = (RelativeLayout) rootView.findViewById(R.id.green_bar_layout);
+        closeGreenBar = (ImageView) rootView.findViewById(R.id.close_green_bar);
+        greenBarCountry = (TextView) rootView.findViewById(R.id.country_green_bar);
+        greenBarCity = (TextView) rootView.findViewById(R.id.city_green_bar);
+
+        greenBarCountry.setText(city.getCountryName());
+        greenBarCity.setText(city.getName());
+
+        //greenBar.bringToFront();
+        greenBar.setVisibility(View.VISIBLE);
+
+        location=new DeviceLocation();
+        location.setLatitude((double) city.getLatitude());
+        location.setLongitude((double) city.getLongitude());
+        //distance=identity.getAccuracy();
+        //location.setAccuracy((long) distance);
+
+
+        closeGreenBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                greenBar.setVisibility(View.GONE);
+                location = null;
+                offset=0;
+                onRefresh();
+            }
+        });     */
+    }
+
+    @Override
+    public void onMethodCallbackAlias(String aliasSearch) {
+        alias=aliasSearch;
+        onRefresh();
+    }
 }
 
 

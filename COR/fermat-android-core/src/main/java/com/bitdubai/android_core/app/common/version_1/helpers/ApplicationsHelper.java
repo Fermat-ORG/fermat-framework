@@ -7,6 +7,7 @@ import com.bitdubai.android_core.app.FermatApplication;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.lang.ref.WeakReference;
 
@@ -28,7 +29,7 @@ public class ApplicationsHelper implements FermatApplicationCaller {
             Intent intent;
             intent = new Intent();
             intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, "main_desktop");
-            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, Activities.CCP_DESKTOP.getCode());
             intent.setAction("org.fermat.APP_LAUNCHER");
             context.get().sendBroadcast(intent);
         } catch (Exception e) {

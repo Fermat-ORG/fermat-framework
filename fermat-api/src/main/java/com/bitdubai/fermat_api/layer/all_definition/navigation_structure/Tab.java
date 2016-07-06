@@ -4,12 +4,13 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTab;
 
+import java.io.Serializable;
 
 
 /**
  * Created by Furszyfer Matias on 2015.07.17..
  */
-public class Tab implements FermatTab {
+public class Tab implements FermatTab,Serializable {
 
     /**
      * Tab class member variables
@@ -22,6 +23,10 @@ public class Tab implements FermatTab {
 
     private FermatDrawable drawable;
 
+    /**
+     * Custom View for the tab
+     * eg: you can use frameworks view or your custom view
+     */
     private FermatView fermatView;
 
     /**
@@ -79,6 +84,10 @@ public class Tab implements FermatTab {
 
     public void setFermatView(FermatView fermatView) {
         this.fermatView = fermatView;
+    }
+
+    public boolean hasCustomView(){
+        return fermatView!=null;
     }
 
     @Override

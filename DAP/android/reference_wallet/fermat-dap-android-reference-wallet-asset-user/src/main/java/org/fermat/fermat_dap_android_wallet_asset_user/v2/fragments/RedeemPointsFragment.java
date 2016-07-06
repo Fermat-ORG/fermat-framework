@@ -159,7 +159,7 @@ public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint, 
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

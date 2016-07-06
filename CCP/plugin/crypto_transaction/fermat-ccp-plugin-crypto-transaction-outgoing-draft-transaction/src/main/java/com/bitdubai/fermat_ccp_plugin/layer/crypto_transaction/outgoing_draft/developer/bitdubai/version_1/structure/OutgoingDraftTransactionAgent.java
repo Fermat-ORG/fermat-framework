@@ -18,9 +18,11 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
@@ -39,6 +41,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +55,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
 
     private ErrorManager errorManager;
     private CryptoVaultManager cryptoVaultManager;
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     private CryptoWalletManager cryptoWalletManager;
     private OutgoingDraftTransactionDao outgoingIntraActorDao;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
@@ -60,7 +65,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
 
     public OutgoingDraftTransactionAgent(final ErrorManager errorManager,
                                          final CryptoVaultManager cryptoVaultManager,
-                                         final BitcoinNetworkManager bitcoinNetworkManager,
+                                         final BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                          final CryptoWalletManager cryptoWalletManager,
                                          final OutgoingDraftTransactionDao outgoingIntraActorDao,
                                          final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
@@ -111,7 +116,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private CryptoWalletManager cryptoWalletManager;
         private CryptoVaultManager cryptoVaultManager;
         private EventManager eventManager;
-        private BitcoinNetworkManager bitcoinNetworkManager;
+        private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
 
         private static final int SLEEP_TIME = 5000;
@@ -123,7 +128,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private void initialize(ErrorManager errorManager,
                                 OutgoingDraftTransactionDao dao,
                                 CryptoWalletManager cryptoWalletManager,
-                                BitcoinNetworkManager bitcoinNetworkManager,
+                                BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                 CryptoVaultManager cryptoVaultManager,
                                 EventManager eventManager) {
             this.dao = dao;
@@ -361,6 +366,14 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         }
 
         private CryptoWalletTransactionRecord buildBitcoinTransaction(OutgoingDraftTransactionWrapper transaction) {
+
+            long total = 0;
+
+            if(transaction.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
+                total = transaction.getValueToSend() + transaction.getFee();
+            else
+                total = transaction.getValueToSend() - transaction.getFee();
+
             return buildBitcoinTransaction(
                     transaction.getRequestId(),
                     transaction.getTxHash(),
@@ -373,7 +386,10 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                     transaction.getTimestamp(),
                     transaction.getMemo(),
                     transaction.getBlockchainNetworkType(),
-                    transaction.getCryptoCurrency()
+                    transaction.getCryptoCurrency(),
+                    transaction.getFee(),
+                    transaction.getFeeOrigin(),
+                    total
             );
         }
 
@@ -388,7 +404,10 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                                                        final long timeStamp,
                                                                        final String memo,
                                                                        final BlockchainNetworkType blockchainNetworkType,
-                                                                       final CryptoCurrency cryptoCurrency) {
+                                                                       final CryptoCurrency cryptoCurrency,
+                                                                      final long fee,
+                                                                      final FeeOrigin feeOrigin,
+                                                                      final long total) {
             return new CryptoWalletTransactionRecord() {
                 @Override
                 public CryptoAddress getAddressFrom() {
@@ -413,6 +432,11 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                 @Override
                 public long getAmount() {
                     return amount;
+                }
+
+                @Override
+                public long getTotal() {
+                    return total;
                 }
 
                 @Override
@@ -458,6 +482,16 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                 @Override
                 public CryptoCurrency getCryptoCurrency() {
                     return cryptoCurrency;
+                }
+
+                @Override
+                public FeeOrigin getFeeOrigin(){
+                    return feeOrigin;
+                }
+
+                @Override
+                public long getFee(){
+                    return fee;
                 }
             };
         }

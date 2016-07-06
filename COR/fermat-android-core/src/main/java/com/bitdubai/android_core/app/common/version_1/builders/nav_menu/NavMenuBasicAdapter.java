@@ -5,7 +5,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 
-import com.bitdubai.android_core.app.common.version_1.util.ResourceLocationSearcherHelper;
+import com.bitdubai.android_core.app.common.version_1.util.res_manager.ResourceLocationSearcherHelper;
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatLayout;
@@ -51,7 +52,7 @@ public class NavMenuBasicAdapter extends FermatAdapter<MenuItem, NavigationItemM
         int rowRes = 0;
         if(body.getRowLayout()!=null){
             FermatLayout fermatLayout = body.getRowLayout();
-            rowRes = ResourceLocationSearcherHelper.obtainRes(context, fermatLayout.getId(), fermatLayout.getSourceLocation(), fermatLayout.getOwner().getOwnerAppPublicKey());
+            rowRes = ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.LAYOUT_TYPE,context, fermatLayout.getId(), fermatLayout.getSourceLocation(), fermatLayout.getOwner().getOwnerAppPublicKey());
         }
         return (rowRes!=0)?rowRes:com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.navigation_row;
     }
@@ -74,7 +75,7 @@ public class NavMenuBasicAdapter extends FermatAdapter<MenuItem, NavigationItemM
                 holder.getLabel().setTextColor(Color.parseColor(data.getTextColor()));
             }
             FermatDrawable icon = data.getFermatDrawable();
-            if(icon!=null) holder.getIcon().setImageResource(ResourceLocationSearcherHelper.obtainRes(context, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey()));
+            if(icon!=null) holder.getIcon().setImageResource(ResourceLocationSearcherHelper.obtainRes(ResourceSearcher.DRAWABLE_TYPE,context, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey()));
         }catch (Exception e){
             e.printStackTrace();
         }

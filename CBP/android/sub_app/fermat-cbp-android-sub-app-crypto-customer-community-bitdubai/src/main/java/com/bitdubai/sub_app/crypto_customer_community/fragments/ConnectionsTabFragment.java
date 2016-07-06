@@ -8,11 +8,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -23,6 +25,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -105,9 +108,6 @@ public class ConnectionsTabFragment
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -169,6 +169,49 @@ public class ConnectionsTabFragment
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+        SearchViewStyleHelper.on(searchView)
+                .setCursorColor(Color.WHITE)
+                .setTextColor(Color.WHITE)
+                .setHintTextColor(Color.WHITE)
+                .setSearchHintDrawable(R.drawable.ccc_search_icon_withe)
+                .setSearchButtonImageResource(R.drawable.ccc_search_icon_withe)
+                .setCloseBtnImageResource(R.drawable.ccc_close_icon_white)
+                .setSearchPlateTint(Color.WHITE)
+                .setSubmitAreaTint(Color.WHITE);
+
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<CryptoCustomerCommunityInformation> filteredList = filterList(newText, connectedActorList);
+                adapter.changeDataSet(filteredList);
+                return true;
+            }
+        });
+    }
+
+    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
+        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoCustomerCommunityInformation item : baseList) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+
+        return filteredList;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case FragmentsCommons.HELP_OPTION_MENU_ID:
@@ -179,7 +222,7 @@ public class ConnectionsTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -239,9 +282,11 @@ public class ConnectionsTabFragment
 
         try {
             offset = pos;
-            final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
-            dataSet.addAll(result);
+            if(moduleManager.getSelectedActorIdentity() != null) {
+                final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<CryptoCustomerCommunityInformation> result = moduleManager.listAllConnectedCryptoCustomers(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
@@ -234,7 +235,10 @@ public BitcoinLossProtectedWalletTransactionWalletRecord buildLossWalletRecord()
                 actorType,
                 actorType,
                 blockchainNetworkType,
-                CryptoCurrency.BITCOIN);
+                CryptoCurrency.BITCOIN,
+                0,
+                FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT,
+                cryptoAmount);
 
 
         return bitcoinLossProtectedWalletTransactionRecord;

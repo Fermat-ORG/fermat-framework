@@ -1,21 +1,22 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.tab_layout;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.drawables.Badge;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
+
+import java.io.Serializable;
 
 /**
  * Created by Matias Furszyfer on 2016.06.29..
  */
-public class TabBadgeView extends FermatView {
+public class TabBadgeView extends FermatView implements Serializable {
 
     private String title;
-    private int notificationNumbers;
+    private Badge badge;
+    private float titleSize = 24;
 
     public TabBadgeView() {
-    }
-
-    public TabBadgeView(int id, SourceLocation sourceLocation) {
-        super(id, null, sourceLocation);
+        super(100, SourceLocation.FERMAT_FRAMEWORK);
     }
 
     public String getTitle() {
@@ -26,11 +27,15 @@ public class TabBadgeView extends FermatView {
         this.title = title;
     }
 
-    public int getNotificationNumbers() {
-        return notificationNumbers;
+    public Badge getBadge() {
+        return badge;
     }
 
-    public void setNotificationNumbers(int notificationNumbers) {
-        this.notificationNumbers = notificationNumbers;
+    public void setBadge(Badge badge) {
+        this.badge = badge;
+    }
+
+    public float getTitleSize() {
+        return titleSize;
     }
 }

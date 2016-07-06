@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
@@ -56,7 +59,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      *
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
-    List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListCryptoBrokersException;
+    List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias, final int max, final int offset) throws CantListCryptoBrokersException;
 
 
     /**
@@ -233,5 +236,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager
 
     List<ExtendedCity> getExtendedCitiesByFilter(String filter)
             throws CantGetCitiesListException;
+
+    Location getLocation() throws CantGetDeviceLocationException;
 
 }

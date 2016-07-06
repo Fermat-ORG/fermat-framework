@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
@@ -53,7 +53,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return the login identity generated for the said intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException
      */
-     IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
+     IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage,Location location) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 
     /**
      *
@@ -215,7 +215,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @param profileImage
      * @throws CantUpdateIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase,byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantUpdateIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase,byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException;
 
 
     /**

@@ -47,7 +47,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
@@ -379,12 +379,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override

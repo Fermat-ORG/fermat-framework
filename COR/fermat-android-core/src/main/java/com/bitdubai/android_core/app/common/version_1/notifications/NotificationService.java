@@ -7,9 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
-import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -36,7 +34,6 @@ public class NotificationService extends Service {
     private final IBinder mBinder = new LocalBinder();
     // map from AppPublicKey to notificationId
     private Map<String,Integer> lstNotifications;
-    private Map<String,Notification> notifications;
 
     private Map<Integer,NotificationCompat.Builder> mapNotifications;
     private int notificationIdCount;
@@ -44,7 +41,7 @@ public class NotificationService extends Service {
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
 
-
+    int number = 0;
 
 
     public class LocalBinder extends Binder {
@@ -84,11 +81,25 @@ public class NotificationService extends Service {
         Log.v(LOG_TAG, "in onDestroy");
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent.getAction();
+        if(action.equals("cancel")){
+            String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
+            cancelNotification(appPublicKey);
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     public void cancelNotification(String appPublicKey) {
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
-        int id = lstNotifications.get(appPublicKey);
-        notificationManager.cancel(id);
+        if(lstNotifications.containsKey(appPublicKey)) {
+            int id = lstNotifications.get(appPublicKey);
+            notificationManager.cancel(id);
+        }else {
+            Log.i(LOG_TAG,"Cancel notificación arrive with no public key");
+        }
     }
 
     public void pushNotification(String appPublicKey,Notification notification) {
@@ -103,31 +114,27 @@ public class NotificationService extends Service {
         }else{
             id = lstNotifications.get(appPublicKey);
         }
-        notificationManager.notify(id,notification);
+//        notification.deleteIntent =
+        notificationManager.notify(id, notification);
     }
 
     public void notificate(String publicKey,String code){
         Notification.Builder builder = null;
+        int notificationId = 0;
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
         if (publicKey != null) {
-
-
             if (lstNotifications.containsKey(publicKey)){
-                int notificationId = lstNotifications.get(publicKey);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    for (StatusBarNotification statusBarNotification : notificationManager.getActiveNotifications()) {
-                        if(statusBarNotification.getId()==notificationId){
-
-                        }
-                    }
-                }else{
-
+                notificationId = lstNotifications.get(publicKey);
+            }else {
+                synchronized (this) {
+                    notificationId = lstNotifications.size() + 1;
+                    lstNotifications.put(publicKey,notificationId);
                 }
-
             }
-            // notificationIdCount++;
-            // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
+                        // notificationIdCount++;
+                        // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
+
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
             NotificationPainter notificationPainter = null;
             try {
@@ -183,7 +190,7 @@ public class NotificationService extends Service {
                         .setContentIntent(pi)
                         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.YELLOW, 3000, 3000);
-                Log.i(LOG_TAG,"Launcher: "+publicKey);
+                Log.i(LOG_TAG, "Launcher: " + publicKey);
             }
 
         } else {
@@ -199,7 +206,92 @@ public class NotificationService extends Service {
         if(builder!=null) {
             Notification notification = builder.build();
 //            mapNotifications.put()
-            notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/0, notification);
+            notificationManager.notify(/*(fermatStructure!=null)?notificationId:*/notificationId, notification);
+        }
+    }
+
+    public void notificate(String publicKey,FermatBundle fermatBundle){
+        Notification.Builder builder = null;
+        int notificationId = 0;
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        if(publicKey==null) throw new IllegalArgumentException("App public key null");
+
+        if(lstNotifications.containsKey(publicKey)){
+            notificationId = lstNotifications.get(publicKey);
+        }else{
+            synchronized (this) {
+                number++;
+                notificationId = number;
+                lstNotifications.put(publicKey,notificationId);
+            }
+        }
+
+        AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
+        NotificationPainter notificationPainter = null;
+        try {
+            notificationPainter = fermatAppConnection.getNotificationPainter(fermatBundle);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Intent cancelIntent = new Intent("cancel");
+        cancelIntent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,publicKey);
+        PendingIntent cancelPendingIntent = PendingIntent.getService(this,0,cancelIntent,0);
+        if(notificationPainter!=null) {
+            if (notificationPainter.showNotification()) {
+                RemoteViews remoteViews = notificationPainter.getNotificationView(fermatBundle);
+                Intent intent = new Intent();
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
+                intent.setAction("org.fermat.APP_LAUNCHER");
+                intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
+                PendingIntent pi = PendingIntent
+                        .getBroadcast(this, 0, intent, 0);
+                if (remoteViews != null) {
+                    builder = new Notification.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setTicker("ticker")
+                            .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
+                            .setAutoCancel(true)
+                            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                            .setLights(Color.YELLOW, 3000, 3000)
+                            .setContentIntent(pi)
+                            .setContent(remoteViews)
+                            .setDeleteIntent(cancelPendingIntent)
+                            .setWhen(System.currentTimeMillis());
+                } else {
+                    builder = new Notification.Builder(this)
+                            .setTicker(notificationPainter.getNotificationTitle())
+                            .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.mipmap.ic_launcher : notificationPainter.getIcon())
+                            .setContentTitle(notificationPainter.getNotificationTitle())
+                            .setContentText(notificationPainter.getNotificationTextBody())
+                            .setContentIntent(pi)
+                            .setAutoCancel(true)
+                            .setDeleteIntent(cancelPendingIntent)
+                            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                            .setLights(Color.YELLOW, 3000, 3000);
+                }
+            }
+        }else{
+            Intent intent = new Intent();
+            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
+            intent.setAction("org.fermat.APP_LAUNCHER");
+            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pi = PendingIntent
+                    .getBroadcast(this, 0, intent, 0);
+            builder = new Notification.Builder(this)
+                    .setTicker("Something arrive")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("Fermat: new notification")
+                    .setAutoCancel(true)
+                    .setContentIntent(pi)
+                    .setDeleteIntent(cancelPendingIntent)
+                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                    .setLights(Color.YELLOW, 3000, 3000);
+            Log.i(LOG_TAG, "Launcher: " + publicKey);
+        }
+
+        if(builder!=null) {
+            Notification notification = builder.build();
+            notificationManager.notify(notificationId, notification);
         }
     }
 

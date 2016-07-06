@@ -11,14 +11,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.support.v7.widget.Toolbar;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
@@ -45,7 +47,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.11.21..
@@ -72,7 +73,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     /**
      * OptionMenuListeners
      */
-    private Map<Integer,?> optionMenuListeners;
+//    private Map<Integer,?> optionMenuListeners;
 
     /**
      * ViewInflater
@@ -147,7 +148,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                                 MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
                                 FermatDrawable icon = menuItem.getFermatDrawable();
                                 if (icon != null) {
-                                    int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    int iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE,icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
                                     item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
                                 }
@@ -222,16 +223,16 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     /**
      * Method to obtain res from other apps
      */
-    private final int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(id, sourceLocation, appOwnerPublicKey);
+    private final int obtainRes(int resType,int id,SourceLocation sourceLocation,String appOwnerPublicKey){
+        return getFrameworkHelpers().obtainRes(resType,id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
      * Method to obtain view class from framework
      * @return
      */
-    private final View obtainFrameworkView(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainClassView(id, sourceLocation, appOwnerPublicKey);
+    private final View obtainFrameworkView(FermatView fermatView){
+        return getFrameworkHelpers().obtainClassView(fermatView);
     }
     private final View obtainFrameworkViewOptionMenuAvailable(int id,SourceLocation sourceLocation){
         return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation);
@@ -407,6 +408,14 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return ((FermatActivityManager)getActivity()).getRuntimeManager();
     }
 
+    protected final void changeStartActivity(String activityCode){
+        ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
+    }
+
+    public void changeTabNotification(String activityCode, int number) throws InvalidParameterException {
+        ((FermatActivityManager)getActivity()).getRuntimeManager().changeTabNumber(appSession.getAppPublicKey(), activityCode, number);
+    }
+
     protected final FermatActivityManager getFermatActivityManager(){
         return ((FermatActivityManager)getActivity());
     }
@@ -555,7 +564,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     public void pushNotification(Notification notification){
-        getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(),notification);
+        getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(), notification);
     }
 
     public void cancelNotification(){
@@ -576,7 +585,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * @throws InvalidParameterException
      */
     public void changeOptionMenuVisibility(int id,boolean visibility) throws InvalidParameterException {
-        changeOptionMenuVisibility(id,visibility,false);
+        changeOptionMenuVisibility(id, visibility, false);
     }
 
     /**
@@ -591,4 +600,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         else getPaintActivtyFeactures().changeOptionMenuVisibility(id,visibility,appSession.getAppPublicKey());
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
+
+
 }

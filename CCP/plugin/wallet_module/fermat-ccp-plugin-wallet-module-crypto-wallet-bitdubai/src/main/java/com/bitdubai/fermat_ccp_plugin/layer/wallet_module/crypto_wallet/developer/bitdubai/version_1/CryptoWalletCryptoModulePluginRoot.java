@@ -19,10 +19,12 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
@@ -44,6 +46,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Eve
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,12 +122,14 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.TRANSFER_INTRA_WALLET)
     private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
 
     private String appPublicKey;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
@@ -217,7 +224,8 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
                         pluginFileSystem,
                         eventManager,
                         bitcoinNetworkManager, broadcaster,
-                        walletManagerManager,transferIntraWalletUsersManager);
+                        walletManagerManager,transferIntraWalletUsersManager,
+                        locationManager);
 
 //                walletModuleCryptoWallet.initialize();
             }

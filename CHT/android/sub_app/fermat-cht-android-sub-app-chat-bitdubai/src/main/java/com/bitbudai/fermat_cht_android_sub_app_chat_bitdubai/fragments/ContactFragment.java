@@ -136,14 +136,6 @@ public class ContactFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        // Inflate the menu items
-//        inflater.inflate(R.menu.contact_detail_menu, menu);
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 //        if (item.getId() == R.id.menu_block_contact) {
 //            //Contact con = chatSession.getSelectedContact();

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
@@ -43,12 +43,12 @@ public class AssetIssuerIdentitySubAppModuleManager extends ModuleManagerImpl<Is
     }
 
     @Override
-    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetIssuerException {
+    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewIdentityAssetIssuerException {
         return identityAssetIssuerManager.createNewIdentityAssetIssuer(alias, profileImage, accuracy, frequency);
     }
 
     @Override
-    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetIssuerException {
+    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityAssetIssuerException {
         identityAssetIssuerManager.updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
     }
 
@@ -63,7 +63,7 @@ public class AssetIssuerIdentitySubAppModuleManager extends ModuleManagerImpl<Is
     }
 
     @Override
-    public Frequency getFrequencyDataDefault() {
+    public GeoFrequency getFrequencyDataDefault() {
         return identityAssetIssuerManager.getFrequencyDataDefault();
     }
 

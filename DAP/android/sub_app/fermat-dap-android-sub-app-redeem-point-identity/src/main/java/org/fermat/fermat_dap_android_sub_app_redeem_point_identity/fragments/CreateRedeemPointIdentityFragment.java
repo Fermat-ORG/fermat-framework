@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,17 +50,19 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 
+import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.dialogs.DialogSelectCamPic;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.IdentityRedeemDialogCropImage;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,7 +101,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     private RedeemPointIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    private Button createButton;
+    private ImageButton createButton;
     private TextView mIdentityName;
     private TextView mIdentityContactInformation;
     private TextView mIdentityAddressCountryName;
@@ -117,7 +121,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     private boolean contextMenuInUse = false;
 
     private int accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
     ExecutorService executorService;
 
@@ -175,7 +179,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_dap_create_redeem_point_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_dap_v2_create_redeem_point_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
 
@@ -218,22 +222,26 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.dap_redeem_point_button);
-        mIdentityImage = (ImageView) layout.findViewById(R.id.dap_redeem_point_image);
-        mIdentityName = (TextView) layout.findViewById(R.id.dap_redeem_point_name);
-        mIdentityContactInformation = (TextView) layout.findViewById(R.id.dap_redeem_point_contact_information);
-        mIdentityAddressCountryName = (TextView) layout.findViewById(R.id.dap_redeem_point_country_name);
-        mIdentityAddressProvinceName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_province_name);
-        mIdentityAddressCityName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_city_name);
-        mIdentityAddressPostalCode = (TextView) layout.findViewById(R.id.dap_redeem_point_address_postal_code);
-        mIdentityAddressStreetName = (TextView) layout.findViewById(R.id.dap_redeem_point_address_street_name);
-        mIdentityAddressHouseNumber = (TextView) layout.findViewById(R.id.dap_redeem_point_address_house_number);
+        createButton = (ImageButton) layout.findViewById(R.id.dap_v2_redeem_point_button);
+        mIdentityImage = (ImageView) layout.findViewById(R.id.dap_v2_redeem_point_image);
+        mIdentityName = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_name);
+        mIdentityContactInformation = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_contact_information);
+        mIdentityAddressCountryName = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_country_name);
+        mIdentityAddressProvinceName = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_address_province_name);
+        mIdentityAddressCityName = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_address_city_name);
+        mIdentityAddressPostalCode = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_address_postal_code);
+        mIdentityAddressStreetName = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_address_street_name);
+        mIdentityAddressHouseNumber = (TextView) layout.findViewById(R.id.dap_v2_redeem_point_address_house_number);
 
 
-        createButton.setText((!isUpdate) ? "Create" : "Update");
-        createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
-
+        if (isUpdate)
+        {
+            activateButton();
+        }
+        else
+        {
+            deactivatedButton();
+        }
 
         mIdentityName.requestFocus();
         registerForContextMenu(mIdentityImage);
@@ -269,6 +277,132 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                 });
             }
 
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mIdentityContactInformation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RedeemPointIdentity redeemPointIdentity;
+                        try {
+                            redeemPointIdentity = appSession.getModuleManager().getIdentityAssetRedeemPoint();
+                            if (redeemPointIdentity != null) {
+                                if (redeemPointIdentity.getContactInformation().trim().equals(mIdentityContactInformation.getText().toString().trim())) {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                } else {
+                                    activateButton();
+                                }
+                            } else {
+                                if (mIdentityContactInformation.getText().toString().trim().length() > 0) {
+                                    activateButton();
+                                } else {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                }
+                            }
+                        } catch (CantGetRedeemPointIdentitiesException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mIdentityAddressCountryName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RedeemPointIdentity redeemPointIdentity;
+                        try {
+                            redeemPointIdentity = appSession.getModuleManager().getIdentityAssetRedeemPoint();
+                            if (redeemPointIdentity != null) {
+                                if (redeemPointIdentity.getCountryName().trim().equals(mIdentityAddressCountryName.getText().toString().trim())) {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                } else {
+                                    activateButton();
+                                }
+                            } else {
+                                if (mIdentityAddressCountryName.getText().toString().trim().length() > 0) {
+                                    activateButton();
+                                } else {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                }
+                            }
+                        } catch (CantGetRedeemPointIdentitiesException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mIdentityAddressCityName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RedeemPointIdentity redeemPointIdentity;
+                        try {
+                            redeemPointIdentity = appSession.getModuleManager().getIdentityAssetRedeemPoint();
+                            if (redeemPointIdentity != null) {
+                                if (redeemPointIdentity.getCityName().trim().equals(mIdentityAddressCityName.getText().toString().trim())) {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                } else {
+                                    activateButton();
+                                }
+                            } else {
+                                if (mIdentityAddressCityName.getText().toString().trim().length() > 0) {
+                                    activateButton();
+                                } else {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                }
+                            }
+                        } catch (CantGetRedeemPointIdentitiesException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -320,7 +454,18 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en mIdentityImage.setOnClickListener");
-                getActivity().openContextMenu(mIdentityImage);
+                final DialogSelectCamPic Dcamgallery = new DialogSelectCamPic(getActivity(), appSession, null);
+                Dcamgallery.show();
+                Dcamgallery.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_CAM) {
+                            dispatchTakePictureIntent();
+                        } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
+                            loadImageFromGallery();
+                        }
+                    }
+                });
             }
         });
 
@@ -329,7 +474,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
-
+                appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
             }
         });
     }
@@ -391,7 +536,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                 mIdentityName.setText(identitySelected.getAlias());
                                 loadIdentity();
                                 } else {
-                                createButton.setEnabled(false);
+                                deactivatedButton();
                                 }
                             if (appSession.getData(SessionConstants.IDENTITY_NAME) != null) {
                                 mIdentityName.setText((String) appSession.getData(SessionConstants.IDENTITY_NAME));
@@ -435,6 +580,12 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
+    }
+
     private void loadIdentity() {
         if (identitySelected.getImage() != null) {
             Bitmap bitmap;
@@ -449,11 +600,15 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
-            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            if (appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+                mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            }else{
+                mIdentityImage.setImageDrawable((Drawable) appSession.getData(SessionConstants.IDENTITY_IMAGE));
+                activateButton();
+            }
         }
 
         isUpdate = true;
-        createButton.setText("Update");
         mIdentityContactInformation.setText(identitySelected.getContactInformation());
         mIdentityAddressCountryName.setText(identitySelected.getCountryName());
         mIdentityAddressProvinceName.setText(identitySelected.getProvinceName());
@@ -648,6 +803,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                                     mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     updateProfileImage = true;
+                                                    appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
+                                                    activateButton();
                                                 } else {
                                                     mIdentityBitmap = null;
                                                 }
@@ -686,6 +843,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
@@ -734,6 +893,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
@@ -1012,10 +1173,11 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Choose picture"), REQUEST_LOAD_IMAGE);
         } else {
-//            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//            intent.addCategory(Intent.CATEGORY_OPENABLE);
-//            intent.setType("image/jpeg");
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/jpeg");
+            //Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
+//                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
         }
     }
@@ -1044,9 +1206,9 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                 (int) appSession.getData(SessionConstants.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
+    private GeoFrequency getFrequencyData() {
         return appSession.getData(SessionConstants.FREQUENCY_DATA) == null ? moduleManager.getFrequencyDataDefault() :
-                (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
+                (GeoFrequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
     }
 
     private void cleanSessions() {
@@ -1057,12 +1219,12 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
     private void activateButton(){
         createButton.setEnabled(true);
-        createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+        createButton.setBackgroundResource(R.drawable.boton_activo);
     }
 
     private void deactivatedButton() {
         createButton.setEnabled(false);
-        createButton.setBackgroundColor(Color.GRAY);
+        createButton.setBackgroundResource(R.drawable.boton_inactivo);
         }
 
     private void verifyFieldGeo() {
@@ -1075,7 +1237,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                         if (identityInfo.getAccuracy() == getAccuracyData()) {
                             deactivatedButton();
 
-                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode())) {
+                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode()) && appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+
                                 deactivatedButton();
                                 } else {
                                 activateButton();

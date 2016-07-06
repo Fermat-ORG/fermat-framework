@@ -37,7 +37,7 @@ import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.versio
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistProfileImageException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointImpl;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException
+     * @throws CantInitializeAssetRedeemPointIdentityDatabaseException
      */
     private void initializeDatabase() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
         try {
@@ -142,7 +142,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -157,6 +157,8 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME, alias);
             record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
+            record.setIntegerValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ACCURACY_KEY_COLUMN, accuracy);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN, frequency.getCode());
 
 
             table.insertRecord(record);
@@ -167,7 +169,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         } catch (CantInsertRecordException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException e) {
+        } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
         } catch (Exception e) {
@@ -191,7 +193,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
     public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage,
                               String contactInformation, String countryName, String provinceName, String cityName,
                               String postalCode, String streetName, String houseNumber,
-                              int accuracy, Frequency frequency) throws CantCreateNewDeveloperException {
+                              int accuracy, GeoFrequency frequency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -223,7 +225,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         } catch (CantInsertRecordException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException e) {
+        } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
         } catch (Exception e) {
@@ -234,7 +236,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
 
     public void updateIdentityAssetUser(String publicKey, String alias, byte[] profileImage,
                                         String contactInformation, String countryName, String provinceName, String cityName,
-                                        String postalCode, String streetName, String houseNumber, int accuracy, Frequency frequency) throws CantUpdateIdentityRedeemPointException {
+                                        String postalCode, String streetName, String houseNumber, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityRedeemPointException {
         try {
             /**
              * 1) Get the table.
@@ -274,7 +276,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
 
         } catch (CantUpdateRecordException e) {
             throw new CantUpdateIdentityRedeemPointException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, database problems.");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistProfileImageException e) {
+        } catch (CantPersistProfileImageException e) {
             throw new CantUpdateIdentityRedeemPointException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, persist image error.");
         } catch (Exception e) {
             throw new CantUpdateIdentityRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant update Redeem Point Identity, unknown failure.");
@@ -324,7 +326,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME),
                         record.getIntegerValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ACCURACY_KEY_COLUMN),
-                        Frequency.getByCode(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN))));
+                        GeoFrequency.getByCode(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN))));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListAssetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");
@@ -382,7 +384,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME),
                         record.getIntegerValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ACCURACY_KEY_COLUMN),
-                        Frequency.getByCode(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN)));
+                        GeoFrequency.getByCode(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FREQUENCY_KEY_COLUMN)));
 
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -446,7 +448,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistProfileImageException {
+    private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),

@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.enums.ExchangeRateType;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
@@ -29,11 +30,13 @@ import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantPostFermatExchangeDataException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.FermatExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database.FermatExchangeProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.exceptions.CantInitializeFermatExchangeProviderDatabaseException;
@@ -42,17 +45,21 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Eve
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @PluginInfo(createdBy = "abicelis", maintainerMail = "abicelis@gmail.com", platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.FERMAT_EXCHANGE)
-public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
+public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, FermatExchangeRateProviderManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -134,6 +141,29 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
     }
 
     @Override
+    public String postFermatExchangeData(CurrencyPair currencyPair, BigDecimal amount, BigDecimal price) throws CantPostFermatExchangeDataException {
+
+        String url = "http://httpbin.org/post";
+        String response;
+
+        Map<String,Object> params = new LinkedHashMap<>();
+        params.put("base_currency", currencyPair.getFrom().getCode());
+        params.put("quote_currency", currencyPair.getTo().getCode());
+        params.put("amount", amount.toPlainString());
+        params.put("price", price.toPlainString());
+        params.put("timestamp", new Date().getTime());
+
+        try {
+            response = HttpHelper.postHTTPContent(url, params);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_EXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantPostFermatExchangeDataException();
+        }
+
+        return response;
+    }
+
+    @Override
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if(!isCurrencyPairSupported(currencyPair))
@@ -150,7 +180,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
         try{
 
             //TODO: uncomment / kill these two lines when FermatExchange is done
-            //json =  new JSONObject(HttpReader.getHTTPContent(url));
+            //json =  new JSONObject(HttpHelper.getHTTPContent(url));
             json = new JSONObject("{\""+currPairParam+"\":{\"timestamp\":\"1463844159\",\"purchase\":\"123.45\",\"sale\":\"456.78\"}}");
 
             purchase = json.getJSONObject(currPairParam).getDouble("purchase");
@@ -203,7 +233,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             try{
 
                 //TODO: MOCK, uncomment / kill these lines when FermatExchange is done
-                //json =  new JSONObject(HttpReader.getHTTPContent(url));
+                //json =  new JSONObject(HttpHelper.getHTTPContent(url));
                 json = new JSONObject("{\"" + currPairParam + "\":{\"" + dateParam + "\":{\"purchase\": \"123.45\",\"sale\": \"456.78\"}}}");
 
                 purchase = json.getJSONObject(currPairParam).getJSONObject(dateParam).getDouble("purchase");
@@ -267,7 +297,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
 
         try{
 
-            json =  new JSONObject(HttpReader.getHTTPContent(url));
+            json =  new JSONObject(HttpHelper.getHTTPContent(url));
             json = json.getJSONObject(currPairParam);
 
             Iterator<?> keys = json.keys();

@@ -3,9 +3,9 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.BlockchainDownloadUpToDateEvent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -95,6 +95,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
         if (blocksLeft % 1000 == 0)
+            System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft + ". Block date: " + block.getTime());
+
+        if (blocksLeft < 50)
             System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
 
 
@@ -104,8 +107,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         blockchainDownloadProgress.setPendingBlocks(blocksLeft);
         blockchainDownloadProgress.setLastBlockDownloadTime(block.getTimeSeconds());
 
-        if (blockchainDownloadProgress.getTotalBlocks() == 0)
-            blockchainDownloadProgress.setTotalBlocks(blocksLeft);
 
         blockchainDownloadProgress.setDownloader(peer.toString());
 
@@ -171,7 +172,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     /**
      * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
      */
-      for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN,  cryptoNetworkWallet, tx)){
+      for (CryptoTransaction cryptoTransaction : BitcoinTransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN, cryptoNetworkWallet, tx)){
           saveCryptoTransaction(cryptoTransaction);
       }
     }
@@ -211,7 +212,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
          */
-        for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN, cryptoNetworkWallet, tx)){
+        for (CryptoTransaction cryptoTransaction : BitcoinTransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN, cryptoNetworkWallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
     }

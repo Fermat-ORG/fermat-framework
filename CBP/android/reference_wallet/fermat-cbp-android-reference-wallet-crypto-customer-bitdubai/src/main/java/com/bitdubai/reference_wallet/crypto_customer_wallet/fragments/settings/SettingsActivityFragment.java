@@ -35,7 +35,7 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
 
         try {
             errorManager = appSession.getErrorManager();

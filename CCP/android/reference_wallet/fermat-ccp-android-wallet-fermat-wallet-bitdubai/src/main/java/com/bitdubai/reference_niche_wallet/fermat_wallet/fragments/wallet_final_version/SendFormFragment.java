@@ -31,6 +31,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
@@ -54,7 +55,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException;
@@ -74,6 +76,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.Connection
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -694,7 +697,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         cryptoWalletWalletContact.getActorType(),
                                         ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType,
-                                        CryptoCurrency.FERMAT
+                                        CryptoCurrency.FERMAT,
+                                        0,
+                                        FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
 
                                         // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                                 );

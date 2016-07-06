@@ -36,8 +36,10 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyRestockMonitorAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyRestockMonitorAgent2;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by franklin on 16/11/15.
@@ -70,6 +72,10 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     Broadcaster broadcaster;
 
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -140,14 +146,17 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
     }
 
 
-    private BusinessTransactionBankMoneyRestockMonitorAgent businessTransactionBankMoneyRestockMonitorAgent;
+    private BusinessTransactionBankMoneyRestockMonitorAgent2 businessTransactionBankMoneyRestockMonitorAgent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
         if(businessTransactionBankMoneyRestockMonitorAgent == null) {
-            businessTransactionBankMoneyRestockMonitorAgent = new BusinessTransactionBankMoneyRestockMonitorAgent(
+            businessTransactionBankMoneyRestockMonitorAgent = new BusinessTransactionBankMoneyRestockMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     this,
                     stockTransactionBankMoneyRestockManager,
                     cryptoBrokerWalletManager,

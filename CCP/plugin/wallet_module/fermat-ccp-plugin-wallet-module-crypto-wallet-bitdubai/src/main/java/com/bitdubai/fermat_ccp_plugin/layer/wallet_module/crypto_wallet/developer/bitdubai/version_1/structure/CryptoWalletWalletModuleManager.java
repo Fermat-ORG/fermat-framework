@@ -22,15 +22,21 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -132,6 +138,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -172,11 +180,12 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 //    private final UUID pluginId;
 //    private final PluginFileSystem pluginFileSystem;
     private final EventManager eventManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager                   ;
+    private final BlockchainManager<ECKey, Transaction> bitcoinNetworkManager                   ;
     private final Broadcaster                   broadcaster                     ;
     private final WalletManagerManager walletManagerManager;
     private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
     private final ErrorManager errorManager;
+    private LocationManager locationManager;
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -192,9 +201,10 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
                                            final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
-                                           final EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster,
+                                           final EventManager eventManager, BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, Broadcaster broadcaster,
                                            final WalletManagerManager walletManagerManager,
-                                           final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
+                                           final TransferIntraWalletUsersManager transferIntraWalletUsersManager,
+                                           final LocationManager locationManager) {
         super(pluginFileSystem,pluginId);
 
         this.cryptoWalletManager = cryptoWalletManager;
@@ -217,6 +227,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         this.broadcaster = broadcaster;
         this.walletManagerManager = walletManagerManager;
         this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
+        this.locationManager = locationManager;
 
         try {
             initialize();
@@ -1019,18 +1030,20 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     @Override
     public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet,
                      BlockchainNetworkType blockchainNetworkType,
-                     CryptoCurrency cryptoCurrency) throws CantSendCryptoException, InsufficientFundsException {
+                     CryptoCurrency cryptoCurrency,
+                     long fee,
+                     FeeOrigin feeOrigin) throws CantSendCryptoException, InsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType, cryptoCurrency);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType, cryptoCurrency,fee,feeOrigin);
 
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,cryptoCurrency);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,cryptoCurrency,fee,feeOrigin);
                     break;
             }
 
@@ -1531,7 +1544,11 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
-        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("0"), Frecuency.NORMAL);
+        try {
+            intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("100"), Frequency.NORMAL, getLocationManager());
+        } catch (CantGetDeviceLocationException e) {
+            throw new CantCreateNewIntraWalletUserException("Cant Create intra user wallet",e, "", "CantCreateNewIntraWalletUserException");
+        }
     }
 
 
@@ -1542,9 +1559,14 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     @Override
     public List<String> getMnemonicText() throws CantGetMnemonicTextException {
+        //todo this needs to be improved.
         try {
-            return cryptoVaultManager.getMnemonicCode();
-        } catch (CantLoadExistingVaultSeed e) {
+            List<String> textToShow = new ArrayList<>();
+            textToShow.add("mNemonic code: " + cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase());
+            textToShow.add("Date: " + cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds());
+
+            return textToShow;
+        } catch (Exception e) {
             throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
         }
     }
@@ -1595,8 +1617,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed {
-        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
+    public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantImportSeedException {
+       cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date);
     }
 
     @Override
@@ -1615,4 +1637,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
 
+    public Location getLocationManager() throws CantGetDeviceLocationException
+    {
+        return locationManager.getLocation();
+    }
 }

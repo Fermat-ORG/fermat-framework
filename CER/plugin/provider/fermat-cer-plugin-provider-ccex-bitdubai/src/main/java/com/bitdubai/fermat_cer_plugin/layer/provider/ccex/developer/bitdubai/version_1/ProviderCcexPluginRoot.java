@@ -34,7 +34,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRat
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.ccex.developer.bitdubai.version_1.database.CcexProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.ccex.developer.bitdubai.version_1.database.CcexProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.ccex.developer.bitdubai.version_1.exceptions.CantInitializeCcexProviderDatabaseException;
@@ -179,7 +179,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
 
         try{
             String currencyString = exchangeFrom.toLowerCase() + "-" + exchangeTo.toLowerCase();
-            json =  new JSONObject(HttpReader.getHTTPContent("https://c-cex.com/t/" + currencyString + ".json"));
+            json =  new JSONObject(HttpHelper.getHTTPContent("https://c-cex.com/t/" + currencyString + ".json"));
             json = json.getJSONObject("ticker");
             purchasePrice = json.getDouble("buy");
             salePrice = json.getDouble("sell");
@@ -295,7 +295,7 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
                                                   currencyFrom.getCode().toLowerCase() + "-" + currencyTo.getCode().toLowerCase());
 
         try {
-            json = new JSONObject(HttpReader.getHTTPContent("https://c-cex.com/t/s.html?a=tradehistory&d1=" + dateFrom + "&d2=" + dateTo + "&pair=" + currencyPair));
+            json = new JSONObject(HttpHelper.getHTTPContent("https://c-cex.com/t/s.html?a=tradehistory&d1=" + dateFrom + "&d2=" + dateTo + "&pair=" + currencyPair));
             JSONArray jsonArray = json.getJSONArray("return");
 
 

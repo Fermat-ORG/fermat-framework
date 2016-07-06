@@ -77,7 +77,7 @@ public class ContactsListAdapter
             if (address!=null)
                 holder.location.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
             else
-                holder.location.setText("Searching...");//TODO: put here location
+                holder.location.setText("Searching...");
 
         }
     }

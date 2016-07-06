@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -10,11 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
@@ -30,12 +32,11 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransacti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
-
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -78,7 +79,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     /**
      * platform interfaces definition
      */
-    BitcoinNetworkManager bitcoinNetworkManager;
+    BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     PluginFileSystem pluginFileSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
     ErrorManager errorManager;
@@ -93,7 +94,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
                                    PluginFileSystem pluginFileSystem,
                                    PluginDatabaseSystem pluginDatabaseSystem,
                                    String seedFileName,
-                                   BitcoinNetworkManager bitcoinNetworkManager,
+                                             BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                    ErrorManager errorManager) throws InvalidSeedException {
         super(pluginFileSystem, pluginId, bitcoinNetworkManager, "BitcoinVaultSeed", seedFileName);
 
@@ -104,11 +105,14 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.errorManager = errorManager;
 
+
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), false, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         new Thread(vaultKeyHierarchyGenerator).start();
+
+        forceImportedSeedToCryptoNetwork();
     }
 
     /**
@@ -180,17 +184,17 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+        if (BitcoinBlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
             try {
                 // If only one network is enabled, then I will return the default
                 if (getDao().getActiveNetworkTypes().size() == 1)
-                    return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    return BitcoinBlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else {
                     // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
                     return networkParameters;
                 }
             } catch (CantExecuteDatabaseOperationException e) {
-                return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return BitcoinBlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
         } else
             return networkParameters;
@@ -221,7 +225,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I extract the network Parameter from the address
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * If the address is correct, then no exception raised.
@@ -252,7 +256,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @param walletPublicKey
      * @param FermatTrId
      * @param addressTo
-     * @param satoshis
+     * @param cryptoAmount
      * @param op_Return
      * @return
      * @throws InsufficientCryptoFundsException
@@ -260,7 +264,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast, BlockchainNetworkType blockchainNetworkType)
+    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, CryptoAmount cryptoAmount, String op_Return, boolean broadcast, BlockchainNetworkType blockchainNetworkType)
             throws InsufficientCryptoFundsException,
             InvalidSendToAddressException,
             CouldNotSendMoneyException,
@@ -269,8 +273,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * validates we are not sending less than permited.
          */
-        if (isDustySend(satoshis))
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more bitcoins!");
+        if (isDustySend(cryptoAmount.getAmount()))
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + cryptoAmount.getAmount(), "send more bitcoins!");
 
 
         /**
@@ -285,7 +289,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -302,7 +306,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = bitcoinNetworkManager.getBlockchainProviderTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -333,13 +337,13 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * sets the fee and value to send
          */
-        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
-        final Coin coinToSend = Coin.valueOf(satoshis);
+        Coin fee = Coin.valueOf(cryptoAmount.getFee());
+        final Coin coinToSend = Coin.valueOf(cryptoAmount.getAmount());
 
         if (coinToSend.isNegative() || coinToSend.isZero()){
             StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
             output.append(System.lineSeparator());
-            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + satoshis + " - " + fee.getValue() + ")");
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + cryptoAmount.getAmount() + " - " + fee.getValue() + ")");
 
 
             CouldNotSendMoneyException exception = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, output.toString(), null);
@@ -404,8 +408,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
-        } catch (CantStoreBitcoinTransactionException e) {
+            bitcoinNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
+        } catch (CantStoreTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
 
@@ -421,25 +425,6 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         }
 
         return sendRequest.tx.getHashAsString();
-    }
-
-    /**
-     * Gets the Mnemonic code generated for this vault.
-     * It can be used to export and import it somewhere else.
-     * @return
-     * @throws CantLoadExistingVaultSeed
-     */
-    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
-        try {
-            DeterministicSeed deterministicSeed = getVaultSeed();
-            List<String> mnemonicCode = deterministicSeed.getMnemonicCode();
-            ArrayList<String> mnemonicPlusDate = new ArrayList<>(mnemonicCode);
-            mnemonicPlusDate.add(String.valueOf(deterministicSeed.getCreationTimeSeconds()));
-            return mnemonicPlusDate;
-        } catch (InvalidSeedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
-        }
     }
 
     /**
@@ -522,7 +507,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -538,7 +523,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = bitcoinNetworkManager.getBlockchainProviderTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -633,8 +618,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
-        } catch (CantStoreBitcoinTransactionException e) {
+            bitcoinNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
+        } catch (CantStoreTransactionException e) {
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
 
@@ -703,5 +688,21 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     public ECKey getPrivateKey(Address address) {
         ECKey privateKey = this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getPrivateKey(address);
         return privateKey;
+    }
+
+    /**
+     * Gets previously imported Seeds and request the HierarchyMaintainer to generate keys and pass them to the crypto network
+     * for monitoring.
+     */
+    public void forceImportedSeedToCryptoNetwork() {
+        /**
+         * I will start the process for imported seeds. This will create the VaultHierarchy for each imported seed I found
+         * derive the keys and then passed them to the crypto network.
+         */
+        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
+            VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+            new Thread(importedSeedHierarchyGenerator).start();
+
+        }
     }
 }

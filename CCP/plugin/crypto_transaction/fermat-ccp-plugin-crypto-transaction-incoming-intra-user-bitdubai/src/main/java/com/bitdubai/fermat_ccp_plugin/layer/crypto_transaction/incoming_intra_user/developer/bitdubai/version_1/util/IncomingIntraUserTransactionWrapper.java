@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
 import java.util.UUID;
@@ -28,6 +29,9 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
     private final String        memo              ;
     private final BlockchainNetworkType blockchainNetworkType;
     private final CryptoCurrency cryptoCurrency;
+    private final FeeOrigin feeOrigin;
+    private final long        fee;
+    private final long total;
 
     public IncomingIntraUserTransactionWrapper(final UUID transactionId,
                                                final UUID requestId,
@@ -41,7 +45,9 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
                                                final long amount,
                                                final long timestamp,
                                                final String memo,
-                                               final BlockchainNetworkType blockchainNetworkType, CryptoCurrency cryptoCurrency) {
+                                               final BlockchainNetworkType blockchainNetworkType, CryptoCurrency cryptoCurrency,
+                                               FeeOrigin feeOrigin,
+                                               long fee, long total) {
 
         this.transactionId      = transactionId     ;
         this.requestId          = requestId         ;
@@ -57,6 +63,9 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
         this.memo               = memo              ;
         this.blockchainNetworkType = blockchainNetworkType;
         this.cryptoCurrency = cryptoCurrency;
+        this.feeOrigin = feeOrigin;
+        this.fee = fee;
+        this.total = total;
     }
 
     @Override
@@ -110,6 +119,11 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
     }
 
     @Override
+    public long getTotal() {
+        return this.total;
+    }
+
+    @Override
     public long getTimestamp() {
         return timestamp;
     }
@@ -125,6 +139,16 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
     @Override
     public CryptoCurrency getCryptoCurrency() {
         return this.cryptoCurrency;
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return this.feeOrigin;
+    }
+
+    @Override
+    public long getFee() {
+        return this.fee;
     }
 
 
