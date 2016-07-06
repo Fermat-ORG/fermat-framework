@@ -226,11 +226,10 @@ public class ContactsListFragment
             if(chatIdentity != null) {
                 List<ChatActorCommunityInformation> con = chatManager
                         .listAllConnectedChatActor(chatIdentity, MAX, offset); //null;//chatManager.getContacts();
-
                 Collections.sort(con, new Comparator<ChatActorCommunityInformation>() {
                     @Override
                     public int compare(ChatActorCommunityInformation actorA, ChatActorCommunityInformation actorB) {
-                        return (actorA.getAlias().trim().compareTo(actorB.getAlias().trim()));
+                        return (actorA.getAlias().trim().toLowerCase().compareTo(actorB.getAlias().trim().toLowerCase()));
 
                     }
                 });
@@ -340,10 +339,7 @@ public class ContactsListFragment
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //public void onClick(View view) {
                 try {
-                    appSession.setData("whocallme", "contact");
-                    //appSessionSetDataContact(position);
-                    appSessionSetDataContact(position);
-                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                    displayChat(position);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -598,5 +594,12 @@ public class ContactsListFragment
         byte[] byteArray = stream.toByteArray();
         contact.setProfileImage(byteArray);
         appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
+    }
+
+    public void displayChat(int position){
+        appSession.setData("whocallme", "contact");
+        //appSessionSetDataContact(position);
+        appSessionSetDataContact(position);
+        changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
     }
 }
