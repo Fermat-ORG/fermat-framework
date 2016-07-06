@@ -22,6 +22,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ThumbnailUtil;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -261,7 +262,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private DatabaseTransactionStatementPair insertActorsCatalogTransaction(ActorProfile actorProfile, String transactionType) throws CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair insertActorsCatalogTransaction(ActorProfile actorProfile, String transactionType) throws CantCreateTransactionStatementPairException, IOException {
 
         /*
          * Create the transaction
@@ -276,6 +277,11 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         transaction.setNodeIdentityPublicKey(nodeIdentity);
         transaction.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
         transaction.setTransactionType(transactionType);
+
+        if(actorProfile.getPhoto() != null)
+            transaction.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(), null));
+        else
+            transaction.setThumbnail(null);
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
@@ -298,7 +304,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private ActorsCatalogTransaction createActorsCatalogTransaction(ActorProfile actorProfile, String transactionType)  {
+    private ActorsCatalogTransaction createActorsCatalogTransaction(ActorProfile actorProfile, String transactionType) throws IOException {
 
         /*
          * Create the transaction
@@ -313,6 +319,11 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         transaction.setNodeIdentityPublicKey(nodeIdentity);
         transaction.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
         transaction.setTransactionType(transactionType);
+
+        if(actorProfile.getPhoto() != null)
+            transaction.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),null));
+        else
+            transaction.setThumbnail(null);
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
@@ -353,7 +364,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
      * @throws CantReadRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private boolean validateProfileChange(ActorProfile actorProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
+    private boolean validateProfileChange(ActorProfile actorProfile) throws CantReadRecordDataBaseException, RecordNotFoundException, IOException {
 
         /*
          * Create the actorsCatalog
@@ -367,6 +378,11 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         actorsCatalog.setExtraData(actorProfile.getExtraData());
         actorsCatalog.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
         actorsCatalog.setNodeIdentityPublicKey(nodeIdentity);
+
+        if(actorProfile.getPhoto() != null)
+            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),null));
+        else
+            actorsCatalog.setThumbnail(null);
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
