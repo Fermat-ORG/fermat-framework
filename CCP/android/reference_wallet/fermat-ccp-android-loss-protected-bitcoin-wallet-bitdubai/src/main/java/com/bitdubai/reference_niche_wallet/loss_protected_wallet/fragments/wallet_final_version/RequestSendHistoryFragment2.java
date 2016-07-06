@@ -165,7 +165,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

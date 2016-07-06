@@ -48,6 +48,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onli
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.event_handler.BrokerAckOnlinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure.BrokerAckOnlinePaymentTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 
@@ -106,6 +108,16 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
      * Represents the database
      */
     Database database;
+
+    /**
+     * Represents the plugin processor agent
+     */
+    BrokerAckOnlinePaymentMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public BrokerAckOnlinePaymentPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -228,7 +240,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
              */
             //TODO: the following line is only for testing, please comment it when the testing finish
             //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
-            BrokerAckOnlinePaymentMonitorAgent brokerAckOnlinePaymentMonitorAgent = new BrokerAckOnlinePaymentMonitorAgent(
+            /*BrokerAckOnlinePaymentMonitorAgent brokerAckOnlinePaymentMonitorAgent = new BrokerAckOnlinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     this,
@@ -238,7 +250,23 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     customerBrokerSaleNegotiationManager);
-            brokerAckOnlinePaymentMonitorAgent.start();
+            brokerAckOnlinePaymentMonitorAgent.start();*/
+
+            //New Agent Starting
+            processorAgent =
+                    new BrokerAckOnlinePaymentMonitorAgent2(
+                            SLEEP_TIME,
+                            TIME_UNIT,
+                            DELAY_TIME,
+                            this,
+                            brokerAckOnlinePaymentBusinessTransactionDao,
+                            eventManager,
+                            transactionTransmissionManager,
+                            customerBrokerContractPurchaseManager,
+                            customerBrokerContractSaleManager,
+                            customerBrokerSaleNegotiationManager
+                    );
+            processorAgent.start();
 
             /**
              * Init event recorder service.
@@ -310,6 +338,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public void stop() {
         try {
+            processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

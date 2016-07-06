@@ -50,7 +50,11 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp">
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="0dp"
+                >
 
                 <TextView
                     android:id="@+id/ccw_date_time_description_text"
@@ -92,9 +96,48 @@
                     android:textAllCaps="false"
                     android:textColor="#222"
                     android:textSize="14sp"
-                    tools:text="15:30 pm"/>
+                    tools:text="3:30 pm"/>
 
             </RelativeLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_text_you_time_zone"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:paddingRight="50dp"
+                android:text="America/Caracas"
+                android:textColor="#bbb"
+                android:textSize="11dp"
+                android:textColorHint="#9a9a9c"
+                android:gravity="right"
+                android:visibility="invisible"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_text_other_date"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_margin="5dp"
+                android:text="Broker Date: 04/12/2015 02:00 PM (America/Chicago)"
+                android:textColor="#bbb"
+                android:textSize="11dp"
+                android:textColorHint="#9a9a9c"
+                android:gravity="center"
+                android:visibility="gone"/>
+            <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton-->
+                <!--android:id="@+id/ccw_text_other_date"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:padding="2dp"-->
+                <!--android:background="#DDD"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="#666"-->
+                <!--android:textSize="11sp"-->
+                <!--android:gravity="center"-->
+                <!--tools:text="Customer Date: 04/12/2015 02:00 PM (America/Chicago)"-->
+                <!--android:visibility="gone"/>-->
 
             <View
                 android:layout_width="match_parent"

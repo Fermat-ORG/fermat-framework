@@ -14,7 +14,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Rede
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.util.List;
 import java.util.UUID;
@@ -62,7 +62,7 @@ public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<Re
                                                     String cityName,
                                                     String postalCode,
                                                     String streetName,
-                                                    String houseNumber, int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException {
+                                                    String houseNumber, int accuracy, GeoFrequency frequency) throws CantCreateNewRedeemPointException {
 
         return redeemPointIdentityManager.createNewRedeemPoint(alias, profileImage, contactInformation, countryName, provinceName, cityName, postalCode, streetName, houseNumber,
                                 accuracy,frequency);
@@ -78,7 +78,7 @@ public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<Re
                                           String cityName,
                                           String postalCode,
                                           String streetName,
-                                          String houseNumber, int accuracy, Frequency frequency) throws CantUpdateIdentityRedeemPointException {
+                                          String houseNumber, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityRedeemPointException {
 
         redeemPointIdentityManager.updateIdentityRedeemPoint(identityPublicKey, identityAlias, profileImage, contactInformation, countryName, provinceName, cityName, postalCode, streetName, houseNumber,
                 accuracy, frequency);
@@ -140,7 +140,7 @@ public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<Re
     }
 
     @Override
-     public Frequency getFrequencyDataDefault() {
+     public GeoFrequency getFrequencyDataDefault() {
         return redeemPointIdentityManager.getFrequencyDataDefault();
         }
 }

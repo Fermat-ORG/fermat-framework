@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -104,11 +105,21 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.errorManager = errorManager;
 
+
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), false, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         new Thread(vaultKeyHierarchyGenerator).start();
+
+        /**
+         * I will start the process for imported seeds.
+         */
+        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
+            VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+            new Thread(importedSeedHierarchyGenerator).start();
+
+        }
     }
 
     /**
@@ -421,25 +432,6 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         }
 
         return sendRequest.tx.getHashAsString();
-    }
-
-    /**
-     * Gets the Mnemonic code generated for this vault.
-     * It can be used to export and import it somewhere else.
-     * @return
-     * @throws CantLoadExistingVaultSeed
-     */
-    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
-        try {
-            DeterministicSeed deterministicSeed = getVaultSeed();
-            List<String> mnemonicCode = deterministicSeed.getMnemonicCode();
-            ArrayList<String> mnemonicPlusDate = new ArrayList<>(mnemonicCode);
-            mnemonicPlusDate.add(String.valueOf(deterministicSeed.getCreationTimeSeconds()));
-            return mnemonicPlusDate;
-        } catch (InvalidSeedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
-        }
     }
 
     /**

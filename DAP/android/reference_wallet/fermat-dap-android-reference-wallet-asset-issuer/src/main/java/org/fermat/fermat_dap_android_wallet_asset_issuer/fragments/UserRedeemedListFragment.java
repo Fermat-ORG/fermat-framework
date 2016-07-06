@@ -239,7 +239,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

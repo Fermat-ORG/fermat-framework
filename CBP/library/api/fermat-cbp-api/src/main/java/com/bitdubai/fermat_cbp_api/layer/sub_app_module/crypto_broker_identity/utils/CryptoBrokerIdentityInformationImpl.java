@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 
@@ -18,14 +18,14 @@ public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentity
     private final byte[]        profileImage;
     private final ExposureLevel exposureLevel;
     private long   accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
     public CryptoBrokerIdentityInformationImpl(final String alias,
                                                final String publicKey,
                                                final byte[] profileImage,
                                                final ExposureLevel exposureLevel,
                                                final long accuracy,
-                                               final Frequency frequency){
+                                               final GeoFrequency frequency){
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -60,7 +60,7 @@ public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentity
     }
 
     @Override
-    public Frequency getFrequency() {
+    public GeoFrequency getFrequency() {
         return frequency;
     }
 

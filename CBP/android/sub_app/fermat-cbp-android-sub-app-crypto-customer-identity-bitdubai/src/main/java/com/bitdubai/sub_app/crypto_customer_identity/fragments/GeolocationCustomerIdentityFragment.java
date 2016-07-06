@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
@@ -32,6 +32,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -48,7 +49,7 @@ public class GeolocationCustomerIdentityFragment
     Spinner frequency;
     Toolbar toolbar;
     int accuracyData;
-    Frequency frequencyData;
+    GeoFrequency frequencyData;
 
 
     public static GeolocationCustomerIdentityFragment newInstance() {
@@ -80,11 +81,6 @@ public class GeolocationCustomerIdentityFragment
         return rootLayout;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
-
     @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
@@ -97,10 +93,8 @@ public class GeolocationCustomerIdentityFragment
 
     private void initViews(View layout) {
         // Spinner Drop down elements
-        List<Frequency> dataSpinner = new ArrayList<>();
-        dataSpinner.add(Frequency.LOW);
-        dataSpinner.add(Frequency.NORMAL);
-        dataSpinner.add(Frequency.HIGH);
+        List<GeoFrequency> dataSpinner = new ArrayList<>();
+        dataSpinner.addAll(Arrays.asList(GeoFrequency.values()));
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
@@ -108,7 +102,7 @@ public class GeolocationCustomerIdentityFragment
         frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
         try {
-            ArrayAdapter<Frequency> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbp_iden_spinner_item, dataSpinner);
+            ArrayAdapter<GeoFrequency> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbp_iden_spinner_item, dataSpinner);
             dataAdapter.setDropDownViewResource(R.layout.cbp_iden_spinner_item);
             frequency.setAdapter(dataAdapter);
 
@@ -118,7 +112,9 @@ public class GeolocationCustomerIdentityFragment
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        frequencyData = Frequency.getByCode(parent.getItemAtPosition(position).toString());
+//                        frequencyData = GeoFrequency.getByCode(parent.getItemAtPosition(position).toString());
+                        frequencyData = (GeoFrequency) parent.getItemAtPosition(position);
+                        frequencyData = GeoFrequency.getByCode(frequencyData.getCode());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException ex) {
@@ -154,7 +150,7 @@ public class GeolocationCustomerIdentityFragment
         }
     }
 
-    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetCryptoCustomerIdentityException {
+    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<GeoFrequency> dataAdapter) throws CantGetCryptoCustomerIdentityException {
         final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         if (identityInfo != null) {
