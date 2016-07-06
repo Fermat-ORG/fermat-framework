@@ -33,7 +33,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.i
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
-import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityListFilter;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
@@ -41,11 +40,13 @@ import java.util.List;
 
 import static android.widget.Toast.makeText;
 
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation,ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>>
-        implements FermatListItemListeners<CryptoBrokerIdentityInformation>{
+public class CryptoBrokerIdentityListFragment
+        extends FermatListFragment<CryptoBrokerIdentityInformation, ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>>
+        implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
 
     // Constants
     private static final String TAG = "BrokerIdentityList";
@@ -53,11 +54,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     // Data
     private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
 
-    // UI
-    private View noMatchView;
     View emptyListViewsContainer;
-
-    private CryptoBrokerIdentityListFilter filter;
 
     private PresentationDialog presentationDialog;
 
@@ -72,42 +69,11 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         super.onCreate(savedInstanceState);
 
         FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
-        registerReceiver(fermatIntentFilter,new MyReceiver());
+        registerReceiver(fermatIntentFilter, new BrokerIdentityBroadcastReceiver());
 
         cleanSessionData();
 
         onRefresh();
-    }
-
-    /**
-     * Receiver class implemented
-     */
-    private class MyReceiver extends FermatBroadcastReceiver{
-
-        @Override
-        public void onReceive(FermatBundle fermatBundle) {
-            try {
-                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
-
-                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
-                    onRefresh();
-                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-
-                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
-                    onRefresh();
-                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-
-            } catch (IllegalAccessException e) {
-                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-        }
     }
 
     @Override
@@ -116,7 +82,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         this.layout = layout;
 
-        noMatchView = layout.findViewById(R.id.no_matches_crypto_broker_identity);
         emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
 
         presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
@@ -130,9 +95,11 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         IdentityBrokerPreferenceSettings subappSettings;
         try {
             subappSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-        }catch (Exception e){ subappSettings = null; }
+        } catch (Exception e) {
+            subappSettings = null;
+        }
 
-        if(subappSettings == null){
+        if (subappSettings == null) {
             subappSettings = new IdentityBrokerPreferenceSettings();
             subappSettings.setIsPresentationHelpEnabled(true);
             try {
@@ -143,12 +110,12 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         }
 
         boolean showDialog;
-        try{
+        try {
             showDialog = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
-            if(showDialog){
+            if (showDialog) {
                 presentationDialog.show();
             }
-        }catch (FermatException e){
+        } catch (FermatException e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
@@ -157,7 +124,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         configureToolbar();
     }
 
-    private void showOrHideNoIdentitiesView(){
+    private void showOrHideNoIdentitiesView() {
         if (identityInformationList == null || identityInformationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
@@ -188,6 +155,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), appSession.getErrorManager(), identityInformationList);
@@ -226,7 +194,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             data = appSession.getModuleManager().listIdentities(0, 0);
         } catch (CantListCryptoBrokersException ex) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
         return data;
@@ -249,6 +217,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
@@ -271,26 +240,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         }
     }
 
-    @Override
-    public void onUpdateViewOnUIThread(String code) {
-
-//        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)){
-//            onRefresh();
-//            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-//            emptyListViewsContainer.setVisibility(View.INVISIBLE);
-//            recyclerView.setVisibility(View.VISIBLE);
-//        }
-//
-//        if(code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)){
-//            onRefresh();
-//            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-//            emptyListViewsContainer.setVisibility(View.INVISIBLE);
-//            recyclerView.setVisibility(View.VISIBLE);
-//        }
-
-    }
-
-    private void cleanSessionData(){
+    private void cleanSessionData() {
         if (appSession.getData(FragmentsCommons.ACCURACY_DATA) != null)
             appSession.removeData(FragmentsCommons.ACCURACY_DATA);
 
@@ -300,15 +250,44 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         if (appSession.getData(FragmentsCommons.IDENTITY_INFO) != null)
             appSession.removeData(FragmentsCommons.IDENTITY_INFO);
 
-        if(appSession.getData(FragmentsCommons.BROKER_NAME) != null)
+        if (appSession.getData(FragmentsCommons.BROKER_NAME) != null)
             appSession.removeData(FragmentsCommons.BROKER_NAME);
 
-        if(appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null)
+        if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null)
             appSession.removeData(FragmentsCommons.CROPPED_IMAGE);
 
-        if(appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null)
+        if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null)
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
     }
 
+    /**
+     * Receiver class implemented
+     */
+    private class BrokerIdentityBroadcastReceiver extends FermatBroadcastReceiver{
 
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
+                    onRefresh();
+                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+
+                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
+                    onRefresh();
+                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+
+            } catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
+    }
 }
