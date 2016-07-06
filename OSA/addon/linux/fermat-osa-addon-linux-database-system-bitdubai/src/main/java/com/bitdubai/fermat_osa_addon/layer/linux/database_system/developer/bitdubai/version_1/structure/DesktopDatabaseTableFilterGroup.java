@@ -51,11 +51,6 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
         return filters;
     }
 
-
-    public void setFilters(List<DatabaseTableFilter> filters) {
-        this.filters = filters;
-    }
-
     /**
      * <p>This method gets a list of DatabaseTableFilterGroup objects
      *
@@ -64,11 +59,6 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
     @Override
     public List<DatabaseTableFilterGroup> getSubGroups() {
         return subGroups;
-    }
-
-
-    public void setSubGroups(List<DatabaseTableFilterGroup> subGroups) {
-        this.subGroups = subGroups;
     }
 
     /**
@@ -81,8 +71,12 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
         return operator;
     }
 
-
-    public void setOperator(DatabaseFilterOperator operator) {
-        this.operator = operator;
+    @Override
+    public String toString() {
+        return "DesktopDatabaseTableFilterGroup{" +
+                "filters=" + filters +
+                ", subGroups=" + subGroups +
+                ", operator=" + operator +
+                '}';
     }
 }

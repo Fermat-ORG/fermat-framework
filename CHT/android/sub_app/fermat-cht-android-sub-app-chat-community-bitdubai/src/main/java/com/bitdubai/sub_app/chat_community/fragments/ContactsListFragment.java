@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -93,6 +96,7 @@ public class ContactsListFragment
     private ChatActorCommunitySelectableIdentity identity;
     private ChatActorCommunitySettings appSettings;
     TextView noDatalabel;
+    FermatApplicationCaller applicationsHelper;
     ImageView noData;
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
@@ -112,6 +116,7 @@ public class ContactsListFragment
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             lstChatUserInformations = new ArrayList<>();
+            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
@@ -441,6 +446,20 @@ public class ContactsListFragment
             int id = item.getItemId();
             switch (id) {
                 case 2:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 3:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 4:
                     showDialogHelp();
                     break;
                 case 1:

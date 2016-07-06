@@ -156,7 +156,8 @@ public class ActorConnectionEventActions {
                     request.getSenderImage()     ,
                     connectionState              ,
                     request.getSentTime()        ,
-                    request.getSentTime()
+                    request.getSentTime(),
+                    null
             );
 
             switch(request.getSenderActorType()) {

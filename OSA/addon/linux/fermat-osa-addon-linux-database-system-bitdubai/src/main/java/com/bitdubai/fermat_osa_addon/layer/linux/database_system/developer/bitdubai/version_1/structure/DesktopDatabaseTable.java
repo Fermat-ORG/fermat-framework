@@ -131,6 +131,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public void clearAllFilters() {
 
         this.tableFilter = null;
+        this.tableFilterGroup = null;
     }
 
     @Override
@@ -145,7 +146,9 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     @Override
     public DatabaseTableFilterGroup getNewFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator) {
-        return null;
+        return new DesktopDatabaseTableFilterGroup(
+                tableFilters, filterGroups, filterOperator
+        );
     }
 
 
@@ -483,12 +486,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
         );
 
         this.tableFilter.add(filter);
-        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
-                this.tableFilter,
-                null            ,
-                null
-        );
-
     }
 
     @Override
@@ -504,13 +501,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
                         value.getCode()
                 )
         );
-
-        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
-                this.tableFilter,
-                null            ,
-                null
-        );
-
     }
 
     @Override
@@ -538,12 +528,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
         filter.setType(type);
 
         this.tableFilter.add(filter);
-        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
-                this.tableFilter,
-                null            ,
-                null
-        );
-
     }
 
     @Override
@@ -670,6 +654,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
         } else {
             //if set group filter
             if (this.tableFilterGroup != null) {
+                filter = makeGroupFilters(this.tableFilterGroup);
+                if (!filter.isEmpty()) return " WHERE " + filter;
                 return makeGroupFilters(this.tableFilterGroup);
             } else {
                 return filter;
@@ -680,7 +666,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
         StringBuilder strFilter = new StringBuilder();
-        String filter;
 
         if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
             strFilter.append("(");
@@ -691,7 +676,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
             if (databaseTableFilterGroup.getSubGroups() != null){
 
                 for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+
+                    if ((subGroup != null && subGroup.getFilters().size() > 0) || ix > 0) {
                         switch (databaseTableFilterGroup.getOperator()) {
                             case AND:
                                 strFilter.append(" AND ");
@@ -703,9 +689,13 @@ public class DesktopDatabaseTable implements DatabaseTable {
                                 strFilter.append(" ");
                         }
                     }
-                    strFilter.append("(");
-                    strFilter.append(makeGroupFilters(subGroup));
-                    strFilter.append(")");
+
+                    String subGroupFilterString = makeGroupFilters(subGroup);
+                    if (!subGroupFilterString.isEmpty()) {
+                        strFilter.append("(");
+                        strFilter.append(makeGroupFilters(subGroup));
+                        strFilter.append(")");
+                    }
                     ix++;
                 }
 
@@ -714,10 +704,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             strFilter.append(")");
         }
 
-        filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = " WHERE " + filter;
-
-        return filter;
+        return strFilter.toString();
     }
 
     private String makeOrder() {

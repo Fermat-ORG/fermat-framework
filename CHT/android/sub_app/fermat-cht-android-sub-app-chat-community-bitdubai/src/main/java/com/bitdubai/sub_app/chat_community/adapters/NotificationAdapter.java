@@ -45,7 +45,7 @@ public class NotificationAdapter
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 //holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-                holder.date.setText("2 minutes ago");
+                holder.date.setText("");
             }
         }
     }

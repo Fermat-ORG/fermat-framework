@@ -1,7 +1,7 @@
 angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interval', '$filter', '$window', '$location',  function($scope, $http, $interval, $filter, $window, $location) {
 
       $scope.labels = [];
-      $scope.series = ['Client Connections'];
+      $scope.series = ['Client Connections', 'Identities'];
       $scope.charData = [[],[]];
       $scope.monitInfo = [];
 
@@ -43,7 +43,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
                       }
 
                       $scope.charData[0].push(data.registeredClientConnection);
-                      $scope.charData[1].push(data.vpnTotal);
+                      $scope.charData[1].push($scope.registerActorsDetail);
 
            }, function errorCallback(response) {
                 var message = "";

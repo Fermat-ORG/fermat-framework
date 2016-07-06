@@ -24,12 +24,12 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     private String city;
     private String connectionState;
     private long   accuracy;
-    private GeoFrequency frecuency;
+    private GeoFrequency frequency;
 
     ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias,
                                              byte[] image, String status, String country,
                                              String state, String city, String connectionState,
-                                             long accuracy, GeoFrequency frecuency){
+                                             long accuracy, GeoFrequency frequency){
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
@@ -40,7 +40,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
         this.city = city;
         this.connectionState = connectionState;
         this.accuracy = accuracy;
-        this.frecuency = frecuency;
+        this.frequency = frequency;
     }
 
     ChatActorCommunitySelectableIdentityImpl(final ChatIdentity chatIdentity) {
@@ -55,7 +55,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
         this.city = chatIdentity.getCity();
         this.connectionState = chatIdentity.getConnectionState();
         this.accuracy = chatIdentity.getAccuracy();
-        this.frecuency = chatIdentity.getFrecuency();
+        this.frequency = chatIdentity.getFrecuency();
     }
 
 
@@ -113,7 +113,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
 
     public GeoFrequency getFrequency() {
-        return frecuency;
+        return frequency;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
                 ", city='" + city + '\'' +
                 ", connectionState='" + connectionState + '\'' +
                 ", accuracy='" + accuracy + '\'' +
-                ", frequency='" + (frecuency != null) +
+                ", frequency='" + (frequency != null) +
                 '}';
     }
 }

@@ -214,7 +214,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      */
     private void takeCloseNegotiationsAndCreateTransactionWithStatusInProgress() throws FermatException {
         final Collection<CustomerBrokerSaleNegotiation> negotiationsClosed = customerBrokerSaleNegotiationManager.
-                getNegotiationsByStatus(NegotiationStatus.CLOSED);
+                getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CLOSING);
 
         final String customerBrokerSaleTransactionIdColumnName = UserLevelBusinessTransactionCustomerBrokerSaleConstants.
                 CUSTOMER_BROKER_SALE_TRANSACTION_ID_COLUMN_NAME;

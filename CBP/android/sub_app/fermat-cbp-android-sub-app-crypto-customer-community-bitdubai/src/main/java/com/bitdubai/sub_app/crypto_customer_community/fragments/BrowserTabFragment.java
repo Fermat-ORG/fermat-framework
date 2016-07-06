@@ -26,6 +26,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.FermatException;
@@ -63,7 +64,7 @@ public class BrowserTabFragment
         implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreDataListener, GeolocationDialog.AdapterCallback {
 
     //Constants
-    private static final int MAX = 100;
+    private static final int MAX = 10;
     protected static final String TAG = "BrowserTabFragment";
 
     //Managers
@@ -231,15 +232,13 @@ public class BrowserTabFragment
 
     @Override
     public RecyclerView.OnScrollListener getScrollListener() {
-        //TODO: Descomentar esto para activar la paginacion cuando esta funcionando en los Actor Network Service
-//        if (scrollListener == null) {
-//            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
-//            endlessScrollListener.setOnLoadMoreDataListener(this);
-//            scrollListener = endlessScrollListener;
-//        }
-//
-//        return scrollListener;
-        return null;
+        if (scrollListener == null) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+            endlessScrollListener.setOnLoadMoreDataListener(this);
+            scrollListener = endlessScrollListener;
+        }
+
+        return scrollListener;
     }
 
     @Override
@@ -314,10 +313,6 @@ public class BrowserTabFragment
                     errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                             UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
-
-            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                //TODO: colocar aqui el codigo para mostrar el SearchView
-                return true;
         }
 
         return false;

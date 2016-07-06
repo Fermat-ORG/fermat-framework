@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationU
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceActorLocationUpdaterAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileUpdatedEventHandler;
@@ -150,7 +151,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                 )
         );
 
-        if (this.getConnection() != null && this.getConnection().isRegistered()) {
+        if (this.getConnection() != null && this.getConnection().isRegistered() && this.isRegistered()) {
 
             try {
 
@@ -246,7 +247,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
             try {
 
-                this.getConnection().updateRegisteredProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate, UpdateTypes.FULL);
                 registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
 
             } catch (CantUpdateRegisteredProfileException exception) {
@@ -256,13 +257,14 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         }
     }
 
-    public void updateRegisteredActor(final ActorProfile actorToUpdate) throws CantUpdateRegisteredActorException {
+    public void updateRegisteredActor(final ActorProfile actorToUpdate,
+                                      final UpdateTypes  type         ) throws CantUpdateRegisteredActorException {
 
         if (this.getConnection() != null && this.getConnection().isRegistered()) {
 
             try {
 
-                this.getConnection().updateRegisteredProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate, type);
                 registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
 
             } catch (CantUpdateRegisteredProfileException exception) {

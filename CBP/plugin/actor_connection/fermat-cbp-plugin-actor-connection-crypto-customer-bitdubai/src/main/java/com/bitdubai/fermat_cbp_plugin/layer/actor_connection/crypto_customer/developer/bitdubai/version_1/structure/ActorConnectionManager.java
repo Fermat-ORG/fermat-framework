@@ -15,8 +15,12 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
@@ -58,6 +62,22 @@ public class ActorConnectionManager implements CryptoCustomerActorConnectionMana
     public CryptoCustomerActorConnectionSearch getSearch(CryptoCustomerLinkedActorIdentity actorIdentitySearching) {
 
         return new ActorConnectionSearch(actorIdentitySearching, dao);
+    }
+
+    @Override
+    public void requestConnection(final ActorIdentityInformation actorSending  ,
+                                  final ActorIdentityInformation actorReceiving,
+                                  Location location) throws CantRequestActorConnectionException,
+            UnsupportedActorTypeException      ,
+            ConnectionAlreadyRequestedException {
+
+        // TODO not need for implementation now. There's no actors trying to connect with a customer.
+    }
+
+    @Override
+    public void persistLocation(CryptoCustomerActorConnection actorConnection)
+            throws CantUpdateRecordException {
+        dao.persistLocation(actorConnection);
     }
 
     @Override

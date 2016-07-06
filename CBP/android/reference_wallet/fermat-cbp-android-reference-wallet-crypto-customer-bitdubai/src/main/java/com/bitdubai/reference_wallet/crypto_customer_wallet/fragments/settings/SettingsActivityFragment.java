@@ -77,6 +77,15 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
             }
         });
 
+        View settingsManagementFee = layout.findViewById(R.id.settings_management_fee);
+        settingsManagementFee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MANAGEMENT_FEE, appSession.getAppPublicKey());
+            }
+        });
+
+
         return layout;
     }
 
