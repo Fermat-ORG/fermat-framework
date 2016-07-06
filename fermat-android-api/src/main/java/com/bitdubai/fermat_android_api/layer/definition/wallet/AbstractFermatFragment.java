@@ -609,13 +609,15 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver){
-        receivers.remove(fermatBroadcastReceiver);
+        if(receivers!=null) receivers.remove(fermatBroadcastReceiver);
         getFrameworkHelpers().unregisterReceiver(fermatBroadcastReceiver, appSession.getAppPublicKey());
     }
 
     protected void unregisterAllReceivers(){
-        for (FermatBroadcastReceiver receiver : receivers) {
-            getFrameworkHelpers().unregisterReceiver(receiver,appSession.getAppPublicKey());
+        if(receivers!=null) {
+            for (FermatBroadcastReceiver receiver : receivers) {
+                getFrameworkHelpers().unregisterReceiver(receiver, appSession.getAppPublicKey());
+            }
         }
     }
 
