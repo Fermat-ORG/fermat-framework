@@ -170,6 +170,7 @@
     <string name="about_to_expire">About to expire</string>
     <string name="waiting_for_you">Waiting for you</string>
     <string name="waiting_for_broker">Waiting for the Broker</string>
+    <string name="waiting_for_closing">Negotiation is Closing</string>
     <string name="wizard_locations_title">Add Your Locations</string>
 
     <string name="you_will_have_to_pay_amount">You will have to pay: </string>
@@ -194,8 +195,8 @@
     <string name="ccw_fee_miner_speed_3"> FAST</string>
     <string name="ccw_fee_miner_value">Fee miner:</string>
 
-    <string name="ccw_fee_speed_text">Select the speed of the confirmation transaction, more speed increse the fee amount </string>
-    <string name="ccw_fee_origin_text">Set if the fee will be take of the bitcoin wallet or include in the transaction</string>
+    <string name="ccw_fee_speed_text">Select the confirmation speed for a bitcoin transaction. More speed means more fee</string>
+    <string name="ccw_fee_origin_text">Select if the fee will be taken from the bitcoin wallet or from the bitcoins to send</string>
     <string name="ccw_fee_transaction">FEE TYPE</string>
     <string name="ccw_fee_confirmation_time">FEE ORIGIN</string>
 
@@ -231,4 +232,6 @@
     <string name="location">Location</string>
     <string name="ccw_exchange_rate">EXCHANGE RATE</string>
     <string name="fermat_balance">Fermat Balance</string>
+    <string name="ccw_network">Network</string>
+    <string name="ccw_blockchain_network_description">Select the Blockchain Network where you want to send and receive the bitcoins</string>
 </resources>

@@ -410,7 +410,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
         return customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    private void testPayment() {
+    /*private void testPayment() {
         try {
             this.customerOnlinePaymentTransactionManager.sendPayment(
                     "testWalletPublicKey",
@@ -420,6 +420,6 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             System.out.println("Exception in Customer Online Payment: " + e.getMessage());
             e.printStackTrace();
         }
-    }
+    }*/
 
 }

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_onl
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BrokerSubmitMerchandiseManager;
 
@@ -27,7 +28,9 @@ public interface BrokerSubmitOnlineMerchandiseManager extends BrokerSubmitMercha
             String cbpWalletPublicKey,
             String cryptoWalletPublicKey,
             CryptoCurrency merchandiseCurrency,
-            String contractHash) throws CantSubmitMerchandiseException;
+            String contractHash,
+            FeeOrigin feeOrigin,
+            long fee) throws CantSubmitMerchandiseException;
 
     /**
      * This method submit the merchandise according the contract elements.
@@ -43,7 +46,9 @@ public interface BrokerSubmitOnlineMerchandiseManager extends BrokerSubmitMercha
             String cryptoWalletPublicKey,
             String contractHash,
             CryptoCurrency merchandiseCurrency,
-            BlockchainNetworkType blockchainNetworkType) throws CantSubmitMerchandiseException;
+            BlockchainNetworkType blockchainNetworkType,
+            FeeOrigin feeOrigin,
+            long fee) throws CantSubmitMerchandiseException;
 
     /**
      * This method submit the merchandise according the contract clauses.
@@ -57,7 +62,12 @@ public interface BrokerSubmitOnlineMerchandiseManager extends BrokerSubmitMercha
      *
      * @throws CantSubmitMerchandiseException
      */
-    void submitMerchandise(BigDecimal referencePrice, String cbpWalletPublicKey, String contractHash, CryptoCurrency merchandiseCurrency)
+    void submitMerchandise(BigDecimal referencePrice,
+                           String cbpWalletPublicKey,
+                           String contractHash,
+                           CryptoCurrency merchandiseCurrency,
+                           FeeOrigin feeOrigin,
+                           long fee)
             throws CantSubmitMerchandiseException;
 
     /**
@@ -78,5 +88,7 @@ public interface BrokerSubmitOnlineMerchandiseManager extends BrokerSubmitMercha
             String cbpWalletPublicKey,
             String contractHash,
             CryptoCurrency merchandiseCurrency,
-            BlockchainNetworkType blockchainNetworkType) throws CantSubmitMerchandiseException;
+            BlockchainNetworkType blockchainNetworkType,
+            FeeOrigin feeOrigin,
+            long fee) throws CantSubmitMerchandiseException;
 }
