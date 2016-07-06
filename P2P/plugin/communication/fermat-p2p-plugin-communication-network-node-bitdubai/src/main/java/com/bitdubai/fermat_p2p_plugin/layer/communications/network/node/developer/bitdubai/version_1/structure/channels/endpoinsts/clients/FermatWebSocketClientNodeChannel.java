@@ -218,7 +218,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     public void newPackageReceived(Package packageReceived, Session session) {
 
         LOG.info("New message Received");
-        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
+        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived.getPackageType() + "");
 
         try {
 
