@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services;
 
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 import com.google.gson.Gson;
@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
+import org.jboss.resteasy.annotations.GZIP;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -45,6 +46,7 @@ public class ConfigurationService {
     }
 
     @GET
+    @GZIP
     public String isActive() {
         return "The Configuration WebService is running ...";
     }
@@ -53,6 +55,7 @@ public class ConfigurationService {
     @GET
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
+    @GZIP
     public Response getConfiguration() {
 
         LOG.debug("Executing getConfiguration()");
@@ -71,6 +74,7 @@ public class ConfigurationService {
     @POST
     @Path("/save")
     @Produces(MediaType.TEXT_PLAIN)
+    @GZIP
     public Response saveConfiguration(Configuration configuration) {
 
         LOG.debug("Executing saveConfiguration()");

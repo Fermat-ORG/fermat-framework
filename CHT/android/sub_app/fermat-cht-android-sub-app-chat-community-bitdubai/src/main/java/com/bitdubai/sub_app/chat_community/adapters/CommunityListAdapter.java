@@ -227,8 +227,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         Address address= null;
         if(data.getLocation() != null ){
             try {
-                //if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
-                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
+                address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
             }catch(CantCreateAddressException e){
                 address = null;
             }catch(Exception e){

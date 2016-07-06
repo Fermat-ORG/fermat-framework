@@ -290,7 +290,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                           BigDecimal referencePrice,
                                           CryptoCurrency merchandiseCurrency,
                                           BlockchainNetworkType blockchainNetworkType,
-                                          String intraActorPublicKey) throws CantInsertRecordException {
+                                          String intraActorPublicKey,
+                                          FeeOrigin feeOrigin,
+                                          long fee) throws CantInsertRecordException {
         try {
             DatabaseTable databaseTable = getDatabaseSubmitTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
@@ -305,7 +307,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     referencePrice,
                     merchandiseCurrency,
                     blockchainNetworkType,
-                    intraActorPublicKey);
+                    intraActorPublicKey,
+                    feeOrigin,
+                    fee);
 
             databaseTable.insertRecord(databaseTableRecord);
 
@@ -428,8 +432,19 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
             businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
 
-            businessTransactionRecord.setFee(BitcoinFee.NORMAL.getFee()); // TODO: Por favor sacar esto de las clausulas de la negociacion
-            businessTransactionRecord.setFeeOrigin(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT); // TODO: Por favor sacar esto de las clausulas de la negociacion
+            businessTransactionRecord.setFee(record.getLongValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_FEE_COLUMN_NAME));
+            String feeOriginString = record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME);
+            FeeOrigin feeOrigin;
+            if(feeOriginString==null||feeOriginString.isEmpty()){
+                feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            } else {
+                try{
+                    feeOrigin = FeeOrigin.getByCode(feeOriginString);
+                } catch (InvalidParameterException ex){
+                    feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+                }
+            }
+            businessTransactionRecord.setFeeOrigin(feeOrigin);
 
             return businessTransactionRecord;
 
@@ -876,7 +891,11 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setDoubleValue(SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME, businessTransactionRecord.getPriceReference().doubleValue());
         record.setLongValue(SUBMIT_ONLINE_MERCHANDISE_TIMESTAMP_COLUMN_NAME, businessTransactionRecord.getTimestamp());
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME, businessTransactionRecord.getTransactionHash());
-
+        //new fields
+        //Origin Fee
+        record.setStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME, businessTransactionRecord.getFeeOrigin().getCode());
+        //Fee
+        record.setLongValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_FEE_COLUMN_NAME, businessTransactionRecord.getFee());
 
         //I need to check if crypto status is null
         CryptoStatus cryptoStatus = businessTransactionRecord.getCryptoStatus();
@@ -941,7 +960,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                                          BigDecimal referencePrice,
                                                          CryptoCurrency merchandiseCurrency,
                                                          BlockchainNetworkType blockchainNetworkType,
-                                                         String intraActorPk) {
+                                                         String intraActorPk,
+                                                         FeeOrigin feeOrigin,
+                                                         long fee) {
 
         UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME, transactionId);
@@ -957,6 +978,11 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME, cryptoWalletPublicKey);
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME, intraActorPk);
         record.setDoubleValue(SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME, referencePrice.doubleValue());
+        //Origin Fee
+        record.setStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME, feeOrigin.getCode());
+        //Fee
+        record.setLongValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_FEE_COLUMN_NAME, fee);
+
 
         if (blockchainNetworkType == null)
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();

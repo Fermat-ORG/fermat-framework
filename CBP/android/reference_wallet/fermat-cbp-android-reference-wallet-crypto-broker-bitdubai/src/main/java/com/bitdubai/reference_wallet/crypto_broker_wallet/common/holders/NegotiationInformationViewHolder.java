@@ -89,6 +89,9 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         if (status == WAITING_FOR_CUSTOMER || status == SENT_TO_CUSTOMER)
             return res.getColor(R.color.waiting_for_customer_list_item_background);
 
+        if (status == WAITING_FOR_CLOSING)
+            return res.getColor(R.color.waiting_for_closing_list_item_background);
+
         if (status == CLOSED)
             return res.getColor(R.color.negotiation_closed_list_item_background);
 
@@ -101,6 +104,9 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
         if (status == WAITING_FOR_CUSTOMER)
             return R.string.waiting_for_the_customer;
+
+        if (status == WAITING_FOR_CLOSING)
+            return R.string.waiting_for_closing;
 
         return R.string.sending_to_the_customer;
     }

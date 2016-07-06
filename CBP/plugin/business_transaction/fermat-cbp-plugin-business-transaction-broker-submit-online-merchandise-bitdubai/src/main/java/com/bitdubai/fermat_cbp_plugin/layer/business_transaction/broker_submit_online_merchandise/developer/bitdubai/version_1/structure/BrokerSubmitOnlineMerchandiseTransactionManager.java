@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
@@ -157,7 +158,9 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                                   String cbpWalletPublicKey,
                                   String walletPublicKey,
                                   CryptoCurrency merchandiseCurrency,
-                                  String contractHash) throws CantSubmitMerchandiseException {
+                                  String contractHash,
+                                  FeeOrigin feeOrigin,
+                                  long fee) throws CantSubmitMerchandiseException {
 
         submitMerchandise(
                 referencePrice,
@@ -165,7 +168,9 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                 walletPublicKey,
                 contractHash,
                 merchandiseCurrency,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                BlockchainNetworkType.getDefaultBlockchainNetworkType(),
+                feeOrigin,
+                fee);
     }
 
     @Override
@@ -174,7 +179,9 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                                   String walletPublicKey,
                                   String contractHash,
                                   CryptoCurrency merchandiseCurrency,
-                                  BlockchainNetworkType blockchainNetworkType) throws CantSubmitMerchandiseException {
+                                  BlockchainNetworkType blockchainNetworkType,
+                                  FeeOrigin feeOrigin,
+                                  long fee) throws CantSubmitMerchandiseException {
         try {
             //Checking the arguments
             Object[] arguments = {referencePrice, cbpWalletPublicKey, walletPublicKey, contractHash};
@@ -204,7 +211,9 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                     referencePrice,
                     merchandiseCurrency,
                     blockchainNetworkType,
-                    intraActorPk);
+                    intraActorPk,
+                    feeOrigin,
+                    fee);
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -252,14 +261,18 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
     public void submitMerchandise(BigDecimal referencePrice,
                                   String cbpWalletPublicKey,
                                   String contractHash,
-                                  CryptoCurrency merchandiseCurrency) throws CantSubmitMerchandiseException {
+                                  CryptoCurrency merchandiseCurrency,
+                                  FeeOrigin feeOrigin,
+                                  long fee) throws CantSubmitMerchandiseException {
 
         submitMerchandise(
                 referencePrice,
                 cbpWalletPublicKey,
                 contractHash,
                 merchandiseCurrency,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                BlockchainNetworkType.getDefaultBlockchainNetworkType(),
+                feeOrigin,
+                fee);
     }
 
     @Override
@@ -267,7 +280,9 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                                   String cbpWalletPublicKey,
                                   String contractHash,
                                   CryptoCurrency merchandiseCurrency,
-                                  BlockchainNetworkType blockchainNetworkType) throws CantSubmitMerchandiseException {
+                                  BlockchainNetworkType blockchainNetworkType,
+                                  FeeOrigin feeOrigin,
+                                  long fee) throws CantSubmitMerchandiseException {
         try {
             //Checking the arguments
             Object[] arguments = {referencePrice, cbpWalletPublicKey, contractHash};
@@ -299,7 +314,15 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             }
 
             //Overload the original method
-            submitMerchandise(referencePrice, cbpWalletPublicKey, cryptoWalletPublicKey, contractHash, merchandiseCurrency, blockchainNetworkType);
+            submitMerchandise(
+                    referencePrice,
+                    cbpWalletPublicKey,
+                    cryptoWalletPublicKey,
+                    contractHash,
+                    merchandiseCurrency,
+                    blockchainNetworkType,
+                    feeOrigin,
+                    fee);
 
         } catch (CryptoBrokerWalletNotFoundException e) {
             pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
