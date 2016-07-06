@@ -3,9 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -77,6 +75,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransacti
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION;
 
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 03/07/16.
  */
@@ -95,6 +94,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
 
     /**
      * Default constructor with parameters
+     *
      * @param sleepTime
      * @param timeUnit
      * @param initDelayTime
@@ -137,7 +137,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
 
     /**
      * This method sets the IntraActorCryptoTransactionManager
+     *
      * @param outgoingIntraActorManager
+     *
      * @throws CantSetObjectException
      */
     private void setIntraActorCryptoTransactionManager(
@@ -196,7 +198,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                 //I'll check if the merchandise was sent in a previous loop
                 contractTransactionStatus = businessTransactionRecord
                         .getContractTransactionStatus();
-                if(contractTransactionStatus!=ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE){
+                if (contractTransactionStatus != ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE) {
                     /**
                      * If the contractTransactionStatus is different to PENDING_SUBMIT_ONLINE_MERCHANDISE means
                      * that the merchandise submit through the Crypto* Wallet was done.
@@ -222,7 +224,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                         Actors.INTRA_USER,
                         getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
                         businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
-                        businessTransactionRecord.getCryptoCurrency());
+                        businessTransactionRecord.getCryptoCurrency(),
+                        businessTransactionRecord.getFee(), //TODO: se va a crear un setting para configurar este parametros
+                        businessTransactionRecord.getFeeOrigin()); // TODO: se va a crear un setting para configurar este parametros
 
                 //Updating the business transaction record
                 businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());
