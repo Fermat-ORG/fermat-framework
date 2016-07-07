@@ -56,8 +56,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
     private final CryptoWalletManager cryptoWalletManager;
     private final CryptoVaultManager cryptoVaultManager  ;
 
-    private final BlockchainManager<ECKey, Transaction> bitcoinNetworkManager  ;
-    private final TransactionSender<CryptoTransaction> bitcoinNetworkTransactionSender  ;
+    private final BlockchainManager bitcoinNetworkManager  ;
     private final ErrorManager         errorManager        ;
     private final OutgoingExtraUserDao dao                 ;
     private EventManager eventManager;
@@ -69,8 +68,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
      */
     public OutgoingExtraUserTransactionProcessorAgent(final CryptoWalletManager cryptoWalletManager,
                                                       final CryptoVaultManager cryptoVaultManager  ,
-                                                      final BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
-                                                      final TransactionSender<CryptoTransaction> bitcoinNetworkTransactionSender,
+                                                      final BlockchainManager bitcoinNetworkManager,
                                                       final ErrorManager         errorManager        ,
                                                       final OutgoingExtraUserDao dao                 ,
                                                       final EventManager eventManager,
@@ -80,7 +78,6 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
         this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoVaultManager   = cryptoVaultManager  ;
         this.bitcoinNetworkManager   = bitcoinNetworkManager  ;
-        this.bitcoinNetworkTransactionSender = bitcoinNetworkTransactionSender;
         this.errorManager         = errorManager        ;
         this.dao                  = dao                 ;
         this.eventManager         = eventManager;
@@ -294,7 +291,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
             try {
                 CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(transaction.getWalletPublicKey());
                 CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
-                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, bitcoinNetworkManager, bitcoinNetworkTransactionSender, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
+                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, bitcoinNetworkManager, cryptoStatus, cryptoWalletWallet, this.dao, this.errorManager);
 
             } catch (Exception exception) {
                 reportUnexpectedError(exception);
