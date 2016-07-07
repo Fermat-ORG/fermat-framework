@@ -17,7 +17,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -131,7 +130,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * Process the transaction
      * @param actorsCatalogTransaction
      */
-    private int processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantCreateTransactionStatementPairException, DatabaseTransactionFailedException {
+    private int processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantReadRecordDataBaseException, CantCreateTransactionStatementPairException, DatabaseTransactionFailedException {
 
         LOG.info("Executing method processTransaction");
 
@@ -144,66 +143,71 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
         } else {
 
-            // create transaction for
-            DatabaseTransaction databaseTransaction = getDaoFactory().getActorsCatalogDao().getNewTransaction();
-            DatabaseTransactionStatementPair pair;
+            try {
 
-            switch (actorsCatalogTransaction.getTransactionType()){
+                // create transaction for
+                DatabaseTransaction databaseTransaction = getDaoFactory().getActorsCatalogDao().getNewTransaction();
+                DatabaseTransactionStatementPair pair;
 
-                case ActorsCatalogTransaction.ADD_TRANSACTION_TYPE :
-                    /*
-                     * Insert ActorsCatalog into data base
-                     */
-                    pair = insertActorsCatalog(actorsCatalogTransaction);
-                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-                    break;
+                switch (actorsCatalogTransaction.getTransactionType()){
 
-                case ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE :
-                    /*
-                     * Update ActorsCatalog into data base
-                     */
-                    pair = updateActorsCatalog(actorsCatalogTransaction);
-                    databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
-                    break;
+                    case ActorsCatalogTransaction.ADD_TRANSACTION_TYPE :
+                        /*
+                         * Insert ActorsCatalog into data base
+                         */
+                        pair = insertActorsCatalog(actorsCatalogTransaction);
+                        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+                        break;
 
-                case ActorsCatalogTransaction.DELETE_TRANSACTION_TYPE :
-                    /*
-                     * Delete ActorsCatalog into data base
-                     */
-                    pair = deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
-                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
-                    break;
+                    case ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE :
+                        /*
+                         * Update ActorsCatalog into data base
+                         */
+                        pair = updateActorsCatalog(actorsCatalogTransaction);
+                        databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+                        break;
 
-                case ActorsCatalogTransaction.UPDATE_GEOLOCATION_TRANSACTION_TYPE :
-                    /*
-                     * Delete ActorsCatalog into data base
-                     */
-                    pair = updateLocationActorsCatalog(actorsCatalogTransaction);
-                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
-                    break;
+                    case ActorsCatalogTransaction.DELETE_TRANSACTION_TYPE :
+                        /*
+                         * Delete ActorsCatalog into data base
+                         */
+                        pair = deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
+                        databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                        break;
 
-                case ActorsCatalogTransaction.UPDATE_LAST_CONNECTION_TRANSACTION_TYPE :
-                    /*
-                     * Delete ActorsCatalog into data base
-                     */
-                    pair = updateLastConnectionActorsCatalog(actorsCatalogTransaction);
-                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
-                    break;
+                    case ActorsCatalogTransaction.UPDATE_GEOLOCATION_TRANSACTION_TYPE :
+                        /*
+                         * Delete ActorsCatalog into data base
+                         */
+                        pair = updateLocationActorsCatalog(actorsCatalogTransaction);
+                        databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                        break;
+
+                    case ActorsCatalogTransaction.UPDATE_LAST_CONNECTION_TRANSACTION_TYPE :
+                        /*
+                         * Delete ActorsCatalog into data base
+                         */
+                        pair = updateLastConnectionActorsCatalog(actorsCatalogTransaction);
+                        databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                        break;
+                }
+
+                /*
+                 * Insert ActorsCatalogTransaction
+                 */
+                pair = insertActorsCatalogTransaction(actorsCatalogTransaction);
+                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                /*
+                 * Insert ActorsCatalogTransactionsPendingForPropagation
+                 */
+                pair = insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
+                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                databaseTransaction.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            /*
-             * Insert ActorsCatalogTransaction
-             */
-            pair = insertActorsCatalogTransaction(actorsCatalogTransaction);
-            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-
-            /*
-             * Insert ActorsCatalogTransactionsPendingForPropagation
-             */
-            pair = insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
-            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-
-            databaseTransaction.execute();
 
         }
 
