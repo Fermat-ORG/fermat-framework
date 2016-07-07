@@ -31,7 +31,9 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -42,10 +44,14 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -75,7 +81,6 @@ import static android.widget.Toast.makeText;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16
  * @version 1.0
- * Upd
  *
  */
 
@@ -110,6 +115,7 @@ public class ChatListFragment
     TextView nochatssubtitle;
     TextView nochatssubtitle1;
     private static final int MAX = 20;
+    public final String BROADCAST_CODE = "13";
     private int offset = 0;
     Toolbar toolbar;
 
@@ -177,6 +183,7 @@ public class ChatListFragment
                                         String datef = formatter.format(new java.util.Date(milliseconds));
                                         if (Validate.isDateToday(dated)) {
                                             if (Validate.isDateToday(dated)) {
+                                                //if(android.text.format.DateFormat!=null)
                                                 if (Build.VERSION.SDK_INT < 23) {
                                                     if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
                                                         formatter = new SimpleDateFormat("HH:mm");
@@ -250,6 +257,11 @@ public class ChatListFragment
             chatManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
+
+            FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+            registerReceiver(fermatIntentFilter, new ChatBroadcastReceiver());
+//            FermatIntentFilter fermatIntentFilter2 = new FermatIntentFilter(BroadcasterType.NOTIFICATION_SERVICE);
+//            registerReceiver(fermatIntentFilter2, new ChatBroadcastReceiver());
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -463,21 +475,23 @@ public class ChatListFragment
         return layout;
     }
 
-    @Override
-    public void onUpdateViewOnUIThread(String code) {
-        super.onUpdateViewOnUIThread(code);
-        if(code.equals("13")) {
-            if (searchView != null) {
-                if (searchView.getQuery().toString().equals("")) {
-                    updatevalues();
-                    chatlistview();
-                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                }
-            } else {
+//    @Override
+//    public void onUpdateViewOnUIThread(String code) {
+//        super.onUpdateViewOnUIThread(code);
+//        onUpdateViewUIThread();
+//    }
+
+    public void onUpdateViewUIThread(){
+        if (searchView != null) {
+            if (searchView.getQuery().toString().equals("")) {
                 updatevalues();
                 chatlistview();
                 adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
             }
+        } else {
+            updatevalues();
+            chatlistview();
+            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
     }
 
@@ -746,5 +760,29 @@ public class ChatListFragment
 //            return true;
 //        }
         return super.onContextItemSelected(item);
+    }
+
+    /**
+     * Receiver class implemented
+     */
+    private class ChatBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
+                    onUpdateViewUIThread();
+                }
+
+                if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
+//                   fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
+                }
+            } catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
     }
 }

@@ -148,7 +148,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
-                clauseTextDialog.configure(R.string.ccw_amount_to_buy, R.string.ccw_value);
+                clauseTextDialog.configure(R.string.ccw_amount_to_pay, R.string.ccw_value);
 
                 clauseTextDialog.show();
                 break;
