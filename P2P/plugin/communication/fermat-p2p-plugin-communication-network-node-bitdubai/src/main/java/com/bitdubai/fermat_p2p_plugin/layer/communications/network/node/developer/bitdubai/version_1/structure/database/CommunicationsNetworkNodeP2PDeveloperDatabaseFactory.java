@@ -120,6 +120,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorcatalogColumns.add(ACTOR_CATALOG_ALIAS_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_PHOTO_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_THUMBNAIL_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME);
         actorcatalogColumns.add(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME);
@@ -145,6 +146,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
         actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);
@@ -170,6 +172,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);

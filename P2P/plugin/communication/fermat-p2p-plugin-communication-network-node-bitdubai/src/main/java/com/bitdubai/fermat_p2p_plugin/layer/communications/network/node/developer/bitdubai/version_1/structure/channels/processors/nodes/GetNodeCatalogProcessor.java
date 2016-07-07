@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetNodeCatalogMsjRequest;
@@ -25,7 +24,7 @@ import javax.websocket.Session;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class GetNodeCatalogProcessor extends PackageProcessor {
 
@@ -71,7 +70,6 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
              */
             if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
-
                 nodesCatalogList = loadData(messageContent.getOffset(), messageContent.getMax());
 
                 long count = getDaoFactory().getNodesCatalogDao().getAllCount();
@@ -88,7 +86,6 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                 session.getAsyncRemote().sendObject(packageRespond);
 
             }
-
 
         } catch (Exception exception){
 
@@ -110,9 +107,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
             } catch (Exception e) {
                 LOG.error(e.getMessage());
             }
-
         }
-
     }
 
     /**
@@ -124,21 +119,17 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
      */
     public List<NodesCatalog> loadData(Integer offset, Integer max) throws CantReadRecordDataBaseException {
 
-        List<NodesCatalog> nodesCatalogList = null;
+        List<NodesCatalog> nodesCatalogList;
 
         if (offset > 0 && max > 0){
 
             nodesCatalogList = getDaoFactory().getNodesCatalogDao().findAll(offset, max);
 
-        }else {
+        } else {
 
             nodesCatalogList = getDaoFactory().getNodesCatalogDao().findAll();
-
         }
 
         return nodesCatalogList;
-
     }
-
-
 }

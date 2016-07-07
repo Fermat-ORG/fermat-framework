@@ -41,7 +41,7 @@
                 android:selectAllOnFocus="true"
                 android:background="#cc808080"
                 android:padding="12dp"
-                android:hint="Enter name or aliass"
+                android:hint="Enter name or alias"
                 android:textSize="18dp"
                 android:gravity="center_vertical"
                 android:layout_alignBottom="@+id/crypto_broker_image"

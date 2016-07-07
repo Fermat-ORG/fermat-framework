@@ -45,6 +45,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         implements Filterable {
 
     List<ChatActorCommunityInformation> filteredData;
+    private String cityAddress;
+    private String stateAddress;
+    private String countryAddress;
     private String filterString;
     private final String TAG = "communityadapter";
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
@@ -224,7 +227,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         Address address= null;
         if(data.getLocation() != null ){
             try {
-                if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
+                //if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
                     address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
             }catch(CantCreateAddressException e){
                 address = null;
@@ -232,9 +235,15 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 address = null;
             }
         }
-        if (address!=null)
-            holder.location_text.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
-        else
+        if (address!=null) {
+            if (address.getState().equals("null")) stateAddress = "";
+            else stateAddress = address.getState() + " ";
+            if (address.getCity().equals("null")) cityAddress = "";
+            else cityAddress = address.getCity() + " ";
+            if (address.getCountry().equals("null")) countryAddress = "";
+            else countryAddress = address.getCountry();
+            holder.location_text.setText(cityAddress + stateAddress + countryAddress);
+        } else
             holder.location_text.setText("Searching...");
 
         final ChatActorCommunityInformation dat=data;

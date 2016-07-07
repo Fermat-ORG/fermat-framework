@@ -82,20 +82,18 @@ public class UpdateProfileLocationIntoCatalogProcessor extends PackageProcessor 
                         updateProfileMsjRespond = new UpdateProfileMsjRespond(MsgRespond.STATUS.FAIL, "Profile type not supported: "+messageContent.getType(), messageContent.getIdentityPublicKey());
                 }
 
-
                 /*
                  * Send the respond
                  */
                 Package packageRespond = Package.createInstance(updateProfileMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_ACTOR_PROFILE_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
                 session.getAsyncRemote().sendObject(packageRespond);
-
             }
 
             LOG.info("Process finish");
 
         }catch (Exception exception){
 
-            updateProfileMsjRespond = new UpdateProfileMsjRespond(MsgRespond.STATUS.FAIL, exception.getCause().getMessage(), messageContent != null ? messageContent.getIdentityPublicKey() : null);
+            updateProfileMsjRespond = new UpdateProfileMsjRespond(MsgRespond.STATUS.FAIL, exception.getMessage(), (messageContent != null && messageContent.getIdentityPublicKey() != null) ? messageContent.getIdentityPublicKey() : null);
 
             try {
 

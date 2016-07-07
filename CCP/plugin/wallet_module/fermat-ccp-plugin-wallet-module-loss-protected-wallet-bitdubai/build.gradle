@@ -36,15 +36,15 @@ pmd {
 }
 
 dependencies {
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
     compile project(':fermat-ccp-api')
-    compile project(':fermat-pip-api')
+    //compile project(':fermat-pip-api')
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
     testCompile 'junit:junit:4.11'
     //testCompile 'org.mockito:mockito-all:2.0.2-beta'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
-    compile project(':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai')
+    //compile project(':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai')
 }
 
 test {

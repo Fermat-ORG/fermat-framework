@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
@@ -64,7 +65,9 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
                      final Actors        deliveredToActorType     ,
                      ReferenceWallet referenceWallet,
                      BlockchainNetworkType blockchainNetworkType,
-                     final CryptoCurrency cryptoCurrency) throws InsufficientFundsException,
+                     final CryptoCurrency cryptoCurrency,
+                     long fee,
+                     FeeOrigin feeOrigin) throws InsufficientFundsException,
                                                                            CantSendFundsException    {
         /*
          * TODO: Create a class fir tge selection of the correct wallet
@@ -109,7 +112,8 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
 
                 dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey,
                         deliveredToActorType, blockchainNetworkType,
-                        cryptoCurrency);
+                        cryptoCurrency, fee,
+                 feeOrigin);
             }
         } catch (InsufficientFundsException exception) {
 

@@ -2,10 +2,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.06.29..
  */
-public class SearchViewOnPressEvent implements OptionMenuPressEvent<SearchViewOnPressEvent> {
+public class SearchViewOnPressEvent implements OptionMenuPressEvent<SearchViewOnPressEvent>,Serializable {
 
     /**
      * Title when search is focus

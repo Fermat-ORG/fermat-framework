@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -25,14 +25,14 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     private byte[] profileImage;
     private ExposureLevel exposureLevel;
     private long   accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
     public CryptoBrokerIdentityImpl(final String        alias        ,
                                     final KeyPair       keyPair      ,
                                     final byte[]        profileImage ,
                                     final ExposureLevel exposureLevel,
                                     final long accuracy,
-                                    final Frequency frequency){
+                                    final GeoFrequency frequency){
 
         this.alias         = alias        ;
         this.keyPair       = keyPair      ;
@@ -85,7 +85,7 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     }
 
     @Override
-    public Frequency getFrequency() {
+    public GeoFrequency getFrequency() {
         return this.frequency;
     }
 

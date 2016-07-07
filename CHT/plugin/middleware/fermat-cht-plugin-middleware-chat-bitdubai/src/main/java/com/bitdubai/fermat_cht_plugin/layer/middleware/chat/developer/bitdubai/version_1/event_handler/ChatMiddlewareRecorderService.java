@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     private ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
-    private ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent;
+    private ChatMiddlewareMonitorAgent2 chatMiddlewareMonitorAgent;
     /**
      * TransactionService Interface member variables.
      */
@@ -43,7 +44,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             EventManager eventManager,
             ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
-            ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent) throws CantStartServiceException {
+            ChatMiddlewareMonitorAgent2 chatMiddlewareMonitorAgent) throws CantStartServiceException {
         try {
             this.chatMiddlewareMonitorAgent = chatMiddlewareMonitorAgent;
             setDatabaseDao(chatMiddlewareDatabaseDao);

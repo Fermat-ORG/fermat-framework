@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
@@ -145,7 +145,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -180,7 +180,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public void updateIdentityAssetIssuer(String publicKey, String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetIssuerException {
+    public void updateIdentityAssetIssuer(String publicKey, String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityAssetIssuerException {
         try {
             /**
              * 1) Get the table.
@@ -257,7 +257,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
                         record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         record.getIntegerValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN),
-                        Frequency.getByCode(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN)));
+                        GeoFrequency.getByCode(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN)));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetIssuerIdentitiesException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");
@@ -307,7 +307,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
                         getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         record.getIntegerValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN),
-                        Frequency.getByCode(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN))));
+                        GeoFrequency.getByCode(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN))));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListAssetIssuerIdentitiesException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");

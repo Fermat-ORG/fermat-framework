@@ -142,6 +142,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
         try {
 
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask(),       30,  30, TimeUnit.SECONDS));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(),       30,  30, TimeUnit.SECONDS));
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(1, 4),     1,  1, TimeUnit.MINUTES));
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5, 9),    10, 10, TimeUnit.MINUTES));
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10, null), 1,  1, TimeUnit.HOURS));
@@ -255,12 +256,21 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
         private Integer countFailMax;
 
         /**
+         * Constructor without parameters
+         */
+        public PendingOutgoingMessageProcessorTask(){
+
+        }
+
+        /**
          * Constructor with parameters
+         *
          * @param countFailMin
          * @param countFailMax
          */
-        public PendingOutgoingMessageProcessorTask(Integer countFailMin, Integer countFailMax){
-            super();
+        public PendingOutgoingMessageProcessorTask(final Integer countFailMin,
+                                                   final Integer countFailMax){
+
             this.countFailMin = countFailMin;
             this.countFailMax = countFailMax;
         }

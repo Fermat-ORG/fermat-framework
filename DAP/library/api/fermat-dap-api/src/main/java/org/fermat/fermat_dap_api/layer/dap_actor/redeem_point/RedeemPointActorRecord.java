@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -39,7 +39,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private BlockchainNetworkType blockchainNetworkType;
     private List<String> registeredIssuers;
     private int accuracy;
-    private Frecuency frecuency;
+    private Frequency frecuency;
 
     {
         registeredIssuers = new ArrayList<>();

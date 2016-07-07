@@ -10,7 +10,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
@@ -96,7 +96,7 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
         }
     }
 
-    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetUserException {
+    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewIdentityAssetUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -120,7 +120,7 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
         }
     }
 
-    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetUserException {
+    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityAssetUserException {
         try {
             getAssetUserIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
 
@@ -182,8 +182,8 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
     }
 
     @Override
-    public Frequency getFrequencyDataDefault() {
-        return Frequency.NORMAL;
+    public GeoFrequency getFrequencyDataDefault() {
+        return GeoFrequency.NORMAL;
     }
 
     public void registerIdentities() throws CantListAssetUserIdentitiesException {
