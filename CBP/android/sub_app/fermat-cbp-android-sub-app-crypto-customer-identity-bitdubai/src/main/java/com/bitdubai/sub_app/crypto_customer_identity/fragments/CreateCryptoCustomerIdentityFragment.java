@@ -150,7 +150,7 @@ implements FermatWorkerCallBack{
         mCustomerName.performClick();
         mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mCustomerName.addTextChangedListener(textWatcher);
-        textCount.setText(String.valueOf(maxLenghtTextCount));
+        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.getText().length()));
 
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
