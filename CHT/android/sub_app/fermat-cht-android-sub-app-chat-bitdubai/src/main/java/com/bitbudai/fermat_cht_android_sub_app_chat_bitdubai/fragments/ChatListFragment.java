@@ -183,6 +183,7 @@ public class ChatListFragment
                                         String datef = formatter.format(new java.util.Date(milliseconds));
                                         if (Validate.isDateToday(dated)) {
                                             if (Validate.isDateToday(dated)) {
+                                                //if(android.text.format.DateFormat!=null)
                                                 if (Build.VERSION.SDK_INT < 23) {
                                                     if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
                                                         formatter = new SimpleDateFormat("HH:mm");
@@ -771,7 +772,7 @@ public class ChatListFragment
             try {
                 String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
-                if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
+                if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
                     onUpdateViewUIThread();
                 }
 
