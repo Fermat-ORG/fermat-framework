@@ -1115,7 +1115,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                 long fee = preferenceSettings.getBitcoinFee().getFee();
 
                 this.customerOnlinePaymentManager.sendPayment(
-                        cryptoCustomerPublicKey,
+                        preferenceSettings.getSelectedBitcoinWallet().getWalletPublicKey(),
                         contractHash,
                         paymentCurrency,
                         blockchainNetworkType,

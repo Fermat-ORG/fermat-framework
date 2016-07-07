@@ -32,8 +32,7 @@ public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHol
         merchandiseButton.setEnabled(false);
     }
 
-    public void bind(CryptoBrokerWalletAssociatedSetting data) {
-        Currency merchandise = data.getMerchandise();
+    public void bind(Currency merchandise) {
         String merchandiseCode = merchandise.getCode();
 
         try {

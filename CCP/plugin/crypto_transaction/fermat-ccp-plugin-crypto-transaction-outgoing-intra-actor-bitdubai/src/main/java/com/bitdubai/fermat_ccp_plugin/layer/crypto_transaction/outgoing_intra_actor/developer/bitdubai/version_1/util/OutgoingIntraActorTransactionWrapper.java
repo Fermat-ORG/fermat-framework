@@ -41,6 +41,7 @@ public class OutgoingIntraActorTransactionWrapper implements CryptoWalletTransac
 
     private FeeOrigin feeOrigin;
     private long fee;
+    private long total;
 
 
     @Override
@@ -82,6 +83,15 @@ public class OutgoingIntraActorTransactionWrapper implements CryptoWalletTransac
     @Override
     public long getAmount() {
         return amount;
+    }
+
+    @Override
+    public long getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
     }
 
     public void setAmount(long amount) {

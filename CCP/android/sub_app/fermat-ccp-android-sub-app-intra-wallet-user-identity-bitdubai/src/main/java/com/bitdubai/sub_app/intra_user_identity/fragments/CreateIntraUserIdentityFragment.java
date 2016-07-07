@@ -42,6 +42,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
@@ -101,6 +102,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private IntraUserIdentityModuleManager moduleManager;
     private Uri imageToUploadUri;
     private Bitmap imageBitmap;
+    private Location locationManager;
     //private Bitmap imageBitmap = null;
 
     private ImageView mChatImage;
@@ -120,6 +122,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             errorManager = appSession.getErrorManager();
 
             moduleManager = appSession.getModuleManager();
+
+            locationManager = moduleManager.getLocationManager();
 
             executorService.submit(new Runnable() {
                 @Override
@@ -541,10 +545,13 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             public void run() {
                                 try {
 
-                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)0, Frequency.NORMAL);
+                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)100, Frequency.NORMAL, moduleManager.getLocationManager());
 
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
+                                    e.printStackTrace();
+                                }
+                                catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -558,10 +565,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                 try {
                                     if (updateProfileImage)
 
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)0, Frequency.NORMAL);
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)100, Frequency.NORMAL, moduleManager.getLocationManager());
 
                                     else
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)0, Frequency.NORMAL);
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)100, Frequency.NORMAL,moduleManager.getLocationManager());
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
