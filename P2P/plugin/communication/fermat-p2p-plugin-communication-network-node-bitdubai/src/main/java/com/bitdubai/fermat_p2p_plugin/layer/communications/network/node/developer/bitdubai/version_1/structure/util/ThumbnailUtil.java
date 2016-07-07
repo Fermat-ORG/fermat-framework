@@ -11,7 +11,13 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 /**
- * Created by rrequena on 06/07/16.
+ * The Class <code>com.bitdubai.fermat_api.layer.all_definition.util.ImageUtil</code> It provides some
+ * basic functionality for generate a thumbnail from a image
+ * <p/>
+ *
+ * @author Roberto Requena (rart3001@gmail.com) on 06/07/16.
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class ThumbnailUtil {
 
