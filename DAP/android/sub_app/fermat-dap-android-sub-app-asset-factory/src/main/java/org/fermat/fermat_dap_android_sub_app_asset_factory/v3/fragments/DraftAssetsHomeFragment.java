@@ -341,7 +341,7 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

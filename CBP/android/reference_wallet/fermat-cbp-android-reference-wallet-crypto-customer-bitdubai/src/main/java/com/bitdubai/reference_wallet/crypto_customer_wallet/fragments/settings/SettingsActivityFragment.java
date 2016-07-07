@@ -35,7 +35,7 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
 
         try {
             errorManager = appSession.getErrorManager();
@@ -76,6 +76,15 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS, appSession.getAppPublicKey());
             }
         });
+
+        View settingsManagementFee = layout.findViewById(R.id.settings_management_fee);
+        settingsManagementFee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MANAGEMENT_FEE, appSession.getAppPublicKey());
+            }
+        });
+
 
         return layout;
     }

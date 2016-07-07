@@ -19,9 +19,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConsta
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUTCException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.all_definition.util.DateTimeZone;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
+import com.bitdubai.fermat_cbp_api.all_definition.util.UniversalTime;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -56,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -265,7 +269,11 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
 
         for (CustomerBrokerContractPurchase contract : pendingMerchandiseContracts) {
 
-            long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
+            long timeStampToday = ((contract.getDateTime() - getDateTimeUTC()) / 3600000);
+
+//            System.out.print("\n *** TIME ZONE NEGOTIATION: " + contract.getNegotiatiotId() + " ***" +
+//                    "\n - Compare alert: " + contract.getDateTime()+" - "+getDateTimeUTC()+"\n" +
+//                    "\n - timeStampToday: "+timeStampToday+" <= "+DELAY_HOURS);
 
             if (timeStampToday <= DELAY_HOURS) {
                 contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
@@ -360,7 +368,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                 if (transactionId.equals(negotiationId) && transactionStatus != CANCELLED) {
 
                     long timeToDelivery = 0;
-                    long timeStampToday = new Date().getTime();
+//                    long timeStampToday = new Date().getTime();
                     Negotiation negotiation = purchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                     Collection<Clause> clauses = negotiation.getClauses();
                     String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
@@ -368,7 +376,18 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    if (timeStampToday >= timeToDelivery) {
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    String dateDelivery = dateTimeZoneDelivery.getDate();
+
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
+
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
+//                            "\n - " + dateDelivery + " compareTo " + dateToday);
+
+                    if(dateDelivery.compareTo(dateToday) == 0){
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
+//                    if (getDateTimeUTC() >= timeToDelivery) {
 
                         //UPDATE CONTRACT STATUS
                         contractPurchaseManager.cancelContract(contract.getContractId(),
@@ -403,6 +422,19 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
         final Collection<CustomerBrokerContractPurchase> pendingPaymentContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT);
 
+//        long timeToDeliveryTest = 1467235072;
+//        DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDeliveryTest,"MM/dd/yyyy hh:mm a");
+//        String dateTimeDelivery     = dateTimeZoneDelivery.getDate();
+//        String dateTimeDeliveryUTC  = dateTimeZoneDelivery.getDateUTC();
+//        String dateTimeToday        = dateTimeZoneDelivery.getDateTodayUTC();
+//
+//        System.out.print("\n *** TIME ZONE " +
+//                "\n - Date:" +dateTimeDelivery+
+//                "\n - Date UTC:" +dateTimeDeliveryUTC+
+//                "\n - DateToday: "+dateTimeToday+
+//                "\n - CompareTo: " + dateTimeDelivery.compareTo(dateTimeToday)+"\n");
+
+//        System.out.print("\n *** USER LEVEL changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached *** \n");
         for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
             for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
                 String negotiationId = contract.getNegotiatiotId();
@@ -412,7 +444,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                 if (transactionId.equals(negotiationId) && transactionStatus != CANCELLED) {
 
                     long timeToDelivery = 0;
-                    long timeStampToday = new Date().getTime();
+//                    long timeStampToday = new Date().getTime();
 
                     Negotiation negotiation = purchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                     Collection<Clause> clauses = negotiation.getClauses();
@@ -421,7 +453,20 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    if (timeStampToday >= timeToDelivery) {
+
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    String dateDelivery = dateTimeZoneDelivery.getDate();
+
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
+
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
+//                            "\n - " +dateDelivery+" compareTo "+dateToday);
+
+                    if(dateDelivery.compareTo(dateToday) == 0){
+//                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
+//                    if (getDateTimeUTC() >= timeToDelivery) {
+//                    if(dateTimeDeliveryUTC.compareTo(dateTimeToday) == 0){
 
                         contractPurchaseManager.cancelContract(contract.getContractId(),
                                 "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT PAYMENT.");
@@ -432,7 +477,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
 
                         //BROADCASTER
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -454,7 +499,12 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
 
         for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
 
-            long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
+//            long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
+            long timeStampToday = ((contract.getDateTime() - getDateTimeUTC()) / 3600000);
+//            System.out.print("\n *** TIME ZONE NEGOTIATION: " + contract.getNegotiatiotId() + " ***" +
+//                    "\n - Compare alert: " + contract.getDateTime()+" - "+getDateTimeUTC()+"\n" +
+//                    "\n - timeStampToday: "+timeStampToday+" <= "+DELAY_HOURS);
+
             if (timeStampToday <= DELAY_HOURS) {
                 contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
 
@@ -551,7 +601,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
      */
     private void takeCloseNegotiationsAndCreateTransactionInProgress() throws CantGetListPurchaseNegotiationsException, DatabaseOperationException, InvalidParameterException, MissingCustomerBrokerPurchaseDataException {
         Collection<CustomerBrokerPurchaseNegotiation> closedNegotiations = purchaseNegotiationManager.
-                getNegotiationsByStatus(NegotiationStatus.CLOSED);
+                getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CLOSING);
 
         for (CustomerBrokerPurchaseNegotiation negotiation : closedNegotiations) {
             UUID negotiationId = negotiation.getNegotiationId();
@@ -706,5 +756,18 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
 
         //Can't do nothing more
         throw new CantGetExchangeRateException();
+    }
+
+    private long getDateTimeUTC(){
+
+        try{
+
+            return UniversalTime.getUTC().getTime();
+
+        } catch (CantGetUTCException e){
+            System.out.print("Cant get Date UTC in User Level Business Transaction Customer Broker Purchase");
+        }
+
+        return 0;
     }
 }

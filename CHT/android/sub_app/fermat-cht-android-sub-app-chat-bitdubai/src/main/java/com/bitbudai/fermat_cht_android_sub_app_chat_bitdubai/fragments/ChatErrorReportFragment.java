@@ -224,12 +224,6 @@ public class ChatErrorReportFragment
         return layout;
     }
 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        // Inflate the menu items
-        //inflater.inflate(R.menu.chat_menu, menu);
-    }
-
     private synchronized String getMoreData() {
         String dataSet = "";
         try {

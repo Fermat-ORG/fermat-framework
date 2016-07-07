@@ -25,6 +25,7 @@
         android:layout_below="@+id/cbc_broker_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-15dp"
+        android:visibility="gone"
         android:src="@drawable/agregar_contacto"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

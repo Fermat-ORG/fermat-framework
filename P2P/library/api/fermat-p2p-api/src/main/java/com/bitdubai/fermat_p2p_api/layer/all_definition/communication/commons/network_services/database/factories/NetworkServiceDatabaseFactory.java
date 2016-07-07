@@ -31,6 +31,13 @@ import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.com
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.QUERIES_BROADCAST_CODE_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.QUERIES_DISCOVERY_QUERY_PARAMS_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.QUERIES_EXECUTION_TIME_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.QUERIES_ID_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.QUERIES_STATUS_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.QUERIES_TABLE_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.QUERIES_TYPE_COLUMN_NAME;
 
 /**
  *  The Class  <code>com.bitdubai.fermat_p2p_api.layer.network_service.p2p.developer.bitdubai.version_1.database.P2PNetworkServiceDatabaseFactory</code>
@@ -100,16 +107,18 @@ public class NetworkServiceDatabaseFactory {
             table.addColumn(INCOMING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME , DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME , DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(INCOMING_MESSAGES_CONTENT_COLUMN_NAME            , DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME       , DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(INCOMING_MESSAGES_STATUS_COLUMN_NAME             , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(INCOMING_MESSAGES_CONTENT_COLUMN_NAME            , DatabaseDataType.STRING, 255, Boolean.FALSE);
 
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create Outgoing Messages table.
              */
             table = databaseFactory.newTableFactory(ownerId, OUTGOING_MESSAGES_TABLE_NAME);
@@ -119,11 +128,11 @@ public class NetworkServiceDatabaseFactory {
             table.addColumn(OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME       , DatabaseDataType.STRING , 130, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME        , DatabaseDataType.STRING , 255, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME                   , DatabaseDataType.STRING , 255, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME              , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_STATUS_COLUMN_NAME                    , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME         , DatabaseDataType.INTEGER,   0, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME                , DatabaseDataType.INTEGER,  10, Boolean.FALSE);
+            table.addColumn(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME                   , DatabaseDataType.STRING , 255, Boolean.FALSE);
 
             try {
                 //Create the table
@@ -131,6 +140,26 @@ public class NetworkServiceDatabaseFactory {
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            /**
+             * Create Queries table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, QUERIES_TABLE_NAME);
+
+            table.addColumn(QUERIES_ID_COLUMN_NAME                     , DatabaseDataType.STRING       ,  36, Boolean.TRUE );
+            table.addColumn(QUERIES_BROADCAST_CODE_COLUMN_NAME         , DatabaseDataType.STRING       ,  20, Boolean.FALSE);
+            table.addColumn(QUERIES_DISCOVERY_QUERY_PARAMS_COLUMN_NAME , DatabaseDataType.STRING       , 255, Boolean.FALSE);
+            table.addColumn(QUERIES_EXECUTION_TIME_COLUMN_NAME         , DatabaseDataType.LONG_INTEGER ,   0, Boolean.FALSE);
+            table.addColumn(QUERIES_TYPE_COLUMN_NAME                   , DatabaseDataType.STRING       ,   2, Boolean.FALSE);
+            table.addColumn(QUERIES_STATUS_COLUMN_NAME                 , DatabaseDataType.STRING       ,   2, Boolean.FALSE);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

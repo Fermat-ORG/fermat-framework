@@ -47,6 +47,7 @@
         >
 
         <ImageView
+            android:id="@+id/chatContactButton"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:paddingBottom="2dp"

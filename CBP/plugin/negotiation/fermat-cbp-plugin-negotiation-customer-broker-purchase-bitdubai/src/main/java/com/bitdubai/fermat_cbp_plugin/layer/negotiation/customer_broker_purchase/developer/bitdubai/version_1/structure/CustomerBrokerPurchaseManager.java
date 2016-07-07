@@ -138,6 +138,16 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
+        public void waitForClosing(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+            try{
+                this.customerBrokerPurchaseNegotiationDao.waitForClosing(negotiation);
+            } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.getMessage(), e, "", "Cant Update Customer Broker Purchase Negotiation");
+            }
+        }
+
+        @Override
         public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantGetListPurchaseNegotiationsException {
             try{
                 return this.customerBrokerPurchaseNegotiationDao.getNegotiations();

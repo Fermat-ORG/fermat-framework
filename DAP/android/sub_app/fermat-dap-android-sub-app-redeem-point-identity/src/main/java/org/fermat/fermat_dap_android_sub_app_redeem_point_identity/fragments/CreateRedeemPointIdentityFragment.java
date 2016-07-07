@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -61,7 +62,7 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +121,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     private boolean contextMenuInUse = false;
 
     private int accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
     ExecutorService executorService;
 
@@ -473,7 +474,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
-
+                appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
             }
         });
     }
@@ -579,6 +580,12 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
+    }
+
     private void loadIdentity() {
         if (identitySelected.getImage() != null) {
             Bitmap bitmap;
@@ -593,7 +600,12 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
-            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            if (appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+                mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            }else{
+                mIdentityImage.setImageDrawable((Drawable) appSession.getData(SessionConstants.IDENTITY_IMAGE));
+                activateButton();
+            }
         }
 
         isUpdate = true;
@@ -791,6 +803,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                                     mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     updateProfileImage = true;
+                                                    appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     activateButton();
                                                 } else {
                                                     mIdentityBitmap = null;
@@ -830,6 +843,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             activateButton();
                                         } else {
                                             mIdentityBitmap = null;
@@ -879,6 +893,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             activateButton();
                                         } else {
                                             mIdentityBitmap = null;
@@ -1191,9 +1206,9 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                 (int) appSession.getData(SessionConstants.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
+    private GeoFrequency getFrequencyData() {
         return appSession.getData(SessionConstants.FREQUENCY_DATA) == null ? moduleManager.getFrequencyDataDefault() :
-                (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
+                (GeoFrequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
     }
 
     private void cleanSessions() {
@@ -1222,7 +1237,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                         if (identityInfo.getAccuracy() == getAccuracyData()) {
                             deactivatedButton();
 
-                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode())) {
+                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode()) && appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+
                                 deactivatedButton();
                                 } else {
                                 activateButton();

@@ -334,7 +334,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

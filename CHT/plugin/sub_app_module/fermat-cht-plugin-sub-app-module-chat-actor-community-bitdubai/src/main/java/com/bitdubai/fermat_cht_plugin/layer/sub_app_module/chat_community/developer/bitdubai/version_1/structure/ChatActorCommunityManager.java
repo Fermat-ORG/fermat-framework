@@ -31,8 +31,10 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
@@ -320,6 +322,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public List<ChatActorCommunityInformation> listAllConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
+        ChatExposingData chatExposingData = null;
         try{
             if(selectedIdentity!=null) {
                 final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
@@ -335,11 +338,19 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
                 chatActorCommunityInformationList = new ArrayList<>();
 
-                for (ChatActorConnection cac : actorConnections)
-                    chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
+                for (ChatActorConnection cac : actorConnections){
+                    chatExposingData = getChatActorSearch().getResult(cac.getPublicKey());
+                    if (chatExposingData != null )
+                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, chatExposingData.getLocation()));
+                    else
+                        //TODO:Que location debemos usar si esto no se persiste en la Tabla de los actores Connection
+                        chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
+                }
             }
         } catch (CantListActorConnectionsException e) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+        } catch (CantListChatException cantGetChtActorSearchResult) {
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantGetChtActorSearchResult));
         }
         return chatActorCommunityInformationList;
 
@@ -366,7 +377,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 chatActorCommunityInformationList = new ArrayList<>();
 
                 for (ChatActorConnection cac : actorConnections)
-                    chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
+                    chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
 
             }
         }
@@ -396,7 +407,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 chatActorCommunityInformationList = new ArrayList<>();
 
                 for (ChatActorConnection cac : actorConnections)
-                    chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
+                    chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
             }
         } catch(CantListActorConnectionsException e){
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));

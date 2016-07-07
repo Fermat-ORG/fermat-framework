@@ -1,12 +1,14 @@
 package com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.provisory;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatTextViewRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -1171,14 +1173,17 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Issuer Identity");
-        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setColor("#1B1B1B");
         runtimeTitleBar.setTitleColor("#ffffff");
+
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setIsTitleTextStatic(true);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
+        statusBar.setColor("#1B1B1B");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -1213,13 +1218,13 @@ public class SubAppAppsGenerator {
 //        runtimeActivity.setBackgroundColor("#F9F9F9");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
+        statusBar.setColor("#1B1B1B");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Geolocation");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setColor("#1B1B1B");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setLabelSize(18);
@@ -4149,8 +4154,15 @@ public class SubAppAppsGenerator {
         fermatDrawable.setNumber(1);
         runtimeTab.setFermatDrawable(fermatDrawable);
 
+        //FermatTextView
+        //todo: josé acá agregale lo tuyo
+        FermatTextViewRuntime fermatTextViewRuntime = new FermatTextViewRuntime();
+        fermatTextViewRuntime.setTitle("CHAT");
+        fermatTextViewRuntime.setFontType(FontType.ROBOTO_REGULAR);
+        fermatTextViewRuntime.setTitleSize(20);
+
         TabBadgeView tabBadgeView = new TabBadgeView();
-        tabBadgeView.setTitle("CHATS");
+        tabBadgeView.setFermatTextViewRuntime(fermatTextViewRuntime);
         tabBadgeView.setBadge(fermatDrawable);
         runtimeTab.setFermatView(tabBadgeView);
 
@@ -4733,6 +4745,18 @@ public class SubAppAppsGenerator {
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(3);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setLabel("Go to Profile");
+        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
+
+        optionMenuItemBrowser = new OptionMenuItem(4);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setLabel("Go to Chat");
+        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
+
+        optionMenuItemBrowser = new OptionMenuItem(5);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Help");
         optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -4761,8 +4785,19 @@ public class SubAppAppsGenerator {
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-
         optionMenuItemConn = new OptionMenuItem(2);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setLabel("Go to Profile");
+        optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuConn.addMenuItem(optionMenuItemConn);
+
+        optionMenuItemConn = new OptionMenuItem(3);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setLabel("Go to Chat");
+        optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuConn.addMenuItem(optionMenuItemConn);
+
+        optionMenuItemConn = new OptionMenuItem(4);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -4785,6 +4820,18 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setLabel("Go to Profile");
+        optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);
+
+        optionMenuItemNot = new OptionMenuItem(2);
+        //optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setLabel("Go to Chat");
+        optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);
+
+        optionMenuItemNot = new OptionMenuItem(3);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Help");
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);

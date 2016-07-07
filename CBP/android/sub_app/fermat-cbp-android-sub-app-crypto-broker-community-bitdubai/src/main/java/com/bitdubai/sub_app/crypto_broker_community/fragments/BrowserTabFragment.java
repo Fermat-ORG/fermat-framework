@@ -27,7 +27,9 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -39,6 +41,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes.CryptoBrokerCommunitySubAppModuleInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
@@ -50,7 +53,6 @@ import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.GeolocationDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
-import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +81,6 @@ public class BrowserTabFragment
     private int offset = 0;
     private DeviceLocation location;
     private double distance;
-    private String alias;
     private CryptoBrokerCommunitySelectableIdentity identity;
 
     //Flags
@@ -116,18 +117,17 @@ public class BrowserTabFragment
         //Check if a default identity is configured
         try {
             identity = moduleManager.getSelectedActorIdentity();
-            if(identity == null)
-                launchActorCreationDialog = true;   //There are no identities in device
-            else {
-                if (appSettings.getLastSelectedIdentityPublicKey() == null)
-                    launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            if (identity == null) {
+                List<CryptoBrokerCommunitySelectableIdentity> identities = moduleManager.listSelectableIdentities();
+                if (identities.isEmpty())
+                    launchActorCreationDialog = true; //There are no identities in device
+                else
+                    launchListIdentitiesDialog = true; //There are identities in device, but none selected
             }
-        } catch (CantGetSelectedActorIdentityException e) {
-            e.printStackTrace();
-//            launchActorCreationDialog = true;  //There are no identities in device
-        } catch (ActorIdentityNotSelectedException e) {
-            e.printStackTrace();
-//            launchListIdentitiesDialog = true; //There are identities in device, but none selected
+
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException | CantListIdentitiesToSelectException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -136,8 +136,6 @@ public class BrowserTabFragment
         super.initViews(rootView);
 
         configureToolbar();
-
-//        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         noContacts = (ImageView) rootView.findViewById(R.id.cbc_no_contacts);
         locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
@@ -158,7 +156,10 @@ public class BrowserTabFragment
             }
         });
 
-        launchPresentationDialog();
+        if (identity == null)
+            launchPresentationDialog();
+        else
+            onRefresh();
     }
 
     @SuppressWarnings("deprecation")
@@ -237,15 +238,13 @@ public class BrowserTabFragment
 
     @Override
     public RecyclerView.OnScrollListener getScrollListener() {
-        //TODO: Descomentar esto para activar la paginacion cuando esta funcionando en los Actor Network Service
-//        if (scrollListener == null) {
-//            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
-//            endlessScrollListener.setOnLoadMoreDataListener(this);
-//            scrollListener = endlessScrollListener;
-//        }
-//
-//        return scrollListener;
-        return null;
+        if (scrollListener == null) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+            endlessScrollListener.setOnLoadMoreDataListener(this);
+            scrollListener = endlessScrollListener;
+        }
+
+        return scrollListener;
     }
 
     @Override
@@ -257,14 +256,14 @@ public class BrowserTabFragment
 
         final SearchView searchView = (SearchView) menuItem.getActionView();
         SearchViewStyleHelper.on(searchView)
-                    .setCursorColor(Color.WHITE)
-                    .setTextColor(Color.WHITE)
-                    .setHintTextColor(Color.WHITE)
-                    .setSearchHintDrawable(R.drawable.lupa_blanca)
-                    .setSearchButtonImageResource(R.drawable.lupa_blanca)
-                    .setCloseBtnImageResource(R.drawable.x_blanca)
-                    .setSearchPlateTint(Color.WHITE)
-                    .setSubmitAreaTint(Color.WHITE);
+                .setCursorColor(Color.WHITE)
+                .setTextColor(Color.WHITE)
+                .setHintTextColor(Color.WHITE)
+                .setSearchHintDrawable(R.drawable.lupa_blanca)
+                .setSearchButtonImageResource(R.drawable.lupa_blanca)
+                .setCloseBtnImageResource(R.drawable.x_blanca)
+                .setSearchPlateTint(Color.WHITE)
+                .setSubmitAreaTint(Color.WHITE);
 
         searchView.setQueryHint("Search...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -322,10 +321,6 @@ public class BrowserTabFragment
                 }
 
                 return true;
-
-            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                //TODO: colocar aqui el codigo para mostrar el SearchView
-                return true;
         }
 
         return false;
@@ -334,21 +329,21 @@ public class BrowserTabFragment
     @Override
     public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
         try {
-            ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager,
-                    data, identity);
+            if(data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
+                ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, identity);
 
-            connectDialog.setTitle("Connection Request");
-            connectDialog.setSubtitle("New Request");
-            connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", data.getAlias()));
-            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateSelectedActorInList(data, position);
-                }
-            });
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setSubtitle("New Request");
+                connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", data.getAlias()));
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateSelectedActorInList(data, position);
+                    }
+                });
 
-            connectDialog.show();
-
+                connectDialog.show();
+            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
             Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
@@ -473,6 +468,23 @@ public class BrowserTabFragment
      */
     private void launchPresentationDialog() {
         try {
+            DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    try {
+                        identity = moduleManager.getSelectedActorIdentity();
+                        if (identity == null)
+                            getActivity().onBackPressed();
+                        else {
+                            invalidate();
+                            onRefresh();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
             if (launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
@@ -486,51 +498,17 @@ public class BrowserTabFragment
                         .setIsCheckEnabled(false)
                         .build();
 
-                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            identity = moduleManager.getSelectedActorIdentity();
-                            if(identity == null)
-                                getActivity().onBackPressed();
-                            else {
-                                invalidate();
-                            }
-//                        } catch (CantGetSelectedActorIdentityException e) {
-//                            e.printStackTrace();
-//                        } catch (ActorIdentityNotSelectedException e) {
-//                            e.printStackTrace();
-                        } catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
-                                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-//                        invalidate();
-//                        onRefresh();
-                    }
-                });
-
+                presentationDialog.setOnDismissListener(onDismissListener);
                 presentationDialog.show();
 
             } else if (launchListIdentitiesDialog) {
                 ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-                listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
 
-                        if(appSettings.getLastSelectedIdentityPublicKey() == null)
-                            getActivity().onBackPressed();
-                        else {
-                            invalidate();
-                        }
-//                        onRefresh();
-                    }
-                });
-
+                listIdentitiesDialog.setOnDismissListener(onDismissListener);
                 listIdentitiesDialog.show();
 
-//            } else {
-//                invalidate();
-//                onRefresh();
+            } else {
+                onRefresh();
             }
 
         } catch (Exception ex) {
