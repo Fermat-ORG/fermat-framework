@@ -301,10 +301,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             @Override
             public void onClick(View v) {
                 if (layoutAdvances.getVisibility() == View.GONE) {
-                    animar(true);
                     layoutAdvances.setVisibility(View.VISIBLE);
                 } else {
-                    animar(false);
                     layoutAdvances.setVisibility(View.GONE);
                 }
 
@@ -914,30 +912,5 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onCreateOptionsMenu(menu, inflater);
 
     }
-
-    private void animar(boolean mostrar)
-    {
-        AnimationSet set = new AnimationSet(true);
-        Animation animation = null;
-        if (mostrar)
-        {
-            //desde la esquina inferior derecha a la superior izquierda
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        }
-        else
-        {    //desde la esquina superior izquierda a la esquina inferior derecha
-            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        }
-        //duración en milisegundos
-        animation.setDuration(500);
-        set.addAnimation(animation);
-        LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);
-
-        layoutAdvances.setLayoutAnimation(controller);
-        layoutAdvances.startAnimation(animation);
-    }
-
-
-
 
 }
