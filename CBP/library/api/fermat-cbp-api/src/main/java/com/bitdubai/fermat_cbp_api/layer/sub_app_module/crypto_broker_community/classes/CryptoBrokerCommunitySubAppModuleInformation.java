@@ -73,13 +73,14 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.place = place;
     }
 
-    public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection) {
+    public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection, Location location) {
 
         this.publicKey = actorConnection.getPublicKey();
         this.alias = actorConnection.getAlias();
         this.image = actorConnection.getImage();
         this.connectionState = actorConnection.getConnectionState();
         this.connectionId = actorConnection.getConnectionId();
+        this.location = location;
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerExposingData exposingData) {
@@ -154,5 +155,24 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+
+        if (!CryptoBrokerCommunityInformation.class.isAssignableFrom(obj.getClass())) return false;
+
+        final CryptoBrokerCommunitySubAppModuleInformation other = (CryptoBrokerCommunitySubAppModuleInformation) obj;
+
+        return !((this.publicKey == null) ? (other.publicKey != null) : !this.publicKey.equals(other.publicKey));
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.publicKey != null ? this.publicKey.hashCode() : 0);
+        return hash;
     }
 }

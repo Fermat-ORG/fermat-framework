@@ -872,6 +872,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     recyclerView.setVisibility(View.VISIBLE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
                 }
+                else
+                {
+                    recyclerView.setVisibility(View.GONE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                }
             }
             else {
                 recyclerView.setVisibility(View.GONE);
@@ -898,14 +903,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         switch (showMoneyType){
             case BITCOIN:
                 moneyTpe = "btc";
-                if(txt_balance_amount.getText().length() >= 7)
-                    txt_balance_amount.setTextSize(24);
-                else
-                    txt_balance_amount.setTextSize(28);
                 break;
             case BITS:
                 moneyTpe = "bits";
-                txt_balance_amount.setTextSize(18);
+
                 break;
         }
 
@@ -963,6 +964,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 WalletUtils.formatBalanceString(
                         (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode()))
                                 ? balanceAvailable : bookBalance, typeAmountSelected.getCode()));
+
+        switch (typeAmountSelected){
+            case BITCOIN:
+
+                if(txt_balance_amount.getText().length() >= 7)
+                    txt_balance_amount.setTextSize(18);
+                else
+                    txt_balance_amount.setTextSize(26);
+                break;
+            case BITS:
+
+                txt_balance_amount.setTextSize(16);
+                break;
+        }
     }
 
 

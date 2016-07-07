@@ -126,7 +126,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private Handler handler = new Handler();
     List<IntraUserInformation> userList = new ArrayList<>();
 
-    private DeviceLocation location;
+    private Location location;
     private double distance;
     private String alias;
 
@@ -175,7 +175,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 }
             }
 
-            mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
+
             new FetchCountTask().execute();
 
 
@@ -194,14 +194,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                 } catch (CantGetCommunicationNetworkStatusException e) {
                                     e.printStackTrace();
                                 }
-                                switch (networkStatus) {
-                                    case CONNECTED:
-                                        // setUpReferences();
-                                        break;
-                                    case DISCONNECTED:
-                                        showErrorFermatNetworkDialog();
-                                        break;
+                                if(networkStatus != null)
+                                {
+                                    switch (networkStatus) {
+                                        case CONNECTED:
+                                            // setUpReferences();
+                                            break;
+                                        case DISCONNECTED:
+                                            showErrorFermatNetworkDialog();
+                                            break;
+                                    }
                                 }
+
 
                             }
                         }, 500);
@@ -212,9 +216,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             });
 
 
-            Location location = moduleManager.getLocationManager();
+            location = moduleManager.getLocationManager();
 
-
+            mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -308,10 +312,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (!isRefreshing) {
                 isRefreshing = true;
-               final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+              /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
                 notificationsProgressDialog.setMessage("Loading Crypto Wallet Users...");
                 notificationsProgressDialog.setCancelable(false);
-                notificationsProgressDialog.show();
+                notificationsProgressDialog.show();*/
                 //Get Fermat User Cache List First
                 worker = new FermatWorker() {
                     @Override
@@ -325,7 +329,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                      notificationsProgressDialog.dismiss();
+                     // notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -373,7 +377,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        notificationsProgressDialog.dismiss();
+                        //notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -478,10 +482,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
 
                             if (lstIntraUserInformations.isEmpty()) {
-                               showEmpty(true, emptyView);
-                               showEmpty(false, searchEmptyView);
+                                showEmpty(true, emptyView);
+                                showEmpty(false, searchEmptyView);
                             } else {
-                               // Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
 
                                 adapter.changeDataSet(lstIntraUserInformations);
                                 showEmpty(false, emptyView);
@@ -489,8 +493,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                             }
                         }
                     } else {
-                            showEmpty(true, emptyView);
-                            showEmpty(false, searchEmptyView);
+                        showEmpty(true, emptyView);
+                        showEmpty(false, searchEmptyView);
 
                     }
                 }
@@ -498,7 +502,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 @Override
                 public void onErrorOccurred(Exception ex) {
 
-                   // notificationsProgressDialog.dismiss();
+                    // notificationsProgressDialog.dismiss();
 
                     isRefreshing = false;
                     if (swipeRefresh != null)
@@ -723,7 +727,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     }
 
 
-    private synchronized List<IntraUserInformation> getMoreData(DeviceLocation location, double distance, String alias) {
+    private synchronized List<IntraUserInformation> getMoreData(Location location, double distance, String alias) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {

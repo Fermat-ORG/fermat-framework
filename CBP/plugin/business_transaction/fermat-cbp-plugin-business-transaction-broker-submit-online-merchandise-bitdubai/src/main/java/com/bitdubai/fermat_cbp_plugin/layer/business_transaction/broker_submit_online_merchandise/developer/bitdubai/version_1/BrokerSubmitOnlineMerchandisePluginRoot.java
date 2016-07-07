@@ -422,7 +422,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
         return brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    private void testSubmit() {
+    /*private void testSubmit() {
         try {
             BigDecimal referencePrice = BigDecimal.valueOf(666);
             this.brokerSubmitOnlineMerchandiseTransactionManager.submitMerchandise(
@@ -443,5 +443,5 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             System.out.println("Exception in Broker Submit Online Merchandise " + e);
             e.printStackTrace();
         }
-    }
+    }*/
 }

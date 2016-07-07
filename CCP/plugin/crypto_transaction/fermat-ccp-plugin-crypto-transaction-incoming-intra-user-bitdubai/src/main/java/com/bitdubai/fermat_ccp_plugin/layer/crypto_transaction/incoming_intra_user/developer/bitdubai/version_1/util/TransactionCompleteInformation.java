@@ -43,6 +43,7 @@ public class TransactionCompleteInformation {
             long timestamp = System.currentTimeMillis();
             String memo     = this.transactionMetadata       .getInformation().getPaymentDescription();
 
+
             return new IncomingIntraUserTransactionWrapper(
                     cryptoTransactionContainer.getTransactionID()            ,
                     null,

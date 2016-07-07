@@ -49,6 +49,8 @@ public abstract class CryptoBrokerSearch {
 
     public abstract List<CryptoBrokerExposingData> getResultAlias(String alias, Integer max, Integer offset) throws CantListCryptoBrokersException;
 
+    public abstract CryptoBrokerExposingData getResult(String publicKey) throws CantListCryptoBrokersException;
+
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
      * filtered by the parameters set.

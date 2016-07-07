@@ -26,6 +26,7 @@ import java.util.UUID;
  * <p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 04/12/15.
+ * Updated by Manuel Perez on 07/05/2016
  *
  * @author lnacosta
  * @version 1.0
@@ -133,6 +134,13 @@ public abstract class ActorConnectionDeveloperDatabaseFactory {
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME          );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CREATION_TIME_COLUMN_NAME             );
         actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_UPDATE_TIME_COLUMN_NAME               );
+        //Location fields
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LATITUDE                              );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LONGITUDE                             );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ACCURACY                              );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_TIME                                  );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALTITUDE                              );
+        actorConnectionsColumns.add(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LOCATION_SOURCE                       );
 
         /**
          * Table Actor Connections addition.
