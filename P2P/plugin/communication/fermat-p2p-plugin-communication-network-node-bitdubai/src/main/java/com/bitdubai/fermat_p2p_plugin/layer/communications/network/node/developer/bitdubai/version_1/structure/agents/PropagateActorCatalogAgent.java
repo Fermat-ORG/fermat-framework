@@ -50,9 +50,9 @@ public class PropagateActorCatalogAgent extends FermatAgent {
     /**
      * Represent the propagation time
      */
-    private static final int PROPAGATION_TIME = 30;
+    private static final int PROPAGATION_TIME = 90;
 
-    private static final int INIT_TIME = 180;
+    private static final int INIT_TIME = 30;
 
     /**
      * Represent the MIN_SUCCESSFUL_PROPAGATION_COUNT
