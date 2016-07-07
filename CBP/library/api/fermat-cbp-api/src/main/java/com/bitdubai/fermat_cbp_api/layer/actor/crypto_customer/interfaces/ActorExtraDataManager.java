@@ -68,12 +68,9 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
      * Through the method <code>requestBrokerExtraData</code> we can ask a broker its extra data.
      * In this case we're requesting quotes information.
      *
-     * @param actorExtraData data needed to ask for the quotes.
-     *
      * @throws CantRequestBrokerExtraDataException if something goes wrong.
      */
-    @Deprecated //TODO WE CAN'T USE THIS METHOD FROM OUTSIDE THE PLUG-IN, IF NEEDED DELETE FROM THE INTERFACE.
-    void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantRequestBrokerExtraDataException;
+    void requestBrokerExtraData() throws CantRequestBrokerExtraDataException;
 
     /**
      *

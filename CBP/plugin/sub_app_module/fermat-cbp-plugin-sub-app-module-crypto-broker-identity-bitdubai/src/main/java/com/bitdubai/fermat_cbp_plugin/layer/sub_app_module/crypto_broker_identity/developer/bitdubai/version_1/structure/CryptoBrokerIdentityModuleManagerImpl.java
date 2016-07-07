@@ -168,5 +168,10 @@ public class CryptoBrokerIdentityModuleManagerImpl
         return locationManager.getLocation();
     }
 
+    @Override
+    public Boolean itHasAssociatedWallet(String brokerPublicKey) {
+        return null;
+    }
+
 
 }
