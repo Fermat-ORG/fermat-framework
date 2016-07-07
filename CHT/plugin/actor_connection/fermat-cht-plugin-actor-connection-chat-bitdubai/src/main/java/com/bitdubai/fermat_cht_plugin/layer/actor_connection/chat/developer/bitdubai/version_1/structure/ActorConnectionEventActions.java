@@ -99,8 +99,12 @@ public class ActorConnectionEventActions {
 
                     case ACCEPT:
                         this.handleAcceptConnection(request.getRequestId());
-                        //TODO: IMPLEMENT BROADCASTER
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
+                        FermatBundle fermatBundle = new FermatBundle();
+                        fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
+
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle);
+//                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
 
                         break;
                    /* case CANCEL:
