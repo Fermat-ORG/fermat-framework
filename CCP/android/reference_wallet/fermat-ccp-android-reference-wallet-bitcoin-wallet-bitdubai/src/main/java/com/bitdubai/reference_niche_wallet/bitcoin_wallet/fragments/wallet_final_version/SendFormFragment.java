@@ -313,15 +313,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         if (feeLevel.equals(String.valueOf(BitcoinFee.SLOW))) {
             fee_low_btn.setChecked(true);
-            //fee_medium_btn.setChecked(false);
-            //fee_high_btn.setChecked(false);
         }else if(feeLevel.equals(String.valueOf(BitcoinFee.NORMAL))) {
-            //fee_low_btn.setChecked(false);
             fee_medium_btn.setChecked(true);
-            //fee_high_btn.setChecked(false);
         }else if(feeLevel.equals(String.valueOf(BitcoinFee.FAST))) {
-           // fee_low_btn.setChecked(false);
-            //fee_medium_btn.setChecked(false);
             fee_high_btn.setChecked(true);
         }
 
