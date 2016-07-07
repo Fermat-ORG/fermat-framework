@@ -4223,48 +4223,67 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         final String publicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();
 
         //final String statusBarColor = "#00b9ff";
-        final String statusBarColor = "#11516F";
+        final String statusBarColor = "#16698D";
         final String titleBarLabelColor = "#FFFFFF";
-        final String titleBarColor = "#00b9ff";
+        final String titleBarColor = "#16698D";
         final int titleBarLabelSize = 20;
 
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPublicKey(publicKey);
-        navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
+        runtimeAppNavigationStructure.setPlatform(Platforms.CASH_PLATFORM);
 
+        navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
 
         //Setup Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_SETUP);
         runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_SETUP.getCode());
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-        runtimeAppNavigationStructure.changeActualStartActivity(Activities.CSH_CASH_MONEY_WALLET_SETUP.getCode());
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+//                runtimeTitleBar = new TitleBar();
+////        runtimeTitleBar.setIconName("back");
+//        runtimeTitleBar.setLabel("Cash Wallet");
+//        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+//        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+//        runtimeTitleBar.setColor(titleBarColor);
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CSH_CASH_MONEY_WALLET_SETUP.getKey());
         runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_SETUP.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_SETUP.getKey());
 
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+        runtimeAppNavigationStructure.changeActualStartActivity(Activities.CSH_CASH_MONEY_WALLET_SETUP.getCode());
 
         //Home Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_HOME);
         runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_HOME.getCode());
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+//        runtimeTitleBar = new TitleBar();
+////        runtimeTitleBar.setIconName("back");
+//        runtimeTitleBar.setLabel("Cash Wallet");
+//        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+//        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+//        runtimeTitleBar.setColor(titleBarColor);
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
         runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_BALANCE_SUMMARY.getKey());
 
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         //Transaction detail Activity
         runtimeActivity = new Activity();
@@ -4272,7 +4291,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CSH_CASH_MONEY_WALLET_HOME);
         runtimeActivity.setBackPublicKey(publicKey);
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
 //        runtimeTitleBar = new TitleBar();
 //        runtimeTitleBar.setIconName("back");
@@ -4292,6 +4310,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey());
 
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         return runtimeAppNavigationStructure;
     }
