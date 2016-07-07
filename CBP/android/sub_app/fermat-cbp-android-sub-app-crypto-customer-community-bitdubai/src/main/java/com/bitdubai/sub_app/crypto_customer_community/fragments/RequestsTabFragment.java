@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -111,9 +110,6 @@ public class RequestsTabFragment
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override

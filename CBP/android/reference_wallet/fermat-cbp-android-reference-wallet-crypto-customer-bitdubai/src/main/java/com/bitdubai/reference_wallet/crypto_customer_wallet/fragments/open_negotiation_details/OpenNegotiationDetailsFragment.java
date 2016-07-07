@@ -64,10 +64,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.ACCEPTED;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.CHANGED;
@@ -174,11 +177,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         bindData();
 
         return layout;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
     }
 
     @Override
@@ -350,8 +348,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
      * Bind the data on the views
      */
     private void bindData() {
-        long timeInMillisVal = System.currentTimeMillis();
-        String timeInMillisStr = String.valueOf(timeInMillisVal);
+//        long timeInMillisVal = System.currentTimeMillis();
+//        String timeInMillisStr = String.valueOf(timeInMillisVal);
+
+
+        long timeInMillisVal = Calendar.getInstance().getTimeInMillis();
+        String timeInMillisStr = Long.toString(timeInMillisVal);
 
         negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
         ActorIdentity broker = negotiationInfo.getBroker();
@@ -408,6 +410,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         if (clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) == null)
             putClause(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr);
 
+        //VALUE TIME ZONE
+        String youTimeZoneValue = TimeZone.getDefault().getID();
+//        if ((clauses.get(ClauseType.CUSTOMER_TIME_ZONE) == null) || youTimeZoneValue.equals(clauses.get(ClauseType.CUSTOMER_TIME_ZONE).getValue())){
+            putClause(ClauseType.CUSTOMER_TIME_ZONE, youTimeZoneValue);
+//        }
+
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
@@ -420,7 +428,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationInfo);
 
 
-        if (negotiationInfo.getStatus() != NegotiationStatus.SENT_TO_BROKER && negotiationInfo.getStatus() != NegotiationStatus.WAITING_FOR_BROKER) {
+        if (negotiationInfo.getStatus() != NegotiationStatus.SENT_TO_BROKER && negotiationInfo.getStatus() != NegotiationStatus.WAITING_FOR_BROKER && negotiationInfo.getStatus() != NegotiationStatus.WAITING_FOR_CLOSING ) {
             adapter.setFooterListener(this);
             adapter.setClauseListener(this);
         }
@@ -755,11 +763,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         for (ClauseInformation item : clauses.values()) {
             if (validateClauseUsed(item, customerPaymentMethod, brokerPaymentMethod)) {
-                if ((item.getStatus() != CHANGED) && (item.getStatus() != ACCEPTED))
-                    return false;
+                if ((item.getStatus() != CHANGED) && (item.getStatus() != ACCEPTED)) return false;
             }
         }
-
 
         return true;
     }
@@ -776,13 +782,25 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     @SuppressWarnings("RedundantIfStatement")
     private boolean validateClauseUsed(ClauseInformation clause, String customerPaymentMethod, String brokerPaymentMethod) {
 
-        if (clause.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) ||
-                clause.getType().equals(ClauseType.BROKER_PAYMENT_METHOD) ||
-                clause.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) ||
-                clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) ||
-                clause.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) ||
-                clause.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)
-                ) {
+        final List<ClauseType> evalList = Arrays.asList(
+                ClauseType.BROKER_BANK_ACCOUNT,
+                ClauseType.BROKER_PAYMENT_METHOD,
+                ClauseType.BROKER_CRYPTO_ADDRESS,
+                ClauseType.CUSTOMER_BANK_ACCOUNT,
+                ClauseType.CUSTOMER_PAYMENT_METHOD,
+                ClauseType.CUSTOMER_CRYPTO_ADDRESS,
+                ClauseType.BROKER_TIME_ZONE,
+                ClauseType.CUSTOMER_TIME_ZONE
+        );
+
+//        if (clause.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) ||
+//                clause.getType().equals(ClauseType.BROKER_PAYMENT_METHOD) ||
+//                clause.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) ||
+//                clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) ||
+//                clause.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) ||
+//                clause.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)
+//                ) {
+        if (evalList.contains(clause.getType())){
 
             if (clause.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) && (brokerPaymentMethod.equals(MoneyType.BANK.getCode())))
                 return true;

@@ -76,6 +76,9 @@ public final class FermatSystemContext {
 
         try {
 
+            if (platformReference == null)
+                throw new CantRegisterPlatformException("platformReference=null", "The platform does not contain a platform reference to recognize it.");
+
             if(platforms.containsKey(platformReference))
                 throw new CantRegisterPlatformException("platform: " + platformReference.toString(), "platform already exists in the system context.");
 

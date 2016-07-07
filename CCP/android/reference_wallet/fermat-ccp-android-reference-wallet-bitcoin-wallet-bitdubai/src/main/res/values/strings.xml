@@ -109,6 +109,8 @@
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
     <string name="feed_amount_text">Feed</string>
+    <string name="feed_option_text">Substract Fee from Amount</string>
+    <string name="feed_advances_text">Advanced configuration</string>
     <!-- setting_base.xml -->
     <string name="empty_transactions_text">Empty transactions</string>
     <!-- wallet_manager_transaction_view.xml -->

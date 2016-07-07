@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetSelectedActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
@@ -24,12 +24,12 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     private String city;
     private String connectionState;
     private long   accuracy;
-    private Frecuency frecuency;
+    private GeoFrequency frequency;
 
     ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias,
                                              byte[] image, String status, String country,
                                              String state, String city, String connectionState,
-                                             long accuracy, Frecuency frecuency){
+                                             long accuracy, GeoFrequency frequency){
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
@@ -40,7 +40,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
         this.city = city;
         this.connectionState = connectionState;
         this.accuracy = accuracy;
-        this.frecuency = frecuency;
+        this.frequency = frequency;
     }
 
     ChatActorCommunitySelectableIdentityImpl(final ChatIdentity chatIdentity) {
@@ -55,7 +55,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
         this.city = chatIdentity.getCity();
         this.connectionState = chatIdentity.getConnectionState();
         this.accuracy = chatIdentity.getAccuracy();
-        this.frecuency = chatIdentity.getFrecuency();
+        this.frequency = chatIdentity.getFrecuency();
     }
 
 
@@ -112,8 +112,8 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     }
 
 
-    public Frecuency getFrequency() {
-        return frecuency;
+    public GeoFrequency getFrequency() {
+        return frequency;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
                 ", city='" + city + '\'' +
                 ", connectionState='" + connectionState + '\'' +
                 ", accuracy='" + accuracy + '\'' +
-                ", frequency='" + (frecuency != null) +
+                ", frequency='" + (frequency != null) +
                 '}';
     }
 }

@@ -51,7 +51,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     }
 
 
-    public ChatActorCommunitySubAppModuleInformationImpl(final ChatActorConnection exposingData) {
+    public ChatActorCommunitySubAppModuleInformationImpl(final ChatActorConnection exposingData, Location location) {
 
         this.publicKey = exposingData.getPublicKey();
         this.alias     = exposingData.getAlias()    ;
@@ -62,7 +62,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.country = exposingData.getCountry();
         this.state = exposingData.getState();
         this.city = exposingData.getCity();
-        this.location = null;
+        this.location = location;
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {

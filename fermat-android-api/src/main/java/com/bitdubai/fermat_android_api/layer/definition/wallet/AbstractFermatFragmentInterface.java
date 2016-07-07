@@ -23,7 +23,6 @@ public interface AbstractFermatFragmentInterface<S extends FermatSession,R exten
     void onUpdateViewOnUIThread(FermatBundle code);
     void onUpdateView(FermatBundle code);
     void onUpdateViewOnUIThread(String code);
-    void onUpdateView(String code);
 
     /**
      * This method is called when the user press the back button

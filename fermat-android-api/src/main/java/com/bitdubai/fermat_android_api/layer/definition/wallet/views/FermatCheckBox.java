@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.widget.CheckBox;
 
 import com.bitdubai.android_api.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
 
 /**
  * Created by francisco on 02/10/15.

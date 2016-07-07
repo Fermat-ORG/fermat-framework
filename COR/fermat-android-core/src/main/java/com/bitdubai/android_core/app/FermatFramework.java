@@ -16,7 +16,9 @@ import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatContext;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.github.anrwatchdog.ANRWatchDog;
 import com.mati.fermat_osa_addon_android_loader.LoaderManager;
@@ -51,6 +53,11 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
      */
 
     private FermatSystem fermatSystem;
+
+    /**
+     * Receivers
+     */
+    private ReceiversManager receiversManager;
 
     /**
      *  Application state
@@ -91,6 +98,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         this.application = application;
         fermatSystem = FermatSystem.getInstance();
         fermatSystem.setFermatContext(this);
+        receiversManager = new ReceiversManager();
     }
 
 
@@ -288,7 +296,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     @Override
     public Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... args) {
-        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
+        return loaderManager.objectProxyFactory(moduleName, interfaceLoader, interfaces, returnInterface, args);
     }
 
     public ClassLoader getExternalLoader(String name){
@@ -306,5 +314,18 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     public LoaderManager getLoaderManager() {
         return loaderManager;
+    }
+
+    public void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
+        fermatBroadcastReceiver.setBroadcasterType(fermatIntentFilter.getBroadcasterType());
+        receiversManager.registerReceiver(fermatIntentFilter.getBroadcasterType(),fermatBroadcastReceiver,appPublicKey);
+    }
+
+    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
+        receiversManager.unregisterReceiver(fermatBroadcastReceiver, appPublicKey);
+    }
+
+    public void pushReceiverIntent(FermatIntentFilter fermatIntentFilter) {
+        receiversManager.pushIntent(fermatIntentFilter);
     }
 }

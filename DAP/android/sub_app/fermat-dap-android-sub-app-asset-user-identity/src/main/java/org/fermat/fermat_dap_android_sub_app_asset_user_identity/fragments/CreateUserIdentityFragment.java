@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -54,7 +55,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.R;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.IdentityUserDialogCropImage;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
@@ -108,7 +109,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
     private boolean contextMenuInUse = false;
 
     private int accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
     ExecutorService executorService;
 
@@ -311,9 +312,15 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
-
+                appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        appSession.setData(SessionConstants.IDENTITY_IMAGE, null);
     }
 
     private void publishResult(final int resultKey) {
@@ -402,7 +409,12 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
             appSession.setData(SessionConstants.IDENTITY_SELECTED, identitySelected);
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
-            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            if (appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
+                mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+            }else{
+                mIdentityImage.setImageDrawable((Drawable) appSession.getData(SessionConstants.IDENTITY_IMAGE));
+                activateButton();
+            }
         }
 
         isUpdate = true;
@@ -542,6 +554,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                                                     mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     updateProfileImage = true;
+                                                    appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
+                                                    activateButton();
                                                 } else {
                                                     mIdentityBitmap = null;
                                                 }
@@ -580,6 +594,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
@@ -628,6 +644,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                                             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
+                                            appSession.setData(SessionConstants.IDENTITY_IMAGE, ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
+                                            activateButton();
                                         } else {
                                             mIdentityBitmap = null;
                                         }
@@ -931,9 +949,9 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                 (int) appSession.getData(SessionConstants.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
+    private GeoFrequency getFrequencyData() {
         return appSession.getData(SessionConstants.FREQUENCY_DATA) == null ? moduleManager.getFrequencyDataDefault() :
-                (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
+                (GeoFrequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
     }
 
     private void activateButton() {
@@ -956,7 +974,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                         if (identityInfo.getAccuracy() == getAccuracyData()) {
                             deactivatedButton();
 
-                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode())) {
+                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode()) && appSession.getData(SessionConstants.IDENTITY_IMAGE) == null) {
                                 deactivatedButton();
                             } else {
                                 activateButton();

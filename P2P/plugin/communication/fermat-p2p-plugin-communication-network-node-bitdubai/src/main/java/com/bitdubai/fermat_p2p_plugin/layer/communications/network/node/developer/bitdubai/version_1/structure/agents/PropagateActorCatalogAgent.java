@@ -1,9 +1,3 @@
-/*
- * @#PropagateActorCatalogAgent.java - 2016
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -56,7 +50,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
     /**
      * Represent the propagation time
      */
-    private final int PROPAGATION_TIME = 3;
+    private final int PROPAGATION_TIME = 30;
 
     /**
      * Represent the MIN_SUCCESSFUL_PROPAGATION_COUNT
@@ -136,7 +130,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
         LOG.info("Start");
         try {
 
-            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PropagationTask(), PROPAGATION_TIME,  PROPAGATION_TIME, TimeUnit.MINUTES));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PropagationTask(), PROPAGATION_TIME,  PROPAGATION_TIME, TimeUnit.SECONDS));
             this.status = AgentStatus.STARTED;
 
         } catch (Exception exception) {
@@ -153,7 +147,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
         try {
             try {
 
-                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PropagationTask(), PROPAGATION_TIME,  PROPAGATION_TIME, TimeUnit.MINUTES));
+                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PropagationTask(), PROPAGATION_TIME,  PROPAGATION_TIME, TimeUnit.SECONDS));
                 this.status = AgentStatus.STARTED;
 
             } catch (Exception exception) {

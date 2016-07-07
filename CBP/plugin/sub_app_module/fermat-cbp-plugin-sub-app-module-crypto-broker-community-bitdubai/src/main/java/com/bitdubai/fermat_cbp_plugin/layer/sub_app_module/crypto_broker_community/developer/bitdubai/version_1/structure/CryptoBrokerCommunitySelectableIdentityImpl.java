@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
@@ -18,10 +18,10 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
     private final String alias;
     private final byte[] image;
     private long accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
 
-    CryptoBrokerCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image, long accuracy, Frequency frequency) {
+    CryptoBrokerCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image, long accuracy, GeoFrequency frequency) {
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
@@ -78,7 +78,7 @@ public final class CryptoBrokerCommunitySelectableIdentityImpl implements Crypto
         return accuracy;
     }
 
-    public Frequency getFrequency() {
+    public GeoFrequency getFrequency() {
         return frequency;
     }
 

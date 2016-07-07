@@ -83,9 +83,8 @@ public class AcceptDialog
         if (i == R.id.positive_button) {
             try {
                 if (linkedCryptoCustomerIdentity != null && identity != null) {
-                    Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
                     getSession().getModuleManager().acceptCryptoCustomer(linkedCryptoCustomerIdentity.getConnectionId());
-                    Toast.makeText(getContext(), linkedCryptoCustomerIdentity.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Accepted connection request from " + linkedCryptoCustomerIdentity.getAlias(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }

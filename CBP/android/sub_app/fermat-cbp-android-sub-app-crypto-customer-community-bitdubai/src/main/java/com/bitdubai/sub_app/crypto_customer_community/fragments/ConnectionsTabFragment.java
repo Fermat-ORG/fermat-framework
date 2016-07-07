@@ -108,9 +108,6 @@ public class ConnectionsTabFragment
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override

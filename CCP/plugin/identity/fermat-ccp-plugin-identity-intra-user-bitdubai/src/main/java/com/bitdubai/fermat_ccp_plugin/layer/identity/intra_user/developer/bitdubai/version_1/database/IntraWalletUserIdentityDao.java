@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdu
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -24,6 +25,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetUserDeveloperIdentitiesException;
@@ -130,7 +133,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser (String alias, String phrase,String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage, Long accuracy, Frequency frequency) throws CantCreateNewDeveloperException {
+    public void createNewUser (String alias, String phrase,String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists (alias)) {
@@ -149,6 +152,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACTIVE_COLUMN_NAME, "true");
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN, String.valueOf(accuracy));
             record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN, frequency.getCode());
+            record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN, location.getLatitude());
+            record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN, location.getLongitude());
 
             table.insertRecord(record);
 
@@ -170,7 +175,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
 
-    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage, Long accuracy, Frequency frequency) throws CantUpdateIntraUserIdentityException {
+    public void updateIdentity (String publicKey,String alias,String phrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIntraUserIdentityException {
 
         try {
 
@@ -199,6 +204,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN, String.valueOf(accuracy));
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN, frequency.getCode());
+                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN, location.getLatitude());
+                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN, location.getLongitude());
 
                 table.updateRecord(record);
             }
@@ -329,13 +336,18 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
         }
 
+        Location location = new DeviceLocation(record.getDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN),
+                                                record.getDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN),
+                                                System.currentTimeMillis(),Double.parseDouble("0"),
+                                                LocationSource.GPS);
+
         return new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME),
                 record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME),
                 record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
                 getIntraUserIdentityPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                 getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
-                record.getLongValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN), frequency
-                );
+                record.getLongValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN), frequency,
+                location);
 
 
     }
