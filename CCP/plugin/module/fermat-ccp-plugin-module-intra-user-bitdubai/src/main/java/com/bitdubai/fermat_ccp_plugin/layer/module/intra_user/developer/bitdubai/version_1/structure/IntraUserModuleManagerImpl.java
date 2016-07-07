@@ -124,10 +124,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      * @throws CouldNotCreateIntraUserException
      */
     @Override
-    public IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws CouldNotCreateIntraUserException {
+    public IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage, Location location) throws CouldNotCreateIntraUserException {
 
         try {
-            this.intraWalletUser = this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, phrase, profileImage,Long.parseLong("0"), Frequency.NONE);
+            this.intraWalletUser = this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, phrase, profileImage,Long.parseLong("100"), Frequency.NORMAL,location);
 
 
             return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
@@ -254,7 +254,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      */
     @Override
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
-    public List<IntraUserInformation> getSuggestionsToContact(DeviceLocation location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getSuggestionsToContact(Location location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
 
         try {
 
@@ -678,9 +678,9 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage, Long accuracy, Frequency frequency) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException {
         try {
-            this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, identityPhrase, profileImage, accuracy, frequency);
+            this.intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, identityPhrase, profileImage, accuracy, frequency,location);
         } catch (CantUpdateIdentityException e) {
             throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", e, "", "Error on IntraUserIdentity Manager");
         } catch (Exception e) {

@@ -23,6 +23,8 @@ public interface CryptoWalletTransactionRecord {
 
     long getAmount();
 
+    long getTotal();
+
     long getTimestamp();
 
     String getMemo();
@@ -44,6 +46,8 @@ public interface CryptoWalletTransactionRecord {
     FeeOrigin getFeeOrigin();
 
     long getFee() ;
+
+
 
 
 

@@ -201,75 +201,6 @@
                         android:src="@drawable/ic_spinner_arrow" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#bbccc7"
-                    android:visibility="visible"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:paddingTop="10dp"
-                    android:text="@string/feed_amount_text"
-                    android:textColor="#12aca1"
-                    android:textSize="12sp" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="3dip"
-                    android:paddingLeft="7dip"
-                    android:paddingRight="7dip"
-                    android:paddingTop="3dip">
-
-                    <EditText
-                        android:id="@+id/feed_amount"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:background="@null"
-                        android:gravity="left"
-                        android:inputType="numberDecimal"
-                        android:paddingBottom="7dip"
-                        android:paddingLeft="14dip"
-                        android:paddingRight="14dip"
-                        android:paddingTop="7dip"
-                        android:state_selected="true"
-                        android:textColor="#1d1d26"
-                        android:textColorHint="#9a9a9c"
-                        android:textSize="16sp"
-                        android:textStyle="normal"
-                        android:maxLength="12"
-                        android:editable="false"
-                        android:text= "0.0001"
-                        />
-
-                    <Spinner
-                        android:id="@+id/feed_spinner"
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:background="#ffffff"
-                        android:textSize="14sp"
-                        >
-                    </Spinner>
-
-                    <ImageView
-                        android:id="@+id/feed_spinner_open"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_spinner_arrow" />
-                </LinearLayout>
 
 
 
@@ -312,8 +243,109 @@
                         android:textColorHint="#4f4f4f"
                         android:textSize="16sp"
                         android:textStyle="normal"
-                        android:maxLength="35" />
+                        android:maxLength="25" />
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#bbccc7"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/feed_advances_text"
+                        android:textColor="#12aca1"
+                        android:textSize="12sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/feed_advances"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    >
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#bbccc7"
+                        android:visibility="visible"/>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/feed_amount_text"
+                            android:textColor="#12aca1"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="3dip"
+                        android:paddingLeft="7dip"
+                        android:paddingRight="7dip"
+                        android:paddingTop="3dip">
+
+                        <EditText
+                            android:id="@+id/feed_amount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:background="@null"
+                            android:gravity="left"
+                            android:inputType="numberDecimal"
+                            android:paddingBottom="7dip"
+                            android:paddingLeft="14dip"
+                            android:paddingRight="14dip"
+                            android:paddingTop="7dip"
+                            android:state_selected="false"
+                            android:textColor="#1d1d26"
+                            android:textColorHint="#9a9a9c"
+                            android:textSize="16sp"
+                            android:textStyle="normal"
+                            android:maxLength="12"
+                            android:editable="false"
+                            android:text= "0.0001"
+                            />
+
+                        <CheckBox
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:id="@+id/checkBoxSubstract"
+                            android:checked="true"
+                            android:text="@string/feed_option_text"/>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
 
                 <View
                     android:layout_width="match_parent"

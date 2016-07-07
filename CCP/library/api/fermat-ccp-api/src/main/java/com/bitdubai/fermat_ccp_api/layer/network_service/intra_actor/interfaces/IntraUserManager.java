@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
@@ -41,7 +42,7 @@ public interface IntraUserManager extends FermatManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset,DeviceLocation location) throws ErrorSearchingSuggestionsException;
+    List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset,Location location) throws ErrorSearchingSuggestionsException;
 
 
     /**
@@ -123,8 +124,21 @@ public interface IntraUserManager extends FermatManager {
     /**
      * Regist
      */
-    void registerActors(List<Actor> actor);
-    void registerActor(Actor actor);
+    void registerActors(List<Actor> actor,final Location location       ,
+                        final long     refreshInterval,
+                        final long     accuracy);
+
+    /**
+     *
+     * @param actor
+     * @param location
+     * @param refreshInterval
+     * @param accuracy
+     */
+    void registerActor(Actor actor,
+                       final Location location       ,
+                       final long     refreshInterval,
+                       final long     accuracy);
 
     Actor buildIdentity(String publicKey, String alias, String phrase, Actors actors, byte[] profileImage);
 

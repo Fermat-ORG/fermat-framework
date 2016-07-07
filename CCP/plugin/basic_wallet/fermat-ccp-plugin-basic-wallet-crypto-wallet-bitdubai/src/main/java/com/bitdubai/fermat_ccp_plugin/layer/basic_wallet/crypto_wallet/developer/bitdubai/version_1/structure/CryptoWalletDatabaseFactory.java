@@ -90,6 +90,9 @@ public class CryptoWalletDatabaseFactory implements DealsWithPluginDatabaseSyste
         table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
         table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
         table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_FEE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_FEE_ORIGIN_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_TOTAL_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
         return table;
     }
