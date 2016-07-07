@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -24,12 +26,10 @@ import java.util.Set;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinCryptoNetworkEventsAgent implements Agent {
+public class BitcoinCryptoNetworkEventsAgent extends AbstractAgent{
     /**
      * class variables
      */
-    private boolean isSupossedToBeRunning;
-    private final int AGENT_DELAY = 1000 * 10; // 10 seconds of delay
     private final BitcoinCryptoNetworkDatabaseDao dao;
 
     /**
@@ -44,28 +44,10 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      */
     public BitcoinCryptoNetworkEventsAgent(EventManager eventManager,
                                            BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
+        super(10, TimeUnit.SECONDS); //this agent will run every ten seconds.
 
         this.eventManager = eventManager;
         this.dao = bitcoinCryptoNetworkDatabaseDao;
-    }
-
-    /**
-     * starts the agent in a new thread.
-     * @throws CantStartAgentException
-     */
-    @Override
-    public void start() throws CantStartAgentException {
-        isSupossedToBeRunning = true;
-        Thread agentThread = new Thread(new NetworkAgent(this.dao));
-        agentThread.start();
-    }
-
-    /**
-     * stops the agent thread.
-     */
-    @Override
-    public void stop() {
-        isSupossedToBeRunning = false;
     }
 
     /**
@@ -73,7 +55,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      */
     private class NetworkAgent implements Runnable{
         /**
-         * DAO object to access the db
+         * private class variables
          */
         final BitcoinCryptoNetworkDatabaseDao dao;
 
@@ -90,17 +72,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
             /**
              * While isSupossedToBeRunning true, i will run this.
              */
-            while (isSupossedToBeRunning){
-                doTheMainTask();
-
-                /**
-                 * wait for a delay to re execute
-                 */
-                try {
-                    Thread.sleep(AGENT_DELAY);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            doTheMainTask();
             }
         }
 
@@ -286,5 +258,15 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
                 return 0;
             }
         }
+
+
+    @Override
+    protected Runnable agentJob() {
+        return new NetworkAgent(this.dao);
+    }
+
+    @Override
+    protected void onErrorOccur() {
+
     }
 }
