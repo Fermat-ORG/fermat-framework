@@ -18,10 +18,13 @@ public class CryptoCustomerWalletResourceSearcher extends ResourceSearcher {
         switch (id) {
             case FragmentsCommons.CONTRACT_HISTORY_FILTER_OPTION_MENU_ID:
                 resId = R.drawable.ccw_action_filters;
-                break;
+            break;
+            case FragmentsCommons.REQUEST_QUOTES_FILTER_OPTION_MENU_ID:
+                resId = R.drawable.ccw_action_filters;
+            break;
             default:
                 resId = 0;
-                break;
+            break;
         }
         return resId;
     }
