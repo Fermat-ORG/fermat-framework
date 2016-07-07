@@ -55,6 +55,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 
+
 /**
  * This Fragment let you edit a Broker Identity
  * <p/>
@@ -125,9 +126,9 @@ public class EditCryptoBrokerIdentityFragment
         }
 
         //Check if GPS is on and coordinate are fine
-        try{
+        try {
             location = appSession.getModuleManager().getLocation();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -137,7 +138,7 @@ public class EditCryptoBrokerIdentityFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
-               initViews(rootLayout);
+        initViews(rootLayout);
         return rootLayout;
     }
 
@@ -265,13 +266,10 @@ public class EditCryptoBrokerIdentityFragment
 
         return false;
     }
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(resultCode != Activity.RESULT_CANCELED){
-
-        }
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
@@ -507,12 +505,12 @@ public class EditCryptoBrokerIdentityFragment
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void checkGPSOn(){
-        if(location!= null){
-            if(location.getLongitude()==0 || location.getLatitude()==0){
+    private void checkGPSOn() {
+        if (location != null) {
+            if (location.getLongitude() == 0 || location.getLatitude() == 0) {
                 turnOnGPSDialog();
             }
-        }else
+        } else
             turnOnGPSDialog();
     }
 
