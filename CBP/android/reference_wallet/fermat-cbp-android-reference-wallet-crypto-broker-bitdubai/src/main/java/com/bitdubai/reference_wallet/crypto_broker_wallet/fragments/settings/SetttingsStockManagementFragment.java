@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
@@ -54,6 +55,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private boolean automaticRestock = false;
     private List<CryptoBrokerWalletAssociatedSetting> associatedSettings = new ArrayList<>();
     private CryptoBrokerWalletSettingSpread spreadSettings;
+    private List<Currency> merchandises = new ArrayList<>();
 
     //UI
     private ProgressBar processingProgressBar;
@@ -98,6 +100,12 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                         Wallets.CBP_CRYPTO_BROKER_WALLET,
                         DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
+            }
+        }
+
+        for(CryptoBrokerWalletAssociatedSetting x : associatedSettings) {
+            if(!merchandises.contains(x.getMerchandise())) {
+                merchandises.add(x.getMerchandise());
             }
         }
     }
@@ -149,7 +157,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             }
         });
 
-        merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), associatedSettings, moduleManager);
+        merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(), merchandises, moduleManager);
         //merchandisesAdapter.setFermatListEventListener(this);
 
         merchandisesRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_settings_current_merchandises);
@@ -273,7 +281,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 }
 
                 if (merchandisesAdapter != null) {
-                    merchandisesAdapter.changeDataSet(associatedSettings);
+                    merchandisesAdapter.changeDataSet(merchandises);
 
                     //This line is a hack, needed (don't know why) so that the merchandises get refreshed.
                     merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

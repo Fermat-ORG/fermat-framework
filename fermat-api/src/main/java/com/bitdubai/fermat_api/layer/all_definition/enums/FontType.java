@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_android_api.layer.definition.wallet.enums;
+package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 /**
  * Font enum type
