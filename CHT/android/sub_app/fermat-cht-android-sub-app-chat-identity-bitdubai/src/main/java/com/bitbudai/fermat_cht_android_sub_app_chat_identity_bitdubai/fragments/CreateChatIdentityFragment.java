@@ -597,7 +597,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         String chatNameText = mChatName.getText().toString();
         String identityConnectionNameText = mChatConnectionState.getText().toString();
         if (chatBitmap == null) {
-            chatBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.icon_profile);
+            chatBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cht_id_image_profile);
         }
         if (identityConnectionNameText.length() == 0) {
             identityConnectionNameText = "Available";
