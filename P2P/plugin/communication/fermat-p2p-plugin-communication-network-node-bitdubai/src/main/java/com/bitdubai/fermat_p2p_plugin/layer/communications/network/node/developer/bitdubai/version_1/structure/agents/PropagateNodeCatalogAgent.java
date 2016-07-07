@@ -116,9 +116,7 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
             LOG.info("Node transactions to propagate size = " + transactionList.size());
 
             ReceiveNodeCatalogTransactionsMsjRequest receiveNodeCatalogTransactionsMsjRequest = new ReceiveNodeCatalogTransactionsMsjRequest(transactionList);
-
             String messageContent = receiveNodeCatalogTransactionsMsjRequest.toJson();
-
             FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel;
 
             for (NodesCatalog remoteNodesCatalog: nodesCatalogsList) {
