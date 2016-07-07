@@ -899,13 +899,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             case BITCOIN:
                 moneyTpe = "btc";
                 if(txt_balance_amount.getText().length() >= 7)
-                    txt_balance_amount.setTextSize(24);
+                    txt_balance_amount.setTextSize(22);
                 else
-                    txt_balance_amount.setTextSize(28);
+                    txt_balance_amount.setTextSize(26);
                 break;
             case BITS:
                 moneyTpe = "bits";
-                txt_balance_amount.setTextSize(18);
+                txt_balance_amount.setTextSize(16);
                 break;
         }
 

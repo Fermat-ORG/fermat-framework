@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -28,16 +29,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainCryptoManager;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
@@ -48,12 +47,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAd
 import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
@@ -264,7 +260,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      * @param walletPublicKey
      * @param fermatTrId
      * @param addressTo
-     * @param satoshis
+     * @param cryptoAmount
      * @return
      * @throws InsufficientCryptoFundsException
      * @throws InvalidSendToAddressException
@@ -282,27 +278,16 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         return trHash;
     }
 
-    /**
-     * Gets the Mnemonic code generated for this vault.
-     * It can be used to export and import it somewhere else.
-     * @return
-     * @throws CantLoadExistingVaultSeed
-     */
     @Override
-    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
-        return bitcoinCurrencyCryptoVaultManager.getMnemonicCode();
+    public CryptoVaultSeed exportCryptoVaultSeed() {
+        return bitcoinCurrencyCryptoVaultManager.exportCryptoVaultSeed();
     }
 
     @Override
-    public void importSeedFromMnemonicCode(List<String> mnemonicCode,long date,@Nullable String userPhrase,BlockchainNetworkType blockchainNetworkType) throws CantLoadExistingVaultSeed {
-        //todo: me faltaria validar si la network está activa..
-        /**
-         * I get the networkParameter
-         */
-        final NetworkParameters networkParameters = BitcoinBlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
-        bitcoinCurrencyCryptoVaultManager.importCryptoFromSeed(networkParameters,mnemonicCode,date,userPhrase);
+    public void importSeedFromMnemonicCode(List<String> mnemonicCode, long date) throws CantImportSeedException {
+        bitcoinCurrencyCryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode, date);
+        bitcoinCurrencyCryptoVaultManager.forceImportedSeedToCryptoNetwork();
     }
-
 
     /**
      * Signs the owned inputs of the passed Draft transaction
