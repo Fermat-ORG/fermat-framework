@@ -29,6 +29,9 @@ public class CryptoWalletDatabaseConstants {
     public static final String CRYPTO_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME = "runningAvailableBalance";
     public static final String CRYPTO_WALLET_TABLE_RUNNING_NETWORK_TYPE ="runningNetworkType";
     public static final String CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME ="transactionstateenv";
+    public static final String CRYPTO_WALLET_TABLE_TRANSACTION_FEE_COLUMN_NAME ="transactionFee";
+    public static final String CRYPTO_WALLET_TABLE_TRANSACTION_FEE_ORIGIN_COLUMN_NAME ="transactionFeeOrigin";
+    public static final String CRYPTO_WALLET_TABLE_TRANSACTION_TOTAL_COLUMN_NAME ="transactionTotal";
     public static final String CRYPTO_WALLET_TABLE_CRYPTO_CURRENCY_COLUMN_NAME ="cryptoCurrencyType";
 
 
