@@ -91,6 +91,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new BrokerListAdapter(getActivity(), brokerList);
@@ -127,6 +128,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -137,7 +139,6 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
             drawable = getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors);
 
         toolbar.setBackground(drawable);
-
     }
 
     @Override
@@ -156,11 +157,8 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == FragmentsCommons.REQUEST_QUOTES_OPTION_MENU_ID) {
-
             try {
-
                 moduleManager.requestQuotes();
-
                 Toast.makeText(getActivity(), "Request for quotations sent", Toast.LENGTH_LONG).show();
 
             } catch (CantGetCryptoBrokerListException e) {
@@ -196,6 +194,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {

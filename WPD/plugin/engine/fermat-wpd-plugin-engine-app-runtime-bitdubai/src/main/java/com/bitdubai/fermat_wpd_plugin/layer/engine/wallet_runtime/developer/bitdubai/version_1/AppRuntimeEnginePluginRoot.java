@@ -3318,13 +3318,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     private AppNavigationStructure createCryptoCustomerWalletNavigationStructure() {
         final int CANCEL_NEGOTIATION_OPTION_MENU_ID = 1;
-        final int CONTRACT_HISTORY_FILTER_OPTION_MENU_ID = 2;
         final int NO_FILTER_OPTION_MENU_ID = 3;
         final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
         final int CANCELED_FILTER_OPTION_MENU_ID = 5;
         final int START_NEGOTIATION_OPTION_MENU_ID = 6;
         final int REQUEST_QUOTES_OPTION_MENU_ID = 7;
-        final int REQUEST_QUOTES_FILTER_OPTION_MENU_ID = 8;
         final String PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode();
         final Owner OWNER = new Owner(PUBLIC_KEY);
 
@@ -3799,7 +3797,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         // Option Menu Item - No Filter
         optionMenuItem = new OptionMenuItem(REQUEST_QUOTES_OPTION_MENU_ID);
         optionMenuItem.setLabel("Quotes");
-        optionMenuItem.setOrder(0);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(REQUEST_QUOTES_OPTION_MENU_ID, "quote_request", OWNER, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenu.addMenuItem(optionMenuItem);
 
