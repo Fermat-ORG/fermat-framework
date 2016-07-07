@@ -69,23 +69,13 @@ public class ContactsListAdapter
             }else
                 holder.friendAvatar.setImageResource(R.drawable.cht_comm_icon_user);
 
-            Address address= null;
             if(data.getLocation() != null ){
-                try {
-                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
-                }catch(CantCreateAddressException e){
-                    address = null;
-                }catch(Exception e){
-                    address = null;
-                }
-            }
-            if (address!=null){
-                if (address.getState().equals("null")) stateAddress = "";
-                else stateAddress = address.getState() + " ";
-                if (address.getCity().equals("null")) cityAddress = "";
-                else cityAddress = address.getCity() + " ";
-                if (address.getCountry().equals("null")) countryAddress = "";
-                else countryAddress = address.getCountry();
+                if (data.getState().equals("null") || data.getState().equals("null")) stateAddress = "";
+                else stateAddress = data.getState() + " ";
+                if (data.getCity().equals("null") || data.getCity().equals("null")) cityAddress = "";
+                else cityAddress = data.getCity() + " ";
+                if (data.getCountry().equals("null") || data.getCountry().equals("null")) countryAddress = "";
+                else countryAddress = data.getCountry();
                 holder.location.setText(cityAddress + stateAddress + countryAddress);
             } else
                 holder.location.setText("Searching...");
