@@ -16,8 +16,6 @@ public enum Plugins implements FermatPluginsEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BITDUBAI_BITCOIN_CRYPTO_NETWORK             ("BBTCCNET"     ),
-    BITDUBAI_FERMAT_CRYPTO_NETWORK             ("BFERCNET"     ),
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL    ("BWSCCLIENTCH" ),
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
 
