@@ -260,8 +260,8 @@
         <item>TestNet</item>
         <item>RegTest</item>
     </array>
-    <string name="feed_low">Slow</string>
-    <string name="feed_Medium">Normal</string>
-    <string name="feed_High">Fast</string>
+    <string name="fee_low">Slow</string>
+    <string name="fee_Medium">Normal</string>
+    <string name="fee_High">Fast</string>
 </resources>
 
