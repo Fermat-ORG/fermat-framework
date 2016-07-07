@@ -332,15 +332,29 @@ public class CryptoCustomerCommunityManager
 
             final Set<CryptoCustomerCommunityInformation> filteredConnectedActors = new LinkedHashSet<>();
 
-            CryptoCustomerExposingData cryptoCustomerExposingData = null;
+            CryptoCustomerExposingData cryptoBrokerExposingData;
+            CryptoCustomerCommunitySubAppModuleInformation cryptoCustomerCommunitySubAppModuleInformation;
 
-            for (CryptoCustomerActorConnection connectedActor : connectedActors)
-            {
-                cryptoCustomerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
-                if (cryptoCustomerExposingData != null)
-                    filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoCustomerExposingData.getLocation()));
-                else
-                    filteredConnectedActors.add(new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, null));
+            for (CryptoCustomerActorConnection connectedActor : connectedActors){
+                cryptoBrokerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
+                if (cryptoBrokerExposingData != null){
+                    cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
+                } else{
+                    cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
+                }
+
+                Location actorLocation = cryptoCustomerCommunitySubAppModuleInformation.getLocation();
+                Address address;
+                try{
+                    address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                } catch (CantCreateAddressException ex){
+                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
+                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
+                }
+                cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
+                filteredConnectedActors.add(cryptoCustomerCommunitySubAppModuleInformation);
+
             }
 
             return new ArrayList<>(filteredConnectedActors);

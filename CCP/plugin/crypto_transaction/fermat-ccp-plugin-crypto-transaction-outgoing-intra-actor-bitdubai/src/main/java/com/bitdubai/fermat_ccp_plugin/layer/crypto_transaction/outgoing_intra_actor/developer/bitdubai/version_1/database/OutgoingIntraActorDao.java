@@ -366,6 +366,12 @@ public class OutgoingIntraActorDao {
         long             fee          = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_FEE);
         FeeOrigin       feeOrigin  = FeeOrigin.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_FEE_ORIGIN));
 
+        long total = 0;
+
+        if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
+            total = amount + fee;
+        else
+            total = amount - fee;
 
         cryptoTransaction.setWalletPublicKey(walletPublicKey);
         cryptoTransaction.setIdTransaction(transactionId);
@@ -389,6 +395,7 @@ public class OutgoingIntraActorDao {
         cryptoTransaction.setCryptoCurrency(cryptoCurrency);
         cryptoTransaction.setFee(fee);
         cryptoTransaction.setFeeOrigin(feeOrigin);
+        cryptoTransaction.setTotal(total);
 
         return cryptoTransaction;
     }

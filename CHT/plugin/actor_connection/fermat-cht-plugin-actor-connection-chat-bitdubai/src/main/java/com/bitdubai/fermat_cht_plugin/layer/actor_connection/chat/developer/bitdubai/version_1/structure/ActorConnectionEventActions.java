@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.enums.ActorConnectionNotificationType;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
@@ -168,6 +169,11 @@ public class ActorConnectionEventActions {
             switch (request.getSenderActorType()) {
                 case CHAT:
                     dao.registerChatActorConnection(actorConnection,oldActorConnection);
+                    FermatBundle fermatBundle = new FermatBundle();
+                    fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle);
 
                     chatNetworkService.confirm(request.getRequestId());
                     break;
@@ -176,7 +182,8 @@ public class ActorConnectionEventActions {
             }
 
             //TODO: IMPLEMENT BROADCASTER
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+//
+//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {

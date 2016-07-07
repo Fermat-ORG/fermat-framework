@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.structure.VaultKeyHierarchyMaintainer</code>
@@ -42,12 +44,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchyMaintainer implements Agent {
-    /**
-     * controller of the agent execution thread
-     */
-    private boolean isSupposedToRun;
-
+class VaultKeyHierarchyMaintainer implements Agent{
     /**
      * This will hold all the keys that I need to pass to bitcoin network for monitoring.
      */
@@ -66,7 +63,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
      * The vault complete key hierarchy
      */
     private VaultKeyHierarchy vaultKeyHierarchy;
-
+    private boolean isRunning;
+    private boolean shouldRun = true;
 
     /**
      * platform services variables
@@ -87,19 +85,27 @@ class VaultKeyHierarchyMaintainer implements Agent {
         this.pluginId = pluginId;
     }
 
+
     @Override
     public void start() throws CantStartAgentException {
-        isSupposedToRun = true;
-        vaultKeyHierarchyMaintainerAgent = new VaultKeyHierarchyMaintainerAgent();
-        Thread agentThread = new Thread(vaultKeyHierarchyMaintainerAgent);
+        VaultKeyHierarchyMaintainerAgent agent = new VaultKeyHierarchyMaintainerAgent();
+        Thread agentThread = new Thread(agent, VaultKeyHierarchyMaintainer.class.getName());
+        //flag to control running status
+        this.shouldRun = true;
+
         agentThread.start();
+        this.isRunning = true;
+
     }
 
     @Override
     public void stop() {
-        isSupposedToRun = false;
-        vaultKeyHierarchyMaintainerAgent.interrupProcess();
-        vaultKeyHierarchyMaintainerAgent = null;
+        //flag to control running status
+        this.shouldRun = false;
+    }
+
+    public boolean isRunning(){
+        return this.isRunning;
     }
 
     private class VaultKeyHierarchyMaintainerAgent implements Runnable {
@@ -113,34 +119,23 @@ class VaultKeyHierarchyMaintainer implements Agent {
          */
         List<ECKey> allAccountsKeyList;
 
-        /**
-         * Sleep time of the agent between iterations
-         */
-        final long AGENT_SLEEP_TIME = 120000; //default time is 2 minutes
-
-
         @Override
         public void run() {
-            while (isSupposedToRun) {
+            while (shouldRun){
                 try {
                     doTheMainTask();
-                    Thread.sleep(AGENT_SLEEP_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.sleep(1000 * 60 * 2);
                 } catch (CantLoadHierarchyAccountsException e) {
                     e.printStackTrace();
                 } catch (KeyMaintainerStatisticException e) {
                     e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
+
         }
 
-        /**
-         * stop the current thread.
-         */
-        public void interrupProcess(){
-            Thread.currentThread().interrupt();
-        }
 
         /**
          * main executor of the agent

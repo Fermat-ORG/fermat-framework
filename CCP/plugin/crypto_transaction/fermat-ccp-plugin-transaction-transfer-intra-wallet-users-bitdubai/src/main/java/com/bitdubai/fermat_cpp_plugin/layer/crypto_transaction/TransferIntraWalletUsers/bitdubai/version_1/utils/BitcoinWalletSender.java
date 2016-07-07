@@ -237,7 +237,8 @@ public BitcoinLossProtectedWalletTransactionWalletRecord buildLossWalletRecord()
                 blockchainNetworkType,
                 CryptoCurrency.BITCOIN,
                 0,
-                FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+                FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT,
+                cryptoAmount);
 
 
         return bitcoinLossProtectedWalletTransactionRecord;

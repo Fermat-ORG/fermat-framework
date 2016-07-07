@@ -9,7 +9,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':fermat-bch-api')
     compile project(':fermat-pip-api')
-
     /**
      * used to specify where the Blockchain checkpoints are stored.
      */

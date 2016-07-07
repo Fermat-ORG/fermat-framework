@@ -148,7 +148,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
             return 1;
 
-        }else {
+        } else {
 
             // create transaction for
             DatabaseTransaction databaseTransaction = getDaoFactory().getActorsCatalogDao().getNewTransaction();
@@ -156,29 +156,43 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
             switch (actorsCatalogTransaction.getTransactionType()){
 
-                    case ActorsCatalogTransaction.ADD_TRANSACTION_TYPE :
-                        /*
-                         * Insert ActorsCatalog into data base
-                         */
-                        pair = insertActorsCatalog(actorsCatalogTransaction);
-                        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-                        break;
+                case ActorsCatalogTransaction.ADD_TRANSACTION_TYPE :
+                    /*
+                     * Insert ActorsCatalog into data base
+                     */
+                    pair = insertActorsCatalog(actorsCatalogTransaction);
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+                    break;
 
-                    case ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE :
-                        /*
-                         * Update ActorsCatalog into data base
-                         */
-                        pair = updateActorsCatalog(actorsCatalogTransaction);
-                        databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
-                        break;
+                case ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE :
+                    /*
+                     * Update ActorsCatalog into data base
+                     */
+                    pair = updateActorsCatalog(actorsCatalogTransaction);
+                    databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+                    break;
 
-                    case ActorsCatalogTransaction.DELETE_TRANSACTION_TYPE :
+                case ActorsCatalogTransaction.DELETE_TRANSACTION_TYPE :
+                    /*
+                     * Delete ActorsCatalog into data base
+                     */
+                    pair = deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                    break;
+                case ActorsCatalogTransaction.UPDATE_GEOLOCATION_TRANSACTION_TYPE :
                         /*
                          * Delete ActorsCatalog into data base
                          */
-                        pair = deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
-                        databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
-                        break;
+                    pair = updateLocationActorsCatalog(actorsCatalogTransaction);
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                    break;
+                case ActorsCatalogTransaction.UPDATE_LAST_CONNECTION_TRANSACTION_TYPE :
+                        /*
+                         * Delete ActorsCatalog into data base
+                         */
+                    pair = updateLastConnectionActorsCatalog(actorsCatalogTransaction);
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
+                    break;
             }
 
             /*
@@ -205,9 +219,10 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * Create a new row into the data base
      *
      * @param actorsCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
-    private DatabaseTransactionStatementPair insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException, CantReadRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
 
         LOG.info("Executing method insertActorsCatalog");
 
@@ -220,6 +235,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
         actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
         actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
+        actorsCatalog.setLastUpdateTime(actorsCatalogTransaction.getGenerationTime());
         actorsCatalog.setLastLocation(actorsCatalogTransaction.getLastLocation());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
@@ -252,6 +268,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
         actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
         actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
+        actorsCatalog.setLastUpdateTime(actorsCatalogTransaction.getGenerationTime());
         actorsCatalog.setLastLocation(actorsCatalogTransaction.getLastLocation());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
@@ -265,13 +282,47 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
     }
 
     /**
+     * Update a row into the data base
+     *
+     * @param actorsCatalogTransaction
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    private DatabaseTransactionStatementPair updateLocationActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
+
+        LOG.info("Executing method updateLocationActorsCatalog");
+
+        /*
+         * Create statement.
+         */
+        return getDaoFactory().getActorsCatalogDao().createLocationUpdateTransactionStatementPair(actorsCatalogTransaction.getIdentityPublicKey(), actorsCatalogTransaction.getLastLocation(), actorsCatalogTransaction.getGenerationTime());
+    }
+
+    /**
+     * Update a row into the data base
+     *
+     * @param actorsCatalogTransaction
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    private DatabaseTransactionStatementPair updateLastConnectionActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
+
+        LOG.info("Executing method updateLastConnectionActorsCatalog");
+
+        /*
+         * Create statement.
+         */
+        return getDaoFactory().getActorsCatalogDao().createLastConnectionUpdateTransaction(actorsCatalogTransaction.getIdentityPublicKey(), actorsCatalogTransaction.getLastConnection());
+    }
+
+    /**
      * Delete a row from the data base
      *
      * @param identityPublicKey
-     * @throws CantDeleteRecordDataBaseException
-     * @throws RecordNotFoundException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
-    private DatabaseTransactionStatementPair deleteActorsCatalog(String identityPublicKey) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException, CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair deleteActorsCatalog(String identityPublicKey) throws CantCreateTransactionStatementPairException {
 
         LOG.info("Executing method deleteActorsCatalog");
 
@@ -312,7 +363,6 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
          * Create statement.
          */
         return  getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().createInsertTransactionStatementPair(actorsCatalogTransaction);
-
     }
 
 }

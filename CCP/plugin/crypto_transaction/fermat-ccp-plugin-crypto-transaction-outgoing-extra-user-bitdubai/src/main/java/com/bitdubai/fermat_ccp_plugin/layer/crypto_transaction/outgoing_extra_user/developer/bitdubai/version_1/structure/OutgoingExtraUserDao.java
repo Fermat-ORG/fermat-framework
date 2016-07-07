@@ -362,6 +362,13 @@ public class OutgoingExtraUserDao {
         FeeOrigin feeOrigin = FeeOrigin.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_FEE_ORIGIN));
 
 
+        long total = 0;
+
+        if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
+            total = amount + fee;
+        else
+            total = amount - fee;
+
         return new TransactionWrapper(
                 transactionId     ,
                 actorFromPublicKey,
@@ -380,7 +387,8 @@ public class OutgoingExtraUserDao {
                 blockchainNetworkType,
                 cryptoCurrency,
                 fee,
-                feeOrigin);
+                feeOrigin,
+                total);
     }
 
     // Apply convertToBT to all the elements in a list

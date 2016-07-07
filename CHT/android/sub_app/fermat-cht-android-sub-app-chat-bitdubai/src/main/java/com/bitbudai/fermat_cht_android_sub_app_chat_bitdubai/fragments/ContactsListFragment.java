@@ -55,6 +55,8 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -95,7 +97,7 @@ public class ContactsListFragment
     TextView nochatssubtitle1;
     TextView nochatssubtitle2;
     List<ChatActorCommunityInformation> con;
-    private static final int MAX = 20;
+    private static final int MAX = 1000;
     private int offset = 0;
     private SearchView searchView;
 
@@ -224,6 +226,13 @@ public class ContactsListFragment
             if(chatIdentity != null) {
                 List<ChatActorCommunityInformation> con = chatManager
                         .listAllConnectedChatActor(chatIdentity, MAX, offset); //null;//chatManager.getContacts();
+                Collections.sort(con, new Comparator<ChatActorCommunityInformation>() {
+                    @Override
+                    public int compare(ChatActorCommunityInformation actorA, ChatActorCommunityInformation actorB) {
+                        return (actorA.getAlias().trim().toLowerCase().compareTo(actorB.getAlias().trim().toLowerCase()));
+
+                    }
+                });
                 if (con != null) {
                     int size = con.size();
                     if (size > 0) {
@@ -330,10 +339,7 @@ public class ContactsListFragment
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //public void onClick(View view) {
                 try {
-                    appSession.setData("whocallme", "contact");
-                    //appSessionSetDataContact(position);
-                    appSessionSetDataContact(position);
-                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                    displayChat(position);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -524,34 +530,36 @@ public class ContactsListFragment
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId()==R.id.list) {
-            if (Build.VERSION.SDK_INT < 23) {
-                MenuInflater inflater = new MenuInflater(getActivity());
-                inflater.inflate(R.menu.contact_list_context_menu, menu);
-            }else{
-                MenuInflater inflater = new MenuInflater(getContext());
-                inflater.inflate(R.menu.contact_list_context_menu, menu);
-            }
-        }
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-    }
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        if (v.getId()==R.id.list) {
+//            if (Build.VERSION.SDK_INT < 23) {
+//                MenuInflater inflater = new MenuInflater(getActivity());
+//                inflater.inflate(R.menu.contact_list_context_menu, menu);
+//            }else{
+//                MenuInflater inflater = new MenuInflater(getContext());
+//                inflater.inflate(R.menu.contact_list_context_menu, menu);
+//            }
+//        }
+//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+//    }
+//
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//        int id =item.getItemId();
+//        if (id == R.id.menu_view_contact) {
+//            try {
+//                appSessionSetDataContact(info.position);
+//                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+//            }catch (Exception e){
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
+//            return true;
+//        }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int id =item.getItemId();
-        if (id == R.id.menu_view_contact) {
-            try {
-                appSessionSetDataContact(info.position);
-                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
-        }
+
 //        if (id == R.id.menu_edit_contact) {
 //            try {
 //                appSessionSetDataContact(info.position);
@@ -565,8 +573,9 @@ public class ContactsListFragment
 //            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
 //            return true;
 //        }
-        return super.onContextItemSelected(item);
-    }
+
+//        return super.onContextItemSelected(item);
+//    }
 
     public void appSessionSetDataContact (int position){
         Contact contact=new ContactImpl();
@@ -585,5 +594,12 @@ public class ContactsListFragment
         byte[] byteArray = stream.toByteArray();
         contact.setProfileImage(byteArray);
         appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
+    }
+
+    public void displayChat(int position){
+        appSession.setData("whocallme", "contact");
+        //appSessionSetDataContact(position);
+        appSessionSetDataContact(position);
+        changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
     }
 }
