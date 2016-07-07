@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -136,7 +137,7 @@ public class EditCryptoBrokerIdentityFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
-        initViews(rootLayout);
+               initViews(rootLayout);
         return rootLayout;
     }
 
@@ -264,12 +265,20 @@ public class EditCryptoBrokerIdentityFragment
 
         return false;
     }
-
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode != Activity.RESULT_CANCELED){
+
+        }
+
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    //getActivity().getContentResolver().notifyChange(selectedImage, null);
+                    Bundle extras = data.getExtras();
+                    cryptoBrokerBitmap = (Bitmap) extras.get("data");
                     // grant all three uri permissions!
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
@@ -288,7 +297,7 @@ public class EditCryptoBrokerIdentityFragment
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        Bundle extras = data.getExtras();
+                        //Bundle extras = data.getExtras();
                         cryptoBrokerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
@@ -400,9 +409,6 @@ public class EditCryptoBrokerIdentityFragment
         } else {
 
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            imageToUploadUri = Uri.fromFile(f);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }

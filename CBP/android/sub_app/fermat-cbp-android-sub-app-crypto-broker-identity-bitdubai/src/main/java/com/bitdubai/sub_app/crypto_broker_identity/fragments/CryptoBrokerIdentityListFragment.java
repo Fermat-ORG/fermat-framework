@@ -79,7 +79,7 @@ public class CryptoBrokerIdentityListFragment
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
+        System.out.println("JUANASO ES LO MAS BEIO DEL MUNDOOOO!!! ldsmlnvoisnmnvoisnfdvdd-----------------------------------------------------------------");
         this.layout = layout;
 
         emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
