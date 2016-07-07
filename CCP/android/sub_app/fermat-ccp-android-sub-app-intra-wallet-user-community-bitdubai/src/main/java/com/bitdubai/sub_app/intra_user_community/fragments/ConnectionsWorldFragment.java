@@ -67,6 +67,7 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.adapters.GeolocationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
+import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingGPSDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.SearchAliasDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
@@ -220,7 +221,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             //getting location and setting device locacion
             Location dlocation = moduleManager.getLocationManager();
             if(dlocation==null){
-                Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
+                showErrorGPS();
+                //Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
             }
             else {
                 location = new DeviceLocation();
@@ -451,6 +453,30 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         });
         errorConnectingFermatNetworkDialog.show();
     }
+
+    public void showErrorGPS() {
+        final ErrorConnectingGPSDialog errorConnectingGPS = new ErrorConnectingGPSDialog(getActivity(), intraUserSubAppSession, null);
+        errorConnectingGPS.setDescription("Please, turn ON your GPS.");
+        errorConnectingGPS.setRightButton("Close", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorConnectingGPS.dismiss();
+           /*     try {
+                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        //getActivity().onBackPressed();
+                    }
+                } catch (CantGetCommunicationNetworkStatusException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
+            }
+        });
+
+        errorConnectingGPS.show();
+    }
+
 
     @Override
     public void onRefresh() {
