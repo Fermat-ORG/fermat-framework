@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -123,6 +124,8 @@ public class ConnectionsWorldFragment
     private SwipeRefreshLayout swipeRefresh;
     TextView noDatalabel;
     ImageView noData;
+    private Button refreshButton;
+    private View refreshButtonView;
 
     //Greenbar layout
     private RelativeLayout greenBar;
@@ -237,6 +240,8 @@ public class ConnectionsWorldFragment
                     appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
+            refreshButton = (Button) rootView.findViewById(R.id.show_more_button);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -247,7 +252,19 @@ public class ConnectionsWorldFragment
                         offset=totalItemCount;
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if(lastItem == totalItemCount) {
-                            onRefresh();
+
+                            refreshButtonView.setVisibility(View.VISIBLE);
+                            refreshButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onRefresh();
+                                    refreshButtonView.setVisibility(View.GONE);
+                                }
+                            });
+                        } else{
+
+                            refreshButtonView.setVisibility(View.GONE);
+
                         }
 //                        if (!isRefreshing) {
 
