@@ -2,10 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
@@ -38,17 +36,18 @@ import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.com
  * <p/>
  * Created  by Leon Acosta - (laion.cj91@gmail.com) on 13/05/2016.
  *
- * @author lnacosta
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
-public class OutgoingMessagesDao extends AbstractBaseDao {
+public class OutgoingMessagesDao extends AbstractBaseDao<NetworkServiceMessage> {
 
     public OutgoingMessagesDao(final Database dataBase) {
 
         super(
-                dataBase                    ,
-                OUTGOING_MESSAGES_TABLE_NAME
+                dataBase                        ,
+                OUTGOING_MESSAGES_TABLE_NAME    ,
+                OUTGOING_MESSAGES_ID_COLUMN_NAME
         );
     }
 
@@ -131,107 +130,56 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
     }
 
     /**
-     * Method that list the all entities on the data base. The valid value of
-     * the column name are the att of the <code>NetworkServiceDatabaseConstants</code>
+     * Method that list the all the network services messages pending to send which had between @countFailMin and @countFailMax intents.
      *
-     * @return All FermatMessage.
-     * @throws CantReadRecordDataBaseException
+     * @return a list of Network Service Outgoing Messages.
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
      */
-    public List<NetworkServiceMessage> findByFailCount(Integer countFailMin, Integer countFailMax) throws CantReadRecordDataBaseException {
-
-        List<NetworkServiceMessage> list;
+    public List<NetworkServiceMessage> findByFailCount(final Integer countFailMin,
+                                                       final Integer countFailMax) throws CantReadRecordDataBaseException {
 
         try {
 
-            /*
-             * 1 - load the data base to memory with filters
-             */
             DatabaseTable templateTable = getDatabaseTable();
 
-            /*
-             * 2 - prepare the filters
-             */
-            List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+            templateTable.addFermatEnumFilter(OUTGOING_MESSAGES_STATUS_COLUMN_NAME, FermatMessagesStatus.PENDING_TO_SEND, DatabaseFilterType.EQUAL);
 
-            if (countFailMin != null) {
+            if (countFailMin != null)
+                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFailMin.toString(), DatabaseFilterType.GREATER_OR_EQUAL_THAN);
 
-                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
-                newFilter.setType(DatabaseFilterType.GREATER_OR_EQUAL_THAN);
-                newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
-                newFilter.setValue(countFailMin.toString());
-                filtersTable.add(newFilter);
-            }
+            if (countFailMax != null)
+                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFailMax.toString(), DatabaseFilterType.LESS_OR_EQUAL_THAN);
 
-            if (countFailMax != null) {
+            if (countFailMax == null && countFailMin == null)
+                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, "0", DatabaseFilterType.EQUAL);
 
-                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
-                newFilter.setType(DatabaseFilterType.LESS_OR_EQUAL_THAN);
-                newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
-                newFilter.setValue(countFailMax.toString());
-                filtersTable.add(newFilter);
-            }
-
-            DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
-            newFilter.setType(DatabaseFilterType.EQUAL);
-            newFilter.setColumn(OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
-            newFilter.setValue(FermatMessagesStatus.PENDING_TO_SEND.getCode());
-            filtersTable.add(newFilter);
-
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
 
-            /*
-             * 3 - read all records
-             */
             List<DatabaseTableRecord> records = templateTable.getRecords();
 
-            /*
-             * 4 - Create a list of FermatMessage objects
-             */
-            list = new ArrayList<>();
-            list.clear();
+            List<NetworkServiceMessage> list = new ArrayList<>();
 
-            /*
-             * 5 - Convert into FermatMessage objects
-             */
-            for (DatabaseTableRecord record : records) {
+            for (DatabaseTableRecord record : records)
+                list.add(getEntityFromDatabaseTableRecord(record));
 
-                /*
-                 * 5.1 - Create and configure a  FermatMessage
-                 */
-                NetworkServiceMessage fermatMessage = getEntityFromDatabaseTableRecord(record);
-
-                /*
-                 * 5.2 - Add to the list
-                 */
-                list.add(fermatMessage);
-
-            }
+            return list;
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + DATABASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
+            throw new CantReadRecordDataBaseException(
+                    cantLoadTableToMemory,
+                    "Database Name: " + DATABASE_NAME,
+                    "The data no exist"
+            );
         } catch (InvalidParameterException invalidParameterException) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + DATABASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Data is inconsistent.";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, invalidParameterException, context, possibleCause);
-            throw cantReadRecordDataBaseException;
+            throw new CantReadRecordDataBaseException(
+                    invalidParameterException,
+                    "Database Name: " + DATABASE_NAME,
+                    "Data is inconsistent."
+            );
         }
-
-        /*
-         * return the list
-         */
-        return list;
     }
 
 }

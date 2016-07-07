@@ -54,10 +54,12 @@ public abstract class AbstractPlatform {
         this.platformReference = platformReference;
     }
 
-    public AbstractPlatform(PlatformReference platformReference, FermatContext fermatContext) {
+    public AbstractPlatform(final PlatformReference platformReference,
+                            final FermatContext fermatContext) {
+
         this.layers            = new ConcurrentHashMap<>();
+        this.fermatContext     = fermatContext    ;
         this.platformReference = platformReference;
-        this.fermatContext = fermatContext;
     }
 
     /**
@@ -71,6 +73,10 @@ public abstract class AbstractPlatform {
     protected final void registerLayer(final AbstractLayer abstractLayer) throws CantRegisterLayerException {
 
         LayerReference layerReference = abstractLayer.getLayerReference();
+
+        if (layerReference == null)
+            throw new CantRegisterLayerException("layerReference=null", "The layer does not contain a layer reference to recognize it.");
+
         layerReference.setPlatformReference(platformReference);
 
         try {

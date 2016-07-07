@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
@@ -317,7 +318,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
     }
 
     @Override
-    public void handleActorUnreachable(ActorProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
@@ -539,7 +540,8 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
             final ActorProfile actorProfile = constructActorProfile(actorAssetRedeemPointToRegister);
 
             updateRegisteredActor(
-                    actorProfile
+                    actorProfile,
+                    UpdateTypes.FULL
             );
 
         } catch (final CantUpdateRegisteredActorException e) {

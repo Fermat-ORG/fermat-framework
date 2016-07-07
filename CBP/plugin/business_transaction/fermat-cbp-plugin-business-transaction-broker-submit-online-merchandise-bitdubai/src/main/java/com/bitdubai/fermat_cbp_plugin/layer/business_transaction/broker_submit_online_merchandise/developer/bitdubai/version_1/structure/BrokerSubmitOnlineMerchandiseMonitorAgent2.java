@@ -225,8 +225,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                         getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
                         businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
                         businessTransactionRecord.getCryptoCurrency(),
-                        businessTransactionRecord.getFee(), //TODO: se va a crear un setting para configurar este parametros
-                        businessTransactionRecord.getFeeOrigin()); // TODO: se va a crear un setting para configurar este parametros
+                        businessTransactionRecord.getFee(),
+                        businessTransactionRecord.getFeeOrigin());
 
                 //Updating the business transaction record
                 businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());

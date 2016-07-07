@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -54,7 +54,6 @@ public class NetworkData {
      * Represent the gson
      */
     private Gson gson;
-
 
     /**
      * Represent the LOG
@@ -151,7 +150,7 @@ public class NetworkData {
                 jsonObject.addProperty("location", gson.toJson(location));
             }
 
-            jsonObject.addProperty("os","Operative System, not being used right now");
+            jsonObject.addProperty("os","");
             jsonObject.addProperty("networkServices",gson.toJson(getNetworkServicesCount()));
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
@@ -188,8 +187,6 @@ public class NetworkData {
 
                 for(CheckedInClient CheckedInClient : listCheckedInClientS){
 
-                    JsonObject jsonObjectClientExtra = new JsonObject();
-
                     Location location = new NetworkNodeCommunicationDeviceLocation(
                                 CheckedInClient.getLatitude() ,
                                 CheckedInClient.getLongitude(),
@@ -200,13 +197,12 @@ public class NetworkData {
                                 LocationSource.UNKNOWN
                     );
 
-                    jsonObjectClientExtra.addProperty("location", gson.toJson(location));
-                    jsonObjectClientExtra.addProperty("networkServices",gson.toJson(getListOfNetworkServiceOfClientSpecific(CheckedInClient.getIdentityPublicKey())));
 
 
                     JsonObject jsonObjectClient = new JsonObject();
                     jsonObjectClient.addProperty("hash", CheckedInClient.getIdentityPublicKey());
-                    jsonObjectClient.addProperty("extra", gson.toJson(jsonObjectClientExtra));
+                    jsonObjectClient.addProperty("location", gson.toJson(location));
+                    jsonObjectClient.addProperty("networkServices",gson.toJson(getListOfNetworkServiceOfClientSpecific(CheckedInClient.getIdentityPublicKey())));
 
                     listOfClients.add(gson.toJson(jsonObjectClient));
 
@@ -246,6 +242,7 @@ public class NetworkData {
                 for(CheckedInActor CheckedInActor :listOfCheckedInActor){
 
                     JsonObject jsonObjectActor = new JsonObject();
+                    jsonObjectActor.addProperty("hash",CheckedInActor.getIdentityPublicKey());
                     jsonObjectActor.addProperty("type",CheckedInActor.getActorType());
                     jsonObjectActor.addProperty("links",gson.toJson(new ArrayList<>()));
 

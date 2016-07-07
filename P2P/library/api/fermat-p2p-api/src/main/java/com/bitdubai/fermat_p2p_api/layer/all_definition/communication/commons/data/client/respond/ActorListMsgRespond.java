@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,11 +37,11 @@ public class ActorListMsgRespond extends MsgRespond {
      * @param profileList
      * @param networkServicePublicKey
      */
-    public ActorListMsgRespond(final STATUS             status                 ,
-                               final String             details                ,
+    public ActorListMsgRespond(final STATUS                  status                 ,
+                               final String                  details                ,
                                final List<ActorProfile> profileList            ,
-                               final String             networkServicePublicKey,
-                               final UUID               queryId                ) {
+                               final String                  networkServicePublicKey,
+                               final UUID                    queryId                ) {
 
         super(
                 status ,
