@@ -881,7 +881,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     private void checkGPSOn(){
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
-                turnOnGPSDialog();
+                if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
+                    //TODO This needs to be validated
+                    turnOnGPSDialog();
+                }
             }else
             {
                 if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {

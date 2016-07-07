@@ -15,6 +15,10 @@ public interface FermatContext {
 
     Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... parameters);
 
+    void registerReceiver(FermatIntentFilter filter,FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey);
+
+    void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey);
+
 
 
 }
