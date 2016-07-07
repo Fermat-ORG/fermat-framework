@@ -36,12 +36,12 @@ import io.jsonwebtoken.impl.TextCodec;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AdminSecurityFilter implements Filter {
+public class AdminRestApiSecurityFilter implements Filter {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(AdminSecurityFilter.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(AdminRestApiSecurityFilter.class));
 
     /**
      * (non-javadoc)
