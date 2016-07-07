@@ -254,7 +254,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 long currentTime = System.currentTimeMillis();
                 long dif = currentTime - sentDate;
 
-                if (dif >= 180000) {
+                if (dif >= 540000) {
                     try {
                         dao.cancelTransaction(transaction, " ROLLBACK 4.");
                         roolback(transaction, true);
