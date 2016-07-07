@@ -45,6 +45,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCl
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantRequestBrokerExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
@@ -729,6 +730,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         }
 
         return brokersBusinessInfo;
+    }
+
+    @Override
+    public void requestQuotes() throws CantGetCryptoBrokerListException {
+        try {
+            actorExtraDataManager.requestBrokerExtraData();
+        } catch (CantRequestBrokerExtraDataException e) {
+            throw new CantGetCryptoBrokerListException("Error requesting quotes", e, "", "");
+        }
     }
 
     @Override
