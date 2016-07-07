@@ -22,6 +22,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ThumbnailUtil;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -193,7 +194,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
      *
      * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
-    private DatabaseTransactionStatementPair updateActorsCatalog(ActorProfile actorProfile, Timestamp currentMillis) throws CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair updateActorsCatalog(ActorProfile actorProfile, Timestamp currentMillis) throws CantCreateTransactionStatementPairException, IOException {
 
         /*
          * Create the actorsCatalog
@@ -210,6 +211,11 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         actorsCatalog.setLastConnection(currentMillis);
         actorsCatalog.setLastUpdateTime(currentMillis);
         actorsCatalog.setLastLocation(actorProfile.getLocation());
+
+        if(actorProfile.getPhoto() != null)
+            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),null));
+        else
+            actorsCatalog.setThumbnail(null);
 
         /*
          * Save into the data base
@@ -237,7 +243,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
      *
      * @param actorProfile
      */
-    private ActorsCatalogTransaction createActorsCatalogTransaction(ActorProfile actorProfile, String transactionType, Timestamp currentMillis)  {
+    private ActorsCatalogTransaction createActorsCatalogTransaction(ActorProfile actorProfile, String transactionType, Timestamp currentMillis) throws IOException {
 
         /*
          * Create the transaction
@@ -256,6 +262,11 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         transaction.setGenerationTime(currentMillis);
         transaction.setLastConnection(currentMillis);
         transaction.setLastLocation(actorProfile.getLocation());
+
+        if(actorProfile.getPhoto() != null)
+            transaction.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),null));
+        else
+            transaction.setThumbnail(null);
 
         /*
          * Create Object transaction
@@ -288,7 +299,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
      * @throws CantReadRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private boolean validateProfileChange(ActorProfile actorProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
+    private boolean validateProfileChange(ActorProfile actorProfile) throws CantReadRecordDataBaseException, RecordNotFoundException, IOException {
 
         /*
          * Create the actorsCatalog
@@ -309,6 +320,11 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         }else{
             actorsCatalog.setLastLocation(0.0, 0.0);
         }
+
+        if(actorProfile.getPhoto() != null)
+            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(), null));
+        else
+            actorsCatalog.setThumbnail(null);
 
         ActorsCatalog actorsCatalogRegister = getDaoFactory().getActorsCatalogDao().findById(actorProfile.getIdentityPublicKey());
 

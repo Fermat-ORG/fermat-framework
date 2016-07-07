@@ -95,7 +95,7 @@ public class UpdateProfileLocationIntoCatalogProcessor extends PackageProcessor 
 
         }catch (Exception exception){
 
-            updateProfileMsjRespond = new UpdateProfileMsjRespond(MsgRespond.STATUS.FAIL, exception.getCause().getMessage(), messageContent != null ? messageContent.getIdentityPublicKey() : null);
+            updateProfileMsjRespond = new UpdateProfileMsjRespond(MsgRespond.STATUS.FAIL, exception.getCause().getMessage(), (messageContent != null && messageContent.getIdentityPublicKey() != null) ? messageContent.getIdentityPublicKey() : null);
 
             try {
 
