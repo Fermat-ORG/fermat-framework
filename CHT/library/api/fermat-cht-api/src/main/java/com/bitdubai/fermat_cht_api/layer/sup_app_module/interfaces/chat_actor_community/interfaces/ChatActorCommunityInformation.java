@@ -34,5 +34,11 @@ public interface ChatActorCommunityInformation extends Serializable {
 
     Location getLocation();
 
+    void setCity(String city);
+
+    void setCountry(String country);
+
+    void setState(String state);
+
 
 }

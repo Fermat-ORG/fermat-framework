@@ -103,6 +103,7 @@ public class CryptoCustomerCommunityManager
     @Override
     public List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListCryptoCustomersException {
         List<CryptoCustomerCommunityInformation> worldCustomerList;
+        List<CryptoCustomerCommunityInformation> worldCustomerListLocation;
         List<CryptoCustomerActorConnection> actorConnections;
 
         try {
