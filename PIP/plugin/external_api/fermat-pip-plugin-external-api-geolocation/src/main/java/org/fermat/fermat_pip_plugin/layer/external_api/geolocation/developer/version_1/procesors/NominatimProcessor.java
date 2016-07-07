@@ -197,6 +197,12 @@ public class NominatimProcessor extends AbstractAPIProcessor {
             String city = getStringFromJsonObject(
                     jsonAddress,
                     NominatimJsonAttNames.CITY);
+            if(city==null||city.isEmpty()||city.equalsIgnoreCase("null")){
+                //If city is null, we can try to get the town from json response.
+                city = getStringFromJsonObject(
+                        jsonAddress,
+                        NominatimJsonAttNames.TOWN);
+            }
             String county = getStringFromJsonObject(
                     jsonAddress,
                     NominatimJsonAttNames.COUNTY);

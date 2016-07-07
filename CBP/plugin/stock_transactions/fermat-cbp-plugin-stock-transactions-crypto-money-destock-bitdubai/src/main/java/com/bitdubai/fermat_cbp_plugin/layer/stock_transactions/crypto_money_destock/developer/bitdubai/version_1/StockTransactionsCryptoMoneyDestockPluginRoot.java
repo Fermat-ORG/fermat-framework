@@ -36,9 +36,11 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_dest
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.events.StockTransactionsCryptoMoneyDestockMonitorAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.events.StockTransactionsCryptoMoneyDestockMonitorAgent2;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransactionManager;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by franklin on 16/11/15.
@@ -71,6 +73,11 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     Broadcaster broadcaster;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -135,7 +142,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
     }
 
 
-    private StockTransactionsCryptoMoneyDestockMonitorAgent stockTransactionsCryptoMoneyDestockMonitorAgent;
+    private StockTransactionsCryptoMoneyDestockMonitorAgent2 stockTransactionsCryptoMoneyDestockMonitorAgent;
 
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
@@ -144,7 +151,10 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
      */
     private void startMonitorAgent() throws CantStartAgentException {
         if (stockTransactionsCryptoMoneyDestockMonitorAgent == null) {
-            stockTransactionsCryptoMoneyDestockMonitorAgent = new StockTransactionsCryptoMoneyDestockMonitorAgent(
+            stockTransactionsCryptoMoneyDestockMonitorAgent = new StockTransactionsCryptoMoneyDestockMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     this,
                     stockTransactionCryptoMoneyDestockManager,
                     cryptoBrokerWalletManager,

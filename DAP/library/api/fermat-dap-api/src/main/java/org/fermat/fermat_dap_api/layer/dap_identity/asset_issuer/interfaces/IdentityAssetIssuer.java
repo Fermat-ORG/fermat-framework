@@ -1,8 +1,7 @@
 package org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 
 import java.io.Serializable;
 
@@ -29,8 +28,7 @@ public interface IdentityAssetIssuer extends ActiveActorIdentityInformation, Ser
      */
     String createMessageSignature(String message) /*throws CantSingMessageException*/;
 
-
     int getAccuracy();
 
-    Frequency getFrequency();
+    GeoFrequency getFrequency();
 }

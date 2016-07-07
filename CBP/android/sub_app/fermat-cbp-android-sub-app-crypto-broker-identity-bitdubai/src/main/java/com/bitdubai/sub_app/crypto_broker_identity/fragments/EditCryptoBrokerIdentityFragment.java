@@ -41,7 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -359,7 +359,7 @@ public class EditCryptoBrokerIdentityFragment
 
         } else {
             final int accuracy = getAccuracyData();
-            final Frequency frequency = getFrequencyData();
+            final GeoFrequency frequency = getFrequencyData();
 
             CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey,
                     imgInBytes, exposureLevel, accuracy, frequency);
@@ -425,9 +425,9 @@ public class EditCryptoBrokerIdentityFragment
                 (int) appSession.getData(FragmentsCommons.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
-        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
-                (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    private GeoFrequency getFrequencyData() {
+        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? GeoFrequency.NONE :
+                (GeoFrequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
     }
 
     public void turnGPSOn() {

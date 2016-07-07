@@ -20,9 +20,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -228,12 +225,8 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     }
 
     private void saveSettings() {
-        if (type != TemplateType.TYPE_PRESENTATION && type != TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY) {
-//            if (checkButton == checkbox_not_show.isChecked() || checkButton == !checkbox_not_show.isChecked())
-//                if (checkbox_not_show.isChecked()) {
+        if (type != TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY) {
             try {
-//                        M module = getSession().getModuleManager();
-//                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
                 FermatSettings bitcoinWalletSettings = ((ModuleSettingsImpl) getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
                 if (bitcoinWalletSettings != null) {
                     bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
@@ -242,17 +235,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
                     Log.e(TAG, "Error: Save Settings null, verify if the module is running");
                 }
 
-//                        }else{
-//                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
-//                        }
-            } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
-                if (callback != null) callback.onError(e);
-                else e.printStackTrace();
             } catch (Exception e) {
                 if (callback != null) callback.onError(e);
                 else e.printStackTrace();
             }
-//                }
         }
     }
 

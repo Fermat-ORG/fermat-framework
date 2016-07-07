@@ -24,7 +24,7 @@ import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.versio
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.database.AssetRedeemPointIdentityDao;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,7 +188,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
     }
 
     @Override
-    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException {
+    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewRedeemPointException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -215,7 +215,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
     @Override
     public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,
                                                     String contactInformation, String countryName, String provinceName, String cityName,
-                                                    String postalCode, String streetName, String houseNumber, int accuracy, Frequency frequency) throws CantCreateNewRedeemPointException {
+                                                    String postalCode, String streetName, String houseNumber, int accuracy, GeoFrequency frequency) throws CantCreateNewRedeemPointException {
 
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -244,7 +244,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
 
     public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
                                           String contactInformation, String countryName, String provinceName, String cityName,
-                                          String postalCode, String streetName, String houseNumber,  int accuracy, Frequency frequency) throws CantUpdateIdentityRedeemPointException {
+                                          String postalCode, String streetName, String houseNumber,  int accuracy, GeoFrequency frequency) throws CantUpdateIdentityRedeemPointException {
         try {
             getAssetRedeemPointIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, contactInformation,
                     countryName, provinceName, cityName, postalCode, streetName, houseNumber, accuracy, frequency);
@@ -333,8 +333,8 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
         }
 
         @Override
-        public Frequency getFrequencyDataDefault() {
-            return Frequency.NORMAL;
+        public GeoFrequency getFrequencyDataDefault() {
+            return GeoFrequency.NORMAL;
     }
 
 }

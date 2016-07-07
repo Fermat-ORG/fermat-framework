@@ -189,7 +189,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 if(nodesListPosition >= 0){
                     i++;
 
-                    if(i > 4){
+                    if(i > 1){
 
                         pluginRoot.intentToConnectToOtherNode(nodesListPosition);
                         return Boolean.FALSE;
@@ -211,7 +211,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 if(nodesListPosition >= 0){
                     i++;
 
-                    if(i > 4){
+                    if(i > 1){
 
                         pluginRoot.intentToConnectToOtherNode(nodesListPosition);
                         return Boolean.FALSE;
@@ -222,7 +222,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
                             //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
                             // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                            Thread.sleep(5000);
+                            Thread.sleep(1000);
 
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -236,7 +236,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
                         //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
                         // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                        Thread.sleep(5000);
+                        Thread.sleep(1000);
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -775,7 +775,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/profiles/actors");
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/profiles/actors");
 
             String formParameters = "client_public_key=" + URLEncoder.encode(clientIdentity.getPublicKey(), "UTF-8") + "&discovery_params=" + URLEncoder.encode(discoveryQueryParameters.toJson(), "UTF-8");
 

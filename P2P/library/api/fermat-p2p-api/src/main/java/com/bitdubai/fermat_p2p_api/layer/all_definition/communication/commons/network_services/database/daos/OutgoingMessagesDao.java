@@ -151,6 +151,9 @@ public class OutgoingMessagesDao extends AbstractBaseDao<NetworkServiceMessage> 
             if (countFailMax != null)
                 templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFailMax.toString(), DatabaseFilterType.LESS_OR_EQUAL_THAN);
 
+            if (countFailMax == null && countFailMin == null)
+                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, "0", DatabaseFilterType.EQUAL);
+
             templateTable.loadToMemory();
 
             List<DatabaseTableRecord> records = templateTable.getRecords();

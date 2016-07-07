@@ -24,7 +24,7 @@ import javax.websocket.Session;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
 
@@ -90,7 +90,6 @@ public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
                 }
 
                 session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Finish add node to catalog process"));
-
             }
 
         } catch (Exception exception){
@@ -105,7 +104,5 @@ public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
             }
 
         }
-
     }
-
 }

@@ -275,7 +275,7 @@ public class BankMoneyWalletDao {
         BigDecimal heldFunds = new BigDecimal(0);
         try {
             for (BankMoneyTransactionRecord record : getTransactions(TransactionType.HOLD, account)) {
-                heldFunds.add(record.getRunningAvailableBalance());
+                heldFunds = heldFunds.add(record.getRunningAvailableBalance());
             }
         } catch (CantGetTransactionsException e) {
             pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

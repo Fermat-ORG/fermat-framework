@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 /**
  * Created by miguel payarez on 13/04/16.
  */
-public class MusicPlayerNotificationPainter implements NotificationPainter{
+public class MusicPlayerNotificationPainter extends NotificationPainter{
 
 
 

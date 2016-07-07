@@ -2,10 +2,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2015.10.01..
  */
-public class Header implements FermatHeader{
+public class Header implements FermatHeader,Serializable{
 
     String label;
     boolean isExpandable = false;

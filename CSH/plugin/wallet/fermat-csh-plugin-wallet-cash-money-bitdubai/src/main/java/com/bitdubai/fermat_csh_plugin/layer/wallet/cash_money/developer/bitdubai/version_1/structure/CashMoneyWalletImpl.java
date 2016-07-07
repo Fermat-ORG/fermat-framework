@@ -127,11 +127,34 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
     @Override
     public void unhold(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterUnholdException {
         try {
-            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.UNHOLD, BalanceType.AVAILABLE, amount, memo, (new Date().getTime() / 1000), false);
+            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(
+                    transactionId,
+                    this.walletPublicKey,
+                    publicKeyActor,
+                    publicKeyPlugin,
+                    TransactionType.UNHOLD,
+                    BalanceType.AVAILABLE,
+                    amount,
+                    memo,
+                    (new Date().getTime() / 1000),
+                    false);
+            BigDecimal heldBalance = getHeldFunds(publicKeyActor);
+            if(amount.compareTo(heldBalance)>0){
+                throw new CantRegisterUnholdException(
+                        "Trying to make an unHold is greater than Held balance " +
+                                "- Amount: "+amount+" - Held balance: "+heldBalance);
+            }
             dao.credit(this.walletPublicKey, BalanceType.AVAILABLE, amount);
             dao.registerTransaction(transaction);
         }catch (CantRegisterCashMoneyWalletTransactionException | CantRegisterCreditException e) {
             throw new CantRegisterUnholdException(CantRegisterHoldException.DEFAULT_MESSAGE, e, "Cant insert transaction record into database", null);
+        } catch (CantGetHeldFundsException e) {
+            e.printStackTrace();
+            throw new CantRegisterUnholdException(
+                    CantRegisterHoldException.DEFAULT_MESSAGE,
+                    e,
+                    "Making a hold transaction",
+                    "Cant insert transaction record into database");
         }
     }
 

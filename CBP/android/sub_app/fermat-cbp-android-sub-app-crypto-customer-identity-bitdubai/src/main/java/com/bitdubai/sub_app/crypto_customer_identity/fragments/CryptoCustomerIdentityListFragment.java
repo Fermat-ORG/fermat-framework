@@ -90,7 +90,7 @@ public class CryptoCustomerIdentityListFragment
                 .setBody(R.string.cbp_customer_identity_welcome_body)
                 .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setIsCheckEnabled(true)
+                .setIsCheckEnabled(false)
                 .build();
 
         IdentityCustomerPreferenceSettings subappSettings;
@@ -154,11 +154,6 @@ public class CryptoCustomerIdentityListFragment
     @Override
     protected boolean hasMenu() {
         return true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
     }
 
     @Override

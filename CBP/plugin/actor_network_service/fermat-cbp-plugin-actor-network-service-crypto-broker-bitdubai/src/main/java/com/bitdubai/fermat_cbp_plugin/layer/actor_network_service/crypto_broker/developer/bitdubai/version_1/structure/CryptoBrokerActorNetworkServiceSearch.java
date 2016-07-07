@@ -81,7 +81,8 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     alias,
                     distance,
                     null,
-                    publicKey,
+                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
+                    null, //publicKey,
                     deviceLocation,
                     max,
                     null,
@@ -226,6 +227,50 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             }
 
             return cryptoBrokerExposingDataList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public CryptoBrokerExposingData getResult(String publicKey) throws CantListCryptoBrokersException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    //TODO:Hay que pasarle null porque no esta implementado de esa forma en p2p
+                    //Actors.CBP_CRYPTO_BROKER.getCode(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    publicKey,
+                    null,
+                    null,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    null,
+                    NetworkServiceType.CRYPTO_BROKER
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            CryptoBrokerExposingData cryptoBrokerExposingData = null;
+
+            for (final ActorProfile actorProfile : list) {
+
+                cryptoBrokerExposingData = new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0);
+            }
+
+            return cryptoBrokerExposingData;
 
         } catch (final CantRequestProfileListException e) {
 

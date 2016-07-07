@@ -2,10 +2,8 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -202,23 +200,13 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
         });
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //If wallet already configured, go directly to wallet
-                if (walletConfigured) {
-                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
-                } else {  //otherwise, show wizard page
-                    fragmentContainer.setVisibility(View.VISIBLE);
-                    showHelpDialog();
-                }
-            }
-        }, 250);
+        fragmentContainer.setVisibility(View.VISIBLE);
+        showHelpDialog();
 
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -226,11 +214,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle("Prueba");
-
-        System.out.println("toolbar: "+toolbar.toString());
     }
 
     private void showHelpDialog() {
@@ -240,45 +223,51 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             if (haveAssociatedIdentity)
                 return;
 
-            PresentationDialog presentationDialog;
+            final PresentationDialog presentationDialog;
 
-            if (moduleManager.getListOfIdentities().isEmpty()) {
-                presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
-                        .setIconRes(R.drawable.cbp_crypto_customer)
-                        .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
-                        .setBody(R.string.ccw_wizard_providers_dialog_body)
-                        .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
-                        .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                        .setIsCheckEnabled(true)
-                        .build();
-                presentationDialog.setOnDismissListener(this);
-                presentationDialog.show();
-
-            } else {
-                selectedIdentity = moduleManager.getListOfIdentities().get(0);
-
-                presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
-                        .setIconRes(R.drawable.cbp_crypto_customer)
-                        .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
-                        .setBody(R.string.ccw_wizard_providers_dialog_body)
-                        .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                        .setIsCheckEnabled(true)
-                        .build();
-                presentationDialog.setOnDismissListener(this);
-
-                final CryptoCustomerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-
-                final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
-                if (showDialog)
+            List<CryptoCustomerIdentity> listOfIdentities = moduleManager.getListOfIdentities();
+            if(listOfIdentities != null){
+                if (listOfIdentities.isEmpty()) {
+                    presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                            .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                            .setIconRes(R.drawable.cbp_crypto_customer)
+                            .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
+                            .setBody(R.string.ccw_wizard_providers_dialog_body)
+                            .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
+                            .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                            .setIsCheckEnabled(false)
+                            .build();
+                    presentationDialog.setOnDismissListener(this);
                     presentationDialog.show();
 
+                } else {
+                    selectedIdentity = listOfIdentities.get(0);
+                    presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                            .setIconRes(R.drawable.cbp_crypto_customer)
+                            .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
+                            .setBody(R.string.ccw_wizard_providers_dialog_body)
+                            .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                            .setIsCheckEnabled(false)
+                            .build();
+
+                    presentationDialog.setOnDismissListener(this);
+
+                    final CryptoCustomerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+
+                    final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
+                    if (showDialog){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                presentationDialog.show();
+                            }
+                        });
+                    }
+                }
             }
-
-
 
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -379,10 +368,10 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
     private void saveSettingAndGoNextStep() {
 
-        //TODO: no tiene sentido de estar activo si no es requisito para avanzar en los Steps
-//        if (selectedProviders.isEmpty()) {
-//            Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
-//        }
+        if (selectedProviders.isEmpty()) {
+            Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         try {
             moduleManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
@@ -495,8 +484,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         FiatCurrency[] fiatCurrencies = FiatCurrency.values();
         Collections.addAll(data, fiatCurrencies);
 
-        CryptoCurrency[] cryptoCurrencies = CryptoCurrency.values();
-        Collections.addAll(data, cryptoCurrencies);
+        data.add(CryptoCurrency.BITCOIN);
 
         return data;
     }

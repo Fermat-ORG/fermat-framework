@@ -237,9 +237,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
             this.networkServiceRegistrationProcessAgent.start();
 
-            this.networkServicePendingMessagesSupervisorAgent = new NetworkServicePendingMessagesSupervisorAgent(this);
-            this.networkServicePendingMessagesSupervisorAgent.start();
-
             onNetworkServiceStart();
 
         } catch (Exception exception) {
@@ -670,6 +667,16 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     public final void handleNetworkServiceRegisteredEvent() {
 
         this.registered = Boolean.TRUE;
+
+        try {
+            if (networkServicePendingMessagesSupervisorAgent == null)
+                this.networkServicePendingMessagesSupervisorAgent = new NetworkServicePendingMessagesSupervisorAgent(this);
+
+            this.networkServicePendingMessagesSupervisorAgent.start();
+        } catch (Exception ex) {
+            System.out.println("Failed to start the messages supervisor agent - > NS: "+this.getProfile().getNetworkServiceType());
+        }
+
         onNetworkServiceRegistered();
     }
 
@@ -690,6 +697,13 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         try {
 
             if(!networkClientManager.getConnection().isRegistered()) {
+
+                try {
+                    if (networkServicePendingMessagesSupervisorAgent != null)
+                        this.networkServicePendingMessagesSupervisorAgent.pause();
+                } catch (Exception ex) {
+                    System.out.println("Failed to pause the messages supervisor agent - > NS: "+this.getProfile().getNetworkServiceType());
+                }
 
                 this.registered = Boolean.FALSE;
 /*
@@ -721,6 +735,13 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         try {
 
             if(!networkClientManager.getConnection().isRegistered()) {
+
+                try {
+                    if (networkServicePendingMessagesSupervisorAgent != null)
+                        this.networkServicePendingMessagesSupervisorAgent.pause();
+                } catch (Exception ex) {
+                    System.out.println("Failed to pause the messages supervisor agent - > NS: "+this.getProfile().getNetworkServiceType());
+                }
 
                 this.registered = Boolean.FALSE;
 

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 
 import java.util.UUID;
 
@@ -27,13 +28,17 @@ public class OutgoingDraftTransactionWrapper {
     private long timestamp;
     private String txHash;
     private  CryptoCurrency cryptoCurrency;
+    private long fee ;
+    private FeeOrigin feeOrigin;
 
     public OutgoingDraftTransactionWrapper() {
     }
 
     public OutgoingDraftTransactionWrapper(UUID requestId, String walletPublicKey, long valueToSend, CryptoAddress addressTo, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType, String actorFromPublicKey, String actorToPublicKey, Actors actorFromType, Actors actorToType, String memo, long timestamp,
                                            String txHash,
-                                           CryptoCurrency cryptoCurrency) {
+                                           CryptoCurrency cryptoCurrency,
+                                           long fee,
+                                           FeeOrigin feeOrigin) {
         this.requestId = requestId;
         this.walletPublicKey = walletPublicKey;
         this.valueToSend = valueToSend;
@@ -48,6 +53,8 @@ public class OutgoingDraftTransactionWrapper {
         this.timestamp = timestamp;
         this.txHash = txHash;
         this.cryptoCurrency = cryptoCurrency;
+        this.feeOrigin = feeOrigin;
+        this.fee = fee;
     }
 
     public long getValueToSend() {
@@ -104,5 +111,13 @@ public class OutgoingDraftTransactionWrapper {
 
     public CryptoCurrency getCryptoCurrency(){
         return this.cryptoCurrency;
+    }
+
+    public FeeOrigin getFeeOrigin(){
+        return this.feeOrigin;
+    }
+
+    public long getFee(){
+        return this.fee;
     }
 }
