@@ -206,7 +206,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
                      * I do not need to reset the wallet because I will
                      * always be importing fresh (unused) keys.
                      */
-                    isWalletReset = true;
+                    isWalletReset = false;
                 }
             } else {
                 /**
@@ -247,10 +247,10 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
                     bitcoinCryptoNetworkMonitor = null;
 
                     /**
-                     * once the agent is stopped, I will restart it with the new wallet.
+                     * once the agent is stopped, I will restart it with the new wallet and the reset option.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);;
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);;
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     try {
@@ -264,7 +264,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
