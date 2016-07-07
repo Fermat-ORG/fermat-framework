@@ -49,6 +49,8 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
 
     private CryptoCurrency cryptoCurrency;
 
+    private  long Total;
+
     @Override
     public CryptoAddress getAddressFrom() {
         return addressFrom;
@@ -90,6 +92,16 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
     public long getAmount() {
         return amount;
     }
+
+    @Override
+    public long getTotal() {
+        return this.Total;
+    }
+
+    public void setTotal(long Total) {
+        this.Total = Total;
+    }
+
 
     public void setAmount(long amount) {
         this.amount = amount;
@@ -138,6 +150,14 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
     @Override
     public long getFee() {
         return this.fee;
+    }
+
+    public void  setFee(long fee) {
+         this.fee = fee;
+    }
+
+    public void  setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
     }
 
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {

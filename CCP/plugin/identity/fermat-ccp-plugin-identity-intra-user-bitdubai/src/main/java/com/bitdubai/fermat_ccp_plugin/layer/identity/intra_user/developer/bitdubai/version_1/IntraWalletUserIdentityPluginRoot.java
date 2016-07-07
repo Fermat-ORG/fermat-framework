@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
@@ -152,7 +153,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
      * @throws CantCreateNewIntraWalletUserException
      */
     @Override
-    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency) throws CantCreateNewIntraWalletUserException {
+    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -160,9 +161,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias, phrase, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
+            intraWalletUserIdentityDao.createNewUser(alias, phrase, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency, location);
 
-            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, accuracy, frequency);
+            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, accuracy, frequency,location);
 
 
             //registerIdentities();
@@ -179,7 +180,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
-    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage, Long accuracy, Frequency frequency) throws CantCreateNewIntraWalletUserException {
+    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -187,8 +188,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
-            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage, accuracy, frequency);
+            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage, accuracy, frequency, location);
+            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage, accuracy, frequency,location);
 
             registerIdentities();
 
@@ -220,9 +221,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency) throws CantUpdateIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException {
             try {
-                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage, accuracy, frequency);
+                intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage, accuracy, frequency, location);
                 updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
 
             }
@@ -301,7 +302,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             for(IntraWalletUserIdentity user : lstIntraWalletUSer){
                 lstActors.add(intraActorManager.buildIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(), Actors.INTRA_USER, user.getImage()));
             }
-            intraActorManager.registerActors(lstActors);
+            intraActorManager.registerActors(lstActors,lstIntraWalletUSer.get(0).getLocation(),getFrecuency(lstIntraWalletUSer.get(0).getFrequency()),lstIntraWalletUSer.get(0).getAccuracy());
         } catch (CantListIntraWalletUserIdentitiesException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -310,7 +311,12 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     public void registerIdentity(IntraWalletUserIdentity intraWalletUserIdentity){
-        intraActorManager.registerActor(intraActorManager.buildIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage()));
+
+
+        intraActorManager.registerActor(intraActorManager.buildIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage())
+                                        ,intraWalletUserIdentity.getLocation(),
+                                        getFrecuency(intraWalletUserIdentity.getFrequency()),
+                                        intraWalletUserIdentity.getAccuracy());
 
     }
 
@@ -388,5 +394,28 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         return new int[0];
     }
 
+
+    private long getFrecuency(Frequency frecuency)
+    {
+        long refresh = 10;
+
+        switch (frecuency){
+            case LOW:
+                refresh = 60;
+                break;
+            case NORMAL:
+                refresh = 20;
+                break;
+            case HIGH:
+                refresh = 5;
+                break;
+            case NONE:
+                refresh = 0;
+                break;
+        }
+
+        return refresh;
+
+    }
 
 }
