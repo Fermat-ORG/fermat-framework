@@ -58,21 +58,22 @@ public class AdminSecurityFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         LOG.debug("doFilter");
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        LOG.debug("Authorization = " + httpRequest.getHeader("Authorization"));
-
-        final String authHeader = httpRequest.getHeader("Authorization");
-        if (authHeader == null || !authHeader.contains("Bearer ")) {
-            LOG.error("Missing or invalid Authorization header.");
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
-            return;
-        }
-
         try {
+
+            LOG.debug("Authorization = " + httpRequest.getHeader("Authorization"));
+
+            final String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader == null || !authHeader.contains("Bearer ")) {
+                LOG.error("Missing or invalid Authorization header.");
+                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
+                return;
+            }
 
             String token = authHeader.substring("Bearer ".length(), authHeader.length());
             LOG.debug("token = " + token);
@@ -82,9 +83,12 @@ public class AdminSecurityFilter implements Filter {
                 chain.doFilter(request, response);
             }
 
-        }
-        catch (final SignatureException e) {
+        } catch (final SignatureException e) {
             LOG.error( "Invalid token: "+e.getMessage());
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
+            return;
+        } catch (final Exception e) {
+            LOG.error( "Error in token: "+e.getMessage());
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
             return;
         }
