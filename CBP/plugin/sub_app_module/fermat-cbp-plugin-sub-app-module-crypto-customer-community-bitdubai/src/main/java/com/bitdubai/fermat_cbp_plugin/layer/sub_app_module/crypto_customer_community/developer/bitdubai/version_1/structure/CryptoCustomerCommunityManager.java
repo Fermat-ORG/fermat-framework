@@ -344,7 +344,13 @@ public class CryptoCustomerCommunityManager
                 }
 
                 Location actorLocation = cryptoCustomerCommunitySubAppModuleInformation.getLocation();
-                final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(),actorLocation.getLongitude());
+                Address address;
+                try{
+                    address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                } catch (CantCreateAddressException ex){
+                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
+                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
+                }
                 cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
                 cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
                 filteredConnectedActors.add(cryptoCustomerCommunitySubAppModuleInformation);

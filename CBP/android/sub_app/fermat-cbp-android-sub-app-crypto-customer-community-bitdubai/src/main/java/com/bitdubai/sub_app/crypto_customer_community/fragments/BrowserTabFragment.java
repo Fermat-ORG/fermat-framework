@@ -275,17 +275,6 @@ public class BrowserTabFragment
         });
     }
 
-    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
-        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
-        for (CryptoCustomerCommunityInformation item : baseList) {
-            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
-                filteredList.add(item);
-            }
-        }
-
-        return filteredList;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -382,6 +371,7 @@ public class BrowserTabFragment
                         cryptoCustomerCommunityInformationList.clear();
                         cryptoCustomerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(cryptoCustomerCommunityInformationList);
+                        ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     } else {
                         cryptoCustomerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.notifyItemRangeInserted(offset, cryptoCustomerCommunityInformationList.size() - 1);
@@ -403,6 +393,13 @@ public class BrowserTabFragment
         }
 
         Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
     }
 
     private void launchPresentationDialog() {
@@ -473,11 +470,15 @@ public class BrowserTabFragment
         }
     }
 
-    @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
+    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
+        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoCustomerCommunityInformation item : baseList) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
 
-        onRefresh();
+        return filteredList;
     }
 }
 

@@ -1018,4 +1018,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     public NodeProfile getNodeProfile() {
         return nodeProfile;
     }
+
+    public void close() throws IOException {
+        networkClientCommunicationChannel.getClientConnection().close();
+    }
 }

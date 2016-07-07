@@ -5,9 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExportCryptoVaultSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
@@ -78,13 +81,16 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @return
      * @throws CantLoadExistingVaultSeed
      */
-    List<String> getMnemonicCode() throws CantLoadExistingVaultSeed;
+    CryptoVaultSeed exportCryptoVaultSeed();
 
     /**
-     *
-     * @throws CantLoadExistingVaultSeed
+     * Imports the passed seed into the vault.
+     * @param mnemonicCode the mnemonic Code passed by the user
+     * @param date the date this seed was generated.
+     * @throws CantImportSeedException
      */
-    void importSeedFromMnemonicCode(List<String> mnemonicCode,long date,@Nullable String userPhrase,BlockchainNetworkType blockchainNetworkType) throws CantLoadExistingVaultSeed;
+    void importSeedFromMnemonicCode(List<String> mnemonicCode,long date) throws CantImportSeedException;
+
 
     /**
      * Signs the owned inputs of the passed Draft transaction

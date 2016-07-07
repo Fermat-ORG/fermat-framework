@@ -27,9 +27,8 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettingsManager;
@@ -51,8 +50,8 @@ import org.bitcoinj.core.Transaction;
  */
 public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSettings, ActiveActorIdentityInformation> implements AndroidCoreModule {
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_CLIENT)
+    private NetworkClientManager wsCommunicationsCloudClientManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
     private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
@@ -79,7 +78,7 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
     @Override
     public NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException {
         try {
-            if (this.wsCommunicationsCloudClientManager.isConnected())
+            if (this.wsCommunicationsCloudClientManager.getConnection().isConnected())
                 return NetworkStatus.CONNECTED;
             else
                 return NetworkStatus.DISCONNECTED;
@@ -105,9 +104,6 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
         return NetworkStatus.CONNECTED;
     }
 
-    public void setWsCommunicationsCloudClientManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
-    }
 
     @Override
     public SettingsManager getSettingsManager() {

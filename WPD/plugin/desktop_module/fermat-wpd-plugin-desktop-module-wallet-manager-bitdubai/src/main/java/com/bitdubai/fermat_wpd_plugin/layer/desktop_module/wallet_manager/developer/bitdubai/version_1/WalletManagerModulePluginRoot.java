@@ -413,15 +413,19 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     @Override
     public List<String> getMnemonicCode() throws Exception {
         try {
-            return cryptoVaultManager.getMnemonicCode();
-        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            List<String> textToShow = new ArrayList<>();
+            textToShow.add("mNemonic code: " + cryptoVaultManager.exportCryptoVaultSeed().getMnemonicPhrase());
+            textToShow.add("Date: " + cryptoVaultManager.exportCryptoVaultSeed().getCreationTimeSeconds());
+
+            return textToShow;
+        } catch (Exception cantLoadExistingVaultSeed) {
             throw new Exception(cantLoadExistingVaultSeed);
         }
     }
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
-        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,blockchainNetworkType);
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date);
     }
 
     /**
@@ -544,7 +548,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage,Long.parseLong("0"), Frequency.NONE);
+            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage,Long.parseLong("100"), Frequency.NORMAL, null);
 
         }
         catch( CantCreateNewIntraWalletUserException e)

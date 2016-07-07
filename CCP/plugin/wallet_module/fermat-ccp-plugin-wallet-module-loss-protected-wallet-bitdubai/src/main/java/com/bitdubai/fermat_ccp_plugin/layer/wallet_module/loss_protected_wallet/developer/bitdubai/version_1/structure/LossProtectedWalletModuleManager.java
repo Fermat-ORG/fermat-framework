@@ -17,6 +17,9 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
@@ -193,6 +196,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
     private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
+    private LocationManager locationManager;
 
 
 
@@ -212,7 +216,8 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                                             final WalletManagerManager walletManagerManager,
                                             final TransferIntraWalletUsersManager transferIntraWalletUsersManager,
                                             final UUID pluginId,
-                                            final PluginFileSystem pluginFileSystem) {
+                                            final PluginFileSystem pluginFileSystem,
+                                            LocationManager locationManager) {
         super(pluginFileSystem,pluginId);
 
 
@@ -233,7 +238,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
         this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
-
+        this.locationManager = locationManager;
 
     }
 
@@ -2027,7 +2032,11 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
-        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("0"), Frequency.NONE);
+        try {
+            intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("100"), Frequency.NORMAL, getLocationManager());
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -2039,8 +2048,8 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
     @Override
     public List<String> getMnemonicText() throws CantGetMnemonicTextException {
         try {
-            return cryptoVaultManager.getMnemonicCode();
-        } catch (CantLoadExistingVaultSeed e) {
+            return cryptoVaultManager.exportCryptoVaultSeed().getMnemonicCode();
+        } catch (Exception e) {
             throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
         }
     }
@@ -2165,6 +2174,13 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
         int[] notifications = new int[7];
 
         return notifications;
+    }
+
+
+
+    public Location getLocationManager() throws CantGetDeviceLocationException
+    {
+        return locationManager.getLocation();
     }
 
 }

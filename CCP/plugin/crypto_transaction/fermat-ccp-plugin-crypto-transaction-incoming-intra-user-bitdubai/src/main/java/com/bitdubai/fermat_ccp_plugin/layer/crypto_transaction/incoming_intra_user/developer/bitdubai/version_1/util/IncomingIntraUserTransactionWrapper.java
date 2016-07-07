@@ -31,6 +31,7 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
     private final CryptoCurrency cryptoCurrency;
     private final FeeOrigin feeOrigin;
     private final long        fee;
+    private final long total;
 
     public IncomingIntraUserTransactionWrapper(final UUID transactionId,
                                                final UUID requestId,
@@ -46,7 +47,7 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
                                                final String memo,
                                                final BlockchainNetworkType blockchainNetworkType, CryptoCurrency cryptoCurrency,
                                                FeeOrigin feeOrigin,
-                                               long        fee) {
+                                               long fee, long total) {
 
         this.transactionId      = transactionId     ;
         this.requestId          = requestId         ;
@@ -64,6 +65,7 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
         this.cryptoCurrency = cryptoCurrency;
         this.feeOrigin = feeOrigin;
         this.fee = fee;
+        this.total = total;
     }
 
     @Override
@@ -114,6 +116,11 @@ public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransact
     @Override
     public long getAmount() {
         return amount;
+    }
+
+    @Override
+    public long getTotal() {
+        return this.total;
     }
 
     @Override

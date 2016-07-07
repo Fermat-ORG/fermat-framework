@@ -26,7 +26,7 @@ public class WalletModuleLayer extends AbstractLayer {
 
             registerPlugin(new CryptoPluginSubsystem());
             registerPlugin(new LossProtectedPluginSubsystem());
-            registerPlugin(new FermatWalletPluginSubsystem());
+            //registerPlugin(new FermatWalletPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 
