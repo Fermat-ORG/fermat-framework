@@ -16,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +27,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -117,8 +122,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
-    private String feedLevel = "";
+    private String feeLevel = "";
     private String feeOrigin = "";
+    private LinearLayout feed_advances;
+    private TextView advances_btn;
 
     private List<WalletContact> walletContactList = new ArrayList<>();
     /**
@@ -138,9 +145,15 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FermatTextView txt_type;
     private ImageView spinnerArrow;
     private CheckBox feed_Substract;
+    private RadioGroup feeGroup;
+    private RadioButton fee_low_btn;
+    private RadioButton fee_medium_btn;
+    private RadioButton fee_high_btn;
     BlockchainNetworkType blockchainNetworkType;
     private long availableBalance = 0;
     private LinearLayout layoutAdvances;
+
+    private BitcoinWalletSettings bitcoinWalletSettings = null;
 
 
     public static SendFormFragment newInstance() {
@@ -153,7 +166,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         bitcoinConverter = new BitcoinConverter();
         setHasOptionsMenu(true);
         try {
-            BitcoinWalletSettings bitcoinWalletSettings = null;
+
             bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
 
             if(bitcoinWalletSettings != null) {
@@ -165,7 +178,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
                     bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
                 else
-                    feedLevel = bitcoinWalletSettings.getFeedLevel();
+                    feeLevel = bitcoinWalletSettings.getFeedLevel();
 
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
@@ -275,26 +288,66 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         feed_Substract= (CheckBox) rootView.findViewById(R.id.checkBoxSubstract);
 
-        feed_Substract.setOnClickListener(new View.OnClickListener() {
+
+        advances_btn = (TextView) rootView.findViewById(R.id.advances_btn);
+        layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
+        feeGroup = (RadioGroup) rootView.findViewById(R.id.feeGroup);
+        fee_low_btn = (RadioButton) rootView.findViewById(R.id.fee_low);
+        fee_medium_btn = (RadioButton) rootView.findViewById(R.id.fee_Medium);
+        fee_high_btn = (RadioButton) rootView.findViewById(R.id.fee_High);
+
+
+        advances_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (layoutAdvances.getVisibility() == View.GONE)
-                {
+                if (layoutAdvances.getVisibility() == View.GONE) {
+                    animar(true);
                     layoutAdvances.setVisibility(View.VISIBLE);
+                } else {
+                    animar(false);
+                    layoutAdvances.setVisibility(View.GONE);
                 }
-                else
-                {
-                    if (layoutAdvances.getVisibility() == View.VISIBLE)
-                    {
-                        layoutAdvances.setVisibility(View.GONE);
-                    }
-                }
+
             }
         });
 
-        layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
+        if (feeLevel.equals(String.valueOf(BitcoinFee.SLOW))) {
+            fee_low_btn.setChecked(true);
+        }else if(feeLevel.equals(String.valueOf(BitcoinFee.NORMAL))) {
+            fee_medium_btn.setChecked(true);
+        }else if(feeLevel.equals(String.valueOf(BitcoinFee.FAST))) {
+            fee_high_btn.setChecked(true);
+        }
 
-        editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feedLevel).getFee())));
+        editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee())));
+
+
+        feeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.fee_low) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.SLOW.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.SLOW);
+                } else if (checkedId == R.id.fee_Medium) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.NORMAL.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.NORMAL);
+                } else if (checkedId == R.id.fee_High) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.FAST.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.FAST);
+                }
+
+                bitcoinWalletSettings.setFeedLevel(feeLevel);
+
+                try {
+                    cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
 
         editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
 
@@ -861,6 +914,30 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onCreateOptionsMenu(menu, inflater);
 
     }
+
+    private void animar(boolean mostrar)
+    {
+        AnimationSet set = new AnimationSet(true);
+        Animation animation = null;
+        if (mostrar)
+        {
+            //desde la esquina inferior derecha a la superior izquierda
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        }
+        else
+        {    //desde la esquina superior izquierda a la esquina inferior derecha
+            animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
+        }
+        //duración en milisegundos
+        animation.setDuration(500);
+        set.addAnimation(animation);
+        LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);
+
+        layoutAdvances.setLayoutAnimation(controller);
+        layoutAdvances.startAnimation(animation);
+    }
+
+
 
 
 }
