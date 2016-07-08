@@ -376,7 +376,6 @@ public class EditCryptoBrokerIdentityFragment
             progressBar.setVisibility(View.VISIBLE);
 
             executor = fermatWorker.execute();
-            appSession.getModuleManager().launchTestNotification();
         }
     }
 
