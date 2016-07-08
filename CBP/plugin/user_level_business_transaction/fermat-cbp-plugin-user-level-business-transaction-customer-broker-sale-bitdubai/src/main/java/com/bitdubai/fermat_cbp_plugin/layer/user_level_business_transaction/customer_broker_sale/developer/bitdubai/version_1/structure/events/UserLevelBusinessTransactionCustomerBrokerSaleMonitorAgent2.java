@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -723,7 +725,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                         priceReference,
                         OriginTransaction.SALE,
                         contractSale.getContractId(),
-                        BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
+                        BlockchainNetworkType.REG_TEST,
+                        BitcoinFee.SLOW.getFee(),
+                        FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT); //TODO: Revisar de donde saco esto
                 break;
             case BANK:
                 bankMoneyRestockManager.createTransactionRestock(

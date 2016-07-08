@@ -81,7 +81,7 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @return A BigDecimal, containing the balance.
      */
-    long getBalanceBitcoinWallet(String walletPublicKey);
+    long getBalanceBitcoinWallet(String walletPublicKey, String actorPublicKey);
 
     /**
      * associate an Identity to this wallet

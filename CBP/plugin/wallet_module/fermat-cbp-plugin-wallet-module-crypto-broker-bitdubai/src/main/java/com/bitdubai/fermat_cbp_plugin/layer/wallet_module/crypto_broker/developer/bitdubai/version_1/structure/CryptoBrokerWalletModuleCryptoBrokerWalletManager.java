@@ -933,12 +933,28 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
     @Override
     public void createTransactionRestockCrypto(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId, BlockchainNetworkType blockchainNetworkType) throws CantCreateCryptoMoneyRestockException {
-        cryptoMoneyRestockManager.createTransactionRestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType);
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        long fee = preferenceSettings.getBitcoinFee().getFee();
+        cryptoMoneyRestockManager.createTransactionRestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType, fee, feeOrigin);
     }
 
     @Override
     public void createTransactionDestockCrypto(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId, BlockchainNetworkType blockchainNetworkType) throws CantCreateCryptoMoneyDestockException {
-        cryptoMoneyDestockManager.createTransactionDestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType);
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        long fee = preferenceSettings.getBitcoinFee().getFee();
+        cryptoMoneyDestockManager.createTransactionDestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType, fee, feeOrigin);
     }
 
     @Override
@@ -1157,8 +1173,24 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
     @Override//TODO CCP - CBP
     public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException, CantLoadWalletsException {
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        String publicKeyActor;
         try {
-            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+            publicKeyActor = getSelectedActorIdentity().getPublicKey();
+        } catch (CantGetSelectedActorIdentityException e) {
+            throw new CantLoadWalletsException(e.getMessage(),
+                    e,
+                    "Extracting earnings",
+                    "Cannot get the selected identity");
+        }
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        BlockchainNetworkType blockchainNetworkType = preferenceSettings.getBlockchainNetworkType();
+        try {
+            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
         } catch (com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException e) {
             e.printStackTrace();
         }
@@ -1536,7 +1568,24 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     @Override
     public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
-        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions);
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        String publicKeyActor;
+        try {
+            publicKeyActor = getSelectedActorIdentity().getPublicKey();
+        } catch (CantGetSelectedActorIdentityException e) {
+            throw new CantExtractEarningsException(
+                    e,
+                    "Extracting earnings",
+                    "Cannot get the selected identity");
+        }
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        long fee = preferenceSettings.getBitcoinFee().getFee();
+        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions, fee, feeOrigin);
     }
 
     @Override
