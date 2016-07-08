@@ -42,7 +42,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -54,7 +53,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
-import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
@@ -68,7 +66,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
@@ -76,7 +73,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperI
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.BlockchainDownloadInfoDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
-
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import org.apache.http.client.ClientProtocolException;
@@ -578,6 +574,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 @Override
                                 public void run() {
                                     txt_balance_amount.setText(WalletUtils.formatBalanceString(balance,typeAmountSelected.getCode()));
+
+                                    switch (typeAmountSelected) {
+                                        case BITCOIN:
+
+                                            if (txt_balance_amount.getText().length() >= 7)
+                                                txt_balance_amount.setTextSize(18);
+                                            else
+                                                txt_balance_amount.setTextSize(26);
+                                            break;
+                                        case BITS:
+
+                                            txt_balance_amount.setTextSize(16);
+                                            break;
+                                    }
                                 }
                             });
                         } catch (CantGetBalanceException e) {
@@ -590,6 +600,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+
+
         }
         catch (Exception e){
             e.printStackTrace();
@@ -719,6 +731,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             int id = item.getItemId();
             if (id == 1) {
+//                moduleManager.launchNotification();
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 return true;
             } else
@@ -903,12 +916,17 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         switch (showMoneyType){
             case BITCOIN:
                 moneyTpe = "btc";
+                if (txt_balance_amount.getText().length() >= 7)
+                    txt_balance_amount.setTextSize(18);
+                else
+                    txt_balance_amount.setTextSize(26);
                 break;
             case BITS:
                 moneyTpe = "bits";
-
+                txt_balance_amount.setTextSize(16);
                 break;
         }
+
 
         txt_balance_amount_type.setText(moneyTpe);
         updateBalances();
@@ -933,6 +951,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 txt_type_balance.setText(R.string.available_balance);
                 balanceType = BalanceType.AVAILABLE;
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.AVAILABLE);
+            }
+
+            switch (typeAmountSelected) {
+                case BITCOIN:
+
+                    if (txt_balance_amount.getText().length() >= 7)
+                        txt_balance_amount.setTextSize(18);
+                    else
+                        txt_balance_amount.setTextSize(26);
+                    break;
+                case BITS:
+
+                    txt_balance_amount.setTextSize(16);
+                    break;
             }
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedUIException(
@@ -965,19 +997,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode()))
                                 ? balanceAvailable : bookBalance, typeAmountSelected.getCode()));
 
-        switch (typeAmountSelected){
-            case BITCOIN:
-
-                if(txt_balance_amount.getText().length() >= 7)
-                    txt_balance_amount.setTextSize(18);
-                else
-                    txt_balance_amount.setTextSize(26);
-                break;
-            case BITS:
-
-                txt_balance_amount.setTextSize(16);
-                break;
-        }
     }
 
 
