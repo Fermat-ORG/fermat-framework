@@ -406,7 +406,7 @@ public class ChatAdapterView extends LinearLayout {
     public void ChangeStatusOnTheSubtitleBar(int state, String date) {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
-                if(date != null && date != "no record") {
+                if(date != null && !date.equals("no record")) {
                     toolbar.setSubtitle(Html.fromHtml("<small><small>Last time "+setFormatLastTime(date)+"</small></small>"));
                 }else{
                     Log.i("159753**LastTimeOnChat", "No show");
@@ -463,6 +463,9 @@ public class ChatAdapterView extends LinearLayout {
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
 
+                    }
+                    if(s.length() > 0 && s.charAt(s.length()-1) == '\n'){
+                        scroll();
                     }
                 }
             }
