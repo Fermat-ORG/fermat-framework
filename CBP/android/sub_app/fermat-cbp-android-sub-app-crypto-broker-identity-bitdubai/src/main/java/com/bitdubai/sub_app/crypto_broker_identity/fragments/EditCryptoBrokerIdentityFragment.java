@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -53,6 +54,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
+
 
 /**
  * This Fragment let you edit a Broker Identity
@@ -124,9 +126,9 @@ public class EditCryptoBrokerIdentityFragment
         }
 
         //Check if GPS is on and coordinate are fine
-        try{
+        try {
             location = appSession.getModuleManager().getLocation();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -265,11 +267,16 @@ public class EditCryptoBrokerIdentityFragment
         return false;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    //getActivity().getContentResolver().notifyChange(selectedImage, null);
+                    Bundle extras = data.getExtras();
+                    cryptoBrokerBitmap = (Bitmap) extras.get("data");
                     // grant all three uri permissions!
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
@@ -288,7 +295,7 @@ public class EditCryptoBrokerIdentityFragment
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        Bundle extras = data.getExtras();
+                        //Bundle extras = data.getExtras();
                         cryptoBrokerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
@@ -400,9 +407,6 @@ public class EditCryptoBrokerIdentityFragment
         } else {
 
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            imageToUploadUri = Uri.fromFile(f);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -501,12 +505,12 @@ public class EditCryptoBrokerIdentityFragment
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void checkGPSOn(){
-        if(location!= null){
-            if(location.getLongitude()==0 || location.getLatitude()==0){
+    private void checkGPSOn() {
+        if (location != null) {
+            if (location.getLongitude() == 0 || location.getLatitude() == 0) {
                 turnOnGPSDialog();
             }
-        }else
+        } else
             turnOnGPSDialog();
     }
 

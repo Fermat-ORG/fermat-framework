@@ -45,6 +45,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCl
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantRequestBrokerExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
@@ -732,6 +733,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     @Override
+    public void requestQuotes() throws CantGetCryptoBrokerListException {
+        try {
+            actorExtraDataManager.requestBrokerExtraData();
+        } catch (CantRequestBrokerExtraDataException e) {
+            throw new CantGetCryptoBrokerListException("Error requesting quotes", e, "", "");
+        }
+    }
+
+    @Override
     public Collection<Platforms> getPlatformsSupported(String customerPublicKey, String brokerPublicKey, String paymentCurrency) throws CantGetListActorExtraDataException {
 
         return actorExtraDataManager.getPlatformsSupported(customerPublicKey, brokerPublicKey, paymentCurrency);
@@ -1115,7 +1125,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                 long fee = preferenceSettings.getBitcoinFee().getFee();
 
                 this.customerOnlinePaymentManager.sendPayment(
-                        cryptoCustomerPublicKey,
+                        preferenceSettings.getSelectedBitcoinWallet().getWalletPublicKey(),
                         contractHash,
                         paymentCurrency,
                         blockchainNetworkType,
