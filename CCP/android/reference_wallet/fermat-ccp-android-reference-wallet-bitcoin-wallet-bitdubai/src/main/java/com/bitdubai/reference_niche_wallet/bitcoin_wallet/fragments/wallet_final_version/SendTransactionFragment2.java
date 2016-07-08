@@ -574,6 +574,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 @Override
                                 public void run() {
                                     txt_balance_amount.setText(WalletUtils.formatBalanceString(balance,typeAmountSelected.getCode()));
+
+                                    switch (typeAmountSelected) {
+                                        case BITCOIN:
+
+                                            if (txt_balance_amount.getText().length() >= 7)
+                                                txt_balance_amount.setTextSize(18);
+                                            else
+                                                txt_balance_amount.setTextSize(26);
+                                            break;
+                                        case BITS:
+
+                                            txt_balance_amount.setTextSize(16);
+                                            break;
+                                    }
                                 }
                             });
                         } catch (CantGetBalanceException e) {
@@ -586,6 +600,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+
+
         }
         catch (Exception e){
             e.printStackTrace();
@@ -869,6 +885,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     recyclerView.setVisibility(View.VISIBLE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
                 }
+                else
+                {
+                    recyclerView.setVisibility(View.GONE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                }
             }
             else {
                 recyclerView.setVisibility(View.GONE);
@@ -895,8 +916,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         switch (showMoneyType){
             case BITCOIN:
                 moneyTpe = "btc";
-                if(txt_balance_amount.getText().length() >= 7)
-                    txt_balance_amount.setTextSize(22);
+                if (txt_balance_amount.getText().length() >= 7)
+                    txt_balance_amount.setTextSize(18);
                 else
                     txt_balance_amount.setTextSize(26);
                 break;
@@ -905,6 +926,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 txt_balance_amount.setTextSize(16);
                 break;
         }
+
 
         txt_balance_amount_type.setText(moneyTpe);
         updateBalances();
@@ -929,6 +951,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 txt_type_balance.setText(R.string.available_balance);
                 balanceType = BalanceType.AVAILABLE;
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.AVAILABLE);
+            }
+
+            switch (typeAmountSelected) {
+                case BITCOIN:
+
+                    if (txt_balance_amount.getText().length() >= 7)
+                        txt_balance_amount.setTextSize(18);
+                    else
+                        txt_balance_amount.setTextSize(26);
+                    break;
+                case BITS:
+
+                    txt_balance_amount.setTextSize(16);
+                    break;
             }
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedUIException(
@@ -960,6 +996,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 WalletUtils.formatBalanceString(
                         (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode()))
                                 ? balanceAvailable : bookBalance, typeAmountSelected.getCode()));
+
     }
 
 
