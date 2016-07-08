@@ -140,4 +140,13 @@ public interface NetworkClientConnection {
      */
     boolean isRegistered();
 
+    /**
+     * Through the method <code>getActorFullPhoto</code> we can get Full Photo of an actor specific.
+     *
+     * @param publicKey of the actor
+     *
+     * @return a String encodeBase64String
+     */
+    String getActorFullPhoto(final String publicKey);
+
 }

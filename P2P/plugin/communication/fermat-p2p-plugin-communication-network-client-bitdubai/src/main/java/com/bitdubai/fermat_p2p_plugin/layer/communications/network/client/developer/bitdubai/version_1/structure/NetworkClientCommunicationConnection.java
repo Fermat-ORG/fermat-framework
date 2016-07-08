@@ -831,6 +831,60 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return resultList;
     }
 
+    @Override
+    public String getActorFullPhoto(final String publicKey){
+
+        String actorFullPhoto = null;
+        HttpURLConnection conn = null;
+
+        try{
+
+            if(publicKey == null)
+                throw new Exception("The publicKey must not be null");
+
+            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/profiles/actor/photo/"+publicKey);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Encoding", "gzip");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (respond.contains("success")) {
+
+                 /*
+                * Decode into a json Object
+                */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                Boolean isSuccess = respondJsonObject.get("success").getAsBoolean();
+
+                if(isSuccess) {
+
+                    actorFullPhoto = respondJsonObject.get("photo").getAsString();
+                    System.out.println("NetworkClientCommunicationConnection - Successfully get Actor Photo from " + publicKey);
+                    System.out.println("NetworkClientCommunicationConnection - Actor Photo \n" + actorFullPhoto);
+
+                }else {
+                    System.out.println("NetworkClientCommunicationConnection - " + respondJsonObject.get("failure").getAsString());
+                }
+
+            }else{
+                System.out.println("NetworkClientCommunicationConnection - There is a problem when call restfull get Actor Photo");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (conn != null)
+                conn.disconnect();
+        }
+
+        return actorFullPhoto;
+    }
+
     /**
      * Notify when the network client connection is lost.
      */
