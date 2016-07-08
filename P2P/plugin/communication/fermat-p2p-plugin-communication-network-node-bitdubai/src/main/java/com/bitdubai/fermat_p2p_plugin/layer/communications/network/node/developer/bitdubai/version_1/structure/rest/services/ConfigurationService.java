@@ -110,11 +110,11 @@ public class ConfigurationService {
                 ConfigurationManager.updateValue(ConfigurationManager.PORT, configuration.getPort().toString());
             }
 
-            if(!configuration.getLatitude().toString().equals(Double.valueOf(ConfigurationManager.getValue(ConfigurationManager.LATITUDE)))){
+            if(!configuration.getLatitude().toString().equals(ConfigurationManager.getValue(ConfigurationManager.LATITUDE))){
                 ConfigurationManager.updateValue(ConfigurationManager.LATITUDE, configuration.getLatitude().toString());
             }
 
-            if(!configuration.getLongitude().toString().equals(Double.valueOf(ConfigurationManager.getValue(ConfigurationManager.LONGITUDE)))){
+            if(!configuration.getLongitude().toString().equals(ConfigurationManager.getValue(ConfigurationManager.LONGITUDE))){
                 ConfigurationManager.updateValue(ConfigurationManager.LONGITUDE, configuration.getLongitude().toString());
             }
 
@@ -147,6 +147,7 @@ public class ConfigurationService {
             }
 
         } catch (ConfigurationException e) {
+            e.printStackTrace();
             return Response.status(500).entity(e.getMessage()).build();
         }
 

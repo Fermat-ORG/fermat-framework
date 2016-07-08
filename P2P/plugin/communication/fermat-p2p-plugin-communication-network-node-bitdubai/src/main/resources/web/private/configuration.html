@@ -62,107 +62,113 @@
 
     <h1 class="page-header">Configuration</h1>
 
-    <div class="form-group">
-        <label for="ipk">Identity Public Key</label>
-        <input id="ipk" class="form-control" placeholder="Identity Public Key" min="1" ng-model="configuration.ipk" required disabled>
-    </div>
 
-    <div class="form-group">
-        <label for="nodeName">Node Name</label>
-        <input id="nodeName" class="form-control" placeholder="Node Name" min="1" ng-model="configuration.nodeName" required>
-    </div>
-
-    <div class="form-group">
-        <label for="internalIp">Internal IP</label>
-        <input id="internalIp" class="form-control" placeholder="Internal IP" min="19" ng-model="configuration.internalIp" required>
-    </div>
-
-    <div class="form-group">
-        <label for="publicIp">Public IP</label>
-        <input id="publicIp" class="form-control" placeholder="Public IP" min="19" ng-model="configuration.publicIp" required>
-    </div>
-
-    <div class="form-group">
-        <label for="port">Node Port</label>
-        <input type="number" id="port" class="form-control" placeholder="Port number" min="1" ng-model="configuration.port" required>
-    </div>
-
-    <hr/>
-
-    <div class="row">
-        <div class="col-md-4 well">
-            <ng-map zoom="1" ></ng-map>
+        <div class="form-group">
+            <label for="ipk">Identity Public Key</label>
+            <input id="ipk" class="form-control" placeholder="Identity Public Key" min="1" ng-model="configuration.ipk" required disabled>
         </div>
-        <div class="col-md-8">
-            <div class="form-group">
-                <label for="latitude">Latitude</label>
-                <input type="number" id="latitude" class="form-control" placeholder="Latitude" min="1" ng-model="configuration.latitude" required>
-            </div>
 
-            <div class="form-group">
-                <label for="longitude">Longitude</label>
-                <input type="number" id="longitude" class="form-control" placeholder="Longitude" min="1" ng-model="configuration.longitude" required>
-            </div>
+        <div class="form-group">
+            <label for="nodeName">Node Name</label>
+            <input id="nodeName" class="form-control" placeholder="Node Name" min="1" ng-model="configuration.nodeName" required>
+        </div>
 
-            <div class="form-group">
-                <label for="googleMapApiKey">Google Map Api Key</label>
-                <input id="googleMapApiKey" class="form-control" placeholder="Google Map Api Key" min="1" ng-model="configuration.googleMapApiKey" required>
+        <div class="form-group">
+            <label for="internalIp">Internal IP</label>
+            <input id="internalIp" class="form-control" placeholder="Internal IP" min="19" ng-model="configuration.internalIp" required>
+        </div>
+
+        <div class="form-group">
+            <label for="publicIp">Public IP</label>
+            <input id="publicIp" class="form-control" placeholder="Public IP" min="19" ng-model="configuration.publicIp" required>
+        </div>
+
+        <div class="form-group">
+            <label for="port">Node Port</label>
+            <input type="number" id="port" class="form-control" placeholder="Port number" min="1" ng-model="configuration.port" required>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-md-4 well">
+                <ng-map zoom="1" ></ng-map>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="latitude">Latitude</label>
+                    <input type="number" id="latitude" class="form-control" placeholder="Latitude" min="1" ng-model="configuration.latitude" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="longitude">Longitude</label>
+                    <input type="number" id="longitude" class="form-control" placeholder="Longitude" min="1" ng-model="configuration.longitude" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="googleMapApiKey">Google Map Api Key</label>
+                    <input id="googleMapApiKey" class="form-control" placeholder="Google Map Api Key" min="1" ng-model="configuration.googleMapApiKey" required>
+                </div>
             </div>
         </div>
-    </div>
 
-    <hr/>
+        <hr/>
 
-    <div class="form-group">
-        <label for="user">User</label>
-        <input type="text" id="user" class="form-control" placeholder="Username" ng-model="configuration.user" required>
-    </div>
+        <div class="form-group">
+            <label for="user">User</label>
+            <input type="text" id="user" class="form-control" placeholder="Username" ng-model="configuration.user" required>
+        </div>
 
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="Password" ng-model="configuration.password" required>
-    </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Password" ng-model="configuration.password" required>
+        </div>
 
-    <hr/>
+        <hr/>
 
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" ng-model="configuration.registerInCatalog" value="True" ng-checked="configuration.registerInCatalog" disabled > Is Register In Catalog
-        </label>
-    </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="configuration.registerInCatalog" value="True" ng-checked="configuration.registerInCatalog" disabled > Is Register In Catalog
+            </label>
+        </div>
 
-    <div class="form-group">
-        <label for="profile">Last Register Node Profile</label>
-        <textarea id="profile" class="form-control" rows="3" ng-model="configuration.lastRegisterNodeProfile" disabled></textarea>
-    </div>
+        <div class="form-group">
+            <label for="profile">Last Register Node Profile</label>
+            <textarea id="profile" class="form-control" rows="3" ng-model="configuration.lastRegisterNodeProfile" disabled></textarea>
+        </div>
 
-    <hr/>
+        <hr/>
 
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" ng-model="configuration.monitInstalled" value="True" ng-checked="configuration.monitInstalled" > Monit installed
-        </label>
-    </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="configuration.monitInstalled" value="True" ng-checked="configuration.monitInstalled" > Monit installed
+            </label>
+        </div>
 
-    <div class="form-group">
-        <label for="monituser">Monit User</label>
-        <input type="text" id="monituser" class="form-control" placeholder="Monit Username" ng-model="configuration.monitUser" required>
-    </div>
+        <div class="form-group">
+            <label for="monituser">Monit User</label>
+            <input type="text" id="monituser" class="form-control" placeholder="Monit Username" ng-model="configuration.monitUser" required>
+        </div>
 
-    <div class="form-group">
-        <label for="monitpass">Monit Password</label>
-        <input type="password" id="monitpass" class="form-control" placeholder="Password" ng-model="configuration.monitPassword" required>
-    </div>
+        <div class="form-group">
+            <label for="monitpass">Monit Password</label>
+            <input type="password" id="monitpass" class="form-control" placeholder="Password" ng-model="configuration.monitPassword" required>
+        </div>
 
-    <div class="form-group">
-        <label for="moniturl">Monit url</label>
-        <input type="text" id="moniturl" class="form-control" placeholder="Url" ng-model="configuration.monitUrl" required>
-    </div>
+        <div class="form-group">
+            <label for="moniturl">Monit url</label>
+            <input type="text" id="moniturl" class="form-control" placeholder="Url" ng-model="configuration.monitUrl" required>
+        </div>
 
-    <p class="bg-warning">The configuration changes require a server restart to produce effect.</p>
-    <p class="bg-success" ><span ng-bind="message"></span></p>
-    <button type="button" class="btn btn-danger" >Close</button>
-    <button type="submit" class="btn btn-primary" ng-click="save()" >Save</button>
+        <div class="div">
+            <p class="bg-warning">The configuration changes require a server restart to produce effect.</p>
+            <p class="bg-success" ><span ng-bind="message"></span></p>
+        </div>
+
+
+        <button type="button" class="btn btn-danger" >Close</button>
+        <button type="submit" class="btn btn-primary" ng-click="save()" >Save</button>
+
 
     <br/>
     <br/>

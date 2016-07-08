@@ -82,6 +82,8 @@ angular.module("serverApp").controller('ConfCtrl', ['$scope', '$http', '$window'
             var message = "";
             if(response.status === -1){message = "Server no available";}
             if(response.status === 401){message = "You must authenticate again";}
+            if(response.status === 500){message = "Server Error";}
+
             alert(response.status+" - Conf  Service error: "+response.statusText+" "+message);
             $window.location.href = '../index.html';
          });
@@ -95,6 +97,7 @@ angular.module("serverApp").controller('ConfCtrl', ['$scope', '$http', '$window'
         alert("Service error: You must authenticate again");
         $location.url('../index.html');
     }else{
+
         if(window.localStorage['jwtAuthToke'] !== null){
            $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
         }

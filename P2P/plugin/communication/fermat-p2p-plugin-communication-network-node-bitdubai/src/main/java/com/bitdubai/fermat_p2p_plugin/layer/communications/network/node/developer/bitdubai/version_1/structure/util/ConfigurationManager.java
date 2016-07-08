@@ -189,7 +189,7 @@ public class ConfigurationManager {
         newConfigurationFile.addProperty(PORT, FermatEmbeddedNodeServer.DEFAULT_PORT);
 
         newConfigurationFile.getLayout().setComment(LATITUDE, "\n# * SERVER LOCATION");
-        newConfigurationFile.addProperty(LATITUDE,  "0.0");
+        newConfigurationFile.addProperty(LATITUDE, "0.0");
         newConfigurationFile.addProperty(LONGITUDE, "0.0");
 
         newConfigurationFile.getLayout().setComment(REGISTERED_IN_CATALOG, "\n# * IS THE NODE REGISTER IN THE CATALOG");
@@ -204,6 +204,8 @@ public class ConfigurationManager {
 
         newConfigurationFile.getLayout().setComment(MONIT_INSTALLED, "\n# * MONIT CONFIGURATION");
         newConfigurationFile.addProperty(MONIT_INSTALLED, Boolean.FALSE);
+        newConfigurationFile.addProperty(MONIT_USER, "x");
+        newConfigurationFile.addProperty(MONIT_PASSWORD, "x");
         newConfigurationFile.addProperty(MONIT_URL, "http://localhost:2812/");
 
         newConfigurationFile.getLayout().setComment(GOOGLE_MAP_API_KEY, "\n# * GOOGLE MAP API KEY");
