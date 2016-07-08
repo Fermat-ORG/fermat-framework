@@ -102,6 +102,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
     public void stop() {
         //flag to control running status
         this.shouldRun = false;
+        this.isRunning = false;
     }
 
     public boolean isRunning(){
@@ -133,7 +134,6 @@ class VaultKeyHierarchyMaintainer implements Agent{
                     e.printStackTrace();
                 }
             }
-
         }
 
 
