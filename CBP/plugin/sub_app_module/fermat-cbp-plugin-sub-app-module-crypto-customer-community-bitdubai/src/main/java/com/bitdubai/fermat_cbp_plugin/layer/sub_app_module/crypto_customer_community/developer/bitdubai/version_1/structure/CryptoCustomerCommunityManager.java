@@ -118,9 +118,8 @@ public class CryptoCustomerCommunityManager
 
             final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
-//            search.addConnectionState(ConnectionState.CONNECTED);
 
-            actorConnections = search.getResult(max, offset);
+            actorConnections = search.getResult(1000, 0);
 
         } catch (final CantListActorConnectionsException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
