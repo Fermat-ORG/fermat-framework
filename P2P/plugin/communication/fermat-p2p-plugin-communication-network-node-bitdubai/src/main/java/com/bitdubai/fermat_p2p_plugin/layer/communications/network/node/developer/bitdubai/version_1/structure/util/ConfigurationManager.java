@@ -120,6 +120,11 @@ public class ConfigurationManager {
     public static final String MONIT_URL = "monit_url";
 
     /**
+     * Represent the value of GOOGLE_MAP_API_KEY
+     */
+    public static final String GOOGLE_MAP_API_KEY = "google_map_api_key";
+
+    /**
      * Represent the value of configuration file
      */
     private static PropertiesConfiguration configuration = new PropertiesConfiguration();
@@ -200,6 +205,9 @@ public class ConfigurationManager {
         newConfigurationFile.getLayout().setComment(MONIT_INSTALLED, "\n# * MONIT CONFIGURATION");
         newConfigurationFile.addProperty(MONIT_INSTALLED, Boolean.FALSE);
         newConfigurationFile.addProperty(MONIT_URL, "http://localhost:2812/");
+
+        newConfigurationFile.getLayout().setComment(GOOGLE_MAP_API_KEY, "\n# * GOOGLE MAP API KEY");
+        newConfigurationFile.addProperty(GOOGLE_MAP_API_KEY, "xxx");
 
         newConfigurationFile.save();
 
