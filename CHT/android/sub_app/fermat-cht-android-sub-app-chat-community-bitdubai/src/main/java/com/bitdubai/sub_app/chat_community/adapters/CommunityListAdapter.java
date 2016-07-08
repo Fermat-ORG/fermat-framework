@@ -225,13 +225,16 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
         if(data.getLocation() != null){
-            if (data.getState().equals("null") || data.getState().equals("null")) stateAddress = "";
+            if (data.getState().equals("null") || data.getState().equals("")) stateAddress = "";
             else stateAddress = data.getState() + " ";
-            if (data.getCity().equals("null") || data.getCity().equals("null")) cityAddress = "";
+            if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
             else cityAddress = data.getCity() + " ";
-            if (data.getCountry().equals("null") || data.getCountry().equals("null")) countryAddress = "";
+            if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
             else countryAddress = data.getCountry();
-            holder.location_text.setText(cityAddress + stateAddress + countryAddress);
+            if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
+                holder.location_text.setText("Searching...");
+            }else
+                holder.location_text.setText(cityAddress + stateAddress + countryAddress);
         } else
             holder.location_text.setText("Searching...");
 

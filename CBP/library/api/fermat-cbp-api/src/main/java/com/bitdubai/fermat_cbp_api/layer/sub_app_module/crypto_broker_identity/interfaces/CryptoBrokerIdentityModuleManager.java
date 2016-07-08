@@ -72,6 +72,15 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<Identit
      */
     Location getLocation() throws CantGetDeviceLocationException;
 
+    /**
+     *
+     * The method <code>itHasAssociatedWallet</code> It lets you know if an identity has an associated broker wallet
+     *
+     * @param brokerPublicKey
+     * @return
+     */
+    Boolean itHasAssociatedWallet(String brokerPublicKey);
 
 
+    void launchTestNotification();
 }
