@@ -1,5 +1,7 @@
 angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$interval', '$filter', '$window', '$location', '$timeout', 'NgMap', function($scope, $http, $interval, $filter, $window, $location, $timeout, NgMap) {
 
+      $scope.types       = [];
+      $scope.selectType  = '';
       $scope.onlineIdentities = false;
       $scope.offSet      = 0;
       $scope.max         = 20;
@@ -39,11 +41,35 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
         }
      }
 
+     var requestActorsType = function() {
+
+             $scope.busy = $http({
+                 method: 'GET',
+                 url: '/fermat/rest/api/v1/admin/actors/types'
+             }).then(function successCallback(response) {
+
+               var data = response.data;
+               var success = data.success;
+
+               if(success === true){
+                  $scope.types = angular.fromJson(data.types);
+               }
+
+            }, function errorCallback(response) {
+                 var message = "";
+                 if(response.status === -1){message = "Server no available";}
+                 if(response.status === 401){message = "You must authenticate again";}
+                 alert(response.status+" - Identities Service error 1: "+response.statusText+" "+message);
+                 $window.location.href = '../index.html';
+            });
+
+          };
+
      var requestCatalogData = function() {
 
         $scope.busy = $http({
             method: 'GET',
-            url: '/fermat/rest/api/v1/admin/actors/catalog?offSet='+$scope.offSet+'&max='+$scope.max
+            url: '/fermat/rest/api/v1/admin/actors/catalog?actorType='+$scope.selectType+'&offSet='+$scope.offSet+'&max='+$scope.max
         }).then(function successCallback(response) {
 
           var data = response.data;
@@ -88,7 +114,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
          $scope.busy = $http({
              method: 'GET',
-             url: '/fermat/rest/api/v1/admin/actors/check_in?offSet='+$scope.offSet+'&max='+$scope.max
+             url: '/fermat/rest/api/v1/admin/actors/check_in?actorType='+$scope.selectType+'&offSet='+$scope.offSet+'&max='+$scope.max
          }).then(function successCallback(response) {
 
              var data = response.data;
@@ -180,13 +206,15 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
          if(window.localStorage['jwtAuthToke'] !== null){
                $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
+               $http.defaults.headers.common['Accept-Encoding'] = 'gzip';
          }
 
+         requestActorsType();
          requestIdentitiesData();
      }
 
 
-       $scope.reloadOnlineChange = function() {
+       $scope.reloadChange = function() {
           $scope.offSet      = 0;
           $scope.max         = 20;
           $scope.total       = 0;

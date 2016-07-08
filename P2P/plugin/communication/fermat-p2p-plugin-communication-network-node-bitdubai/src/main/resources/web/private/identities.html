@@ -83,16 +83,27 @@
         <ng-map zoom="1"></ng-map>
     </div>
     <br/>
+
+    <H3>List of {{onlineIdentities === true ? "online identities" : "all register identities in catalog" }} - Total ({{ total }})</H3>
     <div class="row" style="height:100%" >
-        <strong>List of {{onlineIdentities === true ? "online identities" : "all register identities in catalog" }} - Total ({{ total }})</strong>
-        <div class="checkbox pull-right">
-            <label class="text-success" >
-                <input id="isOnline" type="checkbox" ng-model="onlineIdentities"  ng-change="reloadOnlineChange()" > <strong>Show Online</strong>
-            </label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Actor Type:</span>
+                <select class="form-control" ng-model="selectType" ng-options="key for (key, t) in types"></select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label class="text-success" >
+                    <input id="isOnline" type="checkbox" ng-model="onlineIdentities" > <strong>Show Online</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-warning" ng-click="reloadChange()"  >Reload</button>
         </div>
     </div>
     <hr/>
-
     <div ng-show="total > 0">
 
         <div class="profiles" style="height:100%" >
