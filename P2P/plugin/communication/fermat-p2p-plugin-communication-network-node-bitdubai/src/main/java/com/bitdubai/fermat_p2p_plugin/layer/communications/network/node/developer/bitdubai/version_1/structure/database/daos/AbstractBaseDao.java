@@ -331,18 +331,17 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>DatabaseConstants</code>
      *
-     * @param max     number of records to bring
      * @param offset  pointer to start bringing records.
+     * @param max     number of records to bring
      *
      * @return All entities filtering by the parameter specified.
      *
      * @throws CantReadRecordDataBaseException
-     *
      */
     public final List<E> findAll(final String  columnName ,
                                  final String  columnValue,
-                                 final Integer max        ,
-                                 final Integer offset     ) throws CantReadRecordDataBaseException {
+                                 final Integer offset,
+                                 final Integer max             ) throws CantReadRecordDataBaseException {
 
         if (columnName == null || columnName.isEmpty() || columnValue == null || columnValue.isEmpty())
             throw new IllegalArgumentException("The filter are required, can not be null or empty.");
@@ -351,11 +350,9 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
 
             // load the data base to memory with filters
             final DatabaseTable table = getDatabaseTable();
-
+            table.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             table.setFilterTop(max.toString());
             table.setFilterOffSet(offset.toString());
-
-            table.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             final List<DatabaseTableRecord> records = table.getRecords();

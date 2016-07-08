@@ -2,7 +2,6 @@
  * @#SecurityFilter  - 2016
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.security;
 
@@ -36,12 +35,12 @@ import io.jsonwebtoken.impl.TextCodec;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AdminSecurityFilter implements Filter {
+public class AdminRestApiSecurityFilter implements Filter {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(AdminSecurityFilter.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(AdminRestApiSecurityFilter.class));
 
     /**
      * (non-javadoc)
@@ -58,21 +57,22 @@ public class AdminSecurityFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         LOG.debug("doFilter");
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        LOG.debug("Authorization = " + httpRequest.getHeader("Authorization"));
-
-        final String authHeader = httpRequest.getHeader("Authorization");
-        if (authHeader == null || !authHeader.contains("Bearer ")) {
-            LOG.error("Missing or invalid Authorization header.");
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
-            return;
-        }
-
         try {
+
+            LOG.debug("Authorization = " + httpRequest.getHeader("Authorization"));
+
+            final String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader == null || !authHeader.contains("Bearer ")) {
+                LOG.error("Missing or invalid Authorization header.");
+                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
+                return;
+            }
 
             String token = authHeader.substring("Bearer ".length(), authHeader.length());
             LOG.debug("token = " + token);
@@ -82,9 +82,13 @@ public class AdminSecurityFilter implements Filter {
                 chain.doFilter(request, response);
             }
 
-        }
-        catch (final SignatureException e) {
+        } catch (final SignatureException e) {
             LOG.error( "Invalid token: "+e.getMessage());
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
+            return;
+        } catch (final Exception e) {
+            e.printStackTrace();
+            LOG.error( "Error in token: "+e.getMessage());
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
             return;
         }

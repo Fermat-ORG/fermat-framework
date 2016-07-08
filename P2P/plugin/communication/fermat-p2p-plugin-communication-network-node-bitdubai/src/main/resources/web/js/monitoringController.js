@@ -25,7 +25,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
       var requestMonitoringData = function() {
 
-            $http({
+            $scope.busy = $http({
                     method: 'GET',
                     url: '/fermat/rest/api/v1/admin/monitoring/current/data'
               }).then(function successCallback(response) {
@@ -58,7 +58,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
       var requestMonitInfo = function() {
 
-              $http({
+              $scope.busy = $http({
                       method: 'GET',
                       url: '/fermat/rest/api/v1/admin/monitoring/system/data'
                 }).then(function successCallback(response) {

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services;
 
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 import com.google.gson.Gson;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -61,11 +62,23 @@ public class ConfigurationService {
         LOG.debug("Executing getConfiguration()");
 
         Configuration configuration = new Configuration();
+        configuration.setIpk(ConfigurationManager.getValue(ConfigurationManager.IDENTITY_PUBLIC_KEY));
+        configuration.setNodeName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
+        configuration.setInternalIp(ConfigurationManager.getValue(ConfigurationManager.INTERNAL_IP));
+        configuration.setPublicIp(ConfigurationManager.getValue(ConfigurationManager.PUBLIC_IP));
         configuration.setPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
+        configuration.setLatitude(Double.valueOf(ConfigurationManager.getValue(ConfigurationManager.LATITUDE)));
+        configuration.setLongitude(Double.valueOf(ConfigurationManager.getValue(ConfigurationManager.LONGITUDE)));
         configuration.setUser(ConfigurationManager.getValue(ConfigurationManager.USER));
         configuration.setMonitInstalled(Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALLED)));
         configuration.setMonitUser(ConfigurationManager.getValue(ConfigurationManager.MONIT_USER));
         configuration.setMonitUrl(ConfigurationManager.getValue(ConfigurationManager.MONIT_URL));
+        configuration.setRegisterInCatalog(Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG)));
+
+        String jsonString = new String(HexadecimalConverter.convertHexStringToByteArray(ConfigurationManager.getValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE)));
+        configuration.setLastRegisterNodeProfile(jsonString);
+
+        configuration.setGoogleMapApiKey(ConfigurationManager.getValue(ConfigurationManager.GOOGLE_MAP_API_KEY));
 
         return Response.status(200).entity(gson.toJson(configuration)).build();
 
@@ -81,8 +94,28 @@ public class ConfigurationService {
 
         try {
 
+            if(!configuration.getNodeName().toString().equals(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME))){
+                ConfigurationManager.updateValue(ConfigurationManager.INTERNAL_IP, configuration.getNodeName());
+            }
+
+            if(!configuration.getInternalIp().toString().equals(ConfigurationManager.getValue(ConfigurationManager.INTERNAL_IP))){
+                ConfigurationManager.updateValue(ConfigurationManager.INTERNAL_IP, configuration.getInternalIp());
+            }
+
+            if(!configuration.getPublicIp().toString().equals(ConfigurationManager.getValue(ConfigurationManager.PUBLIC_IP))){
+                ConfigurationManager.updateValue(ConfigurationManager.PUBLIC_IP, configuration.getPublicIp());
+            }
+
             if(!configuration.getPort().toString().equals(ConfigurationManager.getValue(ConfigurationManager.PORT))){
                 ConfigurationManager.updateValue(ConfigurationManager.PORT, configuration.getPort().toString());
+            }
+
+            if(!configuration.getLatitude().toString().equals(ConfigurationManager.getValue(ConfigurationManager.LATITUDE))){
+                ConfigurationManager.updateValue(ConfigurationManager.LATITUDE, configuration.getLatitude().toString());
+            }
+
+            if(!configuration.getLongitude().toString().equals(ConfigurationManager.getValue(ConfigurationManager.LONGITUDE))){
+                ConfigurationManager.updateValue(ConfigurationManager.LONGITUDE, configuration.getLongitude().toString());
             }
 
             if(!configuration.getUser().equals(ConfigurationManager.getValue(ConfigurationManager.USER))){
@@ -92,7 +125,6 @@ public class ConfigurationService {
             if(!configuration.getPassword().equals(ConfigurationManager.getValue(ConfigurationManager.PASSWORD))){
                 ConfigurationManager.updateValue(ConfigurationManager.PASSWORD, configuration.getPassword());
             }
-
 
             if(!configuration.getMonitInstalled().toString().equals(ConfigurationManager.getValue(ConfigurationManager.MONIT_INSTALLED))){
                 ConfigurationManager.updateValue(ConfigurationManager.MONIT_INSTALLED, configuration.getMonitInstalled().toString());
@@ -110,7 +142,12 @@ public class ConfigurationService {
                 ConfigurationManager.updateValue(ConfigurationManager.MONIT_URL, configuration.getMonitUrl());
             }
 
+            if (!configuration.getGoogleMapApiKey().equals(ConfigurationManager.getValue(ConfigurationManager.GOOGLE_MAP_API_KEY))){
+                ConfigurationManager.updateValue(ConfigurationManager.GOOGLE_MAP_API_KEY, configuration.getGoogleMapApiKey());
+            }
+
         } catch (ConfigurationException e) {
+            e.printStackTrace();
             return Response.status(500).entity(e.getMessage()).build();
         }
 

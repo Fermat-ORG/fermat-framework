@@ -19,6 +19,7 @@
     <!-- Custom styles for this template -->
     <link href="./css/cover.css" rel="stylesheet">
     <link href="./css/angular-chart.min.css" rel="stylesheet">
+    <link href="./css/angular-busy.min.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="./js/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -32,8 +33,7 @@
 </head>
 
   <body>
-
-    <div class="site-wrapper">
+  <div class="site-wrapper">
 
       <div class="site-wrapper-inner">
 
@@ -73,6 +73,7 @@
 
             <!-- Modal -->
             <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="UserCtrl" >
+                <div cg-busy="busy"></div>
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
@@ -120,6 +121,8 @@
     <script src="./js/Chart.min.js"></script>
     <script src="./js/angular-chart.min.js"></script>
     <script src="./js/ng-map.min.js"></script>
+    <script src="./js/angular-busy.min.js"></script>
+
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="./js/ie10-viewport-bug-workaround.js"></script>

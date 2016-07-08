@@ -8,7 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.FermatWebSocketClientChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.FermatWebSocketNodeChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.security.AdminSecurityFilter;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.security.AdminRestApiSecurityFilter;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 
@@ -210,7 +210,7 @@ public class FermatEmbeddedNodeServer {
          */
 
         //Filter for the admin zone is apply to the all request to the web app of the node
-        FilterInfo filter = Servlets.filter("AdminSecurityFilter", AdminSecurityFilter.class);
+        FilterInfo filter = Servlets.filter("AdminSecurityFilter", AdminRestApiSecurityFilter.class);
         restEasyDeploymentInfo.getProviderFactory().register(filter);
         restAppDeploymentInfo.addFilter(filter);
         restAppDeploymentInfo.addFilterUrlMapping("AdminSecurityFilter", "/rest/api/v1/admin/*", DispatcherType.REQUEST);
