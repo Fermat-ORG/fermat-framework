@@ -58,7 +58,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoCustomerExposingDataList;
@@ -80,20 +80,50 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
         try {
 
+            /**
+             * Constructor with params
+             *
+             * @param identityPublicKey    represents the identity public key of the component to discover.
+             * @param networkServiceType   if we're looking for network services we'll set this value with the type of network service.
+             * @param actorType            if we're looking for actors we'll set this value with the type of the actor.
+             * @param name                 we can set here the name of the component to search or discover.
+             * @param alias                we can set here the alias of the component to search or discover.
+             * @param extraData            we can set here the extraData of the actor component to search or discover.
+             * @param location             this param indicates a point for doing the discovery near it.
+             * @param distance             this param indicates the distance to the point to look around.
+             * @param isOnline             with this param we ask to the node the status of the profiles to discover.
+             * @param lastConnectionTime   with this param we'll ask to the node only the profiles connected after the long timestamp.
+             * @param max                  this param will be used with the pagination stuff.
+             * @param offset               this param will be used with the pagination stuff.*/
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
-                    alias,
-                    distance,
-                    null,
-                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
-                    null,///publicKey,
-                    deviceLocation,
-                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    offSet,
-                    NetworkServiceType.CRYPTO_CUSTOMER
+                    Actors.CBP_CRYPTO_BROKER.getCode(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    true,
+                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
+                    null, //publicKey,
+                    max,
+                    offSet
             );
+//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+//                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
+//                    alias,
+//                    distance,
+//                    null,
+//                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
+//                    null,///publicKey,
+//                    deviceLocation,
+//                    max,
+//                    null,
+//                    NetworkServiceType.UNDEFINED,
+//                    offSet,
+//                    NetworkServiceType.CRYPTO_CUSTOMER
+//            );
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
@@ -101,10 +131,10 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
+                System.out.println("************** I'm a crypto customer searched: "+actorProfile + " - " + actorProfile.getStatus());
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoCustomerExposingDataList;
@@ -149,7 +179,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoCustomerExposingDataList;
@@ -194,7 +224,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoCustomerExposingDataList;
@@ -239,7 +269,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoCustomerExposingDataList;
@@ -284,7 +314,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingData = new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0);
+                cryptoCustomerExposingData = new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus());
             }
 
             return cryptoCustomerExposingData;
