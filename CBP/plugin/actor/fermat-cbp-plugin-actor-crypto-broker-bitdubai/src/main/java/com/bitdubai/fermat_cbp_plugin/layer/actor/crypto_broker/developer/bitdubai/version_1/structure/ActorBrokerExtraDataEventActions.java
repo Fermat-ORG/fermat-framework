@@ -62,8 +62,13 @@ public class ActorBrokerExtraDataEventActions {
         try {
             dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.RECEIVED);
             if (dataNS != null) {
+
+                String brokerPublicKey = null;
+
                 for (CryptoBrokerExtraData<CryptoBrokerQuote> extraData : dataNS) {
-                    final String brokerPublicKey = extraData.getCryptoBrokerPublicKey();
+                    if(brokerPublicKey == null){
+                        brokerPublicKey = extraData.getCryptoBrokerPublicKey();
+                    }
                     final List<CryptoBrokerQuote> quotes = getQuotes(brokerPublicKey);
                     final long updateTime = System.currentTimeMillis();
 

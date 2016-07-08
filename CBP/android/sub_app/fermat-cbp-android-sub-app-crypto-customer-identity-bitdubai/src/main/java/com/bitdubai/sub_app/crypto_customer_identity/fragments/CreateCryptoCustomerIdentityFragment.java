@@ -195,7 +195,7 @@ implements FermatWorkerCallBack{
 
         mCustomerName.requestFocus();
 
-        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
+      //  textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
 
         checkGPSOn();
 
@@ -242,6 +242,9 @@ implements FermatWorkerCallBack{
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    Uri selectedImage2 = data.getData();
+                    Bundle extras = data.getExtras();
+                    cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     // grant all three uri permissions!
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
@@ -260,7 +263,7 @@ implements FermatWorkerCallBack{
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        Bundle extras = data.getExtras();
+                        //Bundle extras = data.getExtras();
                         cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
@@ -369,9 +372,6 @@ implements FermatWorkerCallBack{
             }
         } else {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            imageToUploadUri = Uri.fromFile(f);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }

@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -193,7 +194,7 @@ public class CreateCryptoBrokerIdentityFragment
         mBrokerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount));
 
-        textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
+    //    textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
 
         checkGPSOn();
 
@@ -213,19 +214,28 @@ public class CreateCryptoBrokerIdentityFragment
 
         return false;
     }
-
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        if(resultCode != Activity.RESULT_CANCELED){
+
+        }
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
 
                 case REQUEST_IMAGE_CAPTURE:
+                     Uri selectedImage2 = data.getData();
+                    Bundle extras = data.getExtras();
+                    cryptoBrokerBitmap = (Bitmap) extras.get("data");
+
                     // grant all three uri permissions!
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
-                            if (Build.VERSION.SDK_INT >= 23) {
+                        boolean versionCompatible = Build.VERSION.SDK_INT >= 23;
+                            if (versionCompatible) {
+
                                 if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
                                         != PackageManager.PERMISSION_GRANTED) {
                                     getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -239,8 +249,8 @@ public class CreateCryptoBrokerIdentityFragment
                                 }
                             }
                             getActivity().getContentResolver().notifyChange(selectedImage, null);
-                            Bundle extras = data.getExtras();
-                            cryptoBrokerBitmap = (Bitmap) extras.get("data");
+                               // Bundle extras = data.getExtras();
+                                cryptoBrokerBitmap = (Bitmap) extras.get("data");
                         }
                     break;
 
@@ -348,12 +358,11 @@ public class CreateCryptoBrokerIdentityFragment
         } else {
 
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            imageToUploadUri = Uri.fromFile(f);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+
+
         }
 
 //        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
