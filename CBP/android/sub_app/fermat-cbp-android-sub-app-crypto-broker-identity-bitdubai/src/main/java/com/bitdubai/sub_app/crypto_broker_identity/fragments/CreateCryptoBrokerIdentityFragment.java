@@ -47,7 +47,9 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateIdentityWorker;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
@@ -78,6 +80,11 @@ public class CreateCryptoBrokerIdentityFragment
     private int maxLenghtTextCount = 30;
     FermatTextView textCount;
     private ExecutorService executor;
+    IdentityBrokerPreferenceSettings settings;
+    boolean isGpsDialogEnable;
+
+
+
 
     private final TextWatcher textWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
@@ -108,6 +115,16 @@ public class CreateCryptoBrokerIdentityFragment
         if (appSession.getData(FragmentsCommons.BROKER_NAME) != null) {
             cryptoBrokerName = (String) appSession.getData(FragmentsCommons.BROKER_NAME);
             appSession.removeData(FragmentsCommons.BROKER_NAME);
+        }
+
+        try {
+            isGpsDialogEnable=true;
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = settings.isGpsDialogEnabled();
+        } catch (Exception e) {
+            settings = new IdentityBrokerPreferenceSettings();
+            settings.setGpsDialogEnabled(true);
+            isGpsDialogEnable=true;
         }
 
         //Check if GPS is on and coordinate are fine
@@ -175,6 +192,8 @@ public class CreateCryptoBrokerIdentityFragment
         mBrokerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mBrokerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount));
+
+        textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
 
         checkGPSOn();
 
@@ -430,10 +449,15 @@ public class CreateCryptoBrokerIdentityFragment
     private void checkGPSOn(){
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
-                turnOnGPSDialog();
+                if (isGpsDialogEnable ) {
+                    turnOnGPSDialog();
+                }
+
             }
         }else
-            turnOnGPSDialog();
+            if (isGpsDialogEnable) {
+                turnOnGPSDialog();
+            }
     }
 
     public void turnOnGPSDialog() {
@@ -444,8 +468,13 @@ public class CreateCryptoBrokerIdentityFragment
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.bi_icon)
                     .setBannerRes(R.drawable.banner_identity)
+                    .setIsCheckEnabled(false)
                     .build();
+            settings.setGpsDialogEnabled(false);
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
             pd.show();
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
