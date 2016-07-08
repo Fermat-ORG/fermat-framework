@@ -459,19 +459,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         errorConnectingGPS.setDescription("Please, turn ON your GPS.");
         errorConnectingGPS.setCloseButton("Close", new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                errorConnectingGPS.dismiss();
-           /*     try {
-                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
-                        //getActivity().onBackPressed();
-                    }
-                } catch (CantGetCommunicationNetworkStatusException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
-            }
+            public void onClick(View v) { errorConnectingGPS.dismiss();}
         });
 
         errorConnectingGPS.show();

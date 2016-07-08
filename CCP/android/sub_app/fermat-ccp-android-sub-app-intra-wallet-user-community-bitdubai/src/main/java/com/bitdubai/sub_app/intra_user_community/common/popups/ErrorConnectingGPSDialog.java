@@ -36,8 +36,8 @@ public class ErrorConnectingGPSDialog extends FermatDialog<ReferenceAppFermatSes
     /**
      * UI components
      */
-    private FermatTextView mDescription;
-    private CharSequence description;
+    private FermatTextView mDescrip;
+    private CharSequence descrip;
 
     public ErrorConnectingGPSDialog(final Activity a,
                                     final ReferenceAppFermatSession intraUserSubAppSession,
@@ -54,9 +54,9 @@ public class ErrorConnectingGPSDialog extends FermatDialog<ReferenceAppFermatSes
         super.onCreate(savedInstanceState);
         FermatTextView positiveButtonView = (FermatTextView) findViewById(R.id.Close_button);
 
-        mDescription = (FermatTextView) findViewById(R.id.description);
+        mDescrip = (FermatTextView) findViewById(R.id.descrip);
         positiveButtonView.setOnClickListener(CloseClick);
-        mDescription.setText(description != null ? description : "");
+        mDescrip.setText(descrip != null ? descrip : "");
         positiveButtonView.setText(CloseButton != null ? CloseButton : "");
         positiveButtonView.setOnClickListener(CloseClick);
 
@@ -93,7 +93,8 @@ public class ErrorConnectingGPSDialog extends FermatDialog<ReferenceAppFermatSes
         CloseButton = text;
     }
 
-    public void setDescription(CharSequence description) {
-        this.description = description;
+    public void setDescription(CharSequence descrip) {
+        this.descrip = descrip;
+
     }
 }
