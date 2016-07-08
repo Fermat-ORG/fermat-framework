@@ -15,10 +15,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceSearch</code>
  * contains all the functionality to search crypto broker actors.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/11/2015.
  */
 public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSearch {
@@ -75,6 +76,21 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     @Override
     public List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantListCryptoBrokersException {
         try {
+
+            DiscoveryQueryParameters discoveryQueryParameters1 = new DiscoveryQueryParameters(
+                    null, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa solo para buscar por publicKey del Actor
+                    NetworkServiceType.CRYPTO_BROKER,
+                    Actors.CBP_CRYPTO_BROKER.getCode(),
+                    null,
+                    alias,
+                    null,
+                    deviceLocation,
+                    distance,
+                    true,
+                    null,
+                    max,
+                    offset,
+                    false);
 
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.CBP_CRYPTO_BROKER.getCode(),
