@@ -127,7 +127,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
         List<ChatActorCommunityInformation> worldActorList = null;
         List<ChatActorConnection> actorConnections = null;
-
+        ConnectionState connectionState;
+        UUID connectionID;
         try{
             worldActorList = getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max);
         } catch (CantGetChtActorSearchResult exception) {
@@ -147,22 +148,41 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         ChatActorCommunityInformation worldActor;
-        if(actorConnections != null && worldActorList != null
-                && actorConnections.size() > 0 && worldActorList.size() > 0) {
+        if(worldActorList != null && worldActorList.size() > 0) {
             for (int i = 0; i < worldActorList.size(); i++) {
                 worldActor = worldActorList.get(i);
-                for (ChatActorConnection connectedActor : actorConnections) {
-                    if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                        worldActorList.set(i,
-                                new ChatActorCommunitySubAppModuleInformationImpl(
-                                        worldActor.getPublicKey(), worldActor.getAlias(),
-                                        worldActor.getImage(), connectedActor.getConnectionState(),
-                                        connectedActor.getConnectionId(), worldActor.getStatus(),
-                                        connectedActor.getCountry(),connectedActor.getState(),
-                                        connectedActor.getCity(), null));
+                String country = "", city = "", state = "";
+                connectionID=null;
+                connectionState=null;
+                final Location location = worldActor.getLocation();
+                try {
+                    final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
+                    country = address.getCountry();
+                    city = address.getCity().equals("null") ? address.getCounty() : address.getCity();
+                    state = address.getState().equals("null") ? address.getCounty() : address.getState();
+                } catch (CantCreateAddressException ignore) {
                 }
+                if(actorConnections != null && actorConnections.size() > 0) {
+                    for (ChatActorConnection connectedActor : actorConnections) {
+                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
+                            connectionState = connectedActor.getConnectionState();
+                            connectionID = connectedActor.getConnectionId();
+                        }
+                    }
+                }
+                worldActor.setCity(city);
+                worldActor.setCountry(country);
+                worldActor.setState(state);
+                worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(
+                        worldActor.getPublicKey(), worldActor.getAlias(),
+                        worldActor.getImage(), connectionState,
+                        connectionID, worldActor.getStatus(),
+                        country,state,
+                        city, null));
+
             }
         }
+
         return worldActorList;
     }
 
@@ -321,7 +341,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
     @Override
     public List<ChatActorCommunityInformation> listAllConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-        List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
+        List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
         ChatExposingData chatExposingData = null;
         try{
             if(selectedIdentity!=null) {
@@ -335,8 +355,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 search.addConnectionState(ConnectionState.CONNECTED);
 
                 final List<ChatActorConnection> actorConnections = search.getResult(max, offset);
-
-                chatActorCommunityInformationList = new ArrayList<>();
 
                 for (ChatActorConnection cac : actorConnections){
                     chatExposingData = getChatActorSearch().getResult(cac.getPublicKey());

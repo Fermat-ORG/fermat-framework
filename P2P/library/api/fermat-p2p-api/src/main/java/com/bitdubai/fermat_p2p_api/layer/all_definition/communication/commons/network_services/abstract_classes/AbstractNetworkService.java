@@ -32,10 +32,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientCall;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServicePendingMessagesSupervisorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
@@ -112,6 +114,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_CLIENT)
     protected NetworkClientManager networkClientManager;
+
+    //todo: esto va por ahora, más adelante se saca si o si
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.P2P_LAYER)
+    private P2PLayerManager p2PLayerManager;
 
     /**
      * Represents the EVENT_SOURCE
@@ -234,8 +240,9 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /*
              * Initialize the agents and start
              */
-            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
-            this.networkServiceRegistrationProcessAgent.start();
+//            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
+//            this.networkServiceRegistrationProcessAgent.start();
+            p2PLayerManager.register(this);
 
             onNetworkServiceStart();
 
@@ -674,7 +681,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             this.networkServicePendingMessagesSupervisorAgent.start();
         } catch (Exception ex) {
-            System.out.println("Failed to start the messages supervisor agent - > NS: "+this.getProfile().getNetworkServiceType());
+            System.out.println("Failed to start the messages supervisor agent - > NS: " + this.getProfile().getNetworkServiceType());
         }
 
         onNetworkServiceRegistered();
@@ -806,7 +813,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              */
             Map<String, Object> filters = new HashMap<>();
             filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey                    );
-            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME             , MessagesStatus.PENDING_TO_SEND.getCode());
+            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
 
             List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
 
@@ -853,7 +860,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         try {
 
-            System.out.println("-------------- online actors discovery query requested: "+discoveryQueryParameters+" \n------------- " + new Timestamp(System.currentTimeMillis()));
+            System.out.println("-------------- online actors discovery query requested: " + discoveryQueryParameters + " \n------------- " + new Timestamp(System.currentTimeMillis()));
 
             UUID queryId = getConnection().onlineActorsDiscoveryQuery(discoveryQueryParameters, getPublicKey());
 
@@ -1011,4 +1018,14 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         return networkClientManager.getConnection(uriToNode);
     }
+
+    public NetworkServiceType getNetworkServiceType() {
+        return networkServiceType;
+    }
+
+    public void startConnection() throws CantRegisterProfileException {
+        getConnection().registerProfile(getProfile());
+    }
+
+
 }

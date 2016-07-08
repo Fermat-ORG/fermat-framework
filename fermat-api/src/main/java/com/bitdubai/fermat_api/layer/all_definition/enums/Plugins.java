@@ -343,7 +343,9 @@ public enum Plugins implements FermatPluginsEnum {
 
     //Init PIP
     PIP_FERMAT_MONITOR                  ("PFM"),
-    GEOLOCATION                         ("GLT")
+    GEOLOCATION                         ("GLT"),
+
+    P2P_LAYER ("P2PL")
     ;
     //End PIP
 
