@@ -628,7 +628,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
     @Override
     public void onDestroy() {
-        folderDialog.dismiss();
+        if(folderDialog!=null) folderDialog.dismiss();
         adapter = null;
         mItemTouchHelper = null;
         super.onDestroy();
