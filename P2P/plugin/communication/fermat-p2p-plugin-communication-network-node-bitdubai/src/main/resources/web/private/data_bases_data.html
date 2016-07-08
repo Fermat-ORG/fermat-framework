@@ -19,6 +19,7 @@
     <!-- Custom styles for this template -->
     <link href="../css/angular-chart.min.css" rel="stylesheet">
     <link href="../css/monitoring.css" rel="stylesheet">
+    <link href="../css/angular-busy.min.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../js/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -36,7 +37,7 @@
 </style>
 
 <body role="document" ng-controller="DataBaseDataCtrl"  >
-
+<div cg-busy="busy" style="position: relative;z-index: 1050;"></div>
 
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -49,19 +50,17 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="../index.html">Home</a></li>
                 <li><a href="monitoring.html">Monitoring</a></li>
                 <li><a href="identities.html">Identities</a></li>
-                <li><a href="data_bases.html">Data Base</a></li>
+                <li class="active" ><a href="data_bases.html">Data Base</a></li>
+                <li><a href="configuration.html" >Configuration</a></li>
                 <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank">Contact</a></li>
                 <li ng-controller="UserCtrl" ><a ng-click="logout();">Logout</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-
 <div class="container theme-showcase" role="main" style="width:98%;" ng-cloak >
-
     <br/>
 
     <h1 class="page-header">Table Data "{{ selectedTable }}" - Total Rows ({{ totalRows }}) </h1>
@@ -112,7 +111,6 @@
     </footer>
 
 </div>
-
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -126,8 +124,8 @@
 <script src="../js/Chart.min.js"></script>
 <script src="../js/angular-chart.min.js"></script>
 <script src="../js/dataBaseDataController.js"></script>
-
 <script src="../js/ng-map.min.js"></script>
+<script src="../js/angular-busy.min.js"></script>
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../js/ie10-viewport-bug-workaround.js"></script>

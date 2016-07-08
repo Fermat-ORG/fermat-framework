@@ -28,7 +28,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
       };
 
      var requestIdentitiesData = function() {
-        console.log("online = "+$scope.onlineIdentities);
+
         $scope.total       = 0;
         $scope.identities.splice(0, $scope.identities.length);
         clearMarkers();
@@ -41,7 +41,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
      var requestCatalogData = function() {
 
-        $http({
+        $scope.busy = $http({
             method: 'GET',
             url: '/fermat/rest/api/v1/admin/actors/catalog?offSet='+$scope.offSet+'&max='+$scope.max
         }).then(function successCallback(response) {
@@ -86,7 +86,7 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
      var requestCheckInData = function() {
 
-         $http({
+         $scope.busy = $http({
              method: 'GET',
              url: '/fermat/rest/api/v1/admin/actors/check_in?offSet='+$scope.offSet+'&max='+$scope.max
          }).then(function successCallback(response) {
@@ -187,7 +187,11 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
 
        $scope.reloadOnlineChange = function() {
-         requestIdentitiesData();
+          $scope.offSet      = 0;
+          $scope.max         = 20;
+          $scope.total       = 0;
+          $scope.currentPage = 1;
+          requestIdentitiesData();
        };
 
 }]);
