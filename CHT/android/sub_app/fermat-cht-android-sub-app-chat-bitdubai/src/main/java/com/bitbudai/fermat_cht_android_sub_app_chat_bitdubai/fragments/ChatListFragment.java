@@ -779,7 +779,7 @@ public class ChatListFragment
                 if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
 //                   fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
                 }
-            } catch (IllegalAccessException e) {
+            } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
