@@ -73,7 +73,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
+        System.out.println("JUANASO ES LO MAS BEIO DEL MUNDOOOO!!! ldsmlnvoisnmnvoisnfdvdd-----------------------------------------------------------------");
         this.layout = layout;
 
         noMatchView = layout.findViewById(R.id.no_matches_crypto_broker_identity);
