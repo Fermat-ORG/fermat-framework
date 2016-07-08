@@ -17,6 +17,10 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
@@ -120,7 +124,21 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
         }
 
         if (editTextValue != null)
-            editTextView.setText(editTextValue);
+           //change lostwood
+           // editTextView.setText(editTextValue);
+
+            try {
+                if(editTextValue.equals("0.0")){
+                    editTextView.setText(new BigDecimal(DecimalFormat.getInstance().parse(editTextValue).toString()).toString());
+                }else{
+                    editTextView.setText(new BigDecimal(DecimalFormat.getInstance().parse(editTextValue).toString()).toString());
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         if (setTextFree)
             editTextView.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE);
         else
