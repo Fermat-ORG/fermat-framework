@@ -1,15 +1,23 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
@@ -28,7 +36,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.CryptoBrokerIdentitySubAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -44,20 +51,20 @@ public class CryptoBrokerIdentityModuleManagerImpl
 
     private CryptoBrokerIdentityManager identityManager;
     private CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot;
-    private PluginVersionReference      pluginVersionReference;
     private final LocationManager locationManager;
+    private final Broadcaster broadcaster;
 
     public CryptoBrokerIdentityModuleManagerImpl(
             CryptoBrokerIdentityManager identityManager,
-            PluginFileSystem            pluginFileSystem,
-            UUID                        pluginId,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
             CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot,
-            LocationManager locationManager
-    ){
+            LocationManager locationManager,
+            Broadcaster broadcaster){
         super(pluginFileSystem, pluginId);
         this.identityManager        = identityManager;
         this.pluginRoot           = pluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
+        this.broadcaster = broadcaster;
         this.locationManager = locationManager;
     }
 
@@ -173,5 +180,15 @@ public class CryptoBrokerIdentityModuleManagerImpl
         return null;
     }
 
+    @Override
+    public void launchTestNotification() {
+        FermatBundle fermatBundle = new FermatBundle();
+        fermatBundle.put(NotificationBundleConstants.SOURCE_PLUGIN, Plugins.CRYPTO_CUSTOMER.getCode());
+        fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode()));
+        fermatBundle.put(NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
+        fermatBundle.put(NotificationBundleConstants.NOTIFICATION_ID, 1);
+        fermatBundle.put(NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
 
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, null, fermatBundle);
+    }
 }
