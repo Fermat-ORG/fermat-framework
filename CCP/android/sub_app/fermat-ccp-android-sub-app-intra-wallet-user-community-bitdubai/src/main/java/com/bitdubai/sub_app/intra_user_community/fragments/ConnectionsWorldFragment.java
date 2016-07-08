@@ -140,7 +140,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     //flags
     int pastVisiblesItems, visibleItemCount, totalItemCount;
 
-
+    int referencialDy = 0;
 
     private ExecutorService _executor;
     /**
@@ -267,14 +267,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     if (dy > 0) {
+                        referencialDy=dy;
                         visibleItemCount = layoutManager.getChildCount();
                         totalItemCount = layoutManager.getItemCount();
                         pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                        offset = totalItemCount;
+                        offset+=12;
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if (lastItem == totalItemCount) {
                             onRefresh();
                         }
+                    }
+
+                    if (dy < referencialDy){
+                        offset-=12;
+                        if (offset<0) offset=0;
+                        onRefresh();
                     }
                 }
             });
