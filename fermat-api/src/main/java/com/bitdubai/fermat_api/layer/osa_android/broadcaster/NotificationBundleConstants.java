@@ -7,8 +7,17 @@ public class NotificationBundleConstants {
 
 
     public static final String SOURCE_PLUGIN = "sourcePlugin";
+    /**
+     *
+     */
     public static final String APP_TO_OPEN_PUBLIC_KEY = "appToOpenPk";
+    /**
+     * Public Key of notificationPainter (App Public key)
+     */
     public static final String APP_NOTIFICATION_PAINTER_FROM = "appNotificationFrom";
+    /**
+     *
+     */
     public static final String APP_ACTIVITY_TO_OPEN_CODE = "appActivityToOpen";
     /**
      * For example: Update notification will add text to an, cancel notification will dismiss the notification from the screen
