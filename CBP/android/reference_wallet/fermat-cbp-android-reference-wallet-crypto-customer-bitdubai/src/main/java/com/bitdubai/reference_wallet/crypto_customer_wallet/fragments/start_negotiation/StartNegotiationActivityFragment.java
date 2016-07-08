@@ -148,7 +148,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
-                clauseTextDialog.configure(R.string.ccw_amount_to_buy, R.string.ccw_value);
+                clauseTextDialog.configure(R.string.ccw_amount_to_pay, R.string.ccw_value);
 
                 clauseTextDialog.show();
                 break;
@@ -188,7 +188,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
                     clauses = getClause(mapClauses);
 
-                    if(mapClauses.get(ClauseType.BROKER_CURRENCY).getValue().equals("BTC")){
+                   /* if(mapClauses.get(ClauseType.BROKER_CURRENCY).getValue().equals()){
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("Important Information");
                         alertDialog.setMessage("The Miner Fee of this transaction is 0.000015 Bitcoins");
@@ -199,7 +199,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                                     }
                                 });
                         alertDialog.show();
-                    }
+                    }*/
 
                     if (moduleManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
                         Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();

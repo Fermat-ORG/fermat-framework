@@ -11,9 +11,10 @@ import java.io.Serializable;
  */
 public interface Broadcaster extends FermatManager, Serializable {
 
-    public static final String PROGRESS_BAR = "progressBar";
-    public static final String PROGRESS_BAR_TEXT = "progressBarText";
-    public static final String PUBLISH_ID = "publishId";
+    String PROGRESS_BAR = "progressBar";
+    String PROGRESS_BAR_TEXT = "progressBarText";
+    String PUBLISH_ID = "publishId";
+    String NOTIFICATION_TYPE = "notificationType";
 
     /**
      * Let you fire a broadcast to update a fragment in your wallet or sub-app
@@ -48,6 +49,8 @@ public interface Broadcaster extends FermatManager, Serializable {
      * @param bundle            the message is going to be send by the broadcaster, this bundle let you deal with the broadcast the way you want
      */
     void publish(BroadcasterType broadcasterType, String appPublicKeyToOpen, FermatBundle bundle);
+
+    void publish(BroadcasterType broadcasterType, FermatBundle bundle);
 
     /**
      * Let you fire a broadcast to update a fragment or show a notification in your wallet or sub-app

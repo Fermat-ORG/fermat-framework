@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="serverApp">
 <head>
+    <base href="/private/">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,7 +11,7 @@
     <meta name="author" content="Fermat.org">
     <!-- <link rel="icon" href="http://getbootstrap.com/favicon.ico"> -->
 
-    <title>Fermat - Cloud Server</title>
+    <title>Fermat - Network Node</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -38,21 +39,23 @@
         <div class="navbar-header">
             <ul class="nav navbar-nav">
                 <li><img src="https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png" class="img-responsive" alt="Fermat.org" width="95px" height="95px" /></li>
-                <li><a class="navbar-brand" href="#">Cloud Server</a></li>
+                <li><a class="navbar-brand">Fermat Node</a></li>
             </ul>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="../index.html">Home</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#configurationModal" >Configuration</a></li>
+                <li><a href="identities.html">Identities</a></li>
+                <li><a href="data_bases.html">Data Base</a></li>
+                <li><a data-toggle="modal" data-target="#configurationModal" >Configuration</a></li>
                 <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank">Contact</a></li>
-                <li ng-controller="UserCtrl" ><a href="#" ng-click="logout();">Logout</a></li>
+                <li ng-controller="UserCtrl" ><a ng-click="logout();">Logout</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
 
-<div class="container theme-showcase" role="main" ng-controller="ConfCtrl" >
+<div class="container theme-showcase" role="main" ng-controller="ConfCtrl" ng-cloak >
 
     <br/>
 
@@ -256,12 +259,15 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/sha256.js"></script>
 <script src="../js/angular.min.js"></script>
+<script src="../js/angular-route.min.js"></script>
 <script src="../js/app.js"></script>
 <script src="../js/configurationController.js"></script>
 <script src="../js/userController.js"></script>
 <script src="../js/monitoringController.js"></script>
 <script src="../js/Chart.min.js"></script>
 <script src="../js/angular-chart.min.js"></script>
+<script src="../js/ng-map.min.js"></script>
+
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../js/ie10-viewport-bug-workaround.js"></script>
 

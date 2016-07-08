@@ -10,7 +10,9 @@ import com.bitdubai.android_core.app.common.version_1.util.services_helpers.Serv
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatContext;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_core.FermatSystem;
 
 import org.acra.ReportField;
@@ -171,12 +173,27 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
         return fermatFramework.getLoaderManager().objectProxyFactory(moduleName, interfaceLoader, interfaces, returnInterface, args);
     }
 
+    @Override
+    public void registerReceiver(FermatIntentFilter filter, FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey) {
+        fermatFramework.registerReceiver(filter,fermatBroadcastReceiver,appPublicKey);
+    }
+
+    @Override
+    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver, String appPublicKey) {
+        fermatFramework.unregisterReceiver(fermatBroadcastReceiver, appPublicKey);
+    }
+
+
     public ClassLoader getExternalLoader(String name) {
         return fermatFramework.getLoaderManager().getExternalLoader(name);
     }
 
     public void setFermatRunning(boolean fermatRunning) {
         this.fermatFramework.setFermatRunning(fermatRunning);
+    }
+
+    public FermatFramework getFermatFramework() {
+        return fermatFramework;
     }
 //    @Override
 //    public Object loadProxyObject(FermatContext fermatContext, String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... args) {

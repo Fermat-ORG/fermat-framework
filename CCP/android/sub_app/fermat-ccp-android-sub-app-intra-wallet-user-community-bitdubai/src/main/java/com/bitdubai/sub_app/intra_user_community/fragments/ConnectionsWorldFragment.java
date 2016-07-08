@@ -88,7 +88,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 10;
+    private static final int MAX = 12;
     /**
      * MANAGERS
      */
@@ -126,9 +126,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private Handler handler = new Handler();
     List<IntraUserInformation> userList = new ArrayList<>();
 
-    private DeviceLocation location;
+    private Location location;
     private double distance;
     private String alias;
+
+    //flags
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
 
 
 
@@ -172,7 +175,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 }
             }
 
-            mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
+
             new FetchCountTask().execute();
 
 
@@ -191,14 +194,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                 } catch (CantGetCommunicationNetworkStatusException e) {
                                     e.printStackTrace();
                                 }
-                                switch (networkStatus) {
-                                    case CONNECTED:
-                                        // setUpReferences();
-                                        break;
-                                    case DISCONNECTED:
-                                        showErrorFermatNetworkDialog();
-                                        break;
+                                if(networkStatus != null)
+                                {
+                                    switch (networkStatus) {
+                                        case CONNECTED:
+                                            // setUpReferences();
+                                            break;
+                                        case DISCONNECTED:
+                                            showErrorFermatNetworkDialog();
+                                            break;
+                                    }
                                 }
+
 
                             }
                         }, 500);
@@ -209,9 +216,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             });
 
 
-            Location location = moduleManager.getLocationManager();
+            location = moduleManager.getLocationManager();
 
-
+            mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -234,10 +241,31 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
-          setUpReferences();
 
+            //Set up RecyclerView
+            setUpReferences();
             showEmpty(true, emptyView);
-            showEmpty(false, searchEmptyView);
+
+
+            //adapter.setFermatListEventListener(this);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (dy > 0) {
+                        visibleItemCount = layoutManager.getChildCount();
+                        totalItemCount = layoutManager.getItemCount();
+                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                        offset = totalItemCount;
+                        final int lastItem = pastVisiblesItems + visibleItemCount;
+                        if (lastItem == totalItemCount) {
+                            onRefresh();
+                        }
+                    }
+                }
+            });
+
+
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -264,7 +292,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+       // adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations,  appSession, moduleManager);
         recyclerView.setAdapter(adapter);
         adapter.setFermatListEventListener(this);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -283,10 +312,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (!isRefreshing) {
                 isRefreshing = true;
-               final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+              /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
                 notificationsProgressDialog.setMessage("Loading Crypto Wallet Users...");
                 notificationsProgressDialog.setCancelable(false);
-                notificationsProgressDialog.show();
+                notificationsProgressDialog.show();*/
                 //Get Fermat User Cache List First
                 worker = new FermatWorker() {
                     @Override
@@ -300,7 +329,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                      notificationsProgressDialog.dismiss();
+                     // notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -348,7 +377,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        notificationsProgressDialog.dismiss();
+                        //notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -414,14 +443,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     @Override
     public void onRefresh() {
 
-        offset = 0;
+        //offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-          /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-            notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
-            notificationsProgressDialog.setCancelable(true);
-            notificationsProgressDialog.show();*/
 
+          // final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+           // notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
+           // notificationsProgressDialog.setCancelable(true);
+
+           // notificationsProgressDialog.show();
+
+
+           /* if (offset>0) {
+                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
+                notificationsProgressDialog.setCancelable(true);
+                notificationsProgressDialog.show();
+            }*/
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -433,7 +470,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                 //   notificationsProgressDialog.dismiss();
+
+                    //notificationsProgressDialog.dismiss();
+
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -443,10 +482,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
 
                             if (lstIntraUserInformations.isEmpty()) {
-                               showEmpty(true, emptyView);
-                               showEmpty(false, searchEmptyView);
+                                showEmpty(true, emptyView);
+                                showEmpty(false, searchEmptyView);
                             } else {
-                               // Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
 
                                 adapter.changeDataSet(lstIntraUserInformations);
                                 showEmpty(false, emptyView);
@@ -454,15 +493,17 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                             }
                         }
                     } else {
-                            showEmpty(true, emptyView);
-                            showEmpty(false, searchEmptyView);
+                        showEmpty(true, emptyView);
+                        showEmpty(false, searchEmptyView);
 
                     }
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                  // notificationsProgressDialog.dismiss();
+
+                    // notificationsProgressDialog.dismiss();
+
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -472,6 +513,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 }
             });
+            offset=0;
             worker.execute();
         }
     }
@@ -514,9 +556,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     Window window = geolocationDialog.getWindow();
                     WindowManager.LayoutParams wlp = window.getAttributes();
                     wlp.gravity = Gravity.TOP;
-                    wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                    //wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                     window.setAttributes(wlp);
-                    geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    //geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     geolocationDialog.show();
 
 
@@ -685,7 +727,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     }
 
 
-    private synchronized List<IntraUserInformation> getMoreData(DeviceLocation location, double distance, String alias) {
+    private synchronized List<IntraUserInformation> getMoreData(Location location, double distance, String alias) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
@@ -937,7 +979,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
     @Override
     public void onMethodCallback(ExtendedCity city) {
+        location = new DeviceLocation();
+        location.setLongitude((double) city.getLongitude());
+        location.setLatitude((double) city.getLatitude());
+        location.setAccuracy((long) distance);
 
+        onRefresh();
 /*
         greenBar = (RelativeLayout) rootView.findViewById(R.id.green_bar_layout);
         closeGreenBar = (ImageView) rootView.findViewById(R.id.close_green_bar);
@@ -955,8 +1002,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         location.setLongitude((double) city.getLongitude());
         //distance=identity.getAccuracy();
         //location.setAccuracy((long) distance);
-        offset=0;
-        onRefresh();
+
 
         closeGreenBar.setOnClickListener(new View.OnClickListener() {
             @Override

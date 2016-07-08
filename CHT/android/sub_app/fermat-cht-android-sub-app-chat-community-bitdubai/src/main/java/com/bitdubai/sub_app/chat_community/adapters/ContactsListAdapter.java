@@ -36,6 +36,9 @@ public class ContactsListAdapter
     private ChatActorCommunitySubAppModuleManager moduleManager;
     List<ChatActorCommunityInformation> filteredData;
     private String filterString;
+    private String cityAddress;
+    private String stateAddress;
+    private String countryAddress;
 
     public ContactsListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
@@ -66,19 +69,16 @@ public class ContactsListAdapter
             }else
                 holder.friendAvatar.setImageResource(R.drawable.cht_comm_icon_user);
 
-            Address address= null;
             if(data.getLocation() != null ){
-                try {
-                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
-                }catch(CantCreateAddressException e){
-                    address = null;
-                }
-            }
-            if (address!=null)
-                holder.location.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
-            else
+                if (data.getState().equals("null") || data.getState().equals("null")) stateAddress = "";
+                else stateAddress = data.getState() + " ";
+                if (data.getCity().equals("null") || data.getCity().equals("null")) cityAddress = "";
+                else cityAddress = data.getCity() + " ";
+                if (data.getCountry().equals("null") || data.getCountry().equals("null")) countryAddress = "";
+                else countryAddress = data.getCountry();
+                holder.location.setText(cityAddress + stateAddress + countryAddress);
+            } else
                 holder.location.setText("Searching...");
-
         }
     }
 

@@ -45,6 +45,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         implements Filterable {
 
     List<ChatActorCommunityInformation> filteredData;
+    private String cityAddress;
+    private String stateAddress;
+    private String countryAddress;
     private String filterString;
     private final String TAG = "communityadapter";
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
@@ -221,20 +224,15 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         }else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-        Address address= null;
-        if(data.getLocation() != null ){
-            try {
-                if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
-                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
-            }catch(CantCreateAddressException e){
-                address = null;
-            }catch(Exception e){
-                address = null;
-            }
-        }
-        if (address!=null)
-            holder.location_text.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
-        else
+        if(data.getLocation() != null){
+            if (data.getState().equals("null") || data.getState().equals("null")) stateAddress = "";
+            else stateAddress = data.getState() + " ";
+            if (data.getCity().equals("null") || data.getCity().equals("null")) cityAddress = "";
+            else cityAddress = data.getCity() + " ";
+            if (data.getCountry().equals("null") || data.getCountry().equals("null")) countryAddress = "";
+            else countryAddress = data.getCountry();
+            holder.location_text.setText(cityAddress + stateAddress + countryAddress);
+        } else
             holder.location_text.setText("Searching...");
 
         final ChatActorCommunityInformation dat=data;

@@ -21,9 +21,9 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     private final byte[] image    ;
     private final ConnectionState connectionState;
     private final UUID connectionId;
-    private final String country  ;
-    private final String state    ;
-    private final String city     ;
+    private String country  ;
+    private String state    ;
+    private String city     ;
     private final String status;
     private final Location location;
 
@@ -51,7 +51,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     }
 
 
-    public ChatActorCommunitySubAppModuleInformationImpl(final ChatActorConnection exposingData) {
+    public ChatActorCommunitySubAppModuleInformationImpl(final ChatActorConnection exposingData, Location location) {
 
         this.publicKey = exposingData.getPublicKey();
         this.alias     = exposingData.getAlias()    ;
@@ -62,7 +62,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.country = exposingData.getCountry();
         this.state = exposingData.getState();
         this.city = exposingData.getCity();
-        this.location = null;
+        this.location = location;
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {
@@ -136,6 +136,16 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     }
     public Location getLocation() {
         return location;
+    }
+
+    public void setCity(String city) {
+        this.city=city;
+    }
+    public void setCountry(String country) {
+        this.country=country;
+    }
+    public void setState(String state) {
+        this.state=state;
     }
 
     @Override

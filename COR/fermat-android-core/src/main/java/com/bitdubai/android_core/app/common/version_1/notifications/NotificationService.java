@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.*;
 /**
  * Created by Matias Furszyfer on 2016.03.01..
  */
@@ -39,7 +41,6 @@ public class NotificationService extends Service {
     private int notificationIdCount;
     //for progress notifications
     private NotificationManager mNotifyManager;
-    private NotificationCompat.Builder mBuilder;
 
     int number = 0;
 
@@ -211,89 +212,111 @@ public class NotificationService extends Service {
     }
 
     public void notificate(String publicKey,FermatBundle fermatBundle){
-        Notification.Builder builder = null;
-        int notificationId = 0;
-        NotificationManager notificationManager = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-        if(publicKey==null) throw new IllegalArgumentException("App public key null");
 
-        if(lstNotifications.containsKey(publicKey)){
-            notificationId = lstNotifications.get(publicKey);
-        }else{
-            synchronized (this) {
-                number++;
-                notificationId = number;
-                lstNotifications.put(publicKey,notificationId);
-            }
-        }
-
-        AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
-        NotificationPainter notificationPainter = null;
         try {
-            notificationPainter = fermatAppConnection.getNotificationPainter(fermatBundle);
-        }catch (Exception e){
+            String appToOpenPublicKey = fermatBundle.getString(APP_TO_OPEN_PUBLIC_KEY);
+            String appNotificationFrom = fermatBundle.getString(APP_NOTIFICATION_PAINTER_FROM);
+            String appActivityToOpen = fermatBundle.getString(APP_ACTIVITY_TO_OPEN_CODE);
+            String notificationType = fermatBundle.getString(NOTIFICATION_BROADCAST_TYPE);
+            String sourcePlugin = fermatBundle.getString(SOURCE_PLUGIN);
+            int notificationId = fermatBundle.getInt(NOTIFICATION_ID);
+
+            //todo: sumar notificationId con sourcePlugin.
+
+            char[] letters = sourcePlugin.toCharArray();
+            int leeterCount = 0;
+            for (char letter : letters) {
+                leeterCount+= letter;
+            }
+            notificationId = notificationId+leeterCount;
+
+
+
+            Notification.Builder builder = null;
+            NotificationManager notificationManager = (NotificationManager)
+                    getSystemService(NOTIFICATION_SERVICE);
+            if(publicKey==null) throw new IllegalArgumentException("App public key null");
+
+//            if(lstNotifications.containsKey(notificationId)){
+//                notificationId = lstNotifications.get(publicKey);
+//            }else{
+//                synchronized (this) {
+//                    number++;
+//                    notificationId = number;
+//                    lstNotifications.put(publicKey,notificationId);
+//                }
+//            }
+
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appNotificationFrom, this, FermatApplication.getInstance().getAppManager().getAppsSession(appNotificationFrom));
+            NotificationPainter notificationPainter = null;
+            try {
+                notificationPainter = fermatAppConnection.getNotificationPainter(fermatBundle);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            Intent cancelIntent = new Intent("cancel");
+            cancelIntent.putExtra(NOTIFICATION_ID,notificationId);
+            PendingIntent cancelPendingIntent = PendingIntent.getService(this,0,cancelIntent,0);
+            if(notificationPainter!=null) {
+                if (notificationPainter.showNotification()) {
+                    RemoteViews remoteViews = notificationPainter.getNotificationView(fermatBundle);
+                    Intent intent = new Intent();
+                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appToOpenPublicKey);
+                    intent.setAction("org.fermat.APP_LAUNCHER");
+                    intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
+                    PendingIntent pi = PendingIntent
+                            .getBroadcast(this, 0, intent, 0);
+                    if (remoteViews != null) {
+                        builder = new Notification.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setTicker("ticker")
+                                .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
+                                .setAutoCancel(true)
+                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                                .setLights(Color.YELLOW, 3000, 3000)
+                                .setContentIntent(pi)
+                                .setContent(remoteViews)
+                                .setDeleteIntent(cancelPendingIntent)
+                                .setWhen(System.currentTimeMillis());
+                    } else {
+                        builder = new Notification.Builder(this)
+                                .setTicker(notificationPainter.getNotificationTitle())
+                                .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.mipmap.ic_launcher : notificationPainter.getIcon())
+                                .setContentTitle(notificationPainter.getNotificationTitle())
+                                .setContentText(notificationPainter.getNotificationTextBody())
+                                .setContentIntent(pi)
+                                .setAutoCancel(true)
+                                .setDeleteIntent(cancelPendingIntent)
+                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                                .setLights(Color.YELLOW, 3000, 3000);
+                    }
+                }
+            }else{
+                Intent intent = new Intent();
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appToOpenPublicKey);
+                intent.setAction("org.fermat.APP_LAUNCHER");
+                PendingIntent pi = PendingIntent
+                        .getBroadcast(this, notificationId, intent, PendingIntent.FLAG_ONE_SHOT);
+                builder = new Notification.Builder(this)
+                        .setTicker("Something arrive")
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Fermat: new notification")
+                        .setAutoCancel(true)
+                        .setContentIntent(pi)
+                        .setDeleteIntent(cancelPendingIntent)
+                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                        .setLights(Color.YELLOW, 3000, 3000);
+                Log.i(LOG_TAG, "Launcher: " + publicKey);
+            }
+
+            if(builder!=null) {
+                Notification notification = builder.build();
+                notificationManager.notify(notificationId, notification);
+            }
+        } catch (ClassCastException e) {
             e.printStackTrace();
         }
-
-        Intent cancelIntent = new Intent("cancel");
-        cancelIntent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,publicKey);
-        PendingIntent cancelPendingIntent = PendingIntent.getService(this,0,cancelIntent,0);
-        if(notificationPainter!=null) {
-            if (notificationPainter.showNotification()) {
-                RemoteViews remoteViews = notificationPainter.getNotificationView(fermatBundle);
-                Intent intent = new Intent();
-                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
-                intent.setAction("org.fermat.APP_LAUNCHER");
-                intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
-                PendingIntent pi = PendingIntent
-                        .getBroadcast(this, 0, intent, 0);
-                if (remoteViews != null) {
-                    builder = new Notification.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setTicker("ticker")
-                            .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
-                            .setAutoCancel(true)
-                            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                            .setLights(Color.YELLOW, 3000, 3000)
-                            .setContentIntent(pi)
-                            .setContent(remoteViews)
-                            .setDeleteIntent(cancelPendingIntent)
-                            .setWhen(System.currentTimeMillis());
-                } else {
-                    builder = new Notification.Builder(this)
-                            .setTicker(notificationPainter.getNotificationTitle())
-                            .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.mipmap.ic_launcher : notificationPainter.getIcon())
-                            .setContentTitle(notificationPainter.getNotificationTitle())
-                            .setContentText(notificationPainter.getNotificationTextBody())
-                            .setContentIntent(pi)
-                            .setAutoCancel(true)
-                            .setDeleteIntent(cancelPendingIntent)
-                            .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                            .setLights(Color.YELLOW, 3000, 3000);
-                }
-            }
-        }else{
-            Intent intent = new Intent();
-            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
-            intent.setAction("org.fermat.APP_LAUNCHER");
-            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pi = PendingIntent
-                    .getBroadcast(this, 0, intent, 0);
-            builder = new Notification.Builder(this)
-                    .setTicker("Something arrive")
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Fermat: new notification")
-                    .setAutoCancel(true)
-                    .setContentIntent(pi)
-                    .setDeleteIntent(cancelPendingIntent)
-                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                    .setLights(Color.YELLOW, 3000, 3000);
-            Log.i(LOG_TAG, "Launcher: " + publicKey);
-        }
-
-        if(builder!=null) {
-            Notification notification = builder.build();
-            notificationManager.notify(notificationId, notification);
-        }
     }
+
 
 
     public int notificateProgress(FermatBundle bundle) {
@@ -335,7 +358,7 @@ public class NotificationService extends Service {
                 mNotifyManager.notify(publishId, mBuilder.build());
                 return publishId;
             }
-        } catch (IllegalAccessException e) {
+        } catch (ClassCastException e) {
             e.printStackTrace();
         }
         return 0;
@@ -348,7 +371,7 @@ public class NotificationService extends Service {
         }
         mNotifyManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(this);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle("Downloading blockchain blocks")
                 .setContentText("Download in progress")
                 .setSmallIcon(R.drawable.fermat_logo_310_x_310);

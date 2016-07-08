@@ -265,7 +265,9 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     dao,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager
+                    customerBrokerContractSaleManager,
+                    customerBrokerPurchaseNegotiationManager,
+                    customerBrokerSaleNegotiationManager
             );
             processorAgent.start();
 
