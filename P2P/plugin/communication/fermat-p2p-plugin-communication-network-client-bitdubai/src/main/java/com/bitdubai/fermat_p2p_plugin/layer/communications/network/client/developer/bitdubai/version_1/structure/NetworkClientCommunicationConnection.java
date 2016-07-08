@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientCallConnectedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestActorFullPhotoException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
@@ -832,7 +833,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
-    public String getActorFullPhoto(final String publicKey){
+    public String getActorFullPhoto(final String publicKey) throws CantRequestActorFullPhotoException {
 
         String actorFullPhoto = null;
         HttpURLConnection conn = null;
@@ -876,7 +877,11 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             }
 
         }catch (Exception e){
+
             e.printStackTrace();
+            CantRequestActorFullPhotoException cantRequestActorFullPhotoException = new CantRequestActorFullPhotoException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
+            throw cantRequestActorFullPhotoException;
+
         }finally {
             if (conn != null)
                 conn.disconnect();
