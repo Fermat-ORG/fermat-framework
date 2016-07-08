@@ -95,7 +95,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 12;
+    private static final int MAX = 9;
     /**
      * MANAGERS
      */
@@ -138,7 +138,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private String alias;
 
     //flags
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    int firstVisibleItemsReff, pastVisiblesItems, visibleItemCount, totalItemCount;
 
     int referencialDy = 0;
 
@@ -271,17 +271,23 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                         visibleItemCount = layoutManager.getChildCount();
                         totalItemCount = layoutManager.getItemCount();
                         pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                        offset+=12;
+
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if (lastItem == totalItemCount) {
+                            offset+=12;
                             onRefresh();
                         }
                     }
 
                     if (dy < referencialDy){
-                        offset-=12;
-                        if (offset<0) offset=0;
-                        onRefresh();
+
+                        firstVisibleItemsReff= layoutManager.findFirstVisibleItemPosition();
+                        if (firstVisibleItemsReff<pastVisiblesItems){
+                            offset-=12;
+                            if (offset<0) offset=0;
+                            onRefresh();
+                        }
+
                     }
                 }
             });
