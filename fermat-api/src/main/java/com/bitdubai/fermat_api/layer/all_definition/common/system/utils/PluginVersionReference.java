@@ -3,7 +3,9 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.io.Serializable;
@@ -13,6 +15,7 @@ import java.io.Serializable;
  * haves all the information of a Plugin Version Reference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
+ * Updated Matias Furszfer
  */
 public class PluginVersionReference implements Serializable {
 
@@ -49,6 +52,10 @@ public class PluginVersionReference implements Serializable {
 
         this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);
         this.version = version;
+    }
+
+    public static PluginVersionReference PluginVersionReferenceFactory(String platformCode, String layerCode, String pluginsCode, String developerCode, String version) throws InvalidParameterException {
+        return new PluginVersionReference(Platforms.getByCode(platformCode),Layers.getByCode(layerCode), Plugins.getByCode(pluginsCode),Developers.getByCode(developerCode),new Version());
     }
 
     public final Version getVersion() {

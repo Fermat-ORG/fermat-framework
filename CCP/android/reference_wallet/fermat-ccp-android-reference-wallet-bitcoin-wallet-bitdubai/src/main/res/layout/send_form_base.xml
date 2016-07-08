@@ -254,16 +254,24 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
-                        android:paddingTop="10dp"
+                        android:id="@+id/advances_btn"
                         android:text="@string/feed_advances_text"
                         android:textColor="#12aca1"
                         android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_arrow_down_expanded"/>
+
 
 
                 </LinearLayout>
@@ -272,7 +280,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/feed_advances"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone"
                     >
 
@@ -284,7 +292,7 @@
 
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <TextView
@@ -331,14 +339,67 @@
                             />
 
                         <CheckBox
-                            android:layout_width="25dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="25dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginEnd="5dp"
                             android:id="@+id/checkBoxSubstract"
                             android:checked="true"
-                            android:text="@string/feed_option_text"/>
+                            android:gravity="center_vertical"
+                            android:text="@string/feed_option_text"
+                            android:textColor="#333"
+                            android:textSize="12sp"/>
 
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:paddingTop="0dp"
+                            android:text="@string/title_Feed"
+                            android:textColor="#12aca1"
+                            android:textSize="12sp" />
+
+                        <RadioGroup
+                            android:id="@+id/feeGroup"
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_column="0"
+                            android:layout_span="3">
+
+                            <RadioButton
+                                android:id="@+id/fee_low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fee_low"
+                                android:layout_marginRight="0dp"
+                                android:textColor="#333"
+                                android:textSize="12sp"
+                                />
+                            <RadioButton
+                                android:id="@+id/fee_Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fee_Medium"
+                                android:textColor="#333"
+                                android:textSize="12sp"/>
+                            <RadioButton
+                                android:id="@+id/fee_High"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fee_High"
+                                android:textColor="#333"
+                                android:textSize="12sp"/>
+                        </RadioGroup>
 
                     </LinearLayout>
 

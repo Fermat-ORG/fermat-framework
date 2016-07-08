@@ -56,6 +56,8 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         DatabaseManagerForDevelopers ,
         OutgoingExtraUserManager     {
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    private BlockchainManager bitcoinNetworkManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
     private CryptoWalletManager cryptoWalletManager;
@@ -65,13 +67,6 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
     private CryptoVaultManager cryptoVaultManager;
-
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
-    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
-
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
-    private TransactionSender<CryptoTransaction> bitcoinNetworkTransactionSender;
-
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
@@ -110,7 +105,6 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
                 cryptoWalletManager,
                 cryptoVaultManager  ,
                 bitcoinNetworkManager,
-                bitcoinNetworkTransactionSender,
                 getErrorManager()        ,
                 dao,
                 eventManager,

@@ -242,7 +242,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 // start it all
                 doTheMainTask();
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }
@@ -322,7 +322,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
 
             } catch (Exception e){
                 e.printStackTrace();
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw e;
             }
         }
@@ -471,7 +471,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                         dao.setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
                 }
             });
@@ -624,7 +624,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                     Transaction storedTransaction = wallet.getTransaction(tx.getHash());
                     if (storedTransaction == null){
                         CantStoreBitcoinTransactionException e = new  CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction was not correctly stored at the wallet.", null);
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                         throw e;
 
                     }
@@ -636,7 +636,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
 
                 System.out.println("***FermatCryptoNetwork*** Transaction successfully stored for broadcasting: " + tx.getHashAsString());
             } catch (CantExecuteDatabaseOperationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
             } catch (Exception e) {
                 /**
@@ -653,7 +653,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 }
 
                 CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
         }
@@ -777,7 +777,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 System.out.println("***FermatCryptoNetwork*** Transaction " + txHash + " cancelled.");
             } catch (Exception e) {
                 CantCancellBroadcastTransactionException exception = new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
         }
@@ -810,7 +810,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 return blockchainConnectionStatus;
             } catch (Exception e){
                 CantGetBlockchainConnectionStatusException exception = new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
 
@@ -844,7 +844,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
              */
             if (transactionBlockHash == null ){
                 CantGetTransactionException e = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw e;
 
             }
@@ -872,7 +872,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 }
             } catch (Exception e) {
                 CantGetTransactionException exception = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "error getting the Transaction from the blockchain" , null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
 

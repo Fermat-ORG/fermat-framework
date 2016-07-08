@@ -82,4 +82,5 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<Identit
     Boolean itHasAssociatedWallet(String brokerPublicKey);
 
 
+    void launchTestNotification();
 }

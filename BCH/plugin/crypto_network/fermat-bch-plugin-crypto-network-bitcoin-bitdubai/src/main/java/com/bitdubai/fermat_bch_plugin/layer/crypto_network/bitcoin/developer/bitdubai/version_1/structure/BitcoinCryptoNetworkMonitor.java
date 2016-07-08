@@ -76,6 +76,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private String threadName;
     private Thread monitorAgentThread;
     private Wallet wallet;
+    private final boolean isReset;
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
     private final BitcoinCryptoNetworkDatabaseDao dao;
@@ -104,6 +105,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     public BitcoinCryptoNetworkMonitor(UUID pluginId,
                                        Wallet wallet,
+                                       boolean isReset,
                                        File walletFilename,
                                        PluginFileSystem pluginFileSystem,
                                        ErrorManager errorManager,
@@ -114,6 +116,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * I initialize the local variables
          */
         this.wallet = wallet;
+        this.isReset = isReset;
         this.pluginId = pluginId;
         this.walletFileName = walletFilename;
         this.pluginFileSystem = pluginFileSystem;
@@ -140,7 +143,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I define the MonitorAgent private class
          */
-        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, dao, this.context);
+        monitorAgent = new MonitorAgent(this.wallet, this.isReset, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, dao, this.context);
 
         // I define the thread name and start it.
         threadName = "CryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
@@ -185,6 +188,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * private class variables
          */
         Wallet wallet;
+        final boolean isReset;
         PeerGroup peerGroup;
         File walletFileName;
         BlockChain blockChain;
@@ -217,6 +221,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param blockchainNetworkType
          */
         public MonitorAgent(Wallet wallet,
+                            boolean isReset,
                             File walletFileName,
                             UUID pluginId,
                             PluginFileSystem pluginFileSystem,
@@ -227,6 +232,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                             Context context) {
 
             this.wallet = wallet;
+            this.isReset = isReset;
             this.walletFileName = walletFileName;
             this.pluginId = pluginId;
             this.pluginFileSystem = pluginFileSystem;
@@ -255,11 +261,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         private void doTheMainTask() throws Exception {
             System.out.println("***CryptoNetwork***  starting and connecting on " + BLOCKCHAIN_NETWORKTYPE.getCode() + "...");
 
+            //reset the wallet if needed
+            if (this.isReset)
+                this.wallet.reset();
+
             try{
                 /**
                  * creates the blockchain object for the specified network.
                  */
-                BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
+                BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(this.isReset, pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
                 blockChain = cryptoNetworkBlockChain.getBlockChain();
 
                 /**
@@ -931,7 +941,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     }
 
     public Wallet getWallet(){
-        return this.monitorAgent.getWallet();
+        if (this.monitorAgent == null)
+            return this.wallet;
+        else
+            return this.monitorAgent.getWallet();
     }
 
     public BlockchainDownloadProgress getBlockchainDownloadProgress(){
