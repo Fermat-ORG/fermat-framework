@@ -14,10 +14,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -34,7 +31,7 @@ import javax.websocket.Session;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor {
 
@@ -179,14 +176,14 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
             databaseTransaction.execute();
         }
-
     }
 
     /**
      * Create a new row into the data base
      *
      * @param nodesCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
     private DatabaseTransactionStatementPair insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantCreateTransactionStatementPairException {
 
@@ -199,6 +196,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
         nodeCatalog.setIp(nodesCatalogTransaction.getIp());
         nodeCatalog.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
         nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
+        nodeCatalog.setOfflineCounter(0);
         nodeCatalog.setName(nodesCatalogTransaction.getName());
         nodeCatalog.setLastLocation(nodesCatalogTransaction.getLastLocation());
         nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
@@ -215,7 +213,8 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
      * Update a row into the data base
      *
      * @param nodesCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
     private DatabaseTransactionStatementPair updateNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantCreateTransactionStatementPairException {
 
@@ -245,8 +244,8 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
      * Delete a row from the data base
      *
      * @param identityPublicKey
-     * @throws CantDeleteRecordDataBaseException
-     * @throws RecordNotFoundException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
     private DatabaseTransactionStatementPair deleteNodesCatalog(String identityPublicKey) throws CantCreateTransactionStatementPairException {
 
@@ -262,7 +261,8 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
      * Create a new row into the data base
      *
      * @param nodesCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
     private DatabaseTransactionStatementPair insertNodesCatalogTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantCreateTransactionStatementPairException {
 
