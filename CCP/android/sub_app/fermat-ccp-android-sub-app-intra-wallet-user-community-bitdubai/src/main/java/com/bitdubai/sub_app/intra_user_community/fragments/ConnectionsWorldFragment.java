@@ -482,7 +482,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return getMoreData(location,distance,alias);
+                    return getMoreData(location,distance,alias, offset);
                 }
             };
             worker.setContext(getActivity());
@@ -747,12 +747,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     }
 
 
-    private synchronized List<IntraUserInformation> getMoreData(DeviceLocation location, double distance, String alias) {
+    private synchronized List<IntraUserInformation> getMoreData(DeviceLocation location, double distance, String alias, int offsetP) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
 
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offsetP);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
