@@ -19,6 +19,7 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
@@ -211,11 +212,11 @@ public class NotificationService extends Service {
         }
     }
 
-    public void notificate(String publicKey,FermatBundle fermatBundle){
+    public void notificate(FermatBundle fermatBundle){
 
         try {
             String appToOpenPublicKey = fermatBundle.getString(APP_TO_OPEN_PUBLIC_KEY);
-            String appNotificationFrom = fermatBundle.getString(APP_NOTIFICATION_PAINTER_FROM);
+            Owner owner = (Owner) fermatBundle.getSerializable(APP_NOTIFICATION_PAINTER_FROM);
             String appActivityToOpen = fermatBundle.getString(APP_ACTIVITY_TO_OPEN_CODE);
             String notificationType = fermatBundle.getString(NOTIFICATION_BROADCAST_TYPE);
             String sourcePlugin = fermatBundle.getString(SOURCE_PLUGIN);
@@ -235,7 +236,7 @@ public class NotificationService extends Service {
             Notification.Builder builder = null;
             NotificationManager notificationManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
-            if(publicKey==null) throw new IllegalArgumentException("App public key null");
+//            if(publicKey==null) throw new IllegalArgumentException("App public key null");
 
 //            if(lstNotifications.containsKey(notificationId)){
 //                notificationId = lstNotifications.get(publicKey);
@@ -247,7 +248,7 @@ public class NotificationService extends Service {
 //                }
 //            }
 
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appNotificationFrom, this, FermatApplication.getInstance().getAppManager().getAppsSession(appNotificationFrom));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(owner.getOwnerAppPublicKey(), this, FermatApplication.getInstance().getAppManager().getAppsSession(owner.getOwnerAppPublicKey()));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(fermatBundle);
@@ -305,7 +306,7 @@ public class NotificationService extends Service {
                         .setDeleteIntent(cancelPendingIntent)
                         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.YELLOW, 3000, 3000);
-                Log.i(LOG_TAG, "Launcher: " + publicKey);
+
             }
 
             if(builder!=null) {

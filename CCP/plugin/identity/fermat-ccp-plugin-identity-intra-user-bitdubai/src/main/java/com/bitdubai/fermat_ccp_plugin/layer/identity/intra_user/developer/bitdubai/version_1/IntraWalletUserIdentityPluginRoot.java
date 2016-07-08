@@ -297,12 +297,29 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
     public void registerIdentities(){
         try {
+
+            int i = 0;
+            Location location = null;
+            long frequency = 20;
+            long accuracy = 100;
+
             List<IntraWalletUserIdentity> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             List<Actor> lstActors = new ArrayList<Actor>();
             for(IntraWalletUserIdentity user : lstIntraWalletUSer){
                 lstActors.add(intraActorManager.buildIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(), Actors.INTRA_USER, user.getImage()));
+
+                if(i == 0)
+                {
+                    location =lstIntraWalletUSer.get(0).getLocation();
+                    frequency = getFrequency(lstIntraWalletUSer.get(0).getFrequency());
+                    accuracy = lstIntraWalletUSer.get(0).getAccuracy();
+                }
+
+                i++;
             }
-            intraActorManager.registerActors(lstActors,lstIntraWalletUSer.get(0).getLocation(),getFrecuency(lstIntraWalletUSer.get(0).getFrequency()),lstIntraWalletUSer.get(0).getAccuracy());
+
+            intraActorManager.registerActors(lstActors,location,frequency,accuracy);
+
         } catch (CantListIntraWalletUserIdentitiesException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -315,7 +332,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
         intraActorManager.registerActor(intraActorManager.buildIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage())
                                         ,intraWalletUserIdentity.getLocation(),
-                                        getFrecuency(intraWalletUserIdentity.getFrequency()),
+                                        getFrequency(intraWalletUserIdentity.getFrequency()),
                                         intraWalletUserIdentity.getAccuracy());
 
     }
@@ -395,11 +412,11 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
 
-    private long getFrecuency(Frequency frecuency)
+    private long getFrequency(Frequency frequency)
     {
         long refresh = 10;
 
-        switch (frecuency){
+        switch (frequency){
             case LOW:
                 refresh = 60;
                 break;
