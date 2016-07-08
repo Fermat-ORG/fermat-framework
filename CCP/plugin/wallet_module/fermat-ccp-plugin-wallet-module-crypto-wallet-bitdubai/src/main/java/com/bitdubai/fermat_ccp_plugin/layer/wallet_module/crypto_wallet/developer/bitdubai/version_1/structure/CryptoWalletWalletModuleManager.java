@@ -1628,17 +1628,19 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     @Override
     public void launchNotification() {
 //        FermatBundle fermatBundle = new FermatBundle();
-//        fermatBundle.put(SOURCE_PLUGIN,Plugins.CRYPTO_WALLET.getCode());
-//        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+//        fermatBundle.put(NotificationBundleConstants.SOURCE_PLUGIN,Plugins.CRYPTO_WALLET.getCode());
+//        Owner owner = new Owner();
+//        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+//        fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
 //        if(i%2==0){
-//            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY,SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+//            fermatBundle.put(NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
 ////            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY,SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-//            fermatBundle.put(NOTIFICATION_ID,20);
-//            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(),fermatBundle);
+//            fermatBundle.put(NotificationBundleConstants.NOTIFICATION_ID,20);
+//            fermatBundle.put(NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,fermatBundle);
 //        }else{
-//            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY,SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-//            fermatBundle.put(NOTIFICATION_ID,30);
+//            fermatBundle.put(NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY,SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+//            fermatBundle.put(NotificationBundleConstants.NOTIFICATION_ID,30);
 //            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(),fermatBundle);
 //        }
 //        i++;

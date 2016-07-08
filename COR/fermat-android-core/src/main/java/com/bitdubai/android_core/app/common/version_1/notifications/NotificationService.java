@@ -19,6 +19,7 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
@@ -215,7 +216,7 @@ public class NotificationService extends Service {
 
         try {
             String appToOpenPublicKey = fermatBundle.getString(APP_TO_OPEN_PUBLIC_KEY);
-            String appNotificationFrom = fermatBundle.getString(APP_NOTIFICATION_PAINTER_FROM);
+            Owner owner = (Owner) fermatBundle.getSerializable(APP_NOTIFICATION_PAINTER_FROM);
             String appActivityToOpen = fermatBundle.getString(APP_ACTIVITY_TO_OPEN_CODE);
             String notificationType = fermatBundle.getString(NOTIFICATION_BROADCAST_TYPE);
             String sourcePlugin = fermatBundle.getString(SOURCE_PLUGIN);
@@ -247,7 +248,7 @@ public class NotificationService extends Service {
 //                }
 //            }
 
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appNotificationFrom, this, FermatApplication.getInstance().getAppManager().getAppsSession(appNotificationFrom));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(owner.getOwnerAppPublicKey(), this, FermatApplication.getInstance().getAppManager().getAppsSession(owner.getOwnerAppPublicKey()));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(fermatBundle);
