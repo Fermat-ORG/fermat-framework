@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
@@ -149,10 +150,10 @@ public final class ActorConnectionEventActions {
             fermatBundle.put(NotificationBundleConstants.SOURCE_PLUGIN, Plugins.CRYPTO_CUSTOMER.getCode());
             fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode()));
             fermatBundle.put(NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
-            fermatBundle.put(NotificationBundleConstants.NOTIFICATION_ID, 1);
+            fermatBundle.put(NotificationBundleConstants.NOTIFICATION_ID, CBPBroadcasterConstants.CCC_CONNECTION_REQUEST_RECEIVED);
             fermatBundle.put(NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, null, fermatBundle);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
             cryptoBrokerNetworkService.confirm(request.getRequestId());
 
