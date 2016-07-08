@@ -95,15 +95,15 @@ public class ConfigurationService {
         try {
 
             if(!configuration.getNodeName().toString().equals(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME))){
-                ConfigurationManager.updateValue(ConfigurationManager.INTERNAL_IP, configuration.getPort().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.INTERNAL_IP, configuration.getNodeName());
             }
 
             if(!configuration.getInternalIp().toString().equals(ConfigurationManager.getValue(ConfigurationManager.INTERNAL_IP))){
-                ConfigurationManager.updateValue(ConfigurationManager.INTERNAL_IP, configuration.getPort().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.INTERNAL_IP, configuration.getInternalIp());
             }
 
             if(!configuration.getPublicIp().toString().equals(ConfigurationManager.getValue(ConfigurationManager.PUBLIC_IP))){
-                ConfigurationManager.updateValue(ConfigurationManager.PUBLIC_IP, configuration.getPort().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.PUBLIC_IP, configuration.getPublicIp());
             }
 
             if(!configuration.getPort().toString().equals(ConfigurationManager.getValue(ConfigurationManager.PORT))){
@@ -111,11 +111,11 @@ public class ConfigurationService {
             }
 
             if(!configuration.getLatitude().toString().equals(Double.valueOf(ConfigurationManager.getValue(ConfigurationManager.LATITUDE)))){
-                ConfigurationManager.updateValue(ConfigurationManager.LATITUDE, configuration.getPort().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.LATITUDE, configuration.getLatitude().toString());
             }
 
             if(!configuration.getLongitude().toString().equals(Double.valueOf(ConfigurationManager.getValue(ConfigurationManager.LONGITUDE)))){
-                ConfigurationManager.updateValue(ConfigurationManager.LONGITUDE, configuration.getPort().toString());
+                ConfigurationManager.updateValue(ConfigurationManager.LONGITUDE, configuration.getLongitude().toString());
             }
 
             if(!configuration.getUser().equals(ConfigurationManager.getValue(ConfigurationManager.USER))){
@@ -143,7 +143,7 @@ public class ConfigurationService {
             }
 
             if (!configuration.getGoogleMapApiKey().equals(ConfigurationManager.getValue(ConfigurationManager.GOOGLE_MAP_API_KEY))){
-                ConfigurationManager.updateValue(ConfigurationManager.GOOGLE_MAP_API_KEY, configuration.getMonitUrl());
+                ConfigurationManager.updateValue(ConfigurationManager.GOOGLE_MAP_API_KEY, configuration.getGoogleMapApiKey());
             }
 
         } catch (ConfigurationException e) {
