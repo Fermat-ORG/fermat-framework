@@ -173,6 +173,8 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
             cryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
             cryptoMoneyTransaction.setMemo(holdParameters.getMemo());
             cryptoMoneyTransaction.setBlockchainNetworkType(holdParameters.getBlockchainNetworkType());
+            cryptoMoneyTransaction.setFee(holdParameters.getFee());
+            cryptoMoneyTransaction.setFeeOrigin(holdParameters.getFeeOrigin());
              holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoMoneyTransaction);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

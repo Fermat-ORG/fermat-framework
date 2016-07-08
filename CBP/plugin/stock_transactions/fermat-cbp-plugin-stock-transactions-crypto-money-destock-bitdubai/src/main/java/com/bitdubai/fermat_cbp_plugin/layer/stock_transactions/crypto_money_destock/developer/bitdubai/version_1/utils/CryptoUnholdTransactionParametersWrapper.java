@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_des
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransactionParameters;
 
 import java.math.BigDecimal;
@@ -19,6 +21,9 @@ public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTra
     private  String          memo;
     private  String          publicKeyPlugin;
     private BlockchainNetworkType blockchainNetworkType;
+    //fee values
+    private long                   fee;
+    private FeeOrigin feeOrigin;
 
     public CryptoUnholdTransactionParametersWrapper(UUID transactionId,
                                                     CryptoCurrency cryptoCurrency,
@@ -119,6 +124,31 @@ public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTra
     @Override
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
     this.blockchainNetworkType = blockchainNetworkType;
+    }
+
+    @Override
+    public long getFee() {
+        return fee;
+    }
+
+    @Override
+    public void setFee(long fee) {
+        this.fee = fee;
+    }
+
+    @Override
+    public void setFee(BitcoinFee bitcoinFee){
+        this.fee = bitcoinFee.getFee();
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return feeOrigin;
+    }
+
+    @Override
+    public void setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
     }
 
 }

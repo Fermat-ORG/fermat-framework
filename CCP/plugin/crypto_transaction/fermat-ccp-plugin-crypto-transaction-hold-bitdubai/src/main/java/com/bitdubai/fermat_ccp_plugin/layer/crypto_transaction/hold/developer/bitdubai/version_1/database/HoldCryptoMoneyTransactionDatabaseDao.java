@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -133,6 +134,18 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
             longFee = minimalFee;
         }
         holdCryptoMoneyTransaction.setFee(longFee);
+        FeeOrigin feeOrigin;
+        String feeOriginString = cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_ORIGIN_TYPE_COLUMN_NAME);
+        if(feeOriginString==null||feeOriginString.isEmpty()){
+            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        } else {
+            try{
+                feeOrigin = FeeOrigin.getByCode(feeOriginString);
+            } catch (InvalidParameterException ex){
+                feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            }
+        }
+        holdCryptoMoneyTransaction.setFeeOrigin(feeOrigin);
 
         return holdCryptoMoneyTransaction;
     }
