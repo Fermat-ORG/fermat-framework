@@ -1338,6 +1338,14 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             final double amount = parseToDouble(NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY_QUANTITY));
 
             final MoneyType moneyType = MoneyType.getByCode(moneyTypeCode);
+            //Load Wallet Settings
+            CryptoBrokerWalletPreferenceSettings preferenceSettings;
+            try {
+                preferenceSettings = loadAndGetSettings(cryptoBrokerPublicKey);
+            } catch (Exception e) {
+                preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+            }
+
             switch (moneyType) {
                 case CRYPTO:
                     merchandiseWalletPlatform = Platforms.CRYPTO_CURRENCY_PLATFORM;
@@ -1350,7 +1358,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                         throw new CantSubmitMerchandiseException(null, "Validating the Stock to submit the merchandise", "the associated wallet don't have a public key");
 
                     final CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(associatedWallet.getWalletPublicKey());
-                    balance = (double) cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+                    balance = (double) cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(preferenceSettings.getBlockchainNetworkType());
                     break;
 
                 case BANK:
