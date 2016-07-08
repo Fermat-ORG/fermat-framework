@@ -19,13 +19,19 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettin
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -71,6 +77,11 @@ public class ChatFragment
             chatManager = appSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+
+            FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+            registerReceiver(fermatIntentFilter, new ChatBroadcastReceiver());
+//            FermatIntentFilter fermatIntentFilter2 = new FermatIntentFilter(BroadcasterType.NOTIFICATION_SERVICE);
+//            registerReceiver(fermatIntentFilter2, new ChatBroadcastReceiver());
 
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
@@ -132,14 +143,16 @@ public class ChatFragment
     @Override
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
-        if(code.equals("13")) {
-            if (searchView != null) {
-                if (searchView.getQuery().toString().equals("")) {
-                    adapterView.refreshEvents();
-                }
-            } else {
+        onUpdateViewUIThread();
+    }
+
+    public void onUpdateViewUIThread() {
+        if (searchView != null) {
+            if (searchView.getQuery().toString().equals("")) {
                 adapterView.refreshEvents();
             }
+        } else {
+            adapterView.refreshEvents();
         }
     }
 
@@ -272,5 +285,30 @@ public class ChatFragment
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Receiver class implemented
+     */
+    private class ChatBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
+                    onUpdateViewUIThread();
+                }
+
+                if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
+//                    fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
+                }
+            } catch (IllegalAccessException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
     }
 }

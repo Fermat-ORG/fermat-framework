@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -89,6 +91,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new BrokerListAdapter(getActivity(), brokerList);
@@ -125,6 +128,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -135,10 +139,6 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
             drawable = getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors);
 
         toolbar.setBackground(drawable);
-
-        if (toolbar.getMenu() != null) {
-            toolbar.getMenu().clear();
-        }
     }
 
     @Override
@@ -151,6 +151,25 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     public void onLongItemClickListener(BrokerIdentityBusinessInfo data, int position) {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == FragmentsCommons.REQUEST_QUOTES_OPTION_MENU_ID) {
+            try {
+                moduleManager.requestQuotes();
+                Toast.makeText(getActivity(), "Request for quotations sent", Toast.LENGTH_LONG).show();
+
+            } catch (CantGetCryptoBrokerListException e) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -175,6 +194,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {

@@ -278,6 +278,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     .setBody(R.string.cht_chat_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.chat_identity_subapp)
+                    .setCheckButtonAndTextVisible(0)
+                    .setIsCheckEnabled(false)
                     .setBannerRes(R.drawable.banner_identity_chat)
                     .setTextFooter(R.string.cht_chat_footer).build();
             pd.show();
@@ -881,7 +883,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     private void checkGPSOn(){
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
-                turnOnGPSDialog();
+                //if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
+                    turnOnGPSDialog();
+               // }
             }else
             {
                 if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
