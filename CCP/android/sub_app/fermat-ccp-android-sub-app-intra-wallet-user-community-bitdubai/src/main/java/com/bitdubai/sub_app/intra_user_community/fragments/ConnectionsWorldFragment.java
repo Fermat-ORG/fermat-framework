@@ -457,7 +457,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     public void showErrorGPS() {
         final ErrorConnectingGPSDialog errorConnectingGPS = new ErrorConnectingGPSDialog(getActivity(), intraUserSubAppSession, null);
         errorConnectingGPS.setDescription("Please, turn ON your GPS.");
-        errorConnectingGPS.setRightButton("Close", new View.OnClickListener() {
+        errorConnectingGPS.setCloseButton("Close", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 errorConnectingGPS.dismiss();

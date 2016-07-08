@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_dialog_network"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:ignore="UselessParent">
@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:src="@drawable/cht_id_geolacation_icon"
+            android:src="@drawable/ccp_id_geolocation_icon"
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -30,7 +30,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
-            android:text="You are not connected to"
+            android:text="Youre GPS is OFF"
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
@@ -45,29 +45,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/negative_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:padding="12dp"
-                android:singleLine="true"
-                android:text="Cancel"
-                android:textColor="#ffffff"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#e1e1e1" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/positive_button"
+                android:id="@+id/Close_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
