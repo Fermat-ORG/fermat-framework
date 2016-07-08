@@ -36,6 +36,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -130,7 +131,7 @@ public class Profiles implements RestFulServices {
     @GZIP
     @Path("/actor/photo/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFullPhoto(@QueryParam("id") String actorIdentityPublicKey){
+    public Response getFullPhoto(@PathParam("id") String actorIdentityPublicKey){
 
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Profiles - Starting listActors");
@@ -139,7 +140,7 @@ public class Profiles implements RestFulServices {
         try{
 
             LOG.info("actorIdentityPublicKey  = " + actorIdentityPublicKey);
-            ActorsCatalog actorsCatalog = daoFactory.getActorsCatalogDao().findById(actorIdentityPublicKey);
+            ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(actorIdentityPublicKey);
 
             /*
              * Create the respond
