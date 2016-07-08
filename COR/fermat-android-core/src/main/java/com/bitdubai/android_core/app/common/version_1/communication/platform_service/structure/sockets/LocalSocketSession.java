@@ -69,11 +69,6 @@ public abstract class LocalSocketSession {
 
     public void clear() throws IOException {
         try {
-            objectOutputStream.close();
-        }catch (Exception e){
-
-        }
-        try {
             localSocket.close();
         }catch (Exception e){
 
@@ -125,6 +120,21 @@ public abstract class LocalSocketSession {
                 objectOutputStream.write(1);
                 objectOutputStream.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
+                if(localSocket.isClosed()){
+                    if (localSocket.isOutputShutdown()){
+                        try {
+                            localSocket.getOutputStream().flush();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                    //test
+                    try {
+                        reconnect();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
                 e.printStackTrace();
             }catch (IllegalBlockingModeException e){
                 e.printStackTrace();
@@ -209,6 +219,10 @@ public abstract class LocalSocketSession {
         }
     }
 
+    public void reconnect() throws IOException {
+        destroy();
+        connect();
+    }
 
 
 }
