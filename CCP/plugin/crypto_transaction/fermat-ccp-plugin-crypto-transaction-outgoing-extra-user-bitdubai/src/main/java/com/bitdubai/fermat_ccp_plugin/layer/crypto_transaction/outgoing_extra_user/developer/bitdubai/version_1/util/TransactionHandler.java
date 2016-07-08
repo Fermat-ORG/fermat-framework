@@ -27,7 +27,6 @@ import org.bitcoinj.core.Transaction;
 public class TransactionHandler {
 
     public static void handleTransaction(TransactionWrapper   transaction       ,
-                                         BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                          TransactionSender<CryptoTransaction> bitcoinNetworkTransactionSender,
                                          CryptoStatus         cryptoStatus      ,
                                          CryptoWalletWallet bitcoinWallet     ,
