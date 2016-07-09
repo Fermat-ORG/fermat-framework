@@ -45,6 +45,9 @@ interface IPlatformService {
                 in ModuleObjectParameterWrapper[] parameters
                 );
 
+    // Obtain module interfaces
+//    Class[] obtainModuleInterfaces(String platformCode, String layerCode, String pluginsCode, String developerCode, String version);
+
     String register();
 
     boolean isFermatSystemRunning();

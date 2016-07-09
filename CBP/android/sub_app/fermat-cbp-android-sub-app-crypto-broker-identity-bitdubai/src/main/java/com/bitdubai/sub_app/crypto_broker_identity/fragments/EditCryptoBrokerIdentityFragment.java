@@ -381,6 +381,7 @@ public class EditCryptoBrokerIdentityFragment
             FermatWorker fermatWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
 
             progressBar.setVisibility(View.VISIBLE);
+
             executor = fermatWorker.execute();
         }
     }

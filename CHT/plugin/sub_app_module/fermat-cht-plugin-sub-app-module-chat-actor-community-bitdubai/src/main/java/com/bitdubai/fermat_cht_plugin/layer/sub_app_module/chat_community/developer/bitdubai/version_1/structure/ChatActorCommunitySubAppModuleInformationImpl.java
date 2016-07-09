@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     private String city     ;
     private final String status;
     private final Location location;
+    private final ProfileStatus profileStatus;//online offline
 
     public ChatActorCommunitySubAppModuleInformationImpl(final String publicKey,
                                                          final String alias,
@@ -36,7 +38,8 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
                                                          final String country,
                                                          final String state,
                                                          final String city,
-                                                         final Location location) {
+                                                         final Location location,
+                                                         final ProfileStatus profileStatus) {
 
         this.publicKey          = publicKey      ;
         this.alias              = alias          ;
@@ -48,6 +51,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.state             = state         ;
         this.city             = city         ;
         this.location             = location         ;
+        this.profileStatus             = profileStatus         ;
     }
 
 
@@ -63,6 +67,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.state = exposingData.getState();
         this.city = exposingData.getCity();
         this.location = location;
+        this.profileStatus = ProfileStatus.ONLINE;
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {
@@ -76,6 +81,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.state = ced.getState();
         this.city = ced.getCity();
         this.location = ced.getLocation();
+        this.profileStatus = ced.getStatusConnected();
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatActorCommunityInformation record) {
@@ -89,6 +95,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.state = record.getState();
         this.city = record.getCity();
         this.location = record.getLocation();
+        this.profileStatus = record.getProfileStatus();
 
 
     }
@@ -137,6 +144,9 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     public Location getLocation() {
         return location;
     }
+    public ProfileStatus getProfileStatus() {
+        return profileStatus;
+    }
 
     public void setCity(String city) {
         this.city=city;
@@ -161,6 +171,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
                 ", state=" + (state) + '\'' +
                 ", city=" + (city) + '\'' +
                 ", location=" + (location!=null) +
+                ", profileStatus=" + (profileStatus.getCode()) + '\'' +
                 '}';
     }
 }

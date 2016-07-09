@@ -428,13 +428,13 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         /**
          * Wizard
          */
-        activity = new Activity();
-        activity.setActivityType(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
-        activity.setType(Activities.DESKTOP_WIZZARD_WELCOME);
-        activity.setFullScreen(true);
-        activity.setBackgroundColor("#ffffff");
-        activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
-        runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
+//        activity = new Activity();
+//        activity.setActivityType(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
+//        activity.setType(Activities.DESKTOP_WIZZARD_WELCOME);
+//        activity.setFullScreen(true);
+//        activity.setBackgroundColor("#ffffff");
+//        activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+//        runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
 
         fragment = new FermatRuntimeFragment();
         fragment.setFragmentCode(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());

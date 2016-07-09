@@ -537,8 +537,22 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
     @Override
     public long getBalanceBitcoinWallet(String walletPublicKey) {
+        String publicKeyActor;
+        try{
+            publicKeyActor=getSelectedActorIdentity().getPublicKey();
+        } catch (Exception e){
+            publicKeyActor = "customerPublicKey";
+        }
+
         try {
-            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+            CryptoCustomerWalletPreferenceSettings preferenceSettings;
+            try {
+                preferenceSettings = loadAndGetSettings(publicKeyActor);
+            } catch (Exception e) {
+                preferenceSettings = new CryptoCustomerWalletPreferenceSettings();
+            }
+            BlockchainNetworkType blockchainNetworkType = preferenceSettings.getBlockchainNetworkType();
+            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
         } catch (CantCalculateBalanceException | CantLoadWalletsException ignore) {
             return 0;
         }

@@ -283,7 +283,7 @@ public class CryptoBrokerIdentityListFragment
                     recyclerView.setVisibility(View.VISIBLE);
                 }
 
-            } catch (IllegalAccessException e) {
+            } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
