@@ -201,12 +201,11 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
 
      if(isAuthenticate() === false){
          alert("Service error: You must authenticate again");
-         $location.url('../index.html');
+         $window.location.href = '../index.html';
      }else{
 
          if(window.localStorage['jwtAuthToke'] !== null){
                $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
-               $http.defaults.headers.common['Accept-Encoding'] = 'gzip';
          }
 
          requestActorsType();
