@@ -70,6 +70,7 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -122,6 +123,7 @@ public class ConnectionsWorldFragment
     private GridLayoutManager layoutManager;
     private CommunityListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
+    private ExecutorService executor;
     TextView noDatalabel;
     ImageView noData;
     private Button refreshButton;
@@ -406,6 +408,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
+        try{
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -468,6 +471,12 @@ public class ConnectionsWorldFragment
                 }
             });
             worker.execute();
+        }
+        }catch (Exception ignore){
+            if (executor != null) {
+                executor.shutdown();
+                executor = null;
+            }
         }
     }
 

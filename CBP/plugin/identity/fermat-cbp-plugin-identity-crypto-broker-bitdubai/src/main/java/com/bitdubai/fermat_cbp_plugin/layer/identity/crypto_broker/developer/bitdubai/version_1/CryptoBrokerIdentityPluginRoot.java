@@ -56,6 +56,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bit
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerIdentityDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -159,7 +160,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             Location location = locationManager.getLocation();
             long refreshInterval = broker.getFrequency().getRefreshInterval();
             if (broker.isPublished()) {
-                cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile, location, refreshInterval, accuracy));
+                cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile, location, refreshInterval, accuracy, ProfileStatus.UNKNOWN));
 
                 FermatBundle fermatBundle = new FermatBundle();
                 fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
@@ -279,7 +280,8 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
                                     identity.getProfileImage(),
                                     location,
                                     refreshInterval,
-                                    identity.getAccuracy()
+                                    identity.getAccuracy(),
+                                    ProfileStatus.UNKNOWN
                             )
                     );
                 }
@@ -301,7 +303,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             Location location = locationManager.getLocation();
             long refreshInterval = 0;
             refreshInterval = identity.getFrequency().getRefreshInterval();
-            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy()));
+            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy(), ProfileStatus.UNKNOWN));
         } catch (final CantExposeIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");
