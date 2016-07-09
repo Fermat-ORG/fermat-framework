@@ -61,7 +61,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        LOG.info("Processing new package received");
+        LOG.info("------------------ Processing new package received ------------------");
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
@@ -120,10 +120,14 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), actorProfile.getIdentityPublicKey());
                 Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
+                LOG.info("Registered new Actor = "+actorProfile.getName());
+
                 /*
                  * Send the respond
                  */
                 session.getAsyncRemote().sendObject(packageRespond);
+
+                LOG.info("------------------ Processing finish ------------------");
 
             }
 

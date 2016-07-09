@@ -59,7 +59,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        LOG.info("Processing new package received");
+        LOG.info("------------------ Processing new package received ------------------");
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String senderIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
@@ -91,10 +91,12 @@ public class MessageTransmitProcessor extends PackageProcessor {
 
             if (clientDestination == null) {
                 try {
+
                     CheckedInActor checkedInActor = getDaoFactory().getCheckedInActorDao().findById(destinationIdentityPublicKey);
                     clientDestination = clientsSessionMemoryCache.get(checkedInActor.getClientIdentityPublicKey());
+
                 } catch (CantReadRecordDataBaseException| RecordNotFoundException e) {
-                    System.out.println("i suppose that the actor is no longer connected");
+                    LOG.info("i suppose that the actor is no longer connected");
                     e.printStackTrace();
                 }
             }
@@ -113,6 +115,9 @@ public class MessageTransmitProcessor extends PackageProcessor {
                 Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPONSE, channelIdentityPrivateKey, senderIdentityPublicKey);
                 session.getAsyncRemote().sendObject(packageRespond);
 
+                LOG.info("Message transmit successfully");
+
+
             }else {
 
                 /*
@@ -121,7 +126,12 @@ public class MessageTransmitProcessor extends PackageProcessor {
                 messageTransmitRespond = new MessageTransmitRespond(MsgRespond.STATUS.FAIL, "The destination is not more available", messageContent.getId());
                 Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPONSE, channelIdentityPrivateKey, senderIdentityPublicKey);
                 session.getAsyncRemote().sendObject(packageRespond);
+
+                LOG.info("The destination is not more available, Message not transmitted");
             }
+
+            LOG.info("------------------ Processing finish ------------------");
+
 
 
         }catch (Exception exception){
