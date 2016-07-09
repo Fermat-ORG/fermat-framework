@@ -216,7 +216,8 @@ public class ConnectionNotificationsFragment
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
+        offset=0;
+        onRefresh();
     }
 
     private ArrayList<ChatActorCommunityInformation> getMoreData() {

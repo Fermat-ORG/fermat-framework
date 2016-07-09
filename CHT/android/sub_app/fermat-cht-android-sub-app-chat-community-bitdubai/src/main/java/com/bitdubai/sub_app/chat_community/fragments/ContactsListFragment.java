@@ -195,7 +195,8 @@ public class ContactsListFragment
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
+        offset=0;
+        onRefresh();
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {

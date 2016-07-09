@@ -264,9 +264,7 @@ public class ConnectionsWorldFragment
                                 }
                             });
                         } else{
-
                             refreshButtonView.setVisibility(View.GONE);
-
                         }
 //                        if (!isRefreshing) {
 
