@@ -2154,7 +2154,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public FermatRuntime getRuntimeManager(){
-        if(runtimeStructureManager==null) new RuntimeStructureManager(this);
+        if(runtimeStructureManager==null) runtimeStructureManager = new RuntimeStructureManager(this);
         return runtimeStructureManager;
     }
 

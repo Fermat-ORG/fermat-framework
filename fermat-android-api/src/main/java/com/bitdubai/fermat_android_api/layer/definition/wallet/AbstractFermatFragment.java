@@ -419,7 +419,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final void changeStartActivity(String activityCode){
-        if(isAttached)
             ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
     }
 
