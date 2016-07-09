@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +54,8 @@ import com.bitdubai.sub_app.crypto_customer_identity.util.CreateIdentityWorker;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 
 
@@ -244,8 +247,12 @@ implements FermatWorkerCallBack{
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        //Bundle extras = data.getExtras();
-                        cryptoCustomerBitmap = (Bitmap) extras.get("data");
+                        Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
+                        if (reducedSizeBitmap != null) {
+                            cryptoCustomerBitmap = reducedSizeBitmap;
+                        }
+//                        Bundle extras = data.getExtras();
+//                        cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
                 case REQUEST_LOAD_IMAGE:
@@ -377,6 +384,64 @@ implements FermatWorkerCallBack{
     private GeoFrequency getFrequencyData() {
         return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? GeoFrequency.NONE :
                 (GeoFrequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    }
+
+    private Bitmap getBitmap(String path) {
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            in = getActivity().getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+
+            Bitmap b = null;
+            in = getActivity().getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE
+                        / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
+                    b.getHeight());
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
+        }
     }
 
     public void turnGPSOn() {

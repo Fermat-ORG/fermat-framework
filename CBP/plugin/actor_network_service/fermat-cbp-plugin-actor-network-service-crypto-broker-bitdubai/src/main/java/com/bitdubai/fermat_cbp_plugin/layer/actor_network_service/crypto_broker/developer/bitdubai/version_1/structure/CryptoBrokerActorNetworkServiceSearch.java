@@ -56,7 +56,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -93,27 +93,42 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     false);
 
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    Actors.CBP_CRYPTO_BROKER.getCode(),
-                    alias,
-                    distance,
-                    null,
-                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
-                    null, //publicKey,
-                    deviceLocation,
-                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    offset,
-                    NetworkServiceType.CRYPTO_BROKER
+                    Actors.CBP_CRYPTO_BROKER.getCode(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    true,
+                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
+                    null, //publicKey,
+                    max,
+                    offset
             );
+//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+//                    Actors.CBP_CRYPTO_BROKER.getCode(),
+//                    alias,
+//                    distance,
+//                    null,
+//                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
+//                    null, //publicKey,
+//                    deviceLocation,
+//                    max,
+//                    null,
+//                    NetworkServiceType.UNDEFINED,
+//                    offset,
+//                    NetworkServiceType.CRYPTO_BROKER
+//            );
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
             for (final ActorProfile actorProfile : list) {
-
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -155,7 +170,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -197,7 +212,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -238,8 +253,8 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
             for (final ActorProfile actorProfile : list) {
-
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0));
+                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -283,7 +298,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingData = new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0);
+                cryptoBrokerExposingData = new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus());
             }
 
             return cryptoBrokerExposingData;

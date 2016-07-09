@@ -12,7 +12,7 @@ public class NotificationBundleConstants {
      */
     public static final String APP_TO_OPEN_PUBLIC_KEY = "appToOpenPk";
     /**
-     * Public Key of notificationPainter (App Public key)
+     * Owner to get the notificationPainter (Developer/Framework/Internet)
      */
     public static final String APP_NOTIFICATION_PAINTER_FROM = "appNotificationFrom";
     /**
