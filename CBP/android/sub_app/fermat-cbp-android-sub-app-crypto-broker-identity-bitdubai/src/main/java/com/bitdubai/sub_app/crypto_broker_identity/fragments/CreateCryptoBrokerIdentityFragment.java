@@ -194,7 +194,7 @@ public class CreateCryptoBrokerIdentityFragment
         mBrokerName.addTextChangedListener(textWatcher);
         textCount.setText(String.valueOf(maxLenghtTextCount));
 
-    //    textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
+        textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
 
         checkGPSOn();
 

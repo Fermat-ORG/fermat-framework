@@ -671,10 +671,21 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                 newValue = numberFormat.format(new BigDecimal(newValue));
                 putClause(clause, newValue);
 
+                //change lostwood
                 //CALCULATE BROKER CURRENCY QUANTITY
-                final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
+               /* final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
                 final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace(",", ""));
-                final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);
+                final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);*/
+
+                BigDecimal amountToPay=new BigDecimal(0);
+                try {
+                    final BigDecimal exchangeRate = new BigDecimal(numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString());
+                    final BigDecimal amountToBuy =new BigDecimal(numberFormat.parse( clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()).toString());
+                    amountToPay = amountToBuy.multiply(exchangeRate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                //
 
                 //ASSIGN BROKER CURRENCY QUANTITY
                 final String amountToPayStr = numberFormat.format(amountToPay.doubleValue());

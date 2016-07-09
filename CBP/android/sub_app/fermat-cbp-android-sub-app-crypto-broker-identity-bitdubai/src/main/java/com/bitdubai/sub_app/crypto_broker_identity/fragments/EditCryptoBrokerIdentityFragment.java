@@ -253,6 +253,8 @@ public class EditCryptoBrokerIdentityFragment
             }
         });
 
+        textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
+
         if (wantPublishIdentity) {
             sw.setImageResource(R.drawable.switch_visible);
         } else {

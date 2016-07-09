@@ -420,7 +420,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
 
         //ASIGNAMENT BROKER CURRENCY
-        final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
+        final String amountToPayStr = numberFormat.format(amountToPay.doubleValue());
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 

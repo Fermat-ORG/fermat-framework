@@ -195,7 +195,7 @@ implements FermatWorkerCallBack{
 
         mCustomerName.requestFocus();
 
-      //  textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
+        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
 
         checkGPSOn();
 

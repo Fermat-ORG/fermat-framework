@@ -129,7 +129,7 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
 
             try {
                 if(editTextValue.equals("0.0")){
-                    editTextView.setText(new BigDecimal(DecimalFormat.getInstance().parse(editTextValue).toString()).toString());
+                    editTextView.setText("");
                 }else{
                     editTextView.setText(new BigDecimal(DecimalFormat.getInstance().parse(editTextValue).toString()).toString());
                 }
