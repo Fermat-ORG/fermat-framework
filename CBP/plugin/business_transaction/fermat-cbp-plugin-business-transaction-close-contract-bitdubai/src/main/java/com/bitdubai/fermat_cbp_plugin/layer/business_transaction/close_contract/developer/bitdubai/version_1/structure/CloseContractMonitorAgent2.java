@@ -78,7 +78,12 @@ public class CloseContractMonitorAgent2
              */
             List<String> pendingEventsIdList = closeContractBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                checkPendingEvent(eventId);
+                try{
+                    checkPendingEvent(eventId);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
         } catch (CantGetContractListException |
                 UnexpectedResultReturnedFromDatabaseException |
