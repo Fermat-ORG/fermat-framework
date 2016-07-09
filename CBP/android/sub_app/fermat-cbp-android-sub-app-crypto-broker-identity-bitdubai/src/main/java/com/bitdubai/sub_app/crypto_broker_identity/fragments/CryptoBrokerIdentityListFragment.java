@@ -79,7 +79,6 @@ public class CryptoBrokerIdentityListFragment
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
         this.layout = layout;
 
         emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);

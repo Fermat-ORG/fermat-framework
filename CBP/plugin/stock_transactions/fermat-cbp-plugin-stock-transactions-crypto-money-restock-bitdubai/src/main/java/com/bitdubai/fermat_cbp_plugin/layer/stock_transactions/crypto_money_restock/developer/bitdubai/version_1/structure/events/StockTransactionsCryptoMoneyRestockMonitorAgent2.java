@@ -107,7 +107,18 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent2 extends AbstractAg
                     case INIT_TRANSACTION:
 
                         //Try to hold the funds in the crypto wallet
-                        CryptoHoldTransactionParametersWrapper cryptoTransactionParametersWrapper = new CryptoHoldTransactionParametersWrapper(cryptoMoneyTransaction.getTransactionId(), cryptoMoneyTransaction.getCryptoCurrency(), cryptoMoneyTransaction.getCryWalletPublicKey(), cryptoMoneyTransaction.getActorPublicKey(), cryptoMoneyTransaction.getAmount(), cryptoMoneyTransaction.getMemo(), pluginId.toString(), cryptoMoneyTransaction.getBlockchainNetworkType());
+                        CryptoHoldTransactionParametersWrapper cryptoTransactionParametersWrapper =
+                                new CryptoHoldTransactionParametersWrapper(
+                                        cryptoMoneyTransaction.getTransactionId(),
+                                        cryptoMoneyTransaction.getCryptoCurrency(),
+                                        cryptoMoneyTransaction.getCryWalletPublicKey(),
+                                        cryptoMoneyTransaction.getActorPublicKey(),
+                                        cryptoMoneyTransaction.getAmount(),
+                                        cryptoMoneyTransaction.getMemo(),
+                                        pluginId.toString(),
+                                        cryptoMoneyTransaction.getBlockchainNetworkType(),
+                                        cryptoMoneyTransaction.getFee(),
+                                        cryptoMoneyTransaction.getFeeOrigin());
                         cryptoHoldTransactionManager.createCryptoHoldTransaction(cryptoTransactionParametersWrapper);
 
                         //Set status to IN_HOLD

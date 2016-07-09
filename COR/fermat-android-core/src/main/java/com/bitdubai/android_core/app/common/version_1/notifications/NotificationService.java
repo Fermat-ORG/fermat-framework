@@ -100,7 +100,7 @@ public class NotificationService extends Service {
             int id = lstNotifications.get(appPublicKey);
             notificationManager.cancel(id);
         }else {
-            Log.i(LOG_TAG,"Cancel notificación arrive with no public key");
+            Log.i(LOG_TAG, "Cancel notificación arrive with no public key");
         }
     }
 
@@ -212,6 +212,8 @@ public class NotificationService extends Service {
         }
     }
 
+
+
     public void notificate(FermatBundle fermatBundle){
 
         try {
@@ -223,6 +225,8 @@ public class NotificationService extends Service {
             int notificationId = fermatBundle.getInt(NOTIFICATION_ID);
 
             //todo: sumar notificationId con sourcePlugin.
+
+            if(!dataIsValid(owner,sourcePlugin,notificationId))return;
 
             char[] letters = sourcePlugin.toCharArray();
             int leeterCount = 0;
@@ -318,6 +322,23 @@ public class NotificationService extends Service {
         }
     }
 
+
+    private boolean dataIsValid(Owner owner,String sourcePlugin,int notificationId){
+        boolean flag = true;
+        if(owner==null) {
+            Log.e(LOG_TAG, "Notification Owner null");
+            flag =false;
+        }
+        if(notificationId==0) {
+            Log.e(LOG_TAG, "Notification notificationId 0");
+            flag =false;
+        }
+        if(sourcePlugin==null) {
+            Log.e(LOG_TAG, "Notification source plugin null ");
+            flag =false;
+        }
+        return flag;
+    }
 
 
     public int notificateProgress(FermatBundle bundle) {

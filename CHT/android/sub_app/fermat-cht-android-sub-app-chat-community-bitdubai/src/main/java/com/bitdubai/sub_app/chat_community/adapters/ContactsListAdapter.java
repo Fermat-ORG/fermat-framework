@@ -70,13 +70,16 @@ public class ContactsListAdapter
                 holder.friendAvatar.setImageResource(R.drawable.cht_comm_icon_user);
 
             if(data.getLocation() != null ){
-                if (data.getState().equals("null") || data.getState().equals("null")) stateAddress = "";
+                if (data.getState().equals("null") || data.getState().equals("") || data.getState().equals("state")) stateAddress = "";
                 else stateAddress = data.getState() + " ";
-                if (data.getCity().equals("null") || data.getCity().equals("null")) cityAddress = "";
+                if (data.getCity().equals("null") || data.getCity().equals("city")) cityAddress = "";
                 else cityAddress = data.getCity() + " ";
-                if (data.getCountry().equals("null") || data.getCountry().equals("null")) countryAddress = "";
+                if (data.getCountry().equals("null") || data.getCountry().equals("country")) countryAddress = "";
                 else countryAddress = data.getCountry();
-                holder.location.setText(cityAddress + stateAddress + countryAddress);
+                if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
+                    holder.location.setText("Searching...");
+                }else
+                    holder.location.setText(cityAddress + stateAddress + countryAddress);
             } else
                 holder.location.setText("Searching...");
         }

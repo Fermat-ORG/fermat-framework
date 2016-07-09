@@ -31,16 +31,16 @@ public class TimestampAdapter extends TypeAdapter<Timestamp> {
         }
         in.endObject();
 
-        if (timeStamp == null)
-            throw new IOException("Malformed json without time value.");
-
         return timeStamp;
     }
 
     @Override
     public void write(final JsonWriter out, final Timestamp book) throws IOException {
         out.beginObject();
-        out.name("time").value(book.getTime());
+
+        if (book != null)
+            out.name("time").value(book.getTime());
+
         out.endObject();
     }
 }

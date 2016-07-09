@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.b
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -10,6 +11,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
@@ -141,12 +143,26 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
             long availableBalance = 0;
             for (CryptoHoldTransaction cryptoHoldTransaction : holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter)){
                 //TODO: Buscar el saldo disponible en la Bitcoin Wallet
-                availableBalance = cryptoWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).getBalance();
+                BlockchainNetworkType blockchainNetworkType = cryptoHoldTransaction.getBlockchainNetworkType();
+                if(blockchainNetworkType==null){
+                    blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                }
+                availableBalance = cryptoWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
                 if(availableBalance >= cryptoHoldTransaction.getAmount()) {
                     //TODO: llamar metodo Hold de la wallet que se implementara luego que se pruebe las wallet CSH y BNK;
 
                     long total = 0;
+
+                    FeeOrigin feeOrigin = cryptoHoldTransaction.getFeeOrigin();
+                    if(feeOrigin==null){
+                        feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS;
+                    }
+
+                    long longBitcoinFee = cryptoHoldTransaction.getFee();
+                    if(longBitcoinFee< BitcoinFee.SLOW.getFee()){
+                        longBitcoinFee = BitcoinFee.SLOW.getFee();
+                    }
 
                     if(cryptoHoldTransaction.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
                         total = (long)cryptoHoldTransaction.getAmount() + cryptoHoldTransaction.getFee();
@@ -167,8 +183,8 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                             new Date().getTime(),
                             cryptoHoldTransaction.getMemo(),
                             cryptoHoldTransaction.getBlockchainNetworkType(), cryptoHoldTransaction.getCurrency(),
-                            cryptoHoldTransaction.getFeeOrigin(),
-                            cryptoHoldTransaction.getFee(), total); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
+                            feeOrigin,
+                            longBitcoinFee, total); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
 
                     cryptoWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionRecord);
                     cryptoHoldTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
