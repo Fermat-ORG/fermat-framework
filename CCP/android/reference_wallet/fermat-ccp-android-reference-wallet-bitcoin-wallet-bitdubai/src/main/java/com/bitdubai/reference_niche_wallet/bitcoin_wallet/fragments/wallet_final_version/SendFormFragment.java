@@ -763,9 +763,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     String fee = txtFee.getText().toString();
 
                     if(feed_Substract.isChecked())
-                        feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode();
-                    else
                         feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode();
+                    else
+                        feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode();
 
                     BigDecimal money;
 
