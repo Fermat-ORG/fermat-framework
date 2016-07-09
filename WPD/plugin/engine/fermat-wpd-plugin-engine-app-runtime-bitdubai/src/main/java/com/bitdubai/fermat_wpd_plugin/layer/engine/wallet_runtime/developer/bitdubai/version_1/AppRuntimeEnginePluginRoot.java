@@ -2714,6 +2714,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         final int NO_FILTER_OPTION_MENU_ID = 3;
         final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
         final int CANCELED_FILTER_OPTION_MENU_ID = 5;
+        final int GO_TO_PROFILE = 6;
+        final int GO_TO_COMMUNITY = 7;
+        final int MENU_HELP = 8;
         final String PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
         final String statusBarColor = "#1375a7";
         final String titleBarColor = "#254478";
@@ -2879,7 +2882,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getKey());
 
-
         // Activity: Home
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
@@ -2902,6 +2904,27 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeHeader.setLabel("Market rate");
         runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
+
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(GO_TO_PROFILE);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Go to Profile");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(GO_TO_COMMUNITY);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Go to Community");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+//        optionMenuItem = new OptionMenuItem(MENU_HELP);
+//        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Help");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey());
@@ -2941,7 +2964,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
         runtimeFooter.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
         runtimeActivity.setFooter(runtimeFooter);
-
 
         // Activity: Open Negotiation details
         runtimeActivity = new Activity();
@@ -3323,6 +3345,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         final int CANCELED_FILTER_OPTION_MENU_ID = 5;
         final int START_NEGOTIATION_OPTION_MENU_ID = 6;
         final int REQUEST_QUOTES_OPTION_MENU_ID = 7;
+        final int GOT_TO_PROFILE = 8;
+        final int GO_TO_COMMUNITY = 9;
+        final int MENU_HELP = 10;
+
         final String PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode();
         final Owner OWNER = new Owner(PUBLIC_KEY);
 
@@ -3344,11 +3370,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         OptionsMenu optionsMenu;
         OptionMenuItem optionMenuItem;
 
-
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
-
 
         // Side Menu
         runtimeSideMenu = new SideMenu();
@@ -3482,7 +3506,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD.getKey());
 
-
         // Activity: Home
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
@@ -3514,9 +3537,29 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         // Option Menu Item - Open Broker List activity
         optionMenuItem = new OptionMenuItem(START_NEGOTIATION_OPTION_MENU_ID);
         optionMenuItem.setLabel("Start a Negotiation");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST.getCode()));
         optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(GOT_TO_PROFILE);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Go to Profile");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(GO_TO_COMMUNITY);
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Go to Community");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+//        optionMenuItem = new OptionMenuItem(MENU_HELP);
+//        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        optionMenuItem.setLabel("Help");
+//        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());

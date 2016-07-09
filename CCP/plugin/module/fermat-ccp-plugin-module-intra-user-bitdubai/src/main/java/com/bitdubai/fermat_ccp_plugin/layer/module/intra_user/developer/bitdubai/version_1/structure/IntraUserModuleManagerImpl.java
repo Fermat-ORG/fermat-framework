@@ -576,6 +576,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      * @throws CantGetIntraUsersListException
      */
     @Override
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     public List<IntraUserInformation> getAllIntraUsers(String identityPublicKey, int max, int offset) throws CantGetIntraUsersListException {
         try {
             List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();

@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -44,6 +43,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
@@ -54,7 +54,6 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
-
 
 /**
  * This Fragment let you edit a Broker Identity
@@ -77,6 +76,8 @@ public class EditCryptoBrokerIdentityFragment
     private boolean actualizable;
     Location location;
     private Uri imageToUploadUri;
+    IdentityBrokerPreferenceSettings settings;
+    boolean isGpsDialogEnable = true;
 
     // Managers
 
@@ -126,10 +127,19 @@ public class EditCryptoBrokerIdentityFragment
         }
 
         //Check if GPS is on and coordinate are fine
-        try {
+        try{
             location = appSession.getModuleManager().getLocation();
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
+        }
+
+        try {
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = settings.isGpsDialogEnabled();
+        } catch (Exception e) {
+            settings = new IdentityBrokerPreferenceSettings();
+            settings.setGpsDialogEnabled(true);
+            isGpsDialogEnable=true;
         }
 
         turnGPSOn();
@@ -243,6 +253,8 @@ public class EditCryptoBrokerIdentityFragment
             }
         });
 
+        textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
+
         if (wantPublishIdentity) {
             sw.setImageResource(R.drawable.switch_visible);
         } else {
@@ -267,16 +279,11 @@ public class EditCryptoBrokerIdentityFragment
         return false;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    //getActivity().getContentResolver().notifyChange(selectedImage, null);
-                    Bundle extras = data.getExtras();
-                    cryptoBrokerBitmap = (Bitmap) extras.get("data");
                     // grant all three uri permissions!
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
@@ -295,7 +302,7 @@ public class EditCryptoBrokerIdentityFragment
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        //Bundle extras = data.getExtras();
+                        Bundle extras = data.getExtras();
                         cryptoBrokerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
@@ -376,7 +383,6 @@ public class EditCryptoBrokerIdentityFragment
             progressBar.setVisibility(View.VISIBLE);
 
             executor = fermatWorker.execute();
-            appSession.getModuleManager().launchTestNotification();
         }
     }
 
@@ -409,6 +415,9 @@ public class EditCryptoBrokerIdentityFragment
         } else {
 
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            imageToUploadUri = Uri.fromFile(f);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -507,13 +516,18 @@ public class EditCryptoBrokerIdentityFragment
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void checkGPSOn() {
-        if (location != null) {
-            if (location.getLongitude() == 0 || location.getLatitude() == 0) {
+    private void checkGPSOn(){
+        if(location!= null){
+            if(location.getLongitude()==0 || location.getLatitude()==0){
+                if (isGpsDialogEnable ) {
+                    turnOnGPSDialog();
+                }
+
+            }
+        }else
+             if (isGpsDialogEnable ) {
                 turnOnGPSDialog();
             }
-        } else
-            turnOnGPSDialog();
     }
 
     public void turnOnGPSDialog() {

@@ -52,6 +52,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -92,7 +93,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
+            numberFormat.setMaximumFractionDigits(8);
             //NEGOTIATION INFORMATION
 
         } catch (Exception e) {
@@ -164,7 +165,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
                 clauseTextDialog.configure(
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_pay,
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
                         type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
 
                 clauseTextDialog.show();
@@ -366,8 +367,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
             final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
+            //LOCATION TO FIX THE DECIMAL FORMAT
+     //       new BigDecimal(DecimalFormat.getInstance(this.getResources().getConfiguration().locale).parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString())
+
+
             //ASIGNAMENT NEW VALUE
-            newValue = numberFormat.format(getBigDecimal(newValue));
+            //change lostwood
+         //   newValue = numberFormat.format(getBigDecimal(newValue));
+            newValue = numberFormat.format(new BigDecimal(newValue));
             negotiationInfo.putClause(clause, newValue);
 
             //CALCULATE CUSTOMER CURRENCY QUANTITY
@@ -392,16 +399,28 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
         //ASIGNAMENT NEW VALUE
-        newValue = numberFormat.format(getBigDecimal(newValue));
+        //Change Lostwood
+        //newValue = numberFormat.format(getBigDecimal(newValue));
+        newValue = numberFormat.format(new BigDecimal(newValue));
+
         negotiationInfo.putClause(clause, newValue);
 
-        //CALCULATE BROKER CURRENCY
-        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
+        //CALCULATE BROKER CURRENCY CHANGE LOSTWOOD
+       /* final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
         final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace(",", ""));
-        final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);
+        final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);*/
+        BigDecimal amountToPay=new BigDecimal(0);
+        try {
+            final BigDecimal exchangeRate = new BigDecimal(numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString());
+            final BigDecimal amountToBuy =new BigDecimal(numberFormat.parse( clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()).toString());
+            amountToPay = amountToBuy.multiply(exchangeRate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         //ASIGNAMENT BROKER CURRENCY
-        final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
+        final String amountToPayStr = numberFormat.format(amountToPay.doubleValue());
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
@@ -560,7 +579,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
     }
 
     private BigDecimal getBigDecimal(String value) {
-        return new BigDecimal(value.replace(",", ""));
+        //change lostwood
+        //numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString()
+        //return new BigDecimal(value.replace(",", ""));
+
+        try {
+            return new BigDecimal(numberFormat.parse(value).toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new BigDecimal(0);
+        }
     }
 
     /*------------------------------------------ OTHER METHODS ---------------------------------------------*/
