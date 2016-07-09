@@ -160,7 +160,8 @@ public class CryptoBrokerCommunityManager
                             worldBroker.getImage(),
                             connectedBroker.getConnectionState(),
                             connectedBroker.getConnectionId(),
-                            worldBroker.getLocation()));
+                            worldBroker.getLocation(),
+                            worldBroker.getProfileStatus()));
             }
         }
 
@@ -178,6 +179,8 @@ public class CryptoBrokerCommunityManager
 
             brokerActor.setCountry(country);
             brokerActor.setPlace(place);
+
+            System.out.println("************** Actor Customer Register: " + brokerActor.getAlias() + " - " + brokerActor.getProfileStatus() + " - " + brokerActor.getConnectionState());
         }
 
         return worldBrokerList;
