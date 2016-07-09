@@ -98,7 +98,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     null,
                     NetworkServiceType.UNDEFINED,
-                    Actors.CBP_CRYPTO_BROKER.getCode(),
+                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
                     null,
                     null,
                     null,
