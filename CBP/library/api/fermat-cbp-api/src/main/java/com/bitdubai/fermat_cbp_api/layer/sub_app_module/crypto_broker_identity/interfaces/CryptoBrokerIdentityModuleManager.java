@@ -80,6 +80,4 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<Identit
      * @return
      */
     Boolean itHasAssociatedWallet(String brokerPublicKey);
-
-
 }

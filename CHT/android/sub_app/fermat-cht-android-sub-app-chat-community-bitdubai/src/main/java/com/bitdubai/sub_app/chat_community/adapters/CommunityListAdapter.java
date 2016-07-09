@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
@@ -208,11 +209,20 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.pendingButton.setVisibility(View.GONE);
                     break;
             }
+        }else {
+            holder.add_contact_button.setVisibility(View.VISIBLE);
+            holder.connection_text.setVisibility(View.GONE);
+            holder.connectedButton.setVisibility(View.GONE);
+            holder.blockedButton.setVisibility(View.GONE);
+            holder.pendingButton.setVisibility(View.GONE);
         }
     }
 
     @Override
     protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
+        System.out.print("chatworldadapter= "+data.getAlias()+" status: "
+                +data.getProfileStatus().getCode()+" posicion:"+position+" status:"+data.getStatus()
+                +" conexion:"+data.getConnectionState());
         final ConnectionState connectionState = data.getConnectionState();
         updateConnectionState(connectionState, holder);
         holder.name.setText(data.getAlias());
@@ -237,6 +247,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 holder.location_text.setText(cityAddress + stateAddress + countryAddress);
         } else
             holder.location_text.setText("Searching...");
+
+        if(data.getProfileStatus()!= ProfileStatus.ONLINE)
+            holder.location_text.setTextColor(Color.RED);
 
         final ChatActorCommunityInformation dat=data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {

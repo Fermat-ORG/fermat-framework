@@ -59,6 +59,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
@@ -181,6 +182,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                         city, null));
 
                 System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getConnectionState());
+                        country,state,
+                        city, null, worldActor.getProfileStatus()));
 
             }
         }
@@ -455,7 +458,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                         record.getCountry(),
                         record.getState(),
                         record.getCity(),
-                        record.getLocation())));
+                        record.getLocation(),
+                        ProfileStatus.ONLINE)));
 
 
         } catch (CantGetChatActorWaitingException e) {

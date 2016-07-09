@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_amount"
                 android:text="@string/txt_amount_btc_text"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
