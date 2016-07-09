@@ -47,6 +47,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils.CryptoCustomerIdentityInformationImpl;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
@@ -84,6 +85,9 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private View progressBar;
     private int maxLenghtTextCount = 30;
     FermatTextView textCount;
+
+    IdentityCustomerPreferenceSettings settings;
+    boolean isGpsDialogEnable;
 
     private ExecutorService executor;
 
@@ -123,6 +127,16 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             location = appSession.getModuleManager().getLocation();
         }catch (Exception e){
             e.printStackTrace();
+        }
+
+        try {
+            isGpsDialogEnable=true;
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = settings.isGpsDialogEnabled();
+        } catch (Exception e) {
+            settings = new IdentityCustomerPreferenceSettings();
+            settings.setGpsDialogEnabled(true);
+            isGpsDialogEnable=true;
         }
 
         turnGPSOn();
@@ -204,6 +218,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                 loadImageFromGallery();
             }
         });
+
+        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
 
         checkGPSOn();
 
@@ -477,13 +493,17 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void checkGPSOn(){
-        if(location!= null){
-            if(location.getLongitude()==0 || location.getLatitude()==0){
-                turnOnGPSDialog();
+    private void checkGPSOn() {
+        if (location != null) {
+            if (location.getLongitude() == 0 || location.getLatitude() == 0) {
+                if (isGpsDialogEnable) {
+                    turnOnGPSDialog();
+                }
+
             }
-        }else
+        } else if (isGpsDialogEnable) {
             turnOnGPSDialog();
+        }
     }
 
     public void turnOnGPSDialog() {
@@ -495,6 +515,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                     .setBannerRes(R.drawable.banner_identity_customer)
                     .build();
             pd.show();
+            settings.setGpsDialogEnabled(false);
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
         } catch (Exception e) {
             e.printStackTrace();
         }
