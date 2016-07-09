@@ -171,7 +171,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
                 waitingForCustomer.addAll(moduleManager.getNegotiationsWaitingForCustomer(0, 10));
 
-                List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
                 waitingForBroker.addAll(moduleManager.getNegotiationsWaitingForBroker(0, 10));
 
                 if ( !waitingForCustomer.isEmpty() || !waitingForBroker.isEmpty()) {
