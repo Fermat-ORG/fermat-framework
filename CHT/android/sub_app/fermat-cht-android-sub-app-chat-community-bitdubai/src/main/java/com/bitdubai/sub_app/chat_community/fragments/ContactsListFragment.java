@@ -195,7 +195,8 @@ public class ContactsListFragment
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
+        offset=0;
+        onRefresh();
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
@@ -323,7 +324,7 @@ public class ContactsListFragment
             if(identity != null){
                 result = moduleManager.listAllConnectedChatActor(identity, MAX, offset);
                 dataSet.addAll(result);
-                offset = dataSet.size();
+                //offset = dataSet.size();
             }
         } catch (CantListChatActorException e) {
             e.printStackTrace();

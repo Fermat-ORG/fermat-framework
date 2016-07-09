@@ -216,7 +216,8 @@ public class ConnectionNotificationsFragment
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
+        offset=0;
+        onRefresh();
     }
 
     private ArrayList<ChatActorCommunityInformation> getMoreData() {
@@ -227,7 +228,7 @@ public class ConnectionNotificationsFragment
                 result = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
                     identity.getActorType(), MAX, offset);
                 dataSet.addAll(result);
-                offset = dataSet.size();
+                //offset = dataSet.size();
             }
         } catch (CantListChatActorException e) {
             e.printStackTrace();
