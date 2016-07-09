@@ -104,6 +104,7 @@ public class OpenContractMonitorAgent2
             ContractSaleRecord saleContract = new ContractSaleRecord();
             ContractType contractType;
             UUID transmissionId = UUID.randomUUID();
+            UUID transactionId = UUID.randomUUID();
 
             // Check if exist in database new contracts to send
             List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
@@ -120,6 +121,7 @@ public class OpenContractMonitorAgent2
                             purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
                             transactionTransmissionManager.sendContractHash(
                                     transmissionId,
+                                    transactionId,
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
@@ -133,6 +135,7 @@ public class OpenContractMonitorAgent2
                             saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                             transactionTransmissionManager.sendContractHash(
                                     transmissionId,
+                                    transactionId,
                                     saleContract.getPublicKeyBroker(),
                                     saleContract.getPublicKeyCustomer(),
                                     hashToSubmit,
@@ -143,7 +146,7 @@ public class OpenContractMonitorAgent2
                             break;
                     }
                     //Update the ContractTransactionStatus
-                    openContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CHECKING_HASH);
+                    openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CHECKING_HASH);
                     transactionTransmissionManager.confirmReception(transmissionId);
                 }
             }
@@ -256,6 +259,8 @@ public class OpenContractMonitorAgent2
         try {
             String contractHash;
             ContractType contractType;
+            UUID transmissionId;
+            UUID transactionId;
             BusinessTransactionMetadata businessTransactionMetadata;
             ContractTransactionStatus contractTransactionStatusRemote;
 
@@ -267,10 +272,13 @@ public class OpenContractMonitorAgent2
 
                 businessTransactionMetadata = record.getInformation();
                 contractHash = businessTransactionMetadata.getContractHash();
-                contractTransactionStatusRemote = businessTransactionMetadata.getContractTransactionStatus();
-                UUID transmissionId = UUID.randomUUID();
+                transactionId = businessTransactionMetadata.getTransactionContractId();
+                transmissionId = record.getTransactionID();
 
-                if (businessTransactionMetadata.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
+                contractTransactionStatusRemote = businessTransactionMetadata.getContractTransactionStatus();
+                UUID transmissionIdNew = UUID.randomUUID();
+
+//                if (businessTransactionMetadata.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
 
                     System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - EVENT - TYPE: " + eventTypeCode + "\n");
 
@@ -290,20 +298,21 @@ public class OpenContractMonitorAgent2
                                         businessTransactionMetadata.getReceiverId(),
                                         businessTransactionMetadata.getSenderId(),
                                         contractHash,
-                                        transmissionId.toString(),
+                                        transmissionIdNew.toString(),
+                                        transactionId,
                                         Plugins.OPEN_CONTRACT,
                                         businessTransactionMetadata.getReceiverType(),
                                         businessTransactionMetadata.getSenderType()
                                 );
 
                                 //CHANGE STATUS TRANSACTION
-                                openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
+                                openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
 
                                 //CONFIRM TRANSMISSION OF SEND
-                                transactionTransmissionManager.confirmReception(transmissionId);
+                                transactionTransmissionManager.confirmReception(transmissionIdNew);
 
                                 //CONFIRM RECEPTION OF TRANSMISSION
-                                transactionTransmissionManager.confirmReception(record.getTransactionID());
+                                transactionTransmissionManager.confirmReception(transmissionId);
 
                                 //CONFIRM RECEPTION OF NOTIFICATION EVENT
                                 openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
@@ -326,20 +335,21 @@ public class OpenContractMonitorAgent2
                                     businessTransactionMetadata.getReceiverId(),
                                     businessTransactionMetadata.getSenderId(),
                                     contractHash,
-                                    transmissionId.toString(),
+                                    transmissionIdNew.toString(),
+                                    transactionId,
                                     Plugins.OPEN_CONTRACT,
                                     businessTransactionMetadata.getReceiverType(),
                                     businessTransactionMetadata.getSenderType()
                             );
 
                             //CHANGE STATUS TRANSACTION
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
+                            openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_CONFIRMED);
 
                             //CONFIRM SEND OF TRANSMISSION
-                            transactionTransmissionManager.confirmReception(transmissionId);
+                            transactionTransmissionManager.confirmReception(transmissionIdNew);
 
                             //CONFIRM RECEPTION OF TRANSMISSION
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
+                            transactionTransmissionManager.confirmReception(transmissionId);
 
                             //CONFIRM RECEPTION OF NOTIFICATION EVENT
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
@@ -355,7 +365,7 @@ public class OpenContractMonitorAgent2
                         if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_ACK_CONFIRMED.getCode())) {
 
                             System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL\n");
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_OPENED);
+                            openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_OPENED);
                             contractType = openContractBusinessTransactionDao.getContractType(contractHash);
                             switch (contractType) {
                                 case PURCHASE:
@@ -382,7 +392,7 @@ public class OpenContractMonitorAgent2
                             }
 
                             //CONFIRM RECEPTION OF TRANSMISSION
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
+                            transactionTransmissionManager.confirmReception(transmissionId);
 
                             //CONFIRM RECEPTION OF NOTIFICATION EVENT
                             openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
@@ -393,7 +403,7 @@ public class OpenContractMonitorAgent2
                         }
 
                     }
-                }
+//                }
             }
 
             //TODO: look a better way to deal with this exceptions
