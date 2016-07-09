@@ -77,9 +77,9 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     public List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantListCryptoBrokersException {
         try {
 
-            DiscoveryQueryParameters discoveryQueryParameters1 = new DiscoveryQueryParameters(
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     null, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa solo para buscar por publicKey del Actor
-                    NetworkServiceType.CRYPTO_BROKER,
+                    NetworkServiceType.UNDEFINED,
                     Actors.CBP_CRYPTO_BROKER.getCode(),
                     null,
                     alias,
@@ -92,21 +92,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     offset,
                     false);
 
-            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    null,
-                    NetworkServiceType.UNDEFINED,
-                    Actors.CBP_CRYPTO_BROKER.getCode(),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    true,
-                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
-                    null, //publicKey,
-                    max,
-                    offset
-            );
+
 //            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
 //                    Actors.CBP_CRYPTO_BROKER.getCode(),
 //                    alias,
