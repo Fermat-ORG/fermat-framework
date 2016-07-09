@@ -206,7 +206,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
                 moduleManager.updateIntraUserIdentity(identity.getPublicKey(), identity.getAlias(),identity.getPhrase(),
-                        identity.getImage(),acurracydata,frecuencydata );
+                        identity.getImage(),acurracydata,frecuencydata , moduleManager.getLocationManager());
 
                 Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated OK.", Toast.LENGTH_LONG).show();
 

@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
@@ -120,9 +121,11 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
         int id = v.getId();
         SharedPreferences pref = getContext().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit;
+
+
         if (id == R.id.btn_left) {
             try {
-                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male));
+                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male),moduleManager.getLocation());
                 if (recreateView != null)
                     recreateView.recreate();
                 if (dontShowAgainCheckBox.isChecked()) {
@@ -133,10 +136,12 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
                 e.printStackTrace();
+            } catch (CantGetDeviceLocationException e) {
+                e.printStackTrace();
             }
         } else if (id == R.id.btn_right) {
             try {
-                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female),moduleManager.getLocation());
                 if (recreateView != null) {
                     recreateView.recreate();
                 }
@@ -147,6 +152,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
+                e.printStackTrace();
+            } catch (CantGetDeviceLocationException e) {
                 e.printStackTrace();
             }
         } else if (id == R.id.start_community) {

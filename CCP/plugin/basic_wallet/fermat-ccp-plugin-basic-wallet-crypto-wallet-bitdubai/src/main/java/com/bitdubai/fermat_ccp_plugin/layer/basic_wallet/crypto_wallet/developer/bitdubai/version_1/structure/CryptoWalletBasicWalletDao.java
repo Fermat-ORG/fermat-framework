@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
@@ -310,8 +310,10 @@ public class CryptoWalletBasicWalletDao {
      */
     public void addDebit(final CryptoWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
-            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
+
+
+            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getTotal() : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getTotal() : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount, transactionRecord.getBlockchainNetworkType());
             long bookRunningBalance = calculateBookRunningBalance(-bookAmount,transactionRecord.getBlockchainNetworkType());
 
@@ -331,8 +333,15 @@ public class CryptoWalletBasicWalletDao {
 
     public void revertCredit(final CryptoWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
-            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
+            //verify fee origin and add or deducted to balance
+            long total = 0;
+            if(transactionRecord.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode()))
+                total = transactionRecord.getAmount() - transactionRecord.getFee();
+            else
+                total = transactionRecord.getAmount() + transactionRecord.getFee();
+
+            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? total : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? total : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(availableAmount, transactionRecord.getBlockchainNetworkType());
             long bookRunningBalance = calculateBookRunningBalance(bookAmount, transactionRecord.getBlockchainNetworkType());
 
@@ -609,18 +618,18 @@ public class CryptoWalletBasicWalletDao {
 
         DatabaseTableRecord record = getBitcoinWalletEmptyRecord();
 
-        record.setUUIDValue  (CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ID_COLUMN_NAME                       , UUID.randomUUID());
-        record.setUUIDValue  (CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME         , transactionRecord.getTransactionId());
+        record.setUUIDValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
+        record.setUUIDValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionRecord.getTransactionId());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode());
         record.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_AMOUNT_COLUMN_NAME, transactionRecord.getAmount());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_MEMO_COLUMN_NAME, transactionRecord.getMemo());
         record.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, transactionRecord.getTimestamp());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, transactionRecord.getTransactionHash());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME             , transactionRecord.getAddressFrom().getAddress());
-        record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME               , transactionRecord.getAddressTo().getAddress());
-        record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME             , balanceType.getCode());
+        record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, transactionRecord.getAddressTo().getAddress());
+        record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
         record.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
-        record.setLongValue  (CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME     , bookRunningBalance);
+        record.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, transactionRecord.getActorFromPublicKey());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME                 , transactionRecord.getActorToPublicKey());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME          , transactionRecord.getActorFromType().getCode());
@@ -628,6 +637,9 @@ public class CryptoWalletBasicWalletDao {
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_NETWORK_TYPE                 , transactionRecord.getBlockchainNetworkType().getCode());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME        , TransactionState.COMPLETE.getCode());
         record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_CRYPTO_CURRENCY_COLUMN_NAME        , transactionRecord.getCryptoCurrency().getCode());
+        record.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_FEE_COLUMN_NAME, transactionRecord.getFee());
+        record.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_FEE_ORIGIN_COLUMN_NAME, transactionRecord.getFeeOrigin().getCode());
+        record.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_TOTAL_COLUMN_NAME, transactionRecord.getTotal());
 
         return record;
     }
@@ -689,7 +701,7 @@ public class CryptoWalletBasicWalletDao {
 
     private CryptoWalletTransaction constructBitcoinWalletTransactionFromRecord(final DatabaseTableRecord record){
 
-        UUID transactionId              = record.getUUIDValue(  CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ID_COLUMN_NAME);
+        UUID transactionId              = record.getUUIDValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ID_COLUMN_NAME);
         String transactionHash          = record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ID_COLUMN_NAME);
         TransactionType transactionType = TransactionType.getByCode(record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME));
         CryptoAddress addressFrom       = new CryptoAddress();
@@ -707,6 +719,20 @@ public class CryptoWalletBasicWalletDao {
         long timeStamp                  = record.getLongValue(  CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME);
         String memo                     = record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_MEMO_COLUMN_NAME);
         BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_NETWORK_TYPE));
+        FeeOrigin feeOrigin             = null;
+        long total                       = 0;
+        long fee                         = record.getLongValue(  CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_FEE_COLUMN_NAME);
+        try {
+            feeOrigin = FeeOrigin.getByCode(record.getStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_FEE_ORIGIN_COLUMN_NAME));
+        } catch (InvalidParameterException e) {
+            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        }
+
+        if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
+            total = amount + fee;
+        else
+            total = amount - fee;
+
         TransactionState transactionState = null;
         CryptoCurrency cryptoCurrency = null;
         try {
@@ -718,7 +744,8 @@ public class CryptoWalletBasicWalletDao {
         }
 
         return new CryptoWalletTransactionWrapper(transactionId, transactionHash, transactionType, addressFrom, addressTo,
-                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo, blockchainNetworkType,transactionState, cryptoCurrency);
+                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo, blockchainNetworkType,transactionState,
+                cryptoCurrency, feeOrigin,fee,total);
     }
 
     public void deleteTransaction(UUID transactionID)throws CantFindTransactionException{

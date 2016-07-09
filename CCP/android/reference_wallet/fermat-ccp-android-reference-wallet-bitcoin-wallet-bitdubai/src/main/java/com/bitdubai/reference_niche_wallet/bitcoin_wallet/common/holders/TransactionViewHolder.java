@@ -51,7 +51,7 @@ public class TransactionViewHolder extends ChildViewHolder {
     public void bind(CryptoWalletTransaction cryptoWalletTransaction) {
 
         if (cryptoWalletTransaction.getActorFromPublicKey() != null){
-            txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
+            txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getTotal(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
             if(cryptoWalletTransaction.getTransactionState().equals(TransactionState.REVERSED))
                 txt_notes.setText((cryptoWalletTransaction.getMemo()==null) ? "No information" : cryptoWalletTransaction.getMemo() + "(Reversed)");
                 else

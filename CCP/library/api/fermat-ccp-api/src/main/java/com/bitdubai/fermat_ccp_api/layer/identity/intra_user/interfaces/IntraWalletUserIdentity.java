@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
@@ -29,6 +30,8 @@ public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation,
      * @return string phrase object
      */
     Frequency getFrequency();
+
+    Location getLocation();
     
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image

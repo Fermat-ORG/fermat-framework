@@ -72,9 +72,9 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="roboto"
                 android:textColor="#ffffff"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:typeface="ROBOTO_REGULAR"
-                tools:text="1.4 BTC" />
+                tools:text="1.400000 BTC" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/txt_time"

@@ -249,6 +249,9 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    Uri selectedImage2 = data.getData();
+                    Bundle extras = data.getExtras();
+                    cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     // grant all three uri permissions!
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
@@ -267,7 +270,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        Bundle extras = data.getExtras();
+                        //Bundle extras = data.getExtras();
                         cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
@@ -377,9 +380,6 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             }
         } else {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            imageToUploadUri = Uri.fromFile(f);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }

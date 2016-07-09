@@ -50,6 +50,8 @@ public interface Broadcaster extends FermatManager, Serializable {
      */
     void publish(BroadcasterType broadcasterType, String appPublicKeyToOpen, FermatBundle bundle);
 
+    void publish(BroadcasterType broadcasterType, FermatBundle bundle);
+
     /**
      * Let you fire a broadcast to update a fragment or show a notification in your wallet or sub-app
      *

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.ut
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.common.AbstractCBPActorExposingData;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData</code>
@@ -27,14 +28,15 @@ public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData
             byte[] image,
             Location location,
             long refreshInterval,
-            long accuracy) {
+            long accuracy,
+            ProfileStatus profileStatus) {
         super(
                 publicKey,
                 alias,
                 image,
                 location,
                 refreshInterval,
-                accuracy);
+                accuracy, profileStatus);
     }
 
     /**
