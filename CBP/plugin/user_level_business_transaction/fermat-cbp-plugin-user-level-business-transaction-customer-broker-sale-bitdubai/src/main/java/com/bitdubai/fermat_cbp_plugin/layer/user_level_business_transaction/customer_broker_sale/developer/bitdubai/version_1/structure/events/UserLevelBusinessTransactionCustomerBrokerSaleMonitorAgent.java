@@ -373,7 +373,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
                         fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                         fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_CONTRACT_CANCELLED_NOTIFICATION);
-                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
 
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
@@ -575,7 +575,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
                         fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                         fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_CONTRACT_CANCELLED_NOTIFICATION);
-                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
 
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
@@ -658,7 +658,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
                     fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION);
-                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
 
                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 

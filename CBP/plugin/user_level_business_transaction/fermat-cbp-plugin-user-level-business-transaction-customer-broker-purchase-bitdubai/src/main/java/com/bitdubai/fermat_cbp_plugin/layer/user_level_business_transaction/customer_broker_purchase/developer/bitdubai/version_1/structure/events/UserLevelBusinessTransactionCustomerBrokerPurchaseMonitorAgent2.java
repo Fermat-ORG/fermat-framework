@@ -310,7 +310,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
                     fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
 
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, fermatBundle);
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
                 }
@@ -350,7 +350,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CONTRACT_BROKER_ACK_PAYMENT_NOTIFICATION);
                     fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
 
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, fermatBundle);
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
                 }
             }
         }
@@ -445,7 +445,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                         fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
                         fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getCode());
 
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, fermatBundle);
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
@@ -530,7 +530,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                         fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
                         fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getCode());
 
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, fermatBundle);
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
                     }
@@ -573,7 +573,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                     fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
                     fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
 
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, fermatBundle);
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
