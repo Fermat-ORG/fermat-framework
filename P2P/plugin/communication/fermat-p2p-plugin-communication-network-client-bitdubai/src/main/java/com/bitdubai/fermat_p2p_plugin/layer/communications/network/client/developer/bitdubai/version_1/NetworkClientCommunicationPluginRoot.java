@@ -237,35 +237,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 }
             }
 
-            Thread thread = new Thread(){
-                @Override
-                public void run(){
-                    networkClientCommunicationConnection.initializeAndConnect();
-                }
-            };
+            networkClientCommunicationConnection.initializeAndConnect();
 
-            final NetworkClientCommunicationSupervisorConnectionAgent connectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    try {
-
-
-                        /*
-                         * Scheduled the reconnection agent
-                         */
-                        scheduledExecutorService.scheduleAtFixedRate(connectionAgent, 10, 20, TimeUnit.SECONDS);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
-            executorService = Executors.newSingleThreadExecutor();
-            executorService.submit(thread);
-
+             /*
+             * Create and Scheduled the supervisorConnectionAgent
+             */
+            final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
+            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 20, TimeUnit.SECONDS);
 
         } catch (Exception exception){
 
