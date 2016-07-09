@@ -1365,14 +1365,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             //clean page adapter
 
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            if (pager != null) {
-                pager.removeAllViews();
-                pager.removeAllViewsInLayout();
-                pager.clearOnPageChangeListeners();
-                pager.setVisibility(View.GONE);
-                ((ViewGroup) pager.getParent()).removeView(pager);
-                pager = null;
+            if (pagertabs != null) {
+                pagertabs.removeAllViews();
+                pagertabs.removeAllViewsInLayout();
+                pagertabs.clearOnPageChangeListeners();
+                pagertabs.setVisibility(View.GONE);
+                ((ViewGroup) pagertabs.getParent()).removeView(pagertabs);
+                pagertabs = null;
             }
             System.gc();
 
