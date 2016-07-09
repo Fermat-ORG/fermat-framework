@@ -133,7 +133,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private Handler handler = new Handler();
     List<IntraUserInformation> userList = new ArrayList<>();
 
-    private DeviceLocation location;
+    private Location location;
     private double distance;
     private String alias;
 
@@ -219,18 +219,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             });
 
             //getting location and setting device locacion
-            Location dlocation = moduleManager.getLocationManager();
-            if(dlocation==null){
-                showErrorGPS();
-                //Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
+            location = moduleManager.getLocationManager();
+
+            if(location==null){
+              //  showErrorGPS();
+                Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
             }
-            else {
-                location = new DeviceLocation();
-                location.setAccuracy(dlocation.getAccuracy());
-                location.setAltitude(dlocation.getAltitude());
-                location.setLatitude(dlocation.getLatitude());
-                location.setLongitude(dlocation.getLongitude());
-            }
+
                // turnGPSOn();
 
 
@@ -326,10 +321,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (!isRefreshing) {
                 isRefreshing = true;
-               final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+              /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
                 notificationsProgressDialog.setMessage("Loading Crypto Wallet Users...");
                 notificationsProgressDialog.setCancelable(false);
-                notificationsProgressDialog.show();
+                notificationsProgressDialog.show();*/
                 //Get Fermat User Cache List First
                 worker = new FermatWorker() {
                     @Override
@@ -343,7 +338,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                      notificationsProgressDialog.dismiss();
+                      //notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -391,7 +386,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        notificationsProgressDialog.dismiss();
+                       // notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -494,7 +489,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return getMoreData(location,distance,alias);
+                    return getMoreData(location,distance,alias, offset);
                 }
             };
             worker.setContext(getActivity());
@@ -759,12 +754,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     }
 
 
-    private synchronized List<IntraUserInformation> getMoreData(DeviceLocation location, double distance, String alias) {
+    private synchronized List<IntraUserInformation> getMoreData(Location location, double distance, String alias, int offsetP) {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
 
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offsetP);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
