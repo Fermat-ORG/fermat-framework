@@ -1,6 +1,6 @@
 angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$interval', '$filter', '$window', '$location', '$timeout', 'NgMap', function($scope, $http, $interval, $filter, $window, $location, $timeout, NgMap) {
 
-      $scope.types       = [];
+      $scope.types       = {};
       $scope.selectType  = '';
       $scope.onlineIdentities = false;
       $scope.offSet      = 0;
@@ -52,7 +52,12 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
                var success = data.success;
 
                if(success === true){
-                  $scope.types = angular.fromJson(data.types);
+
+                  $scope.types['ALL'] = '';
+                  angular.forEach(angular.fromJson(data.types), function(value, key) {
+                      $scope.types[key] = value;
+                  });
+
                }
 
             }, function errorCallback(response) {
@@ -213,12 +218,12 @@ angular.module("serverApp").controller('IdentitiesCtrl', ['$scope', '$http', '$i
      }
 
 
-       $scope.reloadChange = function() {
-          $scope.offSet      = 0;
-          $scope.max         = 20;
-          $scope.total       = 0;
-          $scope.currentPage = 1;
-          requestIdentitiesData();
-       };
+   $scope.reloadChange = function() {
+      $scope.offSet      = 0;
+      $scope.max         = 20;
+      $scope.total       = 0;
+      $scope.currentPage = 1;
+      requestIdentitiesData();
+   };
 
 }]);
