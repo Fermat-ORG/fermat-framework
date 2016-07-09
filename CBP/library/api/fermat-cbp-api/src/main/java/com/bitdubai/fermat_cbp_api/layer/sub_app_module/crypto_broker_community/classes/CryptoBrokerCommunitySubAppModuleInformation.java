@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     private Location location;
     private String country;
     private String place;
+    private ProfileStatus profileStatus;
 
 
     public CryptoBrokerCommunitySubAppModuleInformation(final String publicKey,
@@ -44,7 +46,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
                                                         final byte[] image,
                                                         final ConnectionState connectionState,
                                                         final UUID connectionId,
-                                                        final Location location) {
+                                                        final Location location,
+                                                        final ProfileStatus profileStatus) {
 
         this.publicKey = publicKey;
         this.alias = alias;
@@ -52,6 +55,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.connectionState = connectionState;
         this.connectionId = connectionId;
         this.location = location;
+        this.profileStatus = profileStatus;
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final String publicKey,
@@ -147,6 +151,11 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     @Override
     public String getPlace() {
         return place;
+    }
+
+    @Override
+    public ProfileStatus getProfileStatus() {
+        return profileStatus;
     }
 
     public void setCountry(String country) {
