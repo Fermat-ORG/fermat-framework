@@ -120,7 +120,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent2 extends AbstractAg
                     case IN_WALLET:
 
                         //Try to unhold the funds in the crypto wallet
-                        CryptoUnholdTransactionParametersWrapper cryptoTransactionParametersWrapper = new CryptoUnholdTransactionParametersWrapper(cryptoMoneyTransaction.getTransactionId(), cryptoMoneyTransaction.getCryptoCurrency(), cryptoMoneyTransaction.getCryWalletPublicKey(), cryptoMoneyTransaction.getActorPublicKey(), cryptoMoneyTransaction.getAmount(), cryptoMoneyTransaction.getMemo(), pluginId.toString(), BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                        CryptoUnholdTransactionParametersWrapper cryptoTransactionParametersWrapper = new CryptoUnholdTransactionParametersWrapper(cryptoMoneyTransaction.getTransactionId(), cryptoMoneyTransaction.getCryptoCurrency(), cryptoMoneyTransaction.getCryWalletPublicKey(), cryptoMoneyTransaction.getActorPublicKey(), cryptoMoneyTransaction.getAmount(), cryptoMoneyTransaction.getMemo(), pluginId.toString(), cryptoMoneyTransaction.getBlockchainNetworkType(), cryptoMoneyTransaction.getFee(),cryptoMoneyTransaction.getFeeOrigin());
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
                         //Set status to IN_UNHOLD

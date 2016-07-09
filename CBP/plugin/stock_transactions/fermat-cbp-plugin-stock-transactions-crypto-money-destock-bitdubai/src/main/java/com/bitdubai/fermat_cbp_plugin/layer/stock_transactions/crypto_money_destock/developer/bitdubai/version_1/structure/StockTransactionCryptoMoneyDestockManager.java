@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
@@ -45,7 +46,19 @@ public class StockTransactionCryptoMoneyDestockManager implements
     }
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId, BlockchainNetworkType blockchainNetworkType) throws CantCreateCryptoMoneyDestockException {
+    public void createTransactionDestock(
+            String publicKeyActor,
+            CryptoCurrency cryptoCurrency,
+            String cbpWalletPublicKey,
+            String cryWalletPublicKey,
+            BigDecimal amount,
+            String memo,
+            BigDecimal priceReference,
+            OriginTransaction originTransaction,
+            String originTransactionId,
+            BlockchainNetworkType blockchainNetworkType,
+            long fee,
+            FeeOrigin feeOrigin) throws CantCreateCryptoMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CryptoMoneyDestockTransactionImpl cryptoMoneyRestockTransaction = new CryptoMoneyDestockTransactionImpl(
@@ -62,7 +75,9 @@ public class StockTransactionCryptoMoneyDestockManager implements
                 priceReference,
                 originTransaction,
                 originTransactionId,
-                blockchainNetworkType);
+                blockchainNetworkType,
+                fee,
+                feeOrigin);
 
         try {
             StockTransactionCryptoMoneyDestockFactory stockTransactionCryptoMoneyDestockFactory = new StockTransactionCryptoMoneyDestockFactory(pluginDatabaseSystem, pluginId);
