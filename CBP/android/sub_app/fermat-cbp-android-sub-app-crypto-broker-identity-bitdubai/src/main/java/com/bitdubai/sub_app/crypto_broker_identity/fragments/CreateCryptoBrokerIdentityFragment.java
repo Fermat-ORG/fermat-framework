@@ -179,7 +179,7 @@ public class CreateCryptoBrokerIdentityFragment
         mBrokerName.performClick();
         mBrokerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mBrokerName.addTextChangedListener(textWatcher);
-        textCount.setText(String.valueOf(maxLenghtTextCount));
+        textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.getText().length()));
 
         checkGPSOn();
 
