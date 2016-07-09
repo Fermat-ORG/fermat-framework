@@ -179,11 +179,9 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                         worldActor.getImage(), connectionState,
                         connectionID, worldActor.getStatus(),
                         country, state,
-                        city, null));
+                        city, null,worldActor.getProfileStatus()));
 
                 System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getConnectionState());
-                        country,state,
-                        city, null, worldActor.getProfileStatus()));
 
             }
         }
