@@ -258,7 +258,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         if(!AndroidCoreUtils.getInstance().isStarted())
             AndroidCoreUtils.getInstance().setStarted(true);
-        runtimeStructureManager = new RuntimeStructureManager(this);
 
         updateViewReceiver = new UpdateViewReceiver(this,getFermatFramework());
         IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
@@ -2156,6 +2155,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public FermatRuntime getRuntimeManager(){
+        if(runtimeStructureManager==null) new RuntimeStructureManager(this);
         return runtimeStructureManager;
     }
 

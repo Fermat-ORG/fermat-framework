@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.ver
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatIdentityDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure.ChatIdentityManagerImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -173,7 +174,8 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                             chatIdentity.getConnectionState(),
                             location,
                             refreshInterval,
-                            chatIdentity.getAccuracy()
+                            chatIdentity.getAccuracy(),
+                            ProfileStatus.UNKNOWN
                     )
             );
 

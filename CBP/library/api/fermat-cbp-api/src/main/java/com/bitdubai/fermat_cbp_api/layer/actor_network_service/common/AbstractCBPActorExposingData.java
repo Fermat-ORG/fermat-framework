@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.common;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.util.Arrays;
 
@@ -15,6 +16,7 @@ public abstract class AbstractCBPActorExposingData {
     private final Location location;
     private final long refreshInterval;
     private final long accuracy;
+    private final ProfileStatus profileStatus;
 
     /**
      * Default constructor with parameters
@@ -30,7 +32,8 @@ public abstract class AbstractCBPActorExposingData {
                                         final byte[] image,
                                         final Location location,
                                         final long refreshInterval,
-                                        final long accuracy) {
+                                        final long accuracy,
+                                        final ProfileStatus profileStatus) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
@@ -38,6 +41,7 @@ public abstract class AbstractCBPActorExposingData {
         this.location  = location;
         this.refreshInterval = refreshInterval;
         this.accuracy = accuracy;
+        this.profileStatus = profileStatus;
     }
 
     /**
@@ -80,6 +84,14 @@ public abstract class AbstractCBPActorExposingData {
      */
     public final long getAccuracy() {
         return accuracy;
+    }
+
+
+    /**
+     * @return an long with accuracy refresh by the Crypto Customer.
+     */
+    public final ProfileStatus getProfileStatus() {
+        return profileStatus;
     }
 
     @Override
