@@ -1139,6 +1139,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     runningBalance = WalletUtils.formatBalanceStringNotDecimal(balanceAvailable,ShowMoneyType.BITCOIN.getCode());
 
                     setCircularProgressBar();
+
+                    //update transactions
+                    onRefresh();
                 }
 
             }

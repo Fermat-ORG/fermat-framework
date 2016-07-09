@@ -82,6 +82,11 @@ public class DiscoveryQueryParameters implements Serializable {
     private Boolean isOnline;
 
     /**
+     * Represent the originalPhoto
+     */
+    private Boolean originalPhoto;
+
+    /**
      * Constructor with params
      *
      * @param identityPublicKey    represents the identity public key of the component to discover.
@@ -96,6 +101,7 @@ public class DiscoveryQueryParameters implements Serializable {
      * @param lastConnectionTime   with this param we'll ask to the node only the profiles connected after the long timestamp.
      * @param max                  this param will be used with the pagination stuff.
      * @param offset               this param will be used with the pagination stuff.
+     * @param originalPhoto        this param will be used to get the photo original if it is true else it will be the Photo thumbnail.
      */
     public DiscoveryQueryParameters(final String             identityPublicKey ,
                                     final NetworkServiceType networkServiceType,
@@ -108,7 +114,8 @@ public class DiscoveryQueryParameters implements Serializable {
                                     final Boolean            isOnline          ,
                                     final Long               lastConnectionTime,
                                     final Integer            max               ,
-                                    final Integer            offset            ) {
+                                    final Integer            offset            ,
+                                    final Boolean            originalPhoto     ) {
 
         this.identityPublicKey  = identityPublicKey ;
         this.networkServiceType = networkServiceType;
@@ -122,6 +129,7 @@ public class DiscoveryQueryParameters implements Serializable {
         this.lastConnectionTime = lastConnectionTime;
         this.max                = max               ;
         this.offset             = offset            ;
+        this.originalPhoto      = originalPhoto     ;
     }
 
     /**
@@ -262,10 +270,26 @@ public class DiscoveryQueryParameters implements Serializable {
         return networkServiceTypeIntermediate;
     }
 
+    /**
+     * Gets the value of isOnline
+     * @return isOnline
+     */
     public Boolean isOnline() {
         return isOnline;
     }
 
+    /**
+     * Gets the value of originalPhoto
+     * @return originalPhoto
+     */
+    public Boolean getOriginalPhoto() {
+        return originalPhoto;
+    }
+
+    /**
+     * Gets the value of lastConnectionTime
+     * @return lastConnectionTime
+     */
     public Long getLastConnectionTime() {
         return lastConnectionTime;
     }

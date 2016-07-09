@@ -147,10 +147,10 @@ public class Profiles implements RestFulServices {
 
         if (discoveryQueryParameters.isOnline() != null && discoveryQueryParameters.isOnline())
             for (ActorsCatalog actorsCatalog : actorsList)
-             profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecordAndSetStatus(actorsCatalog));
+             profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecordAndSetStatus(actorsCatalog, discoveryQueryParameters.getOriginalPhoto()));
         else
             for (ActorsCatalog actorsCatalog : actorsList)
-                profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecord(actorsCatalog));
+                profileList.put(actorsCatalog.getIdentityPublicKey(), buildActorProfileFromActorCatalogRecord(actorsCatalog, discoveryQueryParameters.getOriginalPhoto()));
 
         return new ArrayList<>(profileList.values());
     }
@@ -158,15 +158,20 @@ public class Profiles implements RestFulServices {
     /**
      * Build an Actor Profile from an Actor Catalog record.
      */
-    private ActorProfile buildActorProfileFromActorCatalogRecord(final ActorsCatalog actor){
+    private ActorProfile buildActorProfileFromActorCatalogRecord(final ActorsCatalog actor, final Boolean originalPhoto){
 
         ActorProfile actorProfile = new ActorProfile();
 
         actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
-        actorProfile.setAlias            (actor.getAlias());
-        actorProfile.setName             (actor.getName());
-        actorProfile.setActorType        (actor.getActorType());
-        actorProfile.setPhoto            (actor.getPhoto());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+
+        if(originalPhoto)
+            actorProfile.setPhoto(actor.getPhoto());
+        else
+            actorProfile.setPhoto(actor.getThumbnail());
+
         actorProfile.setExtraData        (actor.getExtraData());
         actorProfile.setLocation         (actor.getLastLocation());
 
@@ -176,15 +181,20 @@ public class Profiles implements RestFulServices {
     /**
      * Build an Actor Profile from an Actor Catalog record and set its status.
      */
-    private ActorProfile buildActorProfileFromActorCatalogRecordAndSetStatus(final ActorsCatalog actor){
+    private ActorProfile buildActorProfileFromActorCatalogRecordAndSetStatus(final ActorsCatalog actor, final Boolean originalPhoto){
 
         ActorProfile actorProfile = new ActorProfile();
 
         actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
-        actorProfile.setAlias            (actor.getAlias());
-        actorProfile.setName             (actor.getName());
-        actorProfile.setActorType        (actor.getActorType());
-        actorProfile.setPhoto            (actor.getPhoto());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+
+        if(originalPhoto)
+            actorProfile.setPhoto            (actor.getPhoto());
+        else
+            actorProfile.setPhoto            (actor.getThumbnail());
+
         actorProfile.setExtraData        (actor.getExtraData());
         actorProfile.setLocation         (actor.getLastLocation());
 

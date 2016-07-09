@@ -147,20 +147,30 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
     private List<NavViewFooterItem> getStockData() {
         List<NavViewFooterItem> stockItems = new ArrayList<>();
+        List<Currency> merchandises = new ArrayList<>();
 
         try {
-            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
             numberFormat = DecimalFormat.getInstance();
 
-            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
-                Currency currency = associatedWallet.getMerchandise();
-                double balance = moduleManager.getAvailableBalance(currency, session.getAppPublicKey());
 
-                String currencyCode = currency.getCode();
-                if(currency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+            //Get a list of merchandises
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+
+                if(!merchandises.contains(associatedWallet.getMerchandise()))
+                    merchandises.add(associatedWallet.getMerchandise());
+            }
+
+
+            //Iterate through them and get their balances and friendly names
+            for (Currency merchandise : merchandises) {
+                double balance = moduleManager.getAvailableBalance(merchandise, session.getAppPublicKey());
+
+                //If Bitcoin, convert to satoshi
+                if(CurrencyTypes.CRYPTO.equals(merchandise.getType()) && CryptoCurrency.BITCOIN.equals(merchandise))
                     balance = BitcoinConverter.convert(balance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
-                stockItems.add(new NavViewFooterItem(currency.getFriendlyName(), numberFormat.format(balance)));
+                stockItems.add(new NavViewFooterItem(merchandise.getFriendlyName(), numberFormat.format(balance)));
             }
 
         } catch (Exception ex) {

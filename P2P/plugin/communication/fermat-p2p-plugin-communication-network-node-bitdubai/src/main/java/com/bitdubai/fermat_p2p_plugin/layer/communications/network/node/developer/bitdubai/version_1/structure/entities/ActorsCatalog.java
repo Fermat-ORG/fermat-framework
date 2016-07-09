@@ -38,6 +38,8 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	private String clientIdentityPublicKey;
 
+	private byte[] thumbnail;
+
 	private byte[] photo;
 
 	public ActorsCatalog() {
@@ -136,7 +138,15 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 		this.photo = photo;
 	}
 
-    @Override
+	public byte[] getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(byte[] thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	@Override
     public String getId() {
         return identityPublicKey;
     }
@@ -181,7 +191,7 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 			return false;
 		if (getClientIdentityPublicKey() != null ? !getClientIdentityPublicKey().equals(that.getClientIdentityPublicKey()) : that.getClientIdentityPublicKey() != null)
 			return false;
-		return Arrays.equals(getPhoto(), that.getPhoto());
+		return Arrays.equals(getPhoto(), that.getPhoto()) || Arrays.equals(getThumbnail(), that.getThumbnail());
 
 	}
 
@@ -195,6 +205,7 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 		result = 31 * result + (getNodeIdentityPublicKey() != null ? getNodeIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getClientIdentityPublicKey() != null ? getClientIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getPhoto() != null ? Arrays.hashCode(getPhoto()) : 0);
+		result = 31 * result + (getThumbnail() != null ? Arrays.hashCode(getThumbnail()) : 0);
 		return result;
 	}
 
