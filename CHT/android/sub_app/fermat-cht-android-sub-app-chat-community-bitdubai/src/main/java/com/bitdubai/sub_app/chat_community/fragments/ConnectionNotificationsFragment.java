@@ -244,10 +244,10 @@ public class ConnectionNotificationsFragment
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-            notificationsProgressDialog.setMessage("Loading Notifications");
-            notificationsProgressDialog.setCancelable(false);
-            notificationsProgressDialog.show();
+//            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+//            notificationsProgressDialog.setMessage("Loading Notifications");
+//            notificationsProgressDialog.setCancelable(false);
+//            notificationsProgressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -259,7 +259,7 @@ public class ConnectionNotificationsFragment
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
+//                    notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -280,7 +280,7 @@ public class ConnectionNotificationsFragment
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
+//                    notificationsProgressDialog.dismiss();
                     try {
                         isRefreshing = false;
                         if (swipeRefresh != null)

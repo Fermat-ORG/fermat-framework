@@ -210,10 +210,10 @@ public class ContactsListFragment
         try {
             if (!isRefreshing) {
                 isRefreshing = true;
-                final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-                connectionsProgressDialog.setMessage("Loading Contacts");
-                connectionsProgressDialog.setCancelable(false);
-                connectionsProgressDialog.show();
+//                final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
+//                connectionsProgressDialog.setMessage("Loading Contacts");
+//                connectionsProgressDialog.setCancelable(false);
+//                connectionsProgressDialog.show();
                 FermatWorker worker = new FermatWorker() {
                     @Override
                     protected Object doInBackground() throws Exception {
@@ -225,7 +225,7 @@ public class ContactsListFragment
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                        connectionsProgressDialog.dismiss();
+//                        connectionsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -246,7 +246,7 @@ public class ContactsListFragment
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        connectionsProgressDialog.dismiss();
+//                        connectionsProgressDialog.dismiss();
                         try {
                             isRefreshing = false;
                             if (swipeRefresh != null)
