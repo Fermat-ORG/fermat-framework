@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.actor_network_service.utils;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.util.Arrays;
 
@@ -19,6 +20,7 @@ public class ChatExposingData {
     private final Location location;
     private final long refreshInterval;
     private final long accuracy;
+    private final ProfileStatus profileStatus;
 
 
     public ChatExposingData(final String publicKey,
@@ -30,7 +32,8 @@ public class ChatExposingData {
                             final String status,
                             final Location location,
                             long refreshInterva,
-                            final long accuracy) {
+                            final long accuracy,
+                            final ProfileStatus profileStatus) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
@@ -42,6 +45,7 @@ public class ChatExposingData {
         this.location = location;
         this.refreshInterval = refreshInterva;
         this.accuracy = accuracy;
+        this.profileStatus = profileStatus;
     }
 
     /**
@@ -91,6 +95,10 @@ public class ChatExposingData {
 
     public long getAccurancy() {
         return accuracy;
+    }
+
+    public ProfileStatus getStatusConnected() {
+        return this.profileStatus;
     }
 
     @Override
