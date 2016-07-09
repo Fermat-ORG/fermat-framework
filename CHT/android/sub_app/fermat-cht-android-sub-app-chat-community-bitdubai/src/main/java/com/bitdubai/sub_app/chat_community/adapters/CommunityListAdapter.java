@@ -208,6 +208,14 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.pendingButton.setVisibility(View.GONE);
                     break;
             }
+
+        }
+        else{
+            holder.add_contact_button.setVisibility(View.VISIBLE);
+            holder.connection_text.setVisibility(View.GONE);
+            holder.connectedButton.setVisibility(View.GONE);
+            holder.blockedButton.setVisibility(View.GONE);
+            holder.pendingButton.setVisibility(View.GONE);
         }
     }
 
