@@ -1,111 +1,52 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.CantStopAgentException;
-import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.all_definition.util.AbstractHoldingTransactionAgent;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.HoldCryptoMoneyTransactionPluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.database.HoldCryptoMoneyTransactionDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.MissingHoldCryptoDataException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.HoldCryptoMoneyTransactionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.CryptoWalletTransactionRecordImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
 import java.util.UUID;
-import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
 
 /**
- * The Class <code>HoldCryptoMoneyTransactionMonitorAgent</code>
- * contains the logic for handling agent transactional
- * Created by franklin on 23/11/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/07/16.
  */
-public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
-    //TODO: Documentar y manejo de excepciones
-    //TODO: Manejo de Eventos
+public class HoldCryptoMoneyTransactionMonitorAgent2
+        extends AbstractHoldingTransactionAgent<HoldCryptoMoneyTransactionPluginRoot> {
 
-    private Thread agentThread;
-
-    private final ErrorManager errorManager;
     private final HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager;
     private final CryptoWalletManager cryptoWalletManager;
 
-    public final int SLEEP_TIME = 5000;
-
-
-    public HoldCryptoMoneyTransactionMonitorAgent(ErrorManager errorManager,
-                                                  HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager,
-                                                  CryptoWalletManager cryptoWalletManager) {
-
-        this.errorManager                      = errorManager;
+    public HoldCryptoMoneyTransactionMonitorAgent2(
+            long sleepTime,
+            TimeUnit timeUnit,
+            long initDelayTime,
+            HoldCryptoMoneyTransactionPluginRoot pluginRoot,
+            HoldCryptoMoneyTransactionManager holdCryptoMoneyTransactionManager,
+            CryptoWalletManager cryptoWalletManager) {
+        super(sleepTime, timeUnit, initDelayTime, pluginRoot);
         this.holdCryptoMoneyTransactionManager = holdCryptoMoneyTransactionManager;
         this.cryptoWalletManager = cryptoWalletManager;
-
-        this.agentThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
-                    process();
-            }
-        }
-                , this.getClass().getSimpleName());
-     }
-    @Override
-    public void start() throws CantStartAgentException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Hold Crypto Transaction monitor agent starting");
-
-//        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-//
-//        this.agentThread = new Thread(monitorAgent);
-        this.agentThread.start();
-        super.start();
     }
 
     @Override
-    public void stop() throws CantStopAgentException {
-        this.agentThread.interrupt();
-        super.stop();
-    }
-
-    public void process() {
-
-        while (isRunning()) {
-
-            try {
-                Thread.sleep(SLEEP_TIME);
-            } catch (InterruptedException interruptedException) {
-                cleanResources();
-                return;
-            }
-
-            doTheMainTask();
-
-            if (agentThread.isInterrupted()) {
-                cleanResources();
-                return;
-            }
-        }
-    }
-
-
-    private void doTheMainTask(){
+    protected void doTheMainTask() {
         // I define the filter
         DatabaseTableFilter filter = new DatabaseTableFilter() {
             @Override
@@ -138,7 +79,6 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                 return DatabaseFilterType.EQUAL;
             }
         };
-
         try {
             long availableBalance = 0;
             for (CryptoHoldTransaction cryptoHoldTransaction : holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter)){
@@ -197,24 +137,8 @@ public class HoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                     holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoHoldTransaction);
                 }
             }
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (MissingHoldCryptoDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantCalculateBalanceException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantRegisterDebitException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-    }
-
-    private void cleanResources() {
-        /**
-         * Disconnect from database and explicitly set all references to null.
-         */
     }
 }
