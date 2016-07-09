@@ -62,7 +62,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.NOTIFICATION_SERVICE;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.UPDATE_VIEW;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
@@ -71,7 +70,6 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION;
 
 
 /**
@@ -488,14 +486,30 @@ public class CustomerBrokerUpdateAgent implements
                                                     //CANCEL NEGOTIATION
                                                     customerBrokerUpdatePurchaseNegotiationTransaction.receiveCancelPurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
-                                                    broadcaster.publish(NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                    FermatBundle fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
+                                                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getCode());
+
+                                                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
                                                     broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
                                                 } else {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                                     //UPDATE NEGOTIATION
                                                     customerBrokerUpdatePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
-                                                    broadcaster.publish(NOTIFICATION_SERVICE, customerWalletPublicKey, CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
+                                                    FermatBundle fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
+                                                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
+                                                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+
+                                                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
                                                     broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
                                                 }
 
