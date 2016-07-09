@@ -8,6 +8,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorCallMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -76,7 +77,29 @@ public class ActorCallRespondProcessor extends PackageProcessor {
 
                 ResultDiscoveryTraceActor result = actorCallMsgRespond.getTraceActor();
 
-                isOnline = isActorOnline(result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort(), result.getActorProfile());
+                NodeProfile actorHomeNode = result.getNodeProfile();
+
+                if (actorHomeNode != null){
+                    isOnline = isActorOnline(result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort(), result.getActorProfile());
+                }else {
+
+                    System.out.print("Actor's Home Node is Empty " + actorHomeNode);
+
+                     /*
+                     * Create a raise a new event whit the NETWORK_CLIENT_ACTOR_UNREACHABLE
+                     */
+                    FermatEvent actorUnreachable = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_UNREACHABLE);
+                    actorUnreachable.setSource(EventSource.NETWORK_CLIENT);
+
+                    ((NetworkClientActorUnreachableEvent) actorUnreachable).setActorProfile(result.getActorProfile());
+                    ((NetworkClientActorUnreachableEvent) actorUnreachable).setNetworkServiceType(actorCallMsgRespond.getNetworkServiceType());
+
+                    /*
+                     * Raise the event
+                     */
+                    System.out.println("ActorCallRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_UNREACHABLE");
+                    getEventManager().raiseEvent(actorUnreachable);
+                }
 
                 if(isOnline){
 
