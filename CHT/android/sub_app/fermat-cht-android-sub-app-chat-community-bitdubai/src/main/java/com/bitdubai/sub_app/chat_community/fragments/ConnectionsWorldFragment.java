@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -69,6 +70,7 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -121,8 +123,11 @@ public class ConnectionsWorldFragment
     private GridLayoutManager layoutManager;
     private CommunityListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
+    private ExecutorService executor;
     TextView noDatalabel;
     ImageView noData;
+    private Button refreshButton;
+    private View refreshButtonView;
 
     //Greenbar layout
     private RelativeLayout greenBar;
@@ -237,6 +242,8 @@ public class ConnectionsWorldFragment
                     appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
+            refreshButton = (Button) rootView.findViewById(R.id.show_more_button);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -247,7 +254,19 @@ public class ConnectionsWorldFragment
                         offset=totalItemCount;
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if(lastItem == totalItemCount) {
-                            onRefresh();
+
+                            refreshButtonView.setVisibility(View.VISIBLE);
+                            refreshButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onRefresh();
+                                    refreshButtonView.setVisibility(View.GONE);
+                                }
+                            });
+                        } else{
+
+                            refreshButtonView.setVisibility(View.GONE);
+
                         }
 //                        if (!isRefreshing) {
 
@@ -389,6 +408,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
+        try{
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -451,6 +471,12 @@ public class ConnectionsWorldFragment
                 }
             });
             worker.execute();
+        }
+        }catch (Exception ignore){
+            if (executor != null) {
+                executor.shutdown();
+                executor = null;
+            }
         }
     }
 

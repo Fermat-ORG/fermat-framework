@@ -16,8 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
-import com.bitdubai.sub_app.crypto_customer_community.common.notifications.CommunityNotificationPainterBuilder;
+import com.bitdubai.sub_app.crypto_customer_community.R;
+import com.bitdubai.sub_app.crypto_customer_community.common.notifications.CommunityNotificationPainter;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
 
 
@@ -76,8 +80,16 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(final String code) {
-        return CommunityNotificationPainterBuilder.getNotification(code);
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
+        int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
+
+        switch (notificationID) {
+            case CBPBroadcasterConstants.CCC_CONNECTION_REQUEST_RECEIVED:
+                return new CommunityNotificationPainter("Crypto Customer Community", "A customer wants to connect with you.",
+                        "", R.drawable.cbc_ic_nav_connections);
+            default:
+                return null;
+        }
     }
 
     @Override
