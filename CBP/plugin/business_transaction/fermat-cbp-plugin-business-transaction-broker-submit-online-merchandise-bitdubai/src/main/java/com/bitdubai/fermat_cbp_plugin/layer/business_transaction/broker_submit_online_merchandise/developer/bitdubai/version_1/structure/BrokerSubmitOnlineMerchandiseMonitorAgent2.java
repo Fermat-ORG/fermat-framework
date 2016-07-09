@@ -182,7 +182,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                         cryptoMoneyDeStockRecord.getPriceReference(),
                         cryptoMoneyDeStockRecord.getOriginTransaction(),
                         pendingToDeStockTransaction.getContractHash(),
-                        cryptoMoneyDeStockRecord.getBlockchainNetworkType()); //TODO de Manuel: crear un setting para configuar esto
+                        cryptoMoneyDeStockRecord.getBlockchainNetworkType(),
+                        cryptoMoneyDeStockRecord.getFee(),
+                        cryptoMoneyDeStockRecord.getFeeOrigin()); //TODO de Manuel: crear un setting para configuar esto
 
                 pendingToDeStockTransaction.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE);
                 dao.updateBusinessTransactionRecord(pendingToDeStockTransaction);

@@ -24,6 +24,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_ALIAS_COLUMN_NAME                      = "alias"                     ;
     public static final String ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME                 = "actor_type"                ;
     public static final String ACTOR_CATALOG_PHOTO_COLUMN_NAME                      = "photo"                     ;
+    public static final String ACTOR_CATALOG_THUMBNAIL_COLUMN_NAME                  = "thumbnail"                 ;
     public static final String ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME              = "last_latitude"             ;
     public static final String ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME             = "last_longitude"            ;
     public static final String ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME                 = "extra_data"                ;
@@ -44,6 +45,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME                      = "alias"                     ;
     public static final String ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME                 = "actor_type"                ;
     public static final String ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME                      = "photo"                     ;
+    public static final String ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME                  = "thumbnail"                 ;
     public static final String ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME              = "last_latitude"             ;
     public static final String ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME             = "last_longitude"            ;
     public static final String ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME                 = "extra_data"                ;

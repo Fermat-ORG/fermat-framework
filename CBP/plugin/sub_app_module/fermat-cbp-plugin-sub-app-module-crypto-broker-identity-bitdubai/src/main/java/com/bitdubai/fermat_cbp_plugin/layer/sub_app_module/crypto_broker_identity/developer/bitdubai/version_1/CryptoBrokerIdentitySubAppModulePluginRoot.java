@@ -27,19 +27,19 @@ import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identit
 
 
 @PluginInfo(createdBy = "vlzangel", maintainerMail = "vlzangel91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_BROKER_IDENTITY)
-public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<IdentityBrokerPreferenceSettings,ActiveActorIdentityInformation>
-        {
+public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<IdentityBrokerPreferenceSettings, ActiveActorIdentityInformation> {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
-    private CryptoBrokerIdentityManager identityManager;
+    CryptoBrokerIdentityManager identityManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
+    PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
-    private LocationManager locationManager;
+    LocationManager locationManager;
 
     private CryptoBrokerIdentityModuleManager moduleManager;
+
 
     public CryptoBrokerIdentitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -47,12 +47,14 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<I
 
     @Override
     public CryptoBrokerIdentityModuleManager getModuleManager() throws CantGetModuleManagerException {
-        if (moduleManager == null){
+        if (moduleManager == null) {
             moduleManager = new CryptoBrokerIdentityModuleManagerImpl(
                     identityManager,
                     pluginFileSystem,
                     pluginId,
-                    this, locationManager);
+                    this,
+                    locationManager
+            );
 
             this.serviceStatus = ServiceStatus.STARTED;
         }
