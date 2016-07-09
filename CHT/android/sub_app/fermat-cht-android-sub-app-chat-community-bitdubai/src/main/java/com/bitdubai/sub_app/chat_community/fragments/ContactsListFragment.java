@@ -323,7 +323,7 @@ public class ContactsListFragment
             if(identity != null){
                 result = moduleManager.listAllConnectedChatActor(identity, MAX, offset);
                 dataSet.addAll(result);
-                offset = dataSet.size();
+                //offset = dataSet.size();
             }
         } catch (CantListChatActorException e) {
             e.printStackTrace();
