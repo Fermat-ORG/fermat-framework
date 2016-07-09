@@ -62,10 +62,10 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 9/23/15.
  */
-@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH, maintainerMail = "acosta_rodrigo@hotmail.com", createdBy = "acostarodrigo", layer = Layers.CRYPTO_NETWORK, platform = Platforms.BLOCKCHAINS, plugin = Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK)
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH, maintainerMail = "acosta_rodrigo@hotmail.com", createdBy = "acostarodrigo", layer = Layers.CRYPTO_NETWORK, platform = Platforms.BLOCKCHAINS, plugin = Plugins.BITCOIN_NETWORK)
 public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
-        TransactionSender<CryptoTransaction>,
         BlockchainManager<ECKey, Transaction>,
+        TransactionSender<CryptoTransaction>,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )

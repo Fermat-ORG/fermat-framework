@@ -43,6 +43,7 @@ public class TransactionCompleteInformation {
             long timestamp = System.currentTimeMillis();
             String memo     = this.transactionMetadata       .getInformation().getPaymentDescription();
 
+
             return new IncomingIntraUserTransactionWrapper(
                     cryptoTransactionContainer.getTransactionID()            ,
                     null,
@@ -59,7 +60,7 @@ public class TransactionCompleteInformation {
                     cryptoTransaction.getBlockchainNetworkType(),
                     cryptoTransaction.getCryptoCurrency(),
                     FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS,
-                    cryptoTransaction.getFee());
+                    cryptoTransaction.getFee(), cryptoTransaction.getCryptoAmount());
 
         } catch (CantGetCryptoAddressBookRecordException e) {
 

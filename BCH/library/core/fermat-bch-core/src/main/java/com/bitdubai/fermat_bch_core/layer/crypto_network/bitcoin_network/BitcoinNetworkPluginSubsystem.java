@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_bch_core.layer.crypto_network.bitcoin_network;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
@@ -15,7 +18,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 public class BitcoinNetworkPluginSubsystem extends AbstractPluginSubsystem {
 
     public BitcoinNetworkPluginSubsystem() {
-        super(new PluginReference(Plugins.BITCOIN_NETWORK));
+        super(new PluginReference(new LayerReference(Layers.CRYPTO_NETWORK),Plugins.BITCOIN_NETWORK));
     }
 
     @Override

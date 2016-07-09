@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bit
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -39,6 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Eve
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TODO ADD A DESCRIPTION OF THE PLUG-IN
@@ -68,6 +71,9 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
 
     private CryptoBrokerExtraDataUpdateAgent agent;
 
+    private final long SLEEP_TIME = 12;
+    private final TimeUnit TIME_UNIT = TimeUnit.HOURS;
+
     public CryptoCustomerActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -87,7 +93,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                     this.cryptoCustomerActorDao = new CryptoCustomerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
                     this.cryptoCustomerActorDao.initializeDatabase();
 
-                    fermatManager = new CustomerActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager, this);
+                    fermatManager = new CustomerActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager, cryptoBrokerActorConnectionManager, this);
 
                     ActorCustomerExtraDataEventActions handlerAction = new ActorCustomerExtraDataEventActions(cryptoBrokerANSManager, cryptoCustomerActorDao, cryptoBrokerActorConnectionManager);
 
@@ -104,7 +110,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                     listenersAdded.add(fermatEventListener);
 
 
-                    agent = new CryptoBrokerExtraDataUpdateAgent(cryptoBrokerANSManager, cryptoCustomerActorDao, this, getPluginVersionReference());
+                    agent = new CryptoBrokerExtraDataUpdateAgent(SLEEP_TIME, TIME_UNIT, cryptoBrokerANSManager, cryptoCustomerActorDao, this, getPluginVersionReference());
                     agent.start();
                     this.serviceStatus = ServiceStatus.STARTED;
 
@@ -130,7 +136,11 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                 }
                 listenersAdded.clear();
 
-                agent.stop();
+                try {
+                    agent.stop();
+                } catch (CantStopAgentException e) {
+                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+                }
             }
 
             @Override

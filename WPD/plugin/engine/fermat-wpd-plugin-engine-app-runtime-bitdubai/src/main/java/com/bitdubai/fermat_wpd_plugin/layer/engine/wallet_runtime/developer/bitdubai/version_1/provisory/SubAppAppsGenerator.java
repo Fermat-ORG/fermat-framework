@@ -4149,22 +4149,22 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("CHATS");
 
         //Badge in the tab
-        Badge fermatDrawable = new Badge("ic_badge");
-        fermatDrawable.setTestSize(32);
-        fermatDrawable.setNumber(1);
-        runtimeTab.setFermatDrawable(fermatDrawable);
+//        Badge fermatDrawable = new Badge("ic_badge");
+//        fermatDrawable.setTestSize(32);
+//        fermatDrawable.setNumber(1);
+//        runtimeTab.setFermatDrawable(fermatDrawable);
 
         //FermatTextView
         //todo: josé acá agregale lo tuyo
-        FermatTextViewRuntime fermatTextViewRuntime = new FermatTextViewRuntime();
-        fermatTextViewRuntime.setTitle("CHAT");
-        fermatTextViewRuntime.setFontType(FontType.ROBOTO_REGULAR);
-        fermatTextViewRuntime.setTitleSize(20);
-
-        TabBadgeView tabBadgeView = new TabBadgeView();
-        tabBadgeView.setFermatTextViewRuntime(fermatTextViewRuntime);
-        tabBadgeView.setBadge(fermatDrawable);
-        runtimeTab.setFermatView(tabBadgeView);
+//        FermatTextViewRuntime fermatTextViewRuntime = new FermatTextViewRuntime();
+//        fermatTextViewRuntime.setTitle("CHAT");
+//        fermatTextViewRuntime.setFontType(FontType.ROBOTO_REGULAR);
+//        fermatTextViewRuntime.setTitleSize(20);
+//
+//        TabBadgeView tabBadgeView = new TabBadgeView();
+//        tabBadgeView.setFermatTextViewRuntime(fermatTextViewRuntime);
+//        tabBadgeView.setBadge(fermatDrawable);
+//        runtimeTab.setFermatView(tabBadgeView);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

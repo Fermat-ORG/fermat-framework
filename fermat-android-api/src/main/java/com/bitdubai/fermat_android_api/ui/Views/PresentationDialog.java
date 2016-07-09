@@ -63,6 +63,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     private int iconRes = -1;
     private int resImageLeft = -1;
     private int resImageRight = -1;
+    private int checkButtonAndTextVisible = -1;
 
     /**
      * UI
@@ -164,6 +165,13 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             txt_sub_title.setTextColor(color);
             txt_body.setTextColor(color);
             footer_title.setTextColor(color);
+        }
+        if(checkButtonAndTextVisible==0 && checkButton==false){
+            checkbox_not_show.setVisibility(View.GONE);
+            checkbox_not_show_text.setVisibility(View.GONE);
+        }else {
+            checkbox_not_show.setVisibility(View.VISIBLE);
+            checkbox_not_show_text.setVisibility(View.VISIBLE);
         }
     }
 
@@ -322,6 +330,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         this.callback = callback;
     }
 
+    public void setCheckButtonAndTextVisible(int checkButtonAndTextVisible) {
+        this.checkButtonAndTextVisible = checkButtonAndTextVisible;
+    }
+
     public static class Builder {
 
         /**
@@ -331,6 +343,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private final WeakReference<ReferenceAppFermatSession> fermatSession;
         private TemplateType templateType = TemplateType.TYPE_PRESENTATION;
         private boolean isCheckEnabled;
+        private int checkButtonAndTextVisible=-1;
         private PresentationCallback callback;
         private String title;
         private int subTitle = -1;
@@ -405,6 +418,8 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             if (callback != null) {
                 presentationDialog.setCallback(callback);
             }
+            presentationDialog.setCheckButtonAndTextVisible(checkButtonAndTextVisible);
+
             return presentationDialog;
         }
 
@@ -495,6 +510,16 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
 
         public Builder setVIewColor(int viewColorInHexa) {
             this.viewColor = viewColorInHexa;
+            return this;
+        }
+
+        /*
+        * setCheckButtonAndTextVisible
+        * set checkButtonAndTextVisible = 0 if you do not want checkbox and text appear
+        */
+
+        public Builder setCheckButtonAndTextVisible(int checkButtonAndTextVisible) {
+            this.checkButtonAndTextVisible = checkButtonAndTextVisible;
             return this;
         }
     }
