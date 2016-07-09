@@ -1177,11 +1177,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         String publicKeyActor;
         try {
             publicKeyActor = getSelectedActorIdentity().getPublicKey();
-        } catch (CantGetSelectedActorIdentityException e) {
-            throw new CantLoadWalletsException(e.getMessage(),
-                    e,
-                    "Extracting earnings",
-                    "Cannot get the selected identity");
+        } catch (Exception e) {
+            publicKeyActor = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
         }
         try {
             preferenceSettings = loadAndGetSettings(publicKeyActor);
@@ -1357,7 +1354,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             CryptoBrokerWalletAssociatedSetting associatedWallet;
             Platforms merchandiseWalletPlatform;
             double balance;
-            String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+            //String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+            String cryptoBrokerPublicKey = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
             Currency merchandiseCurrency;
 
             CustomerBrokerContractSale customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
@@ -1573,10 +1571,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         try {
             publicKeyActor = getSelectedActorIdentity().getPublicKey();
         } catch (CantGetSelectedActorIdentityException e) {
-            throw new CantExtractEarningsException(
-                    e,
-                    "Extracting earnings",
-                    "Cannot get the selected identity");
+            publicKeyActor = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
         }
         try {
             preferenceSettings = loadAndGetSettings(publicKeyActor);

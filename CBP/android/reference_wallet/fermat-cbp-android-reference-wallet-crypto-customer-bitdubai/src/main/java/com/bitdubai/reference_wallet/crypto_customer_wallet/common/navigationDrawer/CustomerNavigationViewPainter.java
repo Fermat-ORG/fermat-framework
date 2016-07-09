@@ -90,10 +90,10 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
         FermatTextView bitcoinBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_bitcoin_balance);
         FermatTextView fermatBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_fermat_balance);
 
-        long satoshisBTC = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(), actorIdentity.getPublicKey());
+        long satoshisBTC = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
         double bitcoins = BitcoinConverter.convert(satoshisBTC, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
-        long satoshisFER = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode(), actorIdentity.getPublicKey());
+        long satoshisFER = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
         double fermats = BitcoinConverter.convert(satoshisFER, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.FERMAT);
 
         bitcoinBalance.setText(String.format("%1$s %2$s", bitcoins, CryptoCurrency.BITCOIN.getCode()));

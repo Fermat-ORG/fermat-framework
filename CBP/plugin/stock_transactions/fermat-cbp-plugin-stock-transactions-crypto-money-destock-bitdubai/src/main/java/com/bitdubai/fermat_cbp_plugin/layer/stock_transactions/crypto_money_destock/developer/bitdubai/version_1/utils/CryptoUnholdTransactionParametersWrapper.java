@@ -32,7 +32,9 @@ public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTra
                                                     BigDecimal amount,
                                                     String memo,
                                                     String publicKeyPlugin,
-                                                    BlockchainNetworkType blockchainNetworkType
+                                                    BlockchainNetworkType blockchainNetworkType,
+                                                    long fee,
+                                                    FeeOrigin feeOrigin
     ){
         this.transactionId   = transactionId;
         this.cryptoCurrency  = cryptoCurrency;
@@ -42,6 +44,8 @@ public class CryptoUnholdTransactionParametersWrapper implements CryptoUnholdTra
         this.memo            = memo;
         this.publicKeyPlugin = publicKeyPlugin;
         this.blockchainNetworkType = blockchainNetworkType;
+        this.fee = fee;
+        this.feeOrigin = feeOrigin;
     }
 
     public CryptoUnholdTransactionParametersWrapper(){}

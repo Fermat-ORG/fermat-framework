@@ -535,7 +535,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     @Override
-    public long getBalanceBitcoinWallet(String walletPublicKey, String publicKeyActor) {
+    public long getBalanceBitcoinWallet(String walletPublicKey) {
+        String publicKeyActor;
+        try{
+            publicKeyActor=getSelectedActorIdentity().getPublicKey();
+        } catch (Exception e){
+            publicKeyActor = "customerPublicKey";
+        }
+
         try {
             CryptoCustomerWalletPreferenceSettings preferenceSettings;
             try {
