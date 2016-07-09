@@ -155,7 +155,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     @Override
     public ProfileStatus getProfileStatus() {
-        return null;
+        return profileStatus;
     }
 
     public void setCountry(String country) {

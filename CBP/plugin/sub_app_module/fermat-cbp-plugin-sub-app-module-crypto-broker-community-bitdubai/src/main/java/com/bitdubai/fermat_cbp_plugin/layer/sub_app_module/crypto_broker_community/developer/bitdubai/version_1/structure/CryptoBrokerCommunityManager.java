@@ -180,7 +180,7 @@ public class CryptoBrokerCommunityManager
             brokerActor.setCountry(country);
             brokerActor.setPlace(place);
 
-            System.out.println("************** Actor Customer Register: " + brokerActor.getAlias() + " - " + brokerActor.getProfileStatus() + " - " + brokerActor.getConnectionState());
+            System.out.println("************** Actor Broker Register: " + brokerActor.getAlias() + " - " + brokerActor.getProfileStatus() + " - " + brokerActor.getConnectionState());
         }
 
         return worldBrokerList;
