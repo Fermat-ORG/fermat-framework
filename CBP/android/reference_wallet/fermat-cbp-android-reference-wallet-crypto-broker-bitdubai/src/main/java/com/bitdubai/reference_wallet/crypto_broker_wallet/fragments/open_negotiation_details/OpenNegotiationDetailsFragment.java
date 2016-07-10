@@ -124,6 +124,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             Object data = appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
             CustomerBrokerNegotiationInformation negotiationInfo = (data != null) ? (CustomerBrokerNegotiationInformation) data : null;
             negotiationWrapper = new NegotiationWrapper(negotiationInfo, appSession);
+            boolean walletUser = isCreateIdentityIntraUser(negotiationWrapper.getClauses());
+            negotiationWrapper.setWalletUser(walletUser);
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -366,8 +368,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
 
-                } else
-                    Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC ", Toast.LENGTH_LONG).show();
+                }
 
             } else
                 Toast.makeText(getActivity(), "Need to confirm ALL the clauses", Toast.LENGTH_LONG).show();
@@ -709,13 +712,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String currencyBTC      = "BTC";
 
         if(customerCurrency != null){
-            if("BTC" == customerCurrency) return moduleManager.isCreateIdentityIntraUser();
+            if(currencyBTC.equals(customerCurrency)) return moduleManager.isCreateIdentityIntraUser();
         }
 
         if(brokerCurrency != null){
-            if("BTC" == brokerCurrency) return moduleManager.isCreateIdentityIntraUser();
+            if(currencyBTC.equals(brokerCurrency)) return moduleManager.isCreateIdentityIntraUser();
         }
 
         return true;
