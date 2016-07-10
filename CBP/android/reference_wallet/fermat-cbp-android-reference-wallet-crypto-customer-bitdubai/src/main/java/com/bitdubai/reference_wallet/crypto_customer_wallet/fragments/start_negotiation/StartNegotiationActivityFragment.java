@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
@@ -186,28 +187,21 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
                 if (validateClauses(mapClauses)) {
 
-                    clauses = getClause(mapClauses);
+                    if(isCreateIdentityIntraUser(negotiationInfo.getClauses())){
 
-                   /* if(mapClauses.get(ClauseType.BROKER_CURRENCY).getValue().equals()){
-                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                        alertDialog.setTitle("Important Information");
-                        alertDialog.setMessage("The Miner Fee of this transaction is 0.000015 Bitcoins");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
-                    }*/
+                        clauses = getClause(mapClauses);
 
-                    if (moduleManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
-                        Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
-                        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
+                        if (moduleManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
+                            Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
+                            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
+                        } else {
+                            Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
+                        }
+
+//                        Toast.makeText(getActivity(), "SEND NEGOTIATION", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC", Toast.LENGTH_LONG).show();
                     }
-
                 }
 
             } else {
@@ -561,6 +555,22 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
     private BigDecimal getBigDecimal(String value) {
         return new BigDecimal(value.replace(",", ""));
+    }
+
+    private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException{
+
+//        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+//        String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+//
+//        if(customerCurrency != null){
+//            if("BTC" == customerCurrency) return moduleManager.isCreateIdentityIntraUser();
+//        }
+//
+//        if(brokerCurrency != null){
+//            if("BTC" == brokerCurrency) return moduleManager.isCreateIdentityIntraUser();
+//        }
+
+        return true;
     }
 
     /*------------------------------------------ OTHER METHODS ---------------------------------------------*/
