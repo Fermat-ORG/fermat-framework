@@ -217,7 +217,7 @@ public class Profiles implements RestFulServices {
         actorProfile.setName(actor.getName());
         actorProfile.setActorType(actor.getActorType());
 
-        if(originalPhoto)
+        if(originalPhoto != null && originalPhoto)
             actorProfile.setPhoto(actor.getPhoto());
         else
             actorProfile.setPhoto(actor.getThumbnail());
@@ -240,7 +240,7 @@ public class Profiles implements RestFulServices {
         actorProfile.setName(actor.getName());
         actorProfile.setActorType(actor.getActorType());
 
-        if(originalPhoto)
+        if(originalPhoto != null && originalPhoto)
             actorProfile.setPhoto            (actor.getPhoto());
         else
             actorProfile.setPhoto            (actor.getThumbnail());
