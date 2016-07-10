@@ -188,8 +188,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -665,7 +667,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
     @Override
     public List<MoneyType> getPaymentMethods(String currencyCode, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
-        List<MoneyType> paymentMethod = new ArrayList<>();
+        Set<MoneyType> paymentMethod = new HashSet<>();
 
         List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings(brokerWalletPublicKey);
 
@@ -680,7 +682,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             }
         }
 
-        return paymentMethod;
+        return new ArrayList<>(paymentMethod);
     }
 
     @Override
