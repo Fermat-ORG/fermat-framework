@@ -104,7 +104,7 @@ public class OpenContractMonitorAgent2
             ContractSaleRecord saleContract = new ContractSaleRecord();
             ContractType contractType;
             UUID transmissionId = UUID.randomUUID();
-            UUID transactionId = UUID.randomUUID();
+            UUID transactionId;
 
             // Check if exist in database new contracts to send
             List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
@@ -112,6 +112,7 @@ public class OpenContractMonitorAgent2
                 for (String hashToSubmit : contractPendingToSubmitList) {
                     contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
                     contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
+                    transactionId = openContractBusinessTransactionDao.getTransactionId(hashToSubmit);
 
                     System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: "+contractType+"\n");
 
