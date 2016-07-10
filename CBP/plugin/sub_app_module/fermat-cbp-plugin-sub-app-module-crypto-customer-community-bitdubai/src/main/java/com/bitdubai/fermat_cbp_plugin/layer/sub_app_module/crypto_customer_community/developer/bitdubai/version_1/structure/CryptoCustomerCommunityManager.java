@@ -130,7 +130,7 @@ public class CryptoCustomerCommunityManager
             CryptoCustomerCommunityInformation worldCustomer = worldCustomerList.get(i);
             for (CryptoCustomerActorConnection connectedCustomer : actorConnections) {
                 if (worldCustomer.getPublicKey().equals(connectedCustomer.getPublicKey()))
-                    worldCustomerList.set(i, new CryptoCustomerCommunitySubAppModuleInformation(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedCustomer.getConnectionState(), connectedCustomer.getConnectionId(), worldCustomer.getLocation()));
+                    worldCustomerList.set(i, new CryptoCustomerCommunitySubAppModuleInformation(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedCustomer.getConnectionState(), connectedCustomer.getConnectionId(), worldCustomer.getLocation(), worldCustomer.getProfileStatus()));
             }
         }
 
@@ -148,6 +148,8 @@ public class CryptoCustomerCommunityManager
 
             customer.setCountry(country);
             customer.setPlace(place);
+
+            System.out.println("************** Actor Customer Register: " + customer.getAlias() + " - " + customer.getProfileStatus() + " - " + customer.getConnectionState());
         }
 
         return worldCustomerList;

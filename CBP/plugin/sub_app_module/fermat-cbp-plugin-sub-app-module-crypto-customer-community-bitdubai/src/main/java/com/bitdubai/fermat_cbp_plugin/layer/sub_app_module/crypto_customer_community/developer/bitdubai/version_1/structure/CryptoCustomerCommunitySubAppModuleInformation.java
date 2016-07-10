@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,19 +25,24 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
     private Location location;
     private String country;
     private String place;
+    private ProfileStatus profileStatus;
+
+
 
     public CryptoCustomerCommunitySubAppModuleInformation(String publicKey,
                                                           String alias,
                                                           byte[] image,
                                                           ConnectionState connectionState,
                                                           UUID connectionId,
-                                                          Location location) {
+                                                          Location location,
+                                                          ProfileStatus profileStatus) {
         this.publicKey = publicKey;
         this.alias = alias;
         this.image = image;
         this.connectionState = connectionState;
         this.connectionId = connectionId;
         this.location = location;
+        this.profileStatus = profileStatus;
     }
 
     public CryptoCustomerCommunitySubAppModuleInformation(final String publicKey,
@@ -111,6 +117,11 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
     @Override
     public Location getLocation() {
         return this.location;
+    }
+
+    @Override
+    public ProfileStatus getProfileStatus() {
+        return this.profileStatus;
     }
 
     @Override

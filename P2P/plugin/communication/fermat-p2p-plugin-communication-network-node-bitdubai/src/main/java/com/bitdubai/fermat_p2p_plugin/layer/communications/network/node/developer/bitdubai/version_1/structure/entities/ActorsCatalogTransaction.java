@@ -50,6 +50,8 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private byte[] photo;
 
+	private byte[] thumbnail;
+
 	private String transactionType;
 
 	private Timestamp generationTime;
@@ -167,6 +169,14 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		this.photo = photo;
 	}
 
+	public byte[] getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(byte[] thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
 	@Override
 	public String getId() {
 		return hashId;
@@ -221,6 +231,8 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		if (getClientIdentityPublicKey() != null ? !getClientIdentityPublicKey().equals(that.getClientIdentityPublicKey()) : that.getClientIdentityPublicKey() != null)
 			return false;
 		if (!Arrays.equals(getPhoto(), that.getPhoto())) return false;
+		if (!Arrays.equals(getThumbnail(), that.getThumbnail())) return false;
+
 		return !(getTransactionType() != null ? !getTransactionType().equals(that.getTransactionType()) : that.getTransactionType() != null);
 
 	}
@@ -239,6 +251,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		result = 31 * result + (getNodeIdentityPublicKey() != null ? getNodeIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getClientIdentityPublicKey() != null ? getClientIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getPhoto() != null ? Arrays.hashCode(getPhoto()) : 0);
+		result = 31 * result + (getThumbnail() != null ? Arrays.hashCode(getThumbnail()) : 0);
 		result = 31 * result + (getTransactionType() != null ? getTransactionType().hashCode() : 0);
 		return result;
 	}

@@ -134,13 +134,11 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
             transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(offset, max);
 
-        }else {
+        } else {
 
             transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(0, 20);
-
         }
 
         return transactionList;
-
     }
 }
