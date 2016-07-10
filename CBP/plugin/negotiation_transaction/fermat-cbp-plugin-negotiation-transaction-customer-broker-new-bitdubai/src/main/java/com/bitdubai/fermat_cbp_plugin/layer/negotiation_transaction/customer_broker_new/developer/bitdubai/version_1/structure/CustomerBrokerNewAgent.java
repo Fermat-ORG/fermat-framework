@@ -307,9 +307,9 @@ public class CustomerBrokerNewAgent implements
         {
             try{
 
-                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
-                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
-//                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
+//                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+//                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
+                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
                 String                              negotiationXML;
                 NegotiationType                     negotiationType;

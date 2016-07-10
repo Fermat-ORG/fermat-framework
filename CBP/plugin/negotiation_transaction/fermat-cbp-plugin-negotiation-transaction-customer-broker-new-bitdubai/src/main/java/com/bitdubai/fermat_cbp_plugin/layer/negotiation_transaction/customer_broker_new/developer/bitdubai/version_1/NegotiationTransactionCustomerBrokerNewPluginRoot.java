@@ -132,16 +132,16 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         try {
 
             //Initialize database
-//            initializeDb();
+            initializeDb();
 
             //Initialize Developer Database Factory
             customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory = new CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             //Initialize Dao
-            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
-            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
-//            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
+//            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+//            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
+            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
 
             //Initialize manager
             customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(
@@ -278,7 +278,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*END IMPLEMENTATION LogManagerForDevelopers*/
 
     /*PRIVATE METHOD*/
-    /*private void initializeDb() throws CantInitializeDatabaseException {
+    private void initializeDb() throws CantInitializeDatabaseException {
         try {
 
 //            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
@@ -304,7 +304,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
 
-    }*/
+    }
     /*END PRIVATE METHOD*/
 
 }
