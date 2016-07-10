@@ -4,14 +4,20 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionFee;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 
@@ -25,6 +31,8 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private FermatButton buyingValue;
     private boolean paymentBuy;
 
+
+
     public AmountToBuyViewHolder(View itemView) {
         super(itemView);
 
@@ -33,21 +41,28 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         currencyToBuyTextValue  = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
         buyingText              = (TextView) itemView.findViewById(R.id.ccw_buying_text);
         buyingValue             = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
+
+
+
         buyingValue.setOnClickListener(this);
     }
 
     @Override
     public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause, int position) {
         super.bindData(data, clause, position);
+        ClauseType currencyType = ClauseType.CUSTOMER_CURRENCY;
 
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
 
-        ClauseType currencyType = ClauseType.CUSTOMER_CURRENCY;
+
+
+
         int buyingTextValue = R.string.buying_text;
 
         if (!paymentBuy) {
             currencyType = ClauseType.BROKER_CURRENCY;
             buyingTextValue = R.string.paying_text;
+
         }
 
         final ClauseInformation currencyToBuy = clauses.get(currencyType);

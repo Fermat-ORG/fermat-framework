@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
@@ -36,6 +37,9 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
     private ChatIdentityManager chatIdentityManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
+
     public ChatIdentitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -51,25 +55,14 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
          *
          */
         System.out.println("******* Init Chat Sup App Module Identity ******");
-        chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId);
-        //TODO: This method is only for testing, please, comment it when the test is finish, thanks.
-        //testMethod("Franklin Marcano", new byte[0]);
+        chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId, locationManager);
 
     }
-
-//    private void testMethod(String alias, byte[] profileImage)
-//    {
-//        try {
-//            chatIdentityManager.createNewIdentityChat(alias, profileImage);
-//        } catch (CantCreateNewChatIdentityException e) {
-//            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-//        }
-//    }
 
     @Override
     public ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if (chatIdentityModuleManager == null)
-            chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId);
+            chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId, locationManager);
         return chatIdentityModuleManager;
     }
 }

@@ -4,16 +4,18 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.FanWalletMainActivity;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.FollowingFragment;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.SongFragment;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 
 /**
  * Created by Miguel Payarez on 15/03/16.
  */
-public class FanWalletFragmentFactory extends FermatFragmentFactory<FanWalletSession,WalletResourcesProviderManager,FanWalletEnumType> {
+public class FanWalletFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<FanWalletModule>,WalletResourcesProviderManager,FanWalletEnumType> {
     @Override
     protected AbstractFermatFragment getFermatFragment(FanWalletEnumType fragments) throws FragmentNotFoundException {
         if (fragments == null) {

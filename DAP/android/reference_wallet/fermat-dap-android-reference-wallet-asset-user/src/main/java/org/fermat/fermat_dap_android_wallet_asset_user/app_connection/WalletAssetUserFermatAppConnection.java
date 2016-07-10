@@ -2,32 +2,35 @@ package org.fermat.fermat_dap_android_wallet_asset_user.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.common.header.WalletAssetUserHeaderPainter;
 import org.fermat.fermat_dap_android_wallet_asset_user.factory.WalletAssetUserFragmentFactory;
 import org.fermat.fermat_dap_android_wallet_asset_user.navigation_drawer.UserWalletNavigationViewPainter;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUserSession> {
+public class WalletAssetUserFermatAppConnection extends AppConnections<ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>> {
 
-    AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
+    ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> assetUserSession;
 
     public WalletAssetUserFermatAppConnection(Context activity) {
         super(activity);
@@ -39,25 +42,24 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.ASSET_USER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
-    public AssetUserSession getSession() {
-        return new AssetUserSession();
+    public AbstractReferenceAppFermatSession getSession() {
+        return new AssetUserSessionReferenceApp();
     }
-
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new UserWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return new UserWalletNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override
@@ -79,7 +81,6 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
             this.assetUserSession = this.getFullyLoadedSession();
             if (assetUserSession != null) {
                 if (assetUserSession.getModuleManager() != null) {
-                    moduleManager = assetUserSession.getModuleManager();
                     enabledNotification = assetUserSession.getModuleManager().loadAndGetSettings(assetUserSession.getAppPublicKey()).getNotificationEnabled();
                 }
             }
@@ -114,5 +115,10 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
             e.printStackTrace();
         }
         return notification;
+    }
+
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new WalletAssetUserSearcher();
     }
 }

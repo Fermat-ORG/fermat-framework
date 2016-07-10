@@ -3,6 +3,9 @@ package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
@@ -36,9 +39,8 @@ public interface IntraWalletUserIdentityManager  extends ModuleManager<FermatSet
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException if something goes wrong.
      */
-    IntraWalletUserIdentity createNewIntraWalletUser(String alias ,String phrase      ,
-                                             byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 
+    IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, Frequency frequency,Location location) throws CantCreateNewIntraWalletUserException;
 
     /**
      *
@@ -47,9 +49,8 @@ public interface IntraWalletUserIdentityManager  extends ModuleManager<FermatSet
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException
      */
-    IntraWalletUserIdentity createNewIntraWalletUser(String alias ,
-                                                     byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 
+    IntraWalletUserIdentity createNewIntraWalletUser(String alias, byte[] profileImage, Long accuracy, Frequency frequency,Location location) throws CantCreateNewIntraWalletUserException;
 
     /**
      * The method <code>hasIntraUserIdentity</code> returns if has a intra user identity created
@@ -68,7 +69,7 @@ public interface IntraWalletUserIdentityManager  extends ModuleManager<FermatSet
      * @param profileImage
      * @throws CantUpdateIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage) throws CantUpdateIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage, Long accuracy, Frequency frequency, Location location) throws CantUpdateIdentityException;
 
     /**
      *The method <code>deleteIntraUserIdentity</code> change identity status to inactive

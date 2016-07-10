@@ -8,28 +8,25 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
@@ -37,7 +34,7 @@ import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClickEven
 import com.bitdubai.sub_app.music_player.R;
 import com.bitdubai.sub_app.music_player.common.adapters.MusicPlayerAdapter;
 import com.bitdubai.sub_app.music_player.common.models.MusicPlayerItems;
-import com.bitdubai.sub_app.music_player.session.MusicPlayerSession;
+import com.bitdubai.sub_app.music_player.session.MusicPlayerSessionReferenceApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,10 +48,10 @@ import java.util.Map;
 /**
  * Created by Miguel Payarez on 13/04/16.
  */
-public class MusicPlayerMainActivity extends AbstractFermatFragment {
+public class MusicPlayerMainActivity extends AbstractFermatFragment<ReferenceAppFermatSession<MusicPlayerModuleManager>, SubAppResourcesProviderManager> {
 
     //FermatManager
-    private MusicPlayerSession musicPlayerSession;
+    private MusicPlayerSessionReferenceApp musicPlayerSession;
     private MusicPlayerModuleManager musicPlayermoduleManager;
     private MusicPlayerPreferenceSettings musicPlayerSettings;
     private ErrorManager errorManager;
@@ -91,8 +88,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         super.onCreate(savedInstanceState);
         try {
-            musicPlayerSession = ((MusicPlayerSession) appSession);
-            musicPlayermoduleManager = musicPlayerSession.getModuleManager();
+            musicPlayerSession = ((MusicPlayerSessionReferenceApp) appSession);
+            musicPlayermoduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START MUSIC PLAYER");
 
@@ -313,7 +310,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         try {
             mysong=musicPlayermoduleManager.getAvailableSongs();
             if(mysong.size()<1){
-                Toast.makeText(view.getContext(),"Dowload Songs with the FanWallet",Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(),"There is no songs in the Fan wallet",Toast.LENGTH_LONG).show();
                 adapter.setFilter(null);
                 //       recyclerView.setBackgroundResource(R.drawable.nomusic);
                 noMusicFound.setVisibility(View.VISIBLE);
@@ -443,7 +440,15 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
                 songPlayerThread = new ThreadSong(false);
-                songPlayerThread.execute();
+                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){ // Above Api Level 13
+                    songPlayerThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else{    // Below Api Level 13
+                    songPlayerThread.execute();
+                }
+
+
+
+
 
 
 

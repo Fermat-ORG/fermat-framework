@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -41,18 +41,18 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.event_handler.CustomerBrokerCloseServiceEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -106,7 +106,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     private CustomerBrokerCloseManagerImpl                                      customerBrokerCloseManagerImpl;
 
     /*Represent Agent*/
-    private CustomerBrokerCloseAgent                                            customerBrokerCloseAgent;
+    private CustomerBrokerCloseAgent2                                            customerBrokerCloseAgent;
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiation                                   customerBrokerPurchaseNegotiation;
@@ -118,6 +118,11 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     private CustomerBrokerCloseServiceEventHandler                              customerBrokerCloseServiceEventHandler;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public NegotiationTransactionCustomerBrokerClosePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -159,12 +164,16 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
              customerBrokerCloseServiceEventHandler.start();
 
              //Init monitor Agent
-             customerBrokerCloseAgent = new CustomerBrokerCloseAgent(
+             customerBrokerCloseAgent = new CustomerBrokerCloseAgent2(
+                     SLEEP_TIME,
+                     TIME_UNIT,
+                     DELAY_TIME,
                      pluginDatabaseSystem,
                      logManager,
                      this,
                      eventManager,
                      pluginId,
+                     customerBrokerCloseNegotiationTransactionDatabaseDao,
                      negotiationTransmissionManager,
                      customerBrokerPurchaseNegotiation,
                      customerBrokerSaleNegotiation,
@@ -179,6 +188,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
              //Startes Service
              this.serviceStatus = ServiceStatus.STARTED;
+             System.out.print("-----------------------\n CUSTOMER BROKER CLOSE: SUCCESSFUL START "+pluginId.toString()+" \n-----------------------\n");
 
          } catch (CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException e){
              reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

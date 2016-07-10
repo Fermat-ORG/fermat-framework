@@ -1,58 +1,46 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-
-import java.util.Arrays;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.common.AbstractCBPActorExposingData;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData</code>
  * represents a crypto broker and exposes all the functionality of it.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
+ * Updated by Manuel Perez on (darkpriestrelative@gmail.com) on 05/07/16.
  */
-public final class CryptoBrokerExposingData {
+public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData {
 
-    private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
-
-    public CryptoBrokerExposingData(final String publicKey,
-                                    final String alias    ,
-                                    final byte[] image    ) {
-
-        this.publicKey = publicKey;
-        this.alias     = alias    ;
-        this.image     = image    ;
+    /**
+     * Default constructor with parameters
+     * @param publicKey
+     * @param alias
+     * @param image
+     * @param location
+     * @param refreshInterval
+     * @param accuracy
+     */
+    public CryptoBrokerExposingData(
+            String publicKey,
+            String alias,
+            byte[] image,
+            Location location,
+            long refreshInterval,
+            long accuracy,
+            ProfileStatus profileStatus) {
+        super(
+                publicKey,
+                alias,
+                image,
+                location,
+                refreshInterval,
+                accuracy, profileStatus);
     }
 
     /**
-     * @return a string representing the public key.
+     * This class only extends AbstractCBPActorExposingData, it can be changed in future versions
      */
-    public final String getPublicKey() {
-        return publicKey;
-    }
-
-    /**
-     * @return a string representing the alias of the crypto broker.
-     */
-    public final String getAlias() {
-        return alias;
-    }
-
-    /**
-     * @return an array of bytes with the image exposed by the Crypto Broker.
-     */
-    public final byte[] getImage() {
-        return image;
-    }
-
-    @Override
-    public String toString() {
-        return "CryptoBrokerExposingData{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", image=" + Arrays.toString(image) +
-                '}';
-    }
 
 }

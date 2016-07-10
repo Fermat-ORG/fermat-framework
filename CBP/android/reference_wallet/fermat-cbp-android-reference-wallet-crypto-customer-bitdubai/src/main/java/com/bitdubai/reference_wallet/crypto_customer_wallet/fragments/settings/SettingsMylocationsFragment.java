@@ -15,18 +15,19 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +37,9 @@ import java.util.List;
 /**
  * Created by memo on 06/01/16.
  */
-public class SettingsMylocationsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String>  {
+public class SettingsMylocationsFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String> {
 
     // Constants
     private static final String TAG = "settingsMyLocations";
@@ -63,29 +66,29 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
 
             //Try to load appSession data
-            Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
-            if(data == null) {
+            Object data = appSession.getData(FragmentsCommons.LOCATION_LIST);
+            if (data == null) {
 
                 //Get saved locations from settings
-                Collection<NegotiationLocations> listAux= moduleManager.getAllLocations(NegotiationType.PURCHASE);
-                for (NegotiationLocations locationAux : listAux){
+                Collection<NegotiationLocations> listAux = moduleManager.getAllLocations(NegotiationType.PURCHASE);
+                for (NegotiationLocations locationAux : listAux) {
                     locationList.add(locationAux.getLocation());
                 }
 
                 //Save locations to appSession data
-                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+                appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
 
 
             //Checking something here
-            if(locationList.size()>0) {
+            if (locationList.size() > 0) {
                 int pos = locationList.size() - 1;
                 if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
                     locationList.remove(pos);

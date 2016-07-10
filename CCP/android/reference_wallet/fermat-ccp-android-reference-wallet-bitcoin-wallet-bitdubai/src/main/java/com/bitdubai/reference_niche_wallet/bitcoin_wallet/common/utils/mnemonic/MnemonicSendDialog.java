@@ -4,11 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-//import android.view.WindowManager;
-//import android.widget.Button;
 import android.widget.EditText;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+
+//import android.view.WindowManager;
+//import android.widget.Button;
 //import com.bitdubai.fermat.R;
 
 /**

@@ -19,14 +19,17 @@ configurations {
 
 dependencies {
     compile project(':fermat-api')
+    compile project(':fermat-bch-api')
+    compile project(':fermat-cer-api')
+    compile project(':fermat-pip-api')
+    compile project(':fermat-p2p-api')
+    compile project(':fermat-wpd-api')
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
-    compile project(':fermat-wpd-api')
-    compile project(':fermat-bch-api')
-    compile project(':fermat-cer-api')
+
 
 }
 

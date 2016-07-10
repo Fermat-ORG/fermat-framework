@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -32,11 +33,13 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_rest
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.database.StockTransactionsCryptoMoneyRestockDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.events.StockTransactionsCryptoMoneyRestockMonitorAgent;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransactionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.events.StockTransactionsCryptoMoneyRestockMonitorAgent2;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransactionManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by franklin on 16/11/15.
@@ -64,9 +67,16 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITCOIN_UNHOLD)
-    CryptoUnholdTransactionManager cryptoUnholdTransactionManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITCOIN_HOLD)
+    CryptoHoldTransactionManager cryptoHoldTransactionManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -135,20 +145,24 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
         return developerDatabaseTableRecordList;
     }
 
-    private StockTransactionsCryptoMoneyRestockMonitorAgent stockTransactionsCryptoMoneyRestockMonitorAgent;
+    private StockTransactionsCryptoMoneyRestockMonitorAgent2 stockTransactionsCryptoMoneyRestockMonitorAgent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
         if(stockTransactionsCryptoMoneyRestockMonitorAgent == null) {
-            stockTransactionsCryptoMoneyRestockMonitorAgent = new StockTransactionsCryptoMoneyRestockMonitorAgent(
+            stockTransactionsCryptoMoneyRestockMonitorAgent = new StockTransactionsCryptoMoneyRestockMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     this,
                     stockTransactionCryptoMoneyRestockManager,
                     cryptoBrokerWalletManager,
-                    cryptoUnholdTransactionManager,
+                    cryptoHoldTransactionManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             stockTransactionsCryptoMoneyRestockMonitorAgent.start();

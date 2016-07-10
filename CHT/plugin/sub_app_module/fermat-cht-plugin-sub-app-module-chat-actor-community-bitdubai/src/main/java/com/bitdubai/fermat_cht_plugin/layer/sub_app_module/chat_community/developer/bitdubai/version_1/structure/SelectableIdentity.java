@@ -1,8 +1,14 @@
 package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetSelectedActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+
+
+/**
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 23/06/16.
+ */
 
 public final class SelectableIdentity implements ChatActorCommunitySelectableIdentity {
 
@@ -71,5 +77,36 @@ public final class SelectableIdentity implements ChatActorCommunitySelectableIde
     public byte[] getProfileImage() {
         return new byte[0];
     }
+
+    @Override
+    public GeoFrequency getFrequency() {
+        return GeoFrequency.NONE;
+    }
+
+    @Override
+    public String getConnectionState() {
+        return "";
+    }
+
+    public String getCountry() {
+        return "";
+    }
+
+    public String getState() {
+        return "";
+    }
+
+    public String getCity() {
+        return "";
+    }
+
+    public long getAccuracy() {
+        return 0;
+    }
+
+    public String getStatus() {
+        return "";
+    }
+
 }
 

@@ -10,9 +10,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 
 /**
  * Created by natalia on 29/07/15.
@@ -48,7 +48,7 @@ public class PlatformInfoPlatformService {
             } catch (CantCreateFileException | CantPersistFileException e1) {
                 throw new CantLoadPlatformInformationException(CantLoadPlatformInformationException.DEFAULT_MESSAGE, e1, "There was an error trying to create the Platform info xml file.", null);
             }
-        } catch (CantCreateFileException | CantLoadFileException  e) {
+        } catch (CantCreateFileException | CantLoadFileException e) {
             throw new CantLoadPlatformInformationException(CantLoadPlatformInformationException.DEFAULT_MESSAGE, e, "There was an error trying to load Platform info xml file.", null);
         }
 
@@ -83,7 +83,7 @@ public class PlatformInfoPlatformService {
 
         } catch (Exception e) {
 
-            throw new CantSetPlatformInformationException(e, "There was an error trying persist Platform info xml file." , null);
+            throw new CantSetPlatformInformationException(e, "There was an error trying persist Platform info xml file.", null);
         }
 
     }

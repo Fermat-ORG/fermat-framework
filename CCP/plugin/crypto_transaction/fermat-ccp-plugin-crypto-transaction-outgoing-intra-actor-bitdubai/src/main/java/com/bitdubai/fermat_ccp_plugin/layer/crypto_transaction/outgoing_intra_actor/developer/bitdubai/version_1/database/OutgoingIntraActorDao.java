@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetCryptoStatusException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
@@ -91,7 +92,9 @@ public class OutgoingIntraActorDao {
                                         ReferenceWallet referenceWallet,
                                         boolean sameDevice,
                                         BlockchainNetworkType blockchainNetworkType,
-                                        CryptoCurrency cryptoCurrency) throws OutgoingIntraActorCantInsertRecordException {
+                                        CryptoCurrency cryptoCurrency,
+                                        long fee,
+                                        FeeOrigin feeOrigin) throws OutgoingIntraActorCantInsertRecordException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
           //check transaction Id not exist
@@ -99,7 +102,7 @@ public class OutgoingIntraActorDao {
                 DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
                 loadRecordAsNew(recordToInsert, transactionId, requestId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType,
                         referenceWallet, sameDevice, blockchainNetworkType,
-                        cryptoCurrency);
+                        cryptoCurrency,fee, feeOrigin);
                 transactionTable.insertRecord(recordToInsert);
             }
         } catch (CantInsertRecordException e) {
@@ -220,7 +223,9 @@ public class OutgoingIntraActorDao {
                                  ReferenceWallet referenceWallet,
                                  boolean sameDevice,
                                  BlockchainNetworkType blockchainNetworkType,
-                                 CryptoCurrency cryptoCurrency) {
+                                 CryptoCurrency cryptoCurrency,
+                                 long fee,
+                                 FeeOrigin feeOrigin) {
 
         UUID transactionId = trxId;
 
@@ -257,6 +262,10 @@ public class OutgoingIntraActorDao {
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME, referenceWallet.getCode());
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode());
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_TYPE, cryptoCurrency.getCode());
+
+        databaseTableRecord.setLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_FEE, fee);
+
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_FEE_ORIGIN, feeOrigin.getCode());
 
     }
 
@@ -353,7 +362,16 @@ public class OutgoingIntraActorDao {
                                                   );
 
         BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE));
-        CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_TYPE));
+       CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_TYPE));
+        long             fee          = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_FEE);
+        FeeOrigin       feeOrigin  = FeeOrigin.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_FEE_ORIGIN));
+
+        long total = 0;
+
+        if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
+            total = amount + fee;
+        else
+            total = amount - fee;
 
         cryptoTransaction.setWalletPublicKey(walletPublicKey);
         cryptoTransaction.setIdTransaction(transactionId);
@@ -375,7 +393,9 @@ public class OutgoingIntraActorDao {
         cryptoTransaction.setSameDevice(sameDevice);
         cryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
         cryptoTransaction.setCryptoCurrency(cryptoCurrency);
-
+        cryptoTransaction.setFee(fee);
+        cryptoTransaction.setFeeOrigin(feeOrigin);
+        cryptoTransaction.setTotal(total);
 
         return cryptoTransaction;
     }

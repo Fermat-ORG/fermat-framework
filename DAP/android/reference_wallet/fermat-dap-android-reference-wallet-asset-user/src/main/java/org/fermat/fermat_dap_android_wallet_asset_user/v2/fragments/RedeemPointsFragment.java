@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
@@ -39,7 +41,7 @@ import java.util.List;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/3/16.
  */
-public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint>
+public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession, ResourceProviderManager>
         implements FermatListItemListeners<RedeemPoint> {
 
     //UI
@@ -157,7 +159,7 @@ public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint>
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

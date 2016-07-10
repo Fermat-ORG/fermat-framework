@@ -3,7 +3,6 @@ package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bi
 import com.bitdubai.fermat_api.FermatException;
 
 
-
 /**
  * Created by Matias Furszyfer on 16/09/15.
  */
@@ -30,7 +29,6 @@ public class CantFactoryResetException extends FermatException {
     public CantFactoryResetException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
 
 
 }

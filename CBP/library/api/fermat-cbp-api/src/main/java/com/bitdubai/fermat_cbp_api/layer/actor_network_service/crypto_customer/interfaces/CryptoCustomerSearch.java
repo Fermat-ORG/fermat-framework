@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 
@@ -38,7 +39,17 @@ public abstract class CryptoCustomerSearch {
      *
      * @throws CantListCryptoCustomersException  if something goes wrong.
      */
-    public abstract List<CryptoCustomerExposingData> getResult() throws CantListCryptoCustomersException;
+    public abstract List<CryptoCustomerExposingData> getResult(Integer max, Integer offSet) throws CantListCryptoCustomersException;
+
+    public abstract List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException;
+
+    public abstract List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offSet) throws CantListCryptoCustomersException;
+
+    public abstract List<CryptoCustomerExposingData> getResultDistance(double distance, Integer max, Integer offSet) throws CantListCryptoCustomersException;
+
+    public abstract List<CryptoCustomerExposingData> getResultAlias(String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException;
+
+    public abstract CryptoCustomerExposingData getResult(String publicKey) throws CantListCryptoCustomersException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,

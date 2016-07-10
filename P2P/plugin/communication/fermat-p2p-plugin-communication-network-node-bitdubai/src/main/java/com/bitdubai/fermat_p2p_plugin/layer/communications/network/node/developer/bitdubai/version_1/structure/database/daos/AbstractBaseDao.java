@@ -7,16 +7,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.AbstractBaseEntity;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.AbstractBaseEntity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -57,9 +61,12 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @param tableName
      * @param idTableName
      */
-    public AbstractBaseDao(final Database dataBase, final String tableName, final String idTableName) {
-        this.dataBase  = dataBase;
-        this.tableName = tableName;
+    public AbstractBaseDao(final Database dataBase   ,
+                           final String   tableName  ,
+                           final String   idTableName) {
+
+        this.dataBase    = dataBase   ;
+        this.tableName   = tableName  ;
         this.idTableName = idTableName;
     }
 
@@ -674,18 +681,111 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         try {
 
             final DatabaseTable table = this.getDatabaseTable();
-            table.loadToMemory();
-            if (table.getRecords() != null && !table.getRecords().isEmpty()) {
-                for (DatabaseTableRecord item : table.getRecords()) {
-                    table.deleteRecord(item);
-                }
-            }
 
-        } catch (CantDeleteRecordException e) {
-            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
-        } catch (final CantLoadTableToMemoryException e) {
-            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            table.truncate();
+
+        } catch (CantTruncateTableException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and I cannot delete all records.");
         }
+    }
+
+    /**
+     * Method that creates a transaction statement pair for a new entity in the database.
+     *
+     * @param entity to create.
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    public final DatabaseTransactionStatementPair createInsertTransactionStatementPair(final E entity) throws CantCreateTransactionStatementPairException {
+
+        DatabaseTable table = getDatabaseTable();
+        DatabaseTableRecord entityRecord = getDatabaseTableRecordFromEntity(entity);
+
+        return new DatabaseTransactionStatementPair(
+                table,
+                entityRecord
+        );
+    }
+
+    /**
+     * Method that creates a transaction statement pair for the updating of an entity in the database.
+     *
+     * @param entity to update.
+     *
+     * @throws CantCreateTransactionStatementPairException  if something goes wrong.
+     */
+    public final DatabaseTransactionStatementPair createUpdateTransactionStatementPair(final E entity) throws CantCreateTransactionStatementPairException {
+
+        if (entity == null)
+            throw new IllegalArgumentException("The entity is required, can not be null.");
+
+        try {
+
+            final DatabaseTable table = this.getDatabaseTable();
+            table.addStringFilter(idTableName, entity.getId(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty())
+                return new DatabaseTransactionStatementPair(
+                        table,
+                        getDatabaseTableRecordFromEntity(entity)
+                );
+            else
+                throw new CantCreateTransactionStatementPairException("id: " + entity.getId(), "Cannot find an entity with that id.");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantCreateTransactionStatementPairException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    /**
+     * Method that creates a transaction statement pair for the deletion of an entity in the database.
+     *
+     * @param id to delete.
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
+     */
+    public final DatabaseTransactionStatementPair createDeleteTransactionStatementPair(final String id) throws CantCreateTransactionStatementPairException {
+
+        DatabaseTable table = getDatabaseTable();
+
+        if (id == null)
+            throw new IllegalArgumentException("The id is required, can not be null.");
+
+        try {
+
+            table.addStringFilter(idTableName, id, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty())
+                return new DatabaseTransactionStatementPair(
+                        table,
+                        records.get(0)
+                );
+            else
+                throw new CantCreateTransactionStatementPairException("id: " + id, "Cannot find a record with that id.");
+        } catch (final CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+
+            throw new CantCreateTransactionStatementPairException(
+                    cantLoadTableToMemoryException,
+                    "Table Name: " + tableName,
+                    "There was an error trying to load the table."
+            );
+        }
+
+    }
+
+    public DatabaseTransaction getNewTransaction() {
+
+        return this.dataBase.newTransaction();
     }
 
     /**
@@ -695,7 +795,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @return Timestamp/null
      */
     public Timestamp getTimestampFromLongValue(Long value){
-        if (value != null){
+        if (value != null && value != 0){
             return new Timestamp(value);
         }else {
             return null;
@@ -712,7 +812,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         if (timestamp != null){
             return timestamp.getTime();
         }else {
-            return null;
+            return Long.valueOf(0);
         }
     }
 

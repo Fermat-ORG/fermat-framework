@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_white_gradient">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_shadow"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_white_gradient"
+            android:paddingBottom="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="13,00 FMTS"
+                            android:id="@id/txt_amount"
+                            android:textStyle="bold"
+                            android:textColor="#F78803"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="5dp"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Date:"
+                                android:textStyle="bold"
+                                android:id="@+id/textView4"
+                                android:textSize="14sp"
+                                android:layout_below="@+id/txt_amount"
+                                android:layout_alignLeft="@+id/txt_amount"
+                                android:layout_alignStart="@+id/txt_amount"
+                                android:layout_marginTop="5dp"
+                                android:textColor="@color/color_black"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="July 10,2016"
+                                android:textSize="14sp"
+                                android:id="@id/txt_time"
+                                android:layout_below="@+id/txt_amount"
+                                android:layout_toRightOf="@+id/textView4"
+                                android:layout_toEndOf="@+id/textView4"
+                                android:layout_marginTop="5dp"
+                                android:textColor="@color/color_black" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="To:"
+                                android:textSize="14sp"
+                                android:id="@+id/textView6"
+                                android:layout_below="@+id/textView4"
+                                android:layout_alignLeft="@+id/textView4"
+                                android:layout_alignStart="@+id/textView4"
+                                android:textStyle="bold"
+                                android:textColor="@color/color_black"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Username"
+                                android:id="@id/txt_contactName"
+                                android:textSize="14sp"
+                                android:layout_below="@+id/txt_time"
+                                android:layout_toRightOf="@+id/textView4"
+                                android:layout_toEndOf="@+id/textView4"
+                                android:textColor="@color/color_black"/>
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="Transaction concept"
+                            android:id="@id/txt_notes"
+                            android:textSize="14sp"
+                            android:layout_below="@+id/textView6"
+                            android:layout_alignLeft="@+id/textView6"
+                            android:layout_alignStart="@+id/textView6"
+                            android:textColor="@color/color_black"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:id="@+id/linear_layour_container_state"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Accepted"
+                            android:id="@+id/txt_state"
+                            android:layout_marginRight="35dp"
+                            android:layout_marginEnd="34dp"
+                            android:textColor="#54ACEC"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="16dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/linear_layour_container_buttons"
+                android:layout_gravity="right"
+                >
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:text="Deny"
+                    android:background="#F78803"
+                    android:textColor="@color/color_white"
+                    android:id="@+id/btn_refuse_request"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/btn_accept_request"
+                    android:layout_toStartOf="@+id/btn_accept_request" />
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:text="Accept"
+                    android:id="@+id/btn_accept_request"
+                    android:background="#54ACEC"
+                    android:textColor="#F9F9F9"
+                    android:layout_alignTop="@+id/btn_refuse_request"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -279,9 +279,9 @@ public class FermatAppConnectionManager {
         return fermatAppConnection;
     }
 
-    public static AppConnections getFermatAppConnection(String publicKey, Activity activity, FermatSession fermatSession) {
+    public static AppConnections getFermatAppConnection(String publicKey, Activity activity, FermatSession referenceAppFermatSession) {
         AppConnections fermatAppConnection = switchStatement(activity,publicKey);
-        fermatAppConnection.setFullyLoadedSession(fermatSession);
+        fermatAppConnection.setFullyLoadedSession(referenceAppFermatSession);
         return fermatAppConnection;
     }
 
@@ -935,12 +935,12 @@ it is temporarily located in the /android-core/common/version_1/ProvisoryData cl
 4. Create the Navigation Structure:
 
 - If you are creating a Wallet go to: `WPD/plugin/engine/fermat-wpd-plugin-engine-wallet-runtime-bitdubai/.../WalletRuntimeEnginePluginRoot.java`
-- If you are creating a Sub-App go to: `DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/.../SubAppRuntimeEnginePluginRoot.java`
+- If you are creating a Sub-App go to: `DMP/plugin/engine/fermat-pip-plugin-engine-sub-app-runtime-bitdubai/.../SubAppRuntimeEnginePluginRoot.java`
 - Add the Navigation Structure as described in the **Navigation Structure** section of this document using the Activities and Fragments created above.
 
 5. Create an icon in the Desktop:
 
-- If you are creating a Wallet go to: `DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/.../DesktopFragment.java`
+- If you are creating a Wallet go to: `DMP/android/sub_app/fermat-wpd-android-sub-app-wallet-manager-bitdubai/.../DesktopFragment.java`
 - If you are creating a Sub-App go to: `PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai/.../DesktopSubAppFragment.java`
 - Add in the `getMoreData()` method the Wallet or Sub-App, in a way so the Desktop shows the wallet icon in order to be able to open it.
 

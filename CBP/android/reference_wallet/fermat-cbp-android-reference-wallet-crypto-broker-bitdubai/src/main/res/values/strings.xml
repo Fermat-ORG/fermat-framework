@@ -17,6 +17,7 @@
     <string name="waiting_for_you">Waiting for you</string>
     <string name="about_to_expire">About to expire</string>
     <string name="waiting_for_the_customer">Waiting for the Customer</string>
+    <string name="waiting_for_closing">Negotiation is Closing</string>
     <string name="negotiation_closed">Close</string>
     <string name="negotiation_cancelled">Cancelled</string>
     <string name="negotiation_cancel">CANCEL</string>
@@ -110,7 +111,8 @@
     <string name="cbw_select_your_bank_account">Your Bank Accounts</string>
     <string name="cbw_no_selected_bank_account">No Selected Bank Accounts</string>
     <string name="cbw_select_your_bank_account_text">Add <b>bank accounts</b> to your Broker Wallet from which you can <b>restock</b> or <b>destock</b> funds.</string>
-    <string name="cbw_stock_management_text">Manage your Stock, set up Automatic Restock and set a Spread.</string>
+    <string name="cbw_stock_management_text">Add or remove from your Stock by tapping an Associated Wallet and setting an Amount</string>
+    <string name="cbw_stock_management_spread_text">Set a Spread (the difference between ask and bid price of your Merchandise)</string>
     <string name="cbw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
     <string name="cbw_wizard_bank_account_title">Bank Accounts</string>
     <string name="cbw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
@@ -162,7 +164,18 @@
     <string name="cbw_no_earnings">No Earnings</string>
     <string name="sending_to_the_customer">Sending to the Customer</string>
 
+    <!--Fee setting -->
 
+
+    <string name="cbw_fee_miner_speed_1"> SLOW</string>
+    <string name="cbw_fee_miner_speed_2"> NORMAL</string>
+    <string name="cbw_fee_miner_speed_3"> FAST</string>
+    <string name="cbw_fee_miner_value">Fee miner:</string>
+
+    <string name="cbw_fee_speed_text">Select the confirmation speed for a bitcoin transaction. More speed means more fee</string>
+    <string name="cbw_fee_origin_text">Select if the fee will be taken from the bitcoin wallet or from the bitcoins to send</string>
+    <string name="cbw_fee_transaction">FEE TYPE</string>
+    <string name="cbw_fee_confirmation_time">FEE ORIGIN</string>
 
 
     <!--These needs to be commented on where they're used or be deleted -->
@@ -199,13 +212,14 @@
     <string name="cbw_wizard_stock_merchandise_title">Select Stock Wallets</string>
     <string name="cbw_wizard_stock_merchandise_description">Associate at least <b>two</b> of your wallets, from which you can withdraw funds to use as stock.</string>
     <string name="cbw_select_stock_merchandise">YOUR WALLETS</string>
+    <string name="cbw_your_stock">YOUR STOCK</string>
     <string name="cbw_associated_wallets">ASSOCIATED WALLETS</string>
 
     <!-- Earnings Wizard and Settings pages-->
     <string name="cbw_wizard_earnings_dialog_sub_title">Configure your earnings!</string>
-    <string name="cbw_wizard_earnings_dialog_body">This page lets you assign wallets where your earnings will be deposited</string>
+    <string name="cbw_wizard_earnings_dialog_body">This page lets you assign wallets where your earnings will be deposited while also set the Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
     <string name="cbw_wizard_earning_merchandise_title">Select Earning Wallets</string>
-    <string name="cbw_wizard_earning_merchandise_description">Assign a wallet to <b>every currency pair in the list</b>, your <b>earnings</b> will be deposited in them.</string>
+    <string name="cbw_wizard_earning_merchandise_description">Assign a wallet to <b>every currency pair in the list</b>, your <b>earnings</b> will be deposited in them. Also, set a spread</string>
     <string name="cbw_select_earnings_merchandise">ASSIGN A WALLET TO EACH ITEM</string>
 
     <!-- Providers Wizard and Settings pages -->
@@ -217,11 +231,14 @@
 
     <!-- 'Other Settings' Wizard and Settings pages -->
     <string name="cbw_wizard_other_settings_dialog_sub_title">Configure additional settings!</string>
-    <string name="cbw_wizard_other_settings_dialog_body">This page allows you to configure: \n* Automatic restock of funds to the broker wallet. \n* The Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
+    <string name="cbw_wizard_other_settings_dialog_body">This page allows you to configure the Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
     <string name="cbw_wizard_other_settings_title">Other settings</string>
-    <string name="cbw_wizard_other_settings_description">Set a Spread and Automatic Restock. These settings can be changed later.</string>
+    <string name="cbw_wizard_other_settings_description">Set a value for the Spread. These settings can be changed later.</string>
     <string name="cbw_transaction">Transaction</string>
     <string name="cbw_restock_title">Restock</string>
     <string name="cbw_destock_title">Destock</string>
+    <string name="amount_to_restock_or_destock">Specify an amount to restock or destock</string>
+    <string name="cbw_blockchain_network_description">Select the Blockchain Network where you want to send and receive the bitcoins</string>
+    <string name="cbw_network">Network</string>
 
 </resources>

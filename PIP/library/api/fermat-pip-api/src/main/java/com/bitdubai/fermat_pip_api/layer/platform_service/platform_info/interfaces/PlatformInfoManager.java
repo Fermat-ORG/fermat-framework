@@ -8,8 +8,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptio
  * The Interface <code>PlatformInfoManager</code>
  * indicates the functionality of a PlatformInfoManager
  * <p/>
- *
+ * <p/>
  * Created by natalia on 29/07/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */

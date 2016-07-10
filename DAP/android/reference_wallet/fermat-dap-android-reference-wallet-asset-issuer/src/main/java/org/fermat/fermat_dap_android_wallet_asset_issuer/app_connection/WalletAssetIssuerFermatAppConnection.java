@@ -2,12 +2,15 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -18,16 +21,15 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.header.WalletAssetIssuerHeaderPainter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.navigation_drawer.IssuerWalletNavigationViewPainter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.factory.IssuerWalletFragmentFactory;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIssuerSession> {
+public class WalletAssetIssuerFermatAppConnection extends AppConnections<ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>> {
 
-    AssetIssuerWalletSupAppModuleManager moduleManager;
-    AssetIssuerSession assetIssuerSession;
+    ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession;
 
     public WalletAssetIssuerFermatAppConnection(Context activity) {
         super(activity);
@@ -39,24 +41,24 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.ASSET_ISSUER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
-    public AssetIssuerSession getSession() {
-        return new AssetIssuerSession();
+    public AbstractReferenceAppFermatSession getSession() {
+        return new AssetIssuerSessionReferenceApp();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new IssuerWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return new IssuerWalletNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override
@@ -78,7 +80,6 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
             this.assetIssuerSession = this.getFullyLoadedSession();
             if (assetIssuerSession != null) {
                 if (assetIssuerSession.getModuleManager() != null) {
-                    moduleManager = assetIssuerSession.getModuleManager();
                     enabledNotification = assetIssuerSession.getModuleManager().loadAndGetSettings(assetIssuerSession.getAppPublicKey()).getNotificationEnabled();
                 }
             }
@@ -113,5 +114,10 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
             e.printStackTrace();
         }
         return notification;
+    }
+
+    @Override
+    public ResourceSearcher getResourceSearcher() {
+        return new WalletAssetIssuerSearcher();
     }
 }

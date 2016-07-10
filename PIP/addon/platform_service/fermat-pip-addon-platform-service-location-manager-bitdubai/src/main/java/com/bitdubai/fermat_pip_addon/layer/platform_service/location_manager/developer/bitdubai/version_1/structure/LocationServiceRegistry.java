@@ -1,9 +1,19 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_pip_api.layer.platform_service.location_subsystem.LocationSubsystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +30,13 @@ public class LocationServiceRegistry {
     }
 
     public void initialize() throws CantCreateDatabaseException,
-                                    CantOpenDatabaseException  ,
-                                    CantCreateTableException   {
+            CantOpenDatabaseException,
+            CantCreateTableException {
 
         try {
             database = platformDatabaseSystem.openDatabase(LocationServiceDatabaseConstants.DATABASE_NAME);
 
-        } catch (final DatabaseNotFoundException databaseNotFoundException) {
+        } catch (final CantOpenDatabaseException | DatabaseNotFoundException databaseNotFoundException) {
 
             LocationServiceDatabaseFactory databaseFactory = new LocationServiceDatabaseFactory(platformDatabaseSystem);
             database = databaseFactory.createDatabase(LocationServiceDatabaseConstants.DATABASE_NAME);

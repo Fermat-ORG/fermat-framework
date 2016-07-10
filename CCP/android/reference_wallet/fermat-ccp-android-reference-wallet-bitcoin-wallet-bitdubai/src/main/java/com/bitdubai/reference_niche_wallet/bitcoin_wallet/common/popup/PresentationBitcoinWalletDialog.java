@@ -13,17 +13,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +31,9 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by mati on 2015.11.27..
  */
-public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalletSession,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
@@ -65,7 +67,9 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationBitcoinWalletDialog(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
+    public PresentationBitcoinWalletDialog(Activity activity, ReferenceAppFermatSession fermatSession, ResourceProviderManager resources,int type,boolean checkButton) {
+
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;
@@ -126,9 +130,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.btn_left) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+
                     try {
                         getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
                         getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
@@ -139,48 +141,41 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
                     }
                     saveSettings();
 
-                }
-            }).start();
-            dismiss();
+                    dismiss();
         } else if(id == R.id.btn_right) {
             try {
                 final CryptoWallet cryptoWallet = getSession().getModuleManager();
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
+
                                 try {
                                     //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
-                                    cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                                    getSession().getModuleManager().createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                                    getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
                                 } catch (CantCreateNewIntraWalletUserException e) {
                                     e.printStackTrace();
                                 }
                                 saveSettings();
-                            }
-                        }).start();
+                                dismiss();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            dismiss();
+
         } else if (id == R.id.btn_dismiss) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+
                     saveSettings();
-                }
-            }).start();
-            dismiss();
+                    dismiss();
         }
     }
 
     private void saveSettings() {
-        if(type!=TYPE_PRESENTATION)
-        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
-        if(checkbox_not_show.isChecked()){
+//        if(type!=TYPE_PRESENTATION)
+//        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
+//        if(checkbox_not_show.isChecked()){
             //noinspection TryWithIdenticalCatches
             try {
                     BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
-                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
                     getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
@@ -191,13 +186,13 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
             } catch (Exception e){
                 e.printStackTrace();
             }
-        }
+//        }
     }
 
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 

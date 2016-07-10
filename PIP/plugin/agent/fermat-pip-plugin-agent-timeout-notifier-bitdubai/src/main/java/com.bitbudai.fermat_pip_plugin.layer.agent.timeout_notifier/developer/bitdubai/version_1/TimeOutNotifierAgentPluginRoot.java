@@ -11,6 +11,7 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -27,8 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +40,10 @@ import java.util.UUID;
  */
 public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -69,7 +69,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     }
 
 
-    private void initializeDatabase(){
+    private void initializeDatabase() {
         timeOutNotifierAgentDeveloperDatabaseFactory = new TimeOutNotifierAgentDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         try {
             timeOutNotifierAgentDeveloperDatabaseFactory.initializeDatabase();
@@ -134,13 +134,13 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     @Override
     public void stop() {
         //I remove any added listener
-        for (FermatEventListener eventListener : myEventListeners){
+        for (FermatEventListener eventListener : myEventListeners) {
             eventManager.removeListener(eventListener);
         }
     }
 
-    private void testAddNewAgent(){
-        try{
+    private void testAddNewAgent() {
+        try {
             FermatActorImpl owner = new FermatActorImpl();
             owner.setPublicKey(UUID.randomUUID().toString());
             owner.setType(Actors.CBP_CRYPTO_CUSTOMER);
@@ -148,12 +148,12 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
             TimeOutAgent timeOutAgent = timeOutNotifierManager.addNew(50000, "Prueba Rodrigo 1", owner);
             timeOutNotifierManager.startTimeOutAgent(timeOutAgent);
 
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private TimeOutNotifierAgentDatabaseDao getDao(){
+    private TimeOutNotifierAgentDatabaseDao getDao() {
         if (dao == null)
             dao = new TimeOutNotifierAgentDatabaseDao(this.pluginDatabaseSystem, this.pluginId);
 

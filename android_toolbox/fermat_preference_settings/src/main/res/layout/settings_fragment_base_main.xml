@@ -5,18 +5,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/linearLayout"
-    android:background="#d6d6d6" >
+     android:background="@color/color_white">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:background="@color/color_white" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="UselessParent"
-        android:background="#d6d6d6" >
+        android:background="@color/color_white" >
 
 
 
@@ -24,7 +24,7 @@
             android:id="@+id/preference_settings_main_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@null"
+            android:background="@color/color_white"
             />
 
 

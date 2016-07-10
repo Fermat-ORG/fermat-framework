@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
@@ -45,7 +45,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Prov
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.CurrencyPairAndProvider;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +57,7 @@ import java.util.UUID;
  * Created by nelson
  * on 22/12/15.
  */
-public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyPairAndProvider>, AdapterView.OnItemSelectedListener, DialogInterface.OnDismissListener {
 
     // Constants
@@ -202,7 +201,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
         });
 
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -219,6 +217,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         return layout;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -226,11 +225,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle("Prueba");
-
-        System.out.println("toolbar: "+toolbar.toString());
     }
 
     private void showHelpDialog() {
@@ -240,43 +234,51 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             if (haveAssociatedIdentity)
                 return;
 
-            PresentationDialog presentationDialog;
+            final PresentationDialog presentationDialog;
 
-            if (moduleManager.getListOfIdentities().isEmpty()) {
-                presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
-                        .setIconRes(R.drawable.cbp_crypto_customer)
-                        .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
-                        .setBody(R.string.ccw_wizard_providers_dialog_body)
-                        .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
-                        .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                        .build();
-                presentationDialog.setOnDismissListener(this);
-                presentationDialog.show();
-
-            } else {
-                selectedIdentity = moduleManager.getListOfIdentities().get(0);
-
-                presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
-                        .setIconRes(R.drawable.cbp_crypto_customer)
-                        .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
-                        .setBody(R.string.ccw_wizard_providers_dialog_body)
-                        .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                        .build();
-                presentationDialog.setOnDismissListener(this);
-
-                final CryptoCustomerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-
-                final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
-                if (showDialog)
+            List<CryptoCustomerIdentity> listOfIdentities = moduleManager.getListOfIdentities();
+            if(listOfIdentities != null){
+                if (listOfIdentities.isEmpty()) {
+                    presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                            .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                            .setIconRes(R.drawable.cbp_crypto_customer)
+                            .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
+                            .setBody(R.string.ccw_wizard_providers_dialog_body)
+                            .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
+                            .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                            .setIsCheckEnabled(false)
+                            .build();
+                    presentationDialog.setOnDismissListener(this);
                     presentationDialog.show();
 
+                } else {
+                    selectedIdentity = listOfIdentities.get(0);
+                    presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                            .setIconRes(R.drawable.cbp_crypto_customer)
+                            .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
+                            .setBody(R.string.ccw_wizard_providers_dialog_body)
+                            .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                            .setIsCheckEnabled(false)
+                            .build();
+
+                    presentationDialog.setOnDismissListener(this);
+
+                    final CryptoCustomerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+
+                    final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
+                    if (showDialog){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                presentationDialog.show();
+                            }
+                        });
+                    }
+                }
             }
-
-
 
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -379,6 +381,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
         if (selectedProviders.isEmpty()) {
             Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
+            return;
         }
 
         try {
@@ -492,8 +495,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         FiatCurrency[] fiatCurrencies = FiatCurrency.values();
         Collections.addAll(data, fiatCurrencies);
 
-        CryptoCurrency[] cryptoCurrencies = CryptoCurrency.values();
-        Collections.addAll(data, cryptoCurrencies);
+        data.add(CryptoCurrency.BITCOIN);
 
         return data;
     }
@@ -530,7 +532,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     }
 
     private List<InstalledWallet> getFermatWallets(CryptoCustomerWalletModuleManager moduleManager) {
-        ArrayList<InstalledWallet> data2 = new ArrayList<>();
+        ArrayList<InstalledWallet> data = new ArrayList<>();
 
         try {
             List<InstalledWallet> installedWallets = moduleManager.getInstallWallets();
@@ -540,7 +542,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
                     if (wallet.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
                         if (wallet.getCryptoCurrency() == CryptoCurrency.FERMAT) {
-                            data2.add(wallet);
+                            data.add(wallet);
                         }
                     }
 
@@ -553,7 +555,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
-        return data2;
+        return data;
     }
 
     private List<String> getFormattedBitcoinWallets(List<InstalledWallet> bitcoinWallets) {

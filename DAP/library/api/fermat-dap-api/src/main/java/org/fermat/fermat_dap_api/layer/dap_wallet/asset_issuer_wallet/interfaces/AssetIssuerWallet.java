@@ -16,13 +16,15 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActor
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by franklin on 07/09/15.
  */
-public interface AssetIssuerWallet {
+public interface AssetIssuerWallet extends Serializable {
 
     //TODO:Documentar y manejo de excepciones
 
@@ -88,4 +90,6 @@ public interface AssetIssuerWallet {
     List<AssetStatistic> getAllStatisticForGivenAsset(String assetName) throws CantGetAssetStatisticException;
 
     int getUnusedAmountForAssetByStatus(AssetCurrentStatus status, String assetName) throws CantGetAssetStatisticException;
+
+    Date assetLastTransaction(String assetPublicKey) throws CantGetTransactionsException;
 }

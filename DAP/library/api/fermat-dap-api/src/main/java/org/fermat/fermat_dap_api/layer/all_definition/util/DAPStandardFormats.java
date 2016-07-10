@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.all_definition.util;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -8,7 +9,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 11/01/16.
  */
-public final class DAPStandardFormats {
+public final class DAPStandardFormats implements Serializable {
 
     //VARIABLE DECLARATION
 

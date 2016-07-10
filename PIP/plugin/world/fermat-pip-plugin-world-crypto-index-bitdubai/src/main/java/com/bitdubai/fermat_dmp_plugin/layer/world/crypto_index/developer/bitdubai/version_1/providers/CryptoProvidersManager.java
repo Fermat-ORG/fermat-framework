@@ -19,17 +19,16 @@ import java.util.List;
 /**
  * Created by francisco on 04/12/15.
  */
-public class CryptoProvidersManager implements IndexProvider{
+public class CryptoProvidersManager implements IndexProvider {
 
     BtceProvider btceProvider = new BtceProvider();
     BterProvider bterProvider = new BterProvider();
     CcexProvider ccexProvider = new CcexProvider();
     CexioProvider cexioProvider = new CexioProvider();
-    BitfinexProvider bitfinexProvider =  new BitfinexProvider();
+    BitfinexProvider bitfinexProvider = new BitfinexProvider();
     CryptoCoinChartsProvider cryptoCoinChartsProvider = new CryptoCoinChartsProvider();
 
     /**
-     *
      * @param cryptoCurrency
      * @param fiatCurrency
      * @return
@@ -47,36 +46,36 @@ public class CryptoProvidersManager implements IndexProvider{
             CryptoIndexImp btceIndex = new CryptoIndexImp(
                     CryptoCurrency.BITCOIN,
                     CryptoCurrency.BITCOIN,//TODO REVISAR !!!!
-                    btceProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
-                    btceProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
+                    btceProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
+                    btceProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
                     (new Date().getTime() / 1000),
                     "btc-e.com");
             CryptoIndexImp ccexIndex = new CryptoIndexImp(
                     CryptoCurrency.BITCOIN,
                     CryptoCurrency.BITCOIN,//TODO REVISAR !!!!
-                    ccexProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
-                    ccexProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
+                    ccexProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
+                    ccexProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
                     (new Date().getTime() / 1000),
                     "c-cex.com");
             CryptoIndexImp cexioIndex = new CryptoIndexImp(
                     CryptoCurrency.BITCOIN,
                     CryptoCurrency.BITCOIN,//TODO REVISAR !!!!
-                    cexioProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
-                    cexioProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
+                    cexioProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
+                    cexioProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
                     (new Date().getTime() / 1000),
                     "cex.io");
             CryptoIndexImp cryptoCoinChartsIndex = new CryptoIndexImp(
                     CryptoCurrency.BITCOIN,
                     CryptoCurrency.BITCOIN,//TODO REVISAR !!!!
-                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
-                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
+                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
+                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
                     (new Date().getTime() / 1000),
                     "www.cryptocoincharts.info");
             CryptoIndexImp bitFinexIndex = new CryptoIndexImp(
                     CryptoCurrency.BITCOIN,
                     CryptoCurrency.BITCOIN,//TODO REVISAR !!!!
-                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
-                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency,fiatCurrency,timestamp),
+                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
+                    cryptoCoinChartsProvider.getMarketPrice(cryptoCurrency, fiatCurrency, timestamp),
                     (new Date().getTime() / 1000),
                     "bitfinex.com");
 
@@ -90,13 +89,13 @@ public class CryptoProvidersManager implements IndexProvider{
             index = CryptoIndexHelper.selectBestIndex(indexList);
             return index;
         } catch (FiatCurrencyNotSupportedException e) {
-            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"CantGetIndexException BTC - USD","FiatCurrency Not Supported Exception");
+            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE, e, "CantGetIndexException BTC - USD", "FiatCurrency Not Supported Exception");
         } catch (CryptoCurrencyNotSupportedException e) {
-            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"CantGetIndexException BTC - USD","CryptoCurrency Not Supported Exception");
+            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE, e, "CantGetIndexException BTC - USD", "CryptoCurrency Not Supported Exception");
         } catch (CantGetMarketPriceException e) {
-            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"CantGetIndexException BTC - USD","Cant Get Market Price Exception");
+            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE, e, "CantGetIndexException BTC - USD", "Cant Get Market Price Exception");
         } catch (CantSelectBestIndexException e) {
-            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE,e,"CantGetIndexException BTC - USD","Cant Select Best Index Exception");
+            throw new CantGetIndexException(CantGetIndexException.DEFAULT_MESSAGE, e, "CantGetIndexException BTC - USD", "Cant Select Best Index Exception");
         }
 
 

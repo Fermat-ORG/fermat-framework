@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -63,11 +62,11 @@ public class GetDatabaseTableContentTest {
         subAppResourcesNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
     }
+
     @Test
     public void getDatabaseTableContentTest() {
 
         assertThat(subAppResourcesNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable)).isInstanceOf(List.class);
-
 
 
     }

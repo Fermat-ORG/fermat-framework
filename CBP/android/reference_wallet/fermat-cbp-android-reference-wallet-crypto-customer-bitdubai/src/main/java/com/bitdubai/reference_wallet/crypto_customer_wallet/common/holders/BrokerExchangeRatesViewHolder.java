@@ -8,7 +8,6 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.ibm.icu.text.DecimalFormatSymbols;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -35,7 +34,7 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
         res = itemView.getResources();
 
         formatter = DecimalFormat.getInstance();
-        formatter.setMaximumFractionDigits(2);
+        formatter.setMaximumFractionDigits(6);
         formatter.setRoundingMode(RoundingMode.DOWN);
 
         exchangeRateItem = (FermatTextView) itemView.findViewById(R.id.ccw_broker_exchange_rate_item);
@@ -50,12 +49,13 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
         //Verificar si el precio del quote es extremadamente pequeno e invertir el quote
         //Si el precio es 0, no hacer nada pues dara infinito...
         //TODO: Revisar este hack (abicelis)
-        if(data.getExchangeRate() < 0.5 && data.getExchangeRate() > 0)
+        //change lostwood
+/*        if(data.getExchangeRate() < 0.5 && data.getExchangeRate() > 0)
         {
             exchangeRate = formatter.format(1/data.getExchangeRate());
             merchandiseCurrency = data.getPaymentCurrency().getCode();
             paymentCurrency = data.getMerchandiseCurrency().getCode();
-        }
+        }*/
 
         String text = res.getString(R.string.ccw_broker_exchange_rate_for_selling_item, merchandiseCurrency, exchangeRate, paymentCurrency);
         exchangeRateItem.setText(text);

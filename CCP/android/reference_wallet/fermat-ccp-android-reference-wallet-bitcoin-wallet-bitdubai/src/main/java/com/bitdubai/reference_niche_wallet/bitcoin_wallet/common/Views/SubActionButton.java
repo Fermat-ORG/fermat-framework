@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 
 /**
  * Modified by
@@ -39,7 +39,7 @@ public class SubActionButton
 
     public SubActionButton(Context context, int theme, Drawable backgroundDrawable, int size,
         int paddingLeft, int paddingRight, int paddingTop, int paddingBottom, String text,
-        int textColor, int textBackgroundColor) {
+        int textColor, int textBackgroundColor, Drawable textBackgroundDrawable) {
         super(context);
 
         // TextView set up
@@ -47,11 +47,15 @@ public class SubActionButton
         textView.setText(text);
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(textColor);
-        textView.setBackgroundColor(textBackgroundColor);
-        int padding = FermatScreenCalculator.getPx(context, 2);
+        if(textBackgroundColor != -1)
+            textView.setBackgroundColor(textBackgroundColor);
+        if(textBackgroundDrawable != null)
+            textView.setBackground(textBackgroundDrawable);
+        int left = FermatScreenCalculator.getPx(context, 5);
+        int down = FermatScreenCalculator.getPx(context, 2);
         LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        textView.setPadding(padding, 0, padding, 0);
+        textView.setPadding(left, 0, left, down);
         textView.setLayoutParams(textViewParams);
 
         // Button set up
@@ -131,7 +135,8 @@ public class SubActionButton
         private Drawable backgroundDrawable;
         private String text;
         private int textColor;
-        private int textBackgroundColor;
+        private int textBackgroundColor = -1;
+        private Drawable textBackgroundDrawable = null;
         private int size = -1;
         private int paddingLeft = 0;
         private int paddingRight = 0;
@@ -168,6 +173,11 @@ public class SubActionButton
             return this;
         }
 
+        public Builder setTextBackgroundDrawable(Drawable drawable) {
+            this.textBackgroundDrawable = drawable;
+            return this;
+        }
+
         /**
          * Set size dimension (width == height)
          * @param size - size in DP
@@ -190,7 +200,8 @@ public class SubActionButton
 
         public SubActionButton build() {
             return new SubActionButton(context, theme, backgroundDrawable, size, paddingLeft,
-                    paddingRight, paddingTop, paddingBottom, text, textColor, textBackgroundColor);
+                    paddingRight, paddingTop, paddingBottom, text, textColor, textBackgroundColor,
+                    textBackgroundDrawable);
         }
     }
 }

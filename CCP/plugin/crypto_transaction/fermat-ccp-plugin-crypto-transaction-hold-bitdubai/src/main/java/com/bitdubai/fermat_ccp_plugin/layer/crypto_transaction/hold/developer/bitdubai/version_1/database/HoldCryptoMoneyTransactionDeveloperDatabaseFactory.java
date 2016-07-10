@@ -130,6 +130,9 @@ public class HoldCryptoMoneyTransactionDeveloperDatabaseFactory {//implements De
         holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);
         holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME);
         holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME);
+        holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_COLUMN_NAME);
+        holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_ORIGIN_TYPE_COLUMN_NAME);
+
         /**
          * Table Hold addition.
          */

@@ -1,25 +1,23 @@
 package com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.UUID;
 
 /**
+ * <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
+ * that define the methods to retrieve wallets resource files.
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
- *     that define the methods to retrieve wallets resource files.
- *
- *
- *  @author  Matias Furszyfer
- *  @version 1.0.0
- *  @since   4/08/15.
- * */
+ * @author Matias Furszyfer
+ * @version 1.0.0
+ * @since 4/08/15.
+ */
 public interface SubAppResourcesProviderManager extends ResourceProviderManager {
 
 
@@ -33,13 +31,14 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
 
     /**
      * This method let us get an skin file referenced by its id
+     *
      * @param skinId
      * @param walletPublicKey
      * @return
      * @throws CantGetSkinFileException
      * @throws CantGetResourcesException
      */
-    Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
+    Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -95,7 +94,6 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @throws CantGetResourcesException
      */
     String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId, String walletPublicKey) throws CantGetResourcesException;
-
 
 
 }

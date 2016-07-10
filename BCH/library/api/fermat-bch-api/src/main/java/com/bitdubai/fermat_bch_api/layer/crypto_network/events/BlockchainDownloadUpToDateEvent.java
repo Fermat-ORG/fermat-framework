@@ -2,8 +2,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.events;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 
 /**

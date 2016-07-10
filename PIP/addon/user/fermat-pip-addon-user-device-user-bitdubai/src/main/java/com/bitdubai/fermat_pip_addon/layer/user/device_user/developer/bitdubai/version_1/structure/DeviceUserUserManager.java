@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
@@ -16,6 +18,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantGetDeviceUserPersonalImageException;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantPersistDeviceUserException;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantPersistDeviceUserPersonalImageFileException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserCreatedEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedInEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedOutEvent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantCreateNewDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetDeviceUserListException;
@@ -25,13 +32,6 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.IncorrectUs
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.LoginFailedException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserCreatedEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedInEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedOutEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +39,15 @@ import java.util.List;
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure.DeviceUserUserManager</code>
  * bla bla bla.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public class DeviceUserUserManager implements DeviceUserManager {
 
     private final AddonVersionReference addonVersionReference;
-    private final ErrorManager          errorManager         ;
-    private final EventManager          eventManager         ;
-    private final PlatformFileSystem    platformFileSystem   ;
+    private final ErrorManager errorManager;
+    private final EventManager eventManager;
+    private final PlatformFileSystem platformFileSystem;
 
     /**
      * DeviceUserManager Interface member variables.
@@ -59,16 +59,15 @@ public class DeviceUserUserManager implements DeviceUserManager {
     private static final String PERSONAL_IMAGE_SUFFIX = "_personal_image";
 
     public DeviceUserUserManager(final AddonVersionReference addonVersionReference,
-                                 final ErrorManager          errorManager         ,
-                                 final EventManager          eventManager         ,
-                                 final PlatformFileSystem    platformFileSystem   ) {
-        
-        this.addonVersionReference = addonVersionReference;
-        this.errorManager          = errorManager         ;
-        this.eventManager          = eventManager         ;
-        this.platformFileSystem    = platformFileSystem   ;
-    }
+                                 final ErrorManager errorManager,
+                                 final EventManager eventManager,
+                                 final PlatformFileSystem platformFileSystem) {
 
+        this.addonVersionReference = addonVersionReference;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.platformFileSystem = platformFileSystem;
+    }
 
 
     /**
@@ -168,7 +167,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
                     FileLifeSpan.PERMANENT
             );
             String deviceUserPublicKeysFile = file.getContent();
-            file.setContent((deviceUserPublicKeysFile != null ? deviceUserPublicKeysFile : "")+ deviceUserPublicKey + ";");
+            file.setContent((deviceUserPublicKeysFile != null ? deviceUserPublicKeysFile : "") + deviceUserPublicKey + ";");
 
         } catch (CantCreateFileException e) {
             throw new CantPersistDeviceUserException(CantPersistDeviceUserException.DEFAULT_MESSAGE, e, "Error getting device user public keys file.", null);
@@ -251,7 +250,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
 
             return deviceUserList;
 
-        } catch (FileNotFoundException |CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             errorManager.reportUnexpectedAddonsException(addonVersionReference, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
             throw new CantGetDeviceUserListException(CantGetDeviceUserListException.DEFAULT_MESSAGE, e, "Error getting device user public keys file.", null);
         }
@@ -277,7 +276,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
             }
             return new DeviceUserUser(deviceUserStringSplit[0], deviceUserStringSplit[1], deviceUserStringSplit[2], publicKey, personalImage);
 
-        } catch (FileNotFoundException|CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             errorManager.reportUnexpectedAddonsException(addonVersionReference, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
             throw new CantGetDeviceUserException(CantGetDeviceUserException.DEFAULT_MESSAGE, e, "Error getting device user information file.", null);
         }
@@ -293,7 +292,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
                     FileLifeSpan.PERMANENT
             );
             return file.getContent();
-        } catch (FileNotFoundException|CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetDeviceUserPersonalImageException(CantGetDeviceUserPersonalImageException.DEFAULT_MESSAGE, e, "Error trying to get device user personal image file.", null);
         }
     }
@@ -329,7 +328,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
             } else {
                 throw new IncorrectUserOrPasswordException(IncorrectUserOrPasswordException.DEFAULT_MESSAGE, null, "Bad credentials", "");
             }
-        } catch (FileNotFoundException|CantCreateFileException e) {
+        } catch (FileNotFoundException | CantCreateFileException e) {
             errorManager.reportUnexpectedAddonsException(addonVersionReference, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
             throw new LoginFailedException(LoginFailedException.DEFAULT_MESSAGE, e, "Error trying to login.", null);
         }
@@ -355,7 +354,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
     public void setPersonalImage(byte[] personalImage) throws CantSetImageException {
         try {
             persistUserPersonalImageFile(mLoggedInDeviceUser.getPublicKey(), personalImage);
-        } catch(CantPersistDeviceUserPersonalImageFileException e) {
+        } catch (CantPersistDeviceUserPersonalImageFileException e) {
             throw new CantSetImageException(CantSetImageException.DEFAULT_MESSAGE, e, "Cant persist device user personal image.", "");
         }
     }

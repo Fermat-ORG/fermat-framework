@@ -15,7 +15,7 @@ public class CantGetInputStreamException extends FermatException {
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
 
-    public static final String DEFAULT_MESSAGE ="CANT GET INPUTSTREAM";
+    public static final String DEFAULT_MESSAGE = "CANT GET INPUTSTREAM";
 
     public CantGetInputStreamException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

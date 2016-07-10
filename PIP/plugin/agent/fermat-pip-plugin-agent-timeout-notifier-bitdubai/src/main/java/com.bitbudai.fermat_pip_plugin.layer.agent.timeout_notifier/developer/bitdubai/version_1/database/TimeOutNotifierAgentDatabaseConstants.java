@@ -4,7 +4,7 @@ package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bi
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Acosta Rodrigo - (acosta_rodrigo@hotmail.com) on 28/03/16.
  *
  * @version 1.0

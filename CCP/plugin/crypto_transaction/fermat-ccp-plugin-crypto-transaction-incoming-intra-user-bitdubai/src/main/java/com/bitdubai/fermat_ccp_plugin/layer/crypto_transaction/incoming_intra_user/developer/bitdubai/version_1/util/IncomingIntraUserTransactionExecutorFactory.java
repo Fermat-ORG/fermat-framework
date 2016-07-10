@@ -10,7 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.int
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.executors.IncomingIntraUserCryptoBasicWalletTransactionExecutor;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 /**
  * Created by eze on 2015.09.11..
@@ -36,6 +36,8 @@ public class IncomingIntraUserTransactionExecutorFactory {
         try {
             switch (walletType) {
                 case BASIC_WALLET_BITCOIN_WALLET:
+                    return createBitcoinBasicWalletExecutor(walletPublicKey);
+                case BASIC_WALLET_FERMAT_WALLET:
                     return createBitcoinBasicWalletExecutor(walletPublicKey);
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     return createBitcoinBasicLossProtectedWalletExecutor(walletPublicKey);

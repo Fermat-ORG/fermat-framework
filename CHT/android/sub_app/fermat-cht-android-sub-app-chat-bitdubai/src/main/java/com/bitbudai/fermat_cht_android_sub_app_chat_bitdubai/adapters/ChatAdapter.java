@@ -76,7 +76,11 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                         android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                         clipboard.setText(copiedMessage);
                     }
-                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
+                    if(copiedMessage.length() <= 10){
+                        Toast.makeText(context, "Copied: " + copiedMessage, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(context, "Copied: " + copiedMessage.substring(0,11) + "...", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 }
             });
@@ -107,7 +111,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage().toString()));
         holder.txtInfo.setText(data.getDate());
         if (isMe) {
-            holder.contentWithBG.setBackgroundResource(R.drawable.burble_green_shadow);
+            holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_green);
 
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
@@ -136,7 +140,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
             }
         } else {
-            holder.contentWithBG.setBackgroundResource(R.drawable.burble_white_shadow);
+            holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_white);
 
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();

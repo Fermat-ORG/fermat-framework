@@ -1,16 +1,15 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.BlockchainDownloadUpToDateEvent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Block;
@@ -38,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -59,6 +57,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     final NetworkParameters NETWORK_PARAMETERS;
     BlockchainDownloadProgress blockchainDownloadProgress;
     Wallet cryptoNetworkWallet;
+    private final CryptoCurrency BITCOIN = BitcoinNetworkConfiguration.CRYPTO_CURRENCY;
 
 
     /**
@@ -96,6 +95,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
         if (blocksLeft % 1000 == 0)
+            System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft + ". Block date: " + block.getTime());
+
+        if (blocksLeft < 50)
             System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
 
 
@@ -105,8 +107,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         blockchainDownloadProgress.setPendingBlocks(blocksLeft);
         blockchainDownloadProgress.setLastBlockDownloadTime(block.getTimeSeconds());
 
-        if (blockchainDownloadProgress.getTotalBlocks() == 0)
-            blockchainDownloadProgress.setTotalBlocks(blocksLeft);
 
         blockchainDownloadProgress.setDownloader(peer.toString());
 
@@ -172,7 +172,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     /**
      * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
      */
-      for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, cryptoNetworkWallet, tx)){
+      for (CryptoTransaction cryptoTransaction : BitcoinTransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN, cryptoNetworkWallet, tx)){
           saveCryptoTransaction(cryptoTransaction);
       }
     }
@@ -212,7 +212,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
          */
-        for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(NETWORK_TYPE, cryptoNetworkWallet, tx)){
+        for (CryptoTransaction cryptoTransaction : BitcoinTransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN, cryptoNetworkWallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
     }

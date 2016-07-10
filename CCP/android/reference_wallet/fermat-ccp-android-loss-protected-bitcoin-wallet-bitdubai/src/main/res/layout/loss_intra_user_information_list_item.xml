@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_data"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@null"
     android:orientation="vertical"
     android:paddingEnd="8dp"
     android:paddingLeft="8dp"
@@ -23,13 +23,14 @@
             android:background="@drawable/bg_circlar_image">
 
             <ImageView
-            android:id="@+id/intra_user_image"
+                android:id="@+id/intra_user_image"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 tools:ignore="ContentDescription" />
+
         </RelativeLayout>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -41,7 +42,6 @@
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:paddingStart="8dp"
         android:singleLine="true"
         android:textColor="#333333"
         tools:text="@string/matias_furszyfer_text" />
@@ -51,11 +51,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColorHint="@color/black"
-            android:buttonTint="@color/color_black_light"
+            android:button="@drawable/checkboxblank_icon"
             android:width="30dp"
-            android:height="16dp"
-           />
+            android:height="16dp"/>
 
     </LinearLayout>
 
@@ -63,6 +61,12 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
         android:layout_marginTop="8dp"
-        android:background="#FFFFFF" />
+        android:background="#ccc"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"></LinearLayout>
 
 </LinearLayout>

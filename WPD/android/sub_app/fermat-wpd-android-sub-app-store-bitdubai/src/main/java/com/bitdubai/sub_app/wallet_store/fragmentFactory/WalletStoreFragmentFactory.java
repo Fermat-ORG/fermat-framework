@@ -8,7 +8,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.wallet_store.fragments.DetailsActivityFragment;
 import com.bitdubai.sub_app.wallet_store.fragments.MainActivityFragment;
 import com.bitdubai.sub_app.wallet_store.fragments.MoreDetailsActivityFragment;
-import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
+import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp;
 
 import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_DETAIL_ACTIVITY;
 import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_MAIN_ACTIVITY;
@@ -17,7 +17,7 @@ import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragm
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class WalletStoreFragmentFactory extends FermatFragmentFactory<WalletStoreSubAppSession, SubAppResourcesProviderManager, WalletStoreFragmentsEnumType> {
+public class WalletStoreFragmentFactory extends FermatFragmentFactory<WalletStoreSubAppSessionReferenceApp, SubAppResourcesProviderManager, WalletStoreFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(WalletStoreFragmentsEnumType fragments) throws FragmentNotFoundException {

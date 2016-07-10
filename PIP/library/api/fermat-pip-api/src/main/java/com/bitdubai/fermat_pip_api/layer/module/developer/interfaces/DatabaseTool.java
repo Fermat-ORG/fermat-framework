@@ -33,18 +33,18 @@ public interface DatabaseTool extends Serializable {
 
     List<DeveloperDatabase> getDatabaseListFromAddon(AddonVersionReference Addon);
 
-    List<DeveloperDatabaseTable> getPluginTableListFromDatabase(PluginVersionReference plugin           ,
-                                                                DeveloperDatabase      developerDatabase);
+    List<DeveloperDatabaseTable> getPluginTableListFromDatabase(PluginVersionReference plugin,
+                                                                DeveloperDatabase developerDatabase);
 
-    List<DeveloperDatabaseTable> getAddonTableListFromDatabase(AddonVersionReference addon            ,
-                                                               DeveloperDatabase     developerDatabase);
+    List<DeveloperDatabaseTable> getAddonTableListFromDatabase(AddonVersionReference addon,
+                                                               DeveloperDatabase developerDatabase);
 
-    List<DeveloperDatabaseTableRecord> getPluginTableContent(PluginVersionReference plugin                ,
-                                                             DeveloperDatabase      developerDatabase     ,
+    List<DeveloperDatabaseTableRecord> getPluginTableContent(PluginVersionReference plugin,
+                                                             DeveloperDatabase developerDatabase,
                                                              DeveloperDatabaseTable developerDatabaseTable);
 
-    List<DeveloperDatabaseTableRecord> getAddonTableContent(AddonVersionReference  addon                 ,
-                                                            DeveloperDatabase      developerDatabase     ,
+    List<DeveloperDatabaseTableRecord> getAddonTableContent(AddonVersionReference addon,
+                                                            DeveloperDatabase developerDatabase,
                                                             DeveloperDatabaseTable developerDatabaseTable);
 
 }

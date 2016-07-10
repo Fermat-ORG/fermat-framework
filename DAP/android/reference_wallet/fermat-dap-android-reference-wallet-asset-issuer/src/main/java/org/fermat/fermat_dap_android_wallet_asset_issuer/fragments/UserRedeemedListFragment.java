@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -30,13 +31,13 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.UserRedeemedListAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.UserRedeemed;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -52,21 +53,16 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Penelope Quintero on 01/06/16.
  */
-public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedeemed> {
+public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedeemed, ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "UserRedeemedListFragment";
-
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetIssuerSession assetIssuerSession;
     // Data
     private List<UserRedeemed> users;
     private DigitalAsset digitalAsset;
-
-//    SettingsManager<AssetIssuerSettings> settingsManager;
-
     //UI
     private View noUsersView;
     private View rootView;
@@ -85,10 +81,8 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         setHasOptionsMenu(true);
 
         try {
-            assetIssuerSession = ((AssetIssuerSession) appSession);
             errorManager = appSession.getErrorManager();
-
-            moduleManager = assetIssuerSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -245,7 +239,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -38,7 +39,6 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.filters.DeveloperPluginFilter;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,19 +54,18 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private ErrorManager errorManager;
     ToolManager toolManager;
     View rootView;
 
     private ArrayList<Resource> mlist;
-
     private ListView listView;
-
     private SearchView searchView;
-
     private AppListAdapter adapter;
+    Toolbar toolbar;
+    private int menuItemSize;
 
     public static DatabaseToolsFragment newInstance() {
         return new DatabaseToolsFragment();
@@ -280,30 +279,33 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAp
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.developer_menu, menu);
+    public void onOptionMenuPrepared(Menu menu){
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-        searchView = (SearchView) menu.findItem(R.id.developer_search).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+            searchView = (SearchView) menu.findItem(1).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapter.getFilter().filter(s);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
-        if (appSession.getData("filterString") != null) {
-            String filterString = (String) appSession.getData("filterString");
-            if (filterString.length() > 0) {
-                searchView.setQuery(filterString, true);
-                searchView.setIconified(false);
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
             }
         }
     }

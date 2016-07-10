@@ -19,17 +19,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.ConnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
@@ -44,14 +46,13 @@ import java.util.Date;
  * Creado por Jinmy Bohorquez on 09/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFermatFragment
+public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager>
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String ISSUER_SELECTED = "issuer";
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
     private ImageView issuerProfileAvatar;
     private FermatTextView issuerName;
     private FermatTextView issuerExtendedKey;
@@ -90,8 +91,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         // setting up  module
         actorIssuer = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
-        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
     }
@@ -176,7 +176,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
 //            try {
             ConnectDialog connectDialog = new ConnectDialog(getActivity(),
-                    (AssetIssuerCommunitySubAppSession) appSession,
+                    (AssetIssuerCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actorIssuer,
                     null);
@@ -200,7 +200,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null, actorIssuer, moduleManager.getActiveAssetIssuerIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null, actorIssuer, moduleManager.getActiveAssetIssuerIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(actorIssuer.getRecord().getName());
@@ -220,7 +220,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             Toast.makeText(getActivity(), R.string.connection_success, Toast.LENGTH_SHORT).show();
 //            try {
 //                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
-//                        (AssetIssuerCommunitySubAppSession) appSession,
+//                        (AssetIssuerCommunitySubAppSessionReferenceApp) appSession,
 //                        null,
 //                        actorIssuer,
 //                        null);
@@ -240,7 +240,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         if (i == R.id.btn_connection_cancel) {
 //            try {
             CancelDialog cancelDialog = new CancelDialog(getActivity(),
-                    (AssetIssuerCommunitySubAppSession) appSession,
+                    (AssetIssuerCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actorIssuer,
                     null);
@@ -364,9 +364,9 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     }*/
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
+//        menu.clear();
     }
 
     @Override

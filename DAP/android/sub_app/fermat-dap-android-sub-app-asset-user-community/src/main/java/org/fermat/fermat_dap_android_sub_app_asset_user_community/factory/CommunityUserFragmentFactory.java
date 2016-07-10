@@ -12,12 +12,12 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.fragments.User
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.fragments.UserCommunityGroupFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.fragments.UserCommunityNotificationsFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.fragments.UsersCommunityConnectionOtherProfileFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 
 /**
  * CommunityUserFragmentFactory
  */
-public class CommunityUserFragmentFactory extends FermatFragmentFactory<AssetUserCommunitySubAppSession, SubAppResourcesProviderManager, FragmentFactoryEnumType> {
+public class CommunityUserFragmentFactory extends FermatFragmentFactory<AssetUserCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager, FragmentFactoryEnumType> {
 
 
     @Override

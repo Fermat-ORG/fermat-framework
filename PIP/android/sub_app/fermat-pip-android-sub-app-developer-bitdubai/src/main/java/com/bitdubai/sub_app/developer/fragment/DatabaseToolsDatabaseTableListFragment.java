@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -30,7 +31,6 @@ import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.DatabasesTable;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,16 +44,12 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableListFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsDatabaseTableListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     View rootView;
     private ErrorManager errorManager;
-
-
     private DeveloperDatabase developerDatabase;
-
     private List<DatabasesTable> lstTables;
-
     List<DeveloperDatabaseTable> developerDatabaseTableList;
 
     public void setResource(Resource databases) {
@@ -61,9 +57,7 @@ public class DatabaseToolsDatabaseTableListFragment extends AbstractFermatFragme
     }
 
     private Resource databases;
-
     private GridView gridView;
-
 
     public static DatabaseToolsDatabaseTableListFragment newInstance() {
         return new DatabaseToolsDatabaseTableListFragment();
@@ -73,12 +67,8 @@ public class DatabaseToolsDatabaseTableListFragment extends AbstractFermatFragme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (super.appSession != null) {
-
-            databases = (Resource) appSession.getData("resource");
-            developerDatabase = (DeveloperDatabase) appSession.getData("database");
-        }
-
+        databases = (Resource) appSession.getData("resource");
+        developerDatabase = (DeveloperDatabase) appSession.getData("database");
 
         errorManager = appSession.getErrorManager();
         setRetainInstance(true);

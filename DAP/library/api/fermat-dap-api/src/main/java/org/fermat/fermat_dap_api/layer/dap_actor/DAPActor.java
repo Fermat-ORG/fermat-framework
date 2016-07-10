@@ -2,10 +2,13 @@ package org.fermat.fermat_dap_api.layer.dap_actor;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import java.io.Serializable;
+
 /**
  * Created by Nerio on 10/09/15.
  */
-public interface DAPActor {
+
+public interface DAPActor extends Serializable {
 
     /**
      * The method <code>getActorPublicKey</code> gives us the public key of the represented a Actor

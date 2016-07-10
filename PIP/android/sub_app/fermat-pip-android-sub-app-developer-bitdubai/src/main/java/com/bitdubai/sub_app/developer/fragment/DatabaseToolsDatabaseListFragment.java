@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
@@ -28,7 +29,6 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,22 +42,16 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private static final String ARG_POSITION = "position";
-    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();
+//    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();
     View rootView;
-
     private Resource resource;
-
     List<DeveloperDatabase> developerDatabaseList;
-
     private GridView gridView;
-
     private List<Databases> lstDatabases;
-
     private int database_type;
-
 
     public static DatabaseToolsDatabaseListFragment newInstance() {
         return new DatabaseToolsDatabaseListFragment();
@@ -67,15 +61,10 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<De
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (super.appSession != null) {
-
-            resource = (Resource) appSession.getData("resource");
-        }
-
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+        resource = (Resource) appSession.getData("resource");
 
         try {
-            ToolManager toolManager = ((DeveloperSubAppSession) appSession).getModuleManager();
+            ToolManager toolManager = appSession.getModuleManager();
 
         } catch (Exception ex) {
             appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));

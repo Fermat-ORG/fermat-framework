@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -11,8 +12,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocatio
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleClauseInformation;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.classes.CryptoBrokerWalletModuleClauseInformation;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.ACCEPTED;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.CHANGED;
@@ -32,10 +33,12 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_DATE_TIME_TO_DELIVER;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_PLACE_TO_DELIVER;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_TIME_ZONE;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CRYPTO_ADDRESS;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_PAYMENT_METHOD;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_TIME_ZONE;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.BANK;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.CASH_DELIVERY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.CASH_ON_HAND;
@@ -59,7 +62,7 @@ final public class NegotiationWrapper {
      * @param negotiationInfo the {@link CustomerBrokerNegotiationInformation} object to wrap
      * @param appSession      the session with the Module Manager and Error Manager in case of need to add missing clauses
      */
-    public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, CryptoBrokerWalletSession appSession) {
+    public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> appSession) {
         this.negotiationInfo = negotiationInfo;
         confirmedClauses = new HashSet<>();
 
@@ -95,6 +98,12 @@ final public class NegotiationWrapper {
                     changeClauseValue(clauses.get(BROKER_CRYPTO_ADDRESS), "");
                 }
             }
+
+            String youTimeZoneValue = TimeZone.getDefault().getID();
+//            if ((clauses.get(BROKER_TIME_ZONE) == null) || (youTimeZoneValue.equals(clauses.get(BROKER_TIME_ZONE).getValue()))){
+                addClause(BROKER_TIME_ZONE, youTimeZoneValue);
+//            }
+
 
         } catch (FermatException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
@@ -141,7 +150,7 @@ final public class NegotiationWrapper {
      */
     public boolean isClausesConfirmed() {
         final Collection<ClauseInformation> clauseList = getClauses().values();
-        final List<ClauseType> obviationList = Arrays.asList(CUSTOMER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, BROKER_CURRENCY, CUSTOMER_CURRENCY);
+        final List<ClauseType> obviationList = Arrays.asList(CUSTOMER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, BROKER_CURRENCY, CUSTOMER_CURRENCY, BROKER_TIME_ZONE, CUSTOMER_TIME_ZONE);
 
         for (ClauseInformation clause : clauseList) {
             if (!isClauseConfirmed(clause) && clause.getStatus() == DRAFT) {
@@ -170,6 +179,7 @@ final public class NegotiationWrapper {
      */
     public void addClause(final ClauseType clauseType, final String value) {
         final String clauseValue = (value != null) ? value : "";
+        //todo: ver esto, core comentado
         final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
@@ -182,6 +192,7 @@ final public class NegotiationWrapper {
      */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
         final ClauseStatus clauseStatus = clause.getValue().equals(value) && clause.getStatus() == DRAFT ? ACCEPTED : CHANGED;
+        //todo: ver esto, core comentado
 
         final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
         clauseInformation.setStatus(clauseStatus);

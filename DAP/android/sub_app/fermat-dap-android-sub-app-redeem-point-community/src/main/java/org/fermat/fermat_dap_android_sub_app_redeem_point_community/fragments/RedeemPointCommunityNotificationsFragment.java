@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -27,12 +28,12 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityNotificationAdapter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.AcceptDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -50,7 +51,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFragment implements
+public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
@@ -64,17 +65,13 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     private RedeemPointCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private RedeemPointCommunitySubAppModuleManager moduleManager;
-    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
     RedeemPointSettings settings = null;
 
     private ErrorManager errorManager;
     private int offset = 0;
     private Actor actorInformation;
     private List<Actor> listActorInformation;
-    //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
-
-//    SettingsManager<RedeemPointSettings> settingsManager;
 
     /**
      * Create a new instance of this fragment
@@ -90,8 +87,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
-        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         actorInformation = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
@@ -236,16 +232,16 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
 
-        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS, 0, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS, 0, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     private void setUpPresentation(boolean checkButton) {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_redeem_point)
+                .setBannerRes(R.drawable.banner_redeem_point_community)
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
                 .setTitleTextColor(R.color.dap_community_redeem_view_color)
@@ -263,13 +259,19 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
         int id = item.getItemId();
 
         try {
-            if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset User system error",
+            makeText(getActivity(), "Redeem Point system error",
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -288,7 +290,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
 
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    assetRedeemPointCommunitySubAppSession,
+                    appSession,
                     null,
                     data,
                     moduleManager.getActiveAssetRedeemPointIdentity());

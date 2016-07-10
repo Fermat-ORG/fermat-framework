@@ -6,11 +6,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
@@ -83,7 +85,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
     /**
      * platform interfaces definition
      */
-    BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     PluginFileSystem pluginFileSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
     ErrorManager errorManager;
@@ -98,7 +100,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
                                    PluginFileSystem pluginFileSystem,
                                    PluginDatabaseSystem pluginDatabaseSystem,
                                    String seedFileName,
-                                   BitcoinNetworkManager bitcoinNetworkManager,
+                                   BlockchainManager<ECKey, Transaction> bitcoinNetworkManager,
                                    ErrorManager errorManager) throws InvalidSeedException {
 
         super (pluginFileSystem, pluginId, bitcoinNetworkManager, "AssetVaultSeed", seedFileName);
@@ -159,12 +161,12 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             throw new CantSendAssetBitcoinsToUserException (CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Network is not active for this address.", "wrong address");
         }
 
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I will get the input transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(blockchainNetworkType, inputTransaction);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBlockchainProviderTransaction(blockchainNetworkType, inputTransaction);
 
         /**
          * If I couldn't get it I can't go on.
@@ -275,9 +277,9 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             /**
              * Once I formed the transaction, I will store it in the CryptoNetwork so that is ready for broadcasting.
              */
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
+            bitcoinNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
             bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
-        } catch (CantStoreBitcoinTransactionException e) {
+        } catch (CantStoreTransactionException e) {
             CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
@@ -366,17 +368,17 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+        if (BlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
             try {
                 // If only one network is enabled, then I will return the default
                 if (getDao().getActiveNetworkTypes().size() == 1)
-                    return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else {
                     // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
                     return networkParameters;
                 }
             } catch (CantExecuteDatabaseOperationException e) {
-                return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
         } else
             return networkParameters;
@@ -681,7 +683,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         try {
             networkParameters = Address.getParametersFromAddress(cryptoAddress.getAddress());
         } catch (AddressFormatException e) {
-            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            networkParameters = BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         /**
@@ -766,12 +768,12 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             throw new CantCreateBitcoinTransactionException (CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Network is not active!", "invalid network type");
         }
 
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I will get the input transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(blockchainNetworkType, inputTransaction);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBlockchainProviderTransaction(blockchainNetworkType, inputTransaction);
 
         /**
          * If I couldn't get it I can't go on.
@@ -877,8 +879,8 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             /**
              * Once I formed the transaction, I will store it in the CryptoNetwork so that is ready for broadcasting.
              */
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), false);
-        } catch (CantStoreBitcoinTransactionException e) {
+            bitcoinNetworkManager.storeTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), false);
+        } catch (CantStoreTransactionException e) {
             throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
         }
 
@@ -935,12 +937,12 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             throw exception;
         }
 
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I will get the input transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(blockchainNetworkType, inputTransaction);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBlockchainProviderTransaction(blockchainNetworkType, inputTransaction);
 
         /**
          * If I couldn't get it I can't go on.
@@ -1034,8 +1036,8 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             /**
              * Once I formed the transaction, I will store it in the CryptoNetwork so that is ready for broadcasting.
              */
-            bitcoinNetworkManager.storeBitcoinTransaction(draftTransaction.getNetworkType(), draftTransaction.getBitcoinTransaction(), UUID.randomUUID(), false);
-        } catch (CantStoreBitcoinTransactionException e) {
+            bitcoinNetworkManager.storeTransaction(draftTransaction.getNetworkType(), draftTransaction.getBitcoinTransaction(), UUID.randomUUID(), false);
+        } catch (CantStoreTransactionException e) {
             throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
         }
 

@@ -1,5 +1,5 @@
 package com.bitdubai.reference_wallet.fan_wallet.session;
-
+/*
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,14 +12,14 @@ import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.SongFragment;
 
-import java.util.List;
+import java.util.List;*/
 
 /**
  * Created by Miguel Payarez on 14/03/16.
  */
-public class FanWalletSession extends AbstractFermatSession<InstalledWallet,FanWalletModule,WalletResourcesProviderManager> {
+public class FanWalletSession /*extends AbstractFermatSession<InstalledWallet,FanWalletModule,WalletResourcesProviderManager>*/ {
 
-    SongFragment.DownloadThreadClass downloadThreadClass=null;
+    /*SongFragment.DownloadThreadClass downloadThreadClass=null;
     SongFragment.SyncThreadClass syncThreadClass=null;
     View view=null;
     SwipeRefreshLayout swipeRefreshLayout=null;
@@ -50,6 +50,6 @@ public class FanWalletSession extends AbstractFermatSession<InstalledWallet,FanW
     public Boolean getDownloading(){return downloading;}
 
     public void setItems( List<SongItems> items){this.items=items;}
-    public  List<SongItems> getItems(){return items;}
+    public  List<SongItems> getItems(){return items;}*/
 
 }

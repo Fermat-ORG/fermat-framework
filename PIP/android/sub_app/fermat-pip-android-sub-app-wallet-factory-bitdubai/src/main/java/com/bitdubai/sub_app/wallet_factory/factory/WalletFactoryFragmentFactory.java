@@ -5,9 +5,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
-import com.bitdubai.sub_app.wallet_factory.settings.WalletFactoryPreferenceSettings;
 import com.bitdubai.sub_app.wallet_factory.ui.fragments.AvailableProjectsFragment;
-import com.bitdubai.sub_app.wallet_factory.ui.fragments.AvailableProjectsFragmentOld;
 import com.bitdubai.sub_app.wallet_factory.ui.fragments.MainFragment;
 
 /**
@@ -17,7 +15,7 @@ import com.bitdubai.sub_app.wallet_factory.ui.fragments.MainFragment;
  * @author Francisco Vasquez
  */
 
-public class WalletFactoryFragmentFactory extends FermatFragmentFactory<WalletFactorySubAppSession,SubAppResourcesProviderManager,WalletFactoryFragmentsEnumType> {
+public class WalletFactoryFragmentFactory extends FermatFragmentFactory<WalletFactorySubAppSession, SubAppResourcesProviderManager, WalletFactoryFragmentsEnumType> {
 
 
     public WalletFactoryFragmentFactory() {

@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_bch_core.layer.crypto_vault;
 
+import com.bitdubai.fermat_api.FermatContext;
+import com.bitdubai.fermat_bch_core.layer.crypto_vault.fermat_vault.FermatVaultPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
@@ -16,8 +18,8 @@ import com.bitdubai.fermat_bch_core.layer.crypto_vault.bitcoin_watch_only_vault.
  */
 public class CryptoVaultLayer extends AbstractLayer {
 
-    public CryptoVaultLayer() {
-        super(Layers.CRYPTO_VAULT);
+    public CryptoVaultLayer(FermatContext fermatContext) {
+        super(Layers.CRYPTO_VAULT,fermatContext);
     }
 
     public void start() throws CantStartLayerException {
@@ -27,6 +29,7 @@ public class CryptoVaultLayer extends AbstractLayer {
             registerPlugin(new BitcoinAssetVaultPluginSubsystem());
             registerPlugin(new BitcoinVaultPluginSubsystem());
             registerPlugin(new BitcoinWatchOnlyVaultPluginSubsystem());
+            //registerPlugin(new FermatVaultPluginSubsystem(getFermatContext()));
 
         } catch(CantRegisterPluginException e) {
 

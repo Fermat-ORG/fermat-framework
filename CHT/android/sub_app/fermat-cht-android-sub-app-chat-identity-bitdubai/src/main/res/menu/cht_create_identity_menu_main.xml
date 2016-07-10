@@ -8,9 +8,9 @@
         <!--android:title="@string/action_settings"-->
         <!--app:showAsAction="never" />-->
 
-    <item
+    <!--item
         android:id="@+id/action_identity_issuer_help"
         android:title="@string/help"
         android:icon="@drawable/ic_menu_help_cht"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" /-->
 </menu>

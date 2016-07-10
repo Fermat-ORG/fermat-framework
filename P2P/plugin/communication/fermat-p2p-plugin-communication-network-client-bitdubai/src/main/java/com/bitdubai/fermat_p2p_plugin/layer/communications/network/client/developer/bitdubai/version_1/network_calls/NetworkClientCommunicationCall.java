@@ -3,9 +3,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientCall;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
 
@@ -35,22 +33,13 @@ public class NetworkClientCommunicationCall implements NetworkClientCall {
     }
 
     @Override
-    public void sendPackageMessage(final PackageContent packageContent) throws CantSendMessageException {
+    public void sendPackageMessage(final NetworkServiceMessage packageContent) throws CantSendMessageException {
 
-        if (profile instanceof ActorProfile)
-            connection.sendPackageMessage(
-                    packageContent,
-                    networkServiceType,
-                    profile.getIdentityPublicKey(),
-                    (((ActorProfile) profile).getClientIdentityPublicKey() != null ? ((ActorProfile) profile).getClientIdentityPublicKey() : profile.getIdentityPublicKey())
-            );
-        else if (profile instanceof NetworkServiceProfile)
-            connection.sendPackageMessage(
-                    packageContent,
-                    networkServiceType,
-                    profile.getIdentityPublicKey(),
-                    (((NetworkServiceProfile) profile).getClientIdentityPublicKey() != null ? ((NetworkServiceProfile) profile).getClientIdentityPublicKey() : profile.getIdentityPublicKey())
-            );
+        connection.sendPackageMessage(
+                packageContent,
+                networkServiceType,
+                profile.getIdentityPublicKey()
+        );
     }
 
     @Override

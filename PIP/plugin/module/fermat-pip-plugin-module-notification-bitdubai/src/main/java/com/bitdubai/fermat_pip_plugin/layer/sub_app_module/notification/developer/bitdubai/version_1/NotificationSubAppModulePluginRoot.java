@@ -4,14 +4,12 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.FlagNotification;
@@ -19,24 +17,14 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
-//import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
-//import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
-//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
-//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.CloudClientNotificationHandler;
-import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.IncomingMoneyNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.exceptions.CantCreateNotification;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification;
 
@@ -45,6 +33,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observer;
 import java.util.Queue;
+
+//import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
+//import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 
 /**
  * TODO: This plugin do .
@@ -84,7 +81,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
-     *  Events pool
+     * Events pool
      */
     Queue<NotificationEvent> poolNotification;
 
@@ -119,7 +116,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         }
     }
 
-    private void setUpEventListeners(){
+    private void setUpEventListeners() {
 
         FermatEventListener fermatEventListenerCloudClientConnectedNotification = eventManager.getNewListener(P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         FermatEventHandler CloudClietNotificationHandler = new CloudClientNotificationHandler(this);
@@ -184,13 +181,13 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public void addIncomingExtraUserNotification(EventSource eventSource,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
-       // try {
+    public void addIncomingExtraUserNotification(EventSource eventSource, String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
+        // try {
 
         //poolNotification = new LinkedList();
 
         try {
-            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(eventSource, "",walletPublicKey, amount, cryptoCurrency, actorId, actorType);
+            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(eventSource, "", walletPublicKey, amount, cryptoCurrency, actorId, actorType);
             notification.setNotificationType(NotificationType.INCOMING_MONEY.getCode());
             poolNotification.add(notification);
         } catch (CantCreateNotification cantCreateNotification) {
@@ -201,8 +198,8 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 //            notification.setTextTitle("Ganaste un premio");
 //            notification.setTextBody("5000 btc");
 //            poolNotification.add(notification);
-            // notify observers
-            notifyNotificationArrived();
+        // notify observers
+        notifyNotificationArrived();
 
 //        } catch (CantCreateNotification cantCreateNotification) {
 //            cantCreateNotification.printStackTrace();
@@ -210,13 +207,13 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public void addIncomingIntraUserNotification(EventSource eventSource,String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
+    public void addIncomingIntraUserNotification(EventSource eventSource, String intraUserIdentityPublicKey, String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
         // try {
 
         //poolNotification = new LinkedList();
 
         try {
-            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(eventSource, intraUserIdentityPublicKey,walletPublicKey, amount, cryptoCurrency, actorId, actorType);
+            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(eventSource, intraUserIdentityPublicKey, walletPublicKey, amount, cryptoCurrency, actorId, actorType);
             notification.setNotificationType(NotificationType.INCOMING_MONEY.getCode());
             poolNotification.add(notification);
 
@@ -231,7 +228,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     }
 
-    private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource,String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) throws CantCreateNotification {
+    private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource, String intraUserIdentityPublicKey, String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) throws CantCreateNotification {
 //        try {
 
 //            Actor actor = null;
@@ -282,7 +279,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 //            e.printStackTrace();
 //            throw new CantCreateNotification();
 //        }
-return null;
+        return null;
     }
 
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource, String actorId, String actorName, Actors actorType, byte[] profileImage) throws CantCreateNotification {
@@ -293,40 +290,40 @@ return null;
 
             notification.setImage(profileImage);
 
-          //  notification.setTextTitle("Soy una bestia");
+            //  notification.setTextTitle("Soy una bestia");
 
             notification.setTextBody("Se recibió un pedido de conexion de " + actorName);
 
             return notification;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CantCreateNotification();
         }
 
     }
 
-    private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource,String text) throws CantCreateNotification {
+    private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource, String text) throws CantCreateNotification {
 
-            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
-            notification.setAlertTitle(getSourceString(eventSource));
+        com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+        notification.setAlertTitle(getSourceString(eventSource));
 
-            notification.setTextTitle(getTextTitleBySource(eventSource));
+        notification.setTextTitle(getTextTitleBySource(eventSource));
 
-            notification.setTextBody(text);
+        notification.setTextBody(text);
 
-            return notification;
+        return notification;
 
     }
 
 
-    public void deleteObserver(Observer observer){
+    public void deleteObserver(Observer observer) {
         this.flagNotification.deleteObservers();
     }
 
     @Override
     public void addPopUpNotification(EventSource source, String text) {
         try {
-            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(source,text);
+            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = createNotification(source, text);
             notification.setNotificationType(NotificationType.CLOUD_CONNECTED_NOTIFICATION.getCode());
             poolNotification.add(notification);
         } catch (CantCreateNotification cantCreateNotification) {
@@ -356,11 +353,11 @@ return null;
     }
 
     @Override
-   public void addOutgoingRollbackNotification(EventSource source, String actorId,long amount ){
+    public void addOutgoingRollbackNotification(EventSource source, String actorId, long amount) {
         try {
             com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
 
-             notification.setAlertTitle(getSourceString(source));
+            notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("Sent Transaction reversed");
 //            notification.setTextBody("Sending " + WalletUtils.formatBalanceString(amount)  + " BTC could not be completed.");
             notification.setNotificationType(NotificationType.OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION.getCode());
@@ -377,7 +374,7 @@ return null;
     }
 
     @Override
-    public void addReceiveRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount )
+    public void addReceiveRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency, long amount)
 
     {
         try {
@@ -400,7 +397,7 @@ return null;
     }
 
     @Override
-    public void addDeniedRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency,long amount )
+    public void addDeniedRequestPaymentNotification(EventSource source, CryptoCurrency cryptoCurrency, long amount)
 
     {
         try {
@@ -425,7 +422,7 @@ return null;
     @Override
     public void addNotificacion(NotificationType notificationType) {
         Notification notification = new Notification();
-        switch (notificationType){
+        switch (notificationType) {
             case CLOUD_CLIENT_CONNECTED:
                 notification.setAlertTitle("running");
                 notification.setTextTitle("");
@@ -448,7 +445,7 @@ return null;
 
 
         poolNotification.add(notification);
-       // notificationListener.notificate(notification);
+        // notificationListener.notificate(notification);
     }
 
     @Override
@@ -463,15 +460,13 @@ return null;
     }
 
 
-
-    private void notifyNotificationArrived(){
+    private void notifyNotificationArrived() {
 
         this.flagNotification.setActive(true);
     }
 
 
-
-    private String getTextTitleBySource(EventSource eventSource){
+    private String getTextTitleBySource(EventSource eventSource) {
         switch (eventSource) {
             case INCOMING_EXTRA_USER:
                 return "Received money";
@@ -484,8 +479,8 @@ return null;
         }
     }
 
-    private String makeString(EventSource eventSource){
-        switch (eventSource){
+    private String makeString(EventSource eventSource) {
+        switch (eventSource) {
             case INCOMING_INTRA_USER:
                 return " send ";
             case INCOMING_EXTRA_USER:
@@ -497,8 +492,8 @@ return null;
 
     }
 
-    private String getSourceString(EventSource eventSource){
-        switch (eventSource){
+    private String getSourceString(EventSource eventSource) {
+        switch (eventSource) {
 
             case INCOMING_EXTRA_USER:
                 return INCOMING_EXTRA_USER_EVENT_STRING;

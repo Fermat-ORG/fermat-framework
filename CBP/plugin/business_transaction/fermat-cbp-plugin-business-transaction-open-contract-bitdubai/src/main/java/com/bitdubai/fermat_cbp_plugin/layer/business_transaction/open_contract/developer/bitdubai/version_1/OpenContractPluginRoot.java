@@ -53,13 +53,15 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.d
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.event_handler.OpenContractRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantInitializeOpenContractBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure.OpenContractTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 
@@ -101,6 +103,16 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     private OpenContractBusinessTransactionDeveloperDatabaseFactory databaseFactory;
 
     private OpenContractTransactionManager openContractTransactionManager;
+
+    /**
+     * Represents the plugin processor agent
+     */
+    OpenContractMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -228,10 +240,11 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
              */
             databaseFactory = new OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             databaseFactory.initializeDatabase();
+
             /**
              * Init monitor Agent
              */
-            OpenContractMonitorAgent monitorAgent = new OpenContractMonitorAgent(
+            /*OpenContractMonitorAgent monitorAgent = new OpenContractMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     this,
@@ -240,7 +253,23 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager);
-            monitorAgent.start();
+            monitorAgent.start();*/
+
+            //New Agent starting
+            processorAgent = new OpenContractMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    eventManager,
+                    dao,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    customerBrokerPurchaseNegotiationManager,
+                    customerBrokerSaleNegotiationManager
+            );
+            processorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -268,7 +297,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     "Starting open contract plugin",
                     "Cannot start recorder service");
 
-        } catch (CantSetObjectException exception) {
+        } /*catch (CantSetObjectException exception) {
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -276,7 +305,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     "Starting open contract plugin",
                     "Cannot set an object");
 
-        } catch (CantStartAgentException exception) {
+        }*/ catch (CantStartAgentException exception) {
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -315,6 +344,7 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     @Override
     public void stop() {
         try {
+            processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

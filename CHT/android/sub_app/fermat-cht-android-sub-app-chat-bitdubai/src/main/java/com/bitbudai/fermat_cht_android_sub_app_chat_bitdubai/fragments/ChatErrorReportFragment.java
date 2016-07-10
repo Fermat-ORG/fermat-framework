@@ -1,6 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,9 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -28,6 +27,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,7 +40,8 @@ import java.io.InputStreamReader;
  * @version 1.0
  */
 
-public class ChatErrorReportFragment extends AbstractFermatFragment {
+public class ChatErrorReportFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -48,7 +49,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSession chatSession;
+    private ReferenceAppFermatSession<ChatManager> chatSession;
 
     private Button okBtn;
     private EditText messageEdit;
@@ -63,8 +64,8 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession = ((ChatSession) appSession);
-            chatManager = chatSession.getModuleManager();
+            //chatSession = ((ChatSessionReferenceApp) appSession);
+            chatManager = appSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
@@ -221,12 +222,6 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
         });
 
         return layout;
-    }
-
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        // Inflate the menu items
-        //inflater.inflate(R.menu.chat_menu, menu);
     }
 
     private synchronized String getMoreData() {

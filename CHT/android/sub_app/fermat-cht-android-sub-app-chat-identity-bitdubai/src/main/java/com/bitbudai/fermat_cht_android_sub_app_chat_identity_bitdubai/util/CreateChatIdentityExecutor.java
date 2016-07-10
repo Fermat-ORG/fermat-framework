@@ -2,8 +2,9 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
 import android.util.Log;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
@@ -42,14 +43,14 @@ public class CreateChatIdentityExecutor {
         identity = null;
     }
 
-    public CreateChatIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes, String identityConnectionState) throws CantGetChatIdentityException {
+    public CreateChatIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String identityName, byte[] imageInBytes, String identityConnectionState) throws CantGetChatIdentityException {
         this(imageInBytes, identityName, identityConnectionState);
         identity = null;
 
         if (session != null) {
-            ChatIdentitySession subAppSession = (ChatIdentitySession) session;
-            this.moduleManager = subAppSession.getModuleManager();
-            this.errorManager = subAppSession.getErrorManager();
+            //ChatIdentitySessionReferenceApp subAppSession = (ChatIdentitySessionReferenceApp) session;
+            this.moduleManager = session.getModuleManager();
+            this.errorManager = session.getErrorManager();
         }
     }
 
@@ -63,8 +64,8 @@ public class CreateChatIdentityExecutor {
 
         try {
             Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
-            //TODO: Buscar la manera de que esta informacion venga desde android puede ser por la geolocalizacion
-            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city", identityConnectionState);
+            //TODO: Jose Cardozo revisa que tienes que pasarle el Location
+            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, GeoFrequency.NONE);
 
 
         } catch (CantCreateNewChatIdentityException e) {

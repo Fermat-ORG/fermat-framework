@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by francisco on 03/12/15.
  */
-public class CantSelectBestIndexException  extends FermatException{
+public class CantSelectBestIndexException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

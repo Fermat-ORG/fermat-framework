@@ -47,16 +47,6 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory {//implements DealsWith
         this.pluginId = pluginId;
     }
 
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
-
     /**
      * This method open or creates the database i'll be working with
      *
@@ -125,6 +115,12 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory {//implements DealsWith
         AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME);
         AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_COUNTRY_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_CITY_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_STATE_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN);
+        AssetIssuerColumns.add(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN);
         /**
          * Table Asset Issuer addition.
          */

@@ -44,13 +44,15 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 
@@ -100,6 +102,16 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
      * Represents the database
      */
     Database database;
+
+    /**
+     * Represents the plugin processor agent
+     */
+    CustomerOfflinePaymentMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -171,7 +183,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             /**
              * Init monitor Agent
              */
-            CustomerOfflinePaymentMonitorAgent monitorAgent = new CustomerOfflinePaymentMonitorAgent(
+            /*CustomerOfflinePaymentMonitorAgent monitorAgent = new CustomerOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     this,
@@ -182,7 +194,22 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                     customerBrokerContractSaleManager,
                     customerBrokerSaleNegotiationManager);
 
-            monitorAgent.start();
+            monitorAgent.start();*/
+
+            //New Agent starting
+            processorAgent = new CustomerOfflinePaymentMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    eventManager,
+                    dao,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager
+            );
+            processorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -244,6 +271,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public void stop() {
         try {
+            processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

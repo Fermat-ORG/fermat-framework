@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 public class DeniedPaymentRequestNotificationEvent extends AbstractFermatEvent {
 
 
-
     private long amount;
     private CryptoCurrency cryptoCurrency;
 
@@ -33,7 +32,6 @@ public class DeniedPaymentRequestNotificationEvent extends AbstractFermatEvent {
     public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
         this.cryptoCurrency = cryptoCurrency;
     }
-
 
 
 }

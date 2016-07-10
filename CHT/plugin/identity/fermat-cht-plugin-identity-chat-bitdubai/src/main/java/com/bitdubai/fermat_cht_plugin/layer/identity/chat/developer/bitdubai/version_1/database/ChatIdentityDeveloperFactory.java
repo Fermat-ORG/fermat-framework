@@ -144,6 +144,8 @@ import java.util.UUID;
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME);
 
         DeveloperDatabaseTable chatIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME, projectColumns);
         tables.add(chatIdentityTable);

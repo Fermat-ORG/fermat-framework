@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_identity.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 
 /**
@@ -14,12 +15,18 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     private final String publicKey;
     private final byte[] profileImage;
     private final boolean published;
+    private long   accuracy;
+    private GeoFrequency frequency;
 
-    public CryptoCustomerIdentityInformationImpl(final String alias, final String publicKey, final byte[] profileImage, final boolean published) {
+    public CryptoCustomerIdentityInformationImpl(final String alias, final String publicKey, final byte[] profileImage, final boolean published,
+                                                 final long accuracy,
+                                                 final GeoFrequency frequency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.published = published;
+        this.accuracy      = accuracy     ;
+        this.frequency = frequency;
     }
 
     @Override
@@ -35,6 +42,16 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     @Override
     public boolean isPublished() {
         return published;
+    }
+
+    @Override
+    public long getAccuracy() {
+        return accuracy;
+    }
+
+    @Override
+    public GeoFrequency getFrequency() {
+        return frequency;
     }
 
     @Override

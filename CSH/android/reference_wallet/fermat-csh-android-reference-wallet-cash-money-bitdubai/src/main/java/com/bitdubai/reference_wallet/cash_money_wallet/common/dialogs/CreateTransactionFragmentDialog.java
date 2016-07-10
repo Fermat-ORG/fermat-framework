@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -15,8 +14,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
@@ -26,7 +27,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.NumberInputFilter;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private CashMoneyWalletSession cashMoneyWalletSession;
+    private ReferenceAppFermatSession<CashMoneyWalletModuleManager> cashMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
     BigDecimal optionalAmount;
@@ -73,7 +73,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
     };
 
-    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
+    public CreateTransactionFragmentDialog(Activity a, ReferenceAppFermatSession<CashMoneyWalletModuleManager> cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;

@@ -80,13 +80,13 @@
             </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.MenuItem>
           </menuItems>
         </sideMenu>
-        <mainMenu>
+        <optionsMenu>
           <menuItems>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.MenuItem>
               <label>Settings</label>
             </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.MenuItem>
           </menuItems>
-        </mainMenu>
+        </optionsMenu>
         <tabStrip>
           <dividerColor>7516060</dividerColor>
           <indicatorColor>0</indicatorColor>
@@ -170,13 +170,13 @@
             </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.MenuItem>
           </menuItems>
         </sideMenu>
-        <mainMenu>
+        <optionsMenu>
           <menuItems>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.MenuItem>
               <label>Settings</label>
             </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.MenuItem>
           </menuItems>
-        </mainMenu>
+        </optionsMenu>
         <color>#72af9c</color>
         <statusBar>
           <color>#72af9c</color>

@@ -20,13 +20,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 
@@ -84,7 +85,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
     private AssetVaultManager assetVaultManager;
     private DigitalAssetDistributionVault digitalAssetDistributionVault;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager bitcoinNetworkManager;
     private DigitalAssetDistributor distributor;
 
     public AssetDistributionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
@@ -92,7 +93,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                          UUID pluginId,
                                          PluginFileSystem pluginFileSystem,
                                          AssetVaultManager assetVaultManager,
-                                         BitcoinNetworkManager bitcoinNetworkManager,
+                                         BlockchainManager bitcoinNetworkManager,
                                          LogManager logManager,
                                          DigitalAssetDistributionVault digitalAssetDistributionVault,
                                          AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException {

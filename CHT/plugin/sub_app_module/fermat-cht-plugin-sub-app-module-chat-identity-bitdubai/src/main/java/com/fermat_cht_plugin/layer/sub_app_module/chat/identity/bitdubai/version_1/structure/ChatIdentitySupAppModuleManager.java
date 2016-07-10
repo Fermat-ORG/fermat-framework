@@ -5,6 +5,10 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -24,16 +28,16 @@ import java.util.UUID;
 public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdentityPreferenceSettings> implements ChatIdentityModuleManager, Serializable {
 
     private ChatIdentityManager chatIdentityManager;
+    private final LocationManager locationManager                       ;
 
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
     public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager,
                                            PluginFileSystem pluginFileSystem,
-                                           UUID pluginId){
+                                           UUID pluginId,
+                                           LocationManager locationManager){
+
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager = chatIdentityManager;
-        this.pluginFileSystem    = pluginFileSystem                         ;
-        this.pluginId            = pluginId;
+        this.locationManager = locationManager;
 
     }
     /**
@@ -53,8 +57,8 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
     }
 
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewChatIdentityException {
-        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city, connectionState);
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, GeoFrequency frecuency) throws CantCreateNewChatIdentityException {
+        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city, connectionState, accurancy, frecuency);
     }
 
     /**
@@ -66,17 +70,19 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
-        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState);
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, GeoFrequency frecuency) throws CantUpdateChatIdentityException {
+        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState, accurancy, frecuency);
     }
 
     /**
-     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
-     * settings class parametrized.
+     * Through the method <code>getLocation</code> we can get the location coordinates of user.
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
+    }
 
     /**
      * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
@@ -106,7 +112,7 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available");
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available", 0, GeoFrequency.NONE);
     }
 
     @Override

@@ -264,7 +264,6 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 
             AppNavigationStructure navigationStructure = new AppNavigationStructure();
             navigationStructure.setPublicKey(UUID.randomUUID().toString());
-            navigationStructure.setSize(100);
 
             walletFactoryProject.setNavigationStructure(navigationStructure);
 

@@ -29,7 +29,9 @@
                 android:text="@string/real_balance_text"
                 android:textSize="16sp"
                 android:id="@+id/txt_type_balance"
-                android:textColor="#FFF"/>
+                android:textColor="#FFF"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -40,6 +42,8 @@
                 android:textColor="#ccc"
                 android:textStyle="italic"
                 app:typeface="ROBOTO_REGULAR"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 />
 
             <LinearLayout
@@ -53,7 +57,9 @@
                     android:id="@+id/txt_balance_amount"
                     android:textSize="20sp"
                     android:text="0.00"
-                    android:textColor="#fff" />
+                    android:textColor="#fff"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
@@ -62,7 +68,9 @@
                     android:id="@+id/txt_balance_amount_type"
                     android:textSize="14sp"
                     android:text="BTC"
-                    android:textColor="#fff" />
+                    android:textColor="#fff"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
             </LinearLayout>
 
 
@@ -83,6 +91,8 @@
                 android:id="@+id/txt_exchange_rate"
                 android:textColor="#fff"
                 android:textSize="16sp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 />
 
         </LinearLayout>
@@ -107,7 +117,9 @@
                 android:fontFamily="ROBOTO"
                 android:textSize="16sp"
                 android:textColor="#fff"
-                android:text="Earnings and losts for today:"/>
+                android:text="Total earnings and lost:"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -130,7 +142,9 @@
                     android:fontFamily="Roboto"
                     android:textSize="16sp"
                     android:textColor="#fff"
-                    android:text="Today: "/>
+                    android:text="Today: "
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -138,7 +152,9 @@
                     android:textSize="16sp"
                     android:textColor="#fff"
                     android:id="@+id/txt_date_home"
-                    android:text="Dec 16, 2016"/>
+                    android:text="Dec 16, 2016"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -149,7 +165,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:scaleType="center"
-                    android:id="@+id/earnOrLostImage"/>
+                    android:id="@+id/earnOrLostImage"
+                    android:focusable="false"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -157,7 +174,9 @@
                     android:textSize="16sp"
                     android:textColor="#fff"
                     android:id="@+id/txt_amount_lost_or_earn"
-                    android:text="U$D 0.00 earning"/>
+                    android:text="U$D 0.00"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -166,19 +185,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="28dp"
-        android:background="@drawable/home_background">
-            <LinearLayout
+        android:background="@drawable/home_background"
+        android:focusable="false"
+        android:focusableInTouchMode="false">
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="22dp"
-                android:background="@drawable/graphic"
+
                 android:orientation="vertical">
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    />
+                    android:layout_marginLeft="27dp"
+                    android:background="@drawable/tabla_new"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false">
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -186,8 +221,10 @@
                     android:text="No Data"
                     android:textColor="#fff"
                     android:visibility="gone"
-                    android:id="@+id/noDataInChart"/>
-            </LinearLayout>
+                    android:id="@+id/noDataInChart"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
+            </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

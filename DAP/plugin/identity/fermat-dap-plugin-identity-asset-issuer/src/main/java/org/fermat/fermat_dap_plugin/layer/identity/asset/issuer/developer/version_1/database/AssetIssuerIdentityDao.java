@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
@@ -144,7 +145,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -159,6 +160,8 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             record.setStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, alias);
             record.setStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
+            record.setIntegerValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN, accuracy);
+            record.setStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN, frequency.getCode());
 
             table.insertRecord(record);
 
@@ -177,7 +180,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public void updateIdentityAssetIssuer(String publicKey, String alias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
+    public void updateIdentityAssetIssuer(String publicKey, String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityAssetIssuerException {
         try {
             /**
              * 1) Get the table.
@@ -200,6 +203,8 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
                 record.setStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME, alias);
+                record.setIntegerValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN, accuracy);
+                record.setStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN, frequency.getCode());
                 table.updateRecord(record);
             }
 
@@ -250,7 +255,9 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
                 IdentityAssetIssuerRecord = new IdentityAssetIssuerImpl(
                         record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));
+                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getIntegerValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN),
+                        GeoFrequency.getByCode(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN)));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetIssuerIdentitiesException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");
@@ -298,7 +305,9 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
                 list.add(new IdentityAssetIssuerImpl(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetIssuerIdentityPrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME))));
+                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getIntegerValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_ACCURACY_KEY_COLUMN),
+                        GeoFrequency.getByCode(record.getStringValue(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_FREQUENCY_KEY_COLUMN))));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListAssetIssuerIdentitiesException(e.getMessage(), e, "Asset Issuer Identity", "Cant load " + AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_TABLE_NAME + " table in memory.");

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.Notifica
 /**
  * Created by Matias Furszyfer on 2015.08.18..
  */
-public class Notification implements NotificationEvent{
+public class Notification implements NotificationEvent {
 
 
     /**
@@ -17,17 +17,17 @@ public class Notification implements NotificationEvent{
     private String textBody;
 
     /**
-     *  Image
+     * Image
      */
     private byte[] image;
 
     /**
-     *  Screen/activity to show
+     * Screen/activity to show
      */
     private Activities screen;
 
     /**
-     *  Wallet to show
+     * Wallet to show
      */
     private String walletPublicKey;
 

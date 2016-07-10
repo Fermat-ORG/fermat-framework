@@ -6,8 +6,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 
 import org.junit.Test;
 
-import java.util.Date;
-
 /**
  * Created by francisco on 22/09/15.
  */
@@ -18,12 +16,12 @@ public class GetHistoricalExchangeRateTest {
     private long time;
 
     @Test
-    public void TestGetHistoricalExchangeRateTest() throws Exception{
+    public void TestGetHistoricalExchangeRateTest() throws Exception {
         cryptoCurrencyTest = CryptoCurrency.getByCode("BTC");
         fiatCurrencyTest = FiatCurrency.getByCode("USD");
-        double price =0;
+        double price = 0;
         long time = 1443038589;
-        price=cexioProvider.getHistoricalExchangeRate(cryptoCurrencyTest,fiatCurrencyTest,time);
+        price = cexioProvider.getHistoricalExchangeRate(cryptoCurrencyTest, fiatCurrencyTest, time);
         System.out.println(price);
     }
 }

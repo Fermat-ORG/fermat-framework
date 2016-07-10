@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center"
+    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/rounded_corners">
 
@@ -11,251 +11,260 @@
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
         android:background="#073487"
-        android:fitsSystemWindows="true"
-        />
+        android:fitsSystemWindows="true" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="2dp"
-        android:paddingEnd="1dp"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
-        android:paddingStart="1dp"
-        android:paddingTop="24dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txt_title"
-                    android:text="@string/txt_title_text"
-                    android:paddingLeft="2dp"
-                    android:textSize="20sp"
-                    android:textColor="#073487"
-                    app:typeface="CAVIAR_DREAMS_BOLD"
-                    android:paddingBottom="4dp"/>
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:paddingBottom="10dp"
-                    android:src="@drawable/ic_menu_help"
-                    android:layout_alignParentRight="true"/>
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.7dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="#073487"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:paddingBottom="5dp"
-                android:paddingTop="7sp"
-                android:text="In this wallet you can have two different types of contacts:"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:paddingLeft="20dp"
-                android:textColor="#1d1d26"
-                android:paddingRight="30dp"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dad9d9"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="7dp"
-                >
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/externaluser_icon"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    />
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/no_id_Users_of_other_text_wallets_outside"
-                    android:gravity="right"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingLeft="16dp"
-                    android:textColor="#1d1d26"
-                    android:paddingRight="30dp"
-                    />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dad9d9"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="7dp">
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/fermatuser_icon"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    />
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/no_id_Users_of_other_text_Fermat_wallets"
-                    android:gravity="right"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingLeft="16dp"
-                    android:textColor="#1d1d26"
-                    android:paddingRight="30dp"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dad9d9"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:paddingBottom="5dp"
-                android:paddingTop="12sp"
-                android:text="@string/no_id_Select_below_which_text"
-                android:layout_gravity="center_horizontal"
-                android:paddingLeft="20dp"
-                android:textColor="#1d1d26"
-                android:paddingRight="30dp"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dad9d9"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                >
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:id="@+id/checkbox_not_show"
-                    android:buttonTint="#073487"
-                    />
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="Don´t show this again"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="#7c7c7c"
-                    android:textSize="12dp"
-                    android:layout_marginRight="32dp"
-                    android:gravity="center_vertical"/>
-            </RelativeLayout>
-        </LinearLayout>
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="15dp"
-            >
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/txt_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/fermatuser_icon"
-                    android:layout_gravity="center_horizontal" />
+                android:layout_weight="2"
+                android:paddingTop="2dp"
+                android:layout_gravity="center"
+                android:text="@string/txt_title_text"
+                android:textSize="20sp"
+                android:textColor="#073487"
+                app:typeface="ROBOTO_REGULAR" />
 
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/add_fermat_user"
-                    android:text="@string/add_fermat_user_text"
-                    android:textSize="12dp"
-                    android:textColor="#fff"
-                    android:layout_gravity="center_horizontal"
-                    android:background="#DC5A0F" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="20dp">
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/externaluser_icon"
-                    android:layout_gravity="center_horizontal"
-                    />
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_extra_user_text"
-                    android:id="@+id/add_extra_user"
-                    android:textColor="#fff"
-                    android:textSize="12dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="#073487" />
-
-            </LinearLayout>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:paddingTop="1dp"
+                android:paddingBottom="7dp"
+                android:src="@drawable/ic_menu_help"
+                android:contentDescription="@string/app_name" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="#073487" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="14sp"
+            android:text="@string/this_is_a_loss_protected_wallet_text"
+            android:gravity="center"
+            android:textColor="#1d1d26" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginRight="17dp"
+            android:layout_marginLeft="17dp"
+            android:background="#dad9d9" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/fermatuser_icon"
+                        android:contentDescription="@string/app_name" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:paddingStart="16dp"
+                        android:paddingRight="30dp"
+                        android:paddingEnd="30dp"
+                        android:gravity="end"
+                        android:text="@string/no_id_Users_of_other_text_Fermat_wallets"
+                        android:textSize="14sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#1d1d26" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:background="#dad9d9"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginLeft="17dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/externaluser_icon"
+                        android:contentDescription="@string/app_name" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:paddingStart="16dp"
+                        android:paddingRight="30dp"
+                        android:paddingEnd="30dp"
+                        android:gravity="end"
+                        android:text="@string/no_id_Users_of_other_text_wallets_outside"
+                        android:textSize="14sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#1d1d26" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:background="#dad9d9"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginLeft="17dp" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="14sp"
+                    android:text="@string/no_id_Select_below_which_text"
+                    android:gravity="center"
+                    android:textColor="#1d1d26" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#dad9d9" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkbox_not_show"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:checked="true" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/no_id_dont_show_this_again_text"
+                        android:textColor="#7c7c7c"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="60dp"
+                            android:padding="6dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/fermatuser_icon"
+                            android:contentDescription="@string/app_name" />
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/add_fermat_user"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            android:text="@string/add_fermat_user_text"
+                            android:textSize="11sp"
+                            android:background="#DC5A0F" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="60dp"
+                            android:padding="6dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/externaluser_icon"
+                            android:contentDescription="@string/app_name"/>
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                            android:id="@+id/add_extra_user"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            android:text="@string/add_extra_user_text"
+                            android:textSize="11sp"
+                            android:background="#073487"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
     </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -25,14 +26,13 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetDetailTransactionAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Transaction;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -46,20 +46,16 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Jinmy Bohorquez on 04/02/16.
  */
-public class TransactionsFragment extends FermatWalletListFragment<Transaction>
+public class TransactionsFragment extends FermatWalletListFragment<Transaction, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<Transaction> {
 
-    private AssetUserSession assetUserSession;
     private AssetUserWalletSubAppModuleManager moduleManager;
-
 
     private Toolbar toolbar;
     private Resources res;
 
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-
-//    SettingsManager<AssetUserSettings> settingsManager;
 
     private View noTransactionsView;
     private List<Transaction> transactions;
@@ -74,8 +70,7 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = ((AssetUserSession) appSession);
-        moduleManager = assetUserSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         Asset assetData = (Asset) appSession.getData("asset_data");
@@ -87,8 +82,7 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        transactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
 
     @Override
@@ -162,11 +156,8 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 4, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override
@@ -174,10 +165,16 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
-                setUpHelpAssetDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_USER_HELP_DETAIL
+                    setUpHelpAssetDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
+//                setUpHelpAssetDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_system_error),

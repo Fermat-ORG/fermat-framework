@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -27,7 +28,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
@@ -45,7 +46,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
     private List<BankAccountNumber> bankAccountList;
 
     // UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
     private RecyclerView recyclerView;
     private BankAccountsAdapter adapter;
     private View emptyView;
@@ -71,15 +72,13 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
             //So that they can be reconfigured cleanly
             moduleManager.clearAllBankAccounts();
 
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if(aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
+            CryptoCustomerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
-            Object data = appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
+            Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             if (data == null) {
                 bankAccountList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
+                appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
             } else
                 bankAccountList = (List<BankAccountNumber>) data;
 
@@ -95,7 +94,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if(!hideHelperDialogs) {
+        if(isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
@@ -103,6 +102,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
                     .setSubTitle(R.string.ccw_wizard_accounts_dialog_sub_title)
                     .setBody(R.string.ccw_wizard_accounts_dialog_body)
                     .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }

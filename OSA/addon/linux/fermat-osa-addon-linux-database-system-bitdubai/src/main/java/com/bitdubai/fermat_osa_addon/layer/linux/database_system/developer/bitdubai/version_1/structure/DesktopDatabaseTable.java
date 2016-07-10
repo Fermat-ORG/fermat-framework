@@ -15,7 +15,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure.DesktopDatabaseTable</code>
@@ -55,6 +56,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
     private List<DataBaseTableOrder> tableOrder;
+    private List<DesktopDatabaseTableNearbyLocationOrder> tableNearbyLocationOrders;
     private String top = "";
     private String offset = "";
     private DatabaseTableFilterGroup tableFilterGroup;
@@ -129,6 +131,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public void clearAllFilters() {
 
         this.tableFilter = null;
+        this.tableFilterGroup = null;
     }
 
     @Override
@@ -143,7 +146,9 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     @Override
     public DatabaseTableFilterGroup getNewFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator) {
-        return null;
+        return new DesktopDatabaseTableFilterGroup(
+                tableFilters, filterGroups, filterOperator
+        );
     }
 
 
@@ -211,6 +216,24 @@ public class DesktopDatabaseTable implements DatabaseTable {
     }
 
     @Override
+    public void truncate() throws CantTruncateTableException {
+
+        String SQL_QUERY = "DELETE FROM " + tableName;
+
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement()) {
+
+                stmt.execute(SQL_QUERY);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new CantTruncateTableException(e, "", "Unhandled error.");
+            }
+        }
+    }
+
+    @Override
     public long getCount() throws CantLoadTableToMemoryException {
 
         String SQL_QUERY = "SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter();
@@ -231,6 +254,20 @@ public class DesktopDatabaseTable implements DatabaseTable {
         }
     }
 
+    private String buildNearbyLocationOrderSentence(final DesktopDatabaseTableNearbyLocationOrder nearbyLocationOrder) {
+
+        String latitude = nearbyLocationOrder.getPoint().getLatitude().toString();
+        String longitude = nearbyLocationOrder.getPoint().getLongitude().toString();
+        String latitudeField = nearbyLocationOrder.getLatitudeField();
+        String longitudeField = nearbyLocationOrder.getLongitudeField();
+
+        String sentence = ", (("+latitude+" - "+latitudeField+") * ("+latitude+" - "+latitudeField+") +" +
+                " ("+longitude+" - "+longitudeField+") * ("+longitude+" - "+longitudeField+")) as "+
+                nearbyLocationOrder.getDistanceField();
+
+        return sentence;
+    }
+
     @Override
     public void loadToMemory() throws CantLoadTableToMemoryException {
 
@@ -238,6 +275,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         String topSentence = "";
         String offsetSentence = "";
+        String nearbyLocationOrderSentence = "";
+        String orderSentence;
 
         if (!this.top.isEmpty())
             topSentence = " LIMIT " + this.top;
@@ -245,7 +284,29 @@ public class DesktopDatabaseTable implements DatabaseTable {
         if (!this.offset.isEmpty())
             offsetSentence = " OFFSET " + this.offset;
 
-        String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
+        // TODO do this in a better way...
+        if (this.tableNearbyLocationOrders != null) {
+
+            String nearbyLocationOrderFields = "";
+            String commonOrder = makeOrderWithoutOrderByClause();
+
+            for (DesktopDatabaseTableNearbyLocationOrder order : tableNearbyLocationOrders) {
+                nearbyLocationOrderSentence += buildNearbyLocationOrderSentence(order);
+                if (nearbyLocationOrderFields.isEmpty())
+                    nearbyLocationOrderFields += order.getDistanceField();
+                else
+                    nearbyLocationOrderFields += ", "+order.getDistanceField();
+            }
+
+            orderSentence = " ORDER BY "+nearbyLocationOrderFields+ (commonOrder.isEmpty() ? "" : ", "+commonOrder);
+
+        } else {
+            orderSentence = makeOrder();
+        }
+
+        String SQL_QUERY = "SELECT * "+nearbyLocationOrderSentence+" FROM " + tableName + makeFilter() + orderSentence + topSentence  + offsetSentence;
+
+        System.out.println(SQL_QUERY);
 
         synchronized (connectionPool) {
             try (Connection connection = connectionPool.getConnection();
@@ -377,6 +438,27 @@ public class DesktopDatabaseTable implements DatabaseTable {
         this.tableOrder.add(order);
     }
 
+    @Override
+    public void addNearbyLocationOrder(final String              latitudeField ,
+                                       final String              longitudeField,
+                                       final Location            point         ,
+                                       final DatabaseFilterOrder direction     ,
+                                       final String              distanceField ) {
+
+        if (tableNearbyLocationOrders == null)
+            tableNearbyLocationOrders = new ArrayList<>();
+
+        tableNearbyLocationOrders.add(
+                new DesktopDatabaseTableNearbyLocationOrder(
+                        latitudeField ,
+                        longitudeField,
+                        point         ,
+                        direction     ,
+                        distanceField
+                )
+        );
+    }
+
     /**
      * <p>Sets the number of records to be selected in query
      *
@@ -404,12 +486,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
         );
 
         this.tableFilter.add(filter);
-        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
-                this.tableFilter,
-                null            ,
-                null
-        );
-
     }
 
     @Override
@@ -425,13 +501,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
                         value.getCode()
                 )
         );
-
-        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
-                this.tableFilter,
-                null            ,
-                null
-        );
-
     }
 
     @Override
@@ -459,11 +528,18 @@ public class DesktopDatabaseTable implements DatabaseTable {
         filter.setType(type);
 
         this.tableFilter.add(filter);
-        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
-                this.tableFilter,
-                null            ,
-                null
-        );
+    }
+
+    @Override
+    public void deleteAllRecord() throws CantDeleteRecordException {
+
+        try {
+            String query = "DELETE FROM " + tableName;
+            database.execSQL(query);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new CantDeleteRecordException(e);
+        }
 
     }
 
@@ -578,6 +654,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
         } else {
             //if set group filter
             if (this.tableFilterGroup != null) {
+                filter = makeGroupFilters(this.tableFilterGroup);
+                if (!filter.isEmpty()) return " WHERE " + filter;
                 return makeGroupFilters(this.tableFilterGroup);
             } else {
                 return filter;
@@ -588,7 +666,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
         StringBuilder strFilter = new StringBuilder();
-        String filter;
 
         if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
             strFilter.append("(");
@@ -599,7 +676,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
             if (databaseTableFilterGroup.getSubGroups() != null){
 
                 for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+
+                    if ((subGroup != null && subGroup.getFilters().size() > 0) || ix > 0) {
                         switch (databaseTableFilterGroup.getOperator()) {
                             case AND:
                                 strFilter.append(" AND ");
@@ -611,9 +689,13 @@ public class DesktopDatabaseTable implements DatabaseTable {
                                 strFilter.append(" ");
                         }
                     }
-                    strFilter.append("(");
-                    strFilter.append(makeGroupFilters(subGroup));
-                    strFilter.append(")");
+
+                    String subGroupFilterString = makeGroupFilters(subGroup);
+                    if (!subGroupFilterString.isEmpty()) {
+                        strFilter.append("(");
+                        strFilter.append(makeGroupFilters(subGroup));
+                        strFilter.append(")");
+                    }
                     ix++;
                 }
 
@@ -622,10 +704,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             strFilter.append(")");
         }
 
-        filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = " WHERE " + filter;
-
-        return filter;
+        return strFilter.toString();
     }
 
     private String makeOrder() {
@@ -660,6 +739,34 @@ public class DesktopDatabaseTable implements DatabaseTable {
         if (strOrder.length() > 0) order = " ORDER BY " + order;
 
         return order;
+    }
+
+    private String makeOrderWithoutOrderByClause() {
+
+        StringBuilder strOrder = new StringBuilder();
+
+        if (this.tableOrder != null) {
+            for (int i = 0; i < tableOrder.size(); ++i) {
+
+                switch (tableOrder.get(i).getDirection()) {
+                    case DESCENDING:
+                        strOrder.append(tableOrder.get(i).getColumnName())
+                                .append(" DESC ");
+                        break;
+                    case ASCENDING:
+                        strOrder.append(tableOrder.get(i).getColumnName());
+                        break;
+                    default:
+                        strOrder.append(" ");
+                        break;
+
+                }
+                if (i < tableOrder.size() - 1)
+                    strOrder.append(" , ");
+            }
+        }
+
+        return strOrder.toString();
     }
 
 

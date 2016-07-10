@@ -24,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
@@ -38,10 +39,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -50,7 +53,6 @@ import com.software.shell.fab.ActionButton;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.adapters.AssetFactoryAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.interfaces.PopupMenu;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
@@ -68,7 +70,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
@@ -81,7 +82,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class EditableAssetsFragment extends AbstractFermatFragment implements
+public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>, ResourceProviderManager> implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     private static AssetFactory selectedAsset;
@@ -93,14 +94,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
     private ErrorManager errorManager;
-    AssetFactorySession assetFactorySession;
     AssetFactorySettings settings = null;
-    //    private MenuItem menuHelp;
-//    private Menu menu;
-    // custom inflater
     private ViewInflater viewInflater;
-
-//    SettingsManager<AssetFactorySettings> settingsManager;
 
     private boolean isRefreshing = false;
     private long satoshisWalletBalance;
@@ -121,16 +116,13 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
         try {
             selectedAsset = null;
-            assetFactorySession = ((AssetFactorySession) appSession);
-            moduleManager = assetFactorySession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
 
             satoshisWalletBalance = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
-
     }
 
     @Nullable
@@ -264,7 +256,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
             settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
             for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                     settings.setBlockchainNetworkPosition(position);
                     break;
                 } else {
@@ -295,7 +287,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 handlerTimer.postDelayed(new Runnable() {
                     public void run() {
                         if (assetFactorySettingsTemp.isPresentationHelpEnabled()) {
-                            setUpPresentation(false);
+                            setUpPresentation(true);
                         }
                     }
                 }, 500);
@@ -313,14 +305,14 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
-                    .setImageLeft(R.drawable.asset_issuer_identity)
+                    .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
                     .setTextNameLeft(R.string.dap_asset_factory_welcome_name_left)
                     .setSubTitle(R.string.dap_asset_factory_welcome_subTitle)
                     .setBody(R.string.dap_asset_factory_welcome_body)
                     .setTextFooter(R.string.dap_asset_factory_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
@@ -359,7 +351,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -422,7 +414,11 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         for (AssetFactory item : items) {
             resources = item.getResources();
             for (Resource resource : resources) {
-                resource.setResourceBinayData(moduleManager.getAssetFactoryResource(resource).getContent());
+                try {
+                    resource.setResourceBinayData(moduleManager.getAssetFactoryResource(resource));
+                } catch (CantGetResourcesException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return items;
@@ -450,7 +446,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             editAsset();
         } else if (menuItem.getItemId() == R.id.action_publish) {
             if (validate()) {
-                new ConfirmDialog.Builder(getActivity(), appSession)
+                new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                         .setTitle("Confirm")
                         .setMessage("Are you sure you are ready to publish your Asset? Once published you won't be able to perform any changes to it.")
                         .setColorStyle(getResources().getColor(R.color.bg_asset_factory))

@@ -6,22 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_linux_core.OSAPlatform;
 import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContext;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.List;
 
 /**
  * The Class <code>com.bitdubai.linux.core.app.FermatLinuxAppMain</code> initialize
@@ -64,55 +51,57 @@ public class FermatLinuxAppMain {
             System.out.println("- Starting process ...");
 
             /*
-             * Start the system
+             * Start the network node.
              */
 
-            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE  , Developers.BITDUBAI, new Version()));
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE, Developers.BITDUBAI, new Version()));
 /*
-            CryptoBrokerIdentityModuleManager cryptoBrokerIdentity = (CryptoBrokerIdentityModuleManager) fermatSystem.getModuleManager(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_IDENTITY, Developers.BITDUBAI, new Version()));
-            CryptoBrokerCommunitySubAppModuleManager cryptoBrokerCommunity = (CryptoBrokerCommunitySubAppModuleManager) fermatSystem.getModuleManager(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_COMMUNITY, Developers.BITDUBAI, new Version()));
+            final NetworkClientManager clientManager = (NetworkClientManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
+            final ChatIdentityManager chatIdentityManager = (ChatIdentityManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.CHAT_PLATFORM, Layers.IDENTITY, Plugins.CHAT_IDENTITY, Developers.BITDUBAI, new Version()));
 
-            List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities = cryptoBrokerCommunity.listSelectableIdentities();
+            ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(4);
 
-            if (listSelectableIdentities == null || listSelectableIdentities.isEmpty()) {
+            scheduledThreadPool.scheduleAtFixedRate(
+                    new Thread() {
+                        @Override
+                        public void run() {
 
-                File file = new File("/home/lnacosta/Desktop/fragances/baby.png");
+                            try {
+                                if (!(chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().size() > 0)) {
+                                    chatIdentityManager.createNewIdentityChat("toreto", new byte[0], " ", " ", " ", " ", 0, Frecuency.HIGH);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
-                InputStream inputStream = new FileInputStream(file);
 
-                byte[] byteArray = IOUtils.toByteArray(inputStream);
+                            try {
+                                clientManager.getConnection().listRegisteredActorProfiles(
+                                        new DiscoveryQueryParameters(
+                                                null, //identityPublicKey
+                                                null,//networkServiceType
+                                                "CHT",//actorType
+                                                null,//name
+                                                null,//alias
+                                                null,//extraData
+                                                null,//location
+                                                null,//distance
+                                                Boolean.TRUE,//isOnline
+                                                Long.valueOf(0),//lastConnectionTime
+                                                10,//max
+                                                0//offset
+                                        )
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
-                CryptoBrokerIdentityInformation actor1 = cryptoBrokerIdentity.createCryptoBrokerIdentity("LINUXTEST1", byteArray);
-
-                cryptoBrokerIdentity.publishIdentity(actor1.getPublicKey());
-
-                CryptoBrokerIdentityInformation actor2 = cryptoBrokerIdentity.createCryptoBrokerIdentity("LINUXTEST2", byteArray);
-
-                cryptoBrokerIdentity.publishIdentity(actor2.getPublicKey());
-            }
-
-            listSelectableIdentities = cryptoBrokerCommunity.listSelectableIdentities();
-            System.out.println("listSelectableIdentities2 = "+listSelectableIdentities);
-            System.out.println("listSelectableIdentities2 quantity= "+listSelectableIdentities.size());
-
-            if (!listSelectableIdentities.isEmpty()) {
-                cryptoBrokerCommunity.setSelectedActorIdentity(listSelectableIdentities.get(0));
-
-                List<CryptoBrokerCommunityInformation> communityBrokersInformationList = cryptoBrokerCommunity.getCryptoBrokerSearch().getResult();
-
-                if (communityBrokersInformationList != null && !communityBrokersInformationList.isEmpty()) {
-
-                    for (CryptoBrokerCommunityInformation information : communityBrokersInformationList) {
-                        try {
-                            System.out.println("requesting connection to: " + information);
-                            cryptoBrokerCommunity.requestConnectionToCryptoBroker(listSelectableIdentities.get(0), information);
-                        } catch (ActorConnectionAlreadyRequestedException e) {
-                            System.out.println("already requested!!!");
                         }
-                    }
-                }
-            }
-*/
+                    },
+                    15,
+                    5,
+                    TimeUnit.SECONDS
+            );*/
 
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 

@@ -2,7 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,23 +14,32 @@ import android.view.WindowManager;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.List;
 
@@ -42,7 +51,8 @@ import java.util.List;
  * Update by Miguel Payarez on 15/01/2016
  */
 
-public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
+public class ChatFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -50,7 +60,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
     ChatActorCommunitySelectableIdentity chatIdentity;
 
@@ -66,10 +76,15 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession = ((ChatSession) appSession);
-            chatManager = chatSession.getModuleManager();
+            //chatSession = ((ChatSessionReferenceApp) appSession);
+            chatManager = appSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+
+            FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+            registerReceiver(fermatIntentFilter, new ChatBroadcastReceiver());
+//            FermatIntentFilter fermatIntentFilter2 = new FermatIntentFilter(BroadcasterType.NOTIFICATION_SERVICE);
+//            registerReceiver(fermatIntentFilter2, new ChatBroadcastReceiver());
 
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
@@ -111,7 +126,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             }
 
             toolbar = getToolbar();
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+            //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
 
             //ChatAdapter chatAdapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
 
@@ -128,22 +143,30 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 
-    @Override
-    public void onUpdateViewOnUIThread(String code) {
-        super.onUpdateViewOnUIThread(code);
-        if(code.equals("13") && searchView.getQuery().toString().equals("") ){
+//    @Override
+//    public void onUpdateViewOnUIThread(String code) {
+//        super.onUpdateViewOnUIThread(code);
+//        onUpdateViewUIThread();
+//    }
+
+    public void onUpdateViewUIThread() {
+        if (searchView != null) {
+            if (searchView.getQuery().toString().equals("")) {
+                adapterView.refreshEvents();
+            }
+        } else {
             adapterView.refreshEvents();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-            }
-        });
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+//            }
+//        });
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         adapterView=new ChatAdapterView.Builder(inflater.getContext())
@@ -169,67 +192,129 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
+//        menu.clear();
+//        super.onCreateOptionsMenu(menu, inflater);
         // Inflate the menu items
-        inflater.inflate(R.menu.chat_menu, menu);
+        //inflater.inflate(R.menu.chat_menu, menu);
         // Locate the search item
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapterView.getFilter(s);
+//        MenuItem searchItem = menu.findItem(fermatFragmentType.getOptionsMenu().getItem(1).getId());
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapterView.getFilter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
             }
-        });
-        if (chatSession.getData("filterString") != null) {
-            String filterString = (String) chatSession.getData("filterString");
-            if (filterString.length() > 0) {
-                searchView.setQuery(filterString, true);
-                searchView.setIconified(false);
+        }
+    }
+
+    public void onOptionMenuPrepared(Menu menu){
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapterView.getFilter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
             }
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_search) {
-//            return true;
-//        }
-        if (item.getItemId() == R.id.menu_clean_chat) {
-            try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
-                alert.setTextTitle("Clean Chat");
-                alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
-                alert.setType("clean-chat");
-                alert.show();
-                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            adapterView.refreshEvents();
-                        }catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
+        try {
+            int id = item.getItemId();
+            switch (id) {
+                case 1:
+                    break;
+                case 2:
+                    try {
+                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
+                        alert.setTextTitle("Clean Chat");
+                        alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
+                        alert.setType("clean-chat");
+                        alert.show();
+                        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                try {
+                                    adapterView.refreshEvents();
+                                }catch (Exception e) {
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                }
+                            }
+                        });
+                    }catch (Exception e){
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     }
-                });
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    break;
             }
-            return true;
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-//        if (item.getItemId() == R.id.menu_send_chat_email) {
-//            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Receiver class implemented
+     */
+    private class ChatBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+//                Owner owner = new Owner();
+//                owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+//                fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
+
+                if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
+                    onUpdateViewUIThread();
+                }
+
+                if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
+//                    fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
+                }
+            } catch (ClassCastException e) {
+                appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
     }
 }

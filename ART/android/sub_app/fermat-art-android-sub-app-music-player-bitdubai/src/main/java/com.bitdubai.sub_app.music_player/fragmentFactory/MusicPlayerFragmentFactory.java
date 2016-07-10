@@ -7,12 +7,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.music_player.fragments.MusicPlayerMainActivity;
-import com.bitdubai.sub_app.music_player.session.MusicPlayerSession;
+import com.bitdubai.sub_app.music_player.session.MusicPlayerSessionReferenceApp;
 
 /**
  * Created by Miguel Payarez on 08/04/16.
  */
-public class MusicPlayerFragmentFactory extends FermatFragmentFactory<MusicPlayerSession,SubAppResourcesProviderManager,MusicPlayerEnumType> {
+public class MusicPlayerFragmentFactory extends FermatFragmentFactory<MusicPlayerSessionReferenceApp,SubAppResourcesProviderManager,MusicPlayerEnumType> {
     @Override
     protected AbstractFermatFragment getFermatFragment(MusicPlayerEnumType fragments) throws FragmentNotFoundException {
         if (fragments == null) {

@@ -1,11 +1,15 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
@@ -24,7 +28,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.CryptoBrokerIdentitySubAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -40,26 +43,26 @@ public class CryptoBrokerIdentityModuleManagerImpl
 
     private CryptoBrokerIdentityManager identityManager;
     private CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot;
-    private PluginVersionReference      pluginVersionReference;
+    private final LocationManager locationManager;
 
     public CryptoBrokerIdentityModuleManagerImpl(
             CryptoBrokerIdentityManager identityManager,
-            PluginFileSystem            pluginFileSystem,
-            UUID                        pluginId,
-            CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot
-    ){
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot,
+            LocationManager locationManager){
         super(pluginFileSystem, pluginId);
         this.identityManager        = identityManager;
         this.pluginRoot           = pluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
+        this.locationManager = locationManager;
     }
 
     @Override
-    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image) throws CantCreateCryptoBrokerException {
+    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image, long accuracy, GeoFrequency frequency) throws CantCreateCryptoBrokerException {
 
         try {
 
-            CryptoBrokerIdentity identity = this.identityManager.createCryptoBrokerIdentity(alias, image);
+            CryptoBrokerIdentity identity = this.identityManager.createCryptoBrokerIdentity(alias, image, accuracy, frequency);
             return converIdentityToInformation(identity);
 
         } catch (CantCreateCryptoBrokerIdentityException e) {
@@ -71,19 +74,16 @@ public class CryptoBrokerIdentityModuleManagerImpl
 
     @Override
     public void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity)  throws CantUpdateBrokerIdentityException {
-        this.identityManager.updateCryptoBrokerIdentity(cryptoBrokerIdentity.getAlias(), cryptoBrokerIdentity.getPublicKey(), cryptoBrokerIdentity.getProfileImage());
+        this.identityManager.updateCryptoBrokerIdentity(cryptoBrokerIdentity.getAlias(), cryptoBrokerIdentity.getPublicKey(), cryptoBrokerIdentity.getProfileImage(), cryptoBrokerIdentity.getAccuracy(), cryptoBrokerIdentity.getFrequency());
     }
 
     @Override
     public void publishIdentity(String publicKey) throws CantPublishCryptoBrokerException, CryptoBrokerNotFoundException {
 
         try {
-
             this.identityManager.publishIdentity(publicKey);
-
         } catch (CantPublishIdentityException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            
             throw new CantPublishCryptoBrokerException(e, "", "Problem publishing the identity.");
         } catch (IdentityNotFoundException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -130,7 +130,7 @@ public class CryptoBrokerIdentityModuleManagerImpl
     }
 
     private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity){
-        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel());
+        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel(), identity.getAccuracy(), identity.getFrequency());
     }
 
 
@@ -154,4 +154,18 @@ public class CryptoBrokerIdentityModuleManagerImpl
         return new int[0];
     }
 
+    /**
+     * Through the method <code>getLocation</code> we can get the location coordinates of user.
+     *
+     * @return a new instance of the settings manager for the specified fermat settings object.
+     */
+    @Override
+    public Location getLocation() throws CantGetDeviceLocationException {
+        return locationManager.getLocation();
+    }
+
+    @Override
+    public Boolean itHasAssociatedWallet(String brokerPublicKey) {
+        return null;
+    }
 }

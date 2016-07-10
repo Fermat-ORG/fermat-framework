@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/transacion_form"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_white_gradient">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/send_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7"
+                android:background="@android:color/transparent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:text="Name"
+                            android:textColor="#F78803"
+                            android:textSize="14sp"
+                            />
+
+                        <AutoCompleteTextView
+                            android:id="@+id/contact_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:background="@null"
+                            android:ems="10"
+                            android:text=""
+                            android:hint="Name"
+                            android:paddingBottom="7dip"
+                            android:paddingLeft="21dip"
+                            android:paddingRight="14dip"
+                            android:paddingTop="25dip"
+                            android:textColor="#777583"
+                            android:textColorHint="#777583"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@drawable/gradient"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:paddingTop="12dp"
+                        android:text="@string/amount_text"
+                        android:textColor="#F78803"
+                        android:textSize="14sp"
+                        app:typeface="ROBOTO_REGULAR" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/balance_amount_type_text"
+                        android:textColor="#F78803"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="16dp"
+                        android:id="@+id/txt_type"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="3dip"
+                    android:paddingLeft="7dip"
+                    android:paddingRight="7dip"
+                    android:paddingTop="3dip">
+
+                    <EditText
+                        android:id="@+id/amount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:background="@null"
+                        android:gravity="left"
+                        android:hint="Amount"
+                        android:inputType="numberDecimal"
+                        android:paddingBottom="7dip"
+                        android:paddingLeft="14dip"
+                        android:paddingRight="14dip"
+                        android:paddingTop="7dip"
+                        android:state_selected="true"
+                        android:textColor="#777583"
+                        android:textColorHint="#777583"
+                        android:textSize="16sp"
+                        android:textStyle="normal"
+                        android:maxLength="11"/>
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff"
+                        android:textColor="#777583"
+                        />
+
+                    <ImageView
+                        android:id="@+id/spinner_open"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/fw_arrow_down_icon"
+
+                        />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@drawable/gradient"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:text="@string/notes_text"
+                    android:textColor="#F78803"
+                    android:textSize="12sp"
+                    app:typeface="ROBOTO_REGULAR" />
+
+                <LinearLayout
+                    android:id="@+id/linear_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="3dip"
+                    android:paddingLeft="7dip"
+                    android:paddingRight="7dip"
+                    android:paddingTop="3dip">
+
+                    <EditText
+                        android:id="@+id/notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:background="@null"
+                        android:gravity="center_vertical"
+                        android:hint="Notes"
+                        android:paddingBottom="7dip"
+                        android:paddingLeft="14dip"
+                        android:paddingRight="14dip"
+                        android:paddingTop="7dip"
+                        android:state_selected = "false"
+                        android:textColor="#777583"
+                        android:textColorHint="#777583"
+                        android:textSize="16sp"
+                        android:textStyle="normal"
+                        android:maxLength="35" />
+                </LinearLayout>
+            </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/gradient" />
+
+
+        </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="12sp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/send_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#54ACEC"
+            android:clickable="true"
+            android:padding="3dp"
+            android:src="@drawable/ic_action_send_now_grey"
+            android:text="Request"
+            android:textColor="#fff"
+            android:textSize="14dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Currency"
+            android:id="@+id/textView"
+            android:layout_marginTop="84dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="62dp"
+            android:layout_marginEnd="62dp"
+            android:textColor="#F78803"
+            android:textSize="14dp"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

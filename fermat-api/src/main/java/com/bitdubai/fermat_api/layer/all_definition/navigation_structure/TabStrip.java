@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTabStrip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
  * Update by Miguel Payarez on 2016.04.08
  */
 
-public class TabStrip implements FermatTabStrip {
+public class TabStrip implements FermatTabStrip,Serializable {
 
     /**
      * WIZARD
@@ -54,7 +55,18 @@ public class TabStrip implements FermatTabStrip {
 
     boolean reduceTabHeight;
 
-    List<Tab> tabs = new ArrayList<>();
+    private List<Tab> tabs = new ArrayList<>();
+
+    /**
+     * Custom view to put as background
+     */
+    private FermatView fermatView;
+
+    /**
+     * Custom drawable
+     */
+    private FermatDrawable backgroundDrawable;
+
 
     public void addTab(Tab tab) {
         tabs.add(tab);
@@ -242,7 +254,29 @@ public class TabStrip implements FermatTabStrip {
         wizards.put(type, wizard);
     }
 
+
+    /**
+     *  Custom View for the tab
+     *
+     * @return
+     */
+    public FermatView getFermatView() {
+        return fermatView;
+    }
+
+    public void setFermatView(FermatView fermatView) {
+        this.fermatView = fermatView;
+    }
+
     public Map<String, Wizard> getWizards() {
         return wizards;
+    }
+
+    public FermatDrawable getBackgroundDrawable() {
+        return backgroundDrawable;
+    }
+
+    public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
     }
 }

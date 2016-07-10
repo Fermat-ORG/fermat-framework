@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/color_white"
     >
 
 
@@ -12,7 +13,7 @@
         android:layout_height="match_parent"
         android:id="@+id/txt_settings_name"
         tools:text="settings"
-        android:textSize="15sp"
+        android:textSize="12sp"
         android:paddingLeft="24dp"
         android:paddingTop="24dp"
         android:textColor="@color/color_black"/>

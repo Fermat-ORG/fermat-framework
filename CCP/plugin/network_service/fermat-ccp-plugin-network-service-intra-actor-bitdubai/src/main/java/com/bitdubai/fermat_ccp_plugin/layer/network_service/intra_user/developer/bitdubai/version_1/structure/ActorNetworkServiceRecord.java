@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 
 import java.util.UUID;
 

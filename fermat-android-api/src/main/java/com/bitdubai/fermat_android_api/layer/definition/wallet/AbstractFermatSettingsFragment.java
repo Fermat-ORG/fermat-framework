@@ -13,8 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -26,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
@@ -35,19 +35,24 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by mati on 2016.05.26..
  */
-public class AbstractFermatSettingsFragment<S extends FermatSession,R extends ResourceProviderManager>extends PreferenceFragment implements AbstractFermatFragmentInterface<S,R> {
+public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,R extends ResourceProviderManager>extends PreferenceFragment implements AbstractFermatFragmentInterface<S,R> {
 
 
     /**
      * FLAGS
      */
     protected boolean isAttached;
+    /**
+     * If the fragment is visible for the user
+     */
+    private boolean isVisible;;
 
     /**
      * Platform
      */
     protected S appSession;
     protected R appResourcesProviderManager;
+    private FermatFragment fermatFragmentType;
 
 
     /**
@@ -55,6 +60,7 @@ public class AbstractFermatSettingsFragment<S extends FermatSession,R extends Re
      */
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
+
 
     public enum ScreenSize{
         LARGE,NORMAL, UNDEFINED, SMALL
@@ -113,6 +119,11 @@ public class AbstractFermatSettingsFragment<S extends FermatSession,R extends Re
 
     public void setAppResourcesProviderManager(R appResourcesProviderManager) {
         this.appResourcesProviderManager = appResourcesProviderManager;
+    }
+
+    @Override
+    public void setFragmentType(FermatFragment fermatFragmentType) {
+        this.fermatFragmentType = fermatFragmentType;
     }
 
     @Override
@@ -238,7 +249,7 @@ public class AbstractFermatSettingsFragment<S extends FermatSession,R extends Re
     }
 
 
-    protected <S extends SubAppsSession> void destroy(){
+    protected void destroy(){
         onDestroy();
         System.gc();
     }
@@ -248,7 +259,7 @@ public class AbstractFermatSettingsFragment<S extends FermatSession,R extends Re
     }
 
     protected void sendMail(String userTo, String bodyText) throws Exception {
-        ((FermatActivityManager)getActivity()).sendMailExternal(userTo,bodyText);
+        ((FermatActivityManager)getActivity()).sendMailExternal(userTo, bodyText);
     }
 
     protected final void onBack(String activityCodeBack){
@@ -327,6 +338,19 @@ public class AbstractFermatSettingsFragment<S extends FermatSession,R extends Re
      * This method will be called when the user press the back button
      */
     public void onBackPressed() {
+
+    }
+
+    @Override
+    public void setFragmentFocus(boolean isVisible) {
+        this.isVisible =isVisible;
+        onFragmentFocus();
+    }
+
+    /**
+     * This method is called when the fragment is on user's focus
+     */
+    public void onFragmentFocus() {
 
     }
 

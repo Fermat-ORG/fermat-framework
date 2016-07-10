@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.Set;
 /**
  * Created by franklin on 05/10/15.
  */
-public class AssetUserWalletBalance implements AssetUserWalletList {
+public class AssetUserWalletBalance implements AssetUserWalletList, Serializable {
 
     DigitalAsset digitalAsset;
     Set<CryptoAddress> cryptoAddresses;

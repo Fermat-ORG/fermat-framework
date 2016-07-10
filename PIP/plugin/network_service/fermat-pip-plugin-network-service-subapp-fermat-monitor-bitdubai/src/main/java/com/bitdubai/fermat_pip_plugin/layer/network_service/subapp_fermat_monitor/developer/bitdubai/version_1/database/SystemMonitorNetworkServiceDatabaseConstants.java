@@ -4,14 +4,14 @@ package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monit
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDeveloperDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Miguel Celedon - (miguelceledon@outlook.com) on 14/03/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class SystemMonitorNetworkServiceDatabaseConstants {
-    
+
     public static final String DATABASE_NAME = "System Monitor Database";
 
     /**
@@ -52,7 +52,6 @@ public class SystemMonitorNetworkServiceDatabaseConstants {
     public static final String SERVICES_FIRST_KEY_COLUMN = "id";
 
 
-
     /**
      * Platform components database table definition.
      */
@@ -63,8 +62,6 @@ public class SystemMonitorNetworkServiceDatabaseConstants {
     public static final String COMPONENT_TYPE_COLUMN_NAME = "type";
 
     public static final String COMPONENT_FIRST_KEY_COLUMN = "id";
-
-
 
 
 }

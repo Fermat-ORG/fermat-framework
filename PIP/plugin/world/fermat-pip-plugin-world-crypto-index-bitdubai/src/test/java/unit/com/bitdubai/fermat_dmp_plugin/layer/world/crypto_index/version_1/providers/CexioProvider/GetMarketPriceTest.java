@@ -2,14 +2,12 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.version_1.p
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BtceProvider;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.CexioProvider;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.HTTPJson;
 
 import org.fest.assertions.api.Assertions;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -32,6 +30,7 @@ public class GetMarketPriceTest {
         System.out.println(values);
         Assertions.assertThat(values).isNotNull();
     }
+
     @Test
     public void TestgetHistoricalExchangeRate_successful() throws Exception {
         cryptoCurrencyTest = CryptoCurrency.getByCode("BTC");
@@ -40,6 +39,7 @@ public class GetMarketPriceTest {
         System.out.println(values);
         Assertions.assertThat(values).isNotNull();
     }
+
     @Test
     public void Test() throws Exception {
         HTTPJson jsonService = new HTTPJson();
@@ -53,23 +53,22 @@ public class GetMarketPriceTest {
         StringBuilder stringBuilder = new StringBuilder();
         String line;
 
-            while ((line = br.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append("\n");
-            }
-            String json = stringBuilder.toString();
-            JSONArray jArray=new JSONArray(json);
+        while ((line = br.readLine()) != null) {
+            stringBuilder.append(line);
+            stringBuilder.append("\n");
+        }
+        String json = stringBuilder.toString();
+        JSONArray jArray = new JSONArray(json);
         JSONObject jsonObject = new JSONObject();
 
-for (int i=0;i<jArray.length();i++){
-    String time = "1442956095";
-    if (time.equals(jArray.getJSONObject(i).get("date"))){
-        System.out.println(jArray.getJSONObject(i).get("price")+"  "+i);
-    }
-   // System.out.println(jArray.getJSONObject(i).get("date"));
+        for (int i = 0; i < jArray.length(); i++) {
+            String time = "1442956095";
+            if (time.equals(jArray.getJSONObject(i).get("date"))) {
+                System.out.println(jArray.getJSONObject(i).get("price") + "  " + i);
+            }
+            // System.out.println(jArray.getJSONObject(i).get("date"));
 
-}
-
+        }
 
 
     }

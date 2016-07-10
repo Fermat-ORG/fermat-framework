@@ -1,9 +1,3 @@
-/*
- * @#NodesCatalogDao.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -13,12 +7,27 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IP_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_NAME_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TABLE_NAME;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.NodesCatalogDao</code>
@@ -36,7 +45,102 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
      * @param dataBase
      */
     public NodesCatalogDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME );
+        super(dataBase, NODES_CATALOG_TABLE_NAME, NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME );
+    }
+
+    /**
+     * Method that update a nodes catalog record in the database increasing its offline counter.
+     *
+     * @param publicKey       of the node profile to update.
+     * @param offlineCounter  to set.
+     *
+     * @throws CantUpdateRecordDataBaseException  if something goes wrong.
+     * @throws RecordNotFoundException            if we can't find the record in db.
+     */
+    public final void setOfflineCounter(final String  publicKey     ,
+                                        final Integer offlineCounter) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
+
+        if (publicKey == null)
+            throw new IllegalArgumentException("The publicKey is required, can not be null.");
+
+        if (offlineCounter == null)
+            throw new IllegalArgumentException("The offlineCounter is required, can not be null.");
+
+        try {
+
+            final DatabaseTable table = this.getDatabaseTable();
+            table.addStringFilter(this.getIdTableName(), publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setIntegerValue(NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME, offlineCounter);
+                table.updateRecord(record);
+            } else
+                throw new RecordNotFoundException("publicKey: " + publicKey, "Cannot find an node catalog with this public key.");
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantUpdateRecordDataBaseException(e, "Table Name: " + this.getTableName(), "The record do not exist");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantUpdateRecordDataBaseException(e, "Table Name: " + this.getTableName(), "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>DatabaseConstants</code>
+     *
+     * @param max     number of records to bring
+     * @param offset  pointer to start bringing records.
+     * @param point   coordinates
+     *
+     * @return All entities filtering by the parameters specified.
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
+     *
+     */
+    public final List<NodesCatalog> findAllNearestTo(final Integer  max   ,
+                                                     final Integer  offset,
+                                                     final Location point ) throws CantReadRecordDataBaseException {
+
+        try {
+
+            final DatabaseTable table = getDatabaseTable();
+
+            table.setFilterTop(max.toString());
+            table.setFilterOffSet(offset.toString());
+
+            table.addNearbyLocationOrder(
+                    NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME,
+                    NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME,
+                    point,
+                    DatabaseFilterOrder.ASCENDING,
+                    "NOT_NECESSARY"
+            );
+
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            final List<NodesCatalog> list = new ArrayList<>();
+
+            // Convert into entity objects and add to the list.
+            for (DatabaseTableRecord record : records)
+                list.add(getEntityFromDatabaseTableRecord(record));
+
+            return list;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + super.getTableName(), "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + super.getTableName(), "Invalid parameter found, maybe the enum is wrong.");
+        }
     }
 
     /**
@@ -48,16 +152,15 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
 
         NodesCatalog entity = new NodesCatalog();
 
-        entity.setLastConnectionTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME)));
-        entity.setDefaultPort(record.getIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME));
-        entity.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
-        entity.setIp(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IP_COLUMN_NAME));
-        entity.setName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_NAME_COLUMN_NAME));
-        entity.setLastLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME));
-        entity.setLastLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME));
-        entity.setRegisteredTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME)));
-        entity.setLateNotificationsCounter(record.getIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME));
-        entity.setOfflineCounter(record.getIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME));
+        entity.setLastConnectionTimestamp(getTimestampFromLongValue(record.getLongValue(NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME)));
+        entity.setDefaultPort(record.getIntegerValue(NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME));
+        entity.setIdentityPublicKey(record.getStringValue(NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+        entity.setIp(record.getStringValue(NODES_CATALOG_IP_COLUMN_NAME));
+        entity.setName(record.getStringValue(NODES_CATALOG_NAME_COLUMN_NAME));
+        entity.setLastLocation(record.getDoubleValue(NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME), record.getDoubleValue(NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME));
+        entity.setRegisteredTimestamp(getTimestampFromLongValue(record.getLongValue(NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME)));
+        entity.setLateNotificationsCounter(record.getIntegerValue(NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME));
+        entity.setOfflineCounter(record.getIntegerValue(NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME));
         
         return entity;
     }
@@ -71,16 +174,16 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
 
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
-        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getLastConnectionTimestamp()));
-        databaseTableRecord.setIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME, entity.getDefaultPort());
-        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
-        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IP_COLUMN_NAME, entity.getIp());
-        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_NAME_COLUMN_NAME, entity.getName());
-        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME, entity.getLastLatitude());
-        databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
-        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getRegisteredTimestamp()));
-        databaseTableRecord.setIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME, entity.getLateNotificationsCounter());
-        databaseTableRecord.setIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME, entity.getOfflineCounter());
+        databaseTableRecord.setLongValue(NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getLastConnectionTimestamp()));
+        databaseTableRecord.setIntegerValue(NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME, entity.getDefaultPort());
+        databaseTableRecord.setStringValue(NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
+        databaseTableRecord.setStringValue(NODES_CATALOG_IP_COLUMN_NAME, entity.getIp());
+        databaseTableRecord.setStringValue(NODES_CATALOG_NAME_COLUMN_NAME, entity.getName());
+        databaseTableRecord.setDoubleValue(NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME, entity.getLastLocation().getLatitude());
+        databaseTableRecord.setDoubleValue(NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLocation().getLongitude());
+        databaseTableRecord.setLongValue(NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getRegisteredTimestamp()));
+        databaseTableRecord.setIntegerValue(NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME, entity.getLateNotificationsCounter());
+        databaseTableRecord.setIntegerValue(NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME, entity.getOfflineCounter());
 
         return databaseTableRecord;
     }
@@ -99,10 +202,10 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
             // load the data base to memory
             DatabaseTable table = getDatabaseTable();
 
-            table.addFilterOrder(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
-            table.addFilterOrder(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME          , DatabaseFilterOrder.ASCENDING);
+            table.addFilterOrder(NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            table.addFilterOrder(NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME          , DatabaseFilterOrder.ASCENDING);
 
-            table.addStringFilter(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKey, DatabaseFilterType.NOT_EQUALS);
+            table.addStringFilter(NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKey, DatabaseFilterType.NOT_EQUALS);
             table.setFilterTop("10");
             table.loadToMemory();
 

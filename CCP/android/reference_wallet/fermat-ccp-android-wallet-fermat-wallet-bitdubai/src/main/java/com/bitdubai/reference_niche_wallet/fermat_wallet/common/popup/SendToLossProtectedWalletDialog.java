@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +14,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -23,36 +21,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
-
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.ReferenceWalletSettings;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
-import com.squareup.picasso.Picasso;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.FermatWalletSettings;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -68,7 +58,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
     public Dialog d;
 
 
-    private SettingsManager<ReferenceWalletSettings> settingsManager;
+    private SettingsManager<FermatWalletSettings> settingsManager;
     private BlockchainNetworkType blockchainNetworkType;
 
     /**
@@ -79,8 +69,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
      *  Deals with crypto wallet interface
      */
     private FermatWallet fermatWallet;
-    private FermatWalletSession appSession;
-
+    private ReferenceAppFermatSession<FermatWallet> appSession;
     /**
      * Deals with error manager interface
      */
@@ -98,7 +87,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
     private FermatTextView txt_type;
     private Spinner spinner;
     private BitcoinConverter bitcoinConverter;
-    private FermatWalletSettings bitcoinWalletSettings = null;
+    private com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings bitcoinWalletSettings = null;
 
     private Typeface tf;
     /**
@@ -110,7 +99,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
     public SendToLossProtectedWalletDialog(Activity activity,
                                            FermatWallet fermatWallet,
-                                           FermatWalletSession appSession,
+                                           ReferenceAppFermatSession<FermatWallet> appSession,
                                            BlockchainNetworkType blockchainNetworkType) {
 
         super(activity);

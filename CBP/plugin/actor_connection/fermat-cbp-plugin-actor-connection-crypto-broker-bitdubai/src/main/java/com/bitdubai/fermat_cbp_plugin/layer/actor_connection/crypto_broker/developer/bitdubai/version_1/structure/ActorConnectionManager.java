@@ -17,6 +17,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unsuppor
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
@@ -51,7 +54,7 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
     public ActorConnectionManager(final CryptoBrokerManager            cryptoBrokerNetworkService,
                                   final CryptoBrokerActorConnectionDao dao                       ,
                                   final CryptoBrokerActorConnectionPluginRoot pluginRoot              ,
-                                  final PluginVersionReference         pluginVersionReference    ) {
+                                  final PluginVersionReference         pluginVersionReference) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao                        = dao                       ;
@@ -65,9 +68,18 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
         return new ActorConnectionSearch(actorIdentitySearching, dao);
     }
 
+    public void requestConnection(final ActorIdentityInformation actorSending  ,
+                                  final ActorIdentityInformation actorReceiving)
+            throws CantRequestActorConnectionException,
+            UnsupportedActorTypeException,
+            ConnectionAlreadyRequestedException{
+        requestConnection(actorSending,actorReceiving,null);
+    }
+
     @Override
     public void requestConnection(final ActorIdentityInformation actorSending  ,
-                                  final ActorIdentityInformation actorReceiving) throws CantRequestActorConnectionException,
+                                  final ActorIdentityInformation actorReceiving,
+                                  final Location receivingLocation) throws CantRequestActorConnectionException,
                                                                                         UnsupportedActorTypeException      ,
                                                                                         ConnectionAlreadyRequestedException {
 
@@ -99,13 +111,15 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                     actorReceiving.getImage()    ,
                     connectionState              ,
                     currentTime                  ,
-                    currentTime
+                    currentTime,
+                    receivingLocation
             );
 
             /**
              * I register the actor connection.
              */
             dao.registerActorConnection(actorConnection);
+            dao.persistLocation(actorConnection);
 
             final CryptoBrokerConnectionInformation connectionInformation = new CryptoBrokerConnectionInformation(
                     newConnectionId              ,
@@ -147,6 +161,12 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
             throw new CantRequestActorConnectionException(exception, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Unhandled error.");
         }
 
+    }
+
+    @Override
+    public void persistLocation(CryptoBrokerActorConnection actorConnection)
+            throws CantUpdateRecordException {
+        dao.persistLocation(actorConnection);
     }
 
     @Override

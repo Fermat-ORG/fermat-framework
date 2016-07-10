@@ -4,6 +4,8 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionOtherProfileFragment;
@@ -11,14 +13,14 @@ import com.bitdubai.sub_app.fan_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ListUserIdentiesFragment;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
 public class FanCommunityFragmentFactory extends
         FermatFragmentFactory<
-                FanCommunitySubAppSession,
+                ReferenceAppFermatSession<FanCommunityModuleManager>,
                 SubAppResourcesProviderManager,
                 FanCommunityFragmentsEnumType> {
 

@@ -3,7 +3,7 @@
  */
 rootProject.name = 'Fermat'
 
-apply from: 'ART/settings.gradle'
+//apply from: 'ART/settings.gradle'
 apply from: 'BCH/settings.gradle'
 apply from: 'BNK/settings.gradle'
 apply from: 'CBP/settings.gradle'
@@ -12,17 +12,17 @@ apply from: 'CCP/settings.gradle'
 apply from: 'CHT/settings.gradle'
 apply from: 'CSH/settings.gradle'
 apply from: 'CER/settings.gradle'
-apply from: 'DAP/settings.gradle'
+//apply from: 'DAP/settings.gradle'
 apply from: 'OSA/settings.gradle'
 apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
-apply from: 'TKY/settings.gradle'
+//apply from: 'TKY/settings.gradle'
 apply from: 'WPD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
+apply from: 'COR/settings.gradle'
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment', ':fermat-ccp-android-wallet-fermat-wallet-bitdubai', ':fermat-ccp-plugin-wallet-module-fermat-wallet-bitdubai'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':transactions-fragment', ':fermat-ccp-android-wallet-fermat-wallet-bitdubai', ':fermat-ccp-plugin-wallet-module-fermat-wallet-bitdubai'
 
-include ':fermat-android-core'
 //include ':fermat-linux-core'
 include ':fermat-api'
 include ':fermat-core'
@@ -34,10 +34,6 @@ include ':fermat-core-api'
 
 include ':fermat-bnp-plugin-network-service-bank-notes-bitdubai'
 project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('BNP/plugin/network_service/fermat-bnp-plugin-network-service-bank-notes-bitdubai')
-
-// Milestone 1 project:
-include ':fermat-dmp-android-sub-app-wallet-manager-bitdubai'
-project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai')
 
 // identity
 include ':fermat-mkt-plugin-identity-marketer-bitdubai'
@@ -52,7 +48,8 @@ project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new Fil
 // identity
 include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment'
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
+
 //include ':ApplicationSessionTest'
+

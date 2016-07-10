@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.*;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -45,7 +45,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     /**
      * Resources
      */
-    private FermatSession appSession;
+    private ReferenceAppFermatSession appSession;
 
     /**
      * Contact member
@@ -76,7 +76,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
 
 
-    public CreateContactFragmentDialog(Activity a, FermatSession appSession, WalletContact walletContact, String userId, Bitmap contactImageBitmap, CreateContactDialogCallback createContactDialogCallback) {
+    public CreateContactFragmentDialog(Activity a, ReferenceAppFermatSession appSession, WalletContact walletContact, String userId, Bitmap contactImageBitmap, CreateContactDialogCallback createContactDialogCallback) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;

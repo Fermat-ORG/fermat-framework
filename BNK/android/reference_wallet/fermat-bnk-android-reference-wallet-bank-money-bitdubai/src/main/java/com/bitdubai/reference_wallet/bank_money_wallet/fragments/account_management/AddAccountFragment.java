@@ -15,18 +15,19 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by memo on 03/01/16.
  */
-public class AddAccountFragment extends AbstractFermatFragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
+public class AddAccountFragment extends AbstractFermatFragment<ReferenceAppFermatSession<BankMoneyWalletModuleManager>, ResourceProviderManager> implements View.OnClickListener, Spinner.OnItemSelectedListener {
 
 
     Button okButton, cancelButton;
@@ -93,7 +94,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         try {
-            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             bankAccounts = moduleManager.getAccounts();
 
             errorManager = appSession.getErrorManager();
@@ -239,7 +240,6 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==ReferenceWalletConstants.SAVE_ACTION){
-            System.out.println("item selected");
             if(createAccount())
                 changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
             return true;
@@ -248,11 +248,5 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.SAVE_ACTION, 0, "Save")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
 
 }

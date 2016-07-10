@@ -5,10 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 /**
  * Created by Matias Furszyfer on 2015.09.28..
  */
-public class FactoryCallback implements FermatCallback{
+public class FactoryCallback implements FermatCallback {
 
     /**
-     *  UUID toString
+     * UUID toString
      */
     private String id;
 

@@ -16,18 +16,19 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,9 @@ import java.util.List;
 /**
  * Created by nelson on 03/01/16.
  */
-public class CreateNewBankAccountFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CreateNewBankAccountFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     // Data
     private FiatCurrency[] currencies;
@@ -128,7 +131,7 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+        moduleManager = appSession.getModuleManager();
 
         return layout;
     }
@@ -171,17 +174,9 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
         if (data.isAllDataFilled()) {
 
-            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
+            //Add new bank account to session and go back to Wizard page
+            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             bankAccounts.add(data);
-
-            if (moduleManager != null) {
-                for (BankAccountNumber bankAccount : bankAccounts) {
-                    try {
-                        moduleManager.createNewBankAccount(bankAccount.getAccount(), bankAccount.getCurrencyType());
-                    } catch (CantCreateBankAccountPurchaseException ignore) {
-                    }
-                }
-            }
 
             changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
 

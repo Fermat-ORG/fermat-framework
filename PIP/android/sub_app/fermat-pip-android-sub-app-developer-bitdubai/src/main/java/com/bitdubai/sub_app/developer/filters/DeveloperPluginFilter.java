@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.developer.filters;
 
-import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
 import com.bitdubai.sub_app.developer.common.Resource;

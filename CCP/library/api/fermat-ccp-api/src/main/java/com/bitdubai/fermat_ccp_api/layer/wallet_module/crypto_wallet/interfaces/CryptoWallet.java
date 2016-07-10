@@ -11,9 +11,10 @@ import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
@@ -57,6 +58,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.CryptoWallet</code>
@@ -286,7 +288,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @param cryptoAddress to validate
      * @return boolean value, true if positive, false if negative.
      */
-    boolean isValidAddress(CryptoAddress cryptoAddress);
+    boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType);
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
 
@@ -320,7 +322,9 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
               BlockchainNetworkType blockchainNetworkType,
-              CryptoCurrency cryptoCurrency) throws CantSendCryptoException, InsufficientFundsException;
+              CryptoCurrency cryptoCurrency,
+              long fee,
+              FeeOrigin feeOrigin) throws CantSendCryptoException, InsufficientFundsException;
 
 
     /**
@@ -404,7 +408,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,
@@ -427,6 +431,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @return
      * @throws CantListTransactionsException
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                  TransactionType transactionType,
                                                                  String walletPublicKey,
@@ -603,7 +608,9 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
 
     void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes, Actors actortypeFrom, Actors actortypeTo, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType,CryptoCurrency cryptoCurrency) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
-    void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed;
+    void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantImportSeedException;
 
 
+
+    void launchNotification();
 }

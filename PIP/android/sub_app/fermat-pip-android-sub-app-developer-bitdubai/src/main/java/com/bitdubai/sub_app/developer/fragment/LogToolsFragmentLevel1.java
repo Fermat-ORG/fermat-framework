@@ -2,8 +2,6 @@ package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
-
-
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -24,27 +22,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
-
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,26 +55,21 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel1 extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class LogToolsFragmentLevel1 extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
-    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getKey();
-
+//    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getKey();
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
-
     View rootView;
-
     //    private LogTool logTool;
     private ErrorManager errorManager;
     ToolManager toolManager;
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
-
     private int loggerLevel = 1;
 
     /**
      * SubApp Session
      */
-//    private DeveloperSubAppSession developerSubAppSession;
     public static LogToolsFragmentLevel1 newInstance() {
         return new LogToolsFragmentLevel1();
     }
@@ -88,14 +78,7 @@ public class LogToolsFragmentLevel1 extends AbstractFermatFragment<DeveloperSubA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-//        if(super.appSession !=null){
-//            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
-
-
         lstLoggers = (ArrayListLoggers) appSession.getData("list");
-//        }
-
         errorManager = appSession.getErrorManager();
         try {
             toolManager = appSession.getModuleManager();
@@ -134,7 +117,7 @@ public class LogToolsFragmentLevel1 extends AbstractFermatFragment<DeveloperSubA
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
+        rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
 
         gridView = (GridView) rootView.findViewById(R.id.gridView);
         try {
@@ -198,7 +181,7 @@ public class LogToolsFragmentLevel1 extends AbstractFermatFragment<DeveloperSubA
         this.lstLoggers = lstLoggers;
     }
 
-//    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+//    public void setDeveloperSubAppSession(DeveloperSubAppSessionReferenceApp developerSubAppSession) {
 //        this.developerSubAppSession = developerSubAppSession;
 //    }
 
@@ -255,9 +238,8 @@ public class LogToolsFragmentLevel1 extends AbstractFermatFragment<DeveloperSubA
 
                         appSession.setData("list", lst);
                         appSession.setData("level", level);
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), R.id.logContainer, null);
-
-
+//                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), R.id.logContainer, null);
+                        changeActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS, appSession.getAppPublicKey());
                     }
                 });
                 holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {

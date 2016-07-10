@@ -5,7 +5,7 @@
 //import android.content.res.Resources;
 //import android.graphics.Bitmap;
 //import android.graphics.BitmapFactory;
-//import android.graphics.drawable.Drawable;
+//import android.graphics.drawable.FermatDrawable;
 //import android.util.AttributeSet;
 //import android.view.LayoutInflater;
 //import android.view.View;
@@ -189,7 +189,7 @@
 ////                            "com.bitdubai.reference_niche_wallet.bitcoin_wallet:drawable/" + customComponentsObjects.getImageUrl()
 ////                            , null, null));
 ////            byte[] image = customComponentsObjects.getImage();
-////            Drawable drawableImage = null;
+////            FermatDrawable drawableImage = null;
 ////            if(image!=null){
 ////                drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
 ////            }else{
@@ -242,7 +242,7 @@
 //        txtViewDetailTransaction.setText(transactionInScreen.getDetail());
 //        byte[] image = transactionInScreen.getImage();
 //        Bitmap imageBitmap = null;
-//            Drawable drawableImage = null;
+//            FermatDrawable drawableImage = null;
 //            if(image!=null){
 //                imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
 //                imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);

@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.chat_community.common.utils;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,18 +9,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.views.Utils;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
-import com.squareup.picasso.Picasso;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 import java.io.ByteArrayInputStream;
 
@@ -33,8 +31,8 @@ public class FragmentsCommons {
 
 
     public static View setUpHeaderScreen(LayoutInflater inflater, Context activity,
-                     ChatUserSubAppSession chatUserSubAppSession,
-                     final FermatApplicationCaller applicationsHelper) throws CantGetChatUserIdentityException {//ActiveActorIdentityInformation identity) throws Exception {
+                                         ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
+                                         final FermatApplicationCaller applicationsHelper) throws CantGetChatUserIdentityException {//ActiveActorIdentityInformation identity) throws Exception {
 
         /**
          * Navigation view header

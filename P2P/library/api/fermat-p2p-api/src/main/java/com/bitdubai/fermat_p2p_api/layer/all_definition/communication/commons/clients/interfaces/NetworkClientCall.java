@@ -2,7 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.c
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 
 /**
@@ -25,7 +25,7 @@ public interface NetworkClientCall {
      *
      * @throws CantSendMessageException if something goes wrong.
      */
-    void sendPackageMessage(PackageContent packageContent) throws CantSendMessageException;
+    void sendPackageMessage(NetworkServiceMessage packageContent) throws CantSendMessageException;
 
     /**
      * Through the method <code>hangUp</code> we can hang up the call.

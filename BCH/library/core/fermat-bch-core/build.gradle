@@ -18,13 +18,28 @@ dependencies {
     compile project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
+//    compile project(':fermat-bch-plugin-crypto-network-fermat-bitdubai')
     compile project(':fermat-bch-plugin-crypto-router-incoming-crypto-bitdubai')
     compile project(':fermat-bch-plugin-crypto-module-crypto-address-book-bitdubai')
     compile project(':fermat-bch-plugin-crypto-vault-bitcoin-currency-bitdubai')
     compile project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
+//    compile project(':fermat-bch-plugin-crypto-vault-fermat-currency-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+task bchFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'com.bitdubai.fermat_bch_core.BCHPlatform'
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 
 pmd {
     toolVersion = '5.1.3'

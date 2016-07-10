@@ -22,7 +22,7 @@
     <string name="cht_chat_subtitle_broadcast_step_one">Subtitle of step one broadcast chat dialog</string>
     <string name="cht_chat_footer_broadcast_step_one">Footer of step one broadcast chat dialog</string>
     <string name="menu_view_contact">View Contact</string>
-    <string name="menu_clean_chat">Clean Chat</string>
+    <string name="menu_clean_chat">Clear Chat</string>
     <string name="menu_send_chat_email">Send Chat by Email</string>
     <string name="menu_edit_contact">Edit Contact</string>
     <string name="menu_delete_chat">Delete Chat</string>
@@ -31,9 +31,9 @@
     <string name="no_contact_selected">No Contact Selected</string>
     <string name="cht_search_hint">Search...</string>
     <string name="defaulttext">Type a message</string>
-    <string name="cht_chat_subtitle">Welcome to Fermat Chat.</string>
+    <string name="cht_chat_subtitle">Welcome to P2P Chat.</string>
     <string name="cht_chat_body">If you do not have any identity registered, please register one in our Chat Community.</string>
-    <string name="cht_chat_footer">Fermat Chat</string>
+    <string name="cht_chat_footer">P2P Chat</string>
 
     <!-- Used for the AlphabetIndexer in ContactsListFragment to provide quick navigation by
          alphabet using ListView fast scroll. -->

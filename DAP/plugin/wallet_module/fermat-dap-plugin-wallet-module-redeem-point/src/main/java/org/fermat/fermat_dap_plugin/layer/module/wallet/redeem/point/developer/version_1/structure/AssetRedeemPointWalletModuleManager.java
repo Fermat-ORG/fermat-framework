@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
@@ -21,10 +21,15 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Rede
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.exceptions.CantGetRedeemPointStatisticsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransaction;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.wallet.redeem.point.developer.version_1.AssetRedeemPointWalletModulePluginRoot;
 
@@ -110,6 +115,32 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
     }
 
     @Override
+    public List<RedeemPointStatistic> getStatisticsByAssetPublicKey(String walletPublicKey, String assetPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException, CantLoadWalletException {
+        try {
+            return assetRedeemPointWalletManager.loadAssetRedeemPointWallet(walletPublicKey, selectedNetwork).getStatisticsByAssetPublicKey(assetPublicKey);
+        } catch (CantGetRedeemPointStatisticsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetRedeemPointStatisticsException(e);
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantLoadWalletException(e);
+        }
+    }
+
+    @Override
+    public List<RedeemPointStatistic> getAllStatisticsByWallet(String walletPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException, CantLoadWalletException {
+        try {
+            return assetRedeemPointWalletManager.loadAssetRedeemPointWallet(walletPublicKey, selectedNetwork).getAllStatistics();
+        } catch (CantGetRedeemPointStatisticsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetRedeemPointStatisticsException(e);
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantLoadWalletException(e);
+        }
+    }
+
+    @Override
     public void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException {
         assetRedeemPointWalletManager.createWalletAssetRedeemPoint(walletPublicKey, selectedNetwork);
     }
@@ -155,6 +186,19 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
     }
 
     @Override
+    public List<AssetRedeemPointWalletTransaction> getTransactionsForDisplay(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException {
+        try {
+            return assetRedeemPointWalletManager.loadAssetRedeemPointWallet(walletPublicKey, selectedNetwork).getTransactionsForDisplay(assetPublicKey);
+        } catch (CantLoadWalletException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantLoadWalletException("Error load Wallet ", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
+        } catch (CantGetTransactionsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantGetTransactionsException("Error getting transactions ", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
+        }
+    }
+
+    @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             List<RedeemPointIdentity> identities = this.getActiveIdentities();
@@ -168,7 +212,9 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img);
+        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img,
+                redeemPointIdentityManager.getAccuracyDataDefault(),
+                redeemPointIdentityManager.getFrequencyDataDefault());
     }
 
 

@@ -64,7 +64,7 @@ public class IntraActorNetworkServiceDao {
              * first delete old cache records
              */
 
-            deleteIntraUserCache();
+            //deleteIntraUserCache();
 
             DatabaseTable table = this.database.getTable(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TABLE_NAME);
             table.getRecords();
@@ -233,7 +233,6 @@ public class IntraActorNetworkServiceDao {
 
             throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,e, "Error creating file.", null);
         } catch (Exception e) {
-
             throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,FermatException.wrapException(e), "", "");
         }
     }

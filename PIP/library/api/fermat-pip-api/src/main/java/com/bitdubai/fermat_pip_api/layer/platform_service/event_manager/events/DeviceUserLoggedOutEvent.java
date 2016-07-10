@@ -8,7 +8,7 @@ public class DeviceUserLoggedOutEvent extends AbstractFermatEvent {
 
     private String publicKey;
 
-    public void setPublicKey (String publicKey){
+    public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
 

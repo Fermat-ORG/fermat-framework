@@ -3,16 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:text="settings"
-        android:textSize="15sp"
+        android:textSize="12sp"
         android:paddingLeft="24dp"
         android:paddingTop="24dp"
         android:id="@+id/txt_settings_name"
-        android:textColor="@color/color_black"/>
+        android:textColor="@color/color_black" />
 
 </LinearLayout>

@@ -49,8 +49,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValue.setOnClickListener(this);
 
         formatter = DecimalFormat.getInstance();
-        formatter.setMaximumFractionDigits(2);
-        formatter.setRoundingMode(RoundingMode.DOWN);
+        formatter.setMaximumFractionDigits(8);
+    //    formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
                 exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
-                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
+//                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
             }
         } else {
             exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());

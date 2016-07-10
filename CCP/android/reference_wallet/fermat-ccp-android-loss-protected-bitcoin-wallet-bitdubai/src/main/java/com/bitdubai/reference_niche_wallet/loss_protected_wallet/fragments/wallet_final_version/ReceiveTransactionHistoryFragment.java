@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -22,6 +23,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
@@ -30,7 +33,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.TransactionsHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +44,13 @@ import static android.widget.Toast.makeText;
 /**
  * Created by root on 18/05/16.
  */
-public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<LossProtectedWalletTransaction>
+public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<LossProtectedWalletTransaction,ReferenceAppFermatSession,ResourceProviderManager>
         implements FermatListItemListeners<LossProtectedWalletTransaction>, onRefreshList {
 
     /**
      * Session
      */
-    LossProtectedWalletSession lossProtectedWalletSession;
+    ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
@@ -86,7 +89,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
 
         super.onCreate(savedInstanceState);
 
-        lossProtectedWalletSession = (LossProtectedWalletSession) appSession;
+        lossProtectedWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
 
         lstWalletTransaction = new ArrayList<LossProtectedWalletTransaction>();
         try {
@@ -137,7 +140,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -192,8 +195,8 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
                 if (refreshType.equals(FermatRefreshTypes.NEW))
                     offset = 0;
 
-                LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
-                intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
+                ActiveActorIdentityInformation intraUserLoginIdentity = null;
+                intraUserLoginIdentity = lossProtectedWalletManager.getSelectedActorIdentity();
                 String intraUserPk = null;
                 if (intraUserLoginIdentity != null) {
                     intraUserPk = intraUserLoginIdentity.getPublicKey();
@@ -255,7 +258,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
         }
     }
 
-    public void setReferenceWalletSession(LossProtectedWalletSession referenceWalletSession) {
+    public void setReferenceWalletSession(ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession) {
         this.lossProtectedWalletSession = referenceWalletSession;
     }
 }

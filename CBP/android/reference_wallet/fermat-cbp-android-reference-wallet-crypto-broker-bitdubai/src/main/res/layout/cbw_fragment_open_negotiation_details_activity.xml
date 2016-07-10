@@ -59,7 +59,7 @@
             android:layout_toRightOf="@+id/cbw_customer_image"
             android:layout_marginBottom="-2dp"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="16sp"
             tools:text="Customer Name"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -70,7 +70,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/cbw_customer_name"
             android:textColor="#fff"
-            android:textSize="12sp"
+            android:textSize="14sp"
             tools:text="03 Feb 2015"/>
     </RelativeLayout>
 

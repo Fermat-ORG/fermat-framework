@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
@@ -45,7 +46,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
@@ -54,8 +56,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.UserSelectorAdap
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.SellInfo;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
@@ -74,7 +74,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
  */
-public class UserSellAssetFragment extends FermatWalletListFragment<User>
+public class UserSellAssetFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
 
@@ -82,10 +82,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
     private Activity activity;
 
-
     private AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
-    //private UserSelectorAdapter adapter;
 
     private Asset assetToSell;
 
@@ -94,7 +91,6 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     private Resources res;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-    //    SettingsManager<AssetUserSettings> settingsManager;
     List<User> users;
     private User user;
     String digitalAssetPublicKey;
@@ -123,13 +119,12 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
         try {
 
-            assetUserSession = ((AssetUserSession) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             activity = getActivity();
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -384,39 +379,53 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    public void onOptionMenuPrepared(Menu menu){
+        super.onOptionMenuPrepared(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-
-            if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
-                if (isValidSell()) {
-                    new ConfirmDialog.Builder(getActivity(), appSession)
-                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_sell))
-                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
-                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
-                                    doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
-                                }
-                            }).build().show();
-                }
-
+            switch (id) {
+//                case 1://IC_ACTION_USER_HELP_REDEEM
+//                    setUpHelpAssetRedeem(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                    break;
+                case 2://IC_ACTION_USER_ASSET_REDEEM
+                    if (isValidSell()) {
+                        new ConfirmDialog.Builder(getActivity(), appSession)
+                                .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                                .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_sell))
+                                .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
+                                        long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
+                                        doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
+                                    }
+                                }).build().show();
+                    }
+                    break;
             }
-            return true;
+
+//            if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
+//                if (isValidSell()) {
+//                    new ConfirmDialog.Builder(getActivity(), appSession)
+//                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+//                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_sell))
+//                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
+//                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+//                                @Override
+//                                public void onClick() {
+//                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
+//                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
+//                                    doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
+//                                }
+//                            }).build().show();
+//                }
+//            }
+//            return true;
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

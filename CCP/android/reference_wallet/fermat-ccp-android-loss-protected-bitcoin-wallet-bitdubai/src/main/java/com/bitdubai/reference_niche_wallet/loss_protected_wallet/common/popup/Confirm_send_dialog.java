@@ -10,24 +10,25 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 
 /**
  * Created by Joaquin Carrasuquero on 11/04/16.
  */
+
 public class Confirm_send_dialog extends Dialog implements
         View.OnClickListener {
-
 
 
     public Activity activity;
@@ -50,13 +51,12 @@ public class Confirm_send_dialog extends Dialog implements
 
     private LossProtectedWallet lossProtectedWallet;
 
-    private LossProtectedWalletSession appSession;
-
-
+    private ReferenceAppFermatSession<LossProtectedWallet> appSession;
 
     /**
      *  UI components
      */
+
     Button cancel_btn;
     Button accept_btn;
 
@@ -72,7 +72,7 @@ public class Confirm_send_dialog extends Dialog implements
                                Actors deliveredToActorType,
                                ReferenceWallet referenceWallet,
                                BlockchainNetworkType blockchainNetworkType,
-                               LossProtectedWalletSession appSession) {
+                               ReferenceAppFermatSession<LossProtectedWallet> appSession) {
         super(a);
         this.activity = a;
         this.lossProtectedWallet=lossProtectedWallet;
@@ -138,7 +138,9 @@ public class Confirm_send_dialog extends Dialog implements
                             this.deliveredToActorType,
                             this.referenceWallet,
                             blockchainNetworkType,
-                            CryptoCurrency.BITCOIN
+                            CryptoCurrency.BITCOIN,
+                            0,
+                            FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT
 
                     );
                 }

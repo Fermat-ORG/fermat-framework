@@ -42,6 +42,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSav
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord;
 
 import java.util.ArrayList;
@@ -153,7 +154,7 @@ public class AssetBuyerDAO {
     }
 
     public void processNegotiation(UUID negotiationId) throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
-        org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord record = getNegotiationRecord(negotiationId);
+        NegotiationRecord record = getNegotiationRecord(negotiationId);
         long forProcess = record.getForProcess() - 1;
         updateRecordForTableByKey(getNegotiationTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, forProcess, AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN, negotiationId.toString());
         if (forProcess == 0) {
@@ -245,7 +246,7 @@ public class AssetBuyerDAO {
         return table.getRecords();
     }
 
-    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord constructBuyingByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException, CantLoadWalletException {
+    private BuyingRecord constructBuyingByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException, CantLoadWalletException {
         AssetSellStatus status = AssetSellStatus.getByCode(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME));
         UUID entryId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME));
         DigitalAssetMetadata metadata = assetBuyingVault.getDigitalAssetMetadataFromLocalStorage(entryId.toString());
@@ -264,17 +265,17 @@ public class AssetBuyerDAO {
         CryptoAddress sellerCryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_CRYPTO_ADDRESS_COLUMN_NAME), currency);
         CryptoAddress buyerCryptoAddress = new CryptoAddress(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_CRYPTO_ADDRESS_COLUMN_NAME), currency);
         String outgoingId = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_OUTGOING_ID_COLUMN_NAME);
-        return new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord(entryId, metadata, user, status, buyerTransaction, sellerTransaction, negotiationId, sellerCryptoAddress, buyerCryptoAddress, outgoingId);
+        return new BuyingRecord(entryId, metadata, user, status, buyerTransaction, sellerTransaction, negotiationId, sellerCryptoAddress, buyerCryptoAddress, outgoingId);
     }
 
-    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
+    private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
         AssetNegotiation negotiation = (AssetNegotiation) XMLParser.parseXML(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_OBJECT_XML_COLUMN_NAME), new AssetNegotiation());
         AssetSellStatus status = AssetSellStatus.getByCode(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME));
         Date timeStamp = new Date(record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME));
         ActorAssetUser actorAssetUser = actorAssetUserManager.getActorByPublicKey(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_SELLER_PUBLICKEY_COLUMN_NAME));
         String btcWalletPublicKey = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_BTC_WALLET_PK_COLUMN_NAME);
         long forProcess = record.getLongValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FOR_PROCESS_COLUMN_NAME);
-        return new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord(negotiation, status, actorAssetUser, timeStamp, btcWalletPublicKey, forProcess);
+        return new NegotiationRecord(negotiation, status, actorAssetUser, timeStamp, btcWalletPublicKey, forProcess);
     }
 
     private DatabaseTable getNegotiationTable() {
@@ -323,16 +324,16 @@ public class AssetBuyerDAO {
         };
     }
 
-    private List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord> constructBuyingRecordList(List<DatabaseTableRecord> records) throws CantAssetUserActorNotFoundException, CantLoadWalletException, InvalidParameterException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException {
-        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord> toReturn = new ArrayList<>();
+    private List<BuyingRecord> constructBuyingRecordList(List<DatabaseTableRecord> records) throws CantAssetUserActorNotFoundException, CantLoadWalletException, InvalidParameterException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException {
+        List<BuyingRecord> toReturn = new ArrayList<>();
         for (DatabaseTableRecord record : records) {
             toReturn.add(constructBuyingByDatabaseRecord(record));
         }
         return toReturn;
     }
 
-    private List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord> constructNegotiationList(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord> toReturn = new ArrayList<>();
+    private List<NegotiationRecord> constructNegotiationList(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+        List<NegotiationRecord> toReturn = new ArrayList<>();
         for (DatabaseTableRecord record : records) {
             toReturn.add(constructNegotiationByDatabaseRecord(record));
         }
@@ -348,7 +349,7 @@ public class AssetBuyerDAO {
     }
 
     //GETTER AND SETTERS
-    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord> getActionRequiredBuying() throws DAPException {
+    public List<BuyingRecord> getActionRequiredBuying() throws DAPException {
         DatabaseTableFilter filter = constructFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.NO_ACTION_REQUIRED.getCode(), DatabaseFilterType.NOT_EQUALS);
         try {
             return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
@@ -357,7 +358,7 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord> getAddingInputsBuying() throws DAPException {
+    public List<BuyingRecord> getAddingInputsBuying() throws DAPException {
         DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.ADDING_INPUTS.getCode());
         try {
             return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
@@ -366,7 +367,7 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord> getWaitingCompleteSignature() throws DAPException {
+    public List<BuyingRecord> getWaitingCompleteSignature() throws DAPException {
         DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_COMPLETE_SIGNATURE.getCode());
         try {
             return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
@@ -375,7 +376,7 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord> getCompletedSignedBuying() throws DAPException {
+    public List<BuyingRecord> getCompletedSignedBuying() throws DAPException {
         DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, AssetSellStatus.COMPLETE_SIGNATURE.getCode());
         try {
             return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));
@@ -437,7 +438,7 @@ public class AssetBuyerDAO {
     }
 
 
-    public org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord getNegotiationRecord(UUID recordId) throws DAPException {
+    public NegotiationRecord getNegotiationRecord(UUID recordId) throws DAPException {
         DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ID_COLUMN_NAME, recordId.toString());
         try {
             List<DatabaseTableRecord> recordList = getRecordsByFilterNegotiationTable(filter);
@@ -450,7 +451,7 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.BuyingRecord> getBuyingRecordsForNegotiation(UUID negotiationId) throws DAPException {
+    public List<BuyingRecord> getBuyingRecordsForNegotiation(UUID negotiationId) throws DAPException {
         DatabaseTableFilter filter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME, negotiationId.toString());
         try {
             return constructBuyingRecordList(getRecordsByFilterBuyerTable(filter));

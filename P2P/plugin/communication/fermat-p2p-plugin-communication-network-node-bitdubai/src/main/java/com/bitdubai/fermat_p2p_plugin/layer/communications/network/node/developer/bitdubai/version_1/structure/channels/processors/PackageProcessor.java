@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors;
 
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.MethodCallsHistory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
@@ -49,6 +50,11 @@ public abstract class PackageProcessor {
     private JsonParser jsonParser;
 
     /**
+     * Represent the networkNodePluginRoot
+     */
+    private NetworkNodePluginRoot networkNodePluginRoot;
+
+    /**
      * Constructor with parameter
      *
      * @param channel
@@ -60,6 +66,7 @@ public abstract class PackageProcessor {
         this.daoFactory  = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
         this.gson        = new Gson();
         this.jsonParser  = new JsonParser();
+        this.networkNodePluginRoot = (NetworkNodePluginRoot) NodeContext.get(NodeContextItem.PLUGIN_ROOT);
     }
 
     /**
@@ -107,6 +114,13 @@ public abstract class PackageProcessor {
         return jsonParser;
     }
 
+    /**
+     * Get the NetworkNodePluginRoot
+     * @return NetworkNodePluginRoot
+     */
+    public NetworkNodePluginRoot getNetworkNodePluginRoot() {
+        return networkNodePluginRoot;
+    }
 
     /**
      * Save the method call history
@@ -115,13 +129,13 @@ public abstract class PackageProcessor {
      * @param profileIdentityPublicKey
      */
     protected void methodCallsHistory(String parameters, String profileIdentityPublicKey) throws CantInsertRecordDataBaseException {
-
+/*
         MethodCallsHistory methodCallsHistory = new MethodCallsHistory();
         methodCallsHistory.setMethodName(getPackageType().toString());
         methodCallsHistory.setParameters(parameters);
         methodCallsHistory.setProfileIdentityPublicKey(profileIdentityPublicKey);
 
-        getDaoFactory().getMethodCallsHistoryDao().create(methodCallsHistory);
+        getDaoFactory().getMethodCallsHistoryDao().create(methodCallsHistory);*/
     }
 
     /**

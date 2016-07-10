@@ -7,27 +7,18 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    android:visibility="invisible"
-    >
+    android:visibility="invisible">
 
-    <LinearLayout
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccw_wizard_title_container"
+        android:background="@drawable/ccw_action_bar_gradient_colors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ccw_action_bar_gradient_colors"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text="@string/ccw_wizard_exchange_rate_providers_title"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-    </LinearLayout>
+        android:text="@string/ccw_wizard_exchange_rate_providers_title"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:padding="16dp"/>
 
     <LinearLayout
         android:id="@+id/ccw_selected_bitcoin_wallet_container"
@@ -42,12 +33,11 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:text="@string/ccw_wizard_exchange_rate_providers_description"
             android:textColor="#606060"
             android:textSize="16sp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -66,7 +56,7 @@
             android:id="@+id/bitcoin_wallets_spinner"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:backgroundTint="@color/black"
             android:drawSelectorOnTop="true"
             tools:listitem="@layout/ccw_spinner_item"/>
@@ -81,7 +71,8 @@
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="8dp">
+        android:paddingTop="10dp"
+        android:visibility="gone">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -116,10 +107,21 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="YOUR PROVIDERS"
+            android:layout_marginTop="8dp"
+            android:text="Add at least one Exchange Provider, selecting two currencies per Provider"
+            android:textColor="#606060"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOUR EXCHANGE PROVIDERS"
             android:textColor="#E5007E"/>
 
         <View
@@ -131,7 +133,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <Spinner
@@ -169,7 +171,7 @@
                 android:background="#1271A7"
                 android:text="@string/ccw_providers"
                 android:textColor="@color/white"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
 

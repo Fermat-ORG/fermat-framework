@@ -18,10 +18,11 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
@@ -55,7 +56,7 @@ import java.util.regex.Pattern;
 
 })
 
-@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.LOSS_PROTECTED_WALLET)
+@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.LOSS_PROTECTED_WALLET)
 
 public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossProtectedWalletSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers{
@@ -111,6 +112,8 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.TRANSFER_INTRA_WALLET)
     private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     private String appPublicKey;
 
@@ -121,7 +124,8 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
         super(new PluginVersionReference(new Version()));
     }
 
-   /* @Override
+    /*
+    @Override
     public LossProtectedWallet getCryptoWallet() throws CantGetCryptoLossProtectedWalletException {
 
         try {
@@ -246,7 +250,8 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
                         walletManagerManager,
                         transferIntraWalletUsersManager,
                         pluginId,
-                        pluginFileSystem
+                        pluginFileSystem,
+                        locationManager
                 );
             }
 

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -26,12 +27,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -43,13 +44,14 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
 
     /**
      * Session
      */
-    ReferenceWalletSession referenceWalletSession;
+
     String walletPublicKey = "reference_wallet";
+    BitcoinWalletSettings bitcoinWalletSettings;
     /**
      * MANAGERS
      */
@@ -70,7 +72,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
     BlockchainNetworkType blockchainNetworkType;
-
     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = null;
     FloatingActionMenu actionMenu = null;
     /**
@@ -87,11 +88,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession)appSession;
-
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager();
+            cryptoWallet = appSession.getModuleManager();
 
             //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
@@ -116,10 +115,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
 
-
-            BitcoinWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
@@ -207,7 +204,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             lstPaymentRequest = new ArrayList<PaymentRequest>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
@@ -226,7 +223,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -255,7 +252,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,appSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
         }
@@ -275,13 +272,20 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
+
+            try {
+                bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            }catch (Exception e){
+
+            }
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);
-            offset+=MAX_TRANSACTIONS;
+            offset+=1;
         } catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
@@ -339,8 +343,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
 
-    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
-        this.referenceWalletSession = referenceWalletSession;
+    public void setReferenceWalletSession(ReferenceAppFermatSession referenceWalletSession) {
+        this.appSession = referenceWalletSession;
     }
 
    /* @Override

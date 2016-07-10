@@ -12,24 +12,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 
 
 /**
  * Created by memo on 13/01/16.
  */
-public class SetupFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSession<BankMoneyWalletModuleManager>, ResourceProviderManager> implements View.OnClickListener {
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
-    private BankMoneyWalletPreferenceSettings walletSettings;
 
     EditText bankName;
 
@@ -44,29 +44,25 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
         //Obtain walletSettings or create new wallet settings if first time opening wallet
-        walletSettings = null;
+        BankMoneyWalletPreferenceSettings walletSettings = null;
         try {
             walletSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
-            walletSettings = null;
-            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+            walletSettings = new BankMoneyWalletPreferenceSettings();
         }
 
-        if (walletSettings == null) {
-            walletSettings = new BankMoneyWalletPreferenceSettings();
-            walletSettings.setIsPresentationHelpEnabled(true);
-            try {
-                moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-            }
+        walletSettings.setIsPresentationHelpEnabled(true);
+        try {
+            moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
 

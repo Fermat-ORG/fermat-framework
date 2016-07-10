@@ -14,11 +14,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
@@ -26,7 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.RecreateView;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+
 
 import java.io.ByteArrayOutputStream;
 
@@ -34,7 +36,7 @@ import java.io.ByteArrayOutputStream;
  * @author Jose manuel de Sousa
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationIntraUserCommunityDialog extends FermatDialog<ReferenceAppFermatSession<IntraUserModuleManager>, SubAppResourcesProviderManager> implements View.OnClickListener {
 
 
     public static final int TYPE_PRESENTATION = 1;
@@ -49,7 +51,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private FrameLayout container_john_doe;
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
-    private IntraUserSubAppSession intraUserSubAppSession;
+    private ReferenceAppFermatSession intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
     private RecreateView recreateView;
 
@@ -60,7 +62,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
      * @param resources     parent class of WalletResources and SubAppResources
      */
     public PresentationIntraUserCommunityDialog(final Activity activity,
-                                                final IntraUserSubAppSession fermatSession,
+                                                final ReferenceAppFermatSession fermatSession,
                                                 final SubAppResourcesProviderManager resources,
                                                 final IntraUserModuleManager moduleManager,
                                                 final int type) {
@@ -119,9 +121,11 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
         int id = v.getId();
         SharedPreferences pref = getContext().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit;
+
+
         if (id == R.id.btn_left) {
             try {
-                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male));
+                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male),moduleManager.getLocation());
                 if (recreateView != null)
                     recreateView.recreate();
                 if (dontShowAgainCheckBox.isChecked()) {
@@ -132,10 +136,12 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
                 e.printStackTrace();
+            } catch (CantGetDeviceLocationException e) {
+                e.printStackTrace();
             }
         } else if (id == R.id.btn_right) {
             try {
-                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female),moduleManager.getLocation());
                 if (recreateView != null) {
                     recreateView.recreate();
                 }
@@ -146,6 +152,8 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             } catch (CouldNotCreateIntraUserException e) {
+                e.printStackTrace();
+            } catch (CantGetDeviceLocationException e) {
                 e.printStackTrace();
             }
         } else if (id == R.id.start_community) {
@@ -162,10 +170,10 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
                 if(dontShowAgainCheckBox.isChecked()){
                     try {
 
-                        IntraUserWalletSettings intraUserWalletSettings = intraUserSubAppSession.getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
+                        IntraUserWalletSettings intraUserWalletSettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
                         if(intraUserWalletSettings!=null) {
                             intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                            intraUserSubAppSession.getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserWalletSettings);
+                            moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserWalletSettings);
                         }
                     } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         e.printStackTrace();
@@ -183,7 +191,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
        // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
         return stream.toByteArray();
     }
 

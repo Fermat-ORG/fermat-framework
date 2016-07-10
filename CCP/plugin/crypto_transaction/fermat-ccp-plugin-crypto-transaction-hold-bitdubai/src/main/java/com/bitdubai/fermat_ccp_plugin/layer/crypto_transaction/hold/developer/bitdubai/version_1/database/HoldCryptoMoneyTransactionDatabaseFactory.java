@@ -85,6 +85,9 @@ public class HoldCryptoMoneyTransactionDatabaseFactory implements DealsWithPlugi
             table.addColumn(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 20, Boolean.FALSE);
+            table.addColumn(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_ORIGIN_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+
 
             table.addIndex(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FIRST_KEY_COLUMN);
 

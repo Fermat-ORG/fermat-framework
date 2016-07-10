@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by rodrigo on 3/26/16.
  */
-public class CantRemoveExistingTimeOutAgentException extends FermatException{
+public class CantRemoveExistingTimeOutAgentException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "There was an error removing an existing Time Out Agent from the pool.";
 

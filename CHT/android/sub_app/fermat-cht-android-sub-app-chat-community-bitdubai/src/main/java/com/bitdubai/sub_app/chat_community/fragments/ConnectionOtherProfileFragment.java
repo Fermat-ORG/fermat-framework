@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
@@ -30,11 +31,11 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 /**
@@ -44,14 +45,14 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     public static final String CHAT_USER_SELECTED = "chat_user";
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private ChatUserSubAppSession chatUserSubAppSession;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
@@ -67,7 +68,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
-    //private IntraWalletUserActorManager intraWalletUserActorManager;
     private ConnectionState connectionState;
     private String strConnectionState = "UNKNOWN";
     private android.support.v7.widget.Toolbar toolbar;
@@ -86,9 +86,9 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+        //chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
         chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
-        moduleManager = chatUserSubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         chatUserInformation = (ChatActorCommunityInformation) appSession.getData(ConnectionsWorldFragment.CHAT_USER_SELECTED);
     }
@@ -191,12 +191,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             ConnectDialog connectDialog;
             try {
                 connectDialog =
-                        new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                        new ConnectDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(chatUserInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request?");
+                connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
+                //connectDialog.setUsername(chatUserInformation.getAlias());
+                //connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -215,11 +215,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             final DisconnectDialog disconnectDialog;
             try {
                 disconnectDialog =
-                        new DisconnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                        new DisconnectDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
-                disconnectDialog.setTitle("Disconnect");
-                disconnectDialog.setDescription("Do you want to disconnect from");
-                disconnectDialog.setUsername(chatUserInformation.getAlias()+"?");
+                disconnectDialog.setTitle("Confirm Delete Connection");
+                disconnectDialog.setDescription("Are you sure you want to delete this connection?" );
+//                disconnectDialog.setUsername(chatUserInformation.getAlias()+"?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -235,7 +235,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         if (i == R.id.btn_connection_accept){
             try {
                 AcceptDialog notificationAcceptDialog =
-                        new AcceptDialog(getActivity(),(ChatUserSubAppSession) appSession, null,
+                        new AcceptDialog(getActivity(),appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -257,12 +257,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             ConnectDialog connectDialog;
             try {
                 connectDialog =
-                        new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                        new ConnectDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Resend Connection Request");
-                connectDialog.setDescription("Do you want to resend ");
+                connectDialog.setDescription("Do you want to resend a connection request to this contact?");
                 connectDialog.setUsername(chatUserInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request?");
+                //connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -376,9 +376,4 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetChatUserIdentityException {
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-    }
 }

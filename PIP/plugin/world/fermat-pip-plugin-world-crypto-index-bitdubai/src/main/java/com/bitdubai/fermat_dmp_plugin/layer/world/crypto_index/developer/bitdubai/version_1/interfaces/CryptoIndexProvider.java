@@ -11,7 +11,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexProvider</code>
  * represent the basic functionality of a Crypto Index Provider.<p/>
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  *
  * @version 1.0
@@ -44,11 +44,11 @@ public interface CryptoIndexProvider {
      * @throws CantGetHistoricalExchangeRateException
      * @throws HistoricalExchangeRateNotFoundException
      */
-   double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency,
-                                              FiatCurrency fiatCurrency,
-                                              long time)
-              throws FiatCurrencyNotSupportedException,
-              CryptoCurrencyNotSupportedException,
-              CantGetHistoricalExchangeRateException,
-              HistoricalExchangeRateNotFoundException;
+    double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency,
+                                     FiatCurrency fiatCurrency,
+                                     long time)
+            throws FiatCurrencyNotSupportedException,
+            CryptoCurrencyNotSupportedException,
+            CantGetHistoricalExchangeRateException,
+            HistoricalExchangeRateNotFoundException;
 }

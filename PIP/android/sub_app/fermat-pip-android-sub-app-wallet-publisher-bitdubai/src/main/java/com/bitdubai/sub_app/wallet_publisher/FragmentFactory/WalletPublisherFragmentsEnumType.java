@@ -9,8 +9,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum WalletPublisherFragmentsEnumType implements FermatFragmentsEnumType<WalletPublisherFragmentsEnumType> {
 
 
-    CWP_WALLET_PUBLISHER_MAIN_FRAGMENT("CWPMF"),
-    ;
+    CWP_WALLET_PUBLISHER_MAIN_FRAGMENT("CWPMF"),;
 
 
     private String key;
@@ -21,10 +20,12 @@ public enum WalletPublisherFragmentsEnumType implements FermatFragmentsEnumType<
 
 
     @Override
-    public String getKey()   { return this.key; }
+    public String getKey() {
+        return this.key;
+    }
 
     @Override
-    public String toString(){
+    public String toString() {
         return key;
     }
 

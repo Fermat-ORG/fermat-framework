@@ -602,8 +602,7 @@ public final class AssetUserWalletDao {
         long timeStamp = record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TIME_STAMP_COLUMN_NAME);
         String memo = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_MEMO_COLUMN_NAME);
         boolean isLocked = getLockStatusForMetadata(transactionHash) == LockStatus.LOCKED;
-        return new AssetUserWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, actorFrom, actorTo, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo, isLocked) {
-        };
+        return new AssetUserWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, actorFrom, actorTo, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo, isLocked);
 
     }
 
@@ -709,8 +708,7 @@ public final class AssetUserWalletDao {
     }
 
     private DatabaseTable getAssetUserWalletTable() {
-        DatabaseTable databaseTable = database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME);
-        return databaseTable;
+        return database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME);
     }
 
     private DatabaseTable getLockTable() {

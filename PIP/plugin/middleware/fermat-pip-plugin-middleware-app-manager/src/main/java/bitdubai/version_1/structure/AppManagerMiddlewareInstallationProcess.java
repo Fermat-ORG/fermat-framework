@@ -78,6 +78,7 @@ public class AppManagerMiddlewareInstallationProcess implements WalletInstallati
         }
 
     }
+
     /**
      * This method starts the wallet installation process
      */
@@ -114,14 +115,14 @@ public class AppManagerMiddlewareInstallationProcess implements WalletInstallati
                  * Send wallet info to Wallet Resource
                  */
                 //TODO: se necesita pasarle la public key de la wallet  instalar al resources
-                LOG.info("MAP_WCAT:"+walletCategory.getCode());
-                LOG.info("MAP_WTYP:"+walletType.getCode());
-                LOG.info("MAP_DNAM:"+developerName);
-                LOG.info("MAP_SSIZ:"+screenSize);
-                LOG.info("MAP_SNAM:"+skinName);
-                LOG.info("MAP_LVAL:"+language.getCode());
-                LOG.info("MAP_NSV:"+navigationStructureVersion);
-                LOG.info("MAP_WPK"+walletPublicKey);
+                LOG.info("MAP_WCAT:" + walletCategory.getCode());
+                LOG.info("MAP_WTYP:" + walletType.getCode());
+                LOG.info("MAP_DNAM:" + developerName);
+                LOG.info("MAP_SSIZ:" + screenSize);
+                LOG.info("MAP_SNAM:" + skinName);
+                LOG.info("MAP_LVAL:" + language.getCode());
+                LOG.info("MAP_NSV:" + navigationStructureVersion);
+                LOG.info("MAP_WPK" + walletPublicKey);
                 walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.getCode(), navigationStructureVersion, walletPublicKey);
                 //TODO: erase this test line.
                 //walletResources.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0","TestPublicKey");

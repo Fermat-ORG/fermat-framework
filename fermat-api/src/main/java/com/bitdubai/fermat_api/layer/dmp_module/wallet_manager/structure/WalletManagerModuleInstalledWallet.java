@@ -42,6 +42,7 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     private int notifications;
     private AppsStatus appStatus;
     private int bannerRes;
+//    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
 
     public WalletManagerModuleInstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version, AppsStatus appsStatus) {
@@ -200,6 +201,11 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     public FermatAppType getAppType() {
         return FermatAppType.WALLET;
     }
+
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return appStructureType;
+//    }
 
     @Override
     public byte[] getAppIcon() {

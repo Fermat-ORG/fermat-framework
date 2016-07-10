@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.KeyHierarchy;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
@@ -14,7 +14,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
-import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
@@ -133,7 +133,7 @@ class VaultKeyHierarchy extends KeyHierarchy {
         /**
          * I will create the CryptoAddress with the key I just got
          */
-        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
+        String address = ecKey.toAddress(BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
         /**
@@ -141,7 +141,7 @@ class VaultKeyHierarchy extends KeyHierarchy {
          * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
          * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
          */
-        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
+        if (BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType) != BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
             setActiveNetwork(blockchainNetworkType);
         }
 
@@ -287,7 +287,7 @@ class VaultKeyHierarchy extends KeyHierarchy {
         /**
          * I will create the CryptoAddress with the key I just got in all active networks
          */
-        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
+        String address = ecKey.toAddress(BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
         return cryptoAddress;

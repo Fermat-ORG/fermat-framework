@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.ProjectNotFoundException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -17,6 +15,8 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.dev
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantGetRepositoryPathRecordException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesSubAppResourcesDatabaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
 
 
     /**
-     *  Represent the Plugin Database.
+     * Represent the Plugin Database.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -46,7 +46,7 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
     /**
      * This method open or creates the database i'll be working with
      *
-     * @param ownerId plugin id
+     * @param ownerId      plugin id
      * @param databaseName database name
      * @throws
      */
@@ -81,19 +81,18 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
     }
 
 
-
     /**
      * Method that create a new entity in the database.
      *
-     *  @param repository Repository to create.
+     * @param repository Repository to create.
      */
-    public void createRepository(Repository repository,UUID skinId) throws CantCreateRepositoryException {
+    public void createRepository(Repository repository, UUID skinId) throws CantCreateRepositoryException {
 
-        if (repository == null ){
+        if (repository == null) {
             throw new CantCreateRepositoryException(CantCreateRepositoryException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, name, type and developer public key.");
         }
 
-        if ( repository.getPath() == null && repository.getSkinName() == null && repository.getNavigationStructureVersion() == null){
+        if (repository.getPath() == null && repository.getSkinName() == null && repository.getNavigationStructureVersion() == null) {
             throw new CantCreateRepositoryException(CantCreateRepositoryException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, name, type and developer public key.");
         }
 
@@ -111,11 +110,9 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
             RepositoryTable.insertRecord(entityRecord);
 
             database.closeDatabase();
-        }
-        catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantCreateRepositoryException(CantCreateRepositoryException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
-        }
-        catch(Exception exception){
+        } catch (Exception exception) {
             throw new CantCreateRepositoryException(CantCreateRepositoryException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
@@ -123,13 +120,13 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
     /**
      * Method that delete a entity in the database.
      *
-     *  @param skinId UUID skin id.
-     *  @param repositoryName String repository name
-     * */
+     * @param skinId         UUID skin id.
+     * @param repositoryName String repository name
+     */
 
-    public void delete(UUID skinId,String repositoryName) throws CantDeleteRepositoryException {
+    public void delete(UUID skinId, String repositoryName) throws CantDeleteRepositoryException {
 
-        if (skinId == null || repositoryName==null){
+        if (skinId == null || repositoryName == null) {
             throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, null, "", "The id amd the name is required, can not be null");
         }
 
@@ -151,7 +148,7 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
             // Register the failure.
             database.closeDatabase();
             throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        }catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
@@ -160,11 +157,10 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
     Get Repository data
      */
     public Repository getRepository(UUID skinId) throws CantGetRepositoryPathRecordException {
-        try
-        {
+        try {
             Repository repository = null;
 
-            DatabaseTable repoTable= database.getTable(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_TABLE_NAME);
+            DatabaseTable repoTable = database.getTable(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_TABLE_NAME);
 
             repoTable.addUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
 
@@ -178,23 +174,22 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
                 String navigationStructureVersion = record.getStringValue(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
                 String repoName = record.getStringValue(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME);
 
-                repository = new Repository(repoName,navigationStructureVersion,pathToRepo);
+                repository = new Repository(repoName, navigationStructureVersion, pathToRepo);
             }
 
 
             return repository;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw  new CantGetRepositoryPathRecordException("CAN'T GET REPOSITORY PATH",e,"","Error loading table");
-        }
-        catch (Exception e) {
-            throw  new CantGetRepositoryPathRecordException("CAN'T GET REPOSITORY PATH",e,"","unknown error");
+            throw new CantGetRepositoryPathRecordException("CAN'T GET REPOSITORY PATH", e, "", "Error loading table");
+        } catch (Exception e) {
+            throw new CantGetRepositoryPathRecordException("CAN'T GET REPOSITORY PATH", e, "", "unknown error");
         }
 
     }
 
     /**
-     *  get the repository record
+     * get the repository record
      *
      * @param repositoryTable
      * @param skinId
@@ -203,7 +198,7 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
      * @throws CantLoadTableToMemoryException
      * @throws RepositoryNotFoundException
      */
-    private DatabaseTableRecord getRepositoryDatabaseTableRecord(DatabaseTable repositoryTable,UUID skinId,String repositoryName) throws CantLoadTableToMemoryException, RepositoryNotFoundException {
+    private DatabaseTableRecord getRepositoryDatabaseTableRecord(DatabaseTable repositoryTable, UUID skinId, String repositoryName) throws CantLoadTableToMemoryException, RepositoryNotFoundException {
         repositoryTable.addUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
         repositoryTable.addStringFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
         repositoryTable.loadToMemory();
@@ -220,24 +215,22 @@ public class SubAppResourcesInstallationNetworkServiceDAO {
     }
 
 
-
-
-    private DatabaseTableRecord getRepositoryDatabaseTableRecord(String repositoryName,UUID skinId) throws RepositoryNotFoundException, CantGetRepositoryPathRecordException {
+    private DatabaseTableRecord getRepositoryDatabaseTableRecord(String repositoryName, UUID skinId) throws RepositoryNotFoundException, CantGetRepositoryPathRecordException {
         try {
             database.openDatabase();
             DatabaseTable repositoryTable = getRepositoriesTable();
-            return getRepositoryDatabaseTableRecord(repositoryTable,skinId,repositoryName);
+            return getRepositoryDatabaseTableRecord(repositoryTable, skinId, repositoryName);
 
         } catch (CantLoadTableToMemoryException e) {
             // Register the failure.
             database.closeDatabase();
             throw new CantGetRepositoryPathRecordException(CantGetRepositoryPathRecordException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantGetRepositoryPathRecordException(CantGetRepositoryPathRecordException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
 
-    private DatabaseTable getRepositoriesTable(){
+    private DatabaseTable getRepositoriesTable() {
         return database.getTable(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_TABLE_NAME);
     }
 

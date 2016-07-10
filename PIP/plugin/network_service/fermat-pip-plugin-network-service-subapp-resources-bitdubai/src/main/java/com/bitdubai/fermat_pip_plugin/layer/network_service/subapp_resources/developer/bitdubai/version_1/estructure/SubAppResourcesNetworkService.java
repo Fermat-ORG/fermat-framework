@@ -30,10 +30,10 @@ public class SubAppResourcesNetworkService {
      * Constructor
      */
 
-   public SubAppResourcesNetworkService(UUID resourcesId){
+    public SubAppResourcesNetworkService(UUID resourcesId) {
 
-       this.resourcesId = resourcesId;
-   }
+        this.resourcesId = resourcesId;
+    }
 
     /**
      * SubAppResources Implementation
@@ -122,21 +122,20 @@ public class SubAppResourcesNetworkService {
 //    }
 
 
-
     // Private instances methods declarations.
 
     /**
      * <p>This method connects to the repository and download string file resource for wallet on byte (Private Method)
      *
      * @param repoResource name of repository where wallet files resources are stored
-     * @param fileName Name of resource file
+     * @param fileName     Name of resource file
      * @return string resource object
      * @throws MalformedURLException
      * @throws IOException
      * @throws FileNotFoundException
      */
-    private String getRepositoryStringFile(String repoResource,String fileName) throws IOException, FileNotFoundException {
-        String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
+    private String getRepositoryStringFile(String repoResource, String fileName) throws IOException, FileNotFoundException {
+        String link = REPOSITORY_LINK + repoResource + "/master/" + fileName;
 
         URL url = new URL(link);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -156,7 +155,7 @@ public class SubAppResourcesNetworkService {
         InputStream crunchifyStream = http.getInputStream();
         String response = getStringFromStream(crunchifyStream);
 
-        return  response;
+        return response;
 
     }
 
@@ -164,16 +163,16 @@ public class SubAppResourcesNetworkService {
      * <p>This method connects to the repository and download resource image file for wallet on byte
      *
      * @param repoResource name of repository where wallet files resources are stored
-     * @param fileName Name of resource file
+     * @param fileName     Name of resource file
      * @return byte image object
      * @throws MalformedURLException
      * @throws IOException
      * @throws FileNotFoundException
      */
 
-    private byte[] getRepositoryImageFile(String repoResource ,String fileName) throws IOException, FileNotFoundException {
+    private byte[] getRepositoryImageFile(String repoResource, String fileName) throws IOException, FileNotFoundException {
 
-        String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
+        String link = REPOSITORY_LINK + repoResource + "/master/" + fileName;
 
         URL url = new URL(link);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -197,7 +196,7 @@ public class SubAppResourcesNetworkService {
      * @throws IOException
      */
 
-    private  String getStringFromStream(InputStream stream) throws IOException {
+    private String getStringFromStream(InputStream stream) throws IOException {
         if (stream != null) {
             Writer writer = new StringWriter();
 

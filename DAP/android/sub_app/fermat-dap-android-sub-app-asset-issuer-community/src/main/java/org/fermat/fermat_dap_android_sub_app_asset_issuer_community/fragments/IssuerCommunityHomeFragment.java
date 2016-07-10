@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -32,8 +34,10 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerCommunityAdapter;
@@ -41,7 +45,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.interfaces.A
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.ConnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -62,7 +66,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by francisco on 21/10/15.
  */
-public class IssuerCommunityHomeFragment extends AbstractFermatFragment implements
+public class IssuerCommunityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener,
         FermatListItemListeners<ActorIssuer> {
@@ -70,11 +74,10 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     protected final String TAG = "IssuerCommunityFragment";
 
     public static final String ISSUER_SELECTED = "issuer";
+    private static final String SEARCH = "issuer_community_search";
     private static AssetIssuerCommunitySubAppModuleManager moduleManager;
-    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
     AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
-
     private static ErrorManager errorManager;
 
     // recycler
@@ -85,24 +88,24 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private View rootView;
     private LinearLayout emptyView;
 
-
     private MenuItem menuItemSelect;
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
     private MenuItem menuItemConnect;
+    private SearchView searchView;
 
     private List<ActorIssuer> actors;
     private List<ActorIssuer> actorsConnecting;
     private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
-
     private ExecutorService _executor;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
-
     /**
      * Flags
      */
     private boolean isRefreshing = false;
+    private static final int MAX = 10;
+    private int offset = 0;
+    private int menuItemSize;
 
     public static IssuerCommunityHomeFragment newInstance() {
         return new IssuerCommunityHomeFragment();
@@ -118,22 +121,21 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
             actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
-            assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
-            moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             try {
-                settings = assetIssuerCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey());
+                settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
 
-            if (assetIssuerCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            if (appSession.getAppPublicKey() != null) //the identity not exist yet
             {
                 if (settings == null) {
                     settings = new AssetIssuerSettings();
                     settings.setIsPresentationHelpEnabled(true);
-                    assetIssuerCommunitySubAppSession.getModuleManager().persistSettings(assetIssuerCommunitySubAppSession.getAppPublicKey(), settings);
+                    appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
                 }
             }
 
@@ -158,7 +160,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             @Override
             public void onDataSetChanged(List<ActorIssuer> dataSet) {
 
-                actors = dataSet;
+//                actors = dataSet;
+                for (int i = 0; i < actors.size(); i++) {
+                    for (int j = 0; j < dataSet.size(); j++) {
+                        if (dataSet.get(j).getRecord().getActorPublicKey().equals(actors.get(i).getRecord().getActorPublicKey())) {
+                            actors.set(i, dataSet.get(j));
+                        }
+                    }
+                }
+
                 boolean someSelected = false;
                 int selectedActors = 0;
                 int cheackeableActors = 0;
@@ -184,31 +194,42 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
                     }
                 }
-                if (actorsConnecting.size() > 0) {
-                    menuItemCancel.setVisible(true);
-                } else {
-                    menuItemCancel.setVisible(false);
-                }
-
-                if (someSelected) {
-                    if (actorsConnecting.size() == selectedActors) {
-                        menuItemConnect.setVisible(false);
-                    } else if (actorsConnecting.size() == 0) {
-                        menuItemConnect.setVisible(true);
-                    }
-                    if (selectedActors > actorsConnecting.size()) {
-                        menuItemConnect.setVisible(true);
-                    }
-                    menuItemUnselect.setVisible(true);
-                    if (selectedActors == cheackeableActors) {
-                        menuItemSelect.setVisible(false);
+                try {
+                    if (actorsConnecting.size() > 0) {
+                        changeOptionMenuVisibility(menuItemCancel.getItemId(), true, true);
+//                    menuItemCancel.setVisible(true);
                     } else {
-                        menuItemSelect.setVisible(true);
+                        changeOptionMenuVisibility(menuItemCancel.getItemId(), false, true);
+//                    menuItemCancel.setVisible(false);
                     }
-                } else {
-                    restartButtons();
-                }
 
+                    if (someSelected) {
+                        if (actorsConnecting.size() == selectedActors) {
+                            changeOptionMenuVisibility(menuItemConnect.getItemId(), false, true);
+//                        menuItemConnect.setVisible(false);
+                        } else if (actorsConnecting.size() == 0) {
+                            changeOptionMenuVisibility(menuItemConnect.getItemId(), true, true);
+//                        menuItemConnect.setVisible(true);
+                        }
+                        if (selectedActors > actorsConnecting.size()) {
+                            changeOptionMenuVisibility(menuItemConnect.getItemId(), true, true);
+//                        menuItemConnect.setVisible(true);
+                        }
+                        changeOptionMenuVisibility(menuItemUnselect.getItemId(), true, true);
+//                    menuItemUnselect.setVisible(true);
+                        if (selectedActors == cheackeableActors) {
+                            changeOptionMenuVisibility(menuItemSelect.getItemId(), false, true);
+//                        menuItemSelect.setVisible(false);
+                        } else {
+                            changeOptionMenuVisibility(menuItemSelect.getItemId(), true, true);
+//                        menuItemSelect.setVisible(true);
+                        }
+                    } else {
+                        restartButtons();
+                    }
+                } catch (InvalidParameterException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -224,9 +245,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         onRefresh();
 
         //Initialize settings
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = moduleManager.loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -238,8 +258,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
             try {
                 if (moduleManager != null) {
-                    moduleManager.persistSettings(assetIssuerCommunitySubAppSession.getAppPublicKey(), settings);
-                    moduleManager.setAppPublicKey(assetIssuerCommunitySubAppSession.getAppPublicKey());
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 }
 
             } catch (CantPersistSettingsException e) {
@@ -276,7 +296,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     private void setUpPresentation(boolean checkButton) {
 //        try {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), assetIssuerCommunitySubAppSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
@@ -399,29 +419,102 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
+//        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+//            menuItemSize = menu.size();
+//
+//            searchView = (SearchView) menu.findItem(6).getActionView();
+//            searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
+//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String s) {
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String s) {
+//                    if (s.equals(searchView.getQuery().toString())) {
+//                        adapter.changeDataSet(actors);
+//                        adapter.getFilter().filter(s);
+//                        appSession.setData(SEARCH, s);
+//                    }
+//                    return false;
+//                }
+//            });
+//            if (appSession.getData(SEARCH) != null) {
+//                String s = appSession.getData(SEARCH).toString();
+//                searchView.setQuery(s, true);
+//                if (s.length() > 0) searchView.setIconified(false);
+//            }
+//
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 3, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 4, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+////        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+////                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//            menuItemConnect = menu.findItem(1);
+//            menuItemCancel = menu.findItem(2);
+//            menuItemSelect = menu.findItem(3);
+//            menuItemUnselect = menu.findItem(4);
+//
+//            restartButtons();
+//        }
+    }
 
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    @Override
+    public void onOptionMenuPrepared(Menu menu){
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 1, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            searchView = (SearchView) menu.findItem(6).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
 
-        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 2, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(actors);
+                        adapter.getFilter().filter(s);
+                        appSession.setData(SEARCH, s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData(SEARCH) != null) {
+                String s = appSession.getData(SEARCH).toString();
+                searchView.setQuery(s, true);
+                if (s.length() > 0) searchView.setIconified(false);
+            }
 
-        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 3, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 3, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 4, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(4, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 4, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuItemConnect = menu.findItem(1);
+            menuItemCancel = menu.findItem(2);
+            menuItemSelect = menu.findItem(3);
+            menuItemUnselect = menu.findItem(4);
 
-
-        menuItemConnect = menu.getItem(0);
-        menuItemCancel = menu.getItem(1);
-        menuItemSelect = menu.getItem(2);
-        menuItemUnselect = menu.getItem(3);
-        restartButtons();
+            restartButtons();
+        }
     }
 
     @Override
@@ -429,188 +522,186 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         int id = item.getItemId();
 
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL) {
+        try {
+            switch (id) {
+                case 1://CONNECT
+                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
+                    for (ActorIssuer actorIssuer : actors) {
+                        if (actorIssuer.selected)
+                            toConnect.add(actorIssuer.getRecord());
+                    }
 
-            for (ActorIssuer actorIssuer : actors) {
-                if (actorIssuer.getRecord().getExtendedPublicKey() == null)
-                    actorIssuer.selected = true;
-            }
-            adapter.changeDataSet(actors);
-            adapter.getAdapterChangeListener().onDataSetChanged(actors);
-            menuItemConnect.setVisible(true);
-            menuItemSelect.setVisible(false);
-            menuItemUnselect.setVisible(true);
+                    if (toConnect.size() > 0) {
+                        ConnectDialog connectDialog;
+                        connectDialog = new ConnectDialog(getActivity(), appSession, null) {
+                            @Override
+                            public void onClick(View v) {
+                                int i = v.getId();
+                                if (i == R.id.positive_button) {
+                                    final ProgressDialog dialog = new ProgressDialog(getActivity());
+                                    dialog.setMessage(getString(R.string.connecting));
+                                    dialog.setCancelable(false);
+                                    dialog.show();
+                                    FermatWorker worker = new FermatWorker() {
+                                        @Override
+                                        protected Object doInBackground() throws Exception {
+                                            List<ActorAssetIssuer> toConnect = new ArrayList<>();
+                                            for (ActorIssuer actorIssuer : actors) {
+                                                if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
+                                                    toConnect.add(actorIssuer.getRecord());
+                                                }
+                                            }
+                                            //// TODO: 20/11/15 get Actor asset issuer
+                                            moduleManager.askActorAssetIssuerForConnection(toConnect);
 
-        }
-
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL) {
-
-            for (ActorIssuer actorIssuer : actors) {
-                actorIssuer.selected = false;
-            }
-            adapter.changeDataSet(actors);
-            adapter.getAdapterChangeListener().onDataSetChanged(actors);
-            restartButtons();
-        }
-
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
-            List<ActorAssetIssuer> toConnect = new ArrayList<>();
-            for (ActorIssuer actorIssuer : actors) {
-                if (actorIssuer.selected)
-                    toConnect.add(actorIssuer.getRecord());
-            }
-
-            if (toConnect.size() > 0) {
-                ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
-                    @Override
-                    public void onClick(View v) {
-                        int i = v.getId();
-                        if (i == R.id.positive_button) {
-                            final ProgressDialog dialog = new ProgressDialog(getActivity());
-                            dialog.setMessage(getString(R.string.connecting));
-                            dialog.setCancelable(false);
-                            dialog.show();
-                            FermatWorker worker = new FermatWorker() {
-                                @Override
-                                protected Object doInBackground() throws Exception {
-                                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
-                                    for (ActorIssuer actorIssuer : actors) {
-                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
-                                            toConnect.add(actorIssuer.getRecord());
-                                        }
-                                    }
-                                    //// TODO: 20/11/15 get Actor asset issuer
-                                    moduleManager.askActorAssetIssuerForConnection(toConnect);
-
-                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
-                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
-                                    sendLocalBroadcast(broadcast);
+                                            Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+                                            broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                            sendLocalBroadcast(broadcast);
 
 //                                    moduleManager.connectToActorAssetIssuer(null, toConnect);
-                                    return true;
-                                }
-                            };
-                            worker.setContext(getActivity());
-                            worker.setCallBack(new FermatWorkerCallBack() {
-                                @Override
-                                public void onPostExecute(Object... result) {
-                                    dialog.dismiss();
-                                    Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
-                                    restartButtons();
-                                    if (swipeRefreshLayout != null)
-                                        swipeRefreshLayout.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                onRefresh();
-                                            }
-                                        });
+                                            return true;
+                                        }
+                                    };
+                                    worker.setContext(getActivity());
+                                    worker.setCallBack(new FermatWorkerCallBack() {
+                                        @Override
+                                        public void onPostExecute(Object... result) {
+                                            dialog.dismiss();
+                                            Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
+                                            restartButtons();
+                                            if (swipeRefreshLayout != null)
+                                                swipeRefreshLayout.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        onRefresh();
+                                                    }
+                                                });
+                                        }
+
+                                        @Override
+                                        public void onErrorOccurred(Exception ex) {
+                                            dialog.dismiss();
+                                            Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
+
+                                        }
+                                    });
+                                    worker.execute();
+                                    dismiss();
+                                } else if (i == R.id.negative_button) {
+                                    dismiss();
                                 }
 
-                                @Override
-                                public void onErrorOccurred(Exception ex) {
-                                    dialog.dismiss();
-                                    Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
-
-                                }
-                            });
-                            worker.execute();
-                            dismiss();
-                        } else if (i == R.id.negative_button) {
-                            dismiss();
-                        }
-
+                            }
+                        };
+                        connectDialog.setTitle(R.string.connection_request_title);
+                        connectDialog.setDescription(getString(R.string.connection_request_desc));
+                        connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
+                                " Issuers" : actorsToConnect.get(0).getName());
+                        connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
+                        connectDialog.show();
+                        return true;
+                    } else {
+                        Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
+                        return false;
                     }
-                };
-                connectDialog.setTitle(R.string.connection_request_title);
-                connectDialog.setDescription(getString(R.string.connection_request_desc));
-                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
-                        " Issuers" : actorsToConnect.get(0).getName());
-                connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
-                connectDialog.show();
-                return true;
-            } else {
-                Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
+//                    break;
+                case 2://Cancel Connecting
+                    CancelDialog cancelDialog;
 
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
-            CancelDialog cancelDialog;
+                    cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
+                        @Override
+                        public void onClick(View v) {
+                            int i = v.getId();
+                            if (i == R.id.positive_button) {
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
-                @Override
-                public void onClick(View v) {
-                    int i = v.getId();
-                    if (i == R.id.positive_button) {
-
-                        final ProgressDialog dialog = new ProgressDialog(getActivity());
-                        dialog.setMessage("Canceling, please wait...");
-                        dialog.setCancelable(false);
-                        dialog.show();
-                        FermatWorker worker = new FermatWorker() {
-                            @Override
-                            protected Object doInBackground() throws Exception {
+                                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                                dialog.setMessage("Canceling, please wait...");
+                                dialog.setCancelable(false);
+                                dialog.show();
+                                FermatWorker worker = new FermatWorker() {
+                                    @Override
+                                    protected Object doInBackground() throws Exception {
 
 
-                                for (ActorIssuer actor : actorsConnecting) {
-                                    //TODO revisar si esto es asi
-                                    moduleManager.cancelActorAssetIssuer(actor.getRecord());
-                                }
+                                        for (ActorIssuer actor : actorsConnecting) {
+                                            //TODO revisar si esto es asi
+                                            moduleManager.cancelActorAssetIssuer(actor.getRecord());
+                                        }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);*/
-                                return true;
-                            }
-                        };
-                        worker.setContext(getActivity());
-                        worker.setCallBack(new FermatWorkerCallBack() {
-                            @Override
-                            public void onPostExecute(Object... result) {
-                                dialog.dismiss();
-                                Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
-                                restartButtons();
-                                if (swipeRefreshLayout != null)
-                                    swipeRefreshLayout.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            onRefresh();
-                                        }
-                                    });
-                            }
+                                        return true;
+                                    }
+                                };
+                                worker.setContext(getActivity());
+                                worker.setCallBack(new FermatWorkerCallBack() {
+                                    @Override
+                                    public void onPostExecute(Object... result) {
+                                        dialog.dismiss();
+                                        Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+                                        restartButtons();
+                                        if (swipeRefreshLayout != null)
+                                            swipeRefreshLayout.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    onRefresh();
+                                                }
+                                            });
+                                    }
 
-                            @Override
-                            public void onErrorOccurred(Exception ex) {
-                                dialog.dismiss();
+                                    @Override
+                                    public void onErrorOccurred(Exception ex) {
+                                        dialog.dismiss();
                                     /*TODO aun no se que error deberia ir aqui*/
 //                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                                Toast.makeText(getActivity(), "Can't cancel connection to selected issuers", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getActivity(), "Can't cancel connection to selected issuers", Toast.LENGTH_LONG).show();
 //                                ex.printStackTrace();
+                                    }
+                                });
+                                worker.execute();
+
+
+                                dismiss();
+                            } else if (i == R.id.negative_button) {
+                                dismiss();
                             }
-                        });
-                        worker.execute();
-
-
-                        dismiss();
-                    } else if (i == R.id.negative_button) {
-                        dismiss();
+                        }
+                    };
+                    cancelDialog.setTitle("Cancel request");
+                    cancelDialog.setDescription("Do you want to cancel connection with ");
+                    cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
+                            " Issuers" : actorsConnecting.get(0).getRecord().getName());
+                    //connectDialog.setSecondDescription("a connection request");
+                    cancelDialog.show();
+                    return true;
+//                break;
+                case 3://Select All
+                    for (ActorIssuer actorIssuer : actors) {
+                        if (actorIssuer.getRecord().getExtendedPublicKey() == null)
+                            actorIssuer.selected = true;
                     }
-                }
-            };
-            cancelDialog.setTitle("Cancel request");
-            cancelDialog.setDescription("Do you want to cancel connection with ");
-            cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
-                    " Issuers" : actorsConnecting.get(0).getRecord().getName());
-            //connectDialog.setSecondDescription("a connection request");
-            cancelDialog.show();
-            return true;
-        }
-        try {
+                    adapter.changeDataSet(actors);
+                    adapter.getAdapterChangeListener().onDataSetChanged(actors);
+                    changeOptionMenuVisibility(menuItemConnect.getItemId(), true, true);
+                    changeOptionMenuVisibility(menuItemSelect.getItemId(), false, true);
+                    changeOptionMenuVisibility(menuItemUnselect.getItemId(), true, true);
 
-            if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+//                    menuItemConnect.setVisible(true);
+//                    menuItemSelect.setVisible(false);
+//                    menuItemUnselect.setVisible(true);
+                    break;
+                case 4://Unselect All
+                    for (ActorIssuer actorIssuer : actors) {
+                        actorIssuer.selected = false;
+                    }
+                    adapter.changeDataSet(actors);
+                    adapter.getAdapterChangeListener().onDataSetChanged(actors);
+                    restartButtons();
+                    break;
+                case 5://case IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION:
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -688,6 +779,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                         if (getActivity() != null && adapter != null) {
                             actors = (ArrayList<ActorIssuer>) result[0];
                             adapter.changeDataSet(actors);
+                            adapter.getFilter().filter(searchView.getQuery().toString());
                             if (actors.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
@@ -723,7 +815,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
 
         try {
-            result = moduleManager.getAllActorAssetIssuerRegistered();
+            result = moduleManager.getAllActorAssetIssuerRegistered(MAX, offset);
             if (result != null && result.size() > 0) {
                 for (AssetIssuerActorRecord record : result) {
                     dataSet.add((new ActorIssuer(record)));
@@ -740,7 +832,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onItemClickListener(ActorIssuer data, int position) {
         appSession.setData(ISSUER_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), assetIssuerCommunitySubAppSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
@@ -765,9 +857,17 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     }
 
     private void restartButtons() {
-        menuItemCancel.setVisible(false);
-        menuItemSelect.setVisible(true);
-        menuItemUnselect.setVisible(false);
-        menuItemConnect.setVisible(false);
+//        menuItemCancel.setVisible(false);
+//        menuItemSelect.setVisible(true);
+//        menuItemUnselect.setVisible(false);
+//        menuItemConnect.setVisible(false);
+        try {
+            changeOptionMenuVisibility(menuItemCancel.getItemId(), false, true);
+            changeOptionMenuVisibility(menuItemSelect.getItemId(), true, true);
+            changeOptionMenuVisibility(menuItemUnselect.getItemId(), false, true);
+            changeOptionMenuVisibility(menuItemConnect.getItemId(), false, true);
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
     }
 }

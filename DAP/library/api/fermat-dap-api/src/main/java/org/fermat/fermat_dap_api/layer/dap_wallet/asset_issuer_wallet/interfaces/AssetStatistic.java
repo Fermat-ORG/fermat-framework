@@ -4,6 +4,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
  *
  * @since version 1.0
  */
-public interface AssetStatistic {
+public interface AssetStatistic extends Serializable {
     /**
      * The unique ID that identifies this statistic.
      *

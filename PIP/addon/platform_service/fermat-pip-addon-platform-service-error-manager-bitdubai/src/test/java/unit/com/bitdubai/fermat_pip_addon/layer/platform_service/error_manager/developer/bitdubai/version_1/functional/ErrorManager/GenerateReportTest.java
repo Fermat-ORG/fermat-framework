@@ -25,16 +25,16 @@ public class GenerateReportTest {
     private ErrorReport testErrorReport;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testCause = null;
         testMessage = "TEST MESSAGE";
-        testContext = "A = 1" + FermatException.CONTEXT_CONTENT_SEPARATOR +  "B = 2";
+        testContext = "A = 1" + FermatException.CONTEXT_CONTENT_SEPARATOR + "B = 2";
         testPossibleReason = "FERMAT IS WAY TOO COMPLEX FOR THAT";
     }
 
     @Test
-    public void SimpleConstruction_WithACause_ReturnsCause(){
-        testCause = new FermatException(testMessage+ " Cause", null, "WE NEED TO TEST THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
+    public void SimpleConstruction_WithACause_ReturnsCause() {
+        testCause = new FermatException(testMessage + " Cause", null, "WE NEED TO TEST THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
         testException = new FermatException(testMessage, testCause, testContext, testPossibleReason);
         testErrorReport = new ErrorReport("TEST", "HIGH", testException);
         assertThat(testErrorReport.generateReport()).contains("WE NEED TO TEST THE CHAIN OF CAUSES");

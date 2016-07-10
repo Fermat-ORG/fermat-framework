@@ -4,17 +4,17 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.fragments.CreateIssuerIdentityFragment;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.fragments.GeolocationIssuerIdentityFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.fragments.IdentityListFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSession;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class IssuerIdentityFragmentFactory extends FermatFragmentFactory<IssuerIdentitySubAppSession, SubAppResourcesProviderManager, IssuerIdentityFragmentsEnumType> {
-
+public class IssuerIdentityFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession, ResourceProviderManager, IssuerIdentityFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(IssuerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
@@ -25,6 +25,8 @@ public class IssuerIdentityFragmentFactory extends FermatFragmentFactory<IssuerI
         if (fragments.equals(IssuerIdentityFragmentsEnumType.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT))
             return CreateIssuerIdentityFragment.newInstance();
 
+        if (fragments.equals(IssuerIdentityFragmentsEnumType.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_FRAGMENT))
+            return GeolocationIssuerIdentityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragments);
     }

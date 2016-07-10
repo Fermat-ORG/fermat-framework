@@ -11,7 +11,7 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monito
 /**
  * Created by mati on 2016.03.31..
  */
-public class EventHandlerRouter implements FermatEventHandler<FermatEvent<P2pEventType>>{
+public class EventHandlerRouter implements FermatEventHandler<FermatEvent<P2pEventType>> {
 
     private final SubAppFermatMonitorNetworkServicePluginRoot subAppFermatMonitorNetworkServicePluginRoot;
 
@@ -22,7 +22,7 @@ public class EventHandlerRouter implements FermatEventHandler<FermatEvent<P2pEve
 
     @Override
     public void handleEvent(FermatEvent<P2pEventType> fermatEvent) throws FermatException {
-        switch (fermatEvent.getEventType()){
+        switch (fermatEvent.getEventType()) {
 
             case COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION:
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:id="@+id/row_container">
+
+        <ImageView
+            android:id="@+id/imageView_icon"
+            android:layout_width="56dp"
+            android:layout_marginLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:scaleType="fitStart"
+            android:src="@drawable/home_issuer_navigation_drawer"
+            android:visibility="visible"
+            tools:ignore="ContentDescription" />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/textView_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="15dp"
+            android:text="Home"
+            android:textColor="#FAFAFA"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#44757575"
+        android:id="@+id/navigation_row_divider_1"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#44212121"
+        android:id="@+id/navigation_row_divider_2"/>
+
+</LinearLayout>

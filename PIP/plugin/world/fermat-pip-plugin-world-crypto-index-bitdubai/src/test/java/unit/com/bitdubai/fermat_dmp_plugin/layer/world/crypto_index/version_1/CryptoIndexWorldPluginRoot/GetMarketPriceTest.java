@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.version_1.CryptoIndexWorldPluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -13,8 +14,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDatabaseFactory;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
@@ -54,13 +54,15 @@ public class GetMarketPriceTest {
      */
 
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem= Mockito.mock(PluginDatabaseSystem.class);
+    private PluginDatabaseSystem mockPluginDatabaseSystem = Mockito.mock(PluginDatabaseSystem.class);
 
     @Mock
-    private CryptoIndexDatabaseFactory mockCryptoIndexDatabaseFactory= Mockito.mock(CryptoIndexDatabaseFactory.class);;
+    private CryptoIndexDatabaseFactory mockCryptoIndexDatabaseFactory = Mockito.mock(CryptoIndexDatabaseFactory.class);
+    ;
 
     @Mock
-    DatabaseFactory mockDatabaseFactory = Mockito.mock(DatabaseFactory.class);;
+    DatabaseFactory mockDatabaseFactory = Mockito.mock(DatabaseFactory.class);
+    ;
     @Mock
     private DatabaseTableFactory mockDatabaseTableFactory = Mockito.mock(DatabaseTableFactory.class);
     @Mock
@@ -102,13 +104,14 @@ public class GetMarketPriceTest {
         when(mockCryptoIndexDatabaseFactory.createDatabase(pluginId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
         cryptoIndexDao = new CryptoIndexDao(mockPluginDatabaseSystem, pluginId);
     }
+
     @Test
-    public void TestGetMarketPrice()throws Exception{
-        cryptoCurrency= CryptoCurrency.getByCode("BTC");
-        fiatCurrency= FiatCurrency.getByCode("USD");
+    public void TestGetMarketPrice() throws Exception {
+        cryptoCurrency = CryptoCurrency.getByCode("BTC");
+        fiatCurrency = FiatCurrency.getByCode("USD");
         double price;
-        price=cryptoIndexWorldPluginRoot.getMarketPrice(fiatCurrency,cryptoCurrency,0);
-        System.out.println("Price: " +price );
+        price = cryptoIndexWorldPluginRoot.getMarketPrice(fiatCurrency, cryptoCurrency, 0);
+        System.out.println("Price: " + price);
 
         Assertions.assertThat(price).isNotNull();
     }

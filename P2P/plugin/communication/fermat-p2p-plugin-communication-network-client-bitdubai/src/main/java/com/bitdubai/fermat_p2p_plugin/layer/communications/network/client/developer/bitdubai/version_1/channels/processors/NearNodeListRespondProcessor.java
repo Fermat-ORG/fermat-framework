@@ -3,16 +3,16 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.NearNodeListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import javax.websocket.Session;
 
 /**
  * The Class <code>NearNodeListRespondProcessor</code>
- * process all packages received the type <code>PackageType.NEAR_NODE_LIST_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.NEAR_NODE_LIST_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
@@ -27,12 +27,12 @@ public class NearNodeListRespondProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public NearNodeListRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public NearNodeListRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
-                PackageType.NEAR_NODE_LIST_RESPOND
+                networkClientCommunicationChannel,
+                PackageType.NEAR_NODE_LIST_RESPONSE
         );
 
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER);

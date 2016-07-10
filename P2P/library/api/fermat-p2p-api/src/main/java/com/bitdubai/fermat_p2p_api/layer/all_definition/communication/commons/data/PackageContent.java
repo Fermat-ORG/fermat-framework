@@ -4,6 +4,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Mess
 
 import org.apache.commons.lang.NotImplementedException;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent</code>
  * <p/>
@@ -12,7 +14,7 @@ import org.apache.commons.lang.NotImplementedException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class PackageContent {
+public abstract class PackageContent implements Serializable{
 
     /**
      * Represent the fermatMessageContentType

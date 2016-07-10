@@ -2,26 +2,23 @@ package org.fermat.fermat_dap_android_wallet_asset_user.navigation_drawer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 import java.lang.ref.WeakReference;
-
-import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
-import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.DAP_ASSET_USER_WALLET;
 
 /**
  * Created by frank on 12/9/15.
@@ -31,35 +28,23 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
     private static final String TAG = "UserNavigationView";
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation identityAssetUser;
-    AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
-    private ErrorManager errorManager;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> assetUserSession;
 
-    public UserWalletNavigationViewPainter(Context activity, AssetUserSession assetUserSession) {
-        this.activity = new WeakReference<Context>(activity);
+    public UserWalletNavigationViewPainter(Context activity,
+                                           ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> assetUserSession,
+                                           FermatApplicationCaller applicationsHelper) {
+
+        this.activity = new WeakReference<>(activity);
         this.assetUserSession = assetUserSession;
-
-        errorManager = assetUserSession.getErrorManager();
-
-        try {
-            moduleManager = assetUserSession.getModuleManager();
-            identityAssetUser = this.moduleManager.getActiveAssetUserIdentity();//(assetIssuerSession.getAppPublicKey());
-
-        } catch (FermatException ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                errorManager.reportUnexpectedWalletException(DAP_ASSET_USER_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        }
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetUser);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), assetUserSession, applicationsHelper.get());
         } catch (CantGetIdentityAssetUserException e) {
             e.printStackTrace();
         }
@@ -78,33 +63,45 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-//        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_user_wallet_bottom, base, true);
-        return null;
+        //Dap v3
+        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_v3_navigation_drawer_user_wallet_bottom, base, true);
+
+        //dap v2
+        //return null;
     }
 
-//    @Override
-//    public Bitmap addBodyBackground() {
-//        Bitmap drawable = null;
-//        try {
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inScaled = true;
-//            options.inSampleSize = 5;
-//            drawable = BitmapFactory.decodeResource(
-//                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
-//        } catch (OutOfMemoryError error) {
-//            error.printStackTrace();
-//        }
-//        return drawable;
-//    }
-
+    //DAP V3
     @Override
     public Bitmap addBodyBackground() {
-        return null;
+        Bitmap drawable = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = true;
+            //options.inSampleSize = 5;
+            drawable = BitmapFactory.decodeResource(
+                    activity.get().getResources(), R.drawable.element_background, options);
+        } catch (OutOfMemoryError error) {
+            error.printStackTrace();
+        }
+        return drawable;
     }
 
+    //DAP V2
+    //@Override
+    //public Bitmap addBodyBackground() {
+    //return null;
+    //}
+
+    //DAP V2
+    //@Override
+    //public int addBodyBackgroundColor() {
+    //return 0;
+    //}
+
+    //DAP V3
     @Override
     public int addBodyBackgroundColor() {
-        return 0;
+        return R.drawable.dap_v3_navigation_drawer_user_wallet_gradient_background;
     }
 
     @Override
@@ -114,7 +111,12 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
 
     @Override
     public boolean hasBodyBackground() {
-        return false;
+
+        //dap v2
+        //return false;
+
+        //dap v3
+        return true;
     }
 
     @Override

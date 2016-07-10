@@ -27,11 +27,14 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettingsManager;
+
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 
 /**
@@ -45,18 +48,18 @@ import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidC
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSettings,ActiveActorIdentityInformation> implements AndroidCoreModule {
+public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSettings, ActiveActorIdentityInformation> implements AndroidCoreModule {
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_CLIENT)
+    private NetworkClientManager wsCommunicationsCloudClientManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+    private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    public AndroidCoreModulePluginRoot(){
+    public AndroidCoreModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
@@ -69,31 +72,30 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
 
     /**
      * Module Manager Implementation
-     *
      */
 
 
     @Override
     public NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException {
         try {
-            if( this.wsCommunicationsCloudClientManager.isConnected())
+            if (this.wsCommunicationsCloudClientManager.getConnection().isConnected())
                 return NetworkStatus.CONNECTED;
             else
                 return NetworkStatus.DISCONNECTED;
         } catch (Exception e) {
-            throw new CantGetCommunicationNetworkStatusException(CantGetCommunicationNetworkStatusException.DEFAULT_MESSAGE,e,"","Cant Get Cloud Cient Network Connection Status");
+            throw new CantGetCommunicationNetworkStatusException(CantGetCommunicationNetworkStatusException.DEFAULT_MESSAGE, e, "", "Cant Get Cloud Cient Network Connection Status");
         }
     }
 
     @Override
     public NetworkStatus getBitcoinNetworkStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBitcoinNetworkStatusException {
         try {
-            if(bitcoinNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType).isConnected())
+            if (bitcoinNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType).isConnected())
                 return NetworkStatus.CONNECTED;
             else
                 return NetworkStatus.DISCONNECTED;
         } catch (CantGetBlockchainConnectionStatusException e) {
-            throw new CantGetBitcoinNetworkStatusException(CantGetBitcoinNetworkStatusException.DEFAULT_MESSAGE,e,"","Cant Get Bitcoin Network Connection Status");
+            throw new CantGetBitcoinNetworkStatusException(CantGetBitcoinNetworkStatusException.DEFAULT_MESSAGE, e, "", "Cant Get Bitcoin Network Connection Status");
         }
     }
 
@@ -102,13 +104,10 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
         return NetworkStatus.CONNECTED;
     }
 
-    public void setWsCommunicationsCloudClientManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
-    }
 
     @Override
     public SettingsManager getSettingsManager() {
-        return new AndroidCoreSettingsManager(pluginFileSystem,pluginId);
+        return new AndroidCoreSettingsManager(pluginFileSystem, pluginId);
     }
 
     @Override
@@ -139,7 +138,7 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
 
     @Override
     public void persistSettings(String publicKey, AndroidCoreSettings settings) throws CantPersistSettingsException {
-        getSettingsManager().persistSettings(publicKey,settings);
+        getSettingsManager().persistSettings(publicKey, settings);
     }
 
     @Override
@@ -147,13 +146,13 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
         AndroidCoreSettings androidCoreSettings = null;
         try {
             androidCoreSettings = (AndroidCoreSettings) getSettingsManager().loadAndGetSettings(publicKey);
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (androidCoreSettings == null) {
                 androidCoreSettings = new AndroidCoreSettings(AppsStatus.ALPHA);
                 try {
                     getSettingsManager().persistSettings(publicKey, androidCoreSettings);
                 } catch (CantPersistSettingsException e1) {
-                    throw new CantGetSettingsException(e1,"Settings manager fail in android core module","");
+                    throw new CantGetSettingsException(e1, "Settings manager fail in android core module", "");
                 }
             }
         }

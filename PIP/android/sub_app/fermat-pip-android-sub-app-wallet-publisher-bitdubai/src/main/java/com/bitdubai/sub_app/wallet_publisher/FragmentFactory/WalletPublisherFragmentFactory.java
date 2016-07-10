@@ -5,17 +5,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment;
-import com.bitdubai.sub_app.wallet_publisher.preference_settings.WalletPublisherPreferenceSettings;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class WalletPublisherFragmentFactory extends FermatFragmentFactory<WalletPublisherSubAppSession,SubAppResourcesProviderManager,WalletPublisherFragmentsEnumType> {
+public class WalletPublisherFragmentFactory extends FermatFragmentFactory<WalletPublisherSubAppSession, SubAppResourcesProviderManager, WalletPublisherFragmentsEnumType> {
 
 
-    public WalletPublisherFragmentFactory(){
+    public WalletPublisherFragmentFactory() {
 
     }
 
@@ -23,15 +22,15 @@ public class WalletPublisherFragmentFactory extends FermatFragmentFactory<Wallet
     public AbstractFermatFragment getFermatFragment(WalletPublisherFragmentsEnumType fragments) throws FragmentNotFoundException {
         AbstractFermatFragment currentFragment = null;
 
-        switch (fragments){
+        switch (fragments) {
             /**
              * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_PUBLISHER_MAIN_FRAGMENT:
-                currentFragment =  MainFragment.newInstance();
+                currentFragment = MainFragment.newInstance();
                 break;
             default:
-                throw new FragmentNotFoundException("Fragment not found",new Exception(),fragments.toString(),"Swith failed");
+                throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");
         }
         return currentFragment;
     }
@@ -40,8 +39,6 @@ public class WalletPublisherFragmentFactory extends FermatFragmentFactory<Wallet
     public WalletPublisherFragmentsEnumType getFermatFragmentEnumType(String key) {
         return WalletPublisherFragmentsEnumType.getValue(key);
     }
-
-
 
 
 }

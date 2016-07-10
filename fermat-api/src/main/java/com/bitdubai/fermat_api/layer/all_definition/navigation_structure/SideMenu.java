@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSideMenu;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +12,14 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.07.17..
  */
 
-public class SideMenu implements FermatSideMenu {
+public class SideMenu implements FermatSideMenu,Serializable {
 
     /**
      * SideMenu class member variables
      */
     List<MenuItem> menuItems = new ArrayList<>();
     private String backgroundColor;
+    private FermatDrawable backgroundDrawable;
     private String navigationIconColor;
     private boolean hasFooter=false;
 
@@ -91,5 +93,13 @@ public class SideMenu implements FermatSideMenu {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public FermatDrawable getBackgroundDrawable() {
+        return backgroundDrawable;
+    }
+
+    public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
     }
 }

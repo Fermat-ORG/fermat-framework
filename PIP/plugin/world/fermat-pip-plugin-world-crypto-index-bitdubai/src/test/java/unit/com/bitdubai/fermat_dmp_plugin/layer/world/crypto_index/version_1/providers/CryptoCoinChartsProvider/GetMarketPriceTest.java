@@ -2,7 +2,6 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.version_1.p
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BtceProvider;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.CryptoCoinChartsProvider;
 
 import org.fest.assertions.api.Assertions;

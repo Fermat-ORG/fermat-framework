@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -22,14 +23,21 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
+
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -48,10 +56,12 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransactionSummary;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantGetTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
@@ -117,8 +127,13 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.structure.FermatWalletWalletModuleWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetBasicWalletExchangeProviderException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSetBasicWalletExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.event_handlers.BlockchainDownloadUpToDateEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions.CantCreateOrRegisterActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException;
@@ -126,18 +141,31 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.develope
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions.CantGetActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+
 import org.apache.commons.collections.CollectionUtils;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -154,14 +182,15 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_WALLET)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_FERMAT_WALLET)
+
 public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWalletSettings> implements FermatWallet,Serializable {
 
-    private final FermatWalletManager bitcoinWalletManager          ;
+    private final CryptoWalletManager bitcoinWalletManager          ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
-    private final CryptoVaultManager cryptoVaultManager            ;
+    private final CryptoVaultManager cryptoVaultManager                        ;
 
     private final ExtraUserManager               extraUserManager              ;
     private final IntraWalletUserActorManager    intraUserManager              ;
@@ -172,29 +201,37 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
     private final EventManager eventManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager                   ;
+    private final BlockchainManager<ECKey, Transaction> fermatNetworkManager                     ;
     private final Broadcaster                   broadcaster                     ;
     private final WalletManagerManager walletManagerManager;
     private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
     private final ErrorManager errorManager;
+    private final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
+    private LocationManager locationManager;
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    public FermatWalletWalletModuleManager(final FermatWalletManager bitcoinWalletManager,
+    public FermatWalletWalletModuleManager(final CryptoWalletManager bitcoinWalletManager,
                                            final CryptoAddressBookManager cryptoAddressBookManager,
                                            final CryptoAddressesManager cryptoAddressesNSManager,
                                            final CryptoPaymentManager cryptoPaymentManager,
-                                           final CryptoVaultManager cryptoVaultManager,
+                                           final CryptoVaultManager cryptoVaultManager ,
                                            final ErrorManager errorManager,
                                            final ExtraUserManager extraUserManager,
                                            final IntraWalletUserActorManager intraUserManager,
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
-                                           final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
-                                           final EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster,
+                                           final WalletContactsManager walletContactsManager,
+                                           final UUID pluginId,
+                                           final PluginFileSystem pluginFileSystem,
+                                           final EventManager eventManager,
+                                           final BlockchainManager<ECKey, Transaction> fermatNetworkManager,
+                                           final Broadcaster broadcaster,
+                                           final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
                                            final WalletManagerManager walletManagerManager,
-                                           final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
+                                           final TransferIntraWalletUsersManager transferIntraWalletUsersManager,
+                                           final LocationManager locationManager) {
         super(pluginFileSystem,pluginId);
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
@@ -213,14 +250,20 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         this.pluginFileSystem = pluginFileSystem;
         this.eventManager = eventManager;
 
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.fermatNetworkManager = fermatNetworkManager;
+        this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
         this.broadcaster = broadcaster;
         this.walletManagerManager = walletManagerManager;
         this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
+        this.locationManager = locationManager;
     }
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;
     private WalletContactsRegistry walletContactsRegistry;
+
+  /*  public FermatWalletWalletModuleManager(CryptoWalletManager cryptoWalletManager, CryptoAddressBookManager cryptoAddressBookManager, CryptoAddressesManager cryptoAddressesNSManager, CryptoPaymentManager cryptoPaymentManager, CryptoVaultManager cryptoVaultManager, ErrorManager errorManager, ExtraUserManager extraUserManager, IntraWalletUserActorManager intraWalletUserActorManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, OutgoingExtraUserManager outgoingExtraUserManager, OutgoingIntraActorManager outgoingIntraActorManager, WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem, EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster, WalletManagerManager walletManagerManager, TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
+        super(cryptoWalletManager, cryptoAddressBookManager, cryptoAddressesNSManager, cryptoPaymentManager, cryptoVaultManager, errorManager, extraUserManager, intraWalletUserActorManager, intraWalletUserIdentityManager, outgoingExtraUserManager, outgoingIntraActorManager, walletContactsManager, pluginId, pluginFileSystem, eventManager, bitcoinNetworkManager, broadcaster, walletManagerManager, transferIntraWalletUsersManager);
+    }*/
 
 
     public final void initialize() throws CantInitializeCryptoWalletManagerException {
@@ -257,6 +300,155 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
             throw new CantInitializeCryptoWalletManagerException(e, "", "Unhandled error.");
         }
     }
+
+
+
+    @Override
+    public UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException {
+
+        try {
+            return bitcoinWalletManager.getExchangeProviderId();
+
+
+        } catch (CantGetExchangeProviderIdException e) {
+            throw new CantGetBasicWalletExchangeProviderException(CantGetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantGetSettingsException: " + e.toString(), "");
+
+        }
+    }
+
+    @Override
+    public void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException {
+        try {
+            bitcoinWalletManager.saveExchangeProviderIdFile(idProvider);
+
+
+        } catch (CantSaveExchangeProviderIdException e) {
+            throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantGetSettingsException: " + e.toString(), "");
+
+        }
+
+    }
+
+    @Override
+    public ExchangeRate getCurrencyExchange(UUID rateProviderManagerId,FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeException {
+
+        ExchangeRate rate = null;
+        try {
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
+            CurrencyExchangeRateProviderManager  rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
+            //your exchange rate.
+            rate = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
+
+        } catch (CantGetExchangeRateException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "ExchangeRate error.");
+        } catch (UnsupportedCurrencyPairException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE, e, "", "UnsupportedCurrencyPair error.");
+
+        }catch(Exception e){
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE, e, "", "unknown error.");
+
+        }
+
+        return rate;
+    }
+
+    @Override
+    public  List<ExchangeRateProvider> getExchangeRateProviders() throws CantGetCurrencyExchangeProviderException {
+        List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
+        try {
+
+            //looking all providers
+
+
+            Map<UUID, String> providerARG = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.ARGENTINE_PESO));
+            if (providerARG.size()>0){
+                Iterator entries = providerARG.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
+
+
+            Map<UUID, String> providerUSD = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.US_DOLLAR));
+            if (providerUSD.size()>0){
+                Iterator entries = providerUSD.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
+
+            Map<UUID, String> providerVEN = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.BITCOIN,FiatCurrency.VENEZUELAN_BOLIVAR));
+            if (providerVEN.size()>0){
+                Iterator entries = providerVEN.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
+
+
+
+            Map<UUID, String> providerEUR = exchangeProviderFilterManagerproviderFilter.getProviderNamesListFromCurrencyPair(
+                    new CurrencyPairImpl(CryptoCurrency.FERMAT, FiatCurrency.EURO));
+            if (providerEUR.size()>0){
+                Iterator entries = providerEUR.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry thisEntry = (Map.Entry) entries.next();
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+
+                    filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+                }
+            }
+
+        }
+        catch (Exception e) {
+            throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "unknown error.");
+        }
+
+        return filteredProviders;
+    }
+
+    @Override
+    public  List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException {
+        List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
+        try {
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
+
+            Collection<CurrencyExchangeRateProviderManager> providers = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
+
+            for (Iterator iterator = providers.iterator(); iterator.hasNext();) {
+                CurrencyExchangeRateProviderManager data = (CurrencyExchangeRateProviderManager) iterator.next();
+
+                filteredProviders.add(new FermatWalletExchangeRateProvider(data.getProviderId(), data.getProviderName()));
+
+            }
+
+
+        } catch (CantGetProviderException e) {
+            throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "Provider error.");
+        }
+        catch (Exception e) {
+            throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "unknown error.");
+        }
+
+        return filteredProviders;
+    }
+
 
     @Override
     public List<FermatWalletWalletContact> listWalletContacts(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException {
@@ -791,7 +983,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                            String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceException {
         try {
-            FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
         } catch (CantLoadWalletsException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
@@ -812,10 +1004,10 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         List<FermatWalletModuleTransaction> fermatWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null) {
-                FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-                List<FermatWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
+                CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
                     fermatWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -833,11 +1025,11 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                                                  int max,
                                                                  int offset) throws CantListTransactionsException {
         try {
-            FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<FermatWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
+            List<CryptoWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
 
-            for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+            for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -858,14 +1050,14 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                                                         int max,
                                                                         int offset) throws CantListTransactionsException {
         try {
-            FermatWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<FermatWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
+            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
 
 
-                List<FermatWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
 
                     if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
                         bitcoinWalletTransactionList1.add(bwt);
@@ -877,7 +1069,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
 
 
-            for (FermatWalletTransaction bwt : bitcoinWalletTransactionList1) {
+            for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -894,7 +1086,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                                               String walletPublicKey,
                                                               String actorPublicKey) throws CantGetActorTransactionHistoryException {
         try {
-            FermatWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return constructActorTransactionSummary(fermatWalletWallet.getActorTransactionSummary(actorPublicKey, balanceType));
         } catch (CantLoadWalletsException | CantGetActorTransactionSummaryException e) {
             throw new CantGetActorTransactionHistoryException(CantGetActorTransactionHistoryException.DEFAULT_MESSAGE, e);
@@ -919,24 +1111,24 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null){
-                FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-                List<FermatWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
+                CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
                         balanceType,
                         transactionType,
                         max,
                         offset
                 );
 
-                List<FermatWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
 
                     if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
                         if (bitcoinWalletTransactionList1.isEmpty()){
                             bitcoinWalletTransactionList1.add(bwt);
                         }else {
                             int count = 0;
-                            for (FermatWalletTransaction bwt1 : bitcoinWalletTransactionList1) {
+                            for (CryptoWalletTransaction bwt1 : bitcoinWalletTransactionList1) {
                                 if (bwt1.getActorToPublicKey().equals(bwt.getActorToPublicKey())) {
                                     count++;
                                 }
@@ -950,7 +1142,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
 
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList1) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -966,10 +1158,10 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
         try {
             FermatWalletModuleTransaction cryptoWalletTransaction;
-            FermatWalletWallet bitcoinWalletWallet;
+            CryptoWalletWallet bitcoinWalletWallet;
             bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            FermatWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
+            CryptoWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
             cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
 
             return  cryptoWalletTransaction;
@@ -990,7 +1182,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                           String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException {
 
         try {
-            FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             bitcoinWalletWallet.setTransactionDescription(transactionID, description);
         } catch (CantLoadWalletsException | CantStoreMemoException e) {
             throw new CantSaveTransactionDescriptionException(CantSaveTransactionDescriptionException.DEFAULT_MESSAGE, e);
@@ -1001,7 +1193,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         }
     }
 
-    private ActorTransactionSummary constructActorTransactionSummary(FermatWalletTransactionSummary transactionSummary) {
+    private ActorTransactionSummary constructActorTransactionSummary(CryptoWalletTransactionSummary transactionSummary) {
         return new FermatWalletWalletModuleActorTransactionSummary(
                 transactionSummary.getSentTransactionsNumber(),
                 transactionSummary.getReceivedTransactionsNumber(),
@@ -1011,18 +1203,21 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType,CryptoCurrency cryptoCurrency) throws CantSendFermatException, InsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType,
+                     CryptoCurrency cryptoCurrency,
+                     long fee,
+                     FeeOrigin feeOrigin) throws CantSendFermatException, InsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType,cryptoCurrency);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType,cryptoCurrency,fee,feeOrigin);
 
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,cryptoCurrency);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,cryptoCurrency,fee,feeOrigin);
                     break;
             }
 
@@ -1165,7 +1360,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
         try {
-            return this.bitcoinNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
+            return this.fermatNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
 
         }
         catch (CantGetBlockchainDownloadProgress e) {
@@ -1238,7 +1433,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                             Actors.INTRA_USER,
                             intraUserLoggedInPublicKey,
                             paymentRequest.getWalletPublicKey() ,
-                            CryptoCurrency.BITCOIN,
+                            CryptoCurrency.FERMAT,
                             paymentRequest.getNetworkType());
                 }
                 catch (Exception e1)
@@ -1301,7 +1496,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     @Override
     public boolean isValidAddress(CryptoAddress cryptoAddress) {
-        return cryptoVaultManager.isValidAddress(cryptoAddress);
+        //todo Natalia corregir
+        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
     }
 
     @Override
@@ -1379,14 +1575,14 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
-            case BASIC_WALLET_BITCOIN_WALLET:
+            case BASIC_WALLET_FERMAT_WALLET:
                 return cryptoVaultManager.getAddress(blockchainNetworkType);
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }
     }
 
-    private FermatWalletModuleTransaction enrichTransaction(FermatWalletTransaction bitcoinWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
+    private FermatWalletModuleTransaction enrichTransaction(CryptoWalletTransaction bitcoinWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
         try {
             Actor involvedActor = null;
             UUID contactId = null;
@@ -1518,7 +1714,13 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
-        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image);
+        try {
+            intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image,Long.parseLong("100"), Frequency.NORMAL,getLocationManager());
+        } catch (CantGetDeviceLocationException e) {
+            throw new CantCreateNewIntraWalletUserException("CANT Create Intra User",e, "", "CantCreateNewIntraWalletUserException.");
+        } catch (Exception e) {
+            throw new CantCreateNewIntraWalletUserException("CANT Create Intra User",e, "", "CantCreateNewIntraWalletUserException");
+        }
     }
 
 
@@ -1530,8 +1732,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public List<String> getMnemonicText() throws CantGetMnemonicTextException {
         try {
-            return cryptoVaultManager.getMnemonicCode();
-        } catch (CantLoadExistingVaultSeed e) {
+            return cryptoVaultManager.exportCryptoVaultSeed().getMnemonicCode();
+        } catch (Exception e) {
             throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
         }
     }
@@ -1583,7 +1785,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed {
-        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
+        //cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
     }
 
     @Override
@@ -1601,5 +1803,11 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         return new int[0];
     }
 
+
+
+    public Location getLocationManager() throws CantGetDeviceLocationException
+    {
+        return locationManager.getLocation();
+    }
 
 }

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class AndroidCoreSettingsManager extends SettingsManager<AndroidCoreSettings> implements Serializable{
+public class AndroidCoreSettingsManager extends SettingsManager<AndroidCoreSettings> implements Serializable {
 
 
     public AndroidCoreSettingsManager(PluginFileSystem pluginFileSystem, UUID pluginId) {

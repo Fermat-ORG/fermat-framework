@@ -33,7 +33,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRat
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -137,7 +137,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
 //        double purchasePrice = 0;
 //        double salePrice = 0;
 //        try{
-//            JSONObject json = new JSONObject(HttpReader.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
+//            JSONObject json = new JSONObject(HttpHelper.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
 //
 //            purchasePrice = json.getJSONObject("USD").getDouble("transferencia");
 //            salePrice = json.getJSONObject("USD").getDouble("transferencia");

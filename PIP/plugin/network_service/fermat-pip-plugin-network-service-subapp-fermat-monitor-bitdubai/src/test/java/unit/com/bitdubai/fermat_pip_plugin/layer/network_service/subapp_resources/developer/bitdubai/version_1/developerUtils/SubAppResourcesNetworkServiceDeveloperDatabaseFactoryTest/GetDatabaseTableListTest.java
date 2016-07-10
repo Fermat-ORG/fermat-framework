@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -36,7 +35,7 @@ public class GetDatabaseTableListTest {
     private SubAppResourcesNetworkServiceDeveloperDatabaseFactory subAppResourcesNetworkServiceDeveloperDatabaseFactory;
 
     @Test
-    public void getDatabaseTableListTest() throws Exception{
+    public void getDatabaseTableListTest() throws Exception {
         UUID testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);

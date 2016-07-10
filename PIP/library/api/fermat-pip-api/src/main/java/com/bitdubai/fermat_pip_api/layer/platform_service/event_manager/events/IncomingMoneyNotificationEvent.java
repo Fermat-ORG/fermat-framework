@@ -20,7 +20,7 @@ public class IncomingMoneyNotificationEvent extends AbstractFermatEvent {
     private String transactionHash;
 
 
-    public IncomingMoneyNotificationEvent(EventType eventType, String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType, String transactionHash) {
+    public IncomingMoneyNotificationEvent(EventType eventType, String intraUserIdentityPublicKey, String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType, String transactionHash) {
         super(eventType);
         this.walletPublicKey = walletPublicKey;
         this.amount = amount;
@@ -84,9 +84,13 @@ public class IncomingMoneyNotificationEvent extends AbstractFermatEvent {
         this.actorType = actorType;
     }
 
-    public String getTransactionHash(){ return transactionHash; }
+    public String getTransactionHash() {
+        return transactionHash;
+    }
 
-    public void setTransactionHash(String transactionHash){ this.transactionHash = transactionHash; }
+    public void setTransactionHash(String transactionHash) {
+        this.transactionHash = transactionHash;
+    }
 
 
 }

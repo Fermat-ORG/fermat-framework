@@ -4,13 +4,15 @@ package org.fermat.fermat_dap_api.layer.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
+
 /**
  * The enum <code>com.bitdubai.fermat_dap_api.layer.all_definition.enums.ConnectionState</code>
  * enumerates the states of connection of a common Fermat Actor Asset.
  * <p/>
  * Created by Nerio on 10/11/15.
  */
-public enum DAPConnectionState implements FermatEnum {
+public enum DAPConnectionState implements FermatEnum, Serializable {
 
     /**
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.

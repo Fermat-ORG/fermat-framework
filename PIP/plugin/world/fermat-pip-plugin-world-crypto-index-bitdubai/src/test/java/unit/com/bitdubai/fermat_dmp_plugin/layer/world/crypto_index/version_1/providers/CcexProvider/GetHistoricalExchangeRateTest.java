@@ -14,13 +14,14 @@ public class GetHistoricalExchangeRateTest {
     private CryptoCurrency cryptoCurrencyTest;
     private FiatCurrency fiatCurrencyTest;
     private long time;
+
     @Test
-    public void TestGetHistoricalExchangeRateTest() throws Exception{
+    public void TestGetHistoricalExchangeRateTest() throws Exception {
         cryptoCurrencyTest = CryptoCurrency.getByCode("BTC");
         fiatCurrencyTest = FiatCurrency.getByCode("USD");
-        double price =0;
+        double price = 0;
         long time = 1443038589;
-        price=ccexProvider.getHistoricalExchangeRate(cryptoCurrencyTest,fiatCurrencyTest,time);
+        price = ccexProvider.getHistoricalExchangeRate(cryptoCurrencyTest, fiatCurrencyTest, time);
         System.out.println(price);
     }
 }

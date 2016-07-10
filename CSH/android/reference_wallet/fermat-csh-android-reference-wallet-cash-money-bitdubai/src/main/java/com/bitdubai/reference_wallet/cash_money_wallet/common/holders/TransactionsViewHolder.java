@@ -13,6 +13,7 @@ import com.bitdubai.reference_wallet.cash_money_wallet.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 
 /**
  * Created by Alejandro Bicelis on 12/11/2015.
@@ -45,10 +46,13 @@ public class TransactionsViewHolder extends FermatViewHolder {
     public void bind(CashMoneyWalletTransaction itemInfo) {
         if(itemInfo.isPending()) {
             progressBar.setVisibility(View.VISIBLE);
-            progressBar.getIndeterminateDrawable().setColorFilter(
+            progressBar.setIndeterminate(false);
+            progressBar.setMax(15);
+            int timeDiff = (int) (new Date().getTime()/1000 - itemInfo.getTimestamp());
+            progressBar.setProgress(timeDiff);
+            progressBar.getProgressDrawable().setColorFilter(
                     getTransactionTypeColorProgressBar(itemInfo.getTransactionType()),
                     android.graphics.PorterDuff.Mode.SRC_IN);
-
         }
         else
             progressBar.setVisibility(View.INVISIBLE);

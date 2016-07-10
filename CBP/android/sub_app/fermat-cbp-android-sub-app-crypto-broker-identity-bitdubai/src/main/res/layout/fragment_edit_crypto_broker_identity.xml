@@ -1,116 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background">
-
-
-    <RelativeLayout
-        android:id="@+id/user_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/centro">
-
-        <ImageView
-            android:id="@+id/crypto_broker_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            tools:ignore="ContentDescription"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pic_space" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text=""
-            android:ems="10"
-            android:id="@+id/crypto_broker_name"
-            android:textColor="#ffffff"
-            android:editable="true"
-            android:selectAllOnFocus="true"
-            android:background="#cc808080"
-            android:padding="12dp"
-            android:hint="Enter name or alias"
-            android:textSize="18dp"
-            android:gravity="center_vertical"
-            android:layout_alignBottom="@+id/crypto_broker_image"
-            android:layout_alignParentStart="true"
-            android:textColorHint="#ffffff">
-            <requestFocus />
-        </EditText>
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:id="@+id/camara"
-            android:src="@drawable/pic_with_cam"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="false"
-            android:background="#32ffffff"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:id="@+id/galeria"
-            android:src="@drawable/pic_on_mcard"
-            android:scaleType="fitXY"
-            android:background="#32ffffff"
-            android:layout_above="@+id/camara"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="2dp" />
-
-    </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/centro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/user_image"
-        android:layout_centerHorizontal="true"
+        android:background="@drawable/background"
         android:orientation="vertical">
 
 
         <RelativeLayout
-            android:id="@+id/user_sw"
+            android:id="@+id/user_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_alignBottom="@+id/centro"
-            android:layout_marginBottom="45dp">
+            android:layout_height="300dp"
+            android:gravity="center">
 
             <ImageView
+                android:id="@+id/crypto_broker_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pic_space"
+                tools:ignore="ContentDescription"/>
+
+            <EditText
+                android:id="@+id/crypto_broker_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/sw"
-                android:src="@drawable/switch_notvisible"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp" />
+                android:layout_alignBottom="@+id/crypto_broker_image"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="#cc808080"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="Enter name or alias"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:selectAllOnFocus="true"
+                android:text=""
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff"
+                android:textSize="18sp">
+
+                <requestFocus/>
+            </EditText>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/crypto_broker_name_text_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="50"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageView
+                android:id="@+id/camara"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:adjustViewBounds="false"
+                android:background="#32ffffff"
+                android:scaleType="fitXY"
+                android:src="@drawable/pic_with_cam"/>
+
+            <ImageView
+                android:id="@+id/galeria"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:layout_above="@+id/camara"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="2dp"
+                android:background="#32ffffff"
+                android:scaleType="fitXY"
+                android:src="@drawable/pic_on_mcard"/>
 
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/sw"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_weight="1"
+            android:src="@drawable/switch_notvisible"/>
+
+        <Button
+            android:id="@+id/update_crypto_broker_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00D8B4"
+            android:text="@string/update"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+
     </LinearLayout>
 
-    <Button
-        android:id="@+id/update_crypto_broker_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#00D8B4"
-        android:text="@string/update"
-        android:textColor="@android:color/white"
-        android:textSize="18dp" />
-</RelativeLayout>
+    <ProgressBar
+        android:id="@+id/cbi_progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+</FrameLayout>

@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2015.09.1..
  */
-public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTitleBar {
+public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTitleBar,Serializable {
 
     /**
      * class private attributes
@@ -24,6 +26,15 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     private byte[] toggleIcon;
     private boolean isTitleTextStatic;
     private String font;
+
+    private FermatDrawable backgroundDrawable;
+
+    /**
+     * This icon will be used for open the navigationDrawer, go back
+     * If you put the appLink of the item "Back" the app will back when the user press the item
+      */
+
+    private MenuItem navItem;
 
     public void setFont(String font) {
         this.font = font;
@@ -139,5 +150,21 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public String getFont() {
         return font;
+    }
+
+    public MenuItem getNavItem() {
+        return navItem;
+    }
+
+    public void setNavItem(MenuItem navItem) {
+        this.navItem = navItem;
+    }
+
+    public FermatDrawable getBackgroundDrawable() {
+        return backgroundDrawable;
+    }
+
+    public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
     }
 }

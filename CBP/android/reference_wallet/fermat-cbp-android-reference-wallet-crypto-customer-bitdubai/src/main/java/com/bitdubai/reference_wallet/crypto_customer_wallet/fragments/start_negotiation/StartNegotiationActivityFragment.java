@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -18,9 +20,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -30,10 +35,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.StartNegotiationAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextValueDialog;
@@ -42,12 +46,13 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,7 +63,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  * Modified by Yordin Alayn 21.01.16
  */
-public class StartNegotiationActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+public class StartNegotiationActivityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "StartNegotiationFrag";
@@ -88,7 +93,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
+            numberFormat.setMaximumFractionDigits(8);
             //NEGOTIATION INFORMATION
 
         } catch (Exception e) {
@@ -112,7 +117,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     /*-------------------------------------------------------------------------------------------------
                                             ON CLICK METHODS
     ---------------------------------------------------------------------------------------------------*/
-    
+
     @Override
     public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
         SimpleListDialogFragment dialogFragment;
@@ -144,7 +149,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 });
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
-                clauseTextDialog.configure(R.string.ccw_amount_to_buy, R.string.ccw_value);
+                clauseTextDialog.configure(R.string.ccw_amount_to_pay, R.string.ccw_value);
 
                 clauseTextDialog.show();
                 break;
@@ -160,7 +165,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
                 clauseTextDialog.setEditTextValue(clause.getValue());
                 clauseTextDialog.configure(
-                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_pay,
+                        type.equals(ClauseType.EXCHANGE_RATE) ? R.string.ccw_your_exchange_rate : R.string.ccw_amount_to_buy,
                         type.equals(ClauseType.EXCHANGE_RATE) ? R.string.amount : R.string.ccw_value);
 
                 clauseTextDialog.show();
@@ -183,6 +188,19 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
                 if (validateClauses(mapClauses)) {
 
                     clauses = getClause(mapClauses);
+
+                   /* if(mapClauses.get(ClauseType.BROKER_CURRENCY).getValue().equals()){
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle("Important Information");
+                        alertDialog.setMessage("The Miner Fee of this transaction is 0.000015 Bitcoins");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }*/
 
                     if (moduleManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
                         Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
@@ -241,9 +259,9 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     }
 
     private void bindData() {
-        quotes = appSession.getQuotes();
-        ActorIdentity broker = appSession.getSelectedBrokerIdentity();
-        Currency currencyToBuy = appSession.getCurrencyToBuy();
+        quotes = getQuotes();
+        ActorIdentity broker = getSelectedBrokerIdentity();
+        Currency currencyToBuy = getCurrencyToBuy();
         negotiationInfo = createNewEmptyNegotiationInfo();
 
         //NEGOTIATION SUMMARY
@@ -266,9 +284,29 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
-        adapter.setMarketRateList(appSession.getActualExchangeRates());
+        adapter.setMarketRateList(getActualExchangeRates());
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private List<MerchandiseExchangeRate> getQuotes() {
+        Object data = appSession.getData(FragmentsCommons.QUOTES);
+        return (data != null) ? (List<MerchandiseExchangeRate>) data : null;
+    }
+
+    private List<IndexInfoSummary> getActualExchangeRates() {
+        Object data = appSession.getData(FragmentsCommons.EXCHANGE_RATES);
+        return (data != null) ? (List<IndexInfoSummary>) data : null;
+    }
+
+    private ActorIdentity getSelectedBrokerIdentity() {
+        Object data = appSession.getData(FragmentsCommons.BROKER_ACTOR);
+        return (data != null) ? (ActorIdentity) data : null;
+    }
+
+    private Currency getCurrencyToBuy() {
+        Object data = appSession.getData(FragmentsCommons.CURRENCY_TO_BUY);
+        return (data != null) ? (Currency) data : null;
     }
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
@@ -277,14 +315,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             negotiationInfo.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
             MerchandiseExchangeRate exchangeRate = quotes.get(0);
 
-            final Currency currency = appSession.getCurrencyToBuy();
+            final Currency currency = getCurrencyToBuy();
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY, currency.getCode());
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY, exchangeRate.getPaymentCurrency().getCode());
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, numberFormat.format(exchangeRate.getExchangeRate()));
 
-            final ActorIdentity brokerIdentity = appSession.getSelectedBrokerIdentity();
+            final ActorIdentity brokerIdentity = getSelectedBrokerIdentity();
             if (brokerIdentity != null)
                 negotiationInfo.setBroker(brokerIdentity);
 
@@ -329,8 +367,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
+            //LOCATION TO FIX THE DECIMAL FORMAT
+     //       new BigDecimal(DecimalFormat.getInstance(this.getResources().getConfiguration().locale).parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString())
+
+
             //ASIGNAMENT NEW VALUE
-            newValue = numberFormat.format(getBigDecimal(newValue));
+            //change lostwood
+         //   newValue = numberFormat.format(getBigDecimal(newValue));
+            newValue = numberFormat.format(new BigDecimal(newValue));
             negotiationInfo.putClause(clause, newValue);
 
             //CALCULATE CUSTOMER CURRENCY QUANTITY
@@ -355,16 +399,28 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
         //ASIGNAMENT NEW VALUE
-        newValue = numberFormat.format(getBigDecimal(newValue));
+        //Change Lostwood
+        //newValue = numberFormat.format(getBigDecimal(newValue));
+        newValue = numberFormat.format(new BigDecimal(newValue));
+
         negotiationInfo.putClause(clause, newValue);
 
-        //CALCULATE BROKER CURRENCY
-        final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
+        //CALCULATE BROKER CURRENCY CHANGE LOSTWOOD
+       /* final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
         final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace(",", ""));
-        final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);
+        final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);*/
+        BigDecimal amountToPay=new BigDecimal(0);
+        try {
+            final BigDecimal exchangeRate = new BigDecimal(numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString());
+            final BigDecimal amountToBuy =new BigDecimal(numberFormat.parse( clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()).toString());
+            amountToPay = amountToBuy.multiply(exchangeRate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         //ASIGNAMENT BROKER CURRENCY
-        final String amountToPayStr = DecimalFormat.getInstance().format(amountToPay.doubleValue());
+        final String amountToPayStr = numberFormat.format(amountToPay.doubleValue());
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
@@ -523,7 +579,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     }
 
     private BigDecimal getBigDecimal(String value) {
-        return new BigDecimal(value.replace(",", ""));
+        //change lostwood
+        //numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString()
+        //return new BigDecimal(value.replace(",", ""));
+
+        try {
+            return new BigDecimal(numberFormat.parse(value).toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new BigDecimal(0);
+        }
     }
 
     /*------------------------------------------ OTHER METHODS ---------------------------------------------*/

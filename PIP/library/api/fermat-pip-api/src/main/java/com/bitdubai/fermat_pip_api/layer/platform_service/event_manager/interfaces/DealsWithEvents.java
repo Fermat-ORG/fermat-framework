@@ -3,7 +3,7 @@ package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfa
 /**
  * Created by ciencias on 24.01.15.
  */
- public interface DealsWithEvents {
+public interface DealsWithEvents {
 
-    void setEventManager(EventManager eventManager);
+    void setEventManager(com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager eventManager);
 }

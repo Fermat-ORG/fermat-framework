@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -32,13 +33,15 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -81,9 +84,15 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    private UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent agent;
+    //private UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent agent;
+    private UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 agent;
 
     private UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionManager;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
 
     public UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot() {
@@ -176,9 +185,11 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-
-        if (agent == null) {
-            agent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(
+        try{
+            agent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     this,
                     customerBrokerPurchaseNegotiationManager,
                     pluginDatabaseSystem,
@@ -189,9 +200,14 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     currencyExchangeRateProviderFilter,
                     cryptoBrokerWalletManager,
                     broadcaster);
+            agent.start();
+        } catch (CantStartAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         }
 
-        agent.start();
+        serviceStatus = ServiceStatus.STARTED;
     }
 
     /**

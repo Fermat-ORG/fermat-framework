@@ -14,25 +14,31 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetLocationsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String> {
+public class WizardPageSetLocationsFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String> {
     // Constants
     private static final String TAG = "WizardPageSetLocations";
 
@@ -40,7 +46,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     private List<String> locationList;
 
     // UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
     private RecyclerView recyclerView;
     private LocationsAdapter adapter;
     private View emptyView;
@@ -59,26 +65,23 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Delete potential previous configurations made by this wizard page so that they can be reconfigured cleanly
             moduleManager.clearLocations();
 
+            CryptoCustomerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if(aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
-
-            Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
+            Object data = appSession.getData(FragmentsCommons.LOCATION_LIST);
             if (data == null) {
                 locationList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+                appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
-            if(locationList.size()>0) {
+            if (locationList.size() > 0) {
                 int pos = locationList.size() - 1;
                 if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
                     locationList.remove(pos);
@@ -96,14 +99,15 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if(!hideHelperDialogs) {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+        if (isHomeTutorialDialogEnabled) {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
                     .setIconRes(R.drawable.cbp_crypto_customer)
                     .setSubTitle(R.string.ccw_wizard_locations_dialog_sub_title)
                     .setBody(R.string.ccw_wizard_locations_dialog_body)
                     .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }

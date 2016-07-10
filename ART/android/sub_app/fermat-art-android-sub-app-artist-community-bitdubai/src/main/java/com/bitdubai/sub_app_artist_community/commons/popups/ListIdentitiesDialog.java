@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -17,7 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppSelectableIdentitiesListAdapter;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public class ListIdentitiesDialog extends
         FermatDialog<
-                ArtistSubAppSession,
+                ReferenceAppFermatSession<ArtistCommunitySubAppModuleManager>,
                 SubAppResourcesProviderManager>
         implements
         FermatListItemListeners<ArtistCommunitySelectableIdentity> {
@@ -44,14 +45,14 @@ public class ListIdentitiesDialog extends
     private ArtistCommunitySubAppModuleManager manager;
 
     public ListIdentitiesDialog(final Context activity,
-                                final ArtistSubAppSession subAppSession,
+                                final ReferenceAppFermatSession subAppSession,
                                 final SubAppResourcesProviderManager subAppResources) {
         super(
                 activity,
                 subAppSession,
                 subAppResources
         );
-        manager = subAppSession.getModuleManager();
+        manager = (ArtistCommunitySubAppModuleManager) subAppSession.getModuleManager();
     }
 
     @SuppressLint("SetTextI18n")

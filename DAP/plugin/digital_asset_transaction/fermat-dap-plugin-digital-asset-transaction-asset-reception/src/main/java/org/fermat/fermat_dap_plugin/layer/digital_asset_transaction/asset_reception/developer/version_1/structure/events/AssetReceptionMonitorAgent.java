@@ -17,7 +17,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 
@@ -31,7 +32,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DA
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DistributionStatusUpdateContentMessage;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -78,7 +79,7 @@ public class AssetReceptionMonitorAgent implements Agent {
     private final DigitalAssetReceptionVault digitalAssetReceptionVault;
     private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.DigitalAssetReceptor digitalAssetReceptor;
     private final AssetTransmissionNetworkServiceManager assetTransmissionManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final BlockchainManager bitcoinNetworkManager;
     private final ActorAssetUserManager actorAssetUserManager;
     private final ActorAssetIssuerManager assetIssuerManager;
     private final ActorAssetRedeemPointManager redeemPointManager;
@@ -89,7 +90,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                                       AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot,
                                       UUID pluginId,
                                       LogManager logManager,
-                                      BitcoinNetworkManager bitcoinNetworkManager,
+                                      BlockchainManager bitcoinNetworkManager,
                                       AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                       ActorAssetUserManager actorAssetUserManager,
                                       ActorAssetIssuerManager issuerManager,
@@ -332,7 +333,7 @@ public class AssetReceptionMonitorAgent implements Agent {
             }
         }
 
-        private void checkTransactionsByReceptionStatus(ReceptionStatus receptionStatus) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantExecuteQueryException, CantSetObjectException, CantSendMessageException {
+        private void checkTransactionsByReceptionStatus(ReceptionStatus receptionStatus) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantExecuteQueryException, CantSetObjectException, CantSendDAPMessageException {
             DistributionStatus distributionStatus = DistributionStatus.ASSET_REJECTED_BY_CONTRACT;
 
             List<String> genesisTransactionList;

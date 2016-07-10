@@ -4,23 +4,21 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.util.Base64;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecryptException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantEncryptException;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -232,4 +230,66 @@ public class WalletUtils {
 
     }
 
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatAmountStringWithDecimalEntry(double amount,int maxDecimal, int minDecimal) {
+
+        //check if decimal are separated by ,(samsung)
+        String stringAmount = "";
+
+        String value = String.valueOf(amount).replace(",",".");
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(maxDecimal);
+        df.setMinimumFractionDigits(minDecimal);
+
+        stringAmount = df.format(Double.parseDouble(value));
+
+
+        return stringAmount.replace(",",".");
+
+    }
+
+
+
+
+    public static String formatBalanceStringWithDecimalEntry(long amount,int maxDecimal, int minDecimal,int typeAmount) {
+
+        String stringAmount = "";
+
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(maxDecimal);
+            df.setMinimumFractionDigits(minDecimal);
+            String BTCFormat = "";
+
+            BTCFormat = df.format(amount / 100000000.0); //
+
+            stringAmount = BTCFormat ;//+ " BTC";
+        }else if(typeAmount== ShowMoneyType.BITS.getCode()){
+            stringAmount = String.valueOf(amount / 100);
+        }
+        showMoneyType=!showMoneyType;
+
+        return stringAmount;
+
+    }
+
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
+                matrix, false);
+        return resizedBitmap;
+    }
 }

@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.header;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,17 +11,18 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.MarketExchangeRatesPageAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 import com.viewpagerindicator.LinePageIndicator;
 
 import java.lang.ref.WeakReference;
@@ -38,13 +40,13 @@ import java.util.List;
 public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "BrokerWalletHeader";
 
-    private final CryptoBrokerWalletSession session;
+    private final ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private final WeakReference<Context> activity;
     private ErrorManager errorManager;
     private CryptoBrokerWalletModuleManager moduleManager;
 
 
-    public CryptoBrokerWalletHeaderPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
+    public CryptoBrokerWalletHeaderPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> fullyLoadedSession) {
         this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 
@@ -62,8 +64,12 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
-        View container = ((LayoutInflater) activity.get()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.cbw_header_layout, viewGroup, true);
+        LayoutInflater layoutInflater = (LayoutInflater) activity.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View container = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
+                layoutInflater.inflate(R.layout.cbw_header_layout_pre_lollipop, viewGroup, true) :
+                layoutInflater.inflate(R.layout.cbw_header_layout, viewGroup, true);
+
         ProgressBar progressBar = (ProgressBar) container.findViewById(R.id.cbw_header_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -87,7 +93,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
                     List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
-                    session.setActualExchangeRates(summaries);
+                    session.setData(FragmentsCommons.EXCHANGE_RATES, summaries);
 
                     progressBar.setVisibility(View.GONE);
 

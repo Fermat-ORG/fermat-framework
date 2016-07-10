@@ -4,7 +4,7 @@
 //import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -30,7 +30,7 @@
 //        WalletNavigationStructure runtimeWalletNavigationStructure;
 //        TitleBar runtimeTitleBar;
 //        SideMenu runtimeSideMenu;
-//        MainMenu runtimeMainMenu;
+//        OptionsMenu runtimeMainMenu;
 //        MenuItem runtimeMenuItem;
 //        TabStrip runtimeTabStrip;
 //        StatusBar runtimeStatusBar;
@@ -203,13 +203,13 @@
 //         * Menu
 //         */
 //
-//        runtimeMainMenu = new MainMenu();
+//        runtimeMainMenu = new OptionsMenu();
 //        runtimeMenuItem = new MenuItem();
 //        runtimeMenuItem.setLabel("Settings");
 //        runtimeMainMenu.addMenuItem(runtimeMenuItem);
 //
 //
-//        runtimeActivity.setMainMenu(runtimeMainMenu);
+//        runtimeActivity.setOptionsMenu(runtimeMainMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -291,13 +291,13 @@
 //         * Menu
 //         */
 //
-//        runtimeMainMenu = new MainMenu();
+//        runtimeMainMenu = new OptionsMenu();
 //        runtimeMenuItem = new MenuItem();
 //        runtimeMenuItem.setLabel("Settings");
 //        runtimeMainMenu.addMenuItem(runtimeMenuItem);
 //
 //
-//        runtimeActivity.setMainMenu(runtimeMainMenu);
+//        runtimeActivity.setOptionsMenu(runtimeMainMenu);
 //
 //        /**
 //         *  Fin de menu

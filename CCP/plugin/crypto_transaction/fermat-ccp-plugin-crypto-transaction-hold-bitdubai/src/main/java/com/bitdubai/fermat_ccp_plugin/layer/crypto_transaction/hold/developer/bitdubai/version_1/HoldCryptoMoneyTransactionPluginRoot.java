@@ -1,10 +1,14 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -18,7 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -40,14 +43,12 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bi
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.MissingHoldCryptoDataException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.HoldCryptoMoneyTransactionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.events.HoldCryptoMoneyTransactionMonitorAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.events.HoldCryptoMoneyTransactionMonitorAgent2;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.HoldCryptoMoneyTransactionImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by franklin on 16/11/15.
@@ -77,6 +78,15 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     CryptoWalletManager cryptoWalletManager;
 
+    /**
+     * Represents the plugin processor agent
+     */
+    HoldCryptoMoneyTransactionMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -141,13 +151,13 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
     }
 
 
-    private HoldCryptoMoneyTransactionMonitorAgent holdCryptoMoneyTransactionMonitorAgent;
+    //private HoldCryptoMoneyTransactionMonitorAgent holdCryptoMoneyTransactionMonitorAgent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if(holdCryptoMoneyTransactionMonitorAgent == null) {
+        /*if(holdCryptoMoneyTransactionMonitorAgent == null) {
             holdCryptoMoneyTransactionMonitorAgent = new HoldCryptoMoneyTransactionMonitorAgent(
                     errorManager,
                     holdCryptoMoneyTransactionManager,
@@ -155,7 +165,19 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
             );
 
             holdCryptoMoneyTransactionMonitorAgent.start();
-        }else holdCryptoMoneyTransactionMonitorAgent.start();
+        }else holdCryptoMoneyTransactionMonitorAgent.start();*/
+        if(processorAgent == null) {
+            processorAgent = new HoldCryptoMoneyTransactionMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    holdCryptoMoneyTransactionManager,
+                    cryptoWalletManager
+            );
+
+            processorAgent.start();
+        }else processorAgent.start();
     }
 
 
@@ -173,6 +195,8 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
             cryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
             cryptoMoneyTransaction.setMemo(holdParameters.getMemo());
             cryptoMoneyTransaction.setBlockchainNetworkType(holdParameters.getBlockchainNetworkType());
+            cryptoMoneyTransaction.setFee(holdParameters.getFee());
+            cryptoMoneyTransaction.setFeeOrigin(holdParameters.getFeeOrigin());
              holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoMoneyTransaction);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

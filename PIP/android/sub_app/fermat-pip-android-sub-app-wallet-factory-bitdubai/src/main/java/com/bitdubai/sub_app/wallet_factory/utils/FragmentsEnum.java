@@ -10,6 +10,7 @@ public enum FragmentsEnum {
     COMMUNITY("Community");
 
     String title;
+
     FragmentsEnum(String title) {
         this.title = title;
     }
