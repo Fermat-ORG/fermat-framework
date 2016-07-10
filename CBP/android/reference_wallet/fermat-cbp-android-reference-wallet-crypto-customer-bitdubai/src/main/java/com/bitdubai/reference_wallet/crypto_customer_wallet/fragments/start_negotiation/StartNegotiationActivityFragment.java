@@ -81,6 +81,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
     private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
     private List<MerchandiseExchangeRate> quotes;
     private NumberFormat numberFormat = DecimalFormat.getInstance();
+    private boolean walletUser = false;
 
 
     public static StartNegotiationActivityFragment newInstance() {
@@ -188,7 +189,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
                 if (validateClauses(mapClauses)) {
 
-                    if(isCreateIdentityIntraUser(negotiationInfo.getClauses())){
+                    if(isCreateIdentityIntraUser(mapClauses)){
 
                         clauses = getClause(mapClauses);
 
@@ -273,8 +274,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         final ClauseInformation exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE);
         negotiationInfo.putClause(exchangeRate, brokerMarketRate);
 
+        try {
+            this.walletUser = isCreateIdentityIntraUser(clauses);
+        } catch (CantSendNegotiationException e){
+
+        }
+
         //ADAPTER
-        adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo);
+        adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo, walletUser);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
         adapter.setMarketRateList(getActualExchangeRates());
@@ -450,8 +457,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
+        try {
+            this.walletUser = isCreateIdentityIntraUser(clauses);
+        } catch (CantSendNegotiationException e){
 
-        adapter.changeDataSet(negotiationInfo);
+        }
+
+        adapter.changeDataSet(negotiationInfo, walletUser);
 
 
     }
@@ -588,13 +600,14 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
         String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String currencyBTC      = "BTC";
 
         if(customerCurrency != null){
-            if("BTC" == customerCurrency) return moduleManager.isCreateIdentityIntraUser();
+            if(currencyBTC.equals(customerCurrency)) return moduleManager.isCreateIdentityIntraUser();
         }
 
         if(brokerCurrency != null){
-            if("BTC" == brokerCurrency) return moduleManager.isCreateIdentityIntraUser();
+            if(currencyBTC.equals(brokerCurrency)) return moduleManager.isCreateIdentityIntraUser();
         }
 
         return true;

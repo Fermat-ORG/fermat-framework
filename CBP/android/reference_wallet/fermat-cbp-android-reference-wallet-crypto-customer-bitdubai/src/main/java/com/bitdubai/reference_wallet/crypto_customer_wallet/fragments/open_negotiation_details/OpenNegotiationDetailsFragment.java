@@ -1137,13 +1137,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String currencyBTC      = "BTC";
 
         if(customerCurrency != null){
-            if("BTC" == customerCurrency) return moduleManager.isCreateIdentityIntraUser();
+            if(currencyBTC.equals(customerCurrency)) return moduleManager.isCreateIdentityIntraUser();
         }
 
         if(brokerCurrency != null){
-            if("BTC" == brokerCurrency) return moduleManager.isCreateIdentityIntraUser();
+            if(currencyBTC.equals(brokerCurrency)) return moduleManager.isCreateIdentityIntraUser();
         }
 
         return true;
