@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
@@ -359,16 +360,21 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
             if (negotiationWrapper.isClausesConfirmed()) {
 
+                if(isCreateIdentityIntraUser(negotiationWrapper.getClauses())) {
 
+                    moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
 
-                moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-
+                } else
+                    Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC", Toast.LENGTH_LONG).show();
 
             } else
                 Toast.makeText(getActivity(), "Need to confirm ALL the clauses", Toast.LENGTH_LONG).show();
 
         } catch (CantSendNegotiationToCryptoCustomerException e) {
+            errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        } catch (CantSendNegotiationException e){
             errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
                     DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -696,5 +702,21 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             }
 
         return null;
+    }
+
+    private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException {
+
+//        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+//        String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+//
+//        if(customerCurrency != null){
+//            if("BTC" == customerCurrency) return moduleManager.isCreateIdentityIntraUser();
+//        }
+//
+//        if(brokerCurrency != null){
+//            if("BTC" == brokerCurrency) return moduleManager.isCreateIdentityIntraUser();
+//        }
+
+        return true;
     }
 }
