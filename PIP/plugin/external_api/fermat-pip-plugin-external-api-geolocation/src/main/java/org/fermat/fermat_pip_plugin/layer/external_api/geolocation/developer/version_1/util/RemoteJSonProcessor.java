@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -52,7 +53,16 @@ public class RemoteJSonProcessor {
             CantConnectWithExternalAPIException {
         try{
             URL url=new URL(requestURL);
-            Scanner scanner = new Scanner(url.openStream());
+            URLConnection urlConnection = url.openConnection();
+            //Request properties.
+            urlConnection.setRequestProperty("User-Agent","Mozilla/5.0 ( compatible ) ");
+            urlConnection.setRequestProperty("Accept","*/*");
+            //End of request properties
+
+            //System.out.println("Geolocation plugin is trying to create an URLConnection to: "+urlConnection);
+            //Scanner scanner = new Scanner(url.openStream());
+
+            Scanner scanner = new Scanner(urlConnection.getInputStream());
             String jSonString = new String();
             while (scanner.hasNext())
                 jSonString += scanner.nextLine();
