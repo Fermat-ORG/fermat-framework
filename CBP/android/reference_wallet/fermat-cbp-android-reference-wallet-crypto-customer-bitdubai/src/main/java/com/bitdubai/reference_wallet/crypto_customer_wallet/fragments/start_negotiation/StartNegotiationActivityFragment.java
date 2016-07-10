@@ -199,7 +199,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                             Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
                         }
 
-//                        Toast.makeText(getActivity(), "SEND NEGOTIATION", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC", Toast.LENGTH_LONG).show();
                     }
@@ -587,16 +586,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
     private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException{
 
-//        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-//        String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-//
-//        if(customerCurrency != null){
-//            if("BTC" == customerCurrency) return moduleManager.isCreateIdentityIntraUser();
-//        }
-//
-//        if(brokerCurrency != null){
-//            if("BTC" == brokerCurrency) return moduleManager.isCreateIdentityIntraUser();
-//        }
+        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+
+        if(customerCurrency != null){
+            if("BTC" == customerCurrency) return moduleManager.isCreateIdentityIntraUser();
+        }
+
+        if(brokerCurrency != null){
+            if("BTC" == brokerCurrency) return moduleManager.isCreateIdentityIntraUser();
+        }
 
         return true;
     }
