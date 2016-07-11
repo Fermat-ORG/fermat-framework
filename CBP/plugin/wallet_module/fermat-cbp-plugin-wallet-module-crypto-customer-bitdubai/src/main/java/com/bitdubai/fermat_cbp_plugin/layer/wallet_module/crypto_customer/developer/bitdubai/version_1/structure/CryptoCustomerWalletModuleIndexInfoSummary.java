@@ -30,9 +30,11 @@ public class CryptoCustomerWalletModuleIndexInfoSummary implements IndexInfoSumm
         currencyAndReferenceCurrency = currency.getCode() + " / " + referenceCurrency.getCode();
 
         NumberFormat numberFormat = DecimalFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(8);
         purchasePriceAndCurrency = currency.getCode() + " " + numberFormat.format(purchasePrice);
 
         numberFormat = DecimalFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(8);
         salePriceAndCurrency = currency.getCode() + " " + numberFormat.format(salePrice);
     }
 
@@ -55,9 +57,11 @@ public class CryptoCustomerWalletModuleIndexInfoSummary implements IndexInfoSumm
         currencyAndReferenceCurrency = exchangeRate.getFromCurrency().getCode() + " / " + toCurrency.getCode();
 
         NumberFormat numberFormat = DecimalFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(8);
         purchasePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getPurchasePrice());
 
         numberFormat = DecimalFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(8);
         salePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getSalePrice());
     }
 

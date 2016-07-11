@@ -87,6 +87,7 @@ public class AdminRestApiSecurityFilter implements Filter {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
             return;
         } catch (final Exception e) {
+            e.printStackTrace();
             LOG.error( "Error in token: "+e.getMessage());
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
             return;

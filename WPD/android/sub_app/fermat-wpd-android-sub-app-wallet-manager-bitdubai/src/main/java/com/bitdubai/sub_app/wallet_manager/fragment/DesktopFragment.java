@@ -105,6 +105,8 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
     AppManagerSettings appManagerSettings;
     private Handler handler;
 
+    FolderDialog folderDialog = null;
+
     /**
      * Create a new instance of this fragment
      *
@@ -343,6 +345,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 //                    installedWallet.setAppStatus(AppsStatus.DEV);
 //                    lstItemsWithIcon.add(item);
 //                }
+
 //
 //                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
 //                    Item item = new Item(installedWallet);
@@ -571,15 +574,19 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                FolderDialog folderDialog = null;
-                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
-                                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                } else {
-                                    folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
-
+                                try {
+                                    if(folderDialog==null) {
+                                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
+                                            folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                        } else {
+                                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), DesktopFragment.this, ((FermatActivityManager) getActivity()).getAppStatus(), getScreenSize());
+                                        }
+                                    }
+                                    folderDialog.show();
+                                }catch (Exception e){
+                                    e.printStackTrace();
                                 }
-                                folderDialog.show();
                             }
                         });
                     }
@@ -621,7 +628,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
     @Override
     public void onDestroy() {
-
+        if(folderDialog!=null) folderDialog.dismiss();
         adapter = null;
         mItemTouchHelper = null;
         super.onDestroy();

@@ -18,6 +18,11 @@ public class LinuxPluginBroadcaster implements Broadcaster {
     }
 
     @Override
+    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+
+    }
+
+    @Override
     public void publish(BroadcasterType broadcasterType, String code) {
 
     }

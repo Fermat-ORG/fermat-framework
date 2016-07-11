@@ -371,7 +371,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         reportUnexpectedException(e);
 
                         //if I spend more than five minutes I canceled
-                        long sentDate = transaction.getTimestamp();
+                       /* long sentDate = transaction.getTimestamp();
                         long currentTime = System.currentTimeMillis();
                         long dif = currentTime - sentDate;
 
@@ -385,7 +385,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                 e1.printStackTrace();
                             }
 
-                        }
+                        }*/
 
 
                      } catch (Exception e) {
@@ -395,7 +395,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         long currentTime = System.currentTimeMillis();
                         long dif = currentTime - sentDate;
 
-                        if (dif >= 180000) {
+                        if (dif >= 540000) {
                             try {
                                 dao.cancelTransaction(transaction);
                                 roolback(transaction, true);

@@ -45,28 +45,32 @@ import java.util.UUID;
  */
 public class DesktopDatabaseTable implements DatabaseTable {
 
-
     /**
      * DatabaseTable Member Variables.
      */
-    String tableName;
-    DesktopDatabaseBridge database;
-    private final ConnectionPool connectionPool;
+
+    private final DesktopDatabaseBridge database      ;
+    private final ConnectionPool        connectionPool;
+    private final String                tableName     ;
 
     private List<DatabaseTableFilter> tableFilter;
-    private List<DatabaseTableRecord> records;
-    private List<DataBaseTableOrder> tableOrder;
+    private List<DataBaseTableOrder>  tableOrder ;
+    private List<DatabaseTableRecord> records    ;
     private List<DesktopDatabaseTableNearbyLocationOrder> tableNearbyLocationOrders;
-    private String top = "";
+
+    private String top    = "";
     private String offset = "";
+
     private DatabaseTableFilterGroup tableFilterGroup;
     private List<DatabaseAggregateFunction> tableSelectOperator;
 
     // Public constructor declarations.
-    public DesktopDatabaseTable(DesktopDatabaseBridge database, String tableName) {
-        connectionPool = database.getConnectionPool();
-        this.tableName = tableName;
-        this.database = database;
+    public DesktopDatabaseTable(final DesktopDatabaseBridge database ,
+                                final String                tableName) {
+
+        this.database       = database;
+        this.connectionPool = database.getConnectionPool();
+        this.tableName      = tableName;
     }
 
     @Override
@@ -83,7 +87,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
      *
      * @return List<String> of columns names
      */
-
     public List<String> getColumns(ResultSet rs) {
 
         List<String> columns = new ArrayList<>();
@@ -261,17 +264,13 @@ public class DesktopDatabaseTable implements DatabaseTable {
         String latitudeField = nearbyLocationOrder.getLatitudeField();
         String longitudeField = nearbyLocationOrder.getLongitudeField();
 
-        String sentence = ", (("+latitude+" - "+latitudeField+") * ("+latitude+" - "+latitudeField+") +" +
+        return ", (("+latitude+" - "+latitudeField+") * ("+latitude+" - "+latitudeField+") +" +
                 " ("+longitude+" - "+longitudeField+") * ("+longitude+" - "+longitudeField+")) as "+
                 nearbyLocationOrder.getDistanceField();
-
-        return sentence;
     }
 
     @Override
-    public void loadToMemory() throws CantLoadTableToMemoryException {
-
-        this.records = new ArrayList<>();
+    public String getSqlQuery() {
 
         String topSentence = "";
         String offsetSentence = "";
@@ -304,7 +303,15 @@ public class DesktopDatabaseTable implements DatabaseTable {
             orderSentence = makeOrder();
         }
 
-        String SQL_QUERY = "SELECT * "+nearbyLocationOrderSentence+" FROM " + tableName + makeFilter() + orderSentence + topSentence  + offsetSentence;
+        return "SELECT * "+nearbyLocationOrderSentence+" FROM " + tableName + makeFilter() + orderSentence + topSentence  + offsetSentence;
+    }
+
+    @Override
+    public void loadToMemory() throws CantLoadTableToMemoryException {
+
+        this.records = new ArrayList<>();
+
+        String SQL_QUERY = getSqlQuery();
 
         System.out.println(SQL_QUERY);
 
@@ -360,82 +367,10 @@ public class DesktopDatabaseTable implements DatabaseTable {
         }
     }
 
-    /**
-     * <p>Sets the filter on a string field
-     *
-     * @param columName column name to filter
-     * @param value     value to filter
-     * @param type      DatabaseFilterType object
-     */
-
-    public void setStringFilter(String columName, String value, DatabaseFilterType type) {
-
-        if (this.tableFilter == null)
-            this.tableFilter = new ArrayList<DatabaseTableFilter>();
-
-        DatabaseTableFilter filter = new DesktopDatabaseTableFilter();
-
-        filter.setColumn(columName);
-        filter.setValue(value);
-        filter.setType(type);
-
-        this.tableFilter.add(filter);
-    }
-
-
-    public void setFermatEnumFilter(String columnName, FermatEnum value, DatabaseFilterType type) {
-
-    }
-
     @Override
     public void setFilterGroup(DatabaseTableFilterGroup filterGroup) {
 
         this.tableFilterGroup = filterGroup;
-
-    }
-
-    /**
-     * <p>Sets the filter on a UUID field
-     *
-     * @param columName column name to filter
-     * @param value     value to filter
-     * @param type      DatabaseFilterType object
-     */
-
-    public void setUUIDFilter(String columName, UUID value, DatabaseFilterType type) {
-
-        if (this.tableFilter == null)
-            this.tableFilter = new ArrayList<DatabaseTableFilter>();
-
-        DatabaseTableFilter filter = new DesktopDatabaseTableFilter();
-
-        filter.setColumn(columName);
-        filter.setValue(value.toString());
-        filter.setType(type);
-
-        this.tableFilter.add(filter);
-
-    }
-
-    /**
-     * <p>Sets the order in which filtering field shown in ascendent or descending
-     *
-     * @param columnName Name of the column to sort
-     * @param direction  DatabaseFilterOrder object
-     */
-
-    public void setFilterOrder(String columnName, DatabaseFilterOrder direction) {
-
-        if (this.tableOrder == null)
-            this.tableOrder = new ArrayList<DataBaseTableOrder>();
-
-        DataBaseTableOrder order = new DesktopDatabaseTableOrder(columnName, direction);
-
-        // order.setColumName(columnName);
-        //order.setDirection(direction);
-
-
-        this.tableOrder.add(order);
     }
 
     @Override
@@ -646,7 +581,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
                     strFilter.append(" AND ");
             }
 
-
             filter = strFilter.toString();
             if (strFilter.length() > 0) filter = " WHERE " + filter;
 
@@ -768,7 +702,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         return strOrder.toString();
     }
-
 
     private String makeInternalCondition(DatabaseTableFilter filter) {
 

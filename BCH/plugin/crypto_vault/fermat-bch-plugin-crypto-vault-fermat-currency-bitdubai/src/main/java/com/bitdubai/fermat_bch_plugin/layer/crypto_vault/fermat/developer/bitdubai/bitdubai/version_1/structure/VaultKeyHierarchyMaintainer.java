@@ -110,6 +110,8 @@ public class VaultKeyHierarchyMaintainer  implements Agent {
 
         @Override
         public void run() {
+            //switching off the fermat vault
+            isSupposedToRun = false;
             while (isSupposedToRun) {
                 try {
                     doTheMainTask();

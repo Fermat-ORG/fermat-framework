@@ -16,8 +16,6 @@ public enum Plugins implements FermatPluginsEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BITDUBAI_BITCOIN_CRYPTO_NETWORK             ("BBTCCNET"     ),
-    BITDUBAI_FERMAT_CRYPTO_NETWORK             ("BFERCNET"     ),
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL    ("BWSCCLIENTCH" ),
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
 
@@ -210,8 +208,8 @@ public enum Plugins implements FermatPluginsEnum {
     ASSET_USER_COMMUNITY        ("ASUC"),
     BITCOIN_ASSET_VAULT         ("BAV"),
     BITCOIN_FOR_ASSET("BFA"),
-    BITCOIN_NETWORK             ("BN"),
-    BITCOIN_VAULT               ("BV"),
+    BITCOIN_NETWORK             ("BTCN"),
+    BITCOIN_VAULT               ("BTCV"),
     BITCOIN_WALLET              ("BW"),
     LOSS_PROTECTED_WALLET       ("LPW"),
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
@@ -345,7 +343,9 @@ public enum Plugins implements FermatPluginsEnum {
 
     //Init PIP
     PIP_FERMAT_MONITOR                  ("PFM"),
-    GEOLOCATION                         ("GLT")
+    GEOLOCATION                         ("GLT"),
+
+    P2P_LAYER ("P2PL")
     ;
     //End PIP
 

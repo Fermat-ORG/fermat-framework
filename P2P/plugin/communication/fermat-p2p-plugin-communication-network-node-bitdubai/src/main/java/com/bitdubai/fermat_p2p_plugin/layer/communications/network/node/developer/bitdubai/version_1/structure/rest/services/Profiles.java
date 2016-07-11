@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
@@ -114,7 +115,9 @@ public class Profiles implements RestFulServices {
 
             e.printStackTrace();
 
-            LOG.warn("requested list is not available");
+            LOG.warn("requested list is not available. Error message: " + e.getMessage());
+            LOG.warn(new FermatException("requested list is not available", e, "", "").toString());
+            LOG.error("requested list is not available.", e);
             jsonObjectRespond.addProperty("failure", "Requested list is not available");
         }
 
@@ -193,6 +196,8 @@ public class Profiles implements RestFulServices {
         if (discoveryQueryParameters.getOffset() != null && discoveryQueryParameters.getOffset() >= 0)
             offset = discoveryQueryParameters.getOffset();
 
+        System.out.println("The max and offset applied in database are: max="+max+" | offset="+offset);
+
         actorsList = getDaoFactory().getActorsCatalogDao().findAll(discoveryQueryParameters, clientIdentityPublicKey, max, offset);
 
         if (discoveryQueryParameters.isOnline() != null && discoveryQueryParameters.isOnline())
@@ -217,7 +222,7 @@ public class Profiles implements RestFulServices {
         actorProfile.setName(actor.getName());
         actorProfile.setActorType(actor.getActorType());
 
-        if(originalPhoto)
+        if(originalPhoto != null && originalPhoto)
             actorProfile.setPhoto(actor.getPhoto());
         else
             actorProfile.setPhoto(actor.getThumbnail());
@@ -240,7 +245,7 @@ public class Profiles implements RestFulServices {
         actorProfile.setName(actor.getName());
         actorProfile.setActorType(actor.getActorType());
 
-        if(originalPhoto)
+        if(originalPhoto != null && originalPhoto)
             actorProfile.setPhoto            (actor.getPhoto());
         else
             actorProfile.setPhoto            (actor.getThumbnail());

@@ -119,6 +119,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
         @Override
         public void run() {
+            //switching off the asset vault
+            isSupposedToRun = false;
             while (isSupposedToRun) {
                 try {
                     doTheMainTask();

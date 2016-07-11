@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -29,6 +31,7 @@ import java.util.UUID;
  * The Class <code>HoldCryptoMoneyTransactionDatabaseDao</code>
  * contains the logic for handling database the plugin
  * Created by Franklin Marcano on 23/11/15.
+ * Updated by Manuel Perez on 08/07/2015
  */
 public class HoldCryptoMoneyTransactionDatabaseDao {
 
@@ -85,6 +88,8 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         record.setLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, cryptoHoldTransaction.getTimestampConfirmedRejected());
         record.setStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, cryptoHoldTransaction.getStatus().getCode());
         record.setStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoHoldTransaction.getBlockchainNetworkType().getCode());
+        record.setLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_COLUMN_NAME, cryptoHoldTransaction.getFee());
+        record.setStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_ORIGIN_TYPE_COLUMN_NAME, cryptoHoldTransaction.getFeeOrigin().getCode());
 
         return record;
     }
@@ -107,21 +112,40 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         return table.getRecords();
     }
 
-    private CryptoHoldTransaction getCryptoHoldTransaction(final DatabaseTableRecord crtyptoHoldTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
+    private CryptoHoldTransaction getCryptoHoldTransaction(final DatabaseTableRecord cryptoHoldTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
 
         HoldCryptoMoneyTransactionImpl holdCryptoMoneyTransaction = new HoldCryptoMoneyTransactionImpl();
 
-        holdCryptoMoneyTransaction.setTransactionId(crtyptoHoldTransactionRecord.getUUIDValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setPublicKeyWallet(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setPublicKeyActor(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setPublicKeyPlugin(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setAmount(crtyptoHoldTransactionRecord.getFloatValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setCurrency(CryptoCurrency.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME)));
-        holdCryptoMoneyTransaction.setMemo(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setTimestampAcknowledged(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setTimestampConfirmedRejected(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
-        holdCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME)));
-        holdCryptoMoneyTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
+        holdCryptoMoneyTransaction.setTransactionId(cryptoHoldTransactionRecord.getUUIDValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setPublicKeyWallet(cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setPublicKeyActor(cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setPublicKeyPlugin(cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setAmount(cryptoHoldTransactionRecord.getFloatValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setCurrency(CryptoCurrency.getByCode(cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME)));
+        holdCryptoMoneyTransaction.setMemo(cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setTimestampAcknowledged(cryptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setTimestampConfirmedRejected(cryptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
+        holdCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.getByCode(cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME)));
+        holdCryptoMoneyTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
+        //Fee fields
+        long longFee = cryptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_COLUMN_NAME);
+        long minimalFee = BitcoinFee.SLOW.getFee();
+        if(longFee < minimalFee){
+            longFee = minimalFee;
+        }
+        holdCryptoMoneyTransaction.setFee(longFee);
+        FeeOrigin feeOrigin;
+        String feeOriginString = cryptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_FEE_ORIGIN_TYPE_COLUMN_NAME);
+        if(feeOriginString==null||feeOriginString.isEmpty()){
+            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        } else {
+            try{
+                feeOrigin = FeeOrigin.getByCode(feeOriginString);
+            } catch (InvalidParameterException ex){
+                feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            }
+        }
+        holdCryptoMoneyTransaction.setFeeOrigin(feeOrigin);
 
         return holdCryptoMoneyTransaction;
     }
