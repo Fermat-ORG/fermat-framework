@@ -1575,19 +1575,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
         CryptoBrokerWalletPreferenceSettings preferenceSettings;
-        String publicKeyActor;
+
         try {
-            publicKeyActor = getSelectedActorIdentity().getPublicKey();
-        } catch (CantGetSelectedActorIdentityException e) {
-            publicKeyActor = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
-        }
-        try {
-            preferenceSettings = loadAndGetSettings(publicKeyActor);
+            preferenceSettings = loadAndGetSettings(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
         } catch (Exception e) {
             preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
         }
-        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
-        long fee = preferenceSettings.getBitcoinFee().getFee();
+
+        final FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        final long fee = preferenceSettings.getBitcoinFee().getFee();
+
         return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions, fee, feeOrigin);
     }
 
