@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestActorFullPhotoException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorNotRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
@@ -84,5 +85,14 @@ public interface ActorNetworkService {
      * @param publicKey of the actor.
      */
     boolean isActorOnline(String publicKey);
+
+    /**
+     * Through the method <code>getActorFullPhoto</code> we can get Full Photo of an actor specific.
+     *
+     * @param publicKey of the actor
+     *
+     * @return a String encodeBase64String
+     */
+    String getActorFullPhoto(final String publicKey) throws CantRequestActorFullPhotoException;
 
 }
