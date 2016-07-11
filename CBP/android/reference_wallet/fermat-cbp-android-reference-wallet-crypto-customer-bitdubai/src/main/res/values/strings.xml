@@ -170,6 +170,7 @@
     <string name="about_to_expire">About to expire</string>
     <string name="waiting_for_you">Waiting for you</string>
     <string name="waiting_for_broker">Waiting for the Broker</string>
+    <string name="waiting_for_closing">Negotiation is Closing</string>
     <string name="wizard_locations_title">Add Your Locations</string>
 
     <string name="you_will_have_to_pay_amount">You will have to pay: </string>
@@ -177,6 +178,7 @@
     <string name="ccw_your_exchange_rate_title">Selected Rate:</string>
     <string name="ccw_currency_to_pay">Currency to Pay</string>
     <string name="ccw_amount_to_pay">Amount to Pay</string>
+
     <string name="ccw_currency_to_buy">Currency to Buy</string>
     <string name="selected_currency">Selected Currency</string>
     <string name="ccw_currency_description">Currency:</string>
@@ -184,6 +186,20 @@
     <string name="cancel">Cancel</string>
     <string name="hint">hint</string>
     <string name="title">Title</string>
+
+
+    <!-- Settings Fee Management -->
+
+    <string name="ccw_fee_miner_speed_1"> SLOW</string>
+    <string name="ccw_fee_miner_speed_2"> NORMAL</string>
+    <string name="ccw_fee_miner_speed_3"> FAST</string>
+    <string name="ccw_fee_miner_value">Fee miner:</string>
+
+    <string name="ccw_fee_speed_text">Select the confirmation speed for a bitcoin transaction. More speed means more fee</string>
+    <string name="ccw_fee_origin_text">Select if the fee will be taken from the bitcoin wallet or from the bitcoins to send</string>
+    <string name="ccw_fee_transaction">FEE TYPE</string>
+    <string name="ccw_fee_confirmation_time">FEE ORIGIN</string>
+
 
 
 
@@ -216,4 +232,6 @@
     <string name="location">Location</string>
     <string name="ccw_exchange_rate">EXCHANGE RATE</string>
     <string name="fermat_balance">Fermat Balance</string>
+    <string name="ccw_network">Network</string>
+    <string name="ccw_blockchain_network_description">Select the Blockchain Network where you want to send and receive the bitcoins</string>
 </resources>

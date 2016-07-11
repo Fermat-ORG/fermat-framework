@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -179,10 +180,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                             + "\n-------------------------------------------------");
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
-
-                    System.out.println("----------------------------\n" +
-                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:"
-                            + "\n-------------------------------------------------");
 
                     actorNetworkServiceRecord.setFlagReadead(false);
                     incomingNotificationsDao.createNotification(actorNetworkServiceRecord);
@@ -517,7 +514,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset, DeviceLocation location) throws ErrorSearchingSuggestionsException {
+    public List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset, Location location) throws ErrorSearchingSuggestionsException {
 
         final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
@@ -824,10 +821,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public void registerActors(List<Actor> actors) {
+    public void registerActors(List<Actor> actors, final Location location       ,
+                               final long     refreshInterval,
+                               final long     accuracy) {
 
         for (Actor actor : actors)
-            registerActor(actor);
+            registerActor(actor,location,refreshInterval,accuracy);
     }
 
     private ActorProfile constructActorProfile(Actor actor) {
@@ -854,13 +853,29 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public void registerActor(Actor actor) {
+    public void registerActor(Actor actor,
+                              final Location location       ,
+                              final long     refreshInterval,
+                              final long     accuracy     ) {
 
         try {
 
-            registerActor(
-                    constructActorProfile(actor),
-                    0, 0
+
+            Gson gson = new Gson();
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
+
+            String extraData = gson.toJson(jsonObject);
+
+            registerActor(actor.getActorPublicKey(),
+                    actor.getName(),
+                    actor.getName(),
+                    extraData,
+                    location,
+                    actor.getType(),
+                    actor.getPhoto(),
+                    refreshInterval,accuracy
             );
 
         } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {

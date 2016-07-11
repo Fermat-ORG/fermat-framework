@@ -19,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -102,7 +103,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
@@ -176,8 +179,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Screen adapters
      */
     private FermatScreenAdapter adapter;
-//    private ScreenPagerAdapter<?> screenPagerAdapter;
-
     /**
      * WizardTypes
      */
@@ -257,9 +258,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         if(!AndroidCoreUtils.getInstance().isStarted())
             AndroidCoreUtils.getInstance().setStarted(true);
-        runtimeStructureManager = new RuntimeStructureManager(this);
 
-        updateViewReceiver = new UpdateViewReceiver(this);
+        updateViewReceiver = new UpdateViewReceiver(this,getFermatFramework());
         IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
         registerReceiver(updateViewReceiver, intentFilter);
 
@@ -1154,7 +1154,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         if(updateViewReceiver==null){
-            updateViewReceiver = new UpdateViewReceiver(this);
+            updateViewReceiver = new UpdateViewReceiver(this,getFermatFramework());
             IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
             registerReceiver(updateViewReceiver, intentFilter);
         }
@@ -1365,14 +1365,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             //clean page adapter
 
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            if (pager != null) {
-                pager.removeAllViews();
-                pager.removeAllViewsInLayout();
-                pager.clearOnPageChangeListeners();
-                pager.setVisibility(View.GONE);
-                ((ViewGroup) pager.getParent()).removeView(pager);
-                pager = null;
+            if (pagertabs != null) {
+                pagertabs.removeAllViews();
+                pagertabs.removeAllViewsInLayout();
+                pagertabs.clearOnPageChangeListeners();
+                pagertabs.setVisibility(View.GONE);
+                ((ViewGroup) pagertabs.getParent()).removeView(pagertabs);
+                pagertabs = null;
             }
             System.gc();
 
@@ -2155,6 +2154,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public FermatRuntime getRuntimeManager(){
+        if(runtimeStructureManager==null) runtimeStructureManager = new RuntimeStructureManager(this);
         return runtimeStructureManager;
     }
 
@@ -2225,7 +2225,18 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public void pushNotification(String appPublicKey,Notification notification) {
-        FermatApplication.getInstance().getNotificationService().pushNotification(appPublicKey,notification);
+        FermatApplication.getInstance().getNotificationService().pushNotification(appPublicKey, notification);
+    }
+
+    /**
+     * Receivers
+     */
+    public void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver,@Nullable String appPublicKey){
+        FermatApplication.getInstance().registerReceiver(fermatIntentFilter, fermatBroadcastReceiver, appPublicKey);
+    }
+
+    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,@Nullable String appPublicKey){
+        FermatApplication.getInstance().unregisterReceiver(fermatBroadcastReceiver, appPublicKey);
     }
 
     /**
@@ -2233,7 +2244,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     @Override
     public int obtainRes(int resType,int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainRes(resType,this, id, sourceLocation, appOwnerPublicKey);
+        return ResourceLocationSearcherHelper.obtainRes(resType, this, id, sourceLocation, appOwnerPublicKey);
     }
 
     @Override
@@ -2272,4 +2283,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
+    public FermatFramework getFermatFramework() {
+        return FermatApplication.getInstance().getFermatFramework();
+    }
 }

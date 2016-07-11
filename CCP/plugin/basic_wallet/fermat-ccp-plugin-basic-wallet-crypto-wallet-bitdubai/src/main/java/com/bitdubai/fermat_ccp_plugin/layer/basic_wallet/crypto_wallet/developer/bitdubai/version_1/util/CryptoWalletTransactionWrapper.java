@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
@@ -34,6 +35,9 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
     private final CryptoCurrency cryptoCurrency;
+    private final FeeOrigin feeOrigin;
+    private final long fee;
+    private final long total;
     
     public CryptoWalletTransactionWrapper(final UUID transactionId,
                                           final String transactionHash,
@@ -50,7 +54,10 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
                                           final long runningAvailableBalance,
                                           final long timeStamp,
                                           final String memo,
-                                          BlockchainNetworkType blockchainNetworkType, final TransactionState transactionState, CryptoCurrency cryptoCurrency) {
+                                          BlockchainNetworkType blockchainNetworkType,
+                                          final TransactionState transactionState,
+                                          CryptoCurrency cryptoCurrency,
+                                          FeeOrigin feeOrigin,long fee, long total) {
         this.transactionId = transactionId;
         this.transactionHash = transactionHash;
         this.transactionType = transactionType;
@@ -69,6 +76,10 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
         this.blockchainNetworkType = blockchainNetworkType;
         this.transactionState = transactionState;
         this.cryptoCurrency = cryptoCurrency;
+        this.feeOrigin = feeOrigin;
+        this.fee = fee;
+        this.total = total;
+
     }
 
     @Override
@@ -155,5 +166,20 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
     @Override
     public CryptoCurrency getCryptoCurrency() {
         return this.cryptoCurrency;
+    }
+
+    @Override
+    public long getTotal() {
+        return this.total;
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return feeOrigin;
+    }
+
+    @Override
+    public long getFee() {
+        return this.fee;
     }
 }

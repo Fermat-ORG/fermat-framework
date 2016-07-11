@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.chat_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
@@ -36,6 +38,9 @@ public class ContactsListAdapter
     private ChatActorCommunitySubAppModuleManager moduleManager;
     List<ChatActorCommunityInformation> filteredData;
     private String filterString;
+    private String cityAddress;
+    private String stateAddress;
+    private String countryAddress;
 
     public ContactsListAdapter(Context context, List<ChatActorCommunityInformation> dataSet,
                                ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
@@ -66,19 +71,22 @@ public class ContactsListAdapter
             }else
                 holder.friendAvatar.setImageResource(R.drawable.cht_comm_icon_user);
 
-            Address address= null;
             if(data.getLocation() != null ){
-                try {
-                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
-                }catch(CantCreateAddressException e){
-                    address = null;
-                }
-            }
-            if (address!=null)
-                holder.location.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
-            else
+                if (data.getState().equals("null") || data.getState().equals("") || data.getState().equals("state")) stateAddress = "";
+                else stateAddress = data.getState() + " ";
+                if (data.getCity().equals("null") || data.getState().equals("") || data.getCity().equals("city")) cityAddress = "";
+                else cityAddress = data.getCity() + " ";
+                if (data.getCountry().equals("null")  || data.getState().equals("") || data.getCountry().equals("country")) countryAddress = "";
+                else countryAddress = data.getCountry();
+                if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
+                    holder.location.setText("Searching...");
+                }else
+                    holder.location.setText(cityAddress + stateAddress + countryAddress);
+            } else
                 holder.location.setText("Searching...");
 
+            if(data.getProfileStatus()!= ProfileStatus.ONLINE)
+                holder.location.setTextColor(Color.RED);
         }
     }
 

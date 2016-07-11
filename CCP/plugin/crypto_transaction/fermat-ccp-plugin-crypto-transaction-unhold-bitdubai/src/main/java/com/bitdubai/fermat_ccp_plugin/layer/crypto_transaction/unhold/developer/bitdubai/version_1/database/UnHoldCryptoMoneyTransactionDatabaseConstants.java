@@ -30,5 +30,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseConstants {
     public static final String UNHOLD_STATUS_COLUMN_NAME = "status";
     public static final String UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME = "block_chain_network_type";
     public static final String UNHOLD_FIRST_KEY_COLUMN = "transaction_id";
+    public static final String UNHOLD_FEE_COLUMN_NAME = "fee";
+    public static final String UNHOLD_FEE_ORIGIN_COLUMN_NAME = "fee_origin";
 
 }

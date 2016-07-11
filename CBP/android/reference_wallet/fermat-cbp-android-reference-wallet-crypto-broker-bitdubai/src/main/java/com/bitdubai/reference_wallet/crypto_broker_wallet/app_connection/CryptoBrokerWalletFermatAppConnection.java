@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer.CryptoBrokerWalletFooterPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBrokerWalletHeaderPainter;
@@ -24,13 +26,13 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.notifications.C
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_CANCELLED_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_CUSTOMER_SUBMITTED_PAYMENT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION;
 
 
 /**
@@ -85,8 +87,10 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Refere
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code) {
-        switch (code) {
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
+        int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
+
+        switch (notificationID) {
             case CBW_NEW_NEGOTIATION_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("New Negotiation", "You have a new negotiation! Please check your wallet.", "");
             case CBW_WAITING_FOR_BROKER_NOTIFICATION:
@@ -99,12 +103,12 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Refere
                 return new CryptoBrokerNotificationPainter("Contract Update", "You just received a payment.", "");
             case CBW_CONTRACT_COMPLETED_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Contract Update", "The contract has been completed.", "");
-            case CCW_CONTRACT_CANCELLED_NOTIFICATION:
+            case CBW_CONTRACT_CANCELLED_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Contract Update", "The contract has been cancelled.", "");
             case CBW_CONTRACT_EXPIRATION_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Expiring contract.", "A contract is about to expire, check your wallet.", "");
             default:
-                return super.getNotificationPainter(code);
+                return super.getNotificationPainter(fermatBundle);
         }
     }
 

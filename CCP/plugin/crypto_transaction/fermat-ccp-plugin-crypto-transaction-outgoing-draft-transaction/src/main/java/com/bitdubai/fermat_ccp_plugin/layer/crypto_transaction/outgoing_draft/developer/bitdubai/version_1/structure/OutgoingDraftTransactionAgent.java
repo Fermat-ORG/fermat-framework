@@ -366,6 +366,14 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         }
 
         private CryptoWalletTransactionRecord buildBitcoinTransaction(OutgoingDraftTransactionWrapper transaction) {
+
+            long total = 0;
+
+            if(transaction.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
+                total = transaction.getValueToSend() + transaction.getFee();
+            else
+                total = transaction.getValueToSend() - transaction.getFee();
+
             return buildBitcoinTransaction(
                     transaction.getRequestId(),
                     transaction.getTxHash(),
@@ -380,7 +388,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                     transaction.getBlockchainNetworkType(),
                     transaction.getCryptoCurrency(),
                     transaction.getFee(),
-                    transaction.getFeeOrigin()
+                    transaction.getFeeOrigin(),
+                    total
             );
         }
 
@@ -397,7 +406,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                                                        final BlockchainNetworkType blockchainNetworkType,
                                                                        final CryptoCurrency cryptoCurrency,
                                                                       final long fee,
-                                                                      final FeeOrigin feeOrigin) {
+                                                                      final FeeOrigin feeOrigin,
+                                                                      final long total) {
             return new CryptoWalletTransactionRecord() {
                 @Override
                 public CryptoAddress getAddressFrom() {
@@ -422,6 +432,11 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                 @Override
                 public long getAmount() {
                     return amount;
+                }
+
+                @Override
+                public long getTotal() {
+                    return total;
                 }
 
                 @Override

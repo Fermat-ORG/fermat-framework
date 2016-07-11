@@ -28,5 +28,7 @@ public class IntraWalletUserIdentityDatabaseConstants {
     public static final String INTRA_WALLET_USER_FIRST_KEY_COLUMN                   = "public_key"            ;
     public static final String INTRA_WALLET_USER_ACCURACY_COLUMN                   = "accuracy"     ;
     public static final String INTRA_WALLET_USER_FRECUENCY_COLUMN                   = "frecuency"            ;
+    public static final String INTRA_WALLET_USER_LAT_COLUMN                   = "lat"            ;
+    public static final String INTRA_WALLET_USER_LONG_COLUMN                   = "lng"            ;
 
 }
