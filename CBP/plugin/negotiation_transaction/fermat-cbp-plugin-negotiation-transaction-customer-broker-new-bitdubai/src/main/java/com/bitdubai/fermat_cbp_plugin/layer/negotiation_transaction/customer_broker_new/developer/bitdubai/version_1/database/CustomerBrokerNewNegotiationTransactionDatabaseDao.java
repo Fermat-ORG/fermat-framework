@@ -44,7 +44,8 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 
     private Database database;
 
-    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
+//    public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId) {
+        public CustomerBrokerNewNegotiationTransactionDatabaseDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final Database database) {
         this.pluginDatabaseSystem   = pluginDatabaseSystem;
         this.pluginId               = pluginId;
         this.database               = database;

@@ -18,4 +18,8 @@ public interface ClientBrokerService {
     Object sendMessage(PluginVersionReference pluginVersionReference, Object proxy, Method method, Object[] args) throws Exception;
 
     boolean isFermatBackgroundServiceRunning();
+
+    void disconnect();
+
+    void connect();
 }
