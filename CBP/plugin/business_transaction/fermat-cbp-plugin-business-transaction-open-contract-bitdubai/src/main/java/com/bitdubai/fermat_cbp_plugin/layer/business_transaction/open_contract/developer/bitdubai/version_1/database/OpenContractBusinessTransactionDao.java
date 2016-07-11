@@ -427,6 +427,28 @@ public class OpenContractBusinessTransactionDao {
         }
     }
 
+    public void updateContractTransactionStatus(UUID transactionId,
+                                                ContractTransactionStatus contractTransactionStatus)
+            throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        try {
+
+            DatabaseTable table = getDatabaseContractTable();
+            table.addUUIDFilter(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            record.setStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, contractTransactionStatus.getCode());
+            table.updateRecord(record);
+
+        } catch (CantUpdateRecordException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        } catch (Exception e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
+    }
+
     public List<String> getPendingToSubmitContractHash() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
         try{
             return getStringList(
