@@ -193,6 +193,19 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
         fragmentContainer.setVisibility(View.VISIBLE);
         showHelpDialog();
 
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+                //If wallet already configured, go directly to wallet
+//                if (walletConfigured) {
+//                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+//                } else {  //otherwise, show wizard page
+//                    fragmentContainer.setVisibility(View.VISIBLE);
+//                    showHelpDialog();
+//                }
+//            }
+//        }, 250);
+
         return layout;
     }
 

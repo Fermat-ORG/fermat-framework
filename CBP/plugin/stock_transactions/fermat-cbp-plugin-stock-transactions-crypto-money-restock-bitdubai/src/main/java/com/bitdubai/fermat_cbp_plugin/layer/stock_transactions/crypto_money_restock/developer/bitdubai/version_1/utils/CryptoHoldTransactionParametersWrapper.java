@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_res
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransactionParameters;
 
 import java.math.BigDecimal;
@@ -19,6 +21,9 @@ public class CryptoHoldTransactionParametersWrapper implements CryptoHoldTransac
     private  String                memo;
     private  String                publicKeyPlugin;
     private  BlockchainNetworkType blockchainNetworkType;
+    //fee values
+    private long                   fee;
+    private FeeOrigin              feeOrigin;
 
     public CryptoHoldTransactionParametersWrapper(UUID transactionId,
                                                   CryptoCurrency cryptoCurrency,
@@ -27,7 +32,9 @@ public class CryptoHoldTransactionParametersWrapper implements CryptoHoldTransac
                                                   BigDecimal amount,
                                                   String memo,
                                                   String publicKeyPlugin,
-                                                  BlockchainNetworkType blockchainNetworkType
+                                                  BlockchainNetworkType blockchainNetworkType,
+                                                  long fee,
+                                                  FeeOrigin feeOrigin
     ){
         this.transactionId         = transactionId;
         this.cryptoCurrency        = cryptoCurrency;
@@ -37,6 +44,8 @@ public class CryptoHoldTransactionParametersWrapper implements CryptoHoldTransac
         this.memo                  = memo;
         this.publicKeyPlugin       = publicKeyPlugin;
         this.blockchainNetworkType = blockchainNetworkType;
+        this.fee                   = fee;
+        this.feeOrigin             = feeOrigin;
     }
 
     public CryptoHoldTransactionParametersWrapper(){}
@@ -124,5 +133,30 @@ public class CryptoHoldTransactionParametersWrapper implements CryptoHoldTransac
     @Override
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
         this.blockchainNetworkType = blockchainNetworkType;
+    }
+
+    @Override
+    public long getFee() {
+        return fee;
+    }
+
+    @Override
+    public void setFee(long fee) {
+        this.fee = fee;
+    }
+
+    @Override
+    public void setFee(BitcoinFee bitcoinFee){
+        this.fee = bitcoinFee.getFee();
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return feeOrigin;
+    }
+
+    @Override
+    public void setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
     }
 }

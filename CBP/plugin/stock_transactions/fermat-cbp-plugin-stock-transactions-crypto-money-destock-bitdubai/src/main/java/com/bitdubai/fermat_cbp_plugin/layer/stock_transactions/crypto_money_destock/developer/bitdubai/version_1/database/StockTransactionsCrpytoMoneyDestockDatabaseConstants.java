@@ -32,6 +32,8 @@ public class StockTransactionsCrpytoMoneyDestockDatabaseConstants {
     static final String CRYPTO_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME       = "price_reference";
     static final String CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME = "origin_transaction_id";
     static final String CRYPTO_MONEY_DESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME      = "block_chain_network_type";
+    static final String CRYPTO_MONEY_DESTOCK_FEE_COLUMN_NAME = "fee";
+    static final String CRYPTO_MONEY_DESTOCK_ORIGIN_FEE_COLUMN_NAME      = "origin_fee";
 
     static final String CRYPTO_MONEY_DESTOCK_FIRST_KEY_COLUMN                    = "transaction_id";
 }

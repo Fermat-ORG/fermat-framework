@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -139,32 +138,32 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
      * @param outState
      */
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
+//    }
 
     /**
      * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
      * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
      *
-     * @param savedInstanceState
+//     * @param savedInstanceState
      */
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        try {
-            if (savedInstanceState == null) {
-                savedInstanceState = new Bundle();
-            } else
-                super.onRestoreInstanceState(savedInstanceState);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        try {
+//            if (savedInstanceState == null) {
+//                savedInstanceState = new Bundle();
+//            } else
+//                super.onRestoreInstanceState(savedInstanceState);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
 
-
-    }
+//    }
 
     public void onControlledActivityBack(String activityBackCode){
         try {
@@ -447,17 +446,17 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+//    @Override
+//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        super.onSaveInstanceState(outState, outPersistentState);
+//
+//    }
 
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState);
-
-    }
+//    @Override
+//    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+//        super.onRestoreInstanceState(savedInstanceState, persistentState);
+//
+//    }
 
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.

@@ -195,7 +195,8 @@ public class ContactsListFragment
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
+        offset=0;
+        onRefresh();
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
@@ -209,10 +210,10 @@ public class ContactsListFragment
         try {
             if (!isRefreshing) {
                 isRefreshing = true;
-                final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-                connectionsProgressDialog.setMessage("Loading Contacts");
-                connectionsProgressDialog.setCancelable(false);
-                connectionsProgressDialog.show();
+//                final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
+//                connectionsProgressDialog.setMessage("Loading Contacts");
+//                connectionsProgressDialog.setCancelable(false);
+//                connectionsProgressDialog.show();
                 FermatWorker worker = new FermatWorker() {
                     @Override
                     protected Object doInBackground() throws Exception {
@@ -224,7 +225,7 @@ public class ContactsListFragment
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                        connectionsProgressDialog.dismiss();
+//                        connectionsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -245,7 +246,7 @@ public class ContactsListFragment
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        connectionsProgressDialog.dismiss();
+//                        connectionsProgressDialog.dismiss();
                         try {
                             isRefreshing = false;
                             if (swipeRefresh != null)
@@ -323,7 +324,7 @@ public class ContactsListFragment
             if(identity != null){
                 result = moduleManager.listAllConnectedChatActor(identity, MAX, offset);
                 dataSet.addAll(result);
-                offset = dataSet.size();
+                //offset = dataSet.size();
             }
         } catch (CantListChatActorException e) {
             e.printStackTrace();

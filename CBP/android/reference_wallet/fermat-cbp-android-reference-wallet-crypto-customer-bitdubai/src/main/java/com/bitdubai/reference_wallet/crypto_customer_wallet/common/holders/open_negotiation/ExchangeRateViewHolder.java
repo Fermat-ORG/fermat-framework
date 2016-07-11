@@ -49,8 +49,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValue.setOnClickListener(this);
 
         formatter = DecimalFormat.getInstance();
-        formatter.setMaximumFractionDigits(2);
-        formatter.setRoundingMode(RoundingMode.DOWN);
+        formatter.setMaximumFractionDigits(8);
+    //    formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override

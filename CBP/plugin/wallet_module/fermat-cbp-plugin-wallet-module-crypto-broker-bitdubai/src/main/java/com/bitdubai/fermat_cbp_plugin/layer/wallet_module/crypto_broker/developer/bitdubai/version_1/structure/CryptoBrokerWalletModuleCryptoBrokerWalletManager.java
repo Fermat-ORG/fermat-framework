@@ -935,12 +935,28 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
     @Override
     public void createTransactionRestockCrypto(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId, BlockchainNetworkType blockchainNetworkType) throws CantCreateCryptoMoneyRestockException {
-        cryptoMoneyRestockManager.createTransactionRestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType);
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        long fee = preferenceSettings.getBitcoinFee().getFee();
+        cryptoMoneyRestockManager.createTransactionRestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType, fee, feeOrigin);
     }
 
     @Override
     public void createTransactionDestockCrypto(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId, BlockchainNetworkType blockchainNetworkType) throws CantCreateCryptoMoneyDestockException {
-        cryptoMoneyDestockManager.createTransactionDestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType);
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        long fee = preferenceSettings.getBitcoinFee().getFee();
+        cryptoMoneyDestockManager.createTransactionDestock(publicKeyActor, cryptoCurrency, cbpWalletPublicKey, cryWalletPublicKey, amount, memo, priceReference, originTransaction, originTransactionId, blockchainNetworkType, fee, feeOrigin);
     }
 
     @Override
@@ -1159,8 +1175,21 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
     @Override//TODO CCP - CBP
     public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException, CantLoadWalletsException {
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        String publicKeyActor;
         try {
-            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+            publicKeyActor = getSelectedActorIdentity().getPublicKey();
+        } catch (Exception e) {
+            publicKeyActor = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
+        }
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        BlockchainNetworkType blockchainNetworkType = preferenceSettings.getBlockchainNetworkType();
+        try {
+            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
         } catch (com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException e) {
             e.printStackTrace();
         }
@@ -1327,7 +1356,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             CryptoBrokerWalletAssociatedSetting associatedWallet;
             Platforms merchandiseWalletPlatform;
             double balance;
-            String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+            //String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+            String cryptoBrokerPublicKey = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
             Currency merchandiseCurrency;
 
             CustomerBrokerContractSale customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
@@ -1340,6 +1370,14 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             final double amount = parseToDouble(NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY_QUANTITY));
 
             final MoneyType moneyType = MoneyType.getByCode(moneyTypeCode);
+            //Load Wallet Settings
+            CryptoBrokerWalletPreferenceSettings preferenceSettings;
+            try {
+                preferenceSettings = loadAndGetSettings(cryptoBrokerPublicKey);
+            } catch (Exception e) {
+                preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+            }
+
             switch (moneyType) {
                 case CRYPTO:
                     merchandiseWalletPlatform = Platforms.CRYPTO_CURRENCY_PLATFORM;
@@ -1352,7 +1390,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                         throw new CantSubmitMerchandiseException(null, "Validating the Stock to submit the merchandise", "the associated wallet don't have a public key");
 
                     final CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(associatedWallet.getWalletPublicKey());
-                    balance = (double) cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+                    balance = (double) cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(preferenceSettings.getBlockchainNetworkType());
                     break;
 
                 case BANK:
@@ -1530,7 +1568,21 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     @Override
     public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
-        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions);
+        CryptoBrokerWalletPreferenceSettings preferenceSettings;
+        String publicKeyActor;
+        try {
+            publicKeyActor = getSelectedActorIdentity().getPublicKey();
+        } catch (CantGetSelectedActorIdentityException e) {
+            publicKeyActor = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
+        }
+        try {
+            preferenceSettings = loadAndGetSettings(publicKeyActor);
+        } catch (Exception e) {
+            preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
+        }
+        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        long fee = preferenceSettings.getBitcoinFee().getFee();
+        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions, fee, feeOrigin);
     }
 
     @Override

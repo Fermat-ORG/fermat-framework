@@ -15,10 +15,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ThumbnailUtil;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -35,7 +33,7 @@ import javax.websocket.Session;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcessor {
 
@@ -79,7 +77,6 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
              */
             if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
-
                 if (messageContent.getStatus() == GetNodeCatalogTransactionsMsjRespond.STATUS.SUCCESS){
 
                      /*
@@ -89,13 +86,11 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
 
                     LOG.info("transactionList size = "+transactionList.size());
 
-                    for (ActorsCatalogTransaction actorsCatalogTransaction : transactionList) {
-
-                        /*
-                         * Process the transaction
-                         */
+                    /*
+                     * Process the transactions list
+                     */
+                    for (ActorsCatalogTransaction actorsCatalogTransaction : transactionList)
                         processTransaction(actorsCatalogTransaction);
-                    }
 
                     long totalRowInDb = getDaoFactory().getActorsCatalogTransactionDao().getAllCount();
 
@@ -114,12 +109,12 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                          */
                         session.getAsyncRemote().sendObject(packageRespond);
 
-                    }else {
+                    } else {
 
                         session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Process finish..."));
                     }
 
-                }else {
+                } else {
 
                     LOG.warn(messageContent.getStatus() + " - " + messageContent.getDetails());
                 }
@@ -136,14 +131,13 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                 LOG.error(e.getMessage());
             }
         }
-
     }
 
     /**
      * Process the transaction
      * @param actorsCatalogTransaction
      */
-    private synchronized void processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException, CantReadRecordDataBaseException {
+    private synchronized void processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException, CantReadRecordDataBaseException, IOException {
 
         LOG.info("Executing method processTransaction");
 
@@ -229,7 +223,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
      *
      * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
-    private DatabaseTransactionStatementPair insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException, IOException {
 
         LOG.info("Executing method insertActorsCatalog");
 
@@ -244,25 +238,31 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
         actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
         actorsCatalog.setLastUpdateTime(actorsCatalogTransaction.getGenerationTime());
         actorsCatalog.setLastLocation(actorsCatalogTransaction.getLastLocation());
+        actorsCatalog.setLastConnection(actorsCatalogTransaction.getLastConnection());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
         actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
         actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
+        if(actorsCatalogTransaction.getPhoto() != null)
+            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorsCatalogTransaction.getPhoto(),null));
+        else
+            actorsCatalog.setThumbnail(null);
+
         /*
          * Save into the data base
          */
         return  getDaoFactory().getActorsCatalogDao().createInsertTransactionStatementPair(actorsCatalog);
-
     }
 
     /**
      * Update a row into the data base
      *
      * @param actorsCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
-    private DatabaseTransactionStatementPair updateActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair updateActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException, IOException {
 
         LOG.info("Executing method updateActorsCatalog");
 
@@ -276,24 +276,28 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
         actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
         actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
         actorsCatalog.setLastUpdateTime(actorsCatalogTransaction.getGenerationTime());
+        actorsCatalog.setLastConnection(actorsCatalogTransaction.getLastConnection());
         actorsCatalog.setLastLocation(actorsCatalogTransaction.getLastLocation());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
         actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
+        if(actorsCatalogTransaction.getPhoto() != null)
+            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorsCatalogTransaction.getPhoto(), null));
+        else
+            actorsCatalog.setThumbnail(null);
+
         /*
          * Save into the data base
          */
         return  getDaoFactory().getActorsCatalogDao().createUpdateTransactionStatementPair(actorsCatalog);
-
     }
 
     /**
      * Delete a row from the data base
      *
      * @param identityPublicKey
-     * @throws CantDeleteRecordDataBaseException
-     * @throws RecordNotFoundException
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
     private DatabaseTransactionStatementPair deleteActorsCatalog(String identityPublicKey) throws CantCreateTransactionStatementPairException {
 
@@ -309,7 +313,8 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
      * Create a new row into the data base
      *
      * @param actorsCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantCreateTransactionStatementPairException if something goes wrong.
      */
     private DatabaseTransactionStatementPair insertActorsCatalogTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantCreateTransactionStatementPairException {
 
