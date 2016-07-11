@@ -492,7 +492,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
      */
 
-    void approveRequest(UUID requestId,String intraUserLoggedInPublicKey) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
+    void approveRequest(UUID requestId,String intraUserLoggedInPublicKey,long fee, FeeOrigin feeOrigin) throws CantApproveRequestPaymentException,PaymentRequestNotFoundException,RequestPaymentInsufficientFundsException;
 
     /**
      *
