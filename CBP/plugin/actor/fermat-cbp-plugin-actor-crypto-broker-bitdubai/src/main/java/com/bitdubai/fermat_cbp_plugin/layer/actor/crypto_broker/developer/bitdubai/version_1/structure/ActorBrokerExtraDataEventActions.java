@@ -66,10 +66,14 @@ public class ActorBrokerExtraDataEventActions {
                 String brokerPublicKey = null;
 
                 for (CryptoBrokerExtraData<CryptoBrokerQuote> extraData : dataNS) {
-                    if(brokerPublicKey == null){
+                    //if(brokerPublicKey == null){
                         brokerPublicKey = extraData.getCryptoBrokerPublicKey();
-                    }
+                    //}
                     final List<CryptoBrokerQuote> quotes = getQuotes(brokerPublicKey);
+                    if(quotes==null||quotes.isEmpty()){
+                        //Don't have any quotes to answer
+                        continue;
+                    }
                     final long updateTime = System.currentTimeMillis();
 
                     cryptoBrokerANSManager.answerQuotesRequest(extraData.getRequestId(), updateTime, quotes);
@@ -107,6 +111,9 @@ public class ActorBrokerExtraDataEventActions {
         List<CryptoBrokerQuote> quotes = new ArrayList<>();
         try {
             final BrokerIdentityWalletRelationship relationship = this.cryptoBrokerActorDao.getBrokerIdentityWalletRelationshipByIdentity(brokerPublicKey);
+            if(relationship==null){
+                return quotes;
+            }
             final String wallerPublicKey = relationship.getWallet();
 
             final CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);

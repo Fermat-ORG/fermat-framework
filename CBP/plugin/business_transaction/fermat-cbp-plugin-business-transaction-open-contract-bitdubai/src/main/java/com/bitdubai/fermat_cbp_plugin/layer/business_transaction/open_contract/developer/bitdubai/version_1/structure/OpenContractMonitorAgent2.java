@@ -109,42 +109,47 @@ public class OpenContractMonitorAgent2
             List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
             if (!contractPendingToSubmitList.isEmpty()) {
                 for (String hashToSubmit : contractPendingToSubmitList) {
-                    contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
-                    contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
+                    try{
+                        contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
+                        contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
 
-                    System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: "+contractType+"\n");
+                        System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: "+contractType+"\n");
 
-                    switch (contractType) {
-                        case PURCHASE:
-                            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - PURCHASE\n");
-                            purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
-                            transactionTransmissionManager.sendContractHash(
-                                    transmissionId,
-                                    purchaseContract.getPublicKeyCustomer(),
-                                    purchaseContract.getPublicKeyBroker(),
-                                    hashToSubmit,
-                                    purchaseContract.getNegotiationId(),
-                                    Plugins.OPEN_CONTRACT,
-                                    PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                                    PlatformComponentType.ACTOR_CRYPTO_BROKER);
-                            break;
-                        case SALE:
-                            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - SALE\n");
-                            saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
-                            transactionTransmissionManager.sendContractHash(
-                                    transmissionId,
-                                    saleContract.getPublicKeyBroker(),
-                                    saleContract.getPublicKeyCustomer(),
-                                    hashToSubmit,
-                                    saleContract.getNegotiationId(),
-                                    Plugins.OPEN_CONTRACT,
-                                    PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                                    PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
-                            break;
+                        switch (contractType) {
+                            case PURCHASE:
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - PURCHASE\n");
+                                purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
+                                transactionTransmissionManager.sendContractHash(
+                                        transmissionId,
+                                        purchaseContract.getPublicKeyCustomer(),
+                                        purchaseContract.getPublicKeyBroker(),
+                                        hashToSubmit,
+                                        purchaseContract.getNegotiationId(),
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                                break;
+                            case SALE:
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - SALE\n");
+                                saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
+                                transactionTransmissionManager.sendContractHash(
+                                        transmissionId,
+                                        saleContract.getPublicKeyBroker(),
+                                        saleContract.getPublicKeyCustomer(),
+                                        hashToSubmit,
+                                        saleContract.getNegotiationId(),
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                                break;
+                        }
+                        //Update the ContractTransactionStatus
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CHECKING_HASH);
+                        transactionTransmissionManager.confirmReception(transmissionId);
+                    } catch (Exception e){
+                        reportError(e);
                     }
-                    //Update the ContractTransactionStatus
-                    openContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CHECKING_HASH);
-                    transactionTransmissionManager.confirmReception(transmissionId);
+
                 }
             }
 
@@ -234,11 +239,7 @@ public class OpenContractMonitorAgent2
                 checkPendingEvent(eventId);
             }
 
-        } catch (CantUpdateRecordException |
-                CantConfirmTransactionException |
-                UnexpectedResultReturnedFromDatabaseException |
-                CantGetContractListException |
-                CantSendBusinessTransactionHashException e) {
+        } catch (Exception e) {
             reportError(e);
         }
     }
