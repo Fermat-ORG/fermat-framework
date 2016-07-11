@@ -184,18 +184,23 @@ public class ChatListFragment
                                         if (Validate.isDateToday(dated)) {
                                             if (Validate.isDateToday(dated)) {
                                                 //if(android.text.format.DateFormat!=null)
-                                                if (Build.VERSION.SDK_INT < 23) {
-                                                    if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
-                                                        formatter = new SimpleDateFormat("HH:mm");
+                                                try {
+                                                    //TODO is24HourFormat doesn't work
+                                                    if (Build.VERSION.SDK_INT < 23) {
+                                                        if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
+                                                            formatter = new SimpleDateFormat("HH:mm");
+                                                        } else {
+                                                            formatter = new SimpleDateFormat("hh:mm aa");
+                                                        }
                                                     } else {
-                                                        formatter = new SimpleDateFormat("hh:mm aa");
+                                                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                            formatter = new SimpleDateFormat("HH:mm");
+                                                        } else {
+                                                            formatter = new SimpleDateFormat("hh:mm aa");
+                                                        }
                                                     }
-                                                } else {
-                                                    if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                                        formatter = new SimpleDateFormat("HH:mm");
-                                                    } else {
-                                                        formatter = new SimpleDateFormat("hh:mm aa");
-                                                    }
+                                                }catch(Exception e){
+                                                    formatter = new SimpleDateFormat("HH:mm");
                                                 }
                                             }
                                             formatter.setTimeZone(TimeZone.getDefault());
