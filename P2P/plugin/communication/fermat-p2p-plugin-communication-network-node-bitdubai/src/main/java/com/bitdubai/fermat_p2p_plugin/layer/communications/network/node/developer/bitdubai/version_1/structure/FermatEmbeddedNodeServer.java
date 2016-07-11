@@ -40,6 +40,8 @@ import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.FilterInfo;
 import io.undertow.servlet.api.ServletContainer;
 import io.undertow.util.Headers;
+import io.undertow.websockets.extensions.PerMessageDeflateFunction;
+import io.undertow.websockets.extensions.PerMessageDeflateHandshake;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 
 /**
@@ -140,10 +142,14 @@ public class FermatEmbeddedNodeServer {
          */
         final Xnio xnio = Xnio.getInstance("nio", Undertow.class.getClassLoader());
         final XnioWorker xnioWorker = xnio.createWorker(OptionMap.builder()
-                                                        .set(Options.WORKER_IO_THREADS, 1)
-                                                        .set(Options.WORKER_TASK_CORE_THREADS, 40)
-                                                        .set(Options.TCP_NODELAY, true)
-                                                        .getMap());
+                .set(Options.WORKER_IO_THREADS, 2)
+                .set(Options.CONNECTION_HIGH_WATER, 1000000)
+                .set(Options.CONNECTION_LOW_WATER, 1000000)
+                .set(Options.WORKER_TASK_CORE_THREADS, 40)
+                .set(Options.WORKER_TASK_MAX_THREADS, 40)
+                .set(Options.TCP_NODELAY, true)
+                .set(Options.CORK, true)
+                .getMap());
 
         /*
          * Create the App WebSocketDeploymentInfo and configure
@@ -154,6 +160,7 @@ public class FermatEmbeddedNodeServer {
         appWebSocketDeploymentInfo.setDispatchToWorkerThread(Boolean.TRUE);
         appWebSocketDeploymentInfo.addEndpoint(FermatWebSocketNodeChannelServerEndpoint.class);
         appWebSocketDeploymentInfo.addEndpoint(FermatWebSocketClientChannelServerEndpoint.class);
+        appWebSocketDeploymentInfo.addExtension(new PerMessageDeflateHandshake());
 
          /*
          * Create the App DeploymentInfo and configure

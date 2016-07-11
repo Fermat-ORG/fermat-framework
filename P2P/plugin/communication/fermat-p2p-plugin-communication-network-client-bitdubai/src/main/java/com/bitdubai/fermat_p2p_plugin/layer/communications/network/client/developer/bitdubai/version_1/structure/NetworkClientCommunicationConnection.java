@@ -42,6 +42,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
@@ -54,6 +55,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.ext.extension.deflate.PerMessageDeflateExtension;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,6 +71,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
 
@@ -165,7 +168,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
-
         this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
     }
 
@@ -259,6 +261,10 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
+           /*   ArrayList extensions = new ArrayList();
+                extensions.add(new PerMessageDeflateExtension());
+                final ClientEndpointConfig clientConfiguration = ClientEndpointConfig.Builder.create().extensions(extensions).configurator(new ClientChannelConfigurator()).build();
+            */
             container.asyncConnectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
@@ -286,7 +292,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            container.connectToServer(networkClientCommunicationChannel, uri);
+            container.asyncConnectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
             e.printStackTrace();
