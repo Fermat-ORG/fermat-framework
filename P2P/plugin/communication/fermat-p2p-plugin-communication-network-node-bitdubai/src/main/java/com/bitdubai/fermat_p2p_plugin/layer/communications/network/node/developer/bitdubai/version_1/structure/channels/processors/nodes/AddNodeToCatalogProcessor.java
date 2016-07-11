@@ -68,7 +68,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
             /*
              * Create the method call history
              */
-            methodCallsHistory(messageContent.toJson(), destinationIdentityPublicKey);
+            //methodCallsHistory(messageContent.toJson(), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct

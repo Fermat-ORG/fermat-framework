@@ -72,7 +72,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
             /*
              * Create the method call history
              */
-            methodCallsHistory(getGson().toJson(messageContent.getActorsCatalogTransactions()), destinationIdentityPublicKey);
+            //methodCallsHistory(getGson().toJson(messageContent.getActorsCatalogTransactions()), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct

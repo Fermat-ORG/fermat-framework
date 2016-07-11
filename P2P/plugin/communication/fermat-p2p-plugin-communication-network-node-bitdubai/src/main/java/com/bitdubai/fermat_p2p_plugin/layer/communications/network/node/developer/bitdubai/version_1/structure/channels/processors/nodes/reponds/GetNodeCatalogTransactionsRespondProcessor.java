@@ -68,7 +68,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
             /*
              * Create the method call history
              */
-            methodCallsHistory(getGson().toJson(messageContent), destinationIdentityPublicKey);
+//            methodCallsHistory(getGson().toJson(messageContent), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct

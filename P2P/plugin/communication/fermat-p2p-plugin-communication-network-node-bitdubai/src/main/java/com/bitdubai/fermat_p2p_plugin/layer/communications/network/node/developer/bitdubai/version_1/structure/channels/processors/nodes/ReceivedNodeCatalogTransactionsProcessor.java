@@ -70,7 +70,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
             /*
              * Create the method call history
              */
-            methodCallsHistory(getGson().toJson(messageContent.getNodesCatalogTransactions()), destinationIdentityPublicKey);
+            //methodCallsHistory(getGson().toJson(messageContent.getNodesCatalogTransactions()), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct
