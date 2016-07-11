@@ -833,15 +833,20 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     private float getVolatilityCalculation(final Currency merchandise, MoneyType moneyType) throws CantGetCryptoBrokerStockTransactionException {
         float volatility, priceMinimum = 0, priceMaximum = 0;
 
-        boolean sw = true;
         try {
-            for (CryptoBrokerStockTransaction cryptoBrokerStockTransaction : getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, TransactionType.CREDIT, BalanceType.AVAILABLE)) {
-                if (sw) {
-                    priceMaximum = cryptoBrokerStockTransaction.getPriceReference().floatValue();
-                    sw = false;
-                }
-                priceMinimum = cryptoBrokerStockTransaction.getPriceReference().floatValue();
+            CryptoBrokerStockTransaction cryptoBrokerStockTransactionBegin = null;
+            CryptoBrokerStockTransaction cryptoBrokerStockTransactionEnd   = null;
+            List<CryptoBrokerStockTransaction> list = getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, TransactionType.CREDIT, BalanceType.AVAILABLE);
+            if (list != null)
+            {
+                cryptoBrokerStockTransactionBegin = list.get(0);
+                int lastIndex = list.lastIndexOf(list);
+                cryptoBrokerStockTransactionEnd   = list.get(lastIndex);
             }
+
+            if  (cryptoBrokerStockTransactionBegin != null) priceMaximum = cryptoBrokerStockTransactionBegin.getPriceReference().floatValue();
+            if  (cryptoBrokerStockTransactionEnd   != null) priceMinimum = cryptoBrokerStockTransactionBegin.getPriceReference().floatValue();
+
         } catch (CantGetCryptoBrokerStockTransactionException e) {
             throw new CantGetCryptoBrokerStockTransactionException("Cant Get Crypto Broker Stock Transaction", e, "", "");
         }
