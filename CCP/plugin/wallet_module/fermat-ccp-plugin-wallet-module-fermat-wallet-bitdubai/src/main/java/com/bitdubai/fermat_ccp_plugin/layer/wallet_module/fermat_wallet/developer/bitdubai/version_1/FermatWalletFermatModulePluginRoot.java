@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -132,7 +133,8 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     private String appPublicKey;
 
@@ -235,7 +237,8 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         broadcaster,
                         exchangeProviderFilterManagerproviderFilter,
                         walletManagerManager,
-                        transferIntraWalletUsersManager);
+                        transferIntraWalletUsersManager,
+                        locationManager);
 
                 walletModuleCryptoWallet.initialize();
 

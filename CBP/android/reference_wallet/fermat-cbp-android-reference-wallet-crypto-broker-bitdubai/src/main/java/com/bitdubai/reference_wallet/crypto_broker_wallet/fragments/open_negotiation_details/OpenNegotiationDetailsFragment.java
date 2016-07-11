@@ -100,8 +100,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private float spread = 1;
 
 
-    private Boolean firstTimeConfirmButtonPressed=true;
-
 
     // Fermat Managers
     private ErrorManager errorManager;
@@ -120,6 +118,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            numberFormat.setMaximumFractionDigits(8);
 
             Object data = appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
             CustomerBrokerNegotiationInformation negotiationInfo = (data != null) ? (CustomerBrokerNegotiationInformation) data : null;
@@ -168,7 +167,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
         adapter.setMarketRateList(getActualExchangeRates());
 
-        if (negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER) {
+        if (negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CLOSING) {
             adapter.setFooterListener(this);
             adapter.setClauseListener(this);
         }
@@ -274,19 +273,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     public void onConfirmClauseButtonClicked(ClauseInformation clause) {
         final Map<ClauseType, ClauseInformation> clauses = negotiationWrapper.getNegotiationInfo().getClauses();
         final ClauseType type = clause.getType();
-        if(type==EXCHANGE_RATE && clauses.get(CUSTOMER_CURRENCY).getValue().equals("BTC") &&firstTimeConfirmButtonPressed){
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle("Important Information");
-            alertDialog.setMessage("The Miner Fee of this transaction is 0.000015 Bitcoins");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
-            firstTimeConfirmButtonPressed=false;
-        }
+
 
         if (type == EXCHANGE_RATE || type == CUSTOMER_CURRENCY_QUANTITY || type == BROKER_CURRENCY_QUANTITY) {
             try {

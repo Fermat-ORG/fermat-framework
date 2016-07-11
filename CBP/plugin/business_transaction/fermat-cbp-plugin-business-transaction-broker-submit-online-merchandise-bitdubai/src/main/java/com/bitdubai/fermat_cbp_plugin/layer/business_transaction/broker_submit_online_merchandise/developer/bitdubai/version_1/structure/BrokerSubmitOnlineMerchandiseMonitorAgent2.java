@@ -182,7 +182,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                         cryptoMoneyDeStockRecord.getPriceReference(),
                         cryptoMoneyDeStockRecord.getOriginTransaction(),
                         pendingToDeStockTransaction.getContractHash(),
-                        cryptoMoneyDeStockRecord.getBlockchainNetworkType()); //TODO de Manuel: crear un setting para configuar esto
+                        cryptoMoneyDeStockRecord.getBlockchainNetworkType(),
+                        cryptoMoneyDeStockRecord.getFee(),
+                        cryptoMoneyDeStockRecord.getFeeOrigin()); //TODO de Manuel: crear un setting para configuar esto
 
                 pendingToDeStockTransaction.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE);
                 dao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
@@ -225,8 +227,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
                         getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
                         businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
                         businessTransactionRecord.getCryptoCurrency(),
-                        businessTransactionRecord.getFee(), //TODO: se va a crear un setting para configurar este parametros
-                        businessTransactionRecord.getFeeOrigin()); // TODO: se va a crear un setting para configurar este parametros
+                        businessTransactionRecord.getFee(),
+                        businessTransactionRecord.getFeeOrigin());
 
                 //Updating the business transaction record
                 businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());

@@ -269,7 +269,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
     private final IPlatformService.Stub mBinder = new IPlatformService.Stub() {
 
-
+        @Override
         public String register() {
             String clientKey = null;
             try {
@@ -305,6 +305,37 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             }
             return clientKey;
         }
+
+//        @Override
+//        public Class<?>[] obtainModuleInterfaces(String platformCode, String layerCode, String pluginsCode, String developerCode, String version)  {
+//            Class<?>[] interfaces = null;
+//            try {
+//                PluginVersionReference pluginVersionReference = PluginVersionReference.PluginVersionReferenceFactory(platformCode, layerCode, pluginsCode, developerCode, version);
+//                try {
+//                    ModuleManager moduleManagerBase = FermatSystem.getInstance().getModuleManager2(pluginVersionReference);
+//                    if (moduleManagerBase == null)
+//                        throw new RuntimeException("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                    Class clazz = moduleManagerBase.getClass();
+//                    interfaces = clazz.getInterfaces();
+//                } catch (CantGetModuleManagerException e) {
+//                    try {
+//                        Class clazz = FermatSystem.getInstance().getModuleManager3(pluginVersionReference);
+//                        if (clazz == null)
+//                            throw new RuntimeException("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                        interfaces = clazz.getInterfaces();
+//                    } catch (Exception e2) {
+//                        Log.e(TAG, "Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                        throw new CantCreateProxyException("Cant get module manager from system", e, "factory", "");
+//                    }
+//                } catch (ModuleManagerNotFoundException e) {
+//                    Log.e(TAG, "Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                    throw new CantCreateProxyException("Cant fount module manager from system", e, "factory", "");
+//                }
+//            }catch (Exception e){
+//                throw new RuntimeException(e);
+//            }
+//            return interfaces;
+//        }
 
         @Override
         public FermatModuleObjectWrapper invoqueModuleMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {

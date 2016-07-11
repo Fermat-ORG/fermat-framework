@@ -27,6 +27,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Framew
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
@@ -46,6 +48,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,6 +74,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     protected R appResourcesProviderManager;
 
     /**
+     * Receivers
+     */
+    private List<FermatBroadcastReceiver> receivers;
+
+    /**
      * OptionMenuListeners
      */
 //    private Map<Integer,?> optionMenuListeners;
@@ -91,7 +99,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         super.onCreate(savedInstanceState);
         //if(fermatFragmentType.getOptionsMenu()!=null)
             setHasOptionsMenu(true);
-
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -115,6 +122,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         if (context != null && isAttached) {
             context.showWizard(key, args);
         }
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        isAttached = true;
     }
 
     @Override
@@ -224,7 +237,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * Method to obtain res from other apps
      */
     private final int obtainRes(int resType,int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(resType,id, sourceLocation, appOwnerPublicKey);
+        return getFrameworkHelpers().obtainRes(resType, id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
@@ -380,6 +393,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
 
     protected void destroy(){
+        unregisterAllReceivers();
         onDestroy();
         System.gc();
     }
@@ -405,11 +419,13 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final FermatRuntime getRuntimeManager(){
-        return ((FermatActivityManager)getActivity()).getRuntimeManager();
+        if(isAttached)
+            return ((FermatActivityManager) getActivity()).getRuntimeManager();
+        return null;
     }
 
     protected final void changeStartActivity(String activityCode){
-        ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
+            ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
     }
 
     public void changeTabNotification(String activityCode, int number) throws InvalidParameterException {
@@ -433,13 +449,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    public final void onUpdateViewHandler(final String appCode,final String code){
-        if(appSession.getAppPublicKey().equals(appCode)){
-            onUpdateView(code);
-        }
-
-    }
-
     public final void onUpdateViewUIThred(final String code){
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -454,9 +463,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      *
      * @param code is a code for update some part of the fragment or everything
      */
-    public void onUpdateView(String code) {
-        return;
-    }
+
 
     /**
      * This class have to be ovverride if someone wants to get broadcast on UI Thread
@@ -471,9 +478,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     public void onUpdateView(FermatBundle bundle) {
-
-    }
-    public void onUpdateViewUIThred(FermatBundle bundle) {
 
     }
 
@@ -601,5 +605,28 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
 
+
+
+    /**
+     * Receivers
+     */
+    protected void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver){
+        if(receivers==null)receivers = new ArrayList<>();
+        receivers.add(fermatBroadcastReceiver);
+        getFrameworkHelpers().registerReceiver(fermatIntentFilter, fermatBroadcastReceiver, appSession.getAppPublicKey());
+    }
+
+    protected void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver){
+        if(receivers!=null) receivers.remove(fermatBroadcastReceiver);
+        getFrameworkHelpers().unregisterReceiver(fermatBroadcastReceiver, appSession.getAppPublicKey());
+    }
+
+    protected void unregisterAllReceivers(){
+        if(receivers!=null) {
+            for (FermatBroadcastReceiver receiver : receivers) {
+                getFrameworkHelpers().unregisterReceiver(receiver, appSession.getAppPublicKey());
+            }
+        }
+    }
 
 }

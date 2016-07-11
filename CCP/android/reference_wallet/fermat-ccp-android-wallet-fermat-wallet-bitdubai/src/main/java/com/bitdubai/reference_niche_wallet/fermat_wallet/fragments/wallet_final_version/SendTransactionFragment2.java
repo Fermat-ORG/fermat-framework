@@ -373,12 +373,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         }catch (Exception e){
             e.printStackTrace();
         }
-       /* final int sdk = android.os.Build.VERSION.SDK_INT;
+        final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
         } else {
             container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
-        }*/
+        }
 
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
@@ -480,14 +480,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
             // Give the TabLayout the ViewPager
             tabLayout.setupWithViewPager(vpPager);
+            tabLayout.setLeft(5);
+            tabLayout.setTop(5);
 
         } catch (CantGetCurrencyExchangeProviderException e) {
             e.printStackTrace();
         }
-
-
-
-
 
         long balance = 0;
 
@@ -501,7 +499,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         updateBalances();
     }
-
 
 
     @Override
@@ -910,103 +907,5 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     }
 
 
-
-/*   private void getAndShowMarketExchangeRateData(final View container) {
-
-        final int MAX_DECIMAL_FOR_RATE = 2;
-        final int MIN_DECIMAL_FOR_RATE = 2;
-
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
-            @Override
-            protected Object doInBackground()  {
-
-                ExchangeRate rate = null;
-                try{
-
-                    //default Exchange rate Provider
-
-                    if(moduleManager.getExchangeProvider()==null) {
-                        List<ExchangeRateProvider> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
-
-                        exchangeProviderId = providers.get(0).getProviderId();
-                        moduleManager.setExchangeProvider(exchangeProviderId);
-
-                    }
-                    else
-                    {
-                        exchangeProviderId =moduleManager.getExchangeProvider();
-                    }
-
-
-                    rate =  moduleManager.getCurrencyExchange(exchangeProviderId);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return rate;
-            }
-        };
-
-        fermatWorker.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                if (result != null && result.length > 0) {
-
-                    ExchangeRate rate = (ExchangeRate) result[0];
-                    if(rate != null)
-                    {
-                        // progressBar.setVisibility(View.GONE);
-                        txt_rate_amount.setText("1 BTC = " + String.valueOf(
-                                WalletUtils.formatAmountStringWithDecimalEntry(
-                                        rate.getPurchasePrice(),
-                                        MAX_DECIMAL_FOR_RATE,
-                                        MIN_DECIMAL_FOR_RATE)) + " USD");
-
-                        //get available balance to actual exchange rate
-                        actuaExchangeRate = Double.parseDouble(
-                                WalletUtils.formatAmountStringWithDecimalEntry(rate.getPurchasePrice(),
-                                        MAX_DECIMAL_FOR_RATE,
-                                        MIN_DECIMAL_FOR_RATE));
-
-                        appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, actuaExchangeRate);
-
-                        updateBalances();
-
-                    }
-                    else {
-                        //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                        //dialog_error.show();
-                    }
-
-
-                }
-                else {
-                    //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                    //dialog_error.show();
-                    //makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                //  progressBar.setVisibility(View.GONE);
-
-                txt_rate_amount.setVisibility(View.GONE);
-
-                ErrorManager errorManager = appSession.getErrorManager();
-                if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                else
-                    Log.e("Exchange Rate", ex.getMessage(), ex);
-
-                //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                //dialog_error.show();
-            }
-        });
-
-        fermatWorker.execute();
-    }
-*/}
+}
 

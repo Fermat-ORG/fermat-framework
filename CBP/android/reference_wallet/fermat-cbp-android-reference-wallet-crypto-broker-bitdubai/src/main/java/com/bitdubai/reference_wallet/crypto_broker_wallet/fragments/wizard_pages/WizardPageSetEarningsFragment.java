@@ -192,13 +192,15 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
 
     @Override
     public void checkedChanged(boolean isChecked, EarningsWizardData data, final int position) {
-
+        System.out.println("checkedChanged(): position=" +  position + " isChecked=" + isChecked);
         if (isChecked && !data.isChecked()) {
             showWalletsDialog(data, position);
         }
 
         if (!isChecked && data.isChecked()) {
             data.clearWalletInfo();
+            System.out.println("checkedChanged(): notifyItemChanged");
+
             adapter.notifyItemChanged(position);
         }
     }

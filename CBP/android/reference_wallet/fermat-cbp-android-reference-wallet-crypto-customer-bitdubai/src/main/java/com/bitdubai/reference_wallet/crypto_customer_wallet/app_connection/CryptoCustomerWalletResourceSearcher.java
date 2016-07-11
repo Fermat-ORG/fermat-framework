@@ -13,16 +13,14 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 public class CryptoCustomerWalletResourceSearcher extends ResourceSearcher {
 
     @Override
-    public int obtainResDrawable(Context context,int id){
-        int resId = 0;
+    public int obtainResDrawable(Context context, int id) {
         switch (id) {
             case FragmentsCommons.CONTRACT_HISTORY_FILTER_OPTION_MENU_ID:
-                resId = R.drawable.ccw_action_filters;
-                break;
+                return R.drawable.ccw_action_filters;
+            case FragmentsCommons.REQUEST_QUOTES_OPTION_MENU_ID:
+                return R.drawable.ccw_update_icon;
             default:
-                resId = 0;
-                break;
+                return 0;
         }
-        return resId;
     }
 }

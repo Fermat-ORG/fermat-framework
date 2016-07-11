@@ -19,6 +19,7 @@
         android:layout_weight="0.14"
         android:layout_below="@+id/send_form"
         android:headerDividersEnabled="false"
-        android:divider="#00000000"/>
+        android:divider="#00000000"
+        />
 
 </LinearLayout>

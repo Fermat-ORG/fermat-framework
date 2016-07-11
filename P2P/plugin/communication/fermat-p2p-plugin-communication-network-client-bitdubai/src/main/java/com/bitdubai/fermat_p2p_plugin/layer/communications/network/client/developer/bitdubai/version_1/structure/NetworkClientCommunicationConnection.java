@@ -261,12 +261,15 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
+<<<<<<< HEAD
            /*
                 ArrayList extensions = new ArrayList();
                 extensions.add(new PerMessageDeflateExtension());
                 final ClientEndpointConfig clientConfiguration = ClientEndpointConfig.Builder.create().extensions(extensions).configurator(new ClientChannelConfigurator()).build();
             */
 
+=======
+>>>>>>> 613983614c10b81c7642652da7dc889434f32730
             container.asyncConnectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
@@ -1084,5 +1087,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     public NodeProfile getNodeProfile() {
         return nodeProfile;
+    }
+
+    public void close() throws IOException {
+        networkClientCommunicationChannel.getClientConnection().close();
     }
 }

@@ -65,7 +65,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
         super(
                 pluginVersionReference,
-                eventSource           ,
+                eventSource,
                 networkServiceType
         );
 
@@ -151,17 +151,19 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                 )
         );
 
-        if (this.getConnection() != null && this.getConnection().isRegistered() && this.isRegistered()) {
-
-            try {
-
-                this.getConnection().registerProfile(actorToRegister);
-                registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
-
-            } catch (CantRegisterProfileException exception) {
-
-                throw new CantRegisterActorException(exception, "publicKey: "+publicKey+" - name: "+name, "There was an error trying to register the actor through the network service.");
+        if (getConnection() != null ) {
+            if(getConnection().isRegistered()) {
+                try {
+                    this.getConnection().registerProfile(actorToRegister);
+                    registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
+                } catch (CantRegisterProfileException exception) {
+                    throw new CantRegisterActorException(exception, "publicKey: " + actorToRegister.getIdentityPublicKey() + " - name: " + actorToRegister.getName(), "There was an error trying to register the actor through the network service.");
+                }
+            } else{
+                System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection().isRegistered(): " +getConnection().isRegistered());
             }
+        } else {
+            System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection(): null");
         }
 
         System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  GO OUT METHOD");

@@ -69,6 +69,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         brokerName.setText(broker.getAlias());
 
         NegotiationStatus negotiationStatus = itemInfo.getStatus();
+
         itemView.setBackgroundColor(getStatusBackgroundColor(negotiationStatus));
         status.setText(getStatusStringRes(negotiationStatus));
 
@@ -92,10 +93,14 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         if (status == NegotiationStatus.WAITING_FOR_BROKER || status == NegotiationStatus.SENT_TO_BROKER)
             return res.getColor(R.color.waiting_for_broker_list_item_background);
 
+        if (status == NegotiationStatus.WAITING_FOR_CLOSING)
+            return res.getColor(R.color.waiting_for_closing_list_item_background);
+
         if (status == NegotiationStatus.CLOSED)
             return res.getColor(R.color.negotiation_closed_list_item_background);
 
         return res.getColor(R.color.negotiation_cancelled_list_item_background);
+
     }
 
     protected int getStatusStringRes(NegotiationStatus status) {
@@ -104,6 +109,9 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
         if (status == NegotiationStatus.WAITING_FOR_BROKER)
             return R.string.waiting_for_broker;
+
+        if (status == NegotiationStatus.WAITING_FOR_CLOSING)
+            return R.string.waiting_for_closing;
 
         return R.string.sending_to_the_broker;
     }

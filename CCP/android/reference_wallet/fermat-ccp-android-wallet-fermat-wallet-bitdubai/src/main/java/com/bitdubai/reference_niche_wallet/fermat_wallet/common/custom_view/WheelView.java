@@ -24,7 +24,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.interfaces.WheelAdapter
 public class WheelView extends View {
 	private static final String TAG = "WHEELSPINNER";
 	private WheelAdapter _adp;
-	private int TEXT_SIZE = 40;
+	private int TEXT_SIZE = 20;
 	private Boolean update = false;
 	private Boolean automove = false;
 	private int targetPos;

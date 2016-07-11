@@ -42,6 +42,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
     /**
      * Classes variables
      */
+    final boolean isReset;
     private BlockChain blockChain;
     private BlockStore blockStore;
     private Wallet wallet;
@@ -57,7 +58,8 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
     /**
      * Constructor
      */
-    public BitcoinCryptoNetworkBlockChain(PluginFileSystem pluginFileSystem, NetworkParameters networkParameters, Wallet wallet, Context context) throws BlockchainException {
+    public BitcoinCryptoNetworkBlockChain(boolean isReset, PluginFileSystem pluginFileSystem, NetworkParameters networkParameters, Wallet wallet, Context context) throws BlockchainException {
+        this.isReset = isReset;
         this.pluginFileSystem = pluginFileSystem;
         this.wallet = wallet;
         this.context = context;
@@ -111,6 +113,15 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
                 blockChainFile.delete();
         }
 
+        /**
+         * If a reset happened, we delete and set as first time to use the checkpoints.
+         */
+        if (isReset){
+            firstTime = true;
+            if (isReset)
+                blockChainFile.delete();
+        }
+
 
         /**
          * I create the blockstore.
@@ -134,7 +145,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
             if (firstTime){
                 switch (BLOCKCHAIN_NETWORK_TYPE){
                     case TEST_NET:
-                        loadCheckpoint("2016-06-30 22:11:25");
+                        loadCheckpoint("2016-07-04 00:00:43");
                         break;
                     case PRODUCTION:
                         loadCheckpoint("2016-06-30 22:11:25");

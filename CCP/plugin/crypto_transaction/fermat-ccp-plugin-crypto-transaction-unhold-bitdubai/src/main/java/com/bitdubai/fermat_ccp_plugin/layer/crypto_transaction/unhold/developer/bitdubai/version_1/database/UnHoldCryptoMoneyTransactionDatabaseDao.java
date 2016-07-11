@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -83,6 +85,9 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
         record.setLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, cryptoUnHoldTransaction.getTimestampConfirmedRejected());
         record.setStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, cryptoUnHoldTransaction.getStatus().getCode());
         record.setStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoUnHoldTransaction.getBlockchainNetworkType().getCode());
+        record.setLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_FEE_COLUMN_NAME, cryptoUnHoldTransaction.getFee());
+        record.setStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_FEE_ORIGIN_COLUMN_NAME, cryptoUnHoldTransaction.getFeeOrigin().getCode());
+
         return record;
     }
 
@@ -118,6 +123,26 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
         unHoldCryptoMoneyTransaction.setTimestampConfirmedRejected(crtyptoUnHoldTransactionRecord.getLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         unHoldCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.getByCode(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME)));
         unHoldCryptoMoneyTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
+        //Fee fields
+        long longFee = crtyptoUnHoldTransactionRecord.getLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_FEE_COLUMN_NAME);
+        long minimalFee = BitcoinFee.SLOW.getFee();
+        if(longFee < minimalFee){
+            longFee = minimalFee;
+        }
+        unHoldCryptoMoneyTransaction.setFee(longFee);
+        FeeOrigin feeOrigin;
+        String feeOriginString = crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_FEE_ORIGIN_COLUMN_NAME);
+        if(feeOriginString==null||feeOriginString.isEmpty()){
+            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        } else {
+            try{
+                feeOrigin = FeeOrigin.getByCode(feeOriginString);
+            } catch (InvalidParameterException ex){
+                feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            }
+        }
+        unHoldCryptoMoneyTransaction.setFeeOrigin(feeOrigin);
+
         return unHoldCryptoMoneyTransaction;
     }
 

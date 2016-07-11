@@ -141,6 +141,11 @@ public interface CryptoCustomerWalletModuleManager
             throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
 
     /**
+     * Request quotes from online brokers
+     */
+    void requestQuotes() throws CantGetCryptoBrokerListException;
+
+    /**
      *
      * @param paymentCurrency
      * @return list of platforms supporteds

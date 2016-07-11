@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/cht_image"
             android:background="#00000000"
-            android:src="@drawable/icon_profile"
+            android:src="@drawable/cht_id_image_profile"
             android:contentDescription="ignore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
