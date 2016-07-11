@@ -5,11 +5,14 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Head
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 
+import org.glassfish.tyrus.ext.extension.deflate.PerMessageDeflateExtension;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.websocket.ClientEndpointConfig;
+import javax.websocket.Extension;
 
 /**
  * The Class <code>ClientChannelConfigurator</code>
@@ -33,4 +36,10 @@ public class ClientChannelConfigurator extends ClientEndpointConfig.Configurator
         }
     }
 
+    /*
+    public List<Extension> getNegotiatedExtensions(List<Extension> installed, List<Extension> requested) {
+        installed.add(new PerMessageDeflateExtension());
+        return installed;
+    }
+    */
 }

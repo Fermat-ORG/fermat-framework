@@ -242,11 +242,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 }
             }
 
-<<<<<<< HEAD
             networkClientCommunicationConnection.initializeAndConnect();
-=======
             p2PLayerManager.register(this);
->>>>>>> 613983614c10b81c7642652da7dc889434f32730
 
              /*
              * Create and Scheduled the supervisorConnectionAgent
