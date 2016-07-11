@@ -24,7 +24,6 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.notifications.CommunityNotificationPainter;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 
-
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
  *
