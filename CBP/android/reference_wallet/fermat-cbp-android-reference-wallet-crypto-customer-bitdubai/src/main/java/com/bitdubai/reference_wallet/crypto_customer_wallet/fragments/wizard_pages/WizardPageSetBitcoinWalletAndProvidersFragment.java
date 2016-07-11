@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -201,18 +200,20 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //If wallet already configured, go directly to wallet
-                if (walletConfigured) {
-                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
-                } else {  //otherwise, show wizard page
-                    fragmentContainer.setVisibility(View.VISIBLE);
-                    showHelpDialog();
-                }
-            }
-        }, 250);
+        fragmentContainer.setVisibility(View.VISIBLE);
+        showHelpDialog();
+
+//            @Override
+//            public void run() {
+//                //If wallet already configured, go directly to wallet
+//                if (walletConfigured) {
+//                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+//                } else {  //otherwise, show wizard page
+//                    fragmentContainer.setVisibility(View.VISIBLE);
+//                    showHelpDialog();
+//                }
+//            }
+//        }, 250);
 
         return layout;
     }
