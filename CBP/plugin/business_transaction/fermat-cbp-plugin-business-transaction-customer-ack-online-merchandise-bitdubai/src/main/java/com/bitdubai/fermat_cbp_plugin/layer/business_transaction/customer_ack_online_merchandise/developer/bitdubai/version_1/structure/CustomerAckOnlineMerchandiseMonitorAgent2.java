@@ -107,7 +107,12 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
              */
             List<String> pendingMoneyEventIdList = dao.getPendingIncomingMoneyEvents();
             for (String eventId : pendingMoneyEventIdList) {
-                checkPendingIncomingMoneyEvents(eventId);
+                try{
+                    checkPendingIncomingMoneyEvents(eventId);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             /**
@@ -117,24 +122,29 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                System.out.println("ACK_ONLINE_MERCHANDISE [Customer] - getting Pending To Submit Notification Record");
+                try{
+                    System.out.println("ACK_ONLINE_MERCHANDISE [Customer] - getting Pending To Submit Notification Record");
 
-                contractHash = pendingToSubmitNotificationRecord.getContractHash();
+                    contractHash = pendingToSubmitNotificationRecord.getContractHash();
 
-                transactionTransmissionManager.sendContractStatusNotification(
-                        pendingToSubmitNotificationRecord.getCustomerPublicKey(),
-                        pendingToSubmitNotificationRecord.getBrokerPublicKey(),
-                        contractHash,
-                        pendingToSubmitNotificationRecord.getTransactionId(),
-                        ContractTransactionStatus.ONLINE_MERCHANDISE_ACK,
-                        Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                    transactionTransmissionManager.sendContractStatusNotification(
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            contractHash,
+                            pendingToSubmitNotificationRecord.getTransactionId(),
+                            ContractTransactionStatus.ONLINE_MERCHANDISE_ACK,
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
-                System.out.println("ACK_ONLINE_MERCHANDISE [Customer] - sent Contract Status Notification Message");
+                    System.out.println("ACK_ONLINE_MERCHANDISE [Customer] - sent Contract Status Notification Message");
 
-                dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_MERCHANDISE_ACK);
-                System.out.println("ACK_ONLINE_MERCHANDISE [Customer] - ContractTransactionStatus updated to ONLINE_MERCHANDISE_ACK");
+                    dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_MERCHANDISE_ACK);
+                    System.out.println("ACK_ONLINE_MERCHANDISE [Customer] - ContractTransactionStatus updated to ONLINE_MERCHANDISE_ACK");
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             /**
@@ -143,22 +153,27 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmationList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - getting Pending To Submit Confirmation Record");
-                contractHash = pendingToSubmitConfirmationRecord.getContractHash();
+                try{
+                    System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - getting Pending To Submit Confirmation Record");
+                    contractHash = pendingToSubmitConfirmationRecord.getContractHash();
 
-                transactionTransmissionManager.confirmNotificationReception(
-                        pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
-                        pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
-                        contractHash,
-                        pendingToSubmitConfirmationRecord.getTransactionId(),
-                        Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                    transactionTransmissionManager.confirmNotificationReception(
+                            pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+                            contractHash,
+                            pendingToSubmitConfirmationRecord.getTransactionId(),
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - sent Confirm Notification Reception Message");
+                    System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - sent Confirm Notification Reception Message");
 
-                dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
-                System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_MERCHANDISE");
+                    dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
+                    System.out.println("ACK_ONLINE_MERCHANDISE [Broker] - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_MERCHANDISE");
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             /**
@@ -169,12 +184,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                 checkPendingEvent(eventId);
             }
 
-        } catch (UnexpectedResultReturnedFromDatabaseException |
-                CantGetContractListException |
-                CantUpdateRecordException |
-                CantConfirmNotificationReceptionException |
-                CantSendContractNewStatusNotificationException |
-                IncomingOnlineMerchandiseException e) {
+        } catch (Exception e) {
             reportError(e);
         }
     }
