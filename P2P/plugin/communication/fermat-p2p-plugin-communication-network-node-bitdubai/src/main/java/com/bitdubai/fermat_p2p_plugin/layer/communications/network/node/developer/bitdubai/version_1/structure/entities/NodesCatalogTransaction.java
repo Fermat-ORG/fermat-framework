@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	private String ip;
 
-    private NetworkNodeCommunicationDeviceLocation lastLocation;
+    private Location lastLocation;
 
 	private String name;
 
@@ -112,11 +113,11 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         this.transactionType = transactionType;
     }
 
-    public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+    public Location getLastLocation() {
         return lastLocation;
     }
 
-    public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+    public void setLastLocation(Location lastLocation) {
         this.lastLocation = lastLocation;
     }
 
