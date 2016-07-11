@@ -7,7 +7,6 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_p2p_core.layer.communication.layer.P2PLayerSubsystem;
 import com.bitdubai.fermat_p2p_core.layer.communication.network.client.NetworkClientPluginSubsystem;
 import com.bitdubai.fermat_p2p_core.layer.communication.network.node.NetworkNodePluginSubsystem;
-import com.bitdubai.fermat_p2p_core.layer.communication.ws_cloud_client.WsCloudClientPluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/11/2015.
