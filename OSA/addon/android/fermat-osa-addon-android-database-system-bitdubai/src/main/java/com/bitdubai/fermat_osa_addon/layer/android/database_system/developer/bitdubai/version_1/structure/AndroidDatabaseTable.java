@@ -43,6 +43,20 @@ import java.util.UUID;
 
 public class AndroidDatabaseTable implements DatabaseTable {
 
+    @Override
+    public String getSqlQuery() {
+
+        String topSentence = "";
+        String offsetSentence = "";
+        if (!this.top.isEmpty())
+            topSentence = " LIMIT " + this.top;
+
+        if (!this.offset.isEmpty())
+            offsetSentence = " OFFSET " + this.offset;
+
+        return "SELECT *" + makeOutputColumns() + " FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence;
+    }
+
     /**
      * DatabaseTable Member Variables.
      */
@@ -261,14 +275,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
         this.records = new ArrayList<>();
 
-        String topSentence = "";
-        String offsetSentence = "";
-        if (!this.top.isEmpty())
-            topSentence = " LIMIT " + this.top;
-
-        if (!this.offset.isEmpty())
-            offsetSentence = " OFFSET " + this.offset;
-
         Cursor cursor = null;
 
         /**
@@ -279,7 +285,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         try {
             database = this.database.getReadableDatabase();
             List<String> columns = getColumns(database);
-            String queryString = "SELECT *" + makeOutputColumns() + " FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence;
+            String queryString = getSqlQuery();
             cursor = database.rawQuery(queryString, null);
             while (cursor.moveToNext()) {
                 AndroidDatabaseRecord tableRecord = new AndroidDatabaseRecord();
