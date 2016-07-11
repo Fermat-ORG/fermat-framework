@@ -96,5 +96,6 @@ public interface DatabaseTable {
     String makeFilter();
     String getTableName();
     List<DatabaseAggregateFunction> getTableAggregateFunction();
+    String getSqlQuery();
 
 }

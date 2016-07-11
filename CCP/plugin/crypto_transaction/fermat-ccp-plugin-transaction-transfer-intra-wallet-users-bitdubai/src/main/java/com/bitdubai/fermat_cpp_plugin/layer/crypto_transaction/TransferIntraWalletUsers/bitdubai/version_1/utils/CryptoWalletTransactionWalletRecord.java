@@ -25,6 +25,7 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
     CryptoAddress AddressTo;
 
     long Amount;
+    long Total;
 
     long Timestamp;
 
@@ -63,7 +64,8 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
                                                com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType,
                                                CryptoCurrency cryptoCurrency,
                                                long fee,
-                                               FeeOrigin feeOrigin) {
+                                               FeeOrigin feeOrigin,
+                                               long Total) {
         TransactionId = transactionId;
         AddressFrom = addressFrom;
         RequestId = requestId;
@@ -80,6 +82,7 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
         this.cryptoCurrency = cryptoCurrency;
         this.fee = fee;
         this.feeOrigin = feeOrigin;
+        this.Total = Total;
     }
 
     @Override
@@ -105,6 +108,11 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
     @Override
     public long getAmount() {
         return Amount;
+    }
+
+    @Override
+    public long getTotal() {
+        return this.Total;
     }
 
     @Override

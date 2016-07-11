@@ -459,7 +459,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 blockchainNetworkType,
                 cryptoCurrency,
                 0,
-                FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+                FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT,
+                amount);
 
         return bitcoinLossProtectedWalletTransactionRecord;
 

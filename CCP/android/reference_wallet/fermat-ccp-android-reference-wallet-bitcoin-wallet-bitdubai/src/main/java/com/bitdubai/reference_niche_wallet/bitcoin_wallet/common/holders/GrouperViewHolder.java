@@ -113,7 +113,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
 
         txt_contactName.setText(contactName);
-        txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
+        txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getTotal(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());
 

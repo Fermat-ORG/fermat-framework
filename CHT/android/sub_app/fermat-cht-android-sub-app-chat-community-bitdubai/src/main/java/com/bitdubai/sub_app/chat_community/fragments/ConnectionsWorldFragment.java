@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -69,6 +70,7 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -121,8 +123,11 @@ public class ConnectionsWorldFragment
     private GridLayoutManager layoutManager;
     private CommunityListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
+    private ExecutorService executor;
     TextView noDatalabel;
     ImageView noData;
+    private Button refreshButton;
+    private View refreshButtonView;
 
     //Greenbar layout
     private RelativeLayout greenBar;
@@ -237,6 +242,8 @@ public class ConnectionsWorldFragment
                     appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
+            refreshButton = (Button) rootView.findViewById(R.id.show_more_button);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -247,7 +254,17 @@ public class ConnectionsWorldFragment
                         offset=totalItemCount;
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if(lastItem == totalItemCount) {
-                            onRefresh();
+
+                            refreshButtonView.setVisibility(View.VISIBLE);
+                            refreshButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onRefresh();
+                                    refreshButtonView.setVisibility(View.GONE);
+                                }
+                            });
+                        } else{
+                            refreshButtonView.setVisibility(View.GONE);
                         }
 //                        if (!isRefreshing) {
 
@@ -389,12 +406,13 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
+        try{
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+//            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//            progressDialog.setMessage("Please wait");
+//            progressDialog.setCancelable(false);
+//            progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -411,19 +429,22 @@ public class ConnectionsWorldFragment
                         swipeRefresh.setRefreshing(false);
                         if (result != null &&
                                 result.length > 0) {
-                            progressDialog.dismiss();
+//                            progressDialog.dismiss();
                             if (getActivity() != null && adapter != null) {
                                 if (offset == 0) {
-                                    if(lstChatUserInformations!=null){
+                                    if (lstChatUserInformations != null) {
                                         lstChatUserInformations.clear();
                                         lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                    }
-                                    else{
-                                        lstChatUserInformations=(ArrayList<ChatActorCommunityInformation>) result[0];
+                                    } else {
+                                        lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     }
                                     adapter.changeDataSet(lstChatUserInformations);
                                 } else {
-                                    lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
+                                    ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                    for (ChatActorCommunityInformation info : temp)
+                                        if (notInList(info)) {
+                                            lstChatUserInformations.add(info);
+                                        }
                                     adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
                                 }
                                 if (lstChatUserInformations.isEmpty()) {
@@ -439,7 +460,7 @@ public class ConnectionsWorldFragment
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null && isAttached)
                         swipeRefresh.setRefreshing(false);
@@ -449,6 +470,21 @@ public class ConnectionsWorldFragment
             });
             worker.execute();
         }
+        }catch (Exception ignore){
+            if (executor != null) {
+                executor.shutdown();
+                executor = null;
+            }
+        }
+    }
+
+    private boolean notInList(ChatActorCommunityInformation info) {
+        for (ChatActorCommunityInformation contact : lstChatUserInformations)
+        {
+            if (contact.getPublicKey().equals(info.getPublicKey()))
+            return false;
+        }
+        return true;
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -620,6 +656,20 @@ public class ConnectionsWorldFragment
             int id = item.getItemId();
             switch (id) {
                 case 3:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 4:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 5:
                     showDialogHelp();
                     break;
                 case 1:

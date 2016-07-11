@@ -38,6 +38,7 @@ public class FragmentsCommons {
     public static final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
     public static final int CANCELED_FILTER_OPTION_MENU_ID = 5;
     public static final int START_NEGOTIATION_OPTION_MENU_ID = 6;
+    public static final int REQUEST_QUOTES_OPTION_MENU_ID = 7;
 
     public static int getClauseNumberImageRes(int clauseNumber) {
         switch (clauseNumber) {

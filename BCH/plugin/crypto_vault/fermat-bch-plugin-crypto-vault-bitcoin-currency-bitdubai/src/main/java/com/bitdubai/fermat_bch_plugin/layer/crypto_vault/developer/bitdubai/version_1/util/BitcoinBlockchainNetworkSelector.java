@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.MainNetParams;
@@ -23,7 +24,7 @@ public class BitcoinBlockchainNetworkSelector {
             case REG_TEST:
                 return RegTestParams.get();
             default:
-                return  RegTestParams.get();
+                return  getNetworkParameter(BitcoinNetworkConfiguration.DEFAULT_NETWORK_TYPE);
         }
     }
 

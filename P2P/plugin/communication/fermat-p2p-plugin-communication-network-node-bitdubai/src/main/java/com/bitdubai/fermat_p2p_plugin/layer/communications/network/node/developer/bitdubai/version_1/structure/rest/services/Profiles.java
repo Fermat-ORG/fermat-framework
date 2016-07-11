@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.services;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
@@ -112,9 +113,7 @@ public class Profiles implements RestFulServices {
 
         } catch (Exception e){
 
-            e.printStackTrace();
-
-            LOG.warn("requested list is not available");
+            LOG.error("requested list is not available.", e);
             jsonObjectRespond.addProperty("failure", "Requested list is not available");
         }
 
@@ -192,6 +191,8 @@ public class Profiles implements RestFulServices {
 
         if (discoveryQueryParameters.getOffset() != null && discoveryQueryParameters.getOffset() >= 0)
             offset = discoveryQueryParameters.getOffset();
+
+        System.out.println("The max and offset applied in database are: max="+max+" | offset="+offset);
 
         actorsList = getDaoFactory().getActorsCatalogDao().findAll(discoveryQueryParameters, clientIdentityPublicKey, max, offset);
 

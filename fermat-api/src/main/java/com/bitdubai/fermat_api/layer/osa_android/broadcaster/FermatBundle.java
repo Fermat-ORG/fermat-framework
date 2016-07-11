@@ -10,7 +10,6 @@ public class FermatBundle implements Serializable{
 
     HashMap<String,Object> extras;
 
-
     public FermatBundle() {
         this.extras = new HashMap<>();
     }
@@ -30,21 +29,23 @@ public class FermatBundle implements Serializable{
     }
 
 
-    public Serializable getSerializable(String key) throws IllegalAccessException {
+    public Serializable getSerializable(String key) throws ClassCastException {
         Object o = extras.get(key);
+        if(o==null) return null;
         if(o instanceof Serializable){
             return (Serializable) o;
         }else{
-            throw new IllegalAccessException("Need Serializable, found"+o.getClass());
+            throw new ClassCastException("Need Serializable, found"+o.getClass());
         }
     }
 
-    public String getString(String key) throws IllegalAccessException {
+    public String getString(String key) throws ClassCastException {
         Object o = extras.get(key);
+        if(o==null) return null;
         if(o instanceof String){
             return (String) o;
         }else{
-            throw new IllegalAccessException("Need String, found"+o.getClass());
+            throw new ClassCastException("Need String, found"+o.getClass());
         }
     }
 
@@ -53,12 +54,13 @@ public class FermatBundle implements Serializable{
     }
 
 
-    public int getInt(String key) throws IllegalAccessException {
+    public int getInt(String key) throws ClassCastException {
         Object o = extras.get(key);
+        if(o==null) return 0;
         if(o instanceof Integer){
             return (int) o;
         }else{
-            throw new IllegalAccessException("Need int, found"+o.getClass());
+            throw new ClassCastException("Need int, found"+o.getClass());
         }
     }
 
