@@ -310,6 +310,7 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_broker)
                             .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                            .setVIewColor(R.color.cbc_toolbar_start_background)
                             .setIsCheckEnabled(false)
                             .build();
 
@@ -568,6 +569,7 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
+                        .setVIewColor(R.color.cbc_toolbar_start_background)
                         .setIsCheckEnabled(false)
                         .build();
 
