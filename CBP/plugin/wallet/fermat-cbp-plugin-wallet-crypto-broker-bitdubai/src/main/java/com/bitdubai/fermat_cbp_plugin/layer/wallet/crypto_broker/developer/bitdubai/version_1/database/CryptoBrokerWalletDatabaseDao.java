@@ -844,8 +844,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 cryptoBrokerStockTransactionEnd   = list.get(lastIndex);
             }
 
-            if  (cryptoBrokerStockTransactionBegin != null) priceMaximum = cryptoBrokerStockTransactionBegin.getPriceReference().floatValue();
-            if  (cryptoBrokerStockTransactionEnd   != null) priceMinimum = cryptoBrokerStockTransactionBegin.getPriceReference().floatValue();
+            priceMaximum = (cryptoBrokerStockTransactionBegin != null ? cryptoBrokerStockTransactionBegin.getPriceReference().floatValue() : 0);
+            priceMinimum = (cryptoBrokerStockTransactionEnd   != null ? cryptoBrokerStockTransactionBegin.getPriceReference().floatValue() : 0);
 
         } catch (CantGetCryptoBrokerStockTransactionException e) {
             throw new CantGetCryptoBrokerStockTransactionException("Cant Get Crypto Broker Stock Transaction", e, "", "");
