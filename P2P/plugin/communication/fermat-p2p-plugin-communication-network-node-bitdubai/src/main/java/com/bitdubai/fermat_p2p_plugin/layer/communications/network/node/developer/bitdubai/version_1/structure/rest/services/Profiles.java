@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.GZIP;
@@ -32,9 +33,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -60,6 +64,9 @@ public class Profiles implements RestFulServices {
      */
     private DaoFactory daoFactory;
 
+    /**
+     * Represent the pluginRoot
+     */
     private NetworkNodePluginRoot pluginRoot;
 
     @POST
@@ -118,6 +125,49 @@ public class Profiles implements RestFulServices {
         return Response.status(200).entity(jsonString).build();
 
     }
+
+
+    @GET
+    @GZIP
+    @Path("/actor/photo/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFullPhoto(@PathParam("id") String actorIdentityPublicKey){
+
+        LOG.info(" --------------------------------------------------------------------- ");
+        LOG.info("Profiles - Starting listActors");
+        JsonObject jsonObjectRespond = new JsonObject();
+
+        try{
+
+            LOG.info("actorIdentityPublicKey  = " + actorIdentityPublicKey);
+            ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(actorIdentityPublicKey);
+
+            /*
+             * Create the respond
+             */
+            if (actorsCatalog.getPhoto() != null && actorsCatalog.getPhoto().length > 0) {
+                jsonObjectRespond.addProperty("photo", Base64.encodeBase64String(actorsCatalog.getPhoto()));
+                jsonObjectRespond.addProperty("success", Boolean.TRUE);
+            }else {
+                jsonObjectRespond.addProperty("success", Boolean.FALSE);
+                jsonObjectRespond.addProperty("failure", "Actor photo is not available");
+            }
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+
+            LOG.warn("Actor photo is not available, or actor no exist");
+            jsonObjectRespond.addProperty("success", Boolean.FALSE);
+            jsonObjectRespond.addProperty("failure", "Actor photo is not available, or actor no exist");
+        }
+
+        String jsonString = GsonProvider.getGson().toJson(jsonObjectRespond);
+        return Response.status(200).entity(jsonString).build();
+
+    }
+
+
 
     /**
      * Filter all actor component profiles from database that match with the given parameters.

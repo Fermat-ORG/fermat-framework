@@ -19,6 +19,7 @@
     <!-- Custom styles for this template -->
     <link href="../css/angular-chart.min.css" rel="stylesheet">
     <link href="../css/monitoring.css" rel="stylesheet">
+    <link href="../css/angular-busy.min.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../js/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -52,7 +53,6 @@
 </style>
 
 <body role="document" ng-controller="IdentitiesCtrl"  ng-cloak>
-
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -64,9 +64,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="../index.html">Home</a></li>
                 <li><a href="monitoring.html">Monitoring</a></li>
+                <li class="active" ><a href="identities.html">Identities</a></li>
                 <li><a href="data_bases.html">Data Base</a></li>
+                <li><a href="configuration.html" >Configuration</a></li>
                 <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank">Contact</a></li>
                 <li ng-controller="UserCtrl" ><a ng-click="logout();">Logout</a></li>
             </ul>
@@ -74,6 +75,7 @@
     </div>
 </nav>
 <div class="container theme-showcase" role="main" style="width:98%;" >
+    <div cg-busy="busy" style="position: relative;z-index: 1050;"></div>
     <br/>
     <br/>
     <br/>
@@ -81,16 +83,27 @@
         <ng-map zoom="1"></ng-map>
     </div>
     <br/>
+
+    <H3>List of {{onlineIdentities === true ? "online identities" : "all register identities in catalog" }} - Total ({{ total }})</H3>
     <div class="row" style="height:100%" >
-        <strong>List of {{onlineIdentities === true ? "online identities" : "all register identities in catalog" }} - Total ({{ total }})</strong>
-        <div class="checkbox pull-right">
-            <label class="text-success" >
-                <input id="isOnline" type="checkbox" ng-model="onlineIdentities"  ng-change="reloadOnlineChange()" > <strong>Show Online</strong>
-            </label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Actor Type:</span>
+                <select class="form-control" ng-model="selectType" ng-options="key for (key, t) in types"></select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label class="text-success" >
+                    <input id="isOnline" type="checkbox" ng-model="onlineIdentities" > <strong>Show Online</strong>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-warning" ng-click="reloadChange()"  >Reload</button>
         </div>
     </div>
     <hr/>
-
     <div ng-show="total > 0">
 
         <div class="profiles" style="height:100%" >
@@ -150,8 +163,8 @@
 <script src="../js/Chart.min.js"></script>
 <script src="../js/angular-chart.min.js"></script>
 <script src="../js/identitiesController.js"></script>
-
 <script src="../js/ng-map.min.js"></script>
+<script src="../js/angular-busy.min.js"></script>
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../js/ie10-viewport-bug-workaround.js"></script>

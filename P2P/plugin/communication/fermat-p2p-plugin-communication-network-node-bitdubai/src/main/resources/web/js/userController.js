@@ -14,7 +14,7 @@ angular.module("serverApp").controller('UserCtrl', ['$scope', '$http', '$window'
   $scope.login = function () {
 
     $scope.credentials.password = new String(CryptoJS.SHA256($scope.credentials.password));
-    $http.post('/fermat/rest/api/v1/user/login', angular.toJson($scope.credentials))
+    $scope.busy =  $http.post('/fermat/rest/api/v1/user/login', angular.toJson($scope.credentials))
         .then(function successCallback(response) {
             $scope.loginResponse = response.data;
 

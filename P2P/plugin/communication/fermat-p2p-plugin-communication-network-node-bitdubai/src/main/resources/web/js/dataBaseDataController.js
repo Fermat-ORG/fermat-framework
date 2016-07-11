@@ -29,7 +29,7 @@ angular.module("serverApp").controller('DataBaseDataCtrl', ['$scope', '$http', '
 
      var requestDataBaseData = function() {
 
-            $http({
+            $scope.busy = $http({
                 method: 'GET',
                 url: '/fermat/rest/api/v1/admin/databases/data?tableName='+$scope.selectedTable+'&offSet='+$scope.offSet+'&max='+$scope.max
             }).then(function successCallback(response) {

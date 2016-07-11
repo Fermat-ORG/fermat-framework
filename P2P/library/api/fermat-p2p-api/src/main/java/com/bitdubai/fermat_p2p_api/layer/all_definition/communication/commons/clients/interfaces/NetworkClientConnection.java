@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestActorFullPhotoException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
@@ -139,5 +140,14 @@ public interface NetworkClientConnection {
      * @return boolean
      */
     boolean isRegistered();
+
+    /**
+     * Through the method <code>getActorFullPhoto</code> we can get Full Photo of an actor specific.
+     *
+     * @param publicKey of the actor
+     *
+     * @return a String encodeBase64String
+     */
+    String getActorFullPhoto(final String publicKey) throws CantRequestActorFullPhotoException;
 
 }

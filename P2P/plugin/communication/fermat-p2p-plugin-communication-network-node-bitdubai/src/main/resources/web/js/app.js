@@ -1,4 +1,4 @@
-var app = angular.module("serverApp",  ["ngRoute", "ngMap", "chart.js"]);
+var app = angular.module("serverApp",  ["ngRoute", "ngMap", "chart.js", "cgBusy"]);
 
  app.config(function ($locationProvider, ChartJsProvider) {
 

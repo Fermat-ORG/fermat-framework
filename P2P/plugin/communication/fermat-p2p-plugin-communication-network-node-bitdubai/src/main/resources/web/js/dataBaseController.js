@@ -22,7 +22,7 @@ angular.module("serverApp").controller('DataBaseCtrl', ['$scope', '$http', '$int
 
     var requestDataBaseTableList = function() {
 
-           $http({
+           $scope.busy = $http({
                method: 'GET',
                url: '/fermat/rest/api/v1/admin/databases/list'
 
