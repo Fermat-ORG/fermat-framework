@@ -18,6 +18,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.ClassUtils;
+import org.jboss.logging.Logger;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -49,6 +51,8 @@ import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.d
  * @since   Java JDK 1.7
  */
 public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
+
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ActorsCatalogDao.class));
 
     /**
      * Constructor with parameter
@@ -112,6 +116,8 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
 
             if (!discoveryQueryFilters.isEmpty())
                 internalFilterGroups.add(table.getNewFilterGroup(discoveryQueryFilters, null, DatabaseFilterOperator.AND));
+
+            LOG.info("filters being applied in database table: discoveryQueryFilters = " + discoveryQueryFilters);
 
             table.setFilterGroup(tableFilters, internalFilterGroups, DatabaseFilterOperator.AND);
 
