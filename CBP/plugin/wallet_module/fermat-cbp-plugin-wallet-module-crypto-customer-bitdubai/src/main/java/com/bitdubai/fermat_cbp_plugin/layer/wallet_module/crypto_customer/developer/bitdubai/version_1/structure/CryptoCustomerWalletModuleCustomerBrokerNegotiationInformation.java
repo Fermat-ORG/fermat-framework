@@ -12,6 +12,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,6 +39,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     private String note;
     private String cancelReason;
     private long expirationDatetime;
+    private NumberFormat numberFormat=DecimalFormat.getInstance();
 
 
     public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
@@ -50,6 +53,9 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             long expirationDatetime,
             String cancelReason
     ) {
+        numberFormat.setMaximumFractionDigits(8);
+
+
         this.customerIdentity   = customerIdentity;
         this.brokerIdentity     = brokerIdentity;
 
@@ -216,10 +222,18 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     public String getCancelReason() { return cancelReason; }
 
     private BigDecimal getBigDecimal(String value){
-        return new BigDecimal(value.replace(",", ""));
+
+        try {
+            return new BigDecimal(numberFormat.parse(value).toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new BigDecimal(0);
+        }
+       // change lostwood
+       // return new BigDecimal(value.replace(",", ""));
     }
 
     private String getDecimalFormat(BigDecimal value){
-        return DecimalFormat.getInstance().format(value.doubleValue());
+        return numberFormat.format(value.doubleValue());
     }
 }

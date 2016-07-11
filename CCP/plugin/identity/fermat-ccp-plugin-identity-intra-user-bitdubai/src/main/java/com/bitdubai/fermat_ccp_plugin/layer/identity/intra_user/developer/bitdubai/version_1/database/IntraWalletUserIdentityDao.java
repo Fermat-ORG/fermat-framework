@@ -207,13 +207,21 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
             // 3) Get Intra users.
             for (DatabaseTableRecord record : table.getRecords ()) {
 
+                double lat = 0;
+                double lng = 0;
+
+                if(location != null){
+                    lat = location.getLatitude();
+                    lng = location.getLongitude();
+                }
+
                 //set new values
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME, alias);
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, phrase);
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN, String.valueOf(accuracy));
                 record.setStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN, frequency.getCode());
-                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN, location.getLatitude());
-                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN, location.getLongitude());
+                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LAT_COLUMN, lat);
+                record.setDoubleValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_LONG_COLUMN, lng);
 
                 table.updateRecord(record);
             }

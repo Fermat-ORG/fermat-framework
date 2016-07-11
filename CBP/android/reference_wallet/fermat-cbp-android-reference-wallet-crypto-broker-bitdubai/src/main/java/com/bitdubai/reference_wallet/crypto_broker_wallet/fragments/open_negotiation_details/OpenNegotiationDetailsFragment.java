@@ -118,6 +118,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            numberFormat.setMaximumFractionDigits(8);
 
             Object data = appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
             CustomerBrokerNegotiationInformation negotiationInfo = (data != null) ? (CustomerBrokerNegotiationInformation) data : null;

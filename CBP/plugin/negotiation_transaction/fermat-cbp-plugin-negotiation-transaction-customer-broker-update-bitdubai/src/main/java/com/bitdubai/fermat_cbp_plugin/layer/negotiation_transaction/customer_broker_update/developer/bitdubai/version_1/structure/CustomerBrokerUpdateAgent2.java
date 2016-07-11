@@ -4,10 +4,16 @@ import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
@@ -46,13 +52,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.NOTIFICATION_SERVICE;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION;
 
 /**
  * Created by Yordin Alayn on 05.07.16.
@@ -338,14 +345,30 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                                                 //CANCEL NEGOTIATION
                                                 customerBrokerUpdatePurchaseNegotiationTransaction.receiveCancelPurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
-                                                broadcaster.publish(NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                FermatBundle fermatBundle = new FermatBundle();
+                                                fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
+                                                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getCode());
+
+                                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
                                                 broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
                                             } else {
                                                 System.out.print("\n**** 20) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                                 //UPDATE NEGOTIATION
                                                 customerBrokerUpdatePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
 
-                                                broadcaster.publish(NOTIFICATION_SERVICE, customerWalletPublicKey, CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
+                                                FermatBundle fermatBundle = new FermatBundle();
+                                                fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
+                                                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
+                                                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+
+                                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
                                                 broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
                                             }
 
@@ -372,14 +395,30 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                                                 //CANCEL NEGOTIATION
                                                 customerBrokerUpdateSaleNegotiationTransaction.receiveCancelSaleNegotiationTranasction(transactionId, saleNegotiation);
 
-                                                broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                FermatBundle fermatBundle = new FermatBundle();
+                                                fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
+                                                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                                                fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION);
+                                                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
+
+                                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
                                                 broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
                                             } else {
                                                 System.out.print("\n**** 20) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION  ****\n");
                                                 //UPDATE NEGOTIATION
                                                 customerBrokerUpdateSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
 
-                                                broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_WAITING_FOR_BROKER_NOTIFICATION);
+                                                FermatBundle fermatBundle = new FermatBundle();
+                                                fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_UPDATE.getCode());
+                                                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
+                                                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                                                fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION);
+                                                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+
+                                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
                                                 broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
                                             }
 
