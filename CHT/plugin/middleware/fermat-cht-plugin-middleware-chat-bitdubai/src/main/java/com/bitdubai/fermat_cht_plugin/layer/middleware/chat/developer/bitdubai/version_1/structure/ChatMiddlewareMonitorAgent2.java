@@ -9,7 +9,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Eve
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
@@ -75,6 +78,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/01/16.
@@ -348,19 +357,26 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
                     saveMessage(chatMetadata);
 
-                    //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
+//            FermatBundle fermatBundle = new FermatBundle();
+//            fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+//            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle);
             FermatBundle fermatBundle = new FermatBundle();
-            fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle);
+            fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode()));
+            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+            fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION);
+            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-            //TODO matias, este fue el q comente, explota, y al llegar la notificacion abre es la comunidad en api > 21
             FermatBundle fermatBundle2 = new FermatBundle();
+            fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
             FermatBundle fermatBundle3 = new FermatBundle();
+            fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
@@ -430,12 +446,18 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 //            if(chat!=null){
 //                Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(chatMetadata.getMessageId());
 //                if(message !=null){
-                    updateMessageStatus(chatMetadata);
-                    FermatBundle fermatBundle2 = new FermatBundle();
-                    fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-                    fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
+            updateMessageStatus(chatMetadata);
+            FermatBundle fermatBundle2 = new FermatBundle();
+            fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+            fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+            fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
+            FermatBundle fermatBundle3 = new FermatBundle();
+            fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+            fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+            fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 //                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 //                }
 //            }
@@ -501,6 +523,7 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
                 chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
             }
             FermatBundle fermatBundle2 = new FermatBundle();
+            fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
@@ -558,10 +581,18 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             }
 
             if(changes){
+
                 FermatBundle fermatBundle2 = new FermatBundle();
+                fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
                 fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
+
+                FermatBundle fermatBundle3 = new FermatBundle();
+                fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+                fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 //                broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
             }
 
@@ -607,10 +638,12 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
 
             if(changes) {
                 FermatBundle fermatBundle2 = new FermatBundle();
+                fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
                 fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
                 fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
-    //            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+                //            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
             }
         } catch (CantGetPendingActionListException e) {
             e.printStackTrace();
@@ -670,10 +703,16 @@ public class ChatMiddlewareMonitorAgent2 extends AbstractAgent implements
             }
 
             FermatBundle fermatBundle2 = new FermatBundle();
+            fermatBundle2.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
             fermatBundle2.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
             fermatBundle2.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_UPDATE_VIEW);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle2);
 
+            FermatBundle fermatBundle3 = new FermatBundle();
+            fermatBundle3.put(SOURCE_PLUGIN, Plugins.CHAT_MIDDLEWARE.getCode());
+            fermatBundle3.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+            fermatBundle3.put(Broadcaster.NOTIFICATION_TYPE, ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), fermatBundle3);
 //            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (CantSaveChatException e) {

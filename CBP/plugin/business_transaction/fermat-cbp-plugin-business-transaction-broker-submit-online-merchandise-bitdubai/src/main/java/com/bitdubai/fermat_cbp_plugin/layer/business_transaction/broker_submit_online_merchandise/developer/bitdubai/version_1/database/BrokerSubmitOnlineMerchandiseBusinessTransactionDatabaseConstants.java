@@ -39,7 +39,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String SUBMIT_ONLINE_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME = "origin_fee";
     public static final String SUBMIT_ONLINE_MERCHANDISE_FEE_COLUMN_NAME = "fee";
 
-    public static final String SUBMIT_ONLINE_MERCHANDISE_FIRST_KEY_COLUMN = "transaction_id";
+    public static final String SUBMIT_ONLINE_MERCHANDISE_FIRST_KEY_COLUMN = "contract_hash";
 
     /**
      * Events recorded database table definition.
