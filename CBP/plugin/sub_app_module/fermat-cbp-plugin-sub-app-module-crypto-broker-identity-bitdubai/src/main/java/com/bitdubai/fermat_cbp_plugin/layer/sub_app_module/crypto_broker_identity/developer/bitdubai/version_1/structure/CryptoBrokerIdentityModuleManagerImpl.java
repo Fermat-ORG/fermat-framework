@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -9,7 +10,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
@@ -28,7 +28,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.CryptoBrokerIdentitySubAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -44,20 +43,17 @@ public class CryptoBrokerIdentityModuleManagerImpl
 
     private CryptoBrokerIdentityManager identityManager;
     private CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot;
-    private PluginVersionReference      pluginVersionReference;
     private final LocationManager locationManager;
 
     public CryptoBrokerIdentityModuleManagerImpl(
             CryptoBrokerIdentityManager identityManager,
-            PluginFileSystem            pluginFileSystem,
-            UUID                        pluginId,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
             CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot,
-            LocationManager locationManager
-    ){
+            LocationManager locationManager){
         super(pluginFileSystem, pluginId);
         this.identityManager        = identityManager;
         this.pluginRoot           = pluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
         this.locationManager = locationManager;
     }
 
@@ -168,5 +164,8 @@ public class CryptoBrokerIdentityModuleManagerImpl
         return locationManager.getLocation();
     }
 
-
+    @Override
+    public Boolean itHasAssociatedWallet(String brokerPublicKey) {
+        return null;
+    }
 }

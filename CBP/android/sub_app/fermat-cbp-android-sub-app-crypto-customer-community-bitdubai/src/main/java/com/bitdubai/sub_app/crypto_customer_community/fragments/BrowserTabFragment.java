@@ -1,7 +1,13 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,6 +31,7 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -36,6 +43,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
@@ -52,6 +60,8 @@ import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
 
 
 /**
@@ -90,7 +100,10 @@ public class BrowserTabFragment
     private RelativeLayout locationFilterBar;
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
+    private Toolbar toolbar;
 
+    //DATA
+    private ActiveActorIdentityInformation selectedActorIdentity;
     //Obtain Settings or create new Settings if first time opening subApp
     CryptoCustomerCommunitySettings appSettings;
 
@@ -107,7 +120,10 @@ public class BrowserTabFragment
 
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
+        toolbar = getToolbar();
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+        loadSelectedActorIdentityInBackground();
+
 
         loadSettings();
 
@@ -275,17 +291,6 @@ public class BrowserTabFragment
         });
     }
 
-    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
-        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
-        for (CryptoCustomerCommunityInformation item : baseList) {
-            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
-                filteredList.add(item);
-            }
-        }
-
-        return filteredList;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -382,6 +387,7 @@ public class BrowserTabFragment
                         cryptoCustomerCommunityInformationList.clear();
                         cryptoCustomerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(cryptoCustomerCommunityInformationList);
+                        ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     } else {
                         cryptoCustomerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.notifyItemRangeInserted(offset, cryptoCustomerCommunityInformationList.size() - 1);
@@ -405,6 +411,72 @@ public class BrowserTabFragment
         Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
+
+
+    private void loadSelectedActorIdentityInBackground(){
+
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                if (selectedActorIdentity == null)
+                    return moduleManager.getSelectedActorIdentity();
+                return selectedActorIdentity;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                try {
+                    selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
+                    Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
+                    toolbar.setLogo(bitmapDrawable);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                final ErrorManager errorManager = appSession.getErrorManager();
+                errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            }
+        });
+
+        fermatWorker.execute();
+    }
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+        // TODO Auto-generated method stub
+        int targetWidth = width;
+        int targetHeight = width;
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+                targetHeight,Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(targetBitmap);
+        Path path = new Path();
+        path.addCircle(((float) targetWidth - 1) / 2,
+                ((float) targetHeight - 1) / 2,
+                (Math.min(((float) targetWidth),
+                        ((float) targetHeight)) / 2),
+                Path.Direction.CCW);
+        canvas.clipPath(path);
+        Bitmap sourceBitmap = scaleBitmapImage;
+        canvas.drawBitmap(sourceBitmap,
+                new Rect(0, 0, sourceBitmap.getWidth(),
+                        sourceBitmap.getHeight()),
+                new Rect(0, 0, targetWidth,
+                        targetHeight), null);
+        return targetBitmap;
+    }
+
     private void launchPresentationDialog() {
         try {
             DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
@@ -412,6 +484,7 @@ public class BrowserTabFragment
                 public void onDismiss(DialogInterface dialog) {
                     try {
                         identity = moduleManager.getSelectedActorIdentity();
+                        loadSelectedActorIdentityInBackground();
                         if (identity == null)
                             getActivity().onBackPressed();
                         else {
@@ -473,11 +546,15 @@ public class BrowserTabFragment
         }
     }
 
-    @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
+    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
+        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoCustomerCommunityInformation item : baseList) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
 
-        onRefresh();
+        return filteredList;
     }
 }
 

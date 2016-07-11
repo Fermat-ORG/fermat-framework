@@ -183,6 +183,7 @@ public class ChatListFragment
                                         String datef = formatter.format(new java.util.Date(milliseconds));
                                         if (Validate.isDateToday(dated)) {
                                             if (Validate.isDateToday(dated)) {
+                                                //if(android.text.format.DateFormat!=null)
                                                 if (Build.VERSION.SDK_INT < 23) {
                                                     if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
                                                         formatter = new SimpleDateFormat("HH:mm");
@@ -190,10 +191,14 @@ public class ChatListFragment
                                                         formatter = new SimpleDateFormat("hh:mm aa");
                                                     }
                                                 } else {
-                                                    if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                                        formatter = new SimpleDateFormat("HH:mm");
-                                                    } else {
-                                                        formatter = new SimpleDateFormat("hh:mm aa");
+                                                    try {
+                                                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                            formatter = new SimpleDateFormat("HH:mm");
+                                                        } else {
+                                                            formatter = new SimpleDateFormat("hh:mm aa");
+                                                        }
+                                                    }catch (Exception e){
+                                                        e.printStackTrace();
                                                     }
                                                 }
                                             }
@@ -317,7 +322,11 @@ public class ChatListFragment
                 noDatalabel.setVisibility(View.GONE);
                 nochatssubtitle.setVisibility(View.GONE);
                 nochatssubtitle1.setVisibility(View.GONE);
-                getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
+                try {
+                    getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 chatlistview();
             }else{
                 //layout.setBackgroundResource(R.drawable.cht_background_color);
@@ -325,7 +334,11 @@ public class ChatListFragment
                 noDatalabel.setVisibility(View.VISIBLE);
                 nochatssubtitle.setVisibility(View.VISIBLE);
                 nochatssubtitle1.setVisibility(View.VISIBLE);
-                getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
+                try {
+                    getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 contactName.clear();
                 message.clear();
                 chatId.clear();
@@ -771,7 +784,7 @@ public class ChatListFragment
             try {
                 String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
-                if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
+                if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
                     onUpdateViewUIThread();
                 }
 

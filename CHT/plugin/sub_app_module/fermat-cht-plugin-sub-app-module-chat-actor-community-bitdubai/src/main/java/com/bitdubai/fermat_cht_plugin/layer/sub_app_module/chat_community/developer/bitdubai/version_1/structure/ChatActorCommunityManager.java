@@ -59,6 +59,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
@@ -127,7 +128,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
         List<ChatActorCommunityInformation> worldActorList = null;
         List<ChatActorConnection> actorConnections = null;
-
+        ConnectionState connectionState;
+        UUID connectionID;
         try{
             worldActorList = getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max);
         } catch (CantGetChtActorSearchResult exception) {
@@ -147,23 +149,13 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         ChatActorCommunityInformation worldActor;
-        if(actorConnections != null && worldActorList != null
-                && actorConnections.size() > 0 && worldActorList.size() > 0) {
+        if(worldActorList != null && worldActorList.size() > 0) {
             for (int i = 0; i < worldActorList.size(); i++) {
                 worldActor = worldActorList.get(i);
                 String country = "", city = "", state = "";
+                connectionID=null;
+                connectionState=null;
                 final Location location = worldActor.getLocation();
-
-                for (ChatActorConnection connectedActor : actorConnections) {
-                    if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                        worldActorList.set(i,
-                                new ChatActorCommunitySubAppModuleInformationImpl(
-                                        worldActor.getPublicKey(), worldActor.getAlias(),
-                                        worldActor.getImage(), connectedActor.getConnectionState(),
-                                        connectedActor.getConnectionId(), worldActor.getStatus(),
-                                        connectedActor.getCountry(),connectedActor.getState(),
-                                        connectedActor.getCity(), null));
-                }
                 try {
                     final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
                     country = address.getCountry();
@@ -171,9 +163,26 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                     state = address.getState().equals("null") ? address.getCounty() : address.getState();
                 } catch (CantCreateAddressException ignore) {
                 }
+                if(actorConnections != null && actorConnections.size() > 0) {
+                    for (ChatActorConnection connectedActor : actorConnections) {
+                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
+                            connectionState = connectedActor.getConnectionState();
+                            connectionID = connectedActor.getConnectionId();
+                        }
+                    }
+                }
                 worldActor.setCity(city);
                 worldActor.setCountry(country);
                 worldActor.setState(state);
+                worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(
+                        worldActor.getPublicKey(), worldActor.getAlias(),
+                        worldActor.getImage(), connectionState,
+                        connectionID, worldActor.getStatus(),
+                        country, state,
+                        city, null,worldActor.getProfileStatus()));
+
+                System.out.println("************** Actor Chat Register: " + worldActor.getAlias() + " - " + worldActor.getStatus() + " - " + worldActor.getConnectionState());
+
             }
         }
 
@@ -358,24 +367,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                         //TODO:Que location debemos usar si esto no se persiste en la Tabla de los actores Connection
                         chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac, null));
                 }
-
-                for (int i = 0; i < chatActorCommunityInformationList.size(); i++) {
-                    String country = "--", state = "--", city = "--";
-                    ChatActorCommunityInformation chatActor = chatActorCommunityInformationList.get(i);
-
-                    final Location location = chatActor.getLocation();
-                    try {
-                        final Address address = geolocationManager.getAddressByCoordinate(location.getLatitude(), location.getLongitude());
-                        country = address.getCountry();
-                        city = address.getCity().equals("null") ? address.getCounty() : address.getCity();
-                        state = address.getState().equals("null") ? address.getCounty() : address.getState();
-                    } catch (CantCreateAddressException ignore) {
-                    }
-
-                    chatActor.setCountry(country);
-                    chatActor.setState(state);
-                    chatActor.setCity(city);
-                }
             }
         } catch (CantListActorConnectionsException e) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
@@ -465,7 +456,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                         record.getCountry(),
                         record.getState(),
                         record.getCity(),
-                        record.getLocation())));
+                        record.getLocation(),
+                        ProfileStatus.ONLINE)));
 
 
         } catch (CantGetChatActorWaitingException e) {

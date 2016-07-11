@@ -24,11 +24,14 @@ import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
@@ -140,11 +143,11 @@ public class ChatFragment
         }
     }
 
-    @Override
-    public void onUpdateViewOnUIThread(String code) {
-        super.onUpdateViewOnUIThread(code);
-        onUpdateViewUIThread();
-    }
+//    @Override
+//    public void onUpdateViewOnUIThread(String code) {
+//        super.onUpdateViewOnUIThread(code);
+//        onUpdateViewUIThread();
+//    }
 
     public void onUpdateViewUIThread() {
         if (searchView != null) {
@@ -297,6 +300,9 @@ public class ChatFragment
         public void onReceive(FermatBundle fermatBundle) {
             try {
                 String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+//                Owner owner = new Owner();
+//                owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+//                fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
 
                 if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
                     onUpdateViewUIThread();
