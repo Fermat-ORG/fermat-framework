@@ -121,6 +121,8 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
 
             table.setFilterGroup(tableFilters, internalFilterGroups, DatabaseFilterOperator.AND);
 
+            LOG.info("actorsCatalogDao |||| table.getSqlQuery() = " + table.getSqlQuery());
+
             table.loadToMemory();
 
             final List<DatabaseTableRecord> records = table.getRecords();

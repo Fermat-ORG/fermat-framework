@@ -143,6 +143,8 @@ public class Profiles implements RestFulServices {
         if (discoveryQueryParameters.getOffset() != null && discoveryQueryParameters.getOffset() >= 0)
             offset = discoveryQueryParameters.getOffset();
 
+        System.out.println("The max and offset applied in database are: max="+max+" | offset="+offset);
+
         actorsList = getDaoFactory().getActorsCatalogDao().findAll(discoveryQueryParameters, clientIdentityPublicKey, max, offset);
 
         if (discoveryQueryParameters.isOnline() != null && discoveryQueryParameters.isOnline())
