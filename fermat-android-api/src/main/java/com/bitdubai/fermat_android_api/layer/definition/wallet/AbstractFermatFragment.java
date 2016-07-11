@@ -131,6 +131,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        isAttached = true;
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         isAttached = false;
