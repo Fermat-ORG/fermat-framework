@@ -184,6 +184,10 @@ public abstract class LocalSocketSession {
 
     ObjectInputStream objectInputStream;
 
+    public boolean isConnected() {
+        return localSocket.isConnected();
+    }
+
     private class SessionRunner implements Runnable {
 
         @Override
