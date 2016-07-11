@@ -523,7 +523,23 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
             /* This is for test and example of how to use
                     * Construct the filter
             */
+
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    Actors.INTRA_USER.getCode(),
+                    null,
+                    alias,
+                    null,
+                    location,
+                    distance,
+                    true,
+                    null,
+                    max,
+                    offset,
+                    false);
+
+           /* DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.INTRA_USER.getCode(),
                     alias,
                     distance,
@@ -535,7 +551,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     NetworkServiceType.UNDEFINED,
                     offset,
                     NetworkServiceType.INTRA_USER
-            );                  // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+            );    */              // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
             final List<ActorProfile> list = getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 

@@ -425,6 +425,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
         try {
 
+            //Get actor full profile image to save
             /**
              *Call Network Service Intra User to add request connection
              */
@@ -441,6 +442,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             /**
              *Call Actor Intra User to add request connection
              */
+
             this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage);
 
 

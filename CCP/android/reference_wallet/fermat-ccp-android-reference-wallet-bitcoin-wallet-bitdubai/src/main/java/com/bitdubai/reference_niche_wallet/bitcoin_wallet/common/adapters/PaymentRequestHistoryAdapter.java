@@ -53,8 +53,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
 
-        bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
+
         try {
+
+            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
+
             if (bitcoinWalletSettings.getFeedLevel() == null)
                 bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
             else
