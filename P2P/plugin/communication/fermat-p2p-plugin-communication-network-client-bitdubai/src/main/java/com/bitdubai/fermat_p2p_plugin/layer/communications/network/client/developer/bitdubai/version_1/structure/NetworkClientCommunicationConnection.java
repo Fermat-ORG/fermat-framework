@@ -849,7 +849,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             if(publicKey == null)
                 throw new Exception("The publicKey must not be null");
 
-            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/profiles/actor/photo/"+publicKey);
+            URL url = new URL("http://" + nodeUrl +  "/fermat/rest/api/v1/profiles/actor/photo/"+publicKey);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
