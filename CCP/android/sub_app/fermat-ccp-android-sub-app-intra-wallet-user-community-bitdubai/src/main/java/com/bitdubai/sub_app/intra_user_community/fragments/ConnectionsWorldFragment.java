@@ -44,8 +44,11 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
@@ -84,19 +87,22 @@ import java.util.concurrent.Executors;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
-/**
- * Created by Matias Furszyfer on 15/09/15.
- * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
- */
 
-public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>  implements
+public class ConnectionsWorldFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>
+        implements
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation>, GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias {
+        SwipeRefreshLayout.OnRefreshListener,
+        FermatListItemListeners<IntraUserInformation>,
+        OnLoadMoreDataListener,
+        GeolocationDialog.AdapterCallback ,
+        SearchAliasDialog.AdapterCallbackAlias {
 
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
     private static final int MAX = 12;
+ //   private static final int SPAN_COUNT = 4;
     /**
      * MANAGERS
      */
@@ -138,9 +144,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     private double distance;
     private String alias;
 
-    //flags
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    //flags scroller
 
+    int firstVisibleItemsReff, pastVisiblesItems, visibleItemCount, totalItemCount;
+    int referencialDy = 0;
+
+    //endless scroller
+    protected RecyclerView.OnScrollListener scrollListener;
 
 
     private ExecutorService _executor;
@@ -262,22 +272,35 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
 
             //adapter.setFermatListEventListener(this);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+/*            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     if (dy > 0) {
+                        referencialDy=dy;
                         visibleItemCount = layoutManager.getChildCount();
                         totalItemCount = layoutManager.getItemCount();
                         pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                        offset = totalItemCount;
+
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if (lastItem == totalItemCount) {
+                            offset+=12;
                             onRefresh();
                         }
                     }
+
+                    if (dy < referencialDy){
+
+                        firstVisibleItemsReff= layoutManager.findFirstVisibleItemPosition();
+                        if (firstVisibleItemsReff<pastVisiblesItems){
+                            offset-=12;
+                            if (offset<0) offset=0;
+                            onRefresh();
+                        }
+
+                    }
                 }
-            });
+            });*/
 
 
 
@@ -288,6 +311,43 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         return rootView;
     }
 
+
+ /*   @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    final int itemViewType = adapter.getItemViewType(position);
+                    switch (itemViewType) {
+                        case AvailableActorsListAdapter.DATA_ITEM:
+                            return 1;
+                        case AvailableActorsListAdapter.LOADING_ITEM:
+                            return SPAN_COUNT;
+                        default:
+                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
+                    }
+                }
+            });
+
+            layoutManager = gridLayoutManager;
+        }
+
+
+        return layoutManager;
+    }*/
+
+    @Override
+    public RecyclerView.OnScrollListener getScrollListener() {
+        if (scrollListener == null) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(layoutManager);
+            endlessScrollListener.setOnLoadMoreDataListener(this);
+            scrollListener = endlessScrollListener;
+        }
+
+        return scrollListener;
+    }
     public void setUpReferences() {
 
         rootView.setOnKeyListener(new View.OnKeyListener() {
@@ -461,16 +521,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             @Override
             public void onClick(View v) {
                 errorConnectingGPS.dismiss();
-           /*     try {
-                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
-                        //getActivity().onBackPressed();
-                    }
-                } catch (CantGetCommunicationNetworkStatusException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
             }
         });
 
@@ -484,9 +534,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         //offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+           /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
 
-           /* if (offset>0) {
+            if (offset>0) {
                 notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
                 notificationsProgressDialog.setCancelable(true);
                 notificationsProgressDialog.show();
@@ -545,7 +595,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 }
             });
-            offset=0;
+           // offset=0;
             worker.execute();
         }
     }
@@ -763,8 +813,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
-
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offsetP);
+             offset = offsetP;
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
@@ -791,6 +841,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                  }
              });
         }
+        return dataSet;
+    }
+
+
+    public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<IntraUserInformation> dataSet = new ArrayList<>();
+
+        try {
+            offset = pos;
+            List<IntraUserInformation> result = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
+            dataSet.addAll(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return dataSet;
     }
 
@@ -971,6 +1036,68 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+
+    }
+
+    //endless scroller
+    @Override
+    public void onLoadMoreData(int page, final int totalItemsCount) {
+        adapter.setLoadingData(true);
+        worker = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                Toast.makeText(getActivity(), "Loading more users.", Toast.LENGTH_SHORT).show();
+
+                return getMoreData(location,distance,alias, totalItemsCount);
+            }
+        };
+        worker.setContext(getActivity());
+        worker.setCallBack(new FermatWorkerCallBack() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onPostExecute(Object... result) {
+
+                if (swipeRefresh != null)
+                    swipeRefresh.setRefreshing(false);
+                    adapter.setLoadingData(false);
+                if (result != null &&
+                        result.length > 0) {
+                    if (getActivity() != null && adapter != null) {
+                        lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
+
+                        if (lstIntraUserInformations.isEmpty()) {
+                            showEmpty(true, emptyView);
+                            showEmpty(false, searchEmptyView);
+                        } else {
+                            Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+
+                            adapter.changeDataSet(lstIntraUserInformations);
+                            showEmpty(false, emptyView);
+                            showEmpty(false, searchEmptyView);
+                        }
+                    }
+                } else {
+                    showEmpty(true, emptyView);
+                    showEmpty(false, searchEmptyView);
+
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                // notificationsProgressDialog.dismiss();
+
+                isRefreshing = false;
+                if (swipeRefresh != null)
+                    swipeRefresh.setRefreshing(false);
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                ex.printStackTrace();
+
+            }
+        });
+        worker.execute();
 
     }
 
