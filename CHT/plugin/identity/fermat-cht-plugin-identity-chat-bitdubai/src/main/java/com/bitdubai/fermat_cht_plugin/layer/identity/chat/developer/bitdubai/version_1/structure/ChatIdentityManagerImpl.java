@@ -227,8 +227,8 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
                     chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
                 }
             }
-            if(chatExposingData.getAlias().contains("*on"))
-            registerIdentitiesANSTest(chatExposingData);
+//            if(chatExposingData.getAlias().contains("*on"))
+//            registerIdentitiesANSTest(chatExposingData);
 
         } catch (CantGetChatUserIdentityException e) {
             chatIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
