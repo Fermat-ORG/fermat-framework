@@ -88,6 +88,7 @@ public class CryptoBrokerIdentityListFragment
                 .setBody(R.string.cbp_broker_identity_welcome_body)
                 .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.background_toolbar)
                 .setIsCheckEnabled(false)
                 .build();
 

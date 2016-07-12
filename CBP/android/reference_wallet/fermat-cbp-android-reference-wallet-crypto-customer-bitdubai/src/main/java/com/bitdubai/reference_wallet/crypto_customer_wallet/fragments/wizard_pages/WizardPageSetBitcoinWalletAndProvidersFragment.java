@@ -248,6 +248,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                             .setBody(R.string.ccw_wizard_providers_dialog_body)
                             .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
                             .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                            .setVIewColor(R.color.ccw_wizard_wallet_button_color)
                             .setIsCheckEnabled(false)
                             .build();
                     presentationDialog.setOnDismissListener(this);
@@ -262,13 +263,13 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                             .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
                             .setBody(R.string.ccw_wizard_providers_dialog_body)
                             .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                            .setVIewColor(R.color.ccw_wizard_wallet_button_color)
                             .setIsCheckEnabled(false)
                             .build();
 
                     presentationDialog.setOnDismissListener(this);
 
                     final CryptoCustomerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-
                     final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
                     if (showDialog){
                         getActivity().runOnUiThread(new Runnable() {

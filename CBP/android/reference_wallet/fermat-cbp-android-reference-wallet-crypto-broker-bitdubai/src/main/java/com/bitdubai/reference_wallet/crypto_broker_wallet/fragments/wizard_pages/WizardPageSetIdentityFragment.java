@@ -155,6 +155,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
                             .setBody(R.string.cbw_crypto_broker_wallet_identity_body)
                             .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_footer)
+                            .setVIewColor(R.color.cbw_wizard_merchandises_wallet_button_color)
                             .setIsCheckEnabled(false)
                             .build();
 
