@@ -43,7 +43,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
                       }
 
                       $scope.charData[0].push(data.registeredClientConnection);
-                      $scope.charData[1].push($scope.registerActorsDetail);
+                      $scope.charData[1].push($scope.registerActorsTotal);
 
            }, function errorCallback(response) {
                 var message = "";
