@@ -107,6 +107,7 @@ public class WizardPageSetLocationsFragment
                     .setSubTitle(R.string.ccw_wizard_locations_dialog_sub_title)
                     .setBody(R.string.ccw_wizard_locations_dialog_body)
                     .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                    .setVIewColor(R.color.ccw_wizard_wallet_button_color)
                     .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
