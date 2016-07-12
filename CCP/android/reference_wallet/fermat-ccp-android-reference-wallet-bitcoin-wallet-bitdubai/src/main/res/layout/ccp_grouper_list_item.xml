@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/profile_Image"
             android:orientation="vertical"
-            android:paddingLeft="16dp">
+            android:paddingLeft="16dp"
+            >
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/txt_contactName"
@@ -55,6 +56,8 @@
                 android:textSize="12dp"
                 app:typeface="ROBOTO_REGULAR"
                 tools:text="Conference ticket"
+                android:maxLines="2"
+                android:ellipsize="end"
                 />
         </RelativeLayout>
 
