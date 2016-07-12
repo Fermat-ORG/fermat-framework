@@ -944,35 +944,34 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                         balanceType,
                         transactionType,
                         max,
-                        offset
+                        offset,
+                        blockchainNetworkType
                 );
 
-                List<CryptoWalletTransaction> cryptoWalletTransactionList1 = new ArrayList<>();
+                //List<CryptoWalletTransaction> cryptoWalletTransactionList1 = new ArrayList<>();
 
                 for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
-
-                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        if (cryptoWalletTransactionList1.isEmpty()){
-                            cryptoWalletTransactionList1.add(bwt);
+                        if (cryptoWalletTransactionList.isEmpty()){
+                           // cryptoWalletTransactionList1.add(bwt);
+                            cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                         }else {
                             int count = 0;
-                            for (CryptoWalletTransaction bwt1 : cryptoWalletTransactionList1) {
+                            for (com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction bwt1 : cryptoWalletTransactionList) {
                                 if (bwt1.getActorToPublicKey().equals(bwt.getActorToPublicKey())) {
                                     count++;
                                 }
                             }
                             if (count == 0)
-                                cryptoWalletTransactionList1.add(bwt);
+                                cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+                               // cryptoWalletTransactionList1.add(bwt);
 
                         }
-                    }
                 }
 
 
-
-                for (CryptoWalletTransaction bwt : cryptoWalletTransactionList1) {
+               /* for (CryptoWalletTransaction bwt : cryptoWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
-                }
+                }*/
             }
             return cryptoWalletTransactionList;
         } catch(Exception e){
