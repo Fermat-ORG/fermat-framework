@@ -165,7 +165,10 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent2 extends Abst
 
                 if (earningPairId == null) {
 
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new CantCreateInputTransactionException("currencyMatching: " + currencyMatching, "There's no earnings pair set for this currency matching."));
+                    System.out.println("currencyMatching: " + currencyMatching+" - "+"There's no earnings pair set for this currency matching.");
+                    transactionsToMarkAsSeen.add(currencyMatching.getOriginTransactionId());
+                    //I'll remove this report from this agent, is very annoying and doesn't have any porpoise
+                    //pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new CantCreateInputTransactionException("currencyMatching: " + currencyMatching, "There's no earnings pair set for this currency matching."));
 
                 } else {
 
