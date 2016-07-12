@@ -72,4 +72,12 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
         return gson.fromJson(jsonString, CryptoBrokerIdentityExtraData.class);
     }
 
+    @Override
+    public String toString() {
+        return "CryptoBrokerIdentityExtraData{" +
+                "merchandise=" + merchandise +
+                ", paymentCurrency=" + paymentCurrency +
+                ", extraText='" + extraText + '\'' +
+                '}';
+    }
 }
