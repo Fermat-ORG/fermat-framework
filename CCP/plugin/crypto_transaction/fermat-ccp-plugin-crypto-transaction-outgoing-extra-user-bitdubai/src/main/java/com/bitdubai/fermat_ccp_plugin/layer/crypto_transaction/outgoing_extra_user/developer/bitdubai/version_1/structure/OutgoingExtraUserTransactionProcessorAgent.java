@@ -209,7 +209,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
         for(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper transaction : transactionList) {
             // Now we apply it in the vault
             try {
-                String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount()), transaction.getBlockchainNetworkType());
+                String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), new CryptoAmount(transaction.getAmount(),transaction.getFeeOrigin(),transaction.getFee()), transaction.getBlockchainNetworkType());
                 dao.setTransactionHash(transaction,hash);
                 dao.setToSTCV(transaction);
 

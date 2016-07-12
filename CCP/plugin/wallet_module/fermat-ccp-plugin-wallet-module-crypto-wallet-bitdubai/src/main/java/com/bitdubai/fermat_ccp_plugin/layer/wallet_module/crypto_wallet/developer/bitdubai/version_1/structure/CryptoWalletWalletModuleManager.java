@@ -868,7 +868,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                         TransactionType transactionType,
                                                                         String walletPublicKey,
@@ -926,7 +926,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                     final TransactionType transactionType,
                                                                                     String walletPublicKey,
@@ -944,35 +944,34 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                         balanceType,
                         transactionType,
                         max,
-                        offset
+                        offset,
+                        blockchainNetworkType
                 );
 
-                List<CryptoWalletTransaction> cryptoWalletTransactionList1 = new ArrayList<>();
+                //List<CryptoWalletTransaction> cryptoWalletTransactionList1 = new ArrayList<>();
 
                 for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
-
-                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        if (cryptoWalletTransactionList1.isEmpty()){
-                            cryptoWalletTransactionList1.add(bwt);
+                        if (cryptoWalletTransactionList.isEmpty()){
+                           // cryptoWalletTransactionList1.add(bwt);
+                            cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                         }else {
                             int count = 0;
-                            for (CryptoWalletTransaction bwt1 : cryptoWalletTransactionList1) {
+                            for (com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction bwt1 : cryptoWalletTransactionList) {
                                 if (bwt1.getActorToPublicKey().equals(bwt.getActorToPublicKey())) {
                                     count++;
                                 }
                             }
                             if (count == 0)
-                                cryptoWalletTransactionList1.add(bwt);
+                                cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+                               // cryptoWalletTransactionList1.add(bwt);
 
                         }
-                    }
                 }
 
 
-
-                for (CryptoWalletTransaction bwt : cryptoWalletTransactionList1) {
+               /* for (CryptoWalletTransaction bwt : cryptoWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
-                }
+                }*/
             }
             return cryptoWalletTransactionList;
         } catch(Exception e){
@@ -1236,7 +1235,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
      * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
      */
 
-    public void approveRequest(UUID requestId, String intraUserLoggedInPublicKey) throws CantApproveRequestPaymentException,
+    public void approveRequest(UUID requestId, String intraUserLoggedInPublicKey, long fee, FeeOrigin feeOrigin) throws CantApproveRequestPaymentException,
                                                      PaymentRequestNotFoundException,
                                                      RequestPaymentInsufficientFundsException
     {
@@ -1271,7 +1270,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                 }
             }
 
-            cryptoPaymentRegistry.approveRequest(requestId);
+            cryptoPaymentRegistry.approveRequest(requestId, fee,  feeOrigin);
 
 
         }
