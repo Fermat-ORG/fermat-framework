@@ -160,7 +160,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/qr_icon"
                 android:layout_marginLeft="12dp"
-                android:paddingRight="10dp" />
+                />
         </LinearLayout>
 
     </RelativeLayout>
