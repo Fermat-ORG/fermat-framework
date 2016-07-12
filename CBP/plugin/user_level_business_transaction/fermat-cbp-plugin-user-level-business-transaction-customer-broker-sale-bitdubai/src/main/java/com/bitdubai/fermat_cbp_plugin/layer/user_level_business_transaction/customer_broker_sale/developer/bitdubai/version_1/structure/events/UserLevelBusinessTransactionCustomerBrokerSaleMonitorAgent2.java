@@ -97,7 +97,6 @@ import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.
  * Created by franklin on 15.12.15
  */
 public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends AbstractAgent {
-    private Thread agentThread;
     private final AbstractPlugin pluginRoot;
     private final CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
     private final UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao dao;
@@ -111,7 +110,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
     private final CryptoMoneyRestockManager cryptoMoneyRestockManager;
     private Broadcaster broadcaster;
 
-    public final int SLEEP_TIME = 5000;
     public final int DELAY_HOURS = 2;
     public final int TIME_BETWEEN_NOTIFICATIONS = 600000; //10min
     private long lastNotificationTime = 0;
