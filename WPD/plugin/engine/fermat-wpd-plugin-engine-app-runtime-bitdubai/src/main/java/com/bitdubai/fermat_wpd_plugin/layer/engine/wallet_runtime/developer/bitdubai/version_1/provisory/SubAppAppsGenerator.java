@@ -933,14 +933,14 @@ public class SubAppAppsGenerator {
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Identity Manager");
-            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setColor("#21386D");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
+            statusBar.setColor("#48000000");
             runtimeActivity.setStatusBar(statusBar);
 
             //Menu
