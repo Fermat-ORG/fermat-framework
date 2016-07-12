@@ -43,7 +43,7 @@ public class EditIdentityWorker extends FermatWorker {
 
                 System.out.println("VLZ: Publicando");
 
-                moduleManager.publishIdentity(identity.getPublicKey());
+                moduleManager.unHideIdentity(identity.getPublicKey());
             }else {
 
                 System.out.println("VLZ: Ocultando");

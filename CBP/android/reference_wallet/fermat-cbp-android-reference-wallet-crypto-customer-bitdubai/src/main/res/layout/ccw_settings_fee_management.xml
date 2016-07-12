@@ -52,7 +52,7 @@
             <RadioButton
                 android:id="@+id/ccw_radio_button_slow"
                 style="@style/ccw_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
@@ -64,7 +64,7 @@
             <RadioButton
                 android:id="@+id/ccw_radio_button_normal"
                 style="@style/ccw_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
@@ -77,7 +77,7 @@
             <RadioButton
                 android:id="@+id/ccw_radio_button_fast"
                 style="@style/ccw_radioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:text="  Fast"
                 android:textAllCaps="true"
