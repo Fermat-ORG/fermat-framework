@@ -139,7 +139,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
              * Get the node identity
              */
             setChannelIdentity((ECCKeyPair) endpointConfig.getUserProperties().get(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME));
-            endpointConfig.getUserProperties().remove(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME);
+            //endpointConfig.getUserProperties().remove(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME);
 
             /*
              * Get the client public key identity
