@@ -249,6 +249,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             try {
                 // start it all
                 doTheMainTask();
+
+                //start the controller of the blocks
+                BlocksDownloadControllerAgent blocksDownloadControllerAgent = new BlocksDownloadControllerAgent(2, TimeUnit.MINUTES, this.peerGroup, this.blockChain);
+                blocksDownloadControllerAgent.start();
+                System.out.println("***CryptoNetwork*** Blocks Download agent started...");
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
@@ -967,6 +972,55 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     public Transaction getBitcoinTransaction(Sha256Hash sha256Hash){
         return this.monitorAgent.wallet.getTransaction(sha256Hash);
+    }
+
+    /**
+     * This class controls if there is a difference between our blockchain and our peers.
+     * If there is, it will switch to that peer and download the blocks.
+     */
+    private class BlocksDownloadControllerAgent extends AbstractAgent implements Runnable{
+        private final PeerGroup peerGroup;
+        private final BlockChain blockChain;
+        private final int DOWNLOAD_DELTA = 5; // meaning 5 blocks of difference will trigger a switch on the peer.
+        public BlocksDownloadControllerAgent(long sleepTime, TimeUnit timeUnit, PeerGroup peerGroup, BlockChain blockChain) {
+            super(sleepTime, timeUnit);
+
+            this.peerGroup = peerGroup;
+            this.blockChain = blockChain;
+        }
+
+        @Override
+        protected Runnable agentJob() {
+            return this;
+        }
+
+        @Override
+        protected void onErrorOccur() {
+
+        }
+
+        @Override
+        public void run() {
+            int currentDownloadedBlocks = blockChain.getBestChainHeight();
+
+
+            for (Peer peer : peerGroup.getConnectedPeers()){
+                Long peerValue = peer.getBestHeight();
+               int delta = currentDownloadedBlocks - peerValue.intValue();
+
+                // if the delta is big enought, then switch.
+                if (delta > DOWNLOAD_DELTA){
+                    System.out.println("***CryptoNetwork*** Block Download agent: found more blocks on new peer.");
+                    System.out.println("current download Peer: " + peerGroup.getDownloadPeer().toString());
+                    System.out.println("New download Peer: " + peer.toString());
+
+                    peer.startBlockChainDownload();
+
+                    //wait for the next round to check everything again.
+                    return;
+                }
+            }
+        }
     }
 
 }
