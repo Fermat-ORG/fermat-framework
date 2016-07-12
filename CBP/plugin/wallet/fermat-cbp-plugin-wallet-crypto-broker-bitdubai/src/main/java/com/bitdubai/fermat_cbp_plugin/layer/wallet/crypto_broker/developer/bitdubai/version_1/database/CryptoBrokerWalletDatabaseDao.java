@@ -389,6 +389,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     pricePurchaseUp,
                     pricePurchaseDown,
                     priceReference,
+                    volatility,
                     fiatCurrency
             );
         } catch (CantLoadTableToMemoryException e) {
@@ -831,7 +832,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     private float getVolatilityCalculation(final Currency merchandise, MoneyType moneyType) throws CantGetCryptoBrokerStockTransactionException {
-        float volatility, priceMinimum = 0, priceMaximum = 0;
+        float volatility, priceMinimum, priceMaximum;
 
         try {
             CryptoBrokerStockTransaction cryptoBrokerStockTransactionBegin = null;
