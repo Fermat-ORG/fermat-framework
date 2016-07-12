@@ -50,6 +50,7 @@ import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -437,9 +438,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             final Transaction finalTransaction = transaction;
 
 
+            TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction, blockchainProvider.getMinimumBroadcastConnections());
+            ListenableFuture<Transaction> future = transactionBroadcast.future();
 
-            ListenableFuture<Transaction> future = peerGroup.broadcastTransaction(transaction, blockchainProvider.getMinimumBroadcastConnections()).future();
-            wallet.receivePending(finalTransaction, null);
+
             /**
              * I add the future that will get the broadcast result into a call back to respond to it.
              */
@@ -486,6 +488,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     }
                 }
             });
+
+            /**
+             * the future does not complete until the transaction in included in a block, which may be more than 10 minutes.
+             * to generate the ON_CRYPTO_NETWORK event raising, I'm for now triggering it manually.
+             */
+            wallet.setAcceptRiskyTransactions(true);
+            wallet.receivePending(finalTransaction, null, true);
+            finalTransaction.getConfidence(context).setConfidenceType(TransactionConfidence.ConfidenceType.PENDING);
+            events.onTransactionConfidenceChanged(wallet, finalTransaction);
+
         }
 
         /**
