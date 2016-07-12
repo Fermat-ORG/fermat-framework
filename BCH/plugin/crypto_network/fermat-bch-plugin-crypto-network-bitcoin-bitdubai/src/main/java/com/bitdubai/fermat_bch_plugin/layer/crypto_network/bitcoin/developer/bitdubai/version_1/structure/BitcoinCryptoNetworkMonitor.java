@@ -262,6 +262,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         private void doTheMainTask() throws Exception {
             System.out.println("***CryptoNetwork***  starting and connecting on " + BLOCKCHAIN_NETWORKTYPE.getCode() + "...");
 
+            System.out.println("***cryptoNetwork*** keys " + wallet.getImportedKeys().toString());
+
             //reset the wallet if needed
             if (this.isReset)
                 this.wallet.reset();
