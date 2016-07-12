@@ -732,7 +732,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         final Handler mHandler = new Handler();
 
         try {
-            if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
+            //if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -785,8 +785,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     }
                 });
                 thread.start();
-            }
-        } catch (CantGetBalanceException e) {
+           // }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -923,8 +923,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             e.printStackTrace();
         } catch (Exception e){
             //time out
-
-          e.printStackTrace();
+            e.printStackTrace();
         }
         return data;
     }
@@ -943,71 +942,35 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onLongItemClickListener(CryptoWalletTransaction data, int position) {
     }
 
-    @Override
-    public void onRefresh() {
-
-        //offset = 0;
-        if (!isRefreshing) {
-            isRefreshing = true;
-
-            worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-
-                    isRefreshing = false;
-                    if (isAttached) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        if (result != null && result.length > 0) {
-                            //noinspection unchecked
-                            openNegotiationList = (ArrayList) result[0];
-                            if (adapter != null)
-                                adapter.changeDataSet(openNegotiationList);
-
-                            if(openNegotiationList.size() > 0)
-                            {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
-                            }
-                            else
-                            {
-                                recyclerView.setVisibility(View.GONE);
-                                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                            }
-                        }
-                        else {
-                            recyclerView.setVisibility(View.GONE);
-                            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                        }
-                    }
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    isRefreshing = false;
-
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
-
-                }
-            });
-
-            worker.execute();
-        }
-    }
 
 
     @Override
     public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                //noinspection unchecked
+                openNegotiationList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(openNegotiationList);
 
+                if(openNegotiationList.size() > 0)
+                {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                }
+                else
+                {
+                    recyclerView.setVisibility(View.GONE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                }
+            }
+            else {
+                recyclerView.setVisibility(View.GONE);
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            }
+        }
     }
 
     @Override
