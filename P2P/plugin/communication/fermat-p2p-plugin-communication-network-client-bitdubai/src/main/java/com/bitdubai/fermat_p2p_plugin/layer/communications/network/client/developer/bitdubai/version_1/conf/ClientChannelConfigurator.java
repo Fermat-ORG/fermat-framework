@@ -36,10 +36,9 @@ public class ClientChannelConfigurator extends ClientEndpointConfig.Configurator
         }
     }
 
-    /*
     public List<Extension> getNegotiatedExtensions(List<Extension> installed, List<Extension> requested) {
         installed.add(new PerMessageDeflateExtension());
         return installed;
     }
-    */
+
 }

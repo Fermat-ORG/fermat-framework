@@ -29,7 +29,7 @@ public class ThumbnailUtil {
      * @return byte [] of the thumbnails
      */
     public static byte [] generateThumbnail(byte [] originalImage, String format) throws IOException {
-        return getByteArray(generateThumbnail(getBufferedImage(originalImage)), "JPG");
+        return getByteArray(generateThumbnail(getBufferedImage(originalImage)), format);
     }
 
 

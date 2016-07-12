@@ -42,8 +42,7 @@ public interface ChatIdentityManager extends FermatManager, Serializable {
      * @return the intra user created
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
-    void createNewIdentityChat(String alias,
-                                                 byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantCreateNewChatIdentityException;
+    void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, GeoFrequency frecuency) throws CantCreateNewChatIdentityException;
 
     /**
      * The method <code>updateIdentityChat</code> change a identity information data
