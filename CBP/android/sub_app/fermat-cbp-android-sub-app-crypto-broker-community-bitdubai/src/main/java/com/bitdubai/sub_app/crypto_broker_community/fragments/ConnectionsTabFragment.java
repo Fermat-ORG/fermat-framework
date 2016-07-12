@@ -9,20 +9,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -65,10 +69,12 @@ public class ConnectionsTabFragment
     private ErrorManager errorManager;
 
     private ArrayList<CryptoBrokerCommunityInformation> connectedActorList = new ArrayList<>();
+    private int offset;
 
     private ConnectionsListAdapter adapter;
-    ImageView noContacts;
-    private int offset;
+    private PresentationDialog helpDialog;
+    private ImageView noContacts;
+
 
     public static ConnectionsTabFragment newInstance() {
         return new ConnectionsTabFragment();
@@ -81,19 +87,14 @@ public class ConnectionsTabFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            setHasOptionsMenu(true);
 
-            //Get managers
-            moduleManager = appSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
-            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+        moduleManager = appSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-            loadingSettings();
+        loadSettings();
 
-        } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
-        }
+        onRefresh();
     }
 
     @Override
@@ -102,7 +103,7 @@ public class ConnectionsTabFragment
 
         configureToolbar();
 
-        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+//        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         noContacts = (ImageView) rootView.findViewById(R.id.cbc_no_contacts);
     }
@@ -127,7 +128,7 @@ public class ConnectionsTabFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.cbc_fragment_conections_tab;
+        return R.layout.cbc_fragment_connections_tab;
     }
 
     @Override
@@ -196,9 +197,72 @@ public class ConnectionsTabFragment
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        final MenuItem menuItem = menu.findItem(FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID);
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+        SearchViewStyleHelper.on(searchView)
+                .setCursorColor(Color.WHITE)
+                .setTextColor(Color.WHITE)
+                .setHintTextColor(Color.WHITE)
+                .setSearchHintDrawable(R.drawable.lupa_blanca)
+                .setSearchButtonImageResource(R.drawable.lupa_blanca)
+                .setCloseBtnImageResource(R.drawable.x_blanca)
+                .setSearchPlateTint(Color.WHITE)
+                .setSubmitAreaTint(Color.WHITE);
+
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<CryptoBrokerCommunityInformation> filteredList = filterList(newText, connectedActorList);
+                adapter.changeDataSet(filteredList);
+                return true;
+            }
+        });
+    }
+
+    private List<CryptoBrokerCommunityInformation> filterList(String filterText, List<CryptoBrokerCommunityInformation> baseList) {
+        final ArrayList<CryptoBrokerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoBrokerCommunityInformation item : baseList) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+
+        return filteredList;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //TODO: colocar aqui el codigo para mostrar el help dialog y el SearchView
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                if (helpDialog == null)
+                    helpDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.cbc_banner)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
+                            .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                            .setVIewColor(R.color.cbc_toolbar_start_background)
+                            .setIsCheckEnabled(false)
+                            .build();
+
+                helpDialog.show();
+                return true;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el SearchView
+                return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -247,9 +311,11 @@ public class ConnectionsTabFragment
 
         try {
             offset = pos;
-            final CryptoBrokerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listAllConnectedCryptoBrokers(selectedActorIdentity, MAX, offset);
-            dataSet.addAll(result);
+            if(moduleManager.getSelectedActorIdentity() != null) {
+                final CryptoBrokerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<CryptoBrokerCommunityInformation> result = moduleManager.listAllConnectedCryptoBrokers(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -296,7 +362,7 @@ public class ConnectionsTabFragment
     /**
      * Obtain Settings or create new Settings if first time opening subApp
      */
-    private void loadingSettings() {
+    private void loadSettings() {
         CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -338,7 +404,7 @@ public class ConnectionsTabFragment
     /**
      * Update the actor information and notify the adapter to show the updated info
      *
-     * @param position         the actor's position in the adapter
+     * @param position the actor's position in the adapter
      */
     private void updateSelectedActorInList(int position) {
         if (appSession.getData(FragmentsCommons.CONNECTION_RESULT) == null)
@@ -357,5 +423,12 @@ public class ConnectionsTabFragment
             errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
     }
 }

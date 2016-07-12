@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -25,6 +27,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Framew
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
@@ -33,16 +37,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,6 +73,15 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     protected S appSession;
     protected R appResourcesProviderManager;
 
+    /**
+     * Receivers
+     */
+    private List<FermatBroadcastReceiver> receivers;
+
+    /**
+     * OptionMenuListeners
+     */
+//    private Map<Integer,?> optionMenuListeners;
 
     /**
      * ViewInflater
@@ -84,7 +99,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         super.onCreate(savedInstanceState);
         //if(fermatFragmentType.getOptionsMenu()!=null)
             setHasOptionsMenu(true);
-
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -108,6 +122,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         if (context != null && isAttached) {
             context.showWizard(key, args);
         }
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        isAttached = true;
     }
 
     @Override
@@ -141,7 +161,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                                 MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
                                 FermatDrawable icon = menuItem.getFermatDrawable();
                                 if (icon != null) {
-                                    int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    int iconRes = obtainRes(ResourceSearcher.DRAWABLE_TYPE,icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
                                     item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
                                 }
@@ -149,7 +169,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                                     item.setShowAsAction(menuItem.getShowAsAction());
                                 int actionViewClass = menuItem.getActionViewClass();
                                 if (actionViewClass != -1) {
-                                    item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                                    View view = obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK);
+                                    item.setActionView(view);
                                 }
                             }
                         }
@@ -160,6 +181,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                     Log.e(TAG,"FermatFragmentType null in fragment for app:"+appSession.getAppPublicKey()+", contact furszy");
             }
 
+            onOptionMenuPrepared(menu);
+
 
         } catch (Exception e) {
             if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
@@ -167,6 +190,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         }
         super.onPrepareOptionsMenu(menu);
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -205,25 +230,29 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 //            if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
 //            e.printStackTrace();
 //        }
-//        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     /**
      * Method to obtain res from other apps
      */
-    private final int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(id, sourceLocation, appOwnerPublicKey);
+    private final int obtainRes(int resType,int id,SourceLocation sourceLocation,String appOwnerPublicKey){
+        return getFrameworkHelpers().obtainRes(resType, id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
      * Method to obtain view class from framework
      * @return
      */
-    private final View obtainFrameworkView(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainClassView(id, sourceLocation, appOwnerPublicKey);
+    private final View obtainFrameworkView(FermatView fermatView){
+        return getFrameworkHelpers().obtainClassView(fermatView);
     }
     private final View obtainFrameworkViewOptionMenuAvailable(int id,SourceLocation sourceLocation){
         return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation);
+    }
+
+    private final View obtainFrameworkViewOptionMenuAvailableAndLoadListeners(int id,SourceLocation sourceLocation,Object[] listeners){
+        return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation, listeners);
     }
 
 
@@ -364,6 +393,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
 
     protected void destroy(){
+        unregisterAllReceivers();
         onDestroy();
         System.gc();
     }
@@ -389,7 +419,17 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final FermatRuntime getRuntimeManager(){
-        return ((FermatActivityManager)getActivity()).getRuntimeManager();
+        if(isAttached)
+            return ((FermatActivityManager) getActivity()).getRuntimeManager();
+        return null;
+    }
+
+    protected final void changeStartActivity(String activityCode){
+            ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
+    }
+
+    public void changeTabNotification(String activityCode, int number) throws InvalidParameterException {
+        ((FermatActivityManager)getActivity()).getRuntimeManager().changeTabNumber(appSession.getAppPublicKey(), activityCode, number);
     }
 
     protected final FermatActivityManager getFermatActivityManager(){
@@ -409,13 +449,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    public final void onUpdateViewHandler(final String appCode,final String code){
-        if(appSession.getAppPublicKey().equals(appCode)){
-            onUpdateView(code);
-        }
-
-    }
-
     public final void onUpdateViewUIThred(final String code){
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -430,9 +463,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      *
      * @param code is a code for update some part of the fragment or everything
      */
-    public void onUpdateView(String code) {
-        return;
-    }
+
 
     /**
      * This class have to be ovverride if someone wants to get broadcast on UI Thread
@@ -447,9 +478,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     public void onUpdateView(FermatBundle bundle) {
-
-    }
-    public void onUpdateViewUIThred(FermatBundle bundle) {
 
     }
 
@@ -498,6 +526,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     }
 
+    /**
+     * Method to prepare optionMenu
+     */
+    public void onOptionMenuPrepared(Menu menu){
+
+    }
 
     public ScreenSize getScreenSize(){
         int screenSize = getResources().getConfiguration().screenLayout &
@@ -529,6 +563,18 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    public void setToolbarTitleVisibility(boolean isVisible){
+
+    }
+
+    public void pushNotification(Notification notification){
+        getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(), notification);
+    }
+
+    public void cancelNotification(){
+        getPaintActivtyFeactures().cancelNotification(appSession.getAppPublicKey());
+    }
+
 
     /**
      * Runtime Fragment methods
@@ -543,7 +589,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * @throws InvalidParameterException
      */
     public void changeOptionMenuVisibility(int id,boolean visibility) throws InvalidParameterException {
-        changeOptionMenuVisibility(id,visibility,false);
+        changeOptionMenuVisibility(id, visibility, false);
     }
 
     /**
@@ -558,4 +604,29 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         else getPaintActivtyFeactures().changeOptionMenuVisibility(id,visibility,appSession.getAppPublicKey());
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
+
+
+
+    /**
+     * Receivers
+     */
+    protected void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver){
+        if(receivers==null)receivers = new ArrayList<>();
+        receivers.add(fermatBroadcastReceiver);
+        getFrameworkHelpers().registerReceiver(fermatIntentFilter, fermatBroadcastReceiver, appSession.getAppPublicKey());
+    }
+
+    protected void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver){
+        if(receivers!=null) receivers.remove(fermatBroadcastReceiver);
+        getFrameworkHelpers().unregisterReceiver(fermatBroadcastReceiver, appSession.getAppPublicKey());
+    }
+
+    protected void unregisterAllReceivers(){
+        if(receivers!=null) {
+            for (FermatBroadcastReceiver receiver : receivers) {
+                getFrameworkHelpers().unregisterReceiver(receiver, appSession.getAppPublicKey());
+            }
+        }
+    }
+
 }

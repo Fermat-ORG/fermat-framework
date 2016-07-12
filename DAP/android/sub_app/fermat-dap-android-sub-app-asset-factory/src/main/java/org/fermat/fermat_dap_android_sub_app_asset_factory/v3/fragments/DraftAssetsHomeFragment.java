@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -276,11 +276,11 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onOptionMenuPrepared(Menu menu){
 //        menu.clear();
-        super.onCreateOptionsMenu(menu, inflater);
+        super.onOptionMenuPrepared(menu);
 
-        inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
+//        inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
 
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();
@@ -341,7 +341,7 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_community.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -15,12 +16,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.notifications.CommunityNotificationPainterBuilder;
+import com.bitdubai.sub_app.crypto_broker_community.common.notifications.CommunityNotificationPainter;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
-
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -29,6 +31,9 @@ import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
  * @version 1.0.0
  */
 public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>> {
+
+    private CryptoBrokerCommunityResourceSearcher resourceSearcher;
+
 
     public CryptoBrokerCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -73,28 +78,26 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
 
 
     @Override
-    public NotificationPainter getNotificationPainter(final String code) {
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
 
-        return CommunityNotificationPainterBuilder.getNotification(
-                code
-        );
+        int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
+
+        switch (notificationID) {
+            case CBPBroadcasterConstants.CBC_CONNECTION_REQUEST_RECEIVED:
+                return new CommunityNotificationPainter("Crypto Broker Community", "A Broker wants to connect with you.",
+                        "", R.drawable.cbc_ic_nav_connections);
+            case CBPBroadcasterConstants.CBC_ACTOR_CONNECTED:
+                new CommunityNotificationPainter("Crypto Broker Community", "A Broker accepted your connection request.",
+                        "", R.drawable.cbc_ic_nav_connections);
+            default:
+                return null;
+        }
     }
 
     @Override
-    public int getResource(int id) {
-        switch (id) {
-            case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.cbc_help_icon;
-
-            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
-                return R.drawable.cbc_comm_ubication_icon;
-
-            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                return R.drawable.cbc_comm_search_icon;
-
-            default:
-                return 0;
-        }
-
+    public ResourceSearcher getResourceSearcher() {
+        if (resourceSearcher == null)
+            resourceSearcher = new CryptoBrokerCommunityResourceSearcher();
+        return resourceSearcher;
     }
 }

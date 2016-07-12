@@ -7,16 +7,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
+import android.widget.SearchView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +30,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,16 +49,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
@@ -65,12 +64,13 @@ import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
 import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.SearchAliasDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -85,13 +85,13 @@ import static android.widget.Toast.makeText;
 public class ConnectionsWorldFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
-        FermatListItemListeners<ChatActorCommunityInformation>, GeolocationDialog.AdapterCallback {
+        FermatListItemListeners<ChatActorCommunityInformation>,
+        GeolocationDialog.AdapterCallback , SearchAliasDialog.AdapterCallbackAlias {
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 8;
     protected final String TAG = "Recycler Base";
-
 
     //Managers
     private ChatActorCommunitySubAppModuleManager moduleManager;
@@ -106,6 +106,8 @@ public class ConnectionsWorldFragment
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
+//    private LocationManager locationManager;
+    Location locationGPS;
 
     //Flags
     private boolean isRefreshing = false, launchActorCreationDialog = false, launchListIdentitiesDialog = false;
@@ -113,6 +115,7 @@ public class ConnectionsWorldFragment
 
     //UI
     private View rootView;
+    private SearchView searchView;
 
     //View layout;
     private LinearLayout emptyView;
@@ -120,8 +123,17 @@ public class ConnectionsWorldFragment
     private GridLayoutManager layoutManager;
     private CommunityListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
+    private ExecutorService executor;
     TextView noDatalabel;
     ImageView noData;
+    private Button refreshButton;
+    private View refreshButtonView;
+
+    //Greenbar layout
+    private RelativeLayout greenBar;
+    private ImageView closeGreenBar;
+    private TextView greenBarCountry;
+    private TextView greenBarCity;
 
     public static ConnectionsWorldFragment newInstance() {
         return new ConnectionsWorldFragment();
@@ -129,12 +141,41 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onMethodCallback(ExtendedCity city) {
+
+        greenBar = (RelativeLayout) rootView.findViewById(R.id.green_bar_layout);
+        closeGreenBar = (ImageView) rootView.findViewById(R.id.close_green_bar);
+        greenBarCountry = (TextView) rootView.findViewById(R.id.country_green_bar);
+        greenBarCity = (TextView) rootView.findViewById(R.id.city_green_bar);
+
+        greenBarCountry.setText(city.getCountryName());
+        greenBarCity.setText(city.getName());
+
+        //greenBar.bringToFront();
+        greenBar.setVisibility(View.VISIBLE);
+
         location=new DeviceLocation();
         location.setLatitude((double) city.getLatitude());
         location.setLongitude((double) city.getLongitude());
-        distance=identity.getAccuracy();
-        location.setAccuracy((long) distance);
+        //distance=identity.getAccuracy();
+        //location.setAccuracy((long) distance);
         offset=0;
+        onRefresh();
+
+        closeGreenBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                greenBar.setVisibility(View.GONE);
+                location = null;
+                offset=0;
+                onRefresh();
+            }
+        });
+
+    }
+
+    @Override
+    public void onMethodCallbackAlias(String aliasSearch) {
+        alias=aliasSearch;
         onRefresh();
     }
 
@@ -201,6 +242,8 @@ public class ConnectionsWorldFragment
                     appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
+            refreshButton = (Button) rootView.findViewById(R.id.show_more_button);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -211,7 +254,17 @@ public class ConnectionsWorldFragment
                         offset=totalItemCount;
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if(lastItem == totalItemCount) {
-                            onRefresh();
+
+                            refreshButtonView.setVisibility(View.VISIBLE);
+                            refreshButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onRefresh();
+                                    refreshButtonView.setVisibility(View.GONE);
+                                }
+                            });
+                        } else{
+                            refreshButtonView.setVisibility(View.GONE);
                         }
 //                        if (!isRefreshing) {
 
@@ -353,12 +406,13 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
+        try{
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+//            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//            progressDialog.setMessage("Please wait");
+//            progressDialog.setCancelable(false);
+//            progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -375,19 +429,22 @@ public class ConnectionsWorldFragment
                         swipeRefresh.setRefreshing(false);
                         if (result != null &&
                                 result.length > 0) {
-                            progressDialog.dismiss();
+//                            progressDialog.dismiss();
                             if (getActivity() != null && adapter != null) {
                                 if (offset == 0) {
-                                    if(lstChatUserInformations!=null){
+                                    if (lstChatUserInformations != null) {
                                         lstChatUserInformations.clear();
                                         lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                    }
-                                    else{
-                                        lstChatUserInformations=(ArrayList<ChatActorCommunityInformation>) result[0];
+                                    } else {
+                                        lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     }
                                     adapter.changeDataSet(lstChatUserInformations);
                                 } else {
-                                    lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
+                                    ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                    for (ChatActorCommunityInformation info : temp)
+                                        if (notInList(info)) {
+                                            lstChatUserInformations.add(info);
+                                        }
                                     adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
                                 }
                                 if (lstChatUserInformations.isEmpty()) {
@@ -403,7 +460,7 @@ public class ConnectionsWorldFragment
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null && isAttached)
                         swipeRefresh.setRefreshing(false);
@@ -413,6 +470,21 @@ public class ConnectionsWorldFragment
             });
             worker.execute();
         }
+        }catch (Exception ignore){
+            if (executor != null) {
+                executor.shutdown();
+                executor = null;
+            }
+        }
+    }
+
+    private boolean notInList(ChatActorCommunityInformation info) {
+        for (ChatActorCommunityInformation contact : lstChatUserInformations)
+        {
+            if (contact.getPublicKey().equals(info.getPublicKey()))
+            return false;
+        }
+        return true;
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -451,6 +523,21 @@ public class ConnectionsWorldFragment
         try {
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
+//                if(location != null){
+//                    if(location.getLongitude() == 0 && location.getLatitude() == 0){
+//                        locationGPS = locationManager.getLocation();
+//                        if(locationGPS!= null){
+//                            location.setLatitude(locationGPS.getLatitude());
+//                            location.setLongitude(locationGPS.getLongitude());
+//                        }
+//                    }
+//                }else{
+//                    locationGPS = locationManager.getLocation();
+//                    if(locationGPS!= null){
+//                        location.setLatitude(locationGPS.getLatitude());
+//                        location.setLongitude(locationGPS.getLongitude());
+//                    }
+//                }
                 result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
                         //null, 0, null, 0, 0);
                        location, distance, alias, max, offset);
@@ -488,7 +575,79 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        //super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            //searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        //updatevalues();
+                        adapter.changeDataSet(lstChatUserInformations);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
+    }
+
+    public void onOptionMenuPrepared(Menu menu){
+        MenuItem searchItem = menu.findItem(1);
+        final SearchAliasDialog.AdapterCallbackAlias ad = this;
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            //searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    try {
+                        SearchAliasDialog notificationSearchAliasDialog =
+                                new SearchAliasDialog(getActivity(), appSession, null, null, null, s ,ad);
+                        notificationSearchAliasDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+
+                            }
+                        });
+                        notificationSearchAliasDialog.show();
+                    } catch ( Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(lstChatUserInformations);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
     }
 
     @Override
@@ -497,6 +656,20 @@ public class ConnectionsWorldFragment
             int id = item.getItemId();
             switch (id) {
                 case 3:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 4:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 5:
                     showDialogHelp();
                     break;
                 case 1:
@@ -504,7 +677,7 @@ public class ConnectionsWorldFragment
                 case 2:
                     try {
                         GeolocationDialog geolocationDialog =
-                                new GeolocationDialog(getActivity(),appSession, null, this);//,chatUserInformation, moduleManager.getSelectedActorIdentity());
+                                new GeolocationDialog(getActivity(),appSession, null, this);
                         geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
@@ -532,7 +705,6 @@ public class ConnectionsWorldFragment
     }
 
     private void showDialogHelp() {
-
         try {
             moduleManager = appSession.getModuleManager();
             if (identity != null) {

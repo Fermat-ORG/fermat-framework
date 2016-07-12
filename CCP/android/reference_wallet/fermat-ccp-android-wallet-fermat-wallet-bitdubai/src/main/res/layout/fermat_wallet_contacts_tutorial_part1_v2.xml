@@ -223,12 +223,12 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:id="@+id/add_fermat_user"
                     android:text="@string/add_fermat_user_text"
                     android:textColor="#fff"
                     android:background="#009CD4"
-                    android:textSize="12dp"
+                    android:textSize="10dp"
                     android:layout_gravity="center_horizontal"
                     />
             </LinearLayout>
@@ -248,12 +248,12 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:text="@string/add_extra_user_text"
                     android:id="@+id/add_extra_user"
                     android:textColor="#fff"
                     android:background="#009CD4"
-                    android:textSize="12dp"
+                    android:textSize="10dp"
                     android:layout_gravity="center_horizontal"
                     />
 

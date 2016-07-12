@@ -6,7 +6,10 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -21,6 +24,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.C
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -33,10 +37,14 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     private ErrorManager errorManager;
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-    public IntraUserIdentityModuleManager(UUID pluginId,ErrorManager errorManager, PluginFileSystem pluginFileSystem, IntraWalletUserIdentityManager intraWalletUserIdentityManager) {
+    private LocationManager locationManager;
+
+
+    public IntraUserIdentityModuleManager(UUID pluginId,ErrorManager errorManager, PluginFileSystem pluginFileSystem, IntraWalletUserIdentityManager intraWalletUserIdentityManager,LocationManager locationManager) {
         super(pluginFileSystem,pluginId);
         this.errorManager = errorManager;
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+        this.locationManager = locationManager;
     }
 
     @Override
@@ -63,10 +71,27 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, long accuracy, Frecuency frecuency) throws CantCreateNewIntraUserIdentityException {
+    public IntraWalletUserIdentity getIntraWalletUsers() throws CantListIntraUsersIdentityException {
         try {
 
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage,  accuracy, frecuency);
+            return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+
+
+
+        } catch (CantListIntraWalletUsersException e) {
+            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
+        }
+        catch (Exception e) {
+            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Unknown error");
+        }
+    }
+
+
+    @Override
+    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, long accuracy, Frequency frequency, Location location) throws CantCreateNewIntraUserIdentityException {
+        try {
+
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage,  accuracy, frequency,location);
 
             return new IntraUserIdentity( alias,  phrase,intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
@@ -79,10 +104,10 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage, long accuracy, Frecuency frecuency) throws CantCreateNewIntraUserIdentityException {
+    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage, long accuracy, Frequency frequency, Location location) throws CantCreateNewIntraUserIdentityException {
         try {
 
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage,accuracy,frecuency);
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage,accuracy, frequency,location);
 
             return new IntraUserIdentity( alias, "",intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
@@ -109,11 +134,11 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, long accuracy, Frecuency frecuency) throws CantUpdateIntraUserIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, long accuracy, Frequency frequency, Location location) throws CantUpdateIntraUserIdentityException {
 
         try
         {
-            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, phrase, profileImage);
+            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, phrase, profileImage, accuracy, frequency, location);
 
 
         } catch (CantUpdateIdentityException e) {
@@ -179,7 +204,7 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        createNewIntraWalletUser(name,phrase,profile_img, (long)0, Frecuency.NORMAL);
+        createNewIntraWalletUser(name,phrase,profile_img, (long)100, Frequency.NORMAL,null);
     }
 
     @Override
@@ -190,6 +215,12 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public Location getLocationManager() throws CantGetDeviceLocationException
+    {
+        return locationManager.getLocation();
     }
 
 }

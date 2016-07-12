@@ -1,9 +1,3 @@
-/*
- * @#PropagateNodeCatalogAgent.java - 2016
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -44,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class PropagateNodeCatalogAgent extends FermatAgent {
 
@@ -110,7 +104,7 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
      */
     private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException, CantDeleteRecordDataBaseException, InterruptedException {
 
-        LOG.info("Executing propagateCatalog()");
+        LOG.info("Executing node propagateCatalog()");
 
         successfulPropagateCount = 0;
         List<NodesCatalog> nodesCatalogsList = nodesCatalogDao.getNodeCatalogueListToShare(networkNodePluginRoot.getIdentity().getPublicKey());
@@ -119,30 +113,32 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
         if ((nodesCatalogsList != null && !nodesCatalogsList.isEmpty()) &&
                 (transactionList != null && !transactionList.isEmpty())){
 
-            LOG.info("Transaction to propagate size = " + transactionList.size());
+            LOG.info("Node transactions to propagate size = " + transactionList.size());
+
+            ReceiveNodeCatalogTransactionsMsjRequest receiveNodeCatalogTransactionsMsjRequest = new ReceiveNodeCatalogTransactionsMsjRequest(transactionList);
+
+            String messageContent = receiveNodeCatalogTransactionsMsjRequest.toJson();
+
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel;
 
             for (NodesCatalog remoteNodesCatalog: nodesCatalogsList) {
 
                 try {
 
-                    FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(remoteNodesCatalog);
-                    ReceiveNodeCatalogTransactionsMsjRequest receiveNodeCatalogTransactionsMsjRequest = new ReceiveNodeCatalogTransactionsMsjRequest(transactionList);
-                    fermatWebSocketClientNodeChannel.sendMessage(receiveNodeCatalogTransactionsMsjRequest.toJson(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_REQUEST);
+                    fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(remoteNodesCatalog);
 
-                }catch (Exception e){
+                    fermatWebSocketClientNodeChannel.sendMessage(messageContent, PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_REQUEST);
 
-                    remoteNodesCatalog.setOfflineCounter(remoteNodesCatalog.getOfflineCounter()+1);
-                    nodesCatalogDao.update(remoteNodesCatalog);
+                } catch (Exception e){
+
+                    nodesCatalogDao.setOfflineCounter(remoteNodesCatalog.getIdentityPublicKey(), remoteNodesCatalog.getOfflineCounter()+1);
                 }
             }
 
-        }else {
+        } else {
 
-            LOG.info("Nothing to propagate ...");
-
+            LOG.info("No node transactions to propagate ...");
         }
-
-
     }
 
     /**
@@ -163,7 +159,6 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
             }
         }
     }
-
 
     /**
      * (non-javadoc)
@@ -255,7 +250,6 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
             transactionsPendingForPropagation = new ArrayList<>();
 
         return  transactionsPendingForPropagation;
-
     }
 
     /**

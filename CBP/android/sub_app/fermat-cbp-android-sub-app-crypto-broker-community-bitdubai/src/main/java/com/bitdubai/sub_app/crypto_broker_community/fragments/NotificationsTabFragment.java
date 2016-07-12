@@ -311,4 +311,11 @@ public class NotificationsTabFragment
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
 }

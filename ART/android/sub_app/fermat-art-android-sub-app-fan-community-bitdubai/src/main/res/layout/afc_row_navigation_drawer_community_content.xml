@@ -9,6 +9,18 @@
     android:paddingRight="24dp"
     android:id="@+id/arc_full_row">
 
+    <View
+        android:id="@+id/upline"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_below="@+id/relative1"
+        android:background="@drawable/line_coloured"
+        android:visibility="gone"
+
+        />
+
     <LinearLayout
         android:id="@+id/afc_row_container"
         android:layout_width="match_parent"

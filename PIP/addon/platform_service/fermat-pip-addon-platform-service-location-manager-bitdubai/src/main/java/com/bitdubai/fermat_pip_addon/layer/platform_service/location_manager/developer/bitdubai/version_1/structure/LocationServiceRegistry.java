@@ -36,7 +36,7 @@ public class LocationServiceRegistry {
         try {
             database = platformDatabaseSystem.openDatabase(LocationServiceDatabaseConstants.DATABASE_NAME);
 
-        } catch (final DatabaseNotFoundException databaseNotFoundException) {
+        } catch (final CantOpenDatabaseException | DatabaseNotFoundException databaseNotFoundException) {
 
             LocationServiceDatabaseFactory databaseFactory = new LocationServiceDatabaseFactory(platformDatabaseSystem);
             database = databaseFactory.createDatabase(LocationServiceDatabaseConstants.DATABASE_NAME);

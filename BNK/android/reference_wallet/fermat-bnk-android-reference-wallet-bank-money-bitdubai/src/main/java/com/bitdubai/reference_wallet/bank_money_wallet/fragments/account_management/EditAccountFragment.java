@@ -29,13 +29,14 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.classes.BankAccountNumberImpl;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.common.holders.AccountListViewHolder;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.makeText;
+
+//import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankAccountNumberImpl;
 
 /**
  * Created by Alejandro Bicelis on 12/05/16.
@@ -196,9 +197,10 @@ public class EditAccountFragment extends AbstractFermatFragment<ReferenceAppFerm
                 moduleManager.editAccount(oldData.getAccount(), newAlias, newAccountNumber, newImageId);
 
                 //Update account data in session
-                BankAccountNumber newData = new BankAccountNumberImpl(newAlias, newAccountNumber, oldData.getCurrencyType(), oldData.getAccountType(), oldData.getBankName(), newImageId);
-                appSession.setData("account_data", newData);
-                appSession.setData("account_image", AccountListViewHolder.getResource(newImageId));
+                //todo: see this, core comentado
+//                BankAccountNumber newData = new BankAccountNumberImpl(newAlias, newAccountNumber, oldData.getCurrencyType(), oldData.getAccountType(), oldData.getBankName(), newImageId);
+//                appSession.setData("account_data", newData);
+//                appSession.setData("account_image", AccountListViewHolder.getResource(newImageId));
 
                 Toast.makeText(getActivity().getApplicationContext(), "Account Edited", Toast.LENGTH_SHORT).show();
             }catch(CantEditAccountException e){

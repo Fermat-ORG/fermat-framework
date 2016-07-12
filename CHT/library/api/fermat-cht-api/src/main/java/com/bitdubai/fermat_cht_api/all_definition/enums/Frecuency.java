@@ -10,23 +10,26 @@ public enum Frecuency implements FermatEnum {
     /**
      * Definition types frecuency
      */
-    LOW    ("LOW"),
-    NORMAL ("NORMAL"),
-    HIGH   ("HIGH"),
-    NONE   ("NONE");
+    LOW    ("LOW", 1000),
+    NORMAL ("NORMAL", 2000),
+    HIGH   ("HIGH", 3000),
+    NONE   ("NONE", 0);
 
     /**
      * Represent the code of the message status
      */
     private final String code;
 
+    private final int refreshInterval;
+
     /**
      * Constructor whit parameter
      *
      * @param code the valid code
      */
-    Frecuency(String code) {
+    Frecuency(String code, int refreshInterval) {
         this.code = code;
+        this.refreshInterval = refreshInterval;
     }
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
@@ -62,5 +65,13 @@ public enum Frecuency implements FermatEnum {
          * If we try to convert am invalid string.
          */
         throw new InvalidParameterException(code);
+    }
+
+    /**
+     * This method returns the  pre-defined refresh interval
+     * @return
+     */
+    public int getRefreshInterval(){
+        return this.refreshInterval;
     }
 }

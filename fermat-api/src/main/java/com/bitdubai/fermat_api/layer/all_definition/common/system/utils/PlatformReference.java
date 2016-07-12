@@ -15,7 +15,7 @@ public class PlatformReference implements Serializable{
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
-    private final Platforms platform;
+    private Platforms platform;
 
     public PlatformReference(final Platforms platform) {
 
@@ -26,6 +26,8 @@ public class PlatformReference implements Serializable{
         return platform;
     }
 
+    public PlatformReference() {
+    }
 
     @Override
     public final boolean equals(Object o) {
@@ -40,14 +42,15 @@ public class PlatformReference implements Serializable{
     @Override
     public final int hashCode() {
         int c = 0;
-        c += platform.hashCode();
+        if(platform!=null)
+            c += platform.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public String toString() {
         return "PlatformReference{" +
-                ", platform=" + platform +
+                " platform=" + platform +
                 '}';
     }
 

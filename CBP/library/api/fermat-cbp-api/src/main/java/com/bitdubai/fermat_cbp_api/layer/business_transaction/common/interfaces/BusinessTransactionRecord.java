@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
@@ -51,6 +53,10 @@ public class BusinessTransactionRecord {
     private UUID externalTransactionId;
 
     private String customerAlias;
+
+    private long fee ;
+
+    private FeeOrigin feeOrigin;
 
     //Offline fields
     private FiatCurrency fiatCurrency;
@@ -385,6 +391,45 @@ public class BusinessTransactionRecord {
         this.customerAlias = customerAlias;
     }
 
+    /**
+     * This method returns the transaction fee
+     * @return
+     */
+    public long getFee() {
+        long minimalFee = BitcoinFee.SLOW.getFee();
+        if(this.fee<minimalFee){
+            return minimalFee;
+        }
+        return  fee;
+    }
+
+    /**
+     * This method sets the transaction fee
+     * @param fee
+     */
+    public void setFee(long fee) {
+        this.fee = fee;
+    }
+
+    /**
+     * This method returns the transaction origin fee
+     * @return
+     */
+    public FeeOrigin getFeeOrigin() {
+        if(this.feeOrigin==null){
+            return FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+        }
+        return this.feeOrigin;
+    }
+
+    /**
+     * This method sets the transaction
+     * @param feeOrigin
+     */
+    public void setFeeOrigin(FeeOrigin feeOrigin) {
+        this.feeOrigin = feeOrigin;
+    }
+
     @Override
     public String toString() {
         return "BusinessTransactionRecord{" +
@@ -395,6 +440,7 @@ public class BusinessTransactionRecord {
                 ", cryptoAddress=" + cryptoAddress +
                 ", cryptoAmount=" + cryptoAmount +
                 ", cryptoStatus=" + cryptoStatus +
+                ", cryptoCurrency=" + cryptoCurrency +
                 ", customerPublicKey='" + customerPublicKey + '\'' +
                 ", timestamp=" + timestamp +
                 ", transactionHash='" + transactionHash + '\'' +
@@ -403,7 +449,9 @@ public class BusinessTransactionRecord {
                 ", priceReference=" + priceReference +
                 ", blockchainNetworkType=" + blockchainNetworkType +
                 ", externalTransactionId=" + externalTransactionId +
-                ", customerAlias=" + customerAlias +
+                ", customerAlias='" + customerAlias + '\'' +
+                ", fee=" + fee +
+                ", feeOrigin=" + feeOrigin +
                 ", fiatCurrency=" + fiatCurrency +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +

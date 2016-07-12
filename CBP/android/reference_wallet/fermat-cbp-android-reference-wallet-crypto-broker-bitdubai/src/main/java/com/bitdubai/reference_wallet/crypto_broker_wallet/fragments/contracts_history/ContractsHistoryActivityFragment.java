@@ -98,11 +98,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == FragmentsCommons.NO_FILTER_OPTION_MENU_ID) {
             filterContractStatus = null;

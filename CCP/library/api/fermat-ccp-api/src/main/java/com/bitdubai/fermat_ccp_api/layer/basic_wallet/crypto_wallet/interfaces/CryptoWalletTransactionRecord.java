@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 
 import java.util.UUID;
 
@@ -22,6 +23,8 @@ public interface CryptoWalletTransactionRecord {
 
     long getAmount();
 
+    long getTotal();
+
     long getTimestamp();
 
     String getMemo();
@@ -39,6 +42,12 @@ public interface CryptoWalletTransactionRecord {
     BlockchainNetworkType getBlockchainNetworkType();
 
     CryptoCurrency getCryptoCurrency();
+
+    FeeOrigin getFeeOrigin();
+
+    long getFee() ;
+
+
 
 
 

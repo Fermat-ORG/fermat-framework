@@ -6,25 +6,30 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.GrouperItem;
@@ -34,6 +39,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
 
@@ -58,6 +65,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private CryptoCustomerWalletModuleManager moduleManager;
 
     private View emptyListViewsContainer;
+    FermatApplicationCaller applicationsHelper;
 
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
@@ -70,6 +78,16 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
+
+            CryptoCustomerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            if (settings.isWizardStartActivity()) {
+                changeStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+
+                settings.setIsWizardStartActivity(false);
+                moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+            }
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -153,7 +171,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
                 waitingForCustomer.addAll(moduleManager.getNegotiationsWaitingForCustomer(0, 10));
 
-                List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+                 List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
                 waitingForBroker.addAll(moduleManager.getNegotiationsWaitingForBroker(0, 10));
 
                 if ( !waitingForCustomer.isEmpty() || !waitingForBroker.isEmpty()) {
@@ -240,6 +258,35 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             recyclerView.setVisibility(View.VISIBLE);
             emptyListViewsContainer.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            switch (id) {
+                case 8:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 9:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

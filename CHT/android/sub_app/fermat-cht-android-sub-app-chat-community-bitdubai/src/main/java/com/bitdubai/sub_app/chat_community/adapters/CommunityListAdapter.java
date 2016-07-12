@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -18,12 +20,14 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
+import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
@@ -38,9 +42,13 @@ import java.util.List;
  */
 
 @SuppressWarnings("unused")
-public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder> /*implements Filterable*/ {
+public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder>
+        implements Filterable {
 
     List<ChatActorCommunityInformation> filteredData;
+    private String cityAddress;
+    private String stateAddress;
+    private String countryAddress;
     private String filterString;
     private final String TAG = "communityadapter";
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
@@ -68,8 +76,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return R.layout.cht_comm_world_item;
     }
 
-    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder){
-
+    private void updateConnectionState(ConnectionState connectionState, CommunityWorldHolder holder)
+    {
         if (connectionState != null) {
             switch (connectionState) {
                 case CONNECTED:
@@ -201,6 +209,12 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.pendingButton.setVisibility(View.GONE);
                     break;
             }
+        }else {
+            holder.add_contact_button.setVisibility(View.VISIBLE);
+            holder.connection_text.setVisibility(View.GONE);
+            holder.connectedButton.setVisibility(View.GONE);
+            holder.blockedButton.setVisibility(View.GONE);
+            holder.pendingButton.setVisibility(View.GONE);
         }
     }
 
@@ -217,21 +231,22 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         }else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-        Address address= null;
-        if(data.getLocation() != null ){
-            try {
-                if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
-                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
-            }catch(CantCreateAddressException e){
-                address = null;
-            }catch(Exception e){
-                address = null;
-            }
-        }
-        if (address!=null)
-            holder.location_text.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
-        else
-            holder.location_text.setText("Searching...");//TODO: put here location
+        if(data.getLocation() != null){
+            if (data.getState().equals("null") || data.getState().equals("")) stateAddress = "";
+            else stateAddress = data.getState() + " ";
+            if (data.getCity().equals("null") || data.getCity().equals("")) cityAddress = "";
+            else cityAddress = data.getCity() + " ";
+            if (data.getCountry().equals("null") || data.getCountry().equals("")) countryAddress = "";
+            else countryAddress = data.getCountry();
+            if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
+                holder.location_text.setText("Searching...");
+            }else
+                holder.location_text.setText(cityAddress + stateAddress + countryAddress);
+        } else
+            holder.location_text.setText("Searching...");
+
+        if(data.getProfileStatus()!= ProfileStatus.ONLINE)
+            holder.location_text.setTextColor(Color.RED);
 
         final ChatActorCommunityInformation dat=data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {
@@ -380,6 +395,10 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         return 0;
     }
 
+    public void setData(List<ChatActorCommunityInformation> data) {
+        this.filteredData = data;
+    }
+
 //    @Override
 //    public int getItemCount() {
 //        if(filterString!=null)
@@ -407,15 +426,15 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 //        this.filteredData = data;
 //    }
 //
-//    public Filter getFilter() {
-//        return new CommunityFilter(dataSet, this);
-//    }
-//
-//    public void setFilterString(String filterString) {
-//        this.filterString = filterString;
-//    }
-//
-//    public String getFilterString() {
-//        return filterString;
-//    }
+    public Filter getFilter() {
+        return new CommunityFilter(dataSet, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
 }

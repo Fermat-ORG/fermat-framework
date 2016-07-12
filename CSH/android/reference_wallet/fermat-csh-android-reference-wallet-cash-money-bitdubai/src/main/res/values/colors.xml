@@ -58,4 +58,5 @@
     <color name="accent">#E91E63</color>
     <color name="accent_pressed">#C2185B</color>
 
+    <color name="csh_color_dialog">#16698D</color>
 </resources>

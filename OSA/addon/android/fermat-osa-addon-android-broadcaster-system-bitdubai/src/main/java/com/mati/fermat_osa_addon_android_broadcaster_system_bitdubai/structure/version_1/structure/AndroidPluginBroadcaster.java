@@ -22,13 +22,19 @@ public class AndroidPluginBroadcaster implements Broadcaster{
     }
 
     @Override
-    public void publish(BroadcasterType broadcasterType, String appCode, String code) {
-        androidCoreBroadcasterUtil.publish(broadcasterType,appCode,code);
+    @Deprecated
+    public void publish(BroadcasterType broadcasterType, String appPublicKeyToOpen, String code) {
+        androidCoreBroadcasterUtil.publish(broadcasterType, appPublicKeyToOpen,code);
     }
 
     @Override
     public void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle) {
         androidCoreBroadcasterUtil.publish(broadcasterType,appCode,bundle);
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+        androidCoreBroadcasterUtil.publish(broadcasterType,null,bundle);
     }
 
     @Override

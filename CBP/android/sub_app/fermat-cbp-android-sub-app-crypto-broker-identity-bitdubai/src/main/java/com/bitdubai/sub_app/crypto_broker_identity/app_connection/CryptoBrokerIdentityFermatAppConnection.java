@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_identity.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -15,9 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 
 
 /**
@@ -26,6 +25,8 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
  * @since 2015.12.17
  */
 public class CryptoBrokerIdentityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>> {
+
+    private CryptoBrokerIdentityResourceSearcher resourceSearcher;
 
     public CryptoBrokerIdentityFermatAppConnection(Context activity) {
         super(activity);
@@ -69,19 +70,9 @@ public class CryptoBrokerIdentityFermatAppConnection extends AppConnections<Refe
     }
 
     @Override
-    public int getResource(int id) {
-        switch (id) {
-            case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:
-                return R.drawable.add_identity;
-
-            case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.help_icon_identity_broker;
-
-            case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
-                return R.drawable.cbp_id_geolocation_icon;
-
-            default:
-                return 0;
-        }
+    public ResourceSearcher getResourceSearcher() {
+        if (resourceSearcher == null)
+            resourceSearcher = new CryptoBrokerIdentityResourceSearcher();
+        return resourceSearcher;
     }
 }

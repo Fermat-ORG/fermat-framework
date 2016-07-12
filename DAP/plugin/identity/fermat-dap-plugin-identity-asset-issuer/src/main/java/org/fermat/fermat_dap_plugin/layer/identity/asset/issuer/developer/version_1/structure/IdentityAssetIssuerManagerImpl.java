@@ -10,7 +10,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
@@ -93,7 +93,7 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
         }
     }
 
-    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetIssuerException {
+    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewIdentityAssetIssuerException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -117,7 +117,7 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
         }
     }
 
-    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetIssuerException {
+    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityAssetIssuerException {
         try {
             getAssetIssuerIdentityDao().updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
 
@@ -165,8 +165,8 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
     }
 
     @Override
-    public Frequency getFrequencyDataDefault() {
-        return Frequency.NORMAL;
+    public GeoFrequency getFrequencyDataDefault() {
+        return GeoFrequency.NORMAL;
     }
 
     public void registerIdentities() throws CantListAssetIssuerIdentitiesException {

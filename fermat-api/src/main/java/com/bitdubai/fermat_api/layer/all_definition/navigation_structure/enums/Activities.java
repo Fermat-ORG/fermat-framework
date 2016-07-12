@@ -250,8 +250,10 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS("CBPCBWCNLIS"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT("CBPCBWSSBA"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES("CBPCBWSSM"),
+    CBP_CRYPTO_BROKER_WALLET_SETTINGS_FEE_MANAGEMENT("CBPCBWSFM"),
     CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS("CBPCBWOS"),
     CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS("CBPCBWCD"),
+
 
     // Crypto Customer Wallet
     CBP_CRYPTO_CUSTOMER_WALLET_HOME("CBPCCWH"),
@@ -276,6 +278,7 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS("CBPCCWSBAS"),
     CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS("CBPCCWCNBAIS"),
     CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS("CBPCCWP"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MANAGEMENT_FEE("CBPCCWSMF"),
     CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS("CBPCCWCD"),
 
 
@@ -342,6 +345,7 @@ public enum Activities implements FermatEnum {
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
     CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI"),
+    CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY("CCPSAIIGI"),
 
     // DAP ISSUER IDENTITY
     DAP_SUB_APP_ASSET_ISSUER_IDENTITY("DAPSAAII"),
@@ -401,6 +405,7 @@ public enum Activities implements FermatEnum {
     ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST("ASAACLIL"),
 
     ART_FAN_IDENTITY_CREATE_PROFILE("AFICP"),
+    ART_FAN_IDENTITY_TEST_ACTIVITY("AFITA"),
 
     ART_MUSIC_PLAYER_MAIN_ACTIVITY("ARTMPMA"),
 
@@ -442,6 +447,8 @@ public enum Activities implements FermatEnum {
         //    }
         //}
         switch (code) {
+            case "AFITA":
+                return Activities.ART_FAN_IDENTITY_TEST_ACTIVITY;
             case "AAICP":
                 return Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE;
             case "TAICP":
@@ -646,6 +653,8 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
             case "CBPCBWSSM":
                 return CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES;
+            case "CBPCBWSFM":
+                return CBP_CRYPTO_BROKER_WALLET_SETTINGS_FEE_MANAGEMENT;
             case "CBPCBWCD":
                 return CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS;
             case "CBPCBWSSBA":
@@ -695,6 +704,8 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS;
             case "CBPCCWP":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS;
+            case "CBPCCWSMF":
+                return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MANAGEMENT_FEE;
             case "CBPCCWCNBAIS":
                 return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS;
 
@@ -763,6 +774,8 @@ public enum Activities implements FermatEnum {
 
             case "CCPSAISI":
                 return Activities.CCP_SUB_APP_INTRA_USER_IDENTITY;
+            case "CCPSAIIGI":
+                return Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY;
             case "CCPSAIICI":
                 return Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
             case "CCPSAIUCR":

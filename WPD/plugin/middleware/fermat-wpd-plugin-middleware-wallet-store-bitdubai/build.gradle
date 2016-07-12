@@ -4,8 +4,10 @@ apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'jacoco'
+apply plugin:  'maven'
+apply plugin: 'maven-publish'
 
-group = "com.bitdubai.fermat.dmp"
+group = "com.bitdubai.fermat.pip.middleware.wallet.store"
 version = '1.1.0'
 sourceCompatibility = 1.7
 
@@ -61,6 +63,20 @@ uploadArchives {
             repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
                 authentication(userName: 'bitdubai.repo', password: 'bud@pestdcd16c')
             }
+        }
+    }
+}
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            from components.java
+
+        }
+    }
+    repositories {
+        maven {
+            url "file:/${System.properties['user.home']}/artifacts"
         }
     }
 }

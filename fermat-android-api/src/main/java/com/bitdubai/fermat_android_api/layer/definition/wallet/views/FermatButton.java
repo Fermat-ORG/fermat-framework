@@ -10,7 +10,8 @@ import android.util.AttributeSet;
 import android.widget.Button;
 
 import com.bitdubai.android_api.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FontType;
+
 
 /**
  * Custom Button

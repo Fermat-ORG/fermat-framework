@@ -104,19 +104,10 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
         this.onLoadMoreDataListener = onLoadMoreDataListener;
     }
 
-    public int getVisibleThreshold() {
-        return visibleThreshold;
-    }
-
-    public void setVisibleThreshold(int visibleThreshold) {
-        this.visibleThreshold = visibleThreshold;
-    }
-
-    public int getStartingPageIndex() {
-        return startingPageIndex;
-    }
-
-    public void setStartingPageIndex(int startingPageIndex) {
-        this.startingPageIndex = startingPageIndex;
+    public void notifyDataSetChanged() {
+        currentPage = 0;
+        previousTotalItemCount = 0;
+        loading = true;
+        startingPageIndex = 0;
     }
 }

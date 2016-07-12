@@ -2,32 +2,18 @@
 <resources>
 
     <!-- Navigation drawer - side menu-->
-    <color name="cbc_selected_menu_item_background">#60000000</color>
-
-
-
-
-    <color name="background_tab_pressed">#6633B5E5</color>
-    <color name="black_overlay">#66000000</color>
-    <color name="wallet_factory_orange">#ff9900</color>
-    <color name="wallet_store_link">#69b07f</color>
-    <color name="wallet_install_background_button">#69b07f</color>
-    <color name="wallet_install_text_button">#ffffff</color>
-    <color name="wallet_uninstall_background_button">#89c3c1ce</color>
-    <color name="wallet_uninstall_text_button">#181818</color>
-    <color name="wallet_name_black">#66000000</color>
-    <color name="wallet_store_activities_background">#fbf7ed</color>
-
-
-    <color name="green">#8bba9e</color>
-
-    <color name="nav_drawer_color">#0072bb</color>
-
+    <color name="ccc_green">#8bba9e</color>
     <color name="color_black">#000000</color>
     <color name="color_white">#FFFFFF</color>
-    <color name="color_gray_light1">#aadbfaC8</color>
-    <color name="color_gray_light">#99C9C9C9</color>
-    <color name="color_black_light">#99000000</color>
-    <color name="secondary_text">#727272</color>
-    <color name="primary_text">#212121</color>
+    <color name="color_black_light">#4D4D4D</color>
+    <color name="ccc_background_tabs">#F2F2F2</color>
+    <color name="ccc_dark_purple">#2D2E82</color>
+    <color name="ccc_location_text">#2D2E82</color>
+    <color name="ccc_color_gray">#666666</color>
+    <color name="ccc_color_gray_light">#808080</color>
+    <color name="ccc_separator">#E0E0E0</color>
+    <color name="ccc_gradient_start_color">#2D2E82</color>
+    <color name="ccc_gradient_end_color">#a60f7f</color>
+
+    <color name="ccc_color_dialog">#2D2E82</color>
 </resources>

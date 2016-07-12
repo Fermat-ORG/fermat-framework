@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
@@ -45,7 +46,7 @@ public class WizardPageSetLocationsFragment
     private List<String> locationList;
 
     // UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
     private RecyclerView recyclerView;
     private LocationsAdapter adapter;
     private View emptyView;
@@ -70,11 +71,8 @@ public class WizardPageSetLocationsFragment
             //Delete potential previous configurations made by this wizard page so that they can be reconfigured cleanly
             moduleManager.clearLocations();
 
-
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if (aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
+            CryptoCustomerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
             Object data = appSession.getData(FragmentsCommons.LOCATION_LIST);
             if (data == null) {
@@ -101,7 +99,7 @@ public class WizardPageSetLocationsFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if (!hideHelperDialogs) {
+        if (isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
@@ -109,7 +107,8 @@ public class WizardPageSetLocationsFragment
                     .setSubTitle(R.string.ccw_wizard_locations_dialog_sub_title)
                     .setBody(R.string.ccw_wizard_locations_dialog_body)
                     .setCheckboxText(R.string.ccw_wizard_not_show_text)
-                    .setIsCheckEnabled(true)
+                    .setVIewColor(R.color.ccw_wizard_wallet_button_color)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }

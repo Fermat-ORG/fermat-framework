@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.wallet_manager.fragment.welcome_wizard;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,20 +50,52 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
     private RadioGroup radio_group;
     private LinearLayout txt_dont_show_me_again;
 
+    private Bundle savedInstanceState;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        this.savedInstanceState = savedInstanceState;
+//        setRetainInstance(true);
+
+        if (savedInstanceState != null){
+            Integer  count  = savedInstanceState.getInt("tabsCount");
+            for (int i = 0; i < count; i++){
+                fragments.add((AbstractFermatFragment) getFragment(i));
+            }
+        }
+
         super.onCreate(savedInstanceState);
+    }
+
+    private Fragment getFragment(int position){
+        return savedInstanceState == null ? wizardPageAdapter.getItem(position) : getFragmentManager().findFragmentByTag(getFragmentTag(position));
+    }
+
+    private String getFragmentTag(int position) {
+        return "android:switcher:" + R.id.view_pager_welcome + ":" + position;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tabsCount",      wizardPageAdapter.getCount());
+//        outState.putStringArray("titles", wizardPageAdapter.getTitles().toArray(new String[0]));
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wizard_base_layout, container, false);
-        fragments.add(WelcomeWizardFirstFragment.newInstance());
-        fragments.add(WelcomeWizardSecondFragment.newInstance());
-        fragments.add(WelcomeWizardThridFragment.newInstance());
-        fragments.add(WelcomeWizardFourthFragment.newInstance());
-        fragments.add(WelcomeWizardFifthFragment.newInstance());
+
+        if(fragments.isEmpty()) {
+            fragments.add(WelcomeWizardFirstFragment.newInstance());
+            fragments.add(WelcomeWizardSecondFragment.newInstance());
+            fragments.add(WelcomeWizardThridFragment.newInstance());
+            fragments.add(WelcomeWizardFourthFragment.newInstance());
+            fragments.add(WelcomeWizardFifthFragment.newInstance());
+        }
 
         viewPager = (ViewPager) view.findViewById(R.id.view_pager_welcome);
         btnGotIt = (Button) view.findViewById(R.id.btn_got_it);
@@ -83,9 +116,9 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                     itemPos = 1;
                 } else if (checkedId == R.id.radio_third) {
                     itemPos = 2;
-                }else if (checkedId == R.id.radio_fourth) {
+                } else if (checkedId == R.id.radio_fourth) {
                     itemPos = 3;
-                }else if (checkedId == R.id.radio_fifth) {
+                } else if (checkedId == R.id.radio_fifth) {
                     itemPos = 4;
                 }
                 viewPager.setCurrentItem(itemPos);
@@ -116,7 +149,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                 if (position >= fragments.size() - 1) {
                     btnGotIt.setText("Got it");
                     txt_dont_show_me_again.setVisibility(View.VISIBLE);
-                }else
+                } else
                     btnGotIt.setText("Next >>");
                 if (position > 0 && isNext) {
                     // Save last page before moving to the next slide
@@ -124,7 +157,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                             (WizardPageListener) fragments.get(position - 1);
                     lastPage.savePage();
                     // notify fragment active
-                    WizardPageListener page = (WizardPageListener) fragments.get(position);
+                    //WizardPageListener page = (WizardPageListener) fragments.get(position);
                     //page.onActivated(getData());
                     //setWizardActivity(page.getTitle());
                 }
@@ -136,8 +169,8 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
             }
         });
 
-        WizardPageAdapter adapter = new WizardPageAdapter(getFragmentManager(), fragments);
-        viewPager.setAdapter(adapter);
+        wizardPageAdapter = new WizardPageAdapter(getFragmentManager(), fragments);
+        viewPager.setAdapter(wizardPageAdapter);
         viewPager.setCurrentItem(0);
         position = 0;
 
@@ -204,7 +237,18 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                     public void run() {
                         saveSettings(!checkbox.isChecked());
                         if(checkbox.isChecked()){
-                            getRuntimeManager().changeStartActivity(Activities.CCP_DESKTOP.getCode());
+                            Log.i(TAG, "Starting desktop");
+//                            try {
+//                                wizardPageAdapter.getActiveFragment(viewPager, 3).changeStartActivity(Activities.CCP_DESKTOP.getCode());
+//                            }catch (Exception e){
+//                                e.printStackTrace();
+//                                try {
+//                                    wizardPageAdapter.getActiveFragment(viewPager, fragments.size() - 1).changeStartActivity(Activities.CCP_DESKTOP.getCode());
+//                                }catch (Exception e1){
+//                                    e1.printStackTrace();
+//                                }
+//                            }
+                            changeStartActivity(Activities.CCP_DESKTOP.getCode());
                         }
                     }
                 }).start();
@@ -214,7 +258,6 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                 doNext();
 
             }
-        } else if(id==R.id.checkbox){
         }
     }
 
@@ -275,10 +318,11 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
                                 WizardPageListener page =
                                         (WizardPageListener) fragments.get(fragments.size() - 1);
                                 //page.onWizardFinish(dataHash);
-                                //finish();
+//                                finish();
                             } else if (pos > -1) {
                                 if (viewPager != null) {
-                                    viewPager.setCurrentItem(pos);
+                                    viewPager.setCurrentItem(pos, true);
+//                                    viewPager.setCurrentItem(pos);
                                     Toast.makeText(getActivity(), "Something is missing, please review this step.", Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -293,4 +337,5 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFe
             }
         }
     }
+
 }

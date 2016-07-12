@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:orientation="vertical"
+        android:background="@drawable/background_white_gradient">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_rate_amount"
+            android:textColor="#787878"
+            android:textSize="18sp"
+            android:text="000.00"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Rate"
+            android:textSize="14sp"
+            android:textColor="@color/wallet_factory_orange"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+        <com.bitdubai.reference_niche_wallet.fermat_wallet.common.custom_view.WheelView
+            android:id="@+id/wheel_picker"
+            android:layout_width="80dp"
+            android:padding="5dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

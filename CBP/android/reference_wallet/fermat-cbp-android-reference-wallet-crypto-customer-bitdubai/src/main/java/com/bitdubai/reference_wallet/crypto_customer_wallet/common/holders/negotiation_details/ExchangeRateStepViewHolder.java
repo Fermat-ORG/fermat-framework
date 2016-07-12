@@ -109,7 +109,11 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         super.bind(stepNumber);
 
         double marketRate = 212.48;
+
+        decimalFormat.setMaximumFractionDigits(8);
+
         String formattedMarketRate = decimalFormat.format(marketRate);
+
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToSell, formattedMarketRate, currencyToReceive));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s", currencyToSell));

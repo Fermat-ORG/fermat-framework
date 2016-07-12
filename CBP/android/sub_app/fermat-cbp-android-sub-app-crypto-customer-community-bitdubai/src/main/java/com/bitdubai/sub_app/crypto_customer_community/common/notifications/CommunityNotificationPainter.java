@@ -3,6 +3,8 @@ package com.bitdubai.sub_app.crypto_customer_community.common.notifications;
 import android.widget.RemoteViews;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+
 
 /**
  * This class contains the basic functionality of the crypto customer community notification painter.
@@ -12,19 +14,17 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
  * @author lnacosta
  * @version 1.0.0
  */
-public class CommunityNotificationPainter implements NotificationPainter {
+public class CommunityNotificationPainter extends NotificationPainter {
 
     private String title;
     private String textBody;
     private String image;
-    private RemoteViews remoteViews;
     private int    icon;
 
-    public CommunityNotificationPainter(final String title   ,
+    public CommunityNotificationPainter(final String title,
                                         final String textBody,
-                                        final String image   ,
-                                        final String viewCode,
-                                        final int    icon    ){
+                                        final String image,
+                                        final int icon){
 
         this.title    = title   ;
         this.textBody = textBody;
@@ -35,7 +35,7 @@ public class CommunityNotificationPainter implements NotificationPainter {
 
     @Override
     public RemoteViews getNotificationView(String code) {
-        return this.remoteViews;
+        return null;
     }
 
     @Override
@@ -55,12 +55,12 @@ public class CommunityNotificationPainter implements NotificationPainter {
 
     @Override
     public int getIcon() {
-        return 0;
+        return icon;
     }
 
     @Override
     public String getActivityCodeResult() {
-        return null;
+        return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode();
     }
 
     @Override

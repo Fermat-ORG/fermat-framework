@@ -5,30 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_linux_core.OSAPlatform;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContext;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.linux.core.app.FermatLinuxAppMain</code> initialize
@@ -77,6 +57,7 @@ public class FermatLinuxAppMain {
             fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE, Developers.BITDUBAI, new Version()));
 /*
             final NetworkClientManager clientManager = (NetworkClientManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
+            final ChatIdentityManager chatIdentityManager = (ChatIdentityManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.CHAT_PLATFORM, Layers.IDENTITY, Plugins.CHAT_IDENTITY, Developers.BITDUBAI, new Version()));
 
             ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(4);
 
@@ -84,20 +65,31 @@ public class FermatLinuxAppMain {
                     new Thread() {
                         @Override
                         public void run() {
+
                             try {
-                                clientManager.getConnection().registeredProfileDiscoveryQuery(
+                                if (!(chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().size() > 0)) {
+                                    chatIdentityManager.createNewIdentityChat("toreto", new byte[0], " ", " ", " ", " ", 0, Frecuency.HIGH);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                            try {
+                                clientManager.getConnection().listRegisteredActorProfiles(
                                         new DiscoveryQueryParameters(
-                                                "CHT",
-                                                null,
-                                                null,
-                                                null,
-                                                null,
-                                                null,
-                                                11,
-                                                null,
-                                                null,
-                                                0,
-                                                null
+                                                null, //identityPublicKey
+                                                null,//networkServiceType
+                                                "CHT",//actorType
+                                                null,//name
+                                                null,//alias
+                                                null,//extraData
+                                                null,//location
+                                                null,//distance
+                                                Boolean.TRUE,//isOnline
+                                                Long.valueOf(0),//lastConnectionTime
+                                                10,//max
+                                                0//offset
                                         )
                                 );
                             } catch (Exception e) {

@@ -35,13 +35,15 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerSaleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -92,9 +94,14 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
 
     public static EventSource EVENT_SOURCE = EventSource.USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER;
 
-    private UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent agent;
+    private UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 agent;
 
     private UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionManager;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
 
     public UserLevelBusinessTransactionCustomerBrokerSalePluginRoot() {
@@ -183,7 +190,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
      */
     private void startMonitorAgent() throws CantStartAgentException {
         if (agent == null) {
-            agent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(
+            agent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     this,
                     customerBrokerSaleNegotiationManager,
                     pluginDatabaseSystem,

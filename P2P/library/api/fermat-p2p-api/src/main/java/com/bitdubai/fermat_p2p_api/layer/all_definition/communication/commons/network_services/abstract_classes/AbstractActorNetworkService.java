@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationU
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceActorLocationUpdaterAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileUpdatedEventHandler;
@@ -64,7 +65,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
         super(
                 pluginVersionReference,
-                eventSource           ,
+                eventSource,
                 networkServiceType
         );
 
@@ -150,17 +151,19 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                 )
         );
 
-        if (this.getConnection() != null && this.getConnection().isRegistered()) {
-
-            try {
-
-                this.getConnection().registerProfile(actorToRegister);
-                registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
-
-            } catch (CantRegisterProfileException exception) {
-
-                throw new CantRegisterActorException(exception, "publicKey: "+publicKey+" - name: "+name, "There was an error trying to register the actor through the network service.");
+        if (getConnection() != null ) {
+            if(getConnection().isRegistered()) {
+                try {
+                    this.getConnection().registerProfile(actorToRegister);
+                    registeredActors.get(actorToRegister).setLastExecution(System.currentTimeMillis());
+                } catch (CantRegisterProfileException exception) {
+                    throw new CantRegisterActorException(exception, "publicKey: " + actorToRegister.getIdentityPublicKey() + " - name: " + actorToRegister.getName(), "There was an error trying to register the actor through the network service.");
+                }
+            } else{
+                System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection().isRegistered(): " +getConnection().isRegistered());
             }
+        } else {
+            System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  getConnection(): null");
         }
 
         System.out.println("******************* REGISTERING ACTOR: " + name + " - type: " + type + "  GO OUT METHOD");
@@ -246,7 +249,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
             try {
 
-                this.getConnection().updateRegisteredProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate, UpdateTypes.FULL);
                 registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
 
             } catch (CantUpdateRegisteredProfileException exception) {
@@ -256,13 +259,14 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         }
     }
 
-    public void updateRegisteredActor(final ActorProfile actorToUpdate) throws CantUpdateRegisteredActorException {
+    public void updateRegisteredActor(final ActorProfile actorToUpdate,
+                                      final UpdateTypes  type         ) throws CantUpdateRegisteredActorException {
 
         if (this.getConnection() != null && this.getConnection().isRegistered()) {
 
             try {
 
-                this.getConnection().updateRegisteredProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate, type);
                 registeredActors.get(actorToUpdate).setLastExecution(System.currentTimeMillis());
 
             } catch (CantUpdateRegisteredProfileException exception) {

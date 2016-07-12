@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
@@ -35,7 +36,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
 
 
     // UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
@@ -59,10 +60,8 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
             //So that they can be reconfigured cleanly
             moduleManager.clearWalletSetting(appSession.getAppPublicKey());
 
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if (aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
+            CryptoBrokerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -78,7 +77,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
-        if (!hideHelperDialogs) {
+        if (isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)
@@ -86,7 +85,8 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Refe
                     .setSubTitle(R.string.cbw_wizard_other_settings_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_other_settings_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                    .setIsCheckEnabled(true)
+                    .setVIewColor(R.color.cbw_wizard_merchandises_wallet_button_color)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }

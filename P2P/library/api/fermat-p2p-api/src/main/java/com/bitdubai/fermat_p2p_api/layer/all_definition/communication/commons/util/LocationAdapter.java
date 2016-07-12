@@ -21,29 +21,39 @@ public class LocationAdapter extends TypeAdapter<Location> {
 
     @Override
     public Location read(final JsonReader in) throws IOException {
-        final DeviceLocation location = new DeviceLocation();
+
+        Double latitude = null;
+        Double longitude = null;
 
         in.beginObject();
         while (in.hasNext()) {
             switch (in.nextName()) {
                 case "lat":
-                    location.setLatitude(Double.valueOf(in.nextString()));
+                    latitude = Double.valueOf(in.nextString());
                     break;
                 case "lng":
-                    location.setLongitude(Double.valueOf(in.nextString()));
+                    longitude = Double.valueOf(in.nextString());
                     break;
             }
         }
         in.endObject();
 
-        return location;
+        if (latitude != null && longitude != null) {
+            final DeviceLocation location = new DeviceLocation();
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            return location;
+        } else
+            return null;
     }
 
     @Override
     public void write(final JsonWriter out, final Location location) throws IOException {
         out.beginObject();
-        out.name("lat").value(location != null ? location.getLatitude() : 0.0);
-        out.name("lng").value(location != null ? location.getLongitude() : 0.0);
+        if (location != null) {
+            out.name("lat").value(location.getLatitude());
+            out.name("lng").value(location.getLongitude());
+        }
         out.endObject();
     }
 }

@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
 import java.io.Serializable;
@@ -25,10 +26,12 @@ public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation,
     long getAccuracy();
 
     /**
-     * The method <code>getFrecuency</code> returns the phrase created by the intra user
+     * The method <code>getFrequency</code> returns the phrase created by the intra user
      * @return string phrase object
      */
-    Frecuency getFrecuency();
+    Frequency getFrequency();
+
+    Location getLocation();
     
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image

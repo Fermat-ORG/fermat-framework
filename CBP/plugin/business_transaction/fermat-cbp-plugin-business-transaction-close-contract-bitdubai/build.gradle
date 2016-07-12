@@ -6,8 +6,8 @@ version = '1.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':fermat-pip-api')
-    compile project(':fermat-api')
+    //compile project(':fermat-pip-api')
+    //compile project(':fermat-api')
     compile project(':fermat-cbp-api')
     //compile project(':fermat-p2p-api')
 

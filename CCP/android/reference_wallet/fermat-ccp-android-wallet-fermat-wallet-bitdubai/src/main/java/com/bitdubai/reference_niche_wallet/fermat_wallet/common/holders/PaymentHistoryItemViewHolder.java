@@ -2,12 +2,11 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import org.w3c.dom.Text;
 
 
 /**

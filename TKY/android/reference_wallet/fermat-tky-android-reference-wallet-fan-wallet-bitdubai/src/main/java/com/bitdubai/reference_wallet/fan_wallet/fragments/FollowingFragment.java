@@ -26,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -69,6 +70,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     RecyclerView recyclerView;
     View view;
+    ImageView no_artist_found;
     private Paint p = new Paint();
     private FollowingAdapter adapter;
     private RecyclerView.LayoutManager lManager;
@@ -241,6 +243,8 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         );
 
 
+        no_artist_found=(ImageView)view.findViewById(R.id.no_artist_found_imageView);
+
 
         return view;
     }
@@ -281,7 +285,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     void refreshAdapter(boolean noFollowing){
         if(noFollowing){
-            Toast.makeText(view.getContext(),"Your are not following artist",Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(),"Your are not following any artist",Toast.LENGTH_SHORT).show();
         }else {
             adapter.setFilter(items);
         }
@@ -458,6 +462,18 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
                             }
                         }
+
+                        if(!connectedArtistTKYUsername.isEmpty()){
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    System.out.println("TKY_NO_BG");
+                                    no_artist_found.setVisibility(View.GONE);
+
+                                }
+                            });
+                        }
+
                     }
                     } catch (CantGetBotException e) {
                     errorManager.reportUnexpectedUIException(

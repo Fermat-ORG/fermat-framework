@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -33,6 +34,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +57,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
     private List<Currency> currencies;
 
     // UI
-    boolean hideHelperDialogs = false;
+    boolean isHomeTutorialDialogEnabled = false;
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
 
@@ -84,10 +86,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
             //So that they can be reconfigured cleanly
             moduleManager.clearCryptoBrokerWalletProviderSetting(appSession.getAppPublicKey());
 
-            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
-            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if(aux != null && aux instanceof Boolean)
-                hideHelperDialogs = (boolean) aux;
+            CryptoBrokerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            isHomeTutorialDialogEnabled = settings.isHomeTutorialDialogEnabled();
 
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -131,7 +131,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
             }
         });
 
-        if(!hideHelperDialogs) {
+        if(isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)
@@ -139,7 +139,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                     .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_providers_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                    .setIsCheckEnabled(true)
+                    .setVIewColor(R.color.cbw_wizard_merchandises_wallet_button_color)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         }
@@ -221,6 +222,9 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                 moduleManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
 
+            //Set CONFIGURED_DATA to true so that wizard knows its completed.
+            appSession.setData(FragmentsCommons.CONFIGURED_DATA, true);
+
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -228,8 +232,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
-        // TODO
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+        //Go home
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
     }
 
     @Override
@@ -291,8 +295,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
         FiatCurrency[] fiatCurrencies = FiatCurrency.values();
         Collections.addAll(data, fiatCurrencies);
 
-        CryptoCurrency[] cryptoCurrencies = CryptoCurrency.values();
-        Collections.addAll(data, cryptoCurrencies);
+        data.add(CryptoCurrency.BITCOIN);
 
         return data;
     }

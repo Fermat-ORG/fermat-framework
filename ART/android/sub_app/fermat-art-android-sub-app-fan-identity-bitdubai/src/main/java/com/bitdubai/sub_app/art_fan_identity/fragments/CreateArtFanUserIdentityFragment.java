@@ -1,21 +1,24 @@
 package com.bitdubai.sub_app.art_fan_identity.fragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,7 +37,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -47,11 +51,16 @@ import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.art_fan_identity.R;
 import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSessionReferenceApp;
+import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
+import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,17 +68,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
-import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
-import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
-
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
  */
-public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
+public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<FanIdentityManagerModule>, SubAppResourcesProviderManager> {
     private static final String TAG = "CreateArtFanIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -78,10 +83,19 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
+    private static final int CONTEXT_MENU_DELETE = 3;
+    private static final int CONTEXT_MENU_TURN_RIGHT = 4;
+    private static final int CONTEXT_MENU_TURN_LEFT = 5;
+
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private ArtFanUserIdentitySubAppSessionReferenceApp artFanUserIdentitySubAppSession;
+
+    private static final int MAX_ALIAS_CHARACTER = 40;
+
+
+    //private ArtFanUserIdentitySubAppSession artFanUserIdentitySubAppSession;
+    //private ArtFanUserIdentitySubAppSessionReferenceApp artFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private FanIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -98,6 +112,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private FanIdentitySettings fanIdentitySettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean contextMenuDelete = false;
+
     private Handler handler;
     private boolean updateCheck = false;
     private View WarningCircle;
@@ -118,17 +134,17 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            artFanUserIdentitySubAppSession = (ArtFanUserIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = artFanUserIdentitySubAppSession.getModuleManager();
+            //artFanUserIdentitySubAppSession = (ArtFanUserIdentitySubAppSessionReferenceApp) appSession;
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
             //settingsManager = artFanUserIdentitySubAppSession.getModuleManager().
              //       getSettingsManager();
 
             try {
-                if (artFanUserIdentitySubAppSession.getAppPublicKey()!= null){
+                if (appSession.getAppPublicKey()!= null){
                     fanIdentitySettings = moduleManager.loadAndGetSettings(
-                            artFanUserIdentitySubAppSession.getAppPublicKey());
+                            appSession.getAppPublicKey());
                 }else{
                     fanIdentitySettings = moduleManager.loadAndGetSettings("art_fan_identity");
                 }
@@ -141,9 +157,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 fanIdentitySettings = new FanIdentitySettings();
                 fanIdentitySettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
-                    if (artFanUserIdentitySubAppSession.getAppPublicKey()!=null){
+                fanIdentitySettings.setIsPresentationHelpEnabled(true);
+                    if (appSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(
-                                artFanUserIdentitySubAppSession.getAppPublicKey(), fanIdentitySettings);
+                                appSession.getAppPublicKey(), fanIdentitySettings);
                     }else{
                         moduleManager.persistSettings("art_fan_identity", fanIdentitySettings);
                     }
@@ -164,10 +181,15 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         View rootLayout = inflater.inflate(R.layout.fragment_create_art_fan_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
+        if (fanIdentitySettings.isPresentationHelpEnabled()) {
+            setUpHelpArtFan(false);
+        }
         return rootLayout;
+
+
     }
 
-    public void showDialog(){
+    /*public void showDialog(){
         PresentationArtFanUserIdentityDialog fanUserIdentityDialog =
                 new PresentationArtFanUserIdentityDialog(
                         getActivity(),
@@ -175,10 +197,32 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         null,
                         moduleManager);
         fanUserIdentityDialog.show();
+    }*/
+    private void setUpHelpArtFan(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog;
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.banner_fan_community)
+                    .setIconRes(R.drawable.fan)
+                    .setSubTitle(R.string.art_fan_identity_welcome_subTitle)
+                    .setBody(R.string.art_fan_identity_welcome_body)
+                    .setTextFooter(R.string.art_fan_identity_welcome_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                    e);
+        }
     }
+
     private void setUpIdentity() {
         try {
-            identitySelected = (Fanatic) artFanUserIdentitySubAppSession.getData(
+            identitySelected = (Fanatic) appSession.getData(
                     SessionConstants.IDENTITY_SELECTED);
 
             if (identitySelected != null) {
@@ -215,6 +259,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     }
     private void loadIdentity(){
         updateCheck = true;
+
         if (identitySelected.getProfileImage() != null) {
             Bitmap bitmap = null;
             if (identitySelected.getProfileImage().length > 0) {
@@ -222,10 +267,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         identitySelected.getProfileImage(),
                         0,
                         identitySelected.getProfileImage().length);
+                updateProfileImage = true;
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+           // bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             fanImageByteArray = toByteArray(bitmap);
             fanImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -296,7 +342,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
        // createButton.setText((!isUpdate) ? "Create" : "Update");
         createButton.setBackgroundResource((!isUpdate) ? R.drawable.button_save_inactive:R.drawable.button_save_active);
 
+
+
         mFanExternalUserName.requestFocus();
+
+
         List<String> arraySpinner = new ArrayList<>();
         arraySpinner.add("Select a Platform...");
         arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
@@ -309,6 +359,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             @Override
             public void onClick(View view) {
 
+                CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
+                getActivity().openContextMenu(fanImage);
 
                 /*
                 WarningLabel.setVisibility(View.GONE);
@@ -316,8 +368,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 CommonLogger.debug(TAG, "get in on fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
                 */
-
-
+                /*
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -338,9 +389,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 });
                 dialog.show();
                 //botonG.setVisibility(View.VISIBLE);
-                CommonLogger.debug("Chat identity", "Entrando en chatImg.setOnClickListener");
-
+                CommonLogger.debug("Chat identity", "Entrando en chatImg.setOnClickListener")
+                   */
             }
+
+
         });
 
         WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
@@ -360,6 +413,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         });
 
         mFanExternalUserName.addTextChangedListener(new TextWatcher() {
+
+            private boolean setTextFlag = true;
+            private Toast toastChar = null;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -367,6 +424,23 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+
+                if ( mFanExternalUserName.getText().length()>= MAX_ALIAS_CHARACTER) {
+                    //this to avoid toast accumulation
+                    if (toastChar != null) toastChar.cancel();
+                    toastChar = Toast.makeText(getActivity(), "Only "+MAX_ALIAS_CHARACTER+" chars allowed", Toast.LENGTH_SHORT);
+                    toastChar.show();
+                    // set the text to a string max length MAX_ALIAS_CHARACTER:
+                    if (setTextFlag) {
+                        setTextFlag = false;
+                        mFanExternalUserName.setText(s.subSequence(0, MAX_ALIAS_CHARACTER));
+                        mFanExternalUserName.setSelection(mFanExternalUserName.getText().length());
+                    } else {
+                        setTextFlag = true;
+                    }
+                }
 
             }
 
@@ -377,12 +451,17 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     CheckTheres();
                 }
 
+
             }
         });
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
+
                 CommonLogger.debug(TAG, "get in on createButton.setOnClickListener");
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
@@ -405,7 +484,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         Toast.makeText(getActivity(), "The module manager is null", Toast.LENGTH_LONG).show();
                         break;
                 }
+
+
             }
+
+
         });
 
        // configureToolbar();
@@ -604,18 +687,30 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             contextMenuInUse = true;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    imageBitmap = (Bitmap) extras.get("data");
+                    Uri selectedImage2 = data.getData();
+                    if(selectedImage2==null){
+                        break;
+                    }
+                    File myFile = new File(selectedImage2.getPath());
+                    myFile.getAbsolutePath();
+                    Bundle extras2 = data.getExtras();
+                    Bitmap fixedBitmap = FixRotation(myFile, (Bitmap) extras2.get("data"));
+                    imageBitmap = fixedBitmap;
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                    fanImageByteArray = toByteArray(imageBitmap);
+                    updateProfileImage = true;
+                    Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(fanImage);
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
+                    String absolutePath = getRealPathFromURI(selectedImage);
+                    File uriFile = new File(absolutePath);
                     try {
                         if (isAttached) {
-                            TheresPic = true;
-                            CheckTheres();
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            imageBitmap = FixRotation(uriFile, imageBitmap);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             fanImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
@@ -635,19 +730,82 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         }
     }
 
+    private Bitmap FixRotation(File myFile, Bitmap bitmap) {
+
+        Bitmap rotatedBitmap = null;
+
+        try {
+            ExifInterface exif = new ExifInterface(myFile.getPath());
+            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int rotationInDegrees = exifToDegrees(rotation);
+            Matrix matrix = new Matrix();
+            if (rotation != 0f) {
+                matrix.preRotate(rotationInDegrees);
+            }
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+
+        } catch (IOException ex) {
+            Log.e(TAG, "Failed to get Exif data", ex);
+        }
+
+        return rotatedBitmap;
+    }
+
+    private int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+
+    public String getRealPathFromURI(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = 0;
+        if(cursor != null){
+            column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);}
+
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
+    }
+
+
+
+
+
+
+
+
+
     private void CheckTheres() {
         if(TheresAlias && TheresPic){createButton.setBackgroundResource(R.drawable.button_save_active);}
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+
+
         menu.setHeaderTitle("Choose mode");
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.afi_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-
+        if (updateProfileImage) {
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_RIGHT, Menu.NONE, "Turn pic right");
+            menu.add(Menu.NONE, CONTEXT_MENU_TURN_LEFT, Menu.NONE, "Turn pic left");
+            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
+        }
         super.onCreateContextMenu(menu, view, menuInfo);
     }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if(!contextMenuInUse) {
@@ -660,10 +818,42 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     loadImageFromGallery();
                     contextMenuInUse = true;
                     return true;
+                case CONTEXT_MENU_DELETE:
+                    DeletePicture();
+                    contextMenuDelete = true;
+                    return true;
+                case CONTEXT_MENU_TURN_RIGHT:
+                    turnPicture(90f);
+                    return true;
+                case CONTEXT_MENU_TURN_LEFT:
+                    turnPicture(-90f);
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
     }
+
+    private void DeletePicture() {
+       fanImage.setImageDrawable(null);
+        fanImageByteArray = null;
+       // camEditButton.setBackgroundResource(R.drawable.art_edit_picture_button);
+        updateProfileImage = false;
+    }
+
+
+    private void turnPicture(float rotationInDegrees) {
+        ImageView pictureView = fanImage;
+        Bitmap bitmap = ((RoundedBitmapDrawable)pictureView.getDrawable()).getBitmap();
+        Matrix matrix = new Matrix();
+        matrix.preRotate(rotationInDegrees);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        fanImage.setImageDrawable(
+                ImagesUtils.getRoundedBitmap(
+                        getResources(), rotatedBitmap));
+        fanImageByteArray = toByteArray(rotatedBitmap);
+        contextMenuInUse = false;
+    }
+
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
@@ -694,7 +884,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == 99)
-                showDialog();
+                setUpHelpArtFan(false);
 
 
         } catch (Exception e) {

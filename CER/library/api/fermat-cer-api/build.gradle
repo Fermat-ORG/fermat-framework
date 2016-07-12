@@ -24,7 +24,7 @@ pmd {
 
 dependencies {
     compile project(':fermat-api')
-//    compile project(':fermat-pip-api')
+    compile project(':fermat-pip-api')
     compile 'com.google.code.gson:gson:2.4'
     compile group: 'net.jpountz.lz4', name: 'lz4', version: '1.3'
 

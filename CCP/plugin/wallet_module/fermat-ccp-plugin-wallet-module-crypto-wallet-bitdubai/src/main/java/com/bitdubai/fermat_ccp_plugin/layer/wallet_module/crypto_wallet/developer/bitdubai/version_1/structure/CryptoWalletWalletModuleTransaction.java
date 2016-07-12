@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develop
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
@@ -42,6 +43,9 @@ public class CryptoWalletWalletModuleTransaction implements com.bitdubai.fermat_
     private final String memo;
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
+    private final FeeOrigin feeOrigin;
+    private final long fee;
+    private final long total;
 
     public CryptoWalletWalletModuleTransaction(final CryptoWalletTransaction cryptoWalletTransaction,
                                                final UUID                     contactId,
@@ -68,6 +72,10 @@ public class CryptoWalletWalletModuleTransaction implements com.bitdubai.fermat_
         this.memo = cryptoWalletTransaction.getMemo();
         this.blockchainNetworkType = cryptoWalletTransaction.getBlockchainNetworkType();
         this.transactionState = cryptoWalletTransaction.getTransactionState();
+
+       this.feeOrigin = cryptoWalletTransaction.getFeeOrigin();
+        this.fee = cryptoWalletTransaction.getFee();
+        this.total = cryptoWalletTransaction.getTotal();
     }
 
     @Override
@@ -156,6 +164,21 @@ public class CryptoWalletWalletModuleTransaction implements com.bitdubai.fermat_
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public long getTotal() {
+        return this.total;
+    }
+
+    @Override
+    public FeeOrigin getFeeOrigin() {
+        return this.feeOrigin;
+    }
+
+    @Override
+    public long getFee() {
+        return this.fee;
     }
 
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}

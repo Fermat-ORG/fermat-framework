@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
@@ -122,6 +123,10 @@ public class CryptoBasicWalletTransactionExecutor implements com.bitdubai.fermat
             cryptoWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
             cryptoWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
             cryptoWalletTransactionRecord.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
+            cryptoWalletTransactionRecord.setFee(cryptoTransaction.getFee());
+            cryptoWalletTransactionRecord.setFeeOrigin(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+            cryptoWalletTransactionRecord.setTotal(cryptoTransaction.getCryptoAmount());
+
             return cryptoWalletTransactionRecord;
 
         } catch (CantGetCryptoAddressBookRecordException e) {

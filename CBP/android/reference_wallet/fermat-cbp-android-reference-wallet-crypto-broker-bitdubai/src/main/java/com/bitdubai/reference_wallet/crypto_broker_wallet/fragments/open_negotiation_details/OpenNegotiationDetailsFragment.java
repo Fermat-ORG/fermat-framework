@@ -1,7 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negotiation_details;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -39,6 +41,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
@@ -98,6 +101,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private float spread = 1;
 
 
+
     // Fermat Managers
     private ErrorManager errorManager;
     private OpenNegotiationDetailsAdapter adapter;
@@ -115,10 +119,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            numberFormat.setMaximumFractionDigits(8);
 
             Object data = appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
             CustomerBrokerNegotiationInformation negotiationInfo = (data != null) ? (CustomerBrokerNegotiationInformation) data : null;
             negotiationWrapper = new NegotiationWrapper(negotiationInfo, appSession);
+            boolean walletUser = isCreateIdentityIntraUser(negotiationWrapper.getClauses());
+            negotiationWrapper.setWalletUser(walletUser);
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -148,7 +155,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         final ActorIdentity customer = negotiationInfo.getCustomer();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
+        final String merchandise= clauses.get(CUSTOMER_CURRENCY).getValue();
         final String exchangeAmount = clauses.get(EXCHANGE_RATE).getValue();
         final String paymentCurrency = clauses.get(BROKER_CURRENCY).getValue();
         final String amount = clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue();
@@ -163,7 +170,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
         adapter.setMarketRateList(getActualExchangeRates());
 
-        if (negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER) {
+        if (negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CLOSING) {
             adapter.setFooterListener(this);
             adapter.setClauseListener(this);
         }
@@ -270,6 +277,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         final Map<ClauseType, ClauseInformation> clauses = negotiationWrapper.getNegotiationInfo().getClauses();
         final ClauseType type = clause.getType();
 
+
         if (type == EXCHANGE_RATE || type == CUSTOMER_CURRENCY_QUANTITY || type == BROKER_CURRENCY_QUANTITY) {
             try {
                 if (numberFormat.parse(clause.getValue()).doubleValue() < 0)
@@ -352,13 +360,25 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     @Override
     public void onSendButtonClicked() {
         try {
+
             if (negotiationWrapper.isClausesConfirmed()) {
-                moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+
+                if(isCreateIdentityIntraUser(negotiationWrapper.getClauses())) {
+
+                    moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+
+                } else {
+                    Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC ", Toast.LENGTH_LONG).show();
+                }
+
             } else
                 Toast.makeText(getActivity(), "Need to confirm ALL the clauses", Toast.LENGTH_LONG).show();
 
         } catch (CantSendNegotiationToCryptoCustomerException e) {
+            errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        } catch (CantSendNegotiationException e){
             errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
                     DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -686,5 +706,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             }
 
         return null;
+    }
+
+    private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException {
+
+        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String currencyBTC      = "BTC";
+
+        if(customerCurrency != null){
+            if(currencyBTC.equals(customerCurrency)) return moduleManager.isCreateIdentityIntraUser();
+        }
+
+        if(brokerCurrency != null){
+            if(currencyBTC.equals(brokerCurrency)) return moduleManager.isCreateIdentityIntraUser();
+        }
+
+        return true;
     }
 }

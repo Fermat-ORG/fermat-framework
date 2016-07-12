@@ -125,7 +125,7 @@ import java.util.UUID;
         List<String> projectColumns = new ArrayList<String>();
 
         /**
-         * Table Trnsactions addition.
+         * Table Transactions addition.
          */
         projectColumns.add(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_PUBLIC_KEY_ACTOR_COLUMN_NAME);
@@ -142,6 +142,9 @@ import java.util.UUID;
         projectColumns.add(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
         projectColumns.add(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME);
+        projectColumns.add(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_FEE_COLUMN_NAME);
+        projectColumns.add(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_FEE_COLUMN_NAME);
+
         DeveloperDatabaseTable bankMoneyRestockTable = developerObjectFactory.getNewDeveloperDatabaseTable(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TABLE_NAME, projectColumns);
         tables.add(bankMoneyRestockTable);
 

@@ -297,6 +297,11 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
      */
     private void setUpContact() {
         image_view_profile = (ImageView) mFragmentView.findViewById(R.id.image_view_profile);
+
+        //if api 17 set address font size
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
+            text_view_address.setTextSize(10);
+
         if (cryptoWalletWalletContact != null) {
             if(image_view_profile!=null){
                 try {
@@ -322,7 +327,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                        try {
 
 
-                           if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress()== null){
+                           if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType)== null){
 
 
                            cryptoWallet.sendAddressExchangeRequest(

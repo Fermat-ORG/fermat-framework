@@ -41,9 +41,11 @@ public class CryptoBrokerWalletModuleIndexInfoSummary implements IndexInfoSummar
         currencyAndReferenceCurrency = exchangeRate.getFromCurrency().getCode() + " / " + toCurrency.getCode();
 
         NumberFormat numberFormat = DecimalFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(8);
         purchasePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getPurchasePrice());
 
         numberFormat = DecimalFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(8);
         salePriceAndCurrency = toCurrency.getCode() + " " + numberFormat.format(exchangeRate.getSalePrice());
     }
 

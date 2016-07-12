@@ -95,6 +95,7 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:paddingBottom="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_below="@+id/connection_text"  />
 
     <ImageView
@@ -106,6 +107,7 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:paddingBottom="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_below="@+id/connection_text" />
 
     <ImageView
@@ -113,10 +115,11 @@
         android:scaleType="centerCrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/cht_comm_hold_conections_icon"
+        android:background="@drawable/cht_comm_hold_conections_icon_vers_2"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:paddingBottom="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_below="@+id/connection_text" />
 
     <ImageView
@@ -124,10 +127,11 @@
         android:scaleType="centerCrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/cht_comm_hold_conections_icon"
+        android:background="@drawable/cht_comm_hold_conections_icon_vers_2"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:paddingBottom="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_below="@+id/connection_text" />
 
     <Button

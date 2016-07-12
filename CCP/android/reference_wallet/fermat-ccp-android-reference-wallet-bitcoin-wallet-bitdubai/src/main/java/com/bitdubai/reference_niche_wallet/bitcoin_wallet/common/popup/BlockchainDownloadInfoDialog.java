@@ -88,12 +88,12 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceAppFerma
     }
 
     private void saveSettings(){
-        if(type!=TYPE_PRESENTATION)
+        if(type==TYPE_PRESENTATION)
             if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
                 if(checkbox_not_show.isChecked()){
                     try {
                         BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
-                        bitcoinWalletSettings.setIsBlockchainDownloadEnabled(false);
+                        bitcoinWalletSettings.setIsBlockchainDownloadEnabled(!checkbox_not_show.isChecked());
                         getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
                     } catch (CantGetSettingsException e) {
                         e.printStackTrace();

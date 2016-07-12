@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -168,7 +168,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             }
 
             //CLOSE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.waitForClosing(customerBrokerSaleNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
@@ -220,7 +220,7 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             System.out.print("\n\n**** 29) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION ****\n");
 
             //CLOSE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.waitForClosing(customerBrokerSaleNegotiation);
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

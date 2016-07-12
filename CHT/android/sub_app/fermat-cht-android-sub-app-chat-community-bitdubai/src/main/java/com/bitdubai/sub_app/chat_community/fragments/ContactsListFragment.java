@@ -8,11 +8,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -57,6 +60,7 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -65,7 +69,6 @@ import static android.widget.Toast.makeText;
  * ContactsListFragment
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
- * Updated by Lozadaa 26/05/2016
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -79,20 +82,23 @@ public class ContactsListFragment
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 8;
+    private static final int MAX = 1000;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout empty;
+    private ExecutorService executor;
     private View rootView;
+    private SearchView searchView;
     private ContactsListAdapter adapter;
     private LinearLayout emptyView;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
     private ChatActorCommunitySelectableIdentity identity;
     private ChatActorCommunitySettings appSettings;
     TextView noDatalabel;
+    FermatApplicationCaller applicationsHelper;
     ImageView noData;
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
@@ -112,6 +118,7 @@ public class ContactsListFragment
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             lstChatUserInformations = new ArrayList<>();
+            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
@@ -188,7 +195,8 @@ public class ContactsListFragment
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
+        offset=0;
+        onRefresh();
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
@@ -199,60 +207,68 @@ public class ContactsListFragment
 
     @Override
     public void onRefresh() {
-        if (!isRefreshing) {
-            isRefreshing = true;
-            final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-            connectionsProgressDialog.setMessage("Loading Contacts");
-            connectionsProgressDialog.setCancelable(false);
-            connectionsProgressDialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreData();
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    connectionsProgressDialog.dismiss();
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
-                    if (result != null &&
-                            result.length > 0) {
-                        if (getActivity() != null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                            adapter.changeDataSet(lstChatUserInformations);
-                            if (lstChatUserInformations.isEmpty()) {
-                                showEmpty(true, emptyView);
-                            } else {
-                                showEmpty(false, emptyView);
-                            }
-                        }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    connectionsProgressDialog.dismiss();
-                    try {
+        try {
+            if (!isRefreshing) {
+                isRefreshing = true;
+//                final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
+//                connectionsProgressDialog.setMessage("Loading Contacts");
+//                connectionsProgressDialog.setCancelable(false);
+//                connectionsProgressDialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        return getMoreData();
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @SuppressWarnings("unchecked")
+                    @Override
+                    public void onPostExecute(Object... result) {
+//                        connectionsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
-                        if (getActivity() != null)
-                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
-                                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-                        //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        if (result != null &&
+                                result.length > 0) {
+                            if (getActivity() != null && adapter != null) {
+                                lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                adapter.changeDataSet(lstChatUserInformations);
+                                if (lstChatUserInformations.isEmpty()) {
+                                    showEmpty(true, emptyView);
+                                } else {
+                                    showEmpty(false, emptyView);
+                                }
+                            }
+                        } else
+                            showEmpty(adapter.getSize() < 0, emptyView);
                     }
-                }
-            });
-            worker.execute();
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+//                        connectionsProgressDialog.dismiss();
+                        try {
+                            isRefreshing = false;
+                            if (swipeRefresh != null)
+                                swipeRefresh.setRefreshing(false);
+
+                            if (getActivity() != null)
+                                errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                                        UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
+                            //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            ex.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                executor = worker.execute();
+            }
+        }catch (Exception ignore){
+            if (executor != null) {
+                executor.shutdown();
+                executor = null;
+            }
         }
     }
     public class BackgroundAsyncTaskList extends
@@ -308,7 +324,7 @@ public class ContactsListFragment
             if(identity != null){
                 result = moduleManager.listAllConnectedChatActor(identity, MAX, offset);
                 dataSet.addAll(result);
-                offset = dataSet.size();
+                //offset = dataSet.size();
             }
         } catch (CantListChatActorException e) {
             e.printStackTrace();
@@ -376,7 +392,63 @@ public class ContactsListFragment
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            //searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(lstChatUserInformations);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
+    }
+
+    public void onOptionMenuPrepared(Menu menu){
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            //searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                     return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(lstChatUserInformations);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }
+            }
+        }
     }
 
     @Override
@@ -385,6 +457,20 @@ public class ContactsListFragment
             int id = item.getItemId();
             switch (id) {
                 case 2:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 3:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 4:
                     showDialogHelp();
                     break;
                 case 1:

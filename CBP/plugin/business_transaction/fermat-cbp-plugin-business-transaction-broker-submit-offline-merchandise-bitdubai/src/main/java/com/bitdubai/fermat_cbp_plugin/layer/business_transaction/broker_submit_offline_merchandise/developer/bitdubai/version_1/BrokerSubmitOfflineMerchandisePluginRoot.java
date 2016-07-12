@@ -45,13 +45,15 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.event_handler.BrokerSubmitOfflineMerchandiseRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeBrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOfflineMerchandiseTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
@@ -115,6 +117,16 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
      * Represents the database
      */
     Database database;
+
+    /**
+     * Represents the plugin processor agent
+     */
+    BrokerSubmitOfflineMerchandiseMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -256,7 +268,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             /**
              * Init monitor Agent
              */
-            BrokerSubmitOfflineMerchandiseMonitorAgent brokerSubmitOfflineMerchandiseMonitorAgent = new BrokerSubmitOfflineMerchandiseMonitorAgent(
+           /* BrokerSubmitOfflineMerchandiseMonitorAgent brokerSubmitOfflineMerchandiseMonitorAgent = new BrokerSubmitOfflineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     this,
@@ -271,7 +283,24 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
                     cryptoBrokerWalletManager,
                     customerBrokerPurchaseNegotiationManager);
 
-            brokerSubmitOfflineMerchandiseMonitorAgent.start();
+            brokerSubmitOfflineMerchandiseMonitorAgent.start();*/
+            processorAgent = new BrokerSubmitOfflineMerchandiseMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    eventManager,
+                    brokerSubmitOfflineMerchandiseBusinessTransactionDao,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager,
+                    customerBrokerPurchaseNegotiationManager,
+                    cashMoneyDestockManager,
+                    bankMoneyDestockManager,
+                    cryptoBrokerWalletManager
+            );
+            processorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -333,6 +362,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
     @Override
     public void stop() {
         try {
+            processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

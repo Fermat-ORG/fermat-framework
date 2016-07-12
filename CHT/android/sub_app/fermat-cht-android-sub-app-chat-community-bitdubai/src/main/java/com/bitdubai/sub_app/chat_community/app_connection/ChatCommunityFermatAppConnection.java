@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.app_connection;
 
 import android.content.Context;
 
+import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.R;
@@ -80,24 +82,12 @@ public class ChatCommunityFermatAppConnection
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
-        return CommunityNotificationPainterBuilder.getNotification(code);
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+        return CommunityNotificationPainterBuilder.getNotification(fermatBundle);
     }
 
     @Override
-    public int getResource(int id) {
-        int resId = 0;
-        switch (id){
-            case 1:
-                resId = R.drawable.cht_help_icon;
-                break;
-            case 2:
-                resId = R.drawable.cht_comm_ubication_icon;
-                break;
-            case 3:
-                resId = R.drawable.cht_comm_search_icon;
-                break;
-        }
-        return resId;
+    public ResourceSearcher getResourceSearcher() {
+        return new ChatCommunityResourceSearcher();
     }
 }

@@ -1,10 +1,13 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -25,12 +28,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.database.UnholdBankMoneyTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdBankMoneyTransactionDatabaseException;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnHoldBankMoneyTransactionProcessorAgent2;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnholdBankMoneyTransactionManager;
-import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnholdBankMoneyTransactionProcessorAgent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
-
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -51,8 +53,15 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET)
     BankMoneyWalletManager bankMoneyWalletManager;
 
-    private UnholdBankMoneyTransactionProcessorAgent processorAgent;
+    //private UnholdBankMoneyTransactionProcessorAgent processorAgent;
+    //new agent
+    private UnHoldBankMoneyTransactionProcessorAgent2 processorAgent;
     private UnholdBankMoneyTransactionManager unholdTransactionManager;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public UnholdBankMoneyTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -73,15 +82,38 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
-        processorAgent = new UnholdBankMoneyTransactionProcessorAgent(this, unholdTransactionManager, bankMoneyWalletManager);
-        processorAgent.start();
+        //processorAgent = new UnholdBankMoneyTransactionProcessorAgent(this, unholdTransactionManager, bankMoneyWalletManager);
+        //processorAgent.start();
+
+        //New agent starting
+        try{
+            processorAgent = new UnHoldBankMoneyTransactionProcessorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    unholdTransactionManager,
+                    bankMoneyWalletManager);
+            processorAgent.start();
+        } catch (CantStartAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
+
         //test();
         serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-        processorAgent.stop();
+        try {
+            processorAgent.stop();
+        } catch (CantStopAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 

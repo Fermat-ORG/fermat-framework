@@ -60,6 +60,8 @@
             android:text="User name"
             android:textColor="#0072bb"
             android:textSize="14sp"
+            android:lines="5"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

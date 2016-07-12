@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -26,16 +27,19 @@ import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identit
 
 
 @PluginInfo(createdBy = "vlzangel", maintainerMail = "vlzangel91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_BROKER_IDENTITY)
-public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<IdentityBrokerPreferenceSettings,ActiveActorIdentityInformation>
-        {
+public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<IdentityBrokerPreferenceSettings, ActiveActorIdentityInformation> {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
-    private CryptoBrokerIdentityManager identityManager;
+    CryptoBrokerIdentityManager identityManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
+    PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    LocationManager locationManager;
 
     private CryptoBrokerIdentityModuleManager moduleManager;
+
 
     public CryptoBrokerIdentitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -43,12 +47,14 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<I
 
     @Override
     public CryptoBrokerIdentityModuleManager getModuleManager() throws CantGetModuleManagerException {
-        if (moduleManager == null){
+        if (moduleManager == null) {
             moduleManager = new CryptoBrokerIdentityModuleManagerImpl(
                     identityManager,
                     pluginFileSystem,
                     pluginId,
-                    this);
+                    this,
+                    locationManager
+            );
 
             this.serviceStatus = ServiceStatus.STARTED;
         }

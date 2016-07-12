@@ -1,10 +1,13 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -26,10 +29,10 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.database.HoldBankMoneyTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure.HoldBankMoneyTransactionManager;
-import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure.HoldBankMoneyTransactionProcessorAgent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure.HoldBankMoneyTransactionProcessorAgent2;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by memo on 25/11/15.
@@ -51,8 +54,15 @@ public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implement
     BankMoneyWalletManager bankMoneyWalletManager;
 
 
-    private HoldBankMoneyTransactionProcessorAgent processorAgent;
+    //private HoldBankMoneyTransactionProcessorAgent processorAgent;
+    //New agent
+    private HoldBankMoneyTransactionProcessorAgent2 processorAgent;
     private HoldBankMoneyTransactionManager holdTransactionManager;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public HoldBankMoneyTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -73,15 +83,37 @@ public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implement
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
-        processorAgent = new HoldBankMoneyTransactionProcessorAgent(this, holdTransactionManager, bankMoneyWalletManager);
-        processorAgent.start();
+        //processorAgent = new HoldBankMoneyTransactionProcessorAgent(this, holdTransactionManager, bankMoneyWalletManager);
+        //processorAgent.start();
+
+        //New Agent Starting
+        try{
+            processorAgent = new HoldBankMoneyTransactionProcessorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    holdTransactionManager,
+                    bankMoneyWalletManager);
+            processorAgent.start();
+        } catch (CantStartAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
         //test();
         serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-        processorAgent.stop();
+        try {
+            processorAgent.stop();
+        } catch (CantStopAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 

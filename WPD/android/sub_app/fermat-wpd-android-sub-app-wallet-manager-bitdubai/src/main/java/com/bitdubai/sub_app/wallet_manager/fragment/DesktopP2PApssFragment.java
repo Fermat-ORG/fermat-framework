@@ -24,6 +24,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ComboAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
@@ -37,15 +39,11 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
@@ -375,12 +373,12 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
             item.setPosition(5);
             lstItemsWithIcon.add(item);
 
-            installedSubApp = new InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0), Platforms.ART_PLATFORM, AppsStatus.DEV);
-            installedSubApp.setAppStatus(AppsStatus.ALPHA);
-            item = new Item(installedSubApp);
-            item.setIconResource(R.drawable.subapp_art_music_player);
-            item.setPosition(6);
-            lstItemsWithIcon.add(item);
+//            installedSubApp = new InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0), Platforms.ART_PLATFORM, AppsStatus.DEV);
+//            installedSubApp.setAppStatus(AppsStatus.ALPHA);
+//            item = new Item(installedSubApp);
+//            item.setIconResource(R.drawable.subapp_art_music_player);
+//            item.setPosition(6);
+//            lstItemsWithIcon.add(item);
 
 
             for(int i=0;i<12;i++){
@@ -499,9 +497,9 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<ReferenceApp
         AppsStatus appsStatus = AppsStatus.getByCode(code);
         switch (appsStatus){
             case RELEASE:
-                break;
+                return;
             case BETA:
-                break;
+                return;
             case ALPHA:
                 break;
             case DEV:

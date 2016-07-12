@@ -8,7 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum CryptoVaults {
     ASSETS_OVER_BITCOIN("AOB"),
     BITCOIN_CURRENCY("BTC"),
-    BITCOIN_WATCH_ONLY("BWO");
+    BITCOIN_WATCH_ONLY("BWO"),
+    FERMAT_CURRENCY("FER");
 
 
     private String code;
@@ -30,6 +31,8 @@ public enum CryptoVaults {
                 return BITCOIN_CURRENCY;
             case "BWO":
                 return BITCOIN_WATCH_ONLY;
+            case "FER":
+                return FERMAT_CURRENCY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code is not valid for the CryptoVaults enum.");
         }

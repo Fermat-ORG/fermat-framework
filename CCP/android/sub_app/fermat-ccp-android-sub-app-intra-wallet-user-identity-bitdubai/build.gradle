@@ -51,9 +51,10 @@ android {
 dependencies {
     dependencies {
         // Fermat
-        compile project(':fermat-api')
+        //compile project(':fermat-api')
         compile project(':fermat-android-api')
-        compile fileTree(include: ['*.jar'], dir: 'libs')
+        //compile fileTree(include: ['*.jar'], dir: 'libs')
+        compile project(':fermat-ccp-api')
 
         // Android
         compile 'com.android.support:support-v4:23.1.1'
@@ -111,3 +112,6 @@ publishing {
         }
     }
 }*/
+dependencies {
+    compile 'com.githang:com.edmodo.cropper:1.0.2'
+}

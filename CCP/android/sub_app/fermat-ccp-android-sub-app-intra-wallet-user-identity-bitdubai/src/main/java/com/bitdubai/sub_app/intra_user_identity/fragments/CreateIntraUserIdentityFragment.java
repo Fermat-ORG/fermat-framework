@@ -1,17 +1,24 @@
 package com.bitdubai.sub_app.intra_user_identity.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -29,14 +36,15 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
@@ -47,9 +55,12 @@ import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
-import com.squareup.picasso.Picasso;
+import com.bitdubai.sub_app.intra_user_identity.util.DialogCropImage;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,6 +69,7 @@ import static android.widget.Toast.makeText;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Updated by Andres Abreu aabreu1 27/06/16
  */
 public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserIdentityModuleManager>,ResourceProviderManager> {
 
@@ -88,7 +100,12 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
     private IntraUserIdentityModuleManager moduleManager;
+    private Uri imageToUploadUri;
+    private Bitmap imageBitmap;
+    private Location locationManager;
+    //private Bitmap imageBitmap = null;
 
+    private ImageView mChatImage;
     ExecutorService executorService;
 
     public static CreateIntraUserIdentityFragment newInstance() {
@@ -105,7 +122,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             errorManager = appSession.getErrorManager();
 
             moduleManager = appSession.getModuleManager();
-            setHasOptionsMenu(true);
+
+            locationManager = moduleManager.getLocationManager();
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -324,29 +343,131 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             contextMenuInUse = true;
-            Bitmap imageBitmap = null;
             ImageView pictureView = mBrokerImage;
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     imageBitmap = (Bitmap) extras.get("data");
+                    if (imageToUploadUri != null) {
+                        String provider = "com.android.providers.media.MediaProvider";
+                        Uri selectedImage = imageToUploadUri;
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                                getActivity().requestPermissions(
+                                        new String[]{Manifest.permission.CAMERA},
+                                        REQUEST_IMAGE_CAPTURE);
+                            }
+                        }
+                        getActivity().getContentResolver().notifyChange(selectedImage, null);
+                        Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
+                        if (reducedSizeBitmap != null) {
+                            imageBitmap = reducedSizeBitmap;
+                        }
+                    }
+                    try {
+                        if (checkCameraPermission()) {
+                            if (checkWriteExternalPermission()) {
+                                if (imageBitmap != null) {
+                                  //  if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
+                                        dialogCropImage.show();
+                                        dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog) {
+                                                if (dialogCropImage.getCroppedImage() != null) {
+                                                    imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                    mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+                                                    brokerImageByteArray = toByteArray(imageBitmap);
+                                                    updateProfileImage = true;
+                                                } else {
+                                                    imageBitmap = null;
+                                                }
+                                            }
+                                        });
+                                   // } else {
+                                  //      Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                        // cryptoBrokerBitmap = null;
+                                        //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                                   // }
+                                } else {
+                                    Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
+                                    //  cryptoBrokerBitmap = null;
+                                    //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                                // cryptoBrokerBitmap = null;
+                                //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                            //  cryptoBrokerBitmap = null;
+                            //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                    }
+
                     break;
                 case REQUEST_LOAD_IMAGE:
+                 //   Uri selectedImage = data.getData();
+                 //   try {
+                 //       if (isAttached) {
+                 //           ContentResolver contentResolver = getActivity().getContentResolver();
+                 //           imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                 //           imageBitmap = Bitmap.createScaledBitmap(imageBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
+                 //           brokerImageByteArray = toByteArray(imageBitmap);
+                 //           updateProfileImage = true;
+                 //           Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mBrokerImage);
+                 //       }
+                 //   } catch (Exception e) {
+                 //       e.printStackTrace();
+                 //       Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                 //   }
+
                     Uri selectedImage = data.getData();
                     try {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                            brokerImageByteArray = toByteArray(imageBitmap);
-                            updateProfileImage = true;
-                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mBrokerImage);
+                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
+                            if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                // cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                                final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
+                                dialogCropImagee.show();
+                                dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        if (dialogCropImagee.getCroppedImage() != null) {
+                                            imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                            mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+                                            brokerImageByteArray = toByteArray(imageBitmap);
+
+                                            updateProfileImage = true;
+                                        } else {
+                                            imageBitmap = null;
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                // cryptoBrokerBitmap = null;
+                                // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                       // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT).show();
                     }
+
                     break;
             }
 
@@ -424,10 +545,13 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             public void run() {
                                 try {
 
-                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)0, Frecuency.NORMAL);
+                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)100, Frequency.NORMAL, moduleManager.getLocationManager());
 
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
+                                    e.printStackTrace();
+                                }
+                                catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -441,10 +565,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                 try {
                                     if (updateProfileImage)
 
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)0,Frecuency.NORMAL);
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)100, Frequency.NORMAL, moduleManager.getLocationManager());
 
                                     else
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)0,Frecuency.NORMAL);
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)100, Frequency.NORMAL,moduleManager.getLocationManager());
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
@@ -510,7 +634,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
      */
     private byte[] toByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         return stream.toByteArray();
     }
 
@@ -527,9 +651,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         super.onCreateOptionsMenu(menu, inflater);
         //inflater.inflate(R.menu.menu_main, menu);
 
-        try {
+      /*  try {
             menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+
 
             final MenuItem action_help = menu.findItem(R.id.action_help);
             menu.findItem(R.id.action_help).setVisible(true);
@@ -543,7 +669,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
         } catch (Exception e) {
 
-        }
+        }*/
 
     }
 
@@ -553,8 +679,15 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         try {
             int id = item.getItemId();
 
-            if (id == 99)
+            if (id == 1)
                 showDialog();
+
+            if (id == 2)
+                if(identitySelected!=null)
+                    changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+                else
+                    showDialog();
+
 
 
         } catch (Exception e) {
@@ -564,4 +697,144 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    private Bitmap getBitmap(String path) {
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            in = getActivity().getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+
+
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+
+            Bitmap b = null;
+            in = getActivity().getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE
+                        / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
+                    b.getHeight());
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    private boolean checkCameraPermission() {
+        String permission = "android.permission.CAMERA";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean checkWriteExternalPermission() {
+        String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
+                matrix, false);
+        return resizedBitmap;
+    }
+
+    public int dpToPx() {
+        int dp = 150;
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return bmRotated;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
 }

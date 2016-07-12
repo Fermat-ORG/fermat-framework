@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantExposeActorIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
@@ -41,7 +42,8 @@ import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.ver
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDeveloperFactory;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatIdentityDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure.ChatIdentityManagerImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -158,7 +160,9 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException("Cant Expose Chat Identity, in Get Location.", FermatException.wrapException(e), null, null);
         }
+        long refreshInterval = 0;
         for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser()) {
+           refreshInterval = chatIdentity.getFrecuency().getRefreshInterval();
             chatExposingDataList.add(
                     new ChatExposingData(
                             chatIdentity.getPublicKey(),
@@ -168,7 +172,10 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                             chatIdentity.getState(),
                             chatIdentity.getCity(),
                             chatIdentity.getConnectionState(),
-                            location
+                            location,
+                            refreshInterval,
+                            chatIdentity.getAccuracy(),
+                            ProfileStatus.UNKNOWN
                     )
             );
 

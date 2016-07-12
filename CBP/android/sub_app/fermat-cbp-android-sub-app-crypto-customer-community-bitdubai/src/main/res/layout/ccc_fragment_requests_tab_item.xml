@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="17dp">
+
+    <ImageView
+        android:id="@+id/ccc_notification_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ccc_notification_bell"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccc_customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/ccc_notification_image"
+        android:layout_toRightOf="@+id/ccc_notification_image"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/ccc_dark_purple"
+        android:textSize="15sp"
+        tools:text="Thomas Flores"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccc_request_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ccc_customer_name"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/ccc_notification_image"
+        android:layout_toRightOf="@+id/ccc_notification_image"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="@string/connection_request"
+        android:textColor="@color/ccc_color_gray_light"
+        android:textSize="12sp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccc_notification_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ccc_request_status"
+        android:layout_alignBottom="@+id/ccc_request_status"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@+id/ccc_request_status"
+        android:layout_toRightOf="@+id/ccc_request_status"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:textColor="@color/ccc_color_gray_light"
+        android:textSize="12sp"
+        tools:text="2 minutes"/>
+
+</RelativeLayout>

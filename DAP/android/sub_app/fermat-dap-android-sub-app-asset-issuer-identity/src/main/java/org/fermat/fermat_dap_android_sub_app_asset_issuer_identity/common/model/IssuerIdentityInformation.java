@@ -1,8 +1,8 @@
 package org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.common.model;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**
@@ -14,9 +14,9 @@ public class IssuerIdentityInformation implements IdentityAssetIssuer {
     private byte[] profileImage;
     private String publicKey;
     private int accuracy;
-    private Frequency frequency;
+    private GeoFrequency frequency;
 
-    public IssuerIdentityInformation(String intraUserName, String publicKey, byte[] profileImage, int accuracy, Frequency frequency) {
+    public IssuerIdentityInformation(String intraUserName, String publicKey, byte[] profileImage, int accuracy, GeoFrequency frequency) {
         this.intraUserName = intraUserName;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -60,7 +60,7 @@ public class IssuerIdentityInformation implements IdentityAssetIssuer {
     }
 
     @Override
-    public Frequency getFrequency() {
+    public GeoFrequency getFrequency() {
         return frequency;
     }
 }

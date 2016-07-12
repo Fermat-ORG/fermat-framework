@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.common.AbstractCBPActorExposingData;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.util.Arrays;
 
@@ -9,60 +11,41 @@ import java.util.Arrays;
  * represents a crypto customer and exposes all the functionality of it.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/11/2015.
+ * Updated by Manuel Perez on (darkpriestrelative@gmail.com) on 05/07/16.
  */
-public final class CryptoCustomerExposingData {
+public final class CryptoCustomerExposingData extends AbstractCBPActorExposingData {
 
-    private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
-    private final Location location;
 
-    public CryptoCustomerExposingData(final String publicKey,
-                                      final String alias,
-                                      final byte[] image,
-                                      final Location location) {
-
-        this.publicKey = publicKey;
-        this.alias     = alias    ;
-        this.image     = image    ;
-        this.location  = location;
+    /**
+     * Default constructor with parameters
+     *
+     * @param publicKey
+     * @param alias
+     * @param image
+     * @param location
+     * @param refreshInterval
+     * @param accuracy
+     */
+    public CryptoCustomerExposingData(
+            String publicKey,
+            String alias,
+            byte[] image,
+            Location location,
+            long refreshInterval,
+            long accuracy,
+            ProfileStatus profileStatus) {
+        super(
+                publicKey,
+                alias,
+                image,
+                location,
+                refreshInterval,
+                accuracy,
+                profileStatus);
     }
 
     /**
-     * @return a string representing the public key.
+     * This class only extends AbstractCBPActorExposingData, it can be changed in future versions
      */
-    public final String getPublicKey() {
-        return publicKey;
-    }
-
-    /**
-     * @return a string representing the alias of the crypto customer.
-     */
-    public final String getAlias() {
-        return alias;
-    }
-
-    /**
-     * @return an array of bytes with the image exposed by the Crypto Customer.
-     */
-    public final byte[] getImage() {
-        return image;
-    }
-
-    /**
-     * @return an locarion  with the image exposed by the Crypto Broker.
-     */
-    public final Location getLocation() {
-        return location;
-    }
-
-    @Override
-    public String toString() {
-        return "CryptoCustomerExposingData{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", image=" + Arrays.toString(image) +
-                '}';
-    }
 
 }
