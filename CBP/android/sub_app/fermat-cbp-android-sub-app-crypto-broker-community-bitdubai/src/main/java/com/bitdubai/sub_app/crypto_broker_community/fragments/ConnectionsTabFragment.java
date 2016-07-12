@@ -250,6 +250,7 @@ public class ConnectionsTabFragment
                             .setIconRes(R.drawable.crypto_broker)
                             .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                            .setVIewColor(R.color.cbc_toolbar_start_background)
                             .setIsCheckEnabled(false)
                             .build();
 
