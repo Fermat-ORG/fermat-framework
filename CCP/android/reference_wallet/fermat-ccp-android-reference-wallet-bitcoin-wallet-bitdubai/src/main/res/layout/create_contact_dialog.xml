@@ -149,16 +149,16 @@
 
             <ImageView
                 android:id="@+id/paste_from_clipboard_btn"
-                android:layout_width="28dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_copy"
+                android:src="@drawable/copy_icon"
                 android:layout_marginLeft="20dp"/>
 
             <ImageView
                 android:id="@+id/scan_qr"
-                android:layout_width="28dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_qr"
+                android:src="@drawable/qr_icon"
                 android:layout_marginLeft="12dp"
                 android:paddingRight="10dp" />
         </LinearLayout>
