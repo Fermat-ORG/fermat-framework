@@ -43,13 +43,15 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
     private List <IndexInfoSummary> marketRateList;
+    private boolean walletUser = false;
 
 
 
-    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation ) {
+    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation, boolean walletUser ) {
         super(context);
 
         this.negotiationInformation = negotiationInformation;
+        this.walletUser = walletUser;
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
@@ -57,6 +59,14 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo) {
         this.negotiationInformation = negotiationInfo;
+
+        final List<ClauseInformation> items = buildListOfItems();
+        super.changeDataSet(items);
+    }
+
+    public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo, boolean walletUser) {
+        this.negotiationInformation = negotiationInfo;
+        this.walletUser = walletUser;
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
@@ -92,6 +102,10 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
                 footerViewHolder.setListener(footerListener);
+
+//                if(this.walletUser == false)
+//                    footerViewHolder.HideButtonsWalletUser();
+
                 return footerViewHolder;
 
             default:

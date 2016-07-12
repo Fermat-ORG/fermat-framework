@@ -171,7 +171,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return the list of intra users connected to the logged in intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
      List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
@@ -181,7 +181,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
      List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**

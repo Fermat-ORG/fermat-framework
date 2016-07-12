@@ -17,6 +17,8 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
     OnFooterButtonsClickListener listener;
     CardView addNoteButton;
     TextView sendButton;
+    CardView addWarningWalletUser;
+
     public FooterViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
 
@@ -25,6 +27,8 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
 
         sendButton = (FermatTextView) itemView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
+
+        addWarningWalletUser = (CardView) itemView.findViewById(R.id.warning_wallet_user);
     }
 
     @Override
@@ -45,5 +49,11 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         void onAddNoteButtonClicked();
 
         void onSendButtonClicked();
+    }
+
+    public void HideButtonsWalletUser(){
+        addNoteButton.setVisibility(View.GONE);
+        sendButton.setVisibility(View.GONE);
+        addWarningWalletUser.setVisibility(View.VISIBLE);
     }
 }

@@ -53,3 +53,5 @@ project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir 
 
 //include ':ApplicationSessionTest'
 
+
+//include ':FermatApplicationTest'
