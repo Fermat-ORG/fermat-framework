@@ -1,8 +1,10 @@
 package com.bitdubai.android_core.app;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_core.FermatSystem;
+import com.github.anrwatchdog.ANRError;
 import com.github.anrwatchdog.ANRWatchDog;
 import com.mati.fermat_osa_addon_android_loader.LoaderManager;
 import com.mati.fermat_osa_addon_android_loader.Smith;
@@ -27,6 +30,9 @@ import com.mati.fermat_osa_addon_android_loader.Smith;
 import org.acra.ACRA;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias Furszyfer on 2016.06.29..
@@ -83,6 +89,9 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     private ClassLoader mBaseClassLoader;
 
     private LoaderManager loaderManager;
+
+    private boolean isApplicationInForeground;
+    private ScheduledExecutorService scheduledExecutorService;
 
     public static FermatFramework init(Application application){
         return new FermatFramework(application);
@@ -186,6 +195,32 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
             notificationReceiver = new NotificationReceiver(this);
             IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
             application.getApplicationContext().registerReceiver(notificationReceiver, intentFilter);
+
+            //Application state observer
+            application.registerActivityLifecycleCallbacks(new ApplicationLifecycleManager());
+
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "##########################################################3");
+                    Log.e(TAG, "App in foreground: " + ApplicationLifecycleManager.isAppInForeground());
+                    Log.i(TAG, "##########################################################3");
+                    if (!ApplicationLifecycleManager.isAppInForeground()) {
+                        if (isApplicationInForeground) {
+                            isApplicationInForeground = false;
+                        } else {
+                            appOnBackground();
+                        }
+                    } else {
+                        if (!isApplicationInForeground) {
+                            isApplicationInForeground = true;
+                            appOnForeground();
+                        }
+                    }
+                }
+            }, 30, 30, TimeUnit.SECONDS);
+
         }
 
 //        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
@@ -193,9 +228,44 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 //        intentFilter.addAction("org.fermat.SYSTEM_RUNNING");
 //        bManager.registerReceiver(new FermatSystemRunningReceiver(this), intentFilter);
 
-        new ANRWatchDog().start();
+        ANRWatchDog anrWatchDog = new ANRWatchDog();
+        anrWatchDog.setANRListener(new ANRWatchDog.ANRListener() {
+            @Override
+            public void onAppNotResponding(final ANRError error) {
+                new AlertDialog.Builder(application.getApplicationContext())
+                        .setTitle("ANR")
+                        .setMessage("ANR")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                Log.e(TAG, "ANR:");
+                                error.printStackTrace();
+                                Log.e(TAG, "FIN ANR");
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+        anrWatchDog.setIgnoreDebugger(true);
+        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
+            @Override
+            public void onInterrupted(InterruptedException exception) {
+                exception.printStackTrace();
+            }
+        });
+        anrWatchDog.start();
+
+
+
 
     }
+
 
 
     void handleUncaughtException(Thread thread, Throwable e) {
@@ -214,6 +284,10 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     public ServicesHelpers getServicesHelpers() {
         return servicesHelpers;
+    }
+
+    public boolean isApplicationInForeground(){
+        return isApplicationInForeground;
     }
 
     /**
@@ -275,6 +349,15 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
             }
         }
         return fermatRunning;
+    }
+
+    public void appOnBackground(){
+        servicesHelpers.getClientSideBrokerServiceAIDL().disconnect();
+    }
+
+    public void appOnForeground(){
+        isApplicationInForeground = true;
+        servicesHelpers.getClientSideBrokerServiceAIDL().connect();
     }
 
     @Override

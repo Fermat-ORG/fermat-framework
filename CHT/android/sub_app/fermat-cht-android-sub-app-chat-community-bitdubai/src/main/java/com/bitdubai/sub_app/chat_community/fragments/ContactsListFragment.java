@@ -60,6 +60,7 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -88,6 +89,7 @@ public class ContactsListFragment
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout empty;
+    private ExecutorService executor;
     private View rootView;
     private SearchView searchView;
     private ContactsListAdapter adapter;
@@ -193,7 +195,8 @@ public class ContactsListFragment
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
+        offset=0;
+        onRefresh();
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
@@ -204,60 +207,68 @@ public class ContactsListFragment
 
     @Override
     public void onRefresh() {
-        if (!isRefreshing) {
-            isRefreshing = true;
-            final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-            connectionsProgressDialog.setMessage("Loading Contacts");
-            connectionsProgressDialog.setCancelable(false);
-            connectionsProgressDialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreData();
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    connectionsProgressDialog.dismiss();
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
-                    if (result != null &&
-                            result.length > 0) {
-                        if (getActivity() != null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                            adapter.changeDataSet(lstChatUserInformations);
-                            if (lstChatUserInformations.isEmpty()) {
-                                showEmpty(true, emptyView);
-                            } else {
-                                showEmpty(false, emptyView);
-                            }
-                        }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    connectionsProgressDialog.dismiss();
-                    try {
+        try {
+            if (!isRefreshing) {
+                isRefreshing = true;
+//                final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
+//                connectionsProgressDialog.setMessage("Loading Contacts");
+//                connectionsProgressDialog.setCancelable(false);
+//                connectionsProgressDialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        return getMoreData();
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @SuppressWarnings("unchecked")
+                    @Override
+                    public void onPostExecute(Object... result) {
+//                        connectionsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
-                        if (getActivity() != null)
-                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
-                                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-                        //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        if (result != null &&
+                                result.length > 0) {
+                            if (getActivity() != null && adapter != null) {
+                                lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                adapter.changeDataSet(lstChatUserInformations);
+                                if (lstChatUserInformations.isEmpty()) {
+                                    showEmpty(true, emptyView);
+                                } else {
+                                    showEmpty(false, emptyView);
+                                }
+                            }
+                        } else
+                            showEmpty(adapter.getSize() < 0, emptyView);
                     }
-                }
-            });
-            worker.execute();
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+//                        connectionsProgressDialog.dismiss();
+                        try {
+                            isRefreshing = false;
+                            if (swipeRefresh != null)
+                                swipeRefresh.setRefreshing(false);
+
+                            if (getActivity() != null)
+                                errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                                        UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
+                            //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            ex.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                executor = worker.execute();
+            }
+        }catch (Exception ignore){
+            if (executor != null) {
+                executor.shutdown();
+                executor = null;
+            }
         }
     }
     public class BackgroundAsyncTaskList extends
@@ -313,7 +324,7 @@ public class ContactsListFragment
             if(identity != null){
                 result = moduleManager.listAllConnectedChatActor(identity, MAX, offset);
                 dataSet.addAll(result);
-                offset = dataSet.size();
+                //offset = dataSet.size();
             }
         } catch (CantListChatActorException e) {
             e.printStackTrace();

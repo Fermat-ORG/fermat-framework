@@ -195,6 +195,8 @@ public class ImageUtil {
 
     }
 
+
+
     /**
      * Get the size of the BufferedImage
      *
@@ -250,6 +252,21 @@ public class ImageUtil {
         return bufferedImage;
     }
 
+    /**
+     * Generate a image Thumbnail from the original image
+     * pass by parameters
+     *
+     * @param originalImage
+     * @return BufferedImage of the thumbnails
+     */
+    public static BufferedImage generateThumbnail(BufferedImage originalImage, String format) throws IOException {
+
+        BufferedImage compressImageHigh = ImageUtil.compress(originalImage, format, HIGH_QUALITY);
+        BufferedImage resizeImage = ImageUtil.resize(originalImage, 80, 80);
+
+        return resizeImage;
+    }
+
 
     public static void main(String [] args){
 
@@ -260,7 +277,7 @@ public class ImageUtil {
 
             System.out.println("Original image Size = " + ImageUtil.bytesIntoHumanReadable(file.length()));
 
-            BufferedImage resizeImage = ImageUtil.resize(originalImage, 100, 100);
+       /*     BufferedImage resizeImage = ImageUtil.resize(originalImage, 100, 100);
             System.out.println("Resize image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(originalImage, JPG_FORMAT)));
             ImageIO.write(resizeImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/resize_image.jpg"));
 
@@ -282,7 +299,11 @@ public class ImageUtil {
 
             BufferedImage resizeCompressImage = ImageUtil.resize(compressImageHigh, 100, 100);
             System.out.println("Resize and compress image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(resizeCompressImage, JPG_FORMAT)));
-            ImageIO.write(resizeCompressImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/resize_compress_image.jpg"));
+            ImageIO.write(resizeCompressImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/resize_compress_image.jpg")); */
+
+            BufferedImage thumbnail = ImageUtil.generateThumbnail(originalImage, JPG_FORMAT);
+            System.out.println("thumbnail image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(thumbnail, JPG_FORMAT)));
+            ImageIO.write(thumbnail, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/thumbnail5.jpg"));
 
         } catch (IOException e) {
             e.printStackTrace();

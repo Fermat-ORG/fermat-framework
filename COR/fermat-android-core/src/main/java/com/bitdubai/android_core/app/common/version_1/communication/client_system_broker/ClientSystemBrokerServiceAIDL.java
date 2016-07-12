@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -274,14 +275,48 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     @Override
     public boolean isFermatBackgroundServiceRunning() throws FermatPlatformServiceNotConnectedException{
         try {
-            return iServerBrokerService.isFermatSystemRunning();
+            if(iServerBrokerService!=null)
+                return iServerBrokerService.isFermatSystemRunning();
         } catch (RemoteException e) {
             e.printStackTrace();
             throw new FermatPlatformServiceNotConnectedException("PlatformService not connected yet",e);
         } catch (Exception e){
+
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void disconnect() {
+        try {
+            if (mPlatformServiceIsBound) {
+                doUnbindService();
+            }
+            if (mReceiverSocketSession.isConnected()) {
+                mReceiverSocketSession.stop();
+                try {
+                    mReceiverSocketSession.destroy();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void connect() {
+        try {
+            if (!mPlatformServiceIsBound) {
+                Intent serviceIntent = new Intent(this, PlatformService.class);
+                serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
+                doBindService(serviceIntent);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public class LocalBinder extends Binder {
@@ -300,9 +335,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             poolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_NUM);
             bufferChannelAIDL = new BufferChannelAIDL();
 
-            Intent serviceIntent = new Intent(this, PlatformService.class);
-            serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
-            doBindService(serviceIntent);
+//            Intent serviceIntent = new Intent(this, PlatformService.class);
+//            serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
+//            doBindService(serviceIntent);
+
+            connect();
 
 //        Intent serviceIntent2 = new Intent(this, PlatformService.class);
 //        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);

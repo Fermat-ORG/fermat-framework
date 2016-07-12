@@ -161,6 +161,9 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
                 location = new DeviceLocation(0.0, 0.0, System.currentTimeMillis(), 0.0, LocationSource.UNKNOWN);
         }
         lastKnownLocation = location;
+        if(location==null){
+            location = new DeviceLocation(0.0, 0.0, System.currentTimeMillis(), 0.0, LocationSource.UNKNOWN);
+        }
         return location;
     }
 

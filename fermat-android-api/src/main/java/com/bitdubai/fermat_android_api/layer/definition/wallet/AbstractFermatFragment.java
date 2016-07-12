@@ -126,6 +126,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        isAttached = true;
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         isAttached = true;
@@ -232,7 +238,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * Method to obtain res from other apps
      */
     private final int obtainRes(int resType,int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(resType,id, sourceLocation, appOwnerPublicKey);
+        return getFrameworkHelpers().obtainRes(resType, id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
@@ -414,11 +420,13 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final FermatRuntime getRuntimeManager(){
-        return ((FermatActivityManager)getActivity()).getRuntimeManager();
+        if(isAttached)
+            return ((FermatActivityManager) getActivity()).getRuntimeManager();
+        return null;
     }
 
     protected final void changeStartActivity(String activityCode){
-        ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
+            ((FermatActivityManager)getActivity()).getRuntimeManager().changeStartActivity(appSession.getAppPublicKey(),activityCode);
     }
 
     public void changeTabNotification(String activityCode, int number) throws InvalidParameterException {

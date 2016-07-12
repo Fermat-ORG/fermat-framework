@@ -17,14 +17,12 @@ public class CommunityNotificationPainter extends NotificationPainter {
     private String title;
     private String textBody;
     private String image;
-    private RemoteViews remoteViews;
     private int    icon;
 
-    public CommunityNotificationPainter(final String title   ,
+    public CommunityNotificationPainter(final String title,
                                         final String textBody,
-                                        final String image   ,
-                                        final String viewCode,
-                                        final int    icon    ){
+                                        final String image,
+                                        final int icon){
 
         this.title    = title   ;
         this.textBody = textBody;
@@ -36,7 +34,7 @@ public class CommunityNotificationPainter extends NotificationPainter {
 
     @Override
     public RemoteViews getNotificationView(String code) {
-        return this.remoteViews;
+        return null;
     }
 
     @Override

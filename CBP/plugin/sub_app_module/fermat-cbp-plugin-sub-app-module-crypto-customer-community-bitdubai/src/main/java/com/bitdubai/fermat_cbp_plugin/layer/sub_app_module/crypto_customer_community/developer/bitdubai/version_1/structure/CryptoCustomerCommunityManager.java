@@ -103,6 +103,7 @@ public class CryptoCustomerCommunityManager
     @Override
     public List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListCryptoCustomersException {
         List<CryptoCustomerCommunityInformation> worldCustomerList;
+        List<CryptoCustomerCommunityInformation> worldCustomerListLocation;
         List<CryptoCustomerActorConnection> actorConnections;
 
         try {
@@ -117,9 +118,8 @@ public class CryptoCustomerCommunityManager
 
             final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
-//            search.addConnectionState(ConnectionState.CONNECTED);
 
-            actorConnections = search.getResult(max, offset);
+            actorConnections = search.getResult(1000, 0);
 
         } catch (final CantListActorConnectionsException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -130,7 +130,7 @@ public class CryptoCustomerCommunityManager
             CryptoCustomerCommunityInformation worldCustomer = worldCustomerList.get(i);
             for (CryptoCustomerActorConnection connectedCustomer : actorConnections) {
                 if (worldCustomer.getPublicKey().equals(connectedCustomer.getPublicKey()))
-                    worldCustomerList.set(i, new CryptoCustomerCommunitySubAppModuleInformation(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedCustomer.getConnectionState(), connectedCustomer.getConnectionId(), worldCustomer.getLocation()));
+                    worldCustomerList.set(i, new CryptoCustomerCommunitySubAppModuleInformation(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedCustomer.getConnectionState(), connectedCustomer.getConnectionId(), worldCustomer.getLocation(), worldCustomer.getProfileStatus()));
             }
         }
 
@@ -148,6 +148,8 @@ public class CryptoCustomerCommunityManager
 
             customer.setCountry(country);
             customer.setPlace(place);
+
+            System.out.println("************** Actor Customer Register: " + customer.getAlias() + " - " + customer.getProfileStatus() + " - " + customer.getConnectionState());
         }
 
         return worldCustomerList;
@@ -344,7 +346,13 @@ public class CryptoCustomerCommunityManager
                 }
 
                 Location actorLocation = cryptoCustomerCommunitySubAppModuleInformation.getLocation();
-                final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(),actorLocation.getLongitude());
+                Address address;
+                try{
+                    address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                } catch (CantCreateAddressException ex){
+                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
+                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
+                }
                 cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
                 cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
                 filteredConnectedActors.add(cryptoCustomerCommunitySubAppModuleInformation);

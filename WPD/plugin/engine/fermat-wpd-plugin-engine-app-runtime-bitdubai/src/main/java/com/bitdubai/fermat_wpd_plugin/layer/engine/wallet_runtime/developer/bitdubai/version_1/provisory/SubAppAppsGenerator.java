@@ -3604,7 +3604,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Broker Community");
+        runtimeTitleBar.setLabel("  Broker Community");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -3647,13 +3647,13 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(LOCATION_FILTER_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(LOCATION_FILTER_OPTION_MENU_ID, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Location");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -3740,7 +3740,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Customer Community");
+        runtimeTitleBar.setLabel("  Customer Community");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -3782,7 +3782,7 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(LOCATION_FILTER_OPTION_MENU_ID);
         optionMenuItem.setFermatDrawable(new FermatDrawable(LOCATION_FILTER_OPTION_MENU_ID, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Location");
-        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
@@ -4149,22 +4149,22 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("CHATS");
 
         //Badge in the tab
-        Badge fermatDrawable = new Badge("ic_badge");
-        fermatDrawable.setTestSize(32);
-        fermatDrawable.setNumber(1);
-        runtimeTab.setFermatDrawable(fermatDrawable);
+//        Badge fermatDrawable = new Badge("ic_badge");
+//        fermatDrawable.setTestSize(32);
+//        fermatDrawable.setNumber(1);
+//        runtimeTab.setFermatDrawable(fermatDrawable);
 
         //FermatTextView
         //todo: josé acá agregale lo tuyo
-        FermatTextViewRuntime fermatTextViewRuntime = new FermatTextViewRuntime();
-        fermatTextViewRuntime.setTitle("CHAT");
-        fermatTextViewRuntime.setFontType(FontType.ROBOTO_REGULAR);
-        fermatTextViewRuntime.setTitleSize(20);
-
-        TabBadgeView tabBadgeView = new TabBadgeView();
-        tabBadgeView.setFermatTextViewRuntime(fermatTextViewRuntime);
-        tabBadgeView.setBadge(fermatDrawable);
-        runtimeTab.setFermatView(tabBadgeView);
+//        FermatTextViewRuntime fermatTextViewRuntime = new FermatTextViewRuntime();
+//        fermatTextViewRuntime.setTitle("CHAT");
+//        fermatTextViewRuntime.setFontType(FontType.ROBOTO_REGULAR);
+//        fermatTextViewRuntime.setTitleSize(20);
+//
+//        TabBadgeView tabBadgeView = new TabBadgeView();
+//        tabBadgeView.setFermatTextViewRuntime(fermatTextViewRuntime);
+//        tabBadgeView.setBadge(fermatDrawable);
+//        runtimeTab.setFermatView(tabBadgeView);
 
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();

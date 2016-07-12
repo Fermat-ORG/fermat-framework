@@ -63,6 +63,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWa
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -142,7 +143,7 @@ public class ConnectionsWorldFragment
     private Handler handler = new Handler();
     List<IntraUserInformation> userList = new ArrayList<>();
 
-    private Location location;
+    private Location location = null;
     private double distance;
     private String alias;
 
@@ -238,6 +239,10 @@ public class ConnectionsWorldFragment
               //  showErrorGPS();
                 Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
             }
+
+            IntraUserLoginIdentity identity =  moduleManager.getActiveIntraUserIdentity();
+
+            distance = identity.getAccuracy();
 
                // turnGPSOn();
 
