@@ -645,9 +645,7 @@ public class SubAppAppsGenerator {
 
             /**
              * Start DAP
-             */
 
-            /**
              * DAP ASSET ISSUER IDENTITY
              */
             createAssetIssuerIdentitySubAppNavigationStructure();
@@ -675,56 +673,75 @@ public class SubAppAppsGenerator {
              * DAP REDEEM POINT COMMUNITY
              */
             createRedeemPointCommunitySubAppNavigationStructure();
-
             /**
              * End DAP
              */
 
             /**
+             * Start CBP
+
              * CRYPTO BROKER IDENTITY
              */
             createCryptoBrokerIdentitySubAppNavigationStructure();
-
             /**
              * CBP CRYPTO CUSTOMER  IDENTITY
              */
             createCryptoCustomerIdentitySubAppNavigationStructure();
-
             /**
              * CBP CRYPTO BROKER COMMUNITY
              */
             createCryptoBrokerCommunitySubAppNavigationStructure();
-
             /**
              * CBP CRYPTO CUSTOMER COMMUNITY
              */
             createCryptoCustomerCommunitySubAppNavigationStructure();
+            /**
+             * End CBP
+             */
 
             /**
+             * Start CHT
+
              * CHT CHAT
              */
             createChatSubAppNavigationStructure();
-
             /**
              * CHT COMMUNITY
              */
             createChatCommunitySubAppNavigationStructure();
+            /**
+             * CHAT IDENTITY
+             */
+            createChatIdentitySubAppNavigationStructure();
+            /**
+             * End CHT
+             */
 
             /**
              * CCP INTRA USER IDENTITY
              */
 
-            /*
+            /**
+             * Start ART
+
             *ART MusicPlayer
             */
-
             createMusicPlayerSubAppNavigationStructure();
-
            /*
             *ART ARTIST IDENTITY
             */
             //createArtArtistIdentitySubAppNavigationStructure();
-
+            /**
+             * ART FAN COMMUNITY
+             */
+            createFanCommunitySubAppNavigationStructure();
+            /**
+             * ART ARTIST COMMUNITY
+             */
+            createArtistCommunitySubAppNavigationStructure();
+            /**
+             * End ART
+             */
 
             runtimeSubApp = new AppNavigationStructure();
 
@@ -798,25 +815,6 @@ public class SubAppAppsGenerator {
 
 
             //createTkyArtistIdentityNavigationStructure();
-            /**
-             * Start ART
-             */
-
-            /**
-             * ART FAN COMMUNITY
-             */
-            createFanCommunitySubAppNavigationStructure();
-
-            /**
-             * ART ARTIST COMMUNITY
-             */
-
-            createArtistCommunitySubAppNavigationStructure();
-
-
-            /**
-             * End ART
-             */
 
             runtimeSubApp = new AppNavigationStructure();
 
@@ -845,12 +843,6 @@ public class SubAppAppsGenerator {
             runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            /**
-             * CHAT IDENTITY
-             */
-
-            createChatIdentitySubAppNavigationStructure();
 
             /*
              *TKY FAN IDENTITY
@@ -888,9 +880,6 @@ public class SubAppAppsGenerator {
 
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
-            /*
-
-             */
             runtimeSubApp = new AppNavigationStructure();
 
             String intraUserIdentityPublicKey = SubAppsPublicKeys.CCP_IDENTITY.getCode();
