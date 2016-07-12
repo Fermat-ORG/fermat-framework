@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
@@ -195,7 +196,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 //Check available balance
                 BigDecimal availableBalance = cashMoneyWalletSession.getModuleManager().getWalletBalances(cashMoneyWalletSession.getAppPublicKey()).getAvailableBalance();
                 if(availableBalance.compareTo(new BigDecimal(amount)) >= 0) {
-                    CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.DEBIT);
+                    CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.DEBIT);
                     cashMoneyWalletSession.getModuleManager().createAsyncCashTransaction(t);
                 }
                 else{
@@ -204,7 +205,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 }
             }
             else if(transactionType == TransactionType.CREDIT) {
-                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.CREDIT);
+                CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.CREDIT);
                 cashMoneyWalletSession.getModuleManager().createAsyncCashTransaction(t);
 
             }
