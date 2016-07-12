@@ -270,7 +270,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                     presentationDialog.setOnDismissListener(this);
 
                     final CryptoCustomerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-
                     final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
                     if (showDialog){
                         getActivity().runOnUiThread(new Runnable() {

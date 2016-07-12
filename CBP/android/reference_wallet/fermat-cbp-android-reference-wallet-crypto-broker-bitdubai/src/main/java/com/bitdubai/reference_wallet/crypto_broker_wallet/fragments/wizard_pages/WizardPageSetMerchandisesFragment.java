@@ -233,6 +233,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                             .setVIewColor(R.color.cbw_wizard_merchandises_wallet_button_color)
                             .setIsCheckEnabled(false)
                             .build();
+                    presentationDialog.show();
 
                 } else {
                     presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)

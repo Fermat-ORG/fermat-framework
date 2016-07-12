@@ -4116,7 +4116,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         // Option Menu Item - Help
         optionMenuItem = new OptionMenuItem(HELP_ACTION);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_ACTION, "bw_action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
-        //optionMenuItem.setLabel("Help");
+        optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
