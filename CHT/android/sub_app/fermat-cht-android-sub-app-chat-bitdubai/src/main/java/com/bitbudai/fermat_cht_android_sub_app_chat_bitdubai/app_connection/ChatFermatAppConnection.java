@@ -20,10 +20,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-
-import static com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE;
 
 /**
  * ChatFermatAppConnection
@@ -75,13 +76,14 @@ public class ChatFermatAppConnection
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
-        switch (code){
-            case CHAT_NEW_INCOMING_MESSAGE:
-                return new ChatNotificationPainterBuilder("New Message.","New message in Chat.", "", R.drawable.chat_subapp);
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+        int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
 
+        switch (notificationID) {
+            case ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE_NOTIFICATION:
+                return new ChatNotificationPainterBuilder("New Message.","New message in Chat.", "", R.drawable.chat_subapp);
             default:
-                return super.getNotificationPainter(code);
+                return null;
         }
 //
 //        NotificationPainter notification = null;

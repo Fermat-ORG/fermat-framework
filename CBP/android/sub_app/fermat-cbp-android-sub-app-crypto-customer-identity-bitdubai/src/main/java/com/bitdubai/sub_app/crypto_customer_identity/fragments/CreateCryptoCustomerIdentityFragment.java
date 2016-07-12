@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,12 +48,15 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CreateIdentityWorker;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 
 
@@ -76,6 +80,9 @@ implements FermatWorkerCallBack{
     private View progressBar;
     private int maxLenghtTextCount = 30;
     FermatTextView textCount;
+
+    IdentityCustomerPreferenceSettings settings;
+    boolean isGpsDialogEnable;
 
     private ExecutorService executor;
 
@@ -118,6 +125,19 @@ implements FermatWorkerCallBack{
             e.printStackTrace();
         }
 
+        try {
+            isGpsDialogEnable=true;
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = settings.isGpsDialogEnabled();
+        } catch (Exception e) {
+            settings = new IdentityCustomerPreferenceSettings();
+            settings.setGpsDialogEnabled(true);
+            isGpsDialogEnable=true;
+        }
+
+
+
+
         turnGPSOn();
     }
 
@@ -150,7 +170,7 @@ implements FermatWorkerCallBack{
         mCustomerName.performClick();
         mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mCustomerName.addTextChangedListener(textWatcher);
-        textCount.setText(String.valueOf(maxLenghtTextCount));
+        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.getText().length()));
 
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -177,6 +197,8 @@ implements FermatWorkerCallBack{
         });
 
         mCustomerName.requestFocus();
+
+        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
 
         checkGPSOn();
 
@@ -223,6 +245,9 @@ implements FermatWorkerCallBack{
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    Uri selectedImage2 = data.getData();
+                    Bundle extras = data.getExtras();
+                    cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     // grant all three uri permissions!
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
@@ -241,8 +266,12 @@ implements FermatWorkerCallBack{
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        Bundle extras = data.getExtras();
-                        cryptoCustomerBitmap = (Bitmap) extras.get("data");
+                        Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
+                        if (reducedSizeBitmap != null) {
+                            cryptoCustomerBitmap = reducedSizeBitmap;
+                        }
+//                        Bundle extras = data.getExtras();
+//                        cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
                 case REQUEST_LOAD_IMAGE:
@@ -350,9 +379,6 @@ implements FermatWorkerCallBack{
             }
         } else {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            imageToUploadUri = Uri.fromFile(f);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -377,6 +403,64 @@ implements FermatWorkerCallBack{
     private GeoFrequency getFrequencyData() {
         return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? GeoFrequency.NONE :
                 (GeoFrequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    }
+
+    private Bitmap getBitmap(String path) {
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            in = getActivity().getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+
+            Bitmap b = null;
+            in = getActivity().getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE
+                        / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
+                    b.getHeight());
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
+        }
     }
 
     public void turnGPSOn() {
@@ -453,10 +537,15 @@ implements FermatWorkerCallBack{
     private void checkGPSOn(){
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
-                turnOnGPSDialog();
+                if (isGpsDialogEnable ) {
+                    turnOnGPSDialog();
+                }
+
             }
         }else
+        if (isGpsDialogEnable) {
             turnOnGPSDialog();
+        }
     }
 
     public void turnOnGPSDialog() {
@@ -468,6 +557,8 @@ implements FermatWorkerCallBack{
                     .setBannerRes(R.drawable.banner_identity_customer)
                     .build();
             pd.show();
+            settings.setGpsDialogEnabled(false);
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
         } catch (Exception e) {
             e.printStackTrace();
         }

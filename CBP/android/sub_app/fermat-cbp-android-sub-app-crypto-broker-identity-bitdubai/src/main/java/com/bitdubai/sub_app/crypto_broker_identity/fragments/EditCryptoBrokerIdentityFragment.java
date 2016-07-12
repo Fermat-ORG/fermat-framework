@@ -43,6 +43,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
@@ -75,6 +76,8 @@ public class EditCryptoBrokerIdentityFragment
     private boolean actualizable;
     Location location;
     private Uri imageToUploadUri;
+    IdentityBrokerPreferenceSettings settings;
+    boolean isGpsDialogEnable = true;
 
     // Managers
 
@@ -128,6 +131,15 @@ public class EditCryptoBrokerIdentityFragment
             location = appSession.getModuleManager().getLocation();
         }catch (Exception e){
             e.printStackTrace();
+        }
+
+        try {
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = settings.isGpsDialogEnabled();
+        } catch (Exception e) {
+            settings = new IdentityBrokerPreferenceSettings();
+            settings.setGpsDialogEnabled(true);
+            isGpsDialogEnable=true;
         }
 
         turnGPSOn();
@@ -240,6 +252,8 @@ public class EditCryptoBrokerIdentityFragment
                 }
             }
         });
+
+        textCount.setText(String.valueOf(maxLenghtTextCount - mBrokerName.length()));
 
         if (wantPublishIdentity) {
             sw.setImageResource(R.drawable.switch_visible);
@@ -367,6 +381,7 @@ public class EditCryptoBrokerIdentityFragment
             FermatWorker fermatWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
 
             progressBar.setVisibility(View.VISIBLE);
+
             executor = fermatWorker.execute();
         }
     }
@@ -504,10 +519,15 @@ public class EditCryptoBrokerIdentityFragment
     private void checkGPSOn(){
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
-                turnOnGPSDialog();
+                if (isGpsDialogEnable ) {
+                    turnOnGPSDialog();
+                }
+
             }
         }else
-            turnOnGPSDialog();
+             if (isGpsDialogEnable ) {
+                turnOnGPSDialog();
+            }
     }
 
     public void turnOnGPSDialog() {

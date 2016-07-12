@@ -30,6 +30,7 @@ import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.ver
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseDao;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -197,7 +198,8 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
             long refreshInterval = 0;
             refreshInterval = chatIdentity.getFrecuency().getRefreshInterval();
-            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity(),chatIdentity.getConnectionState(), location, refreshInterval, chatIdentity.getAccuracy());
+            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity(),chatIdentity.getConnectionState(), location, refreshInterval, chatIdentity.getAccuracy(),
+                    ProfileStatus.UNKNOWN);
             chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
 
             if (isIdentityNew)

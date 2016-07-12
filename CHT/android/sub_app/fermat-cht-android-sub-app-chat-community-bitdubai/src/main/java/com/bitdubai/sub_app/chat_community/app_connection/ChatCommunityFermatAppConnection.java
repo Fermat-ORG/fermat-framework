@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.R;
@@ -81,8 +82,8 @@ public class ChatCommunityFermatAppConnection
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
-        return CommunityNotificationPainterBuilder.getNotification(code);
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+        return CommunityNotificationPainterBuilder.getNotification(fermatBundle);
     }
 
     @Override

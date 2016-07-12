@@ -868,7 +868,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                         TransactionType transactionType,
                                                                         String walletPublicKey,
@@ -926,7 +926,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                     final TransactionType transactionType,
                                                                                     String walletPublicKey,
@@ -1236,7 +1236,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
      * @throws com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException
      */
 
-    public void approveRequest(UUID requestId, String intraUserLoggedInPublicKey) throws CantApproveRequestPaymentException,
+    public void approveRequest(UUID requestId, String intraUserLoggedInPublicKey, long fee, FeeOrigin feeOrigin) throws CantApproveRequestPaymentException,
                                                      PaymentRequestNotFoundException,
                                                      RequestPaymentInsufficientFundsException
     {
@@ -1271,7 +1271,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                 }
             }
 
-            cryptoPaymentRegistry.approveRequest(requestId);
+            cryptoPaymentRegistry.approveRequest(requestId, fee,  feeOrigin);
 
 
         }
@@ -1632,7 +1632,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 //        fermatBundle.put(NotificationBundleConstants.SOURCE_PLUGIN,Plugins.CRYPTO_WALLET.getCode());
 //        Owner owner = new Owner();
 //        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
-//        fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
+//    fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
 //        if(i%2==0){
 //            fermatBundle.put(NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
 ////            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY,SubAppsPublicKeys.CHT_COMMUNITY.getCode());

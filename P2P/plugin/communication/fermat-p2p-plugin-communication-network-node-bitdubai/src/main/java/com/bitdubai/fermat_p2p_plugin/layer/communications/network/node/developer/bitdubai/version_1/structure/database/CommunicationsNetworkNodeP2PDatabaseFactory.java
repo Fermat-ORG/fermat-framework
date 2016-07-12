@@ -81,6 +81,7 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(ACTOR_CATALOG_ALIAS_COLUMN_NAME                     , DatabaseDataType.STRING      ,  100, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME                , DatabaseDataType.STRING      ,  255, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_PHOTO_COLUMN_NAME                     , DatabaseDataType.STRING      , 2500, Boolean.FALSE);
+            table.addColumn(ACTOR_CATALOG_THUMBNAIL_COLUMN_NAME                 , DatabaseDataType.STRING      , 2500, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME             , DatabaseDataType.REAL        ,   50, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME            , DatabaseDataType.REAL        ,   50, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME                , DatabaseDataType.STRING      ,  255, Boolean.FALSE);
@@ -108,6 +109,7 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME                     , DatabaseDataType.STRING      ,  100, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME                , DatabaseDataType.STRING      ,  255, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME                     , DatabaseDataType.STRING      , 2500, Boolean.FALSE);
+            table.addColumn(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME                 , DatabaseDataType.STRING      , 2500, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME             , DatabaseDataType.REAL        ,   50, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME            , DatabaseDataType.REAL        ,   50, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME                , DatabaseDataType.STRING      ,  255, Boolean.FALSE);
@@ -135,6 +137,7 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME                     , DatabaseDataType.STRING      ,  100, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME                , DatabaseDataType.STRING      ,  255, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME                     , DatabaseDataType.STRING      , 2500, Boolean.FALSE);
+            table.addColumn(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME                 , DatabaseDataType.STRING      , 2500, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME             , DatabaseDataType.REAL        ,   50, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME            , DatabaseDataType.REAL        ,   50, Boolean.FALSE);
             table.addColumn(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME                , DatabaseDataType.STRING      ,  255, Boolean.FALSE);

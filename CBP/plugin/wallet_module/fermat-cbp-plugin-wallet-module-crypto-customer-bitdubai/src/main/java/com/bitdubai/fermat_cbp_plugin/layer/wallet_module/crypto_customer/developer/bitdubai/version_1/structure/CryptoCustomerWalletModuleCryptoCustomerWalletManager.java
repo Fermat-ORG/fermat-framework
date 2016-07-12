@@ -45,6 +45,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCl
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantRequestBrokerExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
@@ -536,8 +537,22 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
     @Override
     public long getBalanceBitcoinWallet(String walletPublicKey) {
+        String publicKeyActor;
+        try{
+            publicKeyActor=getSelectedActorIdentity().getPublicKey();
+        } catch (Exception e){
+            publicKeyActor = "customerPublicKey";
+        }
+
         try {
-            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+            CryptoCustomerWalletPreferenceSettings preferenceSettings;
+            try {
+                preferenceSettings = loadAndGetSettings(publicKeyActor);
+            } catch (Exception e) {
+                preferenceSettings = new CryptoCustomerWalletPreferenceSettings();
+            }
+            BlockchainNetworkType blockchainNetworkType = preferenceSettings.getBlockchainNetworkType();
+            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
         } catch (CantCalculateBalanceException | CantLoadWalletsException ignore) {
             return 0;
         }
@@ -729,6 +744,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         }
 
         return brokersBusinessInfo;
+    }
+
+    @Override
+    public void requestQuotes() throws CantGetCryptoBrokerListException {
+        try {
+            actorExtraDataManager.requestBrokerExtraData();
+        } catch (CantRequestBrokerExtraDataException e) {
+            throw new CantGetCryptoBrokerListException("Error requesting quotes", e, "", "");
+        }
     }
 
     @Override
