@@ -54,6 +54,7 @@ final public class NegotiationWrapper {
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
     private Set<ClauseType> confirmedClauses;
+    private boolean walletUser = true;
 
     /**
      * Constructor that wrap the {@link CustomerBrokerNegotiationInformation} object offering handy methods to operate with,
@@ -199,5 +200,13 @@ final public class NegotiationWrapper {
         clauseInformation.setValue(value);
 
         negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
+    }
+
+    public boolean isWalletUser(){
+        return this.walletUser;
+    }
+
+    public void setWalletUser(boolean walletUser){
+        this.walletUser = walletUser;
     }
 }

@@ -86,6 +86,12 @@ public interface BusinessTransactionMetadata {
     UUID getTransactionId();
 
     /**
+     * This method returns the transaction contract id
+     * @return
+     */
+    UUID getTransactionContractId();
+
+    /**
      * This method sets the BusinessTransactionTransactionType
      * @param businessTransactionTransactionType
      */

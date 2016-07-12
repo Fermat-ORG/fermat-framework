@@ -220,9 +220,6 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 
     @Override
     protected void bindHolder(final CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
-        System.out.print("chatworldadapter= "+data.getAlias()+" status: "
-                +data.getProfileStatus().getCode()+" posicion:"+position+" status:"+data.getStatus()
-                +" conexion:"+data.getConnectionState());
         final ConnectionState connectionState = data.getConnectionState();
         updateConnectionState(connectionState, holder);
         holder.name.setText(data.getAlias());

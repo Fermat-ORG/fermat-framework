@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -73,7 +72,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private FermatTextView detailDate;
     private FermatTextView detailRate;
     private FermatTextView brokerName;
-    private FermatButton negotiationButton;
+    private View negotiationButton;
     private RecyclerView recyclerView;
     private ContractDetailAdapter adapter;
 
@@ -124,7 +123,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
         sellingSummary = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_selling_summary);
         detailDate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_rate);
-        negotiationButton = (FermatButton) rootView.findViewById(R.id.cbw_contract_details_negotiation_details);
+        negotiationButton = rootView.findViewById(R.id.cbw_contract_details_negotiation_details);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_contract_details_contract_steps_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
