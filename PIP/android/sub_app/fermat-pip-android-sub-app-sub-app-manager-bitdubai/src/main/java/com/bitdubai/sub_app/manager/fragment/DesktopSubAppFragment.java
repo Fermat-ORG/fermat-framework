@@ -441,20 +441,24 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
-        AppsStatus appsStatus = AppsStatus.getByCode(code);
-        switch (appsStatus) {
-            case RELEASE:
-                return;
-            case BETA:
-                return;
-            case ALPHA:
-                break;
-            case DEV:
-                break;
-        }
+        try {
+            AppsStatus appsStatus = AppsStatus.getByCode(code);
+            switch (appsStatus) {
+                case RELEASE:
+                    return;
+                case BETA:
+                    return;
+                case ALPHA:
+                    break;
+                case DEV:
+                    break;
+            }
 
-        select(appsStatus);
-        super.onUpdateViewOnUIThread(code);
+            select(appsStatus);
+            super.onUpdateViewOnUIThread(code);
+        }catch (Exception e){
+            Log.e(TAG,"Desktop. No olvidar borrar esto, furszy");
+        }
     }
 }
 
