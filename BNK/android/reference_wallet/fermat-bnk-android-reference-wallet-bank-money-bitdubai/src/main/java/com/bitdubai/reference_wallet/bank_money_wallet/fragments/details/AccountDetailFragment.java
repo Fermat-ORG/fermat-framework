@@ -172,8 +172,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         accountText.setText(bankAccountNumber.getAccount());
         aliasText.setText(bankAccountNumber.getAlias());
 
-        availableTextView.setText(moneyFormat.format(moduleManager.getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
-        bookTextView.setText(moneyFormat.format(moduleManager.getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        availableTextView.setText(String.format("%s %s", moneyFormat.format(moduleManager.getAvailableBalance(bankAccountNumber.getAccount())), bankAccountNumber.getCurrencyType().getCode()));
+        bookTextView.setText(String.format("%s %s", moneyFormat.format(moduleManager.getBookBalance(bankAccountNumber.getAccount())), bankAccountNumber.getCurrencyType().getCode()));
         balanceText.setTextColor(getResources().getColor(R.color.text_color_soft_blue));
         if (availableTextView.getText().equals(bookTextView.getText())) {
             bookTextView.setVisibility(View.GONE);
@@ -383,7 +383,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         threadIsRunning = false;
     }
 
-    private final void doRefresh() {
+    private void doRefresh() {
 
         while (threadIsRunning) {
 
