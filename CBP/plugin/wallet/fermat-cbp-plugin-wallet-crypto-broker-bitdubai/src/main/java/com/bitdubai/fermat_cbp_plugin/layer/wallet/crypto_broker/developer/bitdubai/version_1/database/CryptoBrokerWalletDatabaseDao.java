@@ -356,8 +356,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
             //Determinar mediante el precio del mercado a como esta esa mercancia
             float priceReference; //Precio en dolar devuelto al pedir el precio del mercado
-            float priceRateSale;
-            float priceRatePurchase;
+            float priceRateSale = 0;
+            float priceRatePurchase = 0;
             if (!getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, TransactionType.CREDIT, BalanceType.AVAILABLE).isEmpty())
                 priceRateSale = getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, TransactionType.CREDIT, BalanceType.AVAILABLE).get(0).getPriceReference().floatValue();
             if (!getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, TransactionType.DEBIT, BalanceType.AVAILABLE).isEmpty())
@@ -370,8 +370,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 rate = provider.getCurrentExchangeRate(usdVefCurrencyPair);
             }
 
-            priceRateSale = (float) (rate != null ? rate.getSalePrice() : 0);
-            priceRatePurchase = (float) (rate != null ? rate.getPurchasePrice() : 0);
+            priceRateSale = (float) (rate != null ? rate.getSalePrice() : priceRateSale);
+            priceRatePurchase = (float) (rate != null ? rate.getPurchasePrice() : priceRatePurchase);
 
             final float priceSaleUp = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
             final float priceSaleDown = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
