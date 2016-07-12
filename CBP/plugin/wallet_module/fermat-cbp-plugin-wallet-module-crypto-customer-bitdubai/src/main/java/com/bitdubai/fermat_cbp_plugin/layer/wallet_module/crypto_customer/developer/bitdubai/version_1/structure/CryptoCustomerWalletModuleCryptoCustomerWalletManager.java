@@ -88,6 +88,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerCloseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
@@ -126,6 +127,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.develo
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -174,6 +177,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     private final BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager;
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
+    private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final CryptoWalletManager cryptoWalletManager;
 
     private String merchandise = null;
@@ -204,6 +208,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                                                                  BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
                                                                  BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                                  BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
+                                                                 IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                                                  CryptoWalletManager cryptoWalletManager,
                                                                  final CryptoCustomerWalletModulePluginRoot pluginRoot,
                                                                  PluginFileSystem pluginFileSystem,
@@ -228,6 +233,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         this.brokerAckOfflinePaymentManager = brokerAckOfflinePaymentManager;
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
         this.cryptoWalletManager = cryptoWalletManager;
         this.pluginRoot = pluginRoot;
     }
@@ -1278,6 +1284,18 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public boolean isCreateIdentityIntraUser() throws CantSendNegotiationException{
+
+        try {
+            return intraWalletUserIdentityManager.hasIntraUserIdentity();
+        } catch (CantListIntraWalletUsersException e){
+            throw new CantSendNegotiationException(e, "Cannot not get has intra user identity", "Cannot get the negotiation");
+        }
+
+
     }
 
     private Collection<Clause> getClause(Collection<ClauseInformation> clauseInformation) {

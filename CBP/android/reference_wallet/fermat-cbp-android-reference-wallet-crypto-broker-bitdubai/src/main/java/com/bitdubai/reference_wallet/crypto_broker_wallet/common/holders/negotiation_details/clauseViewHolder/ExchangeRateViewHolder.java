@@ -193,7 +193,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
                 exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
-                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
+//                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
             }
         } else {
             exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());

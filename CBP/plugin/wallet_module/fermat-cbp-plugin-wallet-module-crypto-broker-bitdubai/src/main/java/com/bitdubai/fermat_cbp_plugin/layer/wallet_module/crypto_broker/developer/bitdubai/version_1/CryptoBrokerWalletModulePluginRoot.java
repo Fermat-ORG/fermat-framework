@@ -60,6 +60,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develope
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletProviderSettingImpl;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -177,6 +178,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_CUSTOMER)
     private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
     public CryptoBrokerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -287,6 +291,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     brokerAckOnlinePaymentManager,
                     brokerSubmitOfflineMerchandiseManager,
                     brokerSubmitOnlineMerchandiseManager,
+                    intraWalletUserIdentityManager,
                     matchingEngineManager,
                     customerBrokerCloseManager,
                     cryptoCustomerActorConnectionManager,

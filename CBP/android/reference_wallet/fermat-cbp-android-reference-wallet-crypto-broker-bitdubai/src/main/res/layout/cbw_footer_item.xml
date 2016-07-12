@@ -6,6 +6,27 @@
               android:orientation="vertical">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/warning_wallet_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="#286aba"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        android:visibility="gone">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="For use of BTC. Need to register the identity THE WALLET USER"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
         android:id="@+id/add_a_note_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
