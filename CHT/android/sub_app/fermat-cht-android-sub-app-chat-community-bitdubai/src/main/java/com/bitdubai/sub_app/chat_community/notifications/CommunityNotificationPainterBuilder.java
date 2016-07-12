@@ -1,6 +1,9 @@
 package com.bitdubai.sub_app.chat_community.notifications;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.enums.ActorConnectionNotificationType;
 import com.bitdubai.sub_app.chat_community.R;
 
@@ -14,26 +17,27 @@ import com.bitdubai.sub_app.chat_community.R;
  */
 public class CommunityNotificationPainterBuilder {
 
-    public static NotificationPainter getNotification(final String code) {
-
+    public static NotificationPainter getNotification(final FermatBundle fermatBundle) {
         NotificationPainter notification = null;
         try {
+            int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
+//            ActorConnectionNotificationType notificationType = ActorConnectionNotificationType.getByCode(code);
 
-            ActorConnectionNotificationType notificationType = ActorConnectionNotificationType.getByCode(code);
-
-            switch (notificationType) {
-                case ACTOR_CONNECTED:
-                    notification = new CommunityNotificationPainter("CHT Community", "A Chat accepted your connection request.", "", "", R.drawable.cht_ic_nav_connections);
-                    break;
-                case CONNECTION_REQUEST_RECEIVED:
-                    notification = new CommunityNotificationPainter("CHT Community", "A Chat wants to connect with you.", "", "", R.drawable.cht_ic_nav_connections);
-                    break;
+            switch (notificationID) {// switch (notificationType) {
+                case ChatBroadcasterConstants.CHAT_COMMUNITY_CONNECTION_ACCEPTED_NOTIFICATION://ACTOR_CONNECTED
+                    return new CommunityNotificationPainter("Chat Community",
+                            "A Chat user accepted your connection request.","",
+                            "", R.drawable.cht_ic_nav_connections);
+                case ChatBroadcasterConstants.CHAT_COMMUNITY_REQUEST_CONNECTION_NOTIFICATION://CONNECTION_REQUEST_RECEIVED
+                    return new CommunityNotificationPainter("Chat Community",
+                            "A Chat user accepted your connection request.","",
+                            "", R.drawable.cht_ic_nav_connections);
+                default:
+                    return null;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return notification;
     }
 

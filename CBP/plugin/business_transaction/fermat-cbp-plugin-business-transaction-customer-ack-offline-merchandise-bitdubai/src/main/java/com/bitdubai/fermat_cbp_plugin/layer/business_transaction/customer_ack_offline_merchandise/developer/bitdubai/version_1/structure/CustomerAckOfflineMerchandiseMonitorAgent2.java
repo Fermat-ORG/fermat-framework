@@ -96,23 +96,27 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
             for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+                try{
+                    contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
 
-                contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " +contractHash+"\n");
 
-                System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " +contractHash+"\n");
+                    transactionTransmissionManager.sendContractStatusNotification(
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            contractHash,
+                            pendingToSubmitNotificationRecord.getTransactionId(),
+                            ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK,
+                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER
+                    );
 
-                transactionTransmissionManager.sendContractStatusNotification(
-                        pendingToSubmitNotificationRecord.getCustomerPublicKey(),
-                        pendingToSubmitNotificationRecord.getBrokerPublicKey(),
-                        contractHash,
-                        pendingToSubmitNotificationRecord.getTransactionId(),
-                        ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK,
-                        Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER
-                );
+                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK);
+                } catch (Exception e){
+                    reportError(e);
+                }
 
-                customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK);
             }
 
             /**
@@ -120,20 +124,23 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
             for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+                try{
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
+                    contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
-                contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
+                    transactionTransmissionManager.confirmNotificationReception(
+                            pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+                            contractHash,
+                            pendingToSubmitConfirmationRecord.getTransactionId(),
+                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                transactionTransmissionManager.confirmNotificationReception(
-                        pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
-                        pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
-                        contractHash,
-                        pendingToSubmitConfirmationRecord.getTransactionId(),
-                        Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
-
-                customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
+                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -141,15 +148,14 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
              */
             List<String> pendingEventsIdList= customerAckOfflineMerchandiseBusinessTransactionDao.getPendingEvents();
             for(String eventId : pendingEventsIdList){
-                checkPendingEvent(eventId);
+                try{
+                    checkPendingEvent(eventId);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
-
-        } catch (UnexpectedResultReturnedFromDatabaseException |
-                CantGetContractListException |
-                CantUpdateRecordException |
-                CantSendContractNewStatusNotificationException |
-                CantConfirmNotificationReceptionException e) {
+        } catch (Exception e) {
             reportError(e);
         }
     }

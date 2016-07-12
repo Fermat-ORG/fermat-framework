@@ -264,9 +264,7 @@ public class ConnectionsWorldFragment
                                 }
                             });
                         } else{
-
                             refreshButtonView.setVisibility(View.GONE);
-
                         }
 //                        if (!isRefreshing) {
 
@@ -411,10 +409,10 @@ public class ConnectionsWorldFragment
         try{
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+//            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//            progressDialog.setMessage("Please wait");
+//            progressDialog.setCancelable(false);
+//            progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -431,7 +429,7 @@ public class ConnectionsWorldFragment
                         swipeRefresh.setRefreshing(false);
                         if (result != null &&
                                 result.length > 0) {
-                            progressDialog.dismiss();
+//                            progressDialog.dismiss();
                             if (getActivity() != null && adapter != null) {
                                 if (offset == 0) {
                                     if (lstChatUserInformations != null) {
@@ -462,7 +460,7 @@ public class ConnectionsWorldFragment
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null && isAttached)
                         swipeRefresh.setRefreshing(false);

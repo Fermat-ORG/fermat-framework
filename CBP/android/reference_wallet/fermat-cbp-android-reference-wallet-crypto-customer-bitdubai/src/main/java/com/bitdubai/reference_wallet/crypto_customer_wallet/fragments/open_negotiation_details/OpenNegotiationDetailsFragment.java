@@ -42,6 +42,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -300,16 +301,27 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         if (validateClauses(mapClauses)) {
             if (validateStatusClause(mapClauses)) {
-                try {
-                    moduleManager.updateNegotiation(negotiationInfo);
 
-                    Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
-                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
+                try {
+
+                    if(isCreateIdentityIntraUser(negotiationInfo.getClauses())) {
+
+                            moduleManager.updateNegotiation(negotiationInfo);
+
+                            Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
+                            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
+
+                    } else
+                        Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC", Toast.LENGTH_LONG).show();
 
                 } catch (CouldNotUpdateNegotiationException e) {
                     Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
+                } catch (CantSendNegotiationException e){
+                    Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
                 }
-            }
+
+            } else
+                Toast.makeText(getActivity(), "Need to confirm ALL the clauses", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -1119,5 +1131,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private List<IndexInfoSummary> getActualExchangeRates() {
         Object data = appSession.getData(FragmentsCommons.EXCHANGE_RATES);
         return (data != null) ? (List<IndexInfoSummary>) data : null;
+    }
+
+    private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException {
+
+        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        String brokerCurrency   = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        String currencyBTC      = "BTC";
+
+        if(customerCurrency != null){
+            if(currencyBTC.equals(customerCurrency)) return moduleManager.isCreateIdentityIntraUser();
+        }
+
+        if(brokerCurrency != null){
+            if(currencyBTC.equals(brokerCurrency)) return moduleManager.isCreateIdentityIntraUser();
+        }
+
+        return true;
     }
 }
