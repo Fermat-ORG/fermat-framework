@@ -44,6 +44,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
@@ -86,10 +87,6 @@ import java.util.concurrent.Executors;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
-/**
- * Created by Matias Furszyfer on 15/09/15.
- * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
- */
 
 public class ConnectionsWorldFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>
@@ -152,7 +149,7 @@ public class ConnectionsWorldFragment
     int firstVisibleItemsReff, pastVisiblesItems, visibleItemCount, totalItemCount;
     int referencialDy = 0;
 
-    //variables scroller 2
+    //endless scroller
     protected RecyclerView.OnScrollListener scrollListener;
 
 
@@ -522,7 +519,9 @@ public class ConnectionsWorldFragment
         errorConnectingGPS.setDescription("Please, turn ON your GPS.");
         errorConnectingGPS.setCloseButton("Close", new View.OnClickListener() {
             @Override
-            public void onClick(View v) { errorConnectingGPS.dismiss();}
+            public void onClick(View v) {
+                errorConnectingGPS.dismiss();
+            }
         });
 
         errorConnectingGPS.show();
@@ -535,9 +534,9 @@ public class ConnectionsWorldFragment
         //offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+           /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
 
-           /* if (offset>0) {
+            if (offset>0) {
                 notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
                 notificationsProgressDialog.setCancelable(true);
                 notificationsProgressDialog.show();
@@ -814,8 +813,8 @@ public class ConnectionsWorldFragment
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
-
-             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offsetP);
+             offset = offsetP;
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
@@ -842,6 +841,21 @@ public class ConnectionsWorldFragment
                  }
              });
         }
+        return dataSet;
+    }
+
+
+    public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<IntraUserInformation> dataSet = new ArrayList<>();
+
+        try {
+            offset = pos;
+            List<IntraUserInformation> result = moduleManager.getSuggestionsToContact(location, distance,alias,MAX, offset);
+            dataSet.addAll(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return dataSet;
     }
 
@@ -1025,8 +1039,65 @@ public class ConnectionsWorldFragment
 
     }
 
+    //endless scroller
     @Override
-    public void onLoadMoreData(int page, int totalItemsCount) {
+    public void onLoadMoreData(int page, final int totalItemsCount) {
+        adapter.setLoadingData(true);
+        worker = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                Toast.makeText(getActivity(), "Loading more users.", Toast.LENGTH_SHORT).show();
+
+                return getMoreData(location,distance,alias, totalItemsCount);
+            }
+        };
+        worker.setContext(getActivity());
+        worker.setCallBack(new FermatWorkerCallBack() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onPostExecute(Object... result) {
+
+                if (swipeRefresh != null)
+                    swipeRefresh.setRefreshing(false);
+                    adapter.setLoadingData(false);
+                if (result != null &&
+                        result.length > 0) {
+                    if (getActivity() != null && adapter != null) {
+                        lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
+
+                        if (lstIntraUserInformations.isEmpty()) {
+                            showEmpty(true, emptyView);
+                            showEmpty(false, searchEmptyView);
+                        } else {
+                            Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+
+                            adapter.changeDataSet(lstIntraUserInformations);
+                            showEmpty(false, emptyView);
+                            showEmpty(false, searchEmptyView);
+                        }
+                    }
+                } else {
+                    showEmpty(true, emptyView);
+                    showEmpty(false, searchEmptyView);
+
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                // notificationsProgressDialog.dismiss();
+
+                isRefreshing = false;
+                if (swipeRefresh != null)
+                    swipeRefresh.setRefreshing(false);
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                ex.printStackTrace();
+
+            }
+        });
+        worker.execute();
 
     }
 
