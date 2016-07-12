@@ -30,6 +30,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.BitcoinFaucetManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
@@ -821,7 +823,6 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,
                                                          BalanceType balanceType, final TransactionType transactionType,
                                                          String walletPublicKey,
@@ -867,8 +868,16 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         }
     }
 
+    public void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException{
+
+            BitcoinFaucetManager.giveMeCoins(blockchainNetworkType,cryptoAddress , 500000000);
+
+    }
+
+
+
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                         TransactionType transactionType,
                                                                         String walletPublicKey,
@@ -879,7 +888,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         try {
             CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
             List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<CryptoWalletTransaction> bitcoinWalletTransactionList = cryptoWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
+            List<CryptoWalletTransaction> bitcoinWalletTransactionList = cryptoWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset,blockchainNetworkType);
 
 
                 List<CryptoWalletTransaction> cryptoWalletTransactionList1 = new ArrayList<>();
@@ -926,7 +935,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                     final TransactionType transactionType,
                                                                                     String walletPublicKey,

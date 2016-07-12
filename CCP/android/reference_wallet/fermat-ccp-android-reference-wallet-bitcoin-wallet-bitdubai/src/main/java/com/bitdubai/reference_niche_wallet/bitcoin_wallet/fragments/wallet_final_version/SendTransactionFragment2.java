@@ -538,37 +538,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             } else {
                                 //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
                                 //TestNet Faucet
-
-                                try {
-                                    String SetServerString;
-                                    CryptoAddress cryptoAddress = new CryptoAddress("mtMFTiGfBpjL1GBki8zrk5UW8otD6Gt541", CryptoCurrency.BITCOIN);
-                                    CryptoWalletWalletContact cryptoWalletWalletContact = null;
-                                    try {
-                                        cryptoWalletWalletContact = moduleManager.createWalletContact(
-                                                cryptoAddress, "Testnet_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
-                                    } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
-                                        try {
-                                            cryptoWalletWalletContact = moduleManager.findWalletContactByName(
-                                                    "Testnet_bitcoins", appSession.getAppPublicKey(), appSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
-                                        } catch (CantFindWalletContactException |
-                                                WalletContactNotFoundException e3) {
-                                            e.printStackTrace();
-                                        } catch (CantGetSelectedActorIdentityException e1) {
-                                            e1.printStackTrace();
-                                        } catch (ActorIdentityNotSelectedException e1) {
-                                            e1.printStackTrace();
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    assert cryptoWalletWalletContact != null;
-
-                                    BitcoinFaucetManager.giveMeCoins(blockchainNetworkType, getWalletAddress(cryptoWalletWalletContact.getActorPublicKey()), 5);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                // GET("", getActivity());
+                                GETTestNet("", getActivity());
                                 progress1 = 1;
                                 circularProgressBar.setProgressValue(progress1);
                                 return true;
@@ -746,6 +716,70 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             public void run() {
                                 if (!finalResponse.equals("transaccion fallida"))
                                     Toast.makeText(context, "Regtest bitcoin arrived", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                thread.start();
+            }
+        } catch (CantGetBalanceException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void GETTestNet(@SuppressWarnings("UnusedParameters") String url, final Context context){
+        final Handler mHandler = new Handler();
+
+        try {
+            if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        String finalResponse = "";
+
+                        try {
+                            String SetServerString;
+                            CryptoAddress cryptoAddress = new CryptoAddress("mtMFTiGfBpjL1GBki8zrk5UW8otD6Gt541", CryptoCurrency.BITCOIN);
+                            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+                            try {
+                                cryptoWalletWalletContact = moduleManager.createWalletContact(
+                                        cryptoAddress, "Testnet_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
+                            } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
+                                try {
+                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName(
+                                            "Testnet_bitcoins", appSession.getAppPublicKey(), appSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
+                                } catch (CantFindWalletContactException |
+                                        WalletContactNotFoundException e3) {
+                                    finalResponse = "transaccion fallida";
+                                    e.printStackTrace();
+                                } catch (CantGetSelectedActorIdentityException e1) {
+                                    e1.printStackTrace();
+                                } catch (ActorIdentityNotSelectedException e1) {
+                                    finalResponse = "transaccion fallida";
+                                    e1.printStackTrace();
+                                }
+                            } catch (Exception e) {
+                                finalResponse = "transaccion fallida";
+                                e.printStackTrace();
+                            }
+
+                            assert cryptoWalletWalletContact != null;
+
+                            moduleManager.testNetGiveMeCoins(blockchainNetworkType, getWalletAddress(cryptoWalletWalletContact.getActorPublicKey()));
+                        } catch (Exception e) {
+                            finalResponse = "transaccion fallida";
+                            e.printStackTrace();
+                        }
+                        final String result = finalResponse;
+
+
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!result.equals("transaccion fallida"))
+                                    Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
