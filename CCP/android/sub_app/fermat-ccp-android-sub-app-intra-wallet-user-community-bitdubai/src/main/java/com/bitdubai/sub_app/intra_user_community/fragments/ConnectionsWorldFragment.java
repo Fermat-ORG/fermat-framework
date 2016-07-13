@@ -89,8 +89,8 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 10;
- //   private static final int SPAN_COUNT = 4;
+    private static final int MAX = 12;
+   private static final int SPAN_COUNT = 4;
     /**
      * MANAGERS
      */
@@ -1082,41 +1082,46 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
     @Override
     public void onPostExecute(Object... result) {
-        isRefreshing = false;
-        if (swipeRefresh != null)
-            swipeRefresh.setRefreshing(false);
-        if (result != null &&
-                result.length > 0) {
-            if (getActivity() != null && adapter != null) {
-                lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
 
-                if (lstIntraUserInformations != null) {
-                    if (lstIntraUserInformations.isEmpty()) {
-                        showEmpty(true, emptyView);
-                        showEmpty(false, searchEmptyView);
-                    } else {
-                        // Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+            isRefreshing = false;
+            if (isAttached) {
+                swipeRefreshLayout.setRefreshing(false);
+                adapter.setLoadingData(false);
+                if (result != null && result.length > 0) {
 
-                        adapter.changeDataSet(lstIntraUserInformations);
-                        ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
-                        showEmpty(false, emptyView);
-                        showEmpty(false, searchEmptyView);
+                    if (adapter != null) {
+                        if (offset == 0) {
+                            lstIntraUserInformations.clear();
+                            lstIntraUserInformations.addAll((ArrayList) result[0]);
+                            adapter.changeDataSet(lstIntraUserInformations);
+                            ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                        } else {
+                            lstIntraUserInformations.addAll((ArrayList) result[0]);
+                            adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
+                        }
+
+                        if (lstIntraUserInformations != null) {
+                            if (lstIntraUserInformations.isEmpty()) {
+                                showEmpty(true, emptyView);
+                                showEmpty(false, searchEmptyView);
+                            } else {
+
+                                showEmpty(false, emptyView);
+                                showEmpty(false, searchEmptyView);
+                            }
+                        }else {
+
+                            showEmpty(false, emptyView);
+                            showEmpty(false, searchEmptyView);
+                        }
+
                     }
-                }else {
-
-                    adapter.changeDataSet(lstIntraUserInformations);
-                    ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
-                    showEmpty(false, emptyView);
-                    showEmpty(false, searchEmptyView);
                 }
-
             }
-        } else {
-            showEmpty(true, emptyView);
-            showEmpty(false, searchEmptyView);
+
 
         }
-    }
+
 
     @Override
     public void onErrorOccurred(Exception ex) {
@@ -1142,7 +1147,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -1151,7 +1156,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                         case 1:
                             return 1;
                         case 2:
-                            return 2;
+                            return SPAN_COUNT;
                         default:
                             return GridLayoutManager.DEFAULT_SPAN_COUNT;
                     }
@@ -1250,6 +1255,8 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
         alias=aliasSearch;
         onRefresh();
     }
+
+
 
     public void turnGPSOn() {
         try{
