@@ -538,37 +538,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             } else {
                                 //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
                                 //TestNet Faucet
-
-                                try {
-                                    String SetServerString;
-                                    CryptoAddress cryptoAddress = new CryptoAddress("mtMFTiGfBpjL1GBki8zrk5UW8otD6Gt541", CryptoCurrency.BITCOIN);
-                                    CryptoWalletWalletContact cryptoWalletWalletContact = null;
-                                    try {
-                                        cryptoWalletWalletContact = moduleManager.createWalletContact(
-                                                cryptoAddress, "Testnet_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
-                                    } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
-                                        try {
-                                            cryptoWalletWalletContact = moduleManager.findWalletContactByName(
-                                                    "Testnet_bitcoins", appSession.getAppPublicKey(), appSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
-                                        } catch (CantFindWalletContactException |
-                                                WalletContactNotFoundException e3) {
-                                            e.printStackTrace();
-                                        } catch (CantGetSelectedActorIdentityException e1) {
-                                            e1.printStackTrace();
-                                        } catch (ActorIdentityNotSelectedException e1) {
-                                            e1.printStackTrace();
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    assert cryptoWalletWalletContact != null;
-
-                                    BitcoinFaucetManager.giveMeCoins(blockchainNetworkType, getWalletAddress(cryptoWalletWalletContact.getActorPublicKey()), 5);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                // GET("", getActivity());
+                                GETTestNet("", getActivity());
                                 progress1 = 1;
                                 circularProgressBar.setProgressValue(progress1);
                                 return true;
@@ -757,6 +727,70 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
     }
 
+
+    public void GETTestNet(@SuppressWarnings("UnusedParameters") String url, final Context context){
+        final Handler mHandler = new Handler();
+
+        try {
+            //if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        String finalResponse = "";
+
+                        try {
+                            String SetServerString;
+                            CryptoAddress cryptoAddress = new CryptoAddress("mtMFTiGfBpjL1GBki8zrk5UW8otD6Gt541", CryptoCurrency.BITCOIN);
+                            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+                            try {
+                                cryptoWalletWalletContact = moduleManager.createWalletContact(
+                                        cryptoAddress, "Testnet_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
+                            } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
+                                try {
+                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName(
+                                            "Testnet_bitcoins", appSession.getAppPublicKey(), appSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
+                                } catch (CantFindWalletContactException |
+                                        WalletContactNotFoundException e3) {
+                                    finalResponse = "transaccion fallida";
+                                    e.printStackTrace();
+                                } catch (CantGetSelectedActorIdentityException e1) {
+                                    e1.printStackTrace();
+                                } catch (ActorIdentityNotSelectedException e1) {
+                                    finalResponse = "transaccion fallida";
+                                    e1.printStackTrace();
+                                }
+                            } catch (Exception e) {
+                                finalResponse = "transaccion fallida";
+                                e.printStackTrace();
+                            }
+
+                            assert cryptoWalletWalletContact != null;
+
+                            moduleManager.testNetGiveMeCoins(blockchainNetworkType, getWalletAddress(cryptoWalletWalletContact.getActorPublicKey()));
+                        } catch (Exception e) {
+                            finalResponse = "transaccion fallida";
+                            e.printStackTrace();
+                        }
+                        final String result = finalResponse;
+
+
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!result.equals("transaccion fallida"))
+                                    Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                thread.start();
+           // }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
@@ -889,8 +923,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             e.printStackTrace();
         } catch (Exception e){
             //time out
-
-          e.printStackTrace();
+            e.printStackTrace();
         }
         return data;
     }
@@ -909,71 +942,35 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onLongItemClickListener(CryptoWalletTransaction data, int position) {
     }
 
-    @Override
-    public void onRefresh() {
-
-        //offset = 0;
-        if (!isRefreshing) {
-            isRefreshing = true;
-
-            worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-
-                    isRefreshing = false;
-                    if (isAttached) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        if (result != null && result.length > 0) {
-                            //noinspection unchecked
-                            openNegotiationList = (ArrayList) result[0];
-                            if (adapter != null)
-                                adapter.changeDataSet(openNegotiationList);
-
-                            if(openNegotiationList.size() > 0)
-                            {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
-                            }
-                            else
-                            {
-                                recyclerView.setVisibility(View.GONE);
-                                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                            }
-                        }
-                        else {
-                            recyclerView.setVisibility(View.GONE);
-                            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                        }
-                    }
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    isRefreshing = false;
-
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
-
-                }
-            });
-
-            worker.execute();
-        }
-    }
 
 
     @Override
     public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                //noinspection unchecked
+                openNegotiationList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(openNegotiationList);
 
+                if(openNegotiationList.size() > 0)
+                {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                }
+                else
+                {
+                    recyclerView.setVisibility(View.GONE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                }
+            }
+            else {
+                recyclerView.setVisibility(View.GONE);
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            }
+        }
     }
 
     @Override

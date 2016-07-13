@@ -421,6 +421,9 @@ public class SubAppAppsGenerator {
             subAppIntraUser.setPublicKey(communityPublicKey);
             listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
 
+
+
+
             //Activity Explore
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);

@@ -261,12 +261,12 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         try {
 
                 //verifico la cache para mostrar los que tenia antes y los nuevos
-                List<IntraUserInformation> userCacheList = new ArrayList<>();
+              /*  List<IntraUserInformation> userCacheList = new ArrayList<>();
                 try {
                     userCacheList = getCacheSuggestionsToContact(max, offset);
                 } catch (CantGetIntraUsersListException e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
@@ -286,7 +286,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 }
 
 
-            if(intraUserInformationModuleList!=null) {
+         /*   if(intraUserInformationModuleList!=null) {
                 if (userCacheList.size() == 0) {
 
                     //save cache records
@@ -328,9 +328,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             }
             else {
                 return userCacheList;
-            }
+            }*/
 
 
+            return intraUserInformationModuleList;
 
         }
         catch (ErrorSearchingSuggestionsException e) {

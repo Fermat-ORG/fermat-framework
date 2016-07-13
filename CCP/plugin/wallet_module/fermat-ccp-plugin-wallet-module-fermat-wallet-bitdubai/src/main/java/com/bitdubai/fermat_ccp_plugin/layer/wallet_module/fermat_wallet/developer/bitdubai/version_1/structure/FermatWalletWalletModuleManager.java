@@ -1052,7 +1052,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         try {
             CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
+            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset, blockchainNetworkType);
 
 
                 List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();

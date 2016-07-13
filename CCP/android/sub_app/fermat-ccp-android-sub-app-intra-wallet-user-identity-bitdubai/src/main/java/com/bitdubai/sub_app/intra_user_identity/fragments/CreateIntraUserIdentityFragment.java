@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -97,6 +98,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private ImageView mphoto_header;
     private RelativeLayout relativeLayout;
     private Menu menuHelp;
+    Toolbar toolbar;
     private IntraUserModuleIdentity identitySelected;
     private boolean isUpdate = false;
     private EditText mBrokerPhrase;
@@ -167,6 +169,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 //            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
 //                moduleManager.createNewIntraWalletUser("John Doe", null);
 //            }
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -220,7 +223,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
 
 
-        createButton.setText((!isUpdate) ? "Create" : "Update");
+        //createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mBrokerName.requestFocus();
         registerForContextMenu(mBrokerImage);
@@ -396,6 +399,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                     mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                                     brokerImageByteArray = toByteArray(imageBitmap);
                                                     updateProfileImage = true;
+
+                                                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                                                    bitmapWorkerTask.execute(brokerImageByteArray );
+                                                    mphoto_header.setAlpha(150);
+
                                                 } else {
                                                     imageBitmap = null;
                                                 }
@@ -460,6 +468,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                             brokerImageByteArray = toByteArray(imageBitmap);
 
+                                            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                                            bitmapWorkerTask.execute(brokerImageByteArray);
+                                            mphoto_header.setAlpha(150);
                                             updateProfileImage = true;
                                         } else {
                                             imageBitmap = null;
