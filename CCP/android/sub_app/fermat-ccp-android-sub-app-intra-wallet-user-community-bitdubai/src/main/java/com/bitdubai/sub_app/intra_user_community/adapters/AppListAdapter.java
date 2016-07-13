@@ -66,7 +66,13 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
     @Override
     protected void bindHolder(AppWorldHolder holder, IntraUserInformation data, int position) {
         holder.connectionState.setVisibility(View.GONE);
-        ConnectionState connectionState = data.getConnectionState();
+        ConnectionState connectionState = null;
+        try {
+            connectionState = data.getConnectionState();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         switch (connectionState) {
             case CONNECTED:
                 if (holder.connectionState.getVisibility() == View.GONE)
