@@ -91,7 +91,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     public static final String INTRA_USER_SELECTED = "intra_user";
 
     private static final int MAX = 12;
-   private static final int SPAN_COUNT = 4;
+   private static final int SPAN_COUNT = 3;
     /**
      * MANAGERS
      */
@@ -318,13 +318,13 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
         });
         //searchEditText = (EditText) searchView.findViewById(R.id.search);
         // closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
-        recyclerView.setHasFixedSize(true);
+      //  recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+       // recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+       // recyclerView.setLayoutManager(layoutManager);
         // adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
         adapter = new AvailableActorsListAdapter(getActivity(), lstIntraUserInformations);
-        recyclerView.setAdapter(adapter);
+       // recyclerView.setAdapter(adapter);
         adapter.setFermatListEventListener(this);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefresh.setOnRefreshListener(this);
@@ -334,7 +334,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-        showEmpty(true, emptyView);
+        //showEmpty(true, emptyView);
 
         //load cache user and online users
 
@@ -1046,11 +1046,13 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -1100,12 +1102,15 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
                                 showEmpty(false, emptyView);
                                 showEmpty(false, searchEmptyView);
+
                             }
                         }else {
 
                             showEmpty(false, emptyView);
                             showEmpty(false, searchEmptyView);
                         }
+
+                        recyclerView.setVisibility(View.INVISIBLE);
 
                     }
                 }
@@ -1145,9 +1150,9 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                 public int getSpanSize(int position) {
                     final int itemViewType = adapter.getItemViewType(position);
                     switch (itemViewType) {
-                        case 1:
+                        case AvailableActorsListAdapter.DATA_ITEM:
                             return 1;
-                        case 2:
+                        case AvailableActorsListAdapter.LOADING_ITEM:
                             return SPAN_COUNT;
                         default:
                             return GridLayoutManager.DEFAULT_SPAN_COUNT;
