@@ -242,14 +242,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 }
             }
 
-            networkClientCommunicationConnection.initializeAndConnect();
             p2PLayerManager.register(this);
-
-             /*
-             * Create and Scheduled the supervisorConnectionAgent
-             */
-            final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
-            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 20, TimeUnit.SECONDS);
 
         } catch (Exception exception){
 
@@ -468,15 +461,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         }
 
-        Thread thread = new Thread(){
-            @Override
-            public void run(){
-                networkClientCommunicationConnection.initializeAndConnect();
-            }
-        };
 
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(thread);
+        networkClientCommunicationConnection.initializeAndConnect();
 
     }
 
