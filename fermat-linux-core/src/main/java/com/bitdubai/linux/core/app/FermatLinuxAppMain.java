@@ -2,13 +2,21 @@ package com.bitdubai.linux.core.app;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_linux_core.OSAPlatform;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContext;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.linux.core.app.FermatLinuxAppMain</code> initialize
@@ -68,7 +76,7 @@ public class FermatLinuxAppMain {
 
                             try {
                                 if (!(chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().size() > 0)) {
-                                    chatIdentityManager.createNewIdentityChat("toreto", new byte[0], " ", " ", " ", " ", 0, Frecuency.HIGH);
+                                    chatIdentityManager.createNewIdentityChat("toreto", new byte[0], " ", " ", " ", " ", 0, GeoFrequency.HIGH);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -89,7 +97,8 @@ public class FermatLinuxAppMain {
                                                 Boolean.TRUE,//isOnline
                                                 Long.valueOf(0),//lastConnectionTime
                                                 10,//max
-                                                0//offset
+                                                0,//offset,
+                                                null
                                         )
                                 );
                             } catch (Exception e) {
@@ -101,8 +110,8 @@ public class FermatLinuxAppMain {
                     15,
                     5,
                     TimeUnit.SECONDS
-            );*/
-
+            );
+*/
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 
         } catch (Exception e) {

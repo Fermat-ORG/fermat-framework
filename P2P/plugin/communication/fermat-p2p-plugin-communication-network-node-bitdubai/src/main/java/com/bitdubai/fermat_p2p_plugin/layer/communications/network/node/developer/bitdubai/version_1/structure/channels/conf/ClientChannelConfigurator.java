@@ -58,14 +58,20 @@ public class ClientChannelConfigurator extends ServerEndpointConfig.Configurator
             /*
              * Create a node identity for this session
              */
-            ECCKeyPair nodeIdentityForSession = new ECCKeyPair();
-
+            ECCKeyPair nodeIdentityForSession;
+            List<String>  value = new ArrayList<>();
             /*
              * Create the node public key identity header attribute value
              * to share with the client
              */
-             List<String> value = new ArrayList<>();
-             value.add(nodeIdentityForSession.getPublicKey());
+            if(!serverEndpointConfig.getUserProperties().containsKey(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME)){
+                nodeIdentityForSession = new ECCKeyPair();
+                value.add(nodeIdentityForSession.getPublicKey());
+            }else{
+                nodeIdentityForSession = (ECCKeyPair) serverEndpointConfig.getUserProperties().get(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME);
+                value.add(nodeIdentityForSession.getPublicKey());
+            }
+
 
             /*
              * Set the new header attribute

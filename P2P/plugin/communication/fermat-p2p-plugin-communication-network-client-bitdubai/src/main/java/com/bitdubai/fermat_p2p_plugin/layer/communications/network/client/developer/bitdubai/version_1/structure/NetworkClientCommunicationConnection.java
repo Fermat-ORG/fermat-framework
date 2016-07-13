@@ -261,10 +261,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-           /*   ArrayList extensions = new ArrayList();
-                extensions.add(new PerMessageDeflateExtension());
-                final ClientEndpointConfig clientConfiguration = ClientEndpointConfig.Builder.create().extensions(extensions).configurator(new ClientChannelConfigurator()).build();
-            */
+      /*      ArrayList extensions = new ArrayList();
+            extensions.add(new PerMessageDeflateExtension());
+            final ClientEndpointConfig clientConfiguration = ClientEndpointConfig.Builder.create().extensions(extensions).configurator(new ClientChannelConfigurator()).build();
+
+            NewNetworkClientCommunicationChannel newNetworkClientCommunicationChannel = new NewNetworkClientCommunicationChannel(this, isExternalNode); */
+
             container.asyncConnectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {

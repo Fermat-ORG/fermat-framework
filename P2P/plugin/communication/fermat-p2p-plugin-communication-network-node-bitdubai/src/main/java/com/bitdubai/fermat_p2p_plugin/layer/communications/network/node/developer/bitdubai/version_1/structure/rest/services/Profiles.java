@@ -113,10 +113,6 @@ public class Profiles implements RestFulServices {
 
         } catch (Exception e){
 
-            e.printStackTrace();
-
-            LOG.warn("requested list is not available. Error message: " + e.getMessage());
-            LOG.warn(new FermatException("requested list is not available", e, "", "").toString());
             LOG.error("requested list is not available.", e);
             jsonObjectRespond.addProperty("failure", "Requested list is not available");
         }
