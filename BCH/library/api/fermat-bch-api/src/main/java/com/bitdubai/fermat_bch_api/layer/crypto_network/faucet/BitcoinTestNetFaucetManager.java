@@ -9,7 +9,9 @@ import org.bitcoinj.params.TestNet3Params;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 /**
  * Created by rodrigo on 7/11/16.
@@ -41,6 +43,7 @@ public class BitcoinTestNetFaucetManager {
         DataInputStream is = null;
 
         try {
+            SocketAddress faucetServer = new InetSocketAddress(FAUCET_IP, FAUCET_PORT);
             faucetSocket = new Socket(FAUCET_IP, FAUCET_PORT);
 
             os = new DataOutputStream(faucetSocket.getOutputStream());
@@ -56,7 +59,7 @@ public class BitcoinTestNetFaucetManager {
                 faucetSocket.close();
             }
             } catch (Exception e) {
-                throw new CantGetCoinsFromFaucetException(e, "error requesting coins to faucet." , "no balance left.");
+                throw new CantGetCoinsFromFaucetException(e, "error requesting coins to faucet." , "cant connect.");
             }
         }
 

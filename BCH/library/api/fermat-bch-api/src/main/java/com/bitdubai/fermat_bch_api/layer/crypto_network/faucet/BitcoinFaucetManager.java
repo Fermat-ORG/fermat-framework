@@ -20,8 +20,11 @@ public class BitcoinFaucetManager  {
         if (cryptoAddress.getCryptoCurrency() != CryptoCurrency.BITCOIN)
             throw new CantGetCoinsFromFaucetException(null, "Coins requested is not Bitcoin. This faucet only allows BTC request.", "Wrong faucet manager selected.");
 
+
+
             if (blockchainNetworkType == BlockchainNetworkType.TEST_NET){
                 BitcoinTestNetFaucetManager testNetFaucetManager = new BitcoinTestNetFaucetManager();
+                System.out.println("***BitcoinFaucet***requesting coins to faucet...");
                 testNetFaucetManager.giveMeCoins(cryptoAddress, amount);
             }
 
