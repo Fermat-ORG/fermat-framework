@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantG
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUnHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
@@ -54,6 +55,14 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
                                     long accuracy,
                                     GeoFrequency frequency) throws CantUpdateBrokerIdentityException;
 
+    /**
+     * This method updates the crypto broker identity stored in database plugin.
+     * @param cryptoBrokerIdentity
+     * @throws CantUpdateBrokerIdentityException
+     */
+    void updateCryptoBrokerIdentity(CryptoBrokerIdentity cryptoBrokerIdentity)
+            throws CantUpdateBrokerIdentityException;
+
     CryptoBrokerIdentity getCryptoBrokerIdentity(String publicKey) throws CantGetCryptoBrokerIdentityException, IdentityNotFoundException;
 
     /**
@@ -65,6 +74,17 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
      * @throws IdentityNotFoundException    if we can't find an identity with the given public key.
      */
     void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException;
+
+
+    /**
+     * The method <code>UnHideIdentity</code> is used to publish a Broker identity
+     *
+     * @param publicKey the public key of the crypto Broker to publish
+     *
+     * @throws CantUnHideIdentityException if something goes wrong.
+     * @throws IdentityNotFoundException    if we can't find an identity with the given public key.
+     */
+    void unHideIdentity(String publicKey) throws  CantUnHideIdentityException, IdentityNotFoundException ;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity

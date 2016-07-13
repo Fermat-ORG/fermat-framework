@@ -129,6 +129,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
                 .setTitle("prueba Title")
                 .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                 .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.bnk_gradient_end_background)
                 .setIsCheckEnabled(true)
                 .build();
         List<BankAccountNumber> tempList = new ArrayList<>();
@@ -171,8 +172,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         accountText.setText(bankAccountNumber.getAccount());
         aliasText.setText(bankAccountNumber.getAlias());
 
-        availableTextView.setText(moneyFormat.format(moduleManager.getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
-        bookTextView.setText(moneyFormat.format(moduleManager.getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        availableTextView.setText(String.format("%s %s", moneyFormat.format(moduleManager.getAvailableBalance(bankAccountNumber.getAccount())), bankAccountNumber.getCurrencyType().getCode()));
+        bookTextView.setText(String.format("%s %s", moneyFormat.format(moduleManager.getBookBalance(bankAccountNumber.getAccount())), bankAccountNumber.getCurrencyType().getCode()));
         balanceText.setTextColor(getResources().getColor(R.color.text_color_soft_blue));
         if (availableTextView.getText().equals(bookTextView.getText())) {
             bookTextView.setVisibility(View.GONE);
@@ -382,7 +383,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         threadIsRunning = false;
     }
 
-    private final void doRefresh() {
+    private void doRefresh() {
 
         while (threadIsRunning) {
 

@@ -368,6 +368,7 @@ public class ConnectionsWorldFragment
                     .setTextNameLeft(R.string.cht_creation_name_left)
                     .setTextNameRight(R.string.cht_creation_name_right)
                     .setImageRight(R.drawable.ic_profile_male)
+                    .setVIewColor(R.color.cht_color_dialog_community)
                     .build();
             presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -781,7 +782,7 @@ public class ConnectionsWorldFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -789,7 +790,7 @@ public class ConnectionsWorldFragment
                 }else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -797,9 +798,9 @@ public class ConnectionsWorldFragment
                 }
             }catch(Exception ex){
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                 }else{
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                 }
             }
         }

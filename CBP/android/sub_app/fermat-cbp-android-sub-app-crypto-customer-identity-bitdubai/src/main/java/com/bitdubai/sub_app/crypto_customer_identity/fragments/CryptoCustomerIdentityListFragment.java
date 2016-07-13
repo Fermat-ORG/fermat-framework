@@ -90,6 +90,7 @@ public class CryptoCustomerIdentityListFragment
                 .setBody(R.string.cbp_customer_identity_welcome_body)
                 .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.ccc_color_dialog_identity)
                 .setIsCheckEnabled(false)
                 .build();
 

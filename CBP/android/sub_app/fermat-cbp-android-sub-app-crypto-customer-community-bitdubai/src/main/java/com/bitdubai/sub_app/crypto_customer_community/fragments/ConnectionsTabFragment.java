@@ -223,6 +223,7 @@ public class ConnectionsTabFragment
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
                             .setIsCheckEnabled(false)
+                            .setVIewColor(R.color.ccc_color_dialog)
                             .build();
 
                 helpDialog.show();
