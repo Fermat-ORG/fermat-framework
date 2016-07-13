@@ -1046,13 +1046,15 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.INVISIBLE);
+            if(recyclerView != null)
+              recyclerView.setVisibility(View.INVISIBLE);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            if(recyclerView != null)
+             recyclerView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -1110,7 +1112,8 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                             showEmpty(false, searchEmptyView);
                         }
 
-                        recyclerView.setVisibility(View.INVISIBLE);
+                        if(recyclerView != null)
+                          recyclerView.setVisibility(View.INVISIBLE);
 
                     }
                 }
