@@ -404,6 +404,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         super.onStop();
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
+
     private void setUp(LayoutInflater inflater){
         try {
             setUpDonut(inflater);
