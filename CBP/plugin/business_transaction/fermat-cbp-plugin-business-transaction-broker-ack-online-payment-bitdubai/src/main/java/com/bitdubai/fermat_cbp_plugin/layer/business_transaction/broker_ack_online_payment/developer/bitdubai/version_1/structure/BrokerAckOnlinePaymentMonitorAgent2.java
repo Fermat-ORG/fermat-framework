@@ -109,7 +109,12 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<String> pendingMoneyEventIdList = dao.getPendingIncomingMoneyEvents();
             for (String eventId : pendingMoneyEventIdList) {
-                checkPendingIncomingMoneyEvents(eventId);
+                try{
+                    checkPendingIncomingMoneyEvents(eventId);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             /**
@@ -119,23 +124,28 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                System.out.println("ACK_ONLINE_PAYMENT [Broker] - getting Pending To Submit Notification Record");
+                try{
+                    System.out.println("ACK_ONLINE_PAYMENT [Broker] - getting Pending To Submit Notification Record");
 
-                contractHash = pendingToSubmitNotificationRecord.getContractHash();
-                transactionTransmissionManager.sendContractStatusNotification(
-                        pendingToSubmitNotificationRecord.getBrokerPublicKey(),
-                        pendingToSubmitNotificationRecord.getCustomerPublicKey(),
-                        contractHash,
-                        pendingToSubmitNotificationRecord.getTransactionId(),
-                        ContractTransactionStatus.ONLINE_PAYMENT_ACK,
-                        Plugins.BROKER_ACK_ONLINE_PAYMENT,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                    contractHash = pendingToSubmitNotificationRecord.getContractHash();
+                    transactionTransmissionManager.sendContractStatusNotification(
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            contractHash,
+                            pendingToSubmitNotificationRecord.getTransactionId(),
+                            ContractTransactionStatus.ONLINE_PAYMENT_ACK,
+                            Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                System.out.println("ACK_ONLINE_PAYMENT [Broker] - sent Contract Status Notification Message");
+                    System.out.println("ACK_ONLINE_PAYMENT [Broker] - sent Contract Status Notification Message");
 
-                dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_PAYMENT_ACK);
-                System.out.println("ACK_ONLINE_PAYMENT [Broker] - ContractTransactionStatus updated to ONLINE_PAYMENT_ACK");
+                    dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_PAYMENT_ACK);
+                    System.out.println("ACK_ONLINE_PAYMENT [Broker] - ContractTransactionStatus updated to ONLINE_PAYMENT_ACK");
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             /**
@@ -143,22 +153,27 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                System.out.println("ACK_ONLINE_PAYMENT [Customer] - getting Pending To Submit Confirmation Record");
-                contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
+                try{
+                    System.out.println("ACK_ONLINE_PAYMENT [Customer] - getting Pending To Submit Confirmation Record");
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                transactionTransmissionManager.confirmNotificationReception(
-                        pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
-                        pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
-                        contractHash,
-                        pendingToSubmitConfirmationRecord.getTransactionId(),
-                        Plugins.BROKER_ACK_ONLINE_PAYMENT,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                    transactionTransmissionManager.confirmNotificationReception(
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            contractHash,
+                            pendingToSubmitConfirmationRecord.getTransactionId(),
+                            Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
-                System.out.println("ACK_ONLINE_PAYMENT [Customer] - sent Confirm Notification Reception Message");
+                    System.out.println("ACK_ONLINE_PAYMENT [Customer] - sent Confirm Notification Reception Message");
 
-                dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
-                System.out.println("ACK_ONLINE_PAYMENT [Customer] - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_PAYMENT");
+                    dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
+                    System.out.println("ACK_ONLINE_PAYMENT [Customer] - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_PAYMENT");
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             /**
@@ -170,12 +185,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
             }
 
         } catch (
-                CantGetContractListException |
-                        CantSendContractNewStatusNotificationException |
-                        CantUpdateRecordException |
-                        IncomingOnlinePaymentException |
-                        CantConfirmNotificationReceptionException |
-                        UnexpectedResultReturnedFromDatabaseException e) {
+                Exception e) {
             reportError(e);
         }
     }

@@ -421,6 +421,9 @@ public class SubAppAppsGenerator {
             subAppIntraUser.setPublicKey(communityPublicKey);
             listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
 
+
+
+
             //Activity Explore
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
@@ -933,14 +936,14 @@ public class SubAppAppsGenerator {
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Identity Manager");
-            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setColor("#21386D");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
+            statusBar.setColor("#48000000");
             runtimeActivity.setStatusBar(statusBar);
 
             //Menu

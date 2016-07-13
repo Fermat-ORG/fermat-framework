@@ -161,8 +161,6 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
             CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
             int                                 timeConfirmSend     = 20;
 
-            iterationConfirmSend++;
-
             //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
             negotiationPendingToSubmitList  = dao.getPendingToSubmitNegotiation();
             if(!negotiationPendingToSubmitList.isEmpty()){
@@ -227,6 +225,7 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
             }
 
             //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
+            /*iterationConfirmSend++;
             if(timeConfirmSend == iterationConfirmSend){
 
                 CustomerBrokerNewForwardTransaction forwardTransaction = new CustomerBrokerNewForwardTransaction(
@@ -239,7 +238,7 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
                 transactionSend = forwardTransaction.getTransactionSend();
 
                 iterationConfirmSend = 0;
-            }
+            }*/
 
         } catch (CantGetNegotiationTransactionListException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

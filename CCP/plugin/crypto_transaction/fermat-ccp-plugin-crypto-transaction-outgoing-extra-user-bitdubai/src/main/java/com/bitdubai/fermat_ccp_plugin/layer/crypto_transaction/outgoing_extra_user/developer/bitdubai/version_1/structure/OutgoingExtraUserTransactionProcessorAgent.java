@@ -219,7 +219,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
                 try {
                     dao.cancelTransaction(transaction, "Insufficient founds.");
-                    roolback(transaction, true);
+                    roolback(transaction,false);
                 } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e2) {
 
                     reportUnexpectedError(e2);
@@ -238,7 +238,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 try {
 
                     dao.cancelTransaction(transaction, "There was a problem and the money was not sent.");
-                    roolback(transaction, true);
+                    roolback(transaction, false);
 
                 } catch (Exception exception) {
                     reportUnexpectedError(exception);
@@ -257,7 +257,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 if (dif >= 540000) {
                     try {
                         dao.cancelTransaction(transaction, " ROLLBACK 4.");
-                        roolback(transaction, true);
+                        roolback(transaction, false);
                         System.out.print("ROLLBACK 4");
                     } catch (CantUpdateRecordException e1) {
                         e1.printStackTrace();

@@ -203,9 +203,9 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
             scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i(TAG, "##########################################################3");
-                    Log.e(TAG, "App in foreground: " + ApplicationLifecycleManager.isAppInForeground());
-                    Log.i(TAG, "##########################################################3");
+//                    Log.i(TAG, "##########################################################3");
+//                    Log.e(TAG, "App in foreground: " + ApplicationLifecycleManager.isAppInForeground());
+//                    Log.i(TAG, "##########################################################3");
                     if (!ApplicationLifecycleManager.isAppInForeground()) {
                         if (isApplicationInForeground) {
                             isApplicationInForeground = false;

@@ -100,53 +100,62 @@ public class CustomerOfflinePaymentMonitorAgent2
             // Check contract status to send.
             List<CustomerOfflinePaymentRecord> pendingToSubmitNotificationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
             for (CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
+                try{
+                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
-                System.out.println("OFFLINE_PAYMENT - [Customer] Sending notification: OFFLINE_PAYMENT_SUBMITTED");
-                transactionTransmissionManager.sendContractStatusNotification(
-                        pendingToSubmitNotificationRecord.getCustomerPublicKey(),
-                        pendingToSubmitNotificationRecord.getBrokerPublicKey(),
-                        contractHash,
-                        pendingToSubmitNotificationRecord.getTransactionId(),
-                        ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
-                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                    System.out.println("OFFLINE_PAYMENT - [Customer] Sending notification: OFFLINE_PAYMENT_SUBMITTED");
+                    transactionTransmissionManager.sendContractStatusNotification(
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            contractHash,
+                            pendingToSubmitNotificationRecord.getTransactionId(),
+                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
-                customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED);
-                System.out.println("OFFLINE_PAYMENT - [Customer] Update Business Transaction Status: OFFLINE_PAYMENT_SUBMITTED");
+                    customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED);
+                    System.out.println("OFFLINE_PAYMENT - [Customer] Update Business Transaction Status: OFFLINE_PAYMENT_SUBMITTED");
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             // Check pending notifications - Broker side
             List<CustomerOfflinePaymentRecord> pendingToSubmitConfirmationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
             for (CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
+                try{
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                System.out.println("OFFLINE_PAYMENT - [Broker] Sending Confirmation");
-                transactionTransmissionManager.confirmNotificationReception(
-                        pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
-                        pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
-                        contractHash,
-                        pendingToSubmitConfirmationRecord.getTransactionId(),
-                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                    System.out.println("OFFLINE_PAYMENT - [Broker] Sending Confirmation");
+                    transactionTransmissionManager.confirmNotificationReception(
+                            pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+                            contractHash,
+                            pendingToSubmitConfirmationRecord.getTransactionId(),
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
-                System.out.println("OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: CONFIRM_OFFLINE_PAYMENT");
+                    customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
+                    System.out.println("OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: CONFIRM_OFFLINE_PAYMENT");
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             // Check if pending events
             List<String> pendingEventsIdList = customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                checkPendingEvent(eventId);
+                try{
+                    checkPendingEvent(eventId);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
-        } catch (UnexpectedResultReturnedFromDatabaseException |
-                CantGetContractListException |
-                CantUpdateRecordException |
-                CantSendContractNewStatusNotificationException |
-                CantConfirmNotificationReceptionException e) {
+        } catch (Exception e) {
             reportError(e);
         }
     }

@@ -142,49 +142,58 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToDeStockTransactionList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingDeStockTransactionList();
             for (BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList) {
+                try{
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList()\n");
 
-                System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList()\n");
-
-                MoneyType moneyType = pendingToDeStockTransaction.getPaymentType();
-                switch (moneyType) {
-                    case BANK:
-                        System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - BANK\n");
-                        executeBankDeStock(pendingToDeStockTransaction);
-                        break;
-                    case CASH_DELIVERY:
-                        System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH DELIVERY\n");
-                        executeCashDeStock(pendingToDeStockTransaction);
-                        break;
-                    case CASH_ON_HAND:
-                        System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH ON HAND\n");
-                        executeCashDeStock(pendingToDeStockTransaction);
-                        break;
-                    case CRYPTO:
-                        throw new CantSubmitMerchandiseException("The currency type is CRYPTO, can't send crypto money from this plugin");
+                    MoneyType moneyType = pendingToDeStockTransaction.getPaymentType();
+                    switch (moneyType) {
+                        case BANK:
+                            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - BANK\n");
+                            executeBankDeStock(pendingToDeStockTransaction);
+                            break;
+                        case CASH_DELIVERY:
+                            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH DELIVERY\n");
+                            executeCashDeStock(pendingToDeStockTransaction);
+                            break;
+                        case CASH_ON_HAND:
+                            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH ON HAND\n");
+                            executeCashDeStock(pendingToDeStockTransaction);
+                            break;
+                        case CRYPTO:
+                            throw new CantSubmitMerchandiseException("The currency type is CRYPTO, can't send crypto money from this plugin");
+                    }
+                } catch (Exception e){
+                    reportError(e);
                 }
+
+
             }
             /**
              * Check contract status to send. Broker Side
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
+                try{
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
 
-                System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
+                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
+                    transactionTransmissionManager.sendContractStatusNotification(
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            contractHash,
+                            pendingToSubmitNotificationRecord.getTransactionId(),
+                            ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED,
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
-                transactionTransmissionManager.sendContractStatusNotification(
-                        pendingToSubmitNotificationRecord.getBrokerPublicKey(),
-                        pendingToSubmitNotificationRecord.getCustomerPublicKey(),
-                        contractHash,
-                        pendingToSubmitNotificationRecord.getTransactionId(),
-                        ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED,
-                        Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                    //Updating the business transaction record
+                    pendingToSubmitNotificationRecord.setContractTransactionStatus(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED);
+                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
 
-                //Updating the business transaction record
-                pendingToSubmitNotificationRecord.setContractTransactionStatus(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED);
-                brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
             }
 
             /**
@@ -192,23 +201,27 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
+                try{
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): " + contractHash + "\n");
 
-                System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): " + contractHash + "\n");
+                    transactionTransmissionManager.confirmNotificationReception(
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            contractHash,
+                            pendingToSubmitConfirmationRecord.getTransactionId(),
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
-                transactionTransmissionManager.confirmNotificationReception(
-                        pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
-                        pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
-                        contractHash,
-                        pendingToSubmitConfirmationRecord.getTransactionId(),
-                        Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                    //Updating the business transaction record
+                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
+                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT);
+                } catch (Exception e){
+                    reportError(e);
+                }
 
-                //Updating the business transaction record
-                brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
-                        ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT);
             }
 
             /**
@@ -219,15 +232,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
                 checkPendingEvent(eventId);
             }
 
-        } catch (
-                UnexpectedResultReturnedFromDatabaseException |
-                        CantCreateCashMoneyDestockException |
-                        CantSubmitMerchandiseException |
-                        CantCreateBankMoneyDestockException |
-                        CantSendContractNewStatusNotificationException |
-                        CantGetContractListException |
-                        CantConfirmNotificationReceptionException |
-                        CantUpdateRecordException e) {
+        } catch (Exception e) {
             reportError(e);
         }
     }
