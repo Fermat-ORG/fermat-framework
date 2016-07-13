@@ -24,6 +24,9 @@ public class CryptoBrokerIdentityDatabaseConstants {
     public static final String CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME         = "exposure_level"        ;
     public static final String CRYPTO_BROKER_ACCURACY_COLUMN_NAME                        = "acuracy"                ;
     public static final String CRYPTO_BROKER_FRECUENCY_COLUMN_NAME                       = "frecuency"              ;
+    public static final String CRYPTO_BROKER_PAYMENT_CURRENCY_COLUMN_NAME       = "payment_currency";
+    public static final String CRYPTO_BROKER_MERCHANDISE_CURRENCY_COLUMN_NAME   = "merchandise_currency";
+    public static final String CRYPTO_BROKER_EXTRA_TEXT_COLUMN_NAME             = "extra_text";
 
     public static final String CRYPTO_BROKER_FIRST_KEY_COLUMN                   = "public_key"            ;
 

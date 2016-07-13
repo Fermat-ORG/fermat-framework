@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 
@@ -94,6 +95,12 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
 
     @Override
     public GeoFrequency getFrequency() {
+        return null;
+    }
+
+    @Override
+    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData() {
+        //TODO: only for compilation
         return null;
     }
 }

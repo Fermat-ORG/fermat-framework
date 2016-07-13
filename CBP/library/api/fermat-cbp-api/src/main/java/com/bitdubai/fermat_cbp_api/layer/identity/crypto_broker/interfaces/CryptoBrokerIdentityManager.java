@@ -55,6 +55,14 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
                                     long accuracy,
                                     GeoFrequency frequency) throws CantUpdateBrokerIdentityException;
 
+    /**
+     * This method updates the crypto broker identity stored in database plugin.
+     * @param cryptoBrokerIdentity
+     * @throws CantUpdateBrokerIdentityException
+     */
+    void updateCryptoBrokerIdentity(CryptoBrokerIdentity cryptoBrokerIdentity)
+            throws CantUpdateBrokerIdentityException;
+
     CryptoBrokerIdentity getCryptoBrokerIdentity(String publicKey) throws CantGetCryptoBrokerIdentityException, IdentityNotFoundException;
 
     /**
