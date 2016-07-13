@@ -95,4 +95,5 @@
     <color name="toolbar_selected_background">#fff</color>
     <color name="rect_bottom">#80000000</color>
 
+    <color name="cht_color_dialog_identity">#47BF73</color>
 </resources>

@@ -52,7 +52,7 @@
                 android:id="@+id/ccw_radio_button_slow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#000000"
+                android:buttonTint="#000000"
                 android:text="Slow"
                 android:textAllCaps="true"
                 android:textColor="@color/description_text_status_confirm" />
@@ -62,7 +62,7 @@
                 android:id="@+id/ccw_radio_button_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#000000"
+                android:buttonTint="#000000"
                 android:text="Normal"
                 android:textAllCaps="true"
                 android:textColor="@color/description_text_status_confirm" />
@@ -72,7 +72,7 @@
                 android:id="@+id/ccw_radio_button_fast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#000000"
+                android:buttonTint="#000000"
                 android:text="Fast"
                 android:textAllCaps="true"
                 android:textColor="@color/description_text_status_confirm" />
