@@ -181,6 +181,7 @@ public class RequestsTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
+                            .setVIewColor(R.color.ccc_color_dialog)
                             .setIsCheckEnabled(false)
                             .build();
 

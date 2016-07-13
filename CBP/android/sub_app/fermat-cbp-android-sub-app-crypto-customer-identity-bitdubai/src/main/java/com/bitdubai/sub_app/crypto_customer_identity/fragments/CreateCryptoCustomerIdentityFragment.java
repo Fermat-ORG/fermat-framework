@@ -555,6 +555,7 @@ implements FermatWorkerCallBack{
                     .setBody(R.string.cbp_customer_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_identity_customer)
+                    .setVIewColor(R.color.ccc_color_dialog_identity)
                     .build();
             pd.show();
             settings.setGpsDialogEnabled(false);
