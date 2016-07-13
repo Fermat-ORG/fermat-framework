@@ -220,7 +220,7 @@ public abstract class LocalSocketSession {
                                     }
                                 }else{
                                     Log.e(TAG,"end of input stream");
-                                    isReceiverActive = false;
+//                                    isReceiverActive = false;
                                 }
                         }
                 }
