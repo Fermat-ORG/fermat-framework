@@ -132,11 +132,11 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
              * For test
              */
             //Default CryptoBrokerIdentityExtraData
-            CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
+            /*CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
                     CryptoCurrency.FERMAT,
                     FiatCurrency.VENEZUELAN_BOLIVAR,
-                    "Testing extra data");
-            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE, accuracy, frecuency,cryptoBrokerIdentityExtraData);
+                    "Testing extra data");*/
+            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE, accuracy, frecuency/*,cryptoBrokerIdentityExtraData*/);
             cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser);
 
             FermatBundle fermatBundle = new FermatBundle();
@@ -367,9 +367,9 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     private void exposeIdentity(final CryptoBrokerIdentity identity) throws CantExposeActorIdentityException {
         try {
             Location location = locationManager.getLocation();
-            long refreshInterval = 0;
-            refreshInterval = identity.getFrequency().getRefreshInterval();
-            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy(), ProfileStatus.UNKNOWN));
+            //long refreshInterval = 0;
+            //refreshInterval = identity.getFrequency().getRefreshInterval();
+            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity, location, ProfileStatus.UNKNOWN));
         } catch (final CantExposeIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");
