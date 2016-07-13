@@ -25,6 +25,7 @@ import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -274,22 +275,27 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                     marketExchangeRate = 1;
                 }
             }
-            openContractManager.openSaleContract(transactionInfo, marketExchangeRate);
 
-            //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
-            customerBrokerSale.setTransactionStatus(IN_OPEN_CONTRACT);
-            dao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+            ContractTransactionStatus contractTransactionStatus = openContractManager.getOpenContractStatus(transactionInfo.getNegotiationId().toString());
+            if(transactionInfo.getStatus().equals(NegotiationStatus.CLOSED) && contractTransactionStatus == null)
+            {
+                openContractManager.openSaleContract(transactionInfo, marketExchangeRate);
 
-            FermatBundle fermatBundle = new FermatBundle();
-            fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
-            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
-            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-            fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
-            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+                //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
+                customerBrokerSale.setTransactionStatus(IN_OPEN_CONTRACT);
+                dao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+                FermatBundle fermatBundle = new FermatBundle();
+                fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
+                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
+                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+                fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
+                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
 
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+            }
         }
     }
 
