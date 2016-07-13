@@ -23,7 +23,7 @@
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="74dp"
-            android:background="@drawable/border"
+            android:background="@drawable/circle_frame"
             android:gravity="center"
             android:id="@+id/img_relativeLayout">
 

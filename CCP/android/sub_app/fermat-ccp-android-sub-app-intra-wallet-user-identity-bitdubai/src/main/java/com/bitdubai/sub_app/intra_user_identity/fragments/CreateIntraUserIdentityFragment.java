@@ -399,6 +399,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                     mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                                     brokerImageByteArray = toByteArray(imageBitmap);
                                                     updateProfileImage = true;
+
+                                                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                                                    bitmapWorkerTask.execute(brokerImageByteArray );
+                                                    mphoto_header.setAlpha(150);
+
                                                 } else {
                                                     imageBitmap = null;
                                                 }
@@ -463,6 +468,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                             brokerImageByteArray = toByteArray(imageBitmap);
 
+                                            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                                            bitmapWorkerTask.execute(brokerImageByteArray);
+                                            mphoto_header.setAlpha(150);
                                             updateProfileImage = true;
                                         } else {
                                             imageBitmap = null;
