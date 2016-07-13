@@ -81,7 +81,8 @@ public interface CryptoWalletWallet {
                                                                   final BalanceType      balanceType   ,
                                                                   final TransactionType transactionType,
                                                                   final int              max           ,
-                                                                  final int              offset        ) throws CantListTransactionsException;
+                                                                  final int              offset       ,
+                                                                  final BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException;
     /**
      * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
      * who have made transactions with this wallet.

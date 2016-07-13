@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
@@ -408,7 +409,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,
@@ -431,7 +432,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @return
      * @throws CantListTransactionsException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
     List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                  TransactionType transactionType,
                                                                  String walletPublicKey,
@@ -613,4 +614,6 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
 
 
     void launchNotification();
+
+    void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException;
 }

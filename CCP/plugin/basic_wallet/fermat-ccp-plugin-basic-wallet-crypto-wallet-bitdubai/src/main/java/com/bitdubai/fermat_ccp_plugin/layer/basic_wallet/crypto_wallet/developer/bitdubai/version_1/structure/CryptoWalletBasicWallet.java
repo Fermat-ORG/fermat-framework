@@ -187,7 +187,8 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
                                                                          final BalanceType balanceType,
                                                                          final TransactionType transactionType,
                                                                          final int max,
-                                                                         final int offset) throws CantListTransactionsException {
+                                                                         final int offset,
+                                                                         final BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
 
         try {
 
@@ -198,7 +199,8 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
                     balanceType,
                     transactionType,
                     max,
-                    offset
+                    offset,
+                    blockchainNetworkType
             );
 
         } catch (CantListTransactionsException exception) {
