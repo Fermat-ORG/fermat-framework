@@ -560,14 +560,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                 /*
                  * Read all pending message from database
                  */
-                List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
+                List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAllPendingToSendByPublicKey(filters);
 
                 /*
                  * For each message
                  */
                 for (NetworkServiceMessage message : messages) {
+                    System.out.println("12345** Estado de conexión = "+networkClientCall.isConnected());
+                    System.out.println("12345** Intentando enviar mensaje= " +message.getContent());
 
                     if (networkClientCall.isConnected() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)) {
+                        System.out.println("12345** INSIDE");
+                        System.out.println("12345** --Estado= " +message.getFermatMessagesStatus());
 
                         networkClientCall.sendPackageMessage(message);
 
@@ -680,6 +684,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                 this.networkServicePendingMessagesSupervisorAgent = new NetworkServicePendingMessagesSupervisorAgent(this);
 
             this.networkServicePendingMessagesSupervisorAgent.start();
+            System.out.println("12345** handleNetworkServiceRegisteredEvent starteado");
         } catch (Exception ex) {
             System.out.println("Failed to start the messages supervisor agent - > NS: " + this.getProfile().getNetworkServiceType());
         }
