@@ -43,7 +43,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
                       }
 
                       $scope.charData[0].push(data.registeredClientConnection);
-                      $scope.charData[1].push($scope.registerActorsDetail);
+                      $scope.charData[1].push($scope.registerActorsTotal);
 
            }, function errorCallback(response) {
                 var message = "";
@@ -90,7 +90,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
         if(isAuthenticate() === false){
             alert("Service error: You must authenticate again");
-            $location.url('../index.html');
+           $window.location.href = '../index.html';
         }else{
 
             if(window.localStorage['jwtAuthToke'] !== null){
