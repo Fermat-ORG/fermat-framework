@@ -600,33 +600,37 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
         super.onPrepareOptionsMenu(menu);
 
         final MenuItem menuItem = menu.findItem(1);
-        menuItem.setIcon(R.drawable.search_icon);
+        if(menuItem!=null) {
+            menuItem.setIcon(R.drawable.search_icon);
 
-        final android.widget.SearchView searchView = (android.widget.SearchView) menuItem.getActionView();
-        SearchViewStyleHelper.on(searchView)
-                .setCursorColor(Color.WHITE)
-                .setTextColor(Color.WHITE)
-                .setHintTextColor(Color.WHITE)
-                .setSearchHintDrawable(R.drawable.search_icon)
-                .setSearchButtonImageResource(R.drawable.search_icon)
-                .setCloseBtnImageResource(R.drawable.search_icon)
-                .setSearchPlateTint(Color.WHITE)
-                .setSubmitAreaTint(Color.WHITE);
+            final android.widget.SearchView searchView = (android.widget.SearchView) menuItem.getActionView();
+            SearchViewStyleHelper.on(searchView)
+                    .setCursorColor(Color.WHITE)
+                    .setTextColor(Color.WHITE)
+                    .setHintTextColor(Color.WHITE)
+                    .setSearchHintDrawable(R.drawable.search_icon)
+                    .setSearchButtonImageResource(R.drawable.search_icon)
+                    .setCloseBtnImageResource(R.drawable.search_icon)
+                    .setSearchPlateTint(Color.WHITE)
+                    .setSubmitAreaTint(Color.WHITE);
 
-        searchView.setQueryHint("Search...");
-        searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+            searchView.setQueryHint("Search...");
+            searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                List<IntraUserInformation> filteredList = filterList(newText, lstIntraUserInformations);
-                adapter.changeDataSet(filteredList);
-                return true;
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    List<IntraUserInformation> filteredList = filterList(newText, lstIntraUserInformations);
+                    adapter.changeDataSet(filteredList);
+                    return true;
+                }
+            });
+        }else{
+            Log.e(TAG,"SearchView null, please check this");
+        }
     }
 
     @Override
