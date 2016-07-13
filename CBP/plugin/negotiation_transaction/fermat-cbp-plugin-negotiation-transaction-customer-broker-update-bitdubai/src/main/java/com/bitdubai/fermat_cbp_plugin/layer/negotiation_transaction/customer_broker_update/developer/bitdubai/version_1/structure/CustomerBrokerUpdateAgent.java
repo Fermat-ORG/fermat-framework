@@ -69,7 +69,6 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW;
 
 
 /**
@@ -495,7 +494,10 @@ public class CustomerBrokerUpdateAgent implements
 
                                                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                                                    broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
                                                 } else {
                                                     System.out.print("\n**** 20) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                                     //UPDATE NEGOTIATION
@@ -510,7 +512,10 @@ public class CustomerBrokerUpdateAgent implements
 
                                                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                                                    broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    fermatBundle = new FermatBundle();
+                                                    fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
                                                 }
 
                                                 break;
@@ -592,7 +597,10 @@ public class CustomerBrokerUpdateAgent implements
                                                 if (purchaseCancelReason == null || purchaseCancelReason.isEmpty() || purchaseCancelReason.equalsIgnoreCase("null"))
                                                     customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
 
-                                                broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                FermatBundle fermatBundle = new FermatBundle();
+                                                fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
 
                                                 break;
                                             case SALE:

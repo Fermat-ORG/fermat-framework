@@ -353,7 +353,11 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
                                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                                                broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                fermatBundle = new FermatBundle();
+                                                fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
+
                                             } else {
                                                 System.out.print("\n**** 20) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
                                                 //UPDATE NEGOTIATION
@@ -368,7 +372,10 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
                                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                                                broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                fermatBundle = new FermatBundle();
+                                                fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
                                             }
 
                                             break;
@@ -450,7 +457,10 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                                             if (purchaseCancelReason == null || purchaseCancelReason.isEmpty() || purchaseCancelReason.equalsIgnoreCase("null"))
                                                 customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
 
-                                            broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                            FermatBundle fermatBundle = new FermatBundle();
+                                            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
 
                                             break;
                                         case SALE:
