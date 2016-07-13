@@ -27,6 +27,10 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorldHolder> {
 
+    public static final int DATA_ITEM = 1;
+    public static final int LOADING_ITEM = 2;
+    private boolean loadingData = true;
+
 
     private ReferenceAppFermatSession<IntraUserModuleManager> appSession;
     private IntraUserModuleManager moduleManager;
@@ -35,8 +39,7 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
     public AppListAdapter(Context context) {
         super(context);
     }
-    //endless scroller
-    private boolean loadingData = true;
+
 
     public AppListAdapter(Context context, List<IntraUserInformation> dataSet,
                                 ReferenceAppFermatSession<IntraUserModuleManager> appSession,
@@ -187,6 +190,20 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == super.getItemCount() ? LOADING_ITEM : DATA_ITEM;
+    }
+
+    @Override
+    public int getItemCount() {
+        return super.getItemCount() + 1;
+    }
+
+    public boolean isLoadingData() {
+        return loadingData;
     }
 
     public void setLoadingData(boolean loadingData) {
