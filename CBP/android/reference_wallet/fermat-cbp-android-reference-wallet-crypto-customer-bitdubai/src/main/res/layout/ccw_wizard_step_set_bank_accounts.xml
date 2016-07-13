@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,12 +38,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
             android:layout_marginTop="8dp"
             android:text="@string/ccw_wizard_set_bank_accounts_description"
             android:textColor="#777777"
-            android:textSize="16sp"
-            android:layout_marginBottom="12dp"
-            />
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -62,7 +60,7 @@
                 android:paddingRight="8dp"
                 android:text="@string/ccw_add_bank_account"
                 android:textColor="@color/white"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -70,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#aeaeae"/>
+            android:background="#aeaeae" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -83,7 +81,7 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 tools:listitem="@layout/ccw_wizard_recycler_view_item"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_selected_bank_accounts_empty_view"
@@ -95,7 +93,7 @@
                 android:textColor="#888"
                 android:textSize="16sp"
                 android:visibility="visible"
-                tools:visibility="gone"/>
+                tools:visibility="gone" />
         </FrameLayout>
 
     </LinearLayout>
@@ -103,10 +101,10 @@
     <LinearLayout
         android:id="@+id/ccw_next_step_button"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="#E5007E"
+        android:background="@color/ccw_wizard_wallet_button_color"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
@@ -120,15 +118,14 @@
             android:layout_weight="4"
             android:gravity="center"
             android:text="@string/ccw_finish"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ccw_arrow_right_selected"
-            tools:ignore="contentDescription"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:ignore="contentDescription" />
     </LinearLayout>
 
 </LinearLayout>
