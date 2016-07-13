@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -42,6 +45,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 
 /**
  * Created by nelson on 22/12/15.
@@ -131,7 +135,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
             }
         });
 
-        if(isHomeTutorialDialogEnabled) {
+        if (isHomeTutorialDialogEnabled) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)
@@ -164,13 +168,13 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                 Currency currencyTo = e.getValue().getTo();
 
                 Collection<CurrencyPairAndProvider> providerManagers = moduleManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
-                if (providerManagers != null){
+                if (providerManagers != null) {
                     for (CurrencyPairAndProvider providerManager : providerManagers) {
 
-                        tempS = currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName();
+                        tempS = currencyFrom.getCode() + " " + currencyTo.getCode() + " " + providerManager.getProviderName();
 
                         if (!temp.contains(tempS)) {
-                            temp.add(currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName());
+                            temp.add(currencyFrom.getCode() + " " + currencyTo.getCode() + " " + providerManager.getProviderName());
                             providers.add(providerManager);
                         }
                     }
@@ -222,7 +226,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                 moduleManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
 
-            moduleManager.setMerchandisesAsExtraDataInAssociatedIdentity();
+            FermatWorker fermatWorker = setMerchandisesAsExtraDataInAssociatedIdentity();
+            fermatWorker.execute();
 
             //Set CONFIGURED_DATA to true so that wizard knows its completed.
             appSession.setData(FragmentsCommons.CONFIGURED_DATA, true);
@@ -309,5 +314,29 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
         }
 
         return data;
+    }
+
+    @NonNull
+    private FermatWorker setMerchandisesAsExtraDataInAssociatedIdentity() {
+        final FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                return moduleManager.setMerchandisesAsExtraDataInAssociatedIdentity();
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            }
+        });
+
+        return fermatWorker;
     }
 }
