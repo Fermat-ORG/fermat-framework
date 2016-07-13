@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+repositories {
+	mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.0'
+}
+
+android {
+    compileSdkVersion 'android-17'
+    buildToolsVersion '20'
+
+    android {
+        defaultConfig {
+            minSdkVersion 16
+        }
+
+        lintOptions {
+            abortOnError false
+        }
+        sourceSets
+                {
+                    androidTest
+                            {
+                                res.srcDirs = ['res']
+                                assets.srcDirs = ['assets']
+                            }
+                }
+    }
+    buildTypes {
+        release {
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+}
+
+task assembleDebug(overwrite: true) {}
+
+task copyTask(type: Copy) {
+    from 'X:/COR/fermat-android-core/build/outputs/apk/fermat-android-core-debug_debug.apk'
+    into 'build/outputs/apk/'
+    rename {
+        'FermatApplicationTest-debug.apk'
+    }
+}
+
+assembleDebug.dependsOn copyTask

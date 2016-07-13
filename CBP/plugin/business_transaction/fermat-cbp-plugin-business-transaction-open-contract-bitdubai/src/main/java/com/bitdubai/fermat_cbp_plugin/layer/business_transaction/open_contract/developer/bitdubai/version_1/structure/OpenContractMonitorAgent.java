@@ -258,6 +258,7 @@ public class OpenContractMonitorAgent implements
                                 purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
                                 transactionTransmissionManager.sendContractHash(
                                         transmissionId,
+                                        transmissionId,
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
@@ -270,6 +271,7 @@ public class OpenContractMonitorAgent implements
                                 System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - SALE\n");
                                 saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                                 transactionTransmissionManager.sendContractHash(
+                                        transmissionId,
                                         transmissionId,
                                         saleContract.getPublicKeyBroker(),
                                         saleContract.getPublicKeyCustomer(),
@@ -479,6 +481,7 @@ public class OpenContractMonitorAgent implements
                                         businessTransactionMetadata.getSenderId(),
                                         contractHash,
                                         transmissionId.toString(),
+                                        transmissionId,
                                         Plugins.OPEN_CONTRACT,
                                         businessTransactionMetadata.getReceiverType(),
                                         businessTransactionMetadata.getSenderType()

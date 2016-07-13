@@ -290,7 +290,6 @@ public class ChatFragment
         return super.onOptionsItemSelected(item);
     }
 
-
     /**
      * Receiver class implemented
      */

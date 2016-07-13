@@ -27,6 +27,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
      */
     void sendContractHash(
             UUID transactionId,
+            UUID transactionContractId,
             String senderPublicKey,
             String receiverPublicKey,
             String contractHash,
@@ -66,6 +67,20 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             CantConfirmNotificationReceptionException;
 
     /**
+     * Method that send the Contract New Status Notification
+     *
+     * @param transactionId
+     */
+    void confirmNotificationReception(
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String contractHash,
+            String transactionId,
+            UUID transactionContractId,
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
+            CantConfirmNotificationReceptionException;
+
+    /**
      * Acknowleges that a confirmation has been received.
      *
      * @param cryptoBrokerActorSenderPublicKey
@@ -82,6 +97,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             String cryptoCustomerActorReceiverPublicKey,
             String contractHash,
             String transactionId,
+            UUID transactionContractId,
             Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
             CantConfirmNotificationReceptionException;
 
