@@ -478,9 +478,10 @@ public class BrowserTabFragment
                         Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
                         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
                         toolbar.setLogo(bitmapDrawable);
-                    }else{
-                        Log.e(TAG,"selectedActorIdentity null, Nelson fijate si esto queres que haga");
                     }
+//                    else{
+//                        Log.e(TAG,"selectedActorIdentity null, Nelson fijate si esto queres que haga");
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

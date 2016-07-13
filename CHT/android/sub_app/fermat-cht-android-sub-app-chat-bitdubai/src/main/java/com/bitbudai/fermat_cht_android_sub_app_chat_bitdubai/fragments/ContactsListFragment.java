@@ -501,6 +501,7 @@ public class ContactsListFragment
                         .setSubTitle(R.string.cht_chat_subtitle)
                         .setBody(R.string.cht_chat_body)
                         .setTextFooter(R.string.cht_chat_footer)
+                        .setVIewColor(R.color.cht_color_dialog)
                         .build();
                      presentationDialog.show();
                     break;

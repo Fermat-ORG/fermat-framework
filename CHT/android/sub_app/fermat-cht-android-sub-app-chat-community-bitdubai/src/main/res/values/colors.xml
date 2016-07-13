@@ -26,4 +26,6 @@
     <color name="color_black_light">#99000000</color>
     <color name="secondary_text">#727272</color>
     <color name="primary_text">#212121</color>
+
+    <color name="cht_color_dialog_community">#47BF73</color>
 </resources>

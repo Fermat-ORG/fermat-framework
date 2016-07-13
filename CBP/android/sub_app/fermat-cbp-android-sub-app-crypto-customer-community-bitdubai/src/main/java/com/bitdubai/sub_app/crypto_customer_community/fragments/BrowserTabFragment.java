@@ -420,7 +420,7 @@ public class BrowserTabFragment
     }
 
 
-    private void loadSelectedActorIdentityInBackground(){
+    private void loadSelectedActorIdentityInBackground() {
 
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
@@ -436,9 +436,14 @@ public class BrowserTabFragment
             public void onPostExecute(Object... result) {
                 try {
                     selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
-                    Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
-                    BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
-                    toolbar.setLogo(bitmapDrawable);
+                    if (selectedActorIdentity != null) {
+                        Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
+                        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
+                        toolbar.setLogo(bitmapDrawable);
+                    }
+//                    else {
+//                        Log.e(TAG, "selectedActorIdentity is null");
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -454,12 +459,13 @@ public class BrowserTabFragment
 
         fermatWorker.execute();
     }
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
+                targetHeight, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();
