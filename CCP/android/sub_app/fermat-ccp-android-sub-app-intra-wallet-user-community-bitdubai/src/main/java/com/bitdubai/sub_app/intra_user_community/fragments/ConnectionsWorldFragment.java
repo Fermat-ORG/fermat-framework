@@ -67,6 +67,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingGPSDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
@@ -104,7 +105,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     private int offset = 0;
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
-    private AppListAdapter adapter;
+    private AvailableActorsListAdapter adapter;
     private boolean isStartList = false;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
@@ -322,7 +323,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         // adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
-        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations,  appSession, moduleManager);
+        adapter = new AvailableActorsListAdapter(getActivity(), lstIntraUserInformations);
         recyclerView.setAdapter(adapter);
         adapter.setFermatListEventListener(this);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -636,19 +637,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-     /*  inflater.inflate(R.menu.cripto_users_menu, menu);
 
-        try {
-            final MenuItem searchItem = menu.findItem(R.id.action_search);
-            menu.findItem(R.id.action_help).setVisible(true);
-            menu.findItem(R.id.action_search).setVisible(true);
-            searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-
-            });
-
-        } catch (Exception e) {
-
-        }*/
 
     }
 
@@ -1140,7 +1129,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+            adapter = new AvailableActorsListAdapter(getActivity(), lstIntraUserInformations);
             adapter.setFermatListEventListener(this);
         }
 
