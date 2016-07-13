@@ -1,17 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/07/16.
  */
 public class AbstractBusinessTransactionDeveloperDatabaseFactory {
 
-    protected DeveloperDatabaseTable getMessageStatusDeveloperDatabaseTable(
+    /*protected DeveloperDatabaseTable getMessageStatusDeveloperDatabaseTable(
             DeveloperObjectFactory developerObjectFactory){
         List<String> messageStatusColumns = new ArrayList<String>();
 
@@ -31,6 +25,6 @@ public class AbstractBusinessTransactionDeveloperDatabaseFactory {
                         messageStatusColumns);
 
         return messageStatusTable;
-    }
+    }*/
 
 }

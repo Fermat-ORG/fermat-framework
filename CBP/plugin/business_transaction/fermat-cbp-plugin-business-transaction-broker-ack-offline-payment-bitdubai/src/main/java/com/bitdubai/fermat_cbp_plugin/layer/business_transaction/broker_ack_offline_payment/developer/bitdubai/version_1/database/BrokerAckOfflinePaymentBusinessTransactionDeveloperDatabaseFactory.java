@@ -32,7 +32,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory extends AbstractBusinessTransactionDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory /*extends AbstractBusinessTransactionDeveloperDatabaseFactory*/ {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -139,7 +139,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
         tables.add(eventsRecorderTable);
 
         //Message status table
-        tables.add(getMessageStatusDeveloperDatabaseTable(developerObjectFactory));
+        //tables.add(getMessageStatusDeveloperDatabaseTable(developerObjectFactory));
 
         return tables;
     }

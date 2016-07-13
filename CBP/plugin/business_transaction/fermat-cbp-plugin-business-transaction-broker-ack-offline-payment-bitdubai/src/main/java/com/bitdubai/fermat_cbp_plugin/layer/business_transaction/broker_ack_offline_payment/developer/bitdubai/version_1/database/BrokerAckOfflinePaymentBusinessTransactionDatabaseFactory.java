@@ -23,7 +23,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory extends AbstractBusinessTransactionDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory /*extends AbstractBusinessTransactionDatabaseFactory*/ implements DealsWithPluginDatabaseSystem {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -113,7 +113,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory extends A
             }
 
             //Message status table
-            table = getMessageStatusDatabaseTablefactory(ownerId, databaseFactory);
+            //table = getMessageStatusDatabaseTablefactory(ownerId, databaseFactory);
 
             try {
                 //Create the table

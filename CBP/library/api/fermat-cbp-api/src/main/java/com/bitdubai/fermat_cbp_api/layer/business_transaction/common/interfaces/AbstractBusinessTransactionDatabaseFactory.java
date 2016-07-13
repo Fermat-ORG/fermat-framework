@@ -1,18 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-
-import java.util.UUID;
-
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/07/16.
  */
 public class AbstractBusinessTransactionDatabaseFactory {
 
-    protected DatabaseTableFactory getMessageStatusDatabaseTablefactory(
+    /*protected DatabaseTableFactory getMessageStatusDatabaseTablefactory(
             UUID ownerId,
             DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory messageStatusTable = databaseFactory.newTableFactory(
@@ -32,6 +25,6 @@ public class AbstractBusinessTransactionDatabaseFactory {
         messageStatusTable.addIndex(AbstractBusinessTransactionDatabaseConstants.BUSINESS_TRANSACTION_FIRST_KEY_COLUMN);
 
         return messageStatusTable;
-    }
+    }*/
 
 }
