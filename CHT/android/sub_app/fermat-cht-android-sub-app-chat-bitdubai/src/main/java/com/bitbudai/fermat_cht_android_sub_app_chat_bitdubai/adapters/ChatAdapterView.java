@@ -264,8 +264,6 @@ public class ChatAdapterView extends LinearLayout {
                     if(oldChatMessagesCount < chatHistory.size() && !isScrollingUp)
                         scroll();
                 }
-
-
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -490,11 +488,8 @@ public class ChatAdapterView extends LinearLayout {
                         textNeverChange = false;
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
-
                     }
-
                     if (s.length() > 0 && s.charAt(s.length() - 1) == '\n' && !isScrollingUp) {
-
                         scroll();
                     }
                 }
@@ -584,7 +579,6 @@ public class ChatAdapterView extends LinearLayout {
                 if (TextUtils.isEmpty(messageText) || messageText.trim().length() == 0) {
                     return;
                 }
-
                 messageText = messageText.trim();
 
 //                String text = "";

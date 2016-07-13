@@ -75,6 +75,7 @@ import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 
 /**
  * Chat List Fragment
@@ -184,22 +185,27 @@ public class ChatListFragment
                                         if (Validate.isDateToday(dated)) {
                                             if (Validate.isDateToday(dated)) {
                                                 //if(android.text.format.DateFormat!=null)
-                                                if (Build.VERSION.SDK_INT < 23) {
-                                                    if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
-                                                        formatter = new SimpleDateFormat("HH:mm");
-                                                    } else {
-                                                        formatter = new SimpleDateFormat("hh:mm aa");
-                                                    }
-                                                } else {
-                                                    try {
-                                                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                try {
+                                                    //TODO is24HourFormat doesn't work
+                                                    if (Build.VERSION.SDK_INT < 23) {
+                                                        if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
                                                             formatter = new SimpleDateFormat("HH:mm");
                                                         } else {
                                                             formatter = new SimpleDateFormat("hh:mm aa");
                                                         }
-                                                    }catch (Exception e){
-                                                        e.printStackTrace();
+                                                    } else {
+//                                                        try {
+                                                            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                                formatter = new SimpleDateFormat("HH:mm");
+                                                            } else {
+                                                                formatter = new SimpleDateFormat("hh:mm aa");
+                                                            }
+//                                                        }catch (Exception e){
+//                                                            e.printStackTrace();
+//                                                        }
                                                     }
+                                                }catch(Exception e){
+                                                    formatter = new SimpleDateFormat("HH:mm");
                                                 }
                                             }
                                             formatter.setTimeZone(TimeZone.getDefault());
@@ -366,6 +372,7 @@ public class ChatListFragment
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
+                    .setVIewColor(R.color.cht_color_dialog)
                     .setIsCheckEnabled(false)
                     .build();
             final ChatActorCommunitySelectableIdentity identity=chatIdentity;
@@ -785,11 +792,14 @@ public class ChatListFragment
                 String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                 if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
+//                    fermatBundle.remove(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
                     onUpdateViewUIThread();
+//                    cancelNotification();
                 }
 
                 if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
-//                   fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
+//                    cancelNotification();
+//                    fermatBundle.remove(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,

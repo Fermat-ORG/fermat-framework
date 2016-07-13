@@ -31,5 +31,12 @@
     <!-- Home tutorial presentation dialog -->
     <string name="csh_home_tut_present_dialog_sub_title">This wallet is meant to help you manage your cash.\nWith it you can:</string>
     <string name="csh_home_tut_present_dialog_body">* See your balances.\n* Deposit funds into wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history.</string>
+    <string name="cw_memo">MEMO</string>
+    <string name="cw_date">DATE</string>
+    <string name="cw_amount">AMOUNT</string>
+    <string name="cw_type">TYPE</string>
+    <string name="cw_transaction_details">Transaction details</string>
+    <string name="csh_delete">Delete</string>
+    <string name="csh_update">Update</string>
 
 </resources>
