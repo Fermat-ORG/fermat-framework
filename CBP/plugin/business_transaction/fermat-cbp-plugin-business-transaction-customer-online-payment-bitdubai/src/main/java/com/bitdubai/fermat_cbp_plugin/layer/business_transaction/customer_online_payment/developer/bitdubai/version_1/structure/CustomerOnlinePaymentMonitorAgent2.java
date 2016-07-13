@@ -130,43 +130,47 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<String> pendingToSubmitCrypto = dao.getPendingToSubmitCryptoList();
             for (String pendingContractHash : pendingToSubmitCrypto) {
-                BusinessTransactionRecord businessTransactionRecord = dao.getCustomerOnlinePaymentRecord(pendingContractHash);
+                try{
+                    BusinessTransactionRecord businessTransactionRecord = dao.getCustomerOnlinePaymentRecord(pendingContractHash);
 
-                //I'll check if the payment was sent in a previous loop
-                contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
-                if(contractTransactionStatus!=ContractTransactionStatus.PENDING_PAYMENT){
-                    /**
-                     * If the contractTransactionStatus is different to PENDING_PAYMENT means
-                     * that tha payment through the Crypto* Wallet was done.
-                     * We don't want to send multiple payments, we will ignore this transaction.
-                     */
-                    continue;
+                    //I'll check if the payment was sent in a previous loop
+                    contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
+                    if(contractTransactionStatus!=ContractTransactionStatus.PENDING_PAYMENT){
+                        /**
+                         * If the contractTransactionStatus is different to PENDING_PAYMENT means
+                         * that tha payment through the Crypto* Wallet was done.
+                         * We don't want to send multiple payments, we will ignore this transaction.
+                         */
+                        continue;
+                    }
+
+                    ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                    IntraWalletUserIdentity intraUser = intraUsers.get(0);
+
+                    System.out.println("***************************************************************************************");
+                    System.out.println("CUSTOMER_ONLINE_PAYMENT - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
+                    System.out.println("***************************************************************************************");
+
+                    UUID outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
+                            businessTransactionRecord.getExternalWalletPublicKey(),
+                            businessTransactionRecord.getCryptoAddress(),
+                            businessTransactionRecord.getCryptoAmount(),
+                            "Payment sent from a Customer",
+                            intraUser.getPublicKey(),
+                            businessTransactionRecord.getActorPublicKey(),
+                            Actors.CBP_CRYPTO_CUSTOMER,
+                            Actors.INTRA_USER,
+                            getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
+                            businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
+                            businessTransactionRecord.getCryptoCurrency(),
+                            businessTransactionRecord.getFee(),
+                            businessTransactionRecord.getFeeOrigin());
+
+                    dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
+                    dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);
+                } catch (Exception e){
+                    reportError(e);
                 }
-
-                ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
-                IntraWalletUserIdentity intraUser = intraUsers.get(0);
-
-                System.out.println("***************************************************************************************");
-                System.out.println("CUSTOMER_ONLINE_PAYMENT - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
-                System.out.println("***************************************************************************************");
-
-                UUID outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
-                        businessTransactionRecord.getExternalWalletPublicKey(),
-                        businessTransactionRecord.getCryptoAddress(),
-                        businessTransactionRecord.getCryptoAmount(),
-                        "Payment sent from a Customer",
-                        intraUser.getPublicKey(),
-                        businessTransactionRecord.getActorPublicKey(),
-                        Actors.CBP_CRYPTO_CUSTOMER,
-                        Actors.INTRA_USER,
-                        getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
-                        businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
-                        businessTransactionRecord.getCryptoCurrency(),
-                        businessTransactionRecord.getFee(),
-                        businessTransactionRecord.getFeeOrigin());
-
-                dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
-                dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);
             }
 
             /**
@@ -174,19 +178,23 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
+                try{
+                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
-                transactionTransmissionManager.sendContractStatusNotification(
-                        pendingToSubmitNotificationRecord.getCustomerPublicKey(),
-                        pendingToSubmitNotificationRecord.getBrokerPublicKey(),
-                        contractHash,
-                        pendingToSubmitNotificationRecord.getTransactionId(),
-                        CRYPTO_PAYMENT_SUBMITTED,
-                        Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                    transactionTransmissionManager.sendContractStatusNotification(
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            contractHash,
+                            pendingToSubmitNotificationRecord.getTransactionId(),
+                            CRYPTO_PAYMENT_SUBMITTED,
+                            Plugins.CUSTOMER_ONLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
-                dao.updateContractTransactionStatus(contractHash, CRYPTO_PAYMENT_SUBMITTED);
+                    dao.updateContractTransactionStatus(contractHash, CRYPTO_PAYMENT_SUBMITTED);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -194,20 +202,24 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
+                try{
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                transactionTransmissionManager.confirmNotificationReception(
-                        pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
-                        pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
-                        contractHash,
-                        pendingToSubmitConfirmationRecord.getTransactionId(),
-                        Plugins.CUSTOMER_ONLINE_PAYMENT,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                    transactionTransmissionManager.confirmNotificationReception(
+                            pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+                            contractHash,
+                            pendingToSubmitConfirmationRecord.getTransactionId(),
+                            Plugins.CUSTOMER_ONLINE_PAYMENT,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                dao.updateContractTransactionStatus(contractHash, CONFIRM_ONLINE_PAYMENT);
+                    dao.updateContractTransactionStatus(contractHash, CONFIRM_ONLINE_PAYMENT);
 
-                raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
+                    raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
 
@@ -217,7 +229,11 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingTransactions = dao.getPendingCryptoTransactionList();
             for (BusinessTransactionRecord onlinePaymentRecord : pendingTransactions) {
-                checkPendingTransaction(onlinePaymentRecord);
+                try{
+                    checkPendingTransaction(onlinePaymentRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -225,12 +241,16 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingSubmitContractCryptoStatusList = dao.getPendingToSubmitCryptoStatusList();
             for (BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractCryptoStatusList) {
-                final String transactionId = pendingSubmitContractRecord.getTransactionId();
-                final String cryptoTransactionHash = intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(transactionId));
+                try{
+                    final String transactionId = pendingSubmitContractRecord.getTransactionId();
+                    final String cryptoTransactionHash = intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(transactionId));
 
-                final CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
-                pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
-                dao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
+                    final CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
+                    pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
+                    dao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -238,12 +258,16 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList = dao.getOnCryptoNetworkCryptoStatusList();
             for (BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList) {
-                final String transactionId = onCryptoNetworkContractRecord.getTransactionId();
-                final String cryptoTransactionHash = intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(transactionId));
+                try{
+                    final String transactionId = onCryptoNetworkContractRecord.getTransactionId();
+                    final String cryptoTransactionHash = intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(transactionId));
 
-                final CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
-                onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
-                dao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
+                    final CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
+                    onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
+                    dao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -251,9 +275,14 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnBlockchainContractList = dao.getOnBlockchainCryptoStatusList();
             for (BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList) {
-                onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
-                onBlockchainContractRecord.setContractTransactionStatus(PENDING_ONLINE_PAYMENT_NOTIFICATION);
-                dao.updateBusinessTransactionRecord(onBlockchainContractRecord);
+                try{
+                    onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
+                    onBlockchainContractRecord.setContractTransactionStatus(PENDING_ONLINE_PAYMENT_NOTIFICATION);
+                    dao.updateBusinessTransactionRecord(onBlockchainContractRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
             //END of the checking process for the crypto status
 
@@ -263,9 +292,12 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<String> pendingEventsIdList = dao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                checkPendingEvent(eventId);
+                try{
+                    checkPendingEvent(eventId);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
-
 
         } catch (Exception e) {
             reportError(e);

@@ -102,6 +102,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerCloseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
@@ -160,6 +161,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -228,6 +231,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     private final BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
+    private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final MatchingEngineManager matchingEngineManager;
     private final CustomerBrokerCloseManager customerBrokerCloseManager;
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
@@ -257,6 +261,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                                                              BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager,
                                                              BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
                                                              BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
+                                                             IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                                              MatchingEngineManager matchingEngineManager,
                                                              CustomerBrokerCloseManager customerBrokerCloseManager,
                                                              CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager,
@@ -288,6 +293,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         this.brokerAckOnlinePaymentManager = brokerAckOnlinePaymentManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
         this.matchingEngineManager = matchingEngineManager;
         this.customerBrokerCloseManager = customerBrokerCloseManager;
         this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
@@ -1569,19 +1575,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
         CryptoBrokerWalletPreferenceSettings preferenceSettings;
-        String publicKeyActor;
+
         try {
-            publicKeyActor = getSelectedActorIdentity().getPublicKey();
-        } catch (CantGetSelectedActorIdentityException e) {
-            publicKeyActor = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
-        }
-        try {
-            preferenceSettings = loadAndGetSettings(publicKeyActor);
+            preferenceSettings = loadAndGetSettings(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
         } catch (Exception e) {
             preferenceSettings = new CryptoBrokerWalletPreferenceSettings();
         }
-        FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
-        long fee = preferenceSettings.getBitcoinFee().getFee();
+
+        final FeeOrigin feeOrigin = preferenceSettings.getFeeOrigin();
+        final long fee = preferenceSettings.getBitcoinFee().getFee();
+
         return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions, fee, feeOrigin);
     }
 
@@ -1597,6 +1600,18 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     public List<EarningTransaction> searchEarnings(EarningsPair earningsPair) throws CantListEarningTransactionsException {
         final EarningsSearch earningsSearch = matchingEngineManager.getSearch(earningsPair);
         return earningsSearch.listResults();
+    }
+
+    @Override
+    public boolean isCreateIdentityIntraUser() throws CantSendNegotiationException {
+
+        try {
+            return intraWalletUserIdentityManager.hasIntraUserIdentity();
+        } catch (CantListIntraWalletUsersException e){
+            throw new CantSendNegotiationException(e, "Cannot not get has intra user identity", "Cannot get the negotiation");
+        }
+
+
     }
 
     private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, ClauseType paramClauseType) throws CantGetListClauseException {

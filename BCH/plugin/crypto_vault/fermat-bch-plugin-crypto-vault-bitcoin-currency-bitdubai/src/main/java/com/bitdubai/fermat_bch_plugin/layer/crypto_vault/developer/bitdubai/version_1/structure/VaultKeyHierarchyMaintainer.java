@@ -125,7 +125,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
             while (shouldRun){
                 try {
                     doTheMainTask();
-                    Thread.sleep(1000 * 60 * 2);
+                    Thread.sleep(1000 * 60 * 10); // 10 minutes
                 } catch (CantLoadHierarchyAccountsException e) {
                     e.printStackTrace();
                 } catch (KeyMaintainerStatisticException e) {

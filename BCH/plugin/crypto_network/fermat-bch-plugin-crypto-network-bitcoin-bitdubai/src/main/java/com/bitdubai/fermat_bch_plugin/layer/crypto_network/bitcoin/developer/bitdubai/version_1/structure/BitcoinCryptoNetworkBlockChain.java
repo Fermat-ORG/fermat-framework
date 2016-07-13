@@ -118,8 +118,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
          */
         if (isReset){
             firstTime = true;
-            if (isReset)
-                blockChainFile.delete();
+            blockChainFile.delete();
         }
 
 

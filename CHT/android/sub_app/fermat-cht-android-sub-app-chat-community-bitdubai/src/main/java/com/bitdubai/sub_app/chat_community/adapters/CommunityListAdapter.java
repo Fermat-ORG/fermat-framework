@@ -32,6 +32,7 @@ import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +54,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     private final String TAG = "communityadapter";
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
+    ArrayList<ChatActorCommunityInformation> chatMessages = new ArrayList<>();
 
     public CommunityListAdapter(Context context) {
         super(context);
@@ -394,6 +396,20 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             return dataSet.size();
         return 0;
     }
+
+    public void refreshEvents(ArrayList<ChatActorCommunityInformation> chatHistory) {
+        for (int i = 0; i < chatHistory.size(); i++) {
+            ChatActorCommunityInformation message = chatHistory.get(i);
+            add(message);
+            changeDataSet(chatHistory);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void add(ChatActorCommunityInformation message) {
+        chatMessages.add(message);
+    }
+
 
     public void setData(List<ChatActorCommunityInformation> data) {
         this.filteredData = data;

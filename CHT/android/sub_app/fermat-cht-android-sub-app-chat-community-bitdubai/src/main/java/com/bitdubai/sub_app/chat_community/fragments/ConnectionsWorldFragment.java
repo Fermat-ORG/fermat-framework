@@ -438,7 +438,8 @@ public class ConnectionsWorldFragment
                                     } else {
                                         lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     }
-                                    adapter.changeDataSet(lstChatUserInformations);
+                                    //adapter.changeDataSet(lstChatUserInformations);
+                                    adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
                                 } else {
                                     ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     for (ChatActorCommunityInformation info : temp)
@@ -488,7 +489,6 @@ public class ConnectionsWorldFragment
     }
 
     public void showEmpty(boolean show, View emptyView) {
-
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
         if (show) {
@@ -503,7 +503,7 @@ public class ConnectionsWorldFragment
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else {
-            emptyView.setAnimation(anim);
+//            emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
             emptyView.setBackgroundResource(0);

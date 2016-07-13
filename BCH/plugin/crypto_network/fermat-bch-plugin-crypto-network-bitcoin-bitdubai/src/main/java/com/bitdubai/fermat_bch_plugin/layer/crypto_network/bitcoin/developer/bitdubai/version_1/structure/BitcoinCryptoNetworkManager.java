@@ -1032,7 +1032,14 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @throws CantGetBlockchainDownloadProgress
      */
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
-        return this.runningAgents.get(blockchainNetworkType).getBlockchainDownloadProgress();
+        BitcoinCryptoNetworkMonitor networkMonitor = this.runningAgents.get(blockchainNetworkType);
+        if (networkMonitor == null) {
+            //it means the monitor is not running now, probably due to a reset.
+            //will return a cero download progress
+
+            return new BlockchainDownloadProgress(blockchainNetworkType, 0, 0, 0, 0);
+        } else
+        return networkMonitor.getBlockchainDownloadProgress();
     }
 
     /**

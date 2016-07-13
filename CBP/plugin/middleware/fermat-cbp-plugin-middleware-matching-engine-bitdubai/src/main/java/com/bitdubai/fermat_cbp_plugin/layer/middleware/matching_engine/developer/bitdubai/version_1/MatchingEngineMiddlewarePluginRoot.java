@@ -26,7 +26,9 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.i
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareEarningsTransactionGeneratorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareTransactionMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareTransactionMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
@@ -38,6 +40,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -89,9 +92,14 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
     private MatchingEngineMiddlewareManager fermatManager;
 
-    private MatchingEngineMiddlewareTransactionMonitorAgent monitorAgent;
+    private MatchingEngineMiddlewareTransactionMonitorAgent2 monitorAgent;
 
-    private MatchingEngineMiddlewareEarningsTransactionGeneratorAgent transactionGeneratorAgent;
+    private MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 transactionGeneratorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     @Override
     public FermatManager getManager() {
@@ -115,10 +123,19 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
             fermatManager.addEarningsExtractor(new CashEarningExtractor(cashMoneyDestockManager));
             fermatManager.addEarningsExtractor(new CryptoEarningExtractor(cryptoMoneyDestockManager));
 
-            monitorAgent = new MatchingEngineMiddlewareTransactionMonitorAgent(cryptoBrokerWalletManager, this, dao);
+            monitorAgent = new MatchingEngineMiddlewareTransactionMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,cryptoBrokerWalletManager, this, dao);
+
             monitorAgent.start();
 
-            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(this, dao);
+            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this, dao);
+
             transactionGeneratorAgent.start();
 
             super.start();
@@ -132,46 +149,16 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
                     "Matching Engine Middleware.",
                     "Problem initializing database of the plug-in."
             );
+        } catch (CantStartAgentException e) {
+            reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantStartPluginException(
+                    e,
+                    "Matching cantInitializeActorConnectionDatabaseException Middleware.",
+                    "Problem initializing database of the plug-in."
+            );
         }
-    }
-
-    @Override
-    public void pause() {
-
-        try {
-
-            monitorAgent.pause();
-            transactionGeneratorAgent.pause();
-
-        } catch (CantStopAgentException cantStopAgentException) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStopAgentException);
-        }
-
-        super.pause();
-    }
-
-    @Override
-    public void resume() {
-
-        try {
-
-            monitorAgent.resume();
-            transactionGeneratorAgent.resume();
-
-        } catch (CantStartAgentException cantStartAgentException) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
-        }
-
-        super.resume();
-    }
-
-    @Override
-    public void stop() {
-
-        monitorAgent.stop();
-        transactionGeneratorAgent.stop();
-
-        super.stop();
     }
 
     @Override

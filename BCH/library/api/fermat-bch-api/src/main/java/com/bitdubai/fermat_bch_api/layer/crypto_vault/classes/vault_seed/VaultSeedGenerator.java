@@ -20,6 +20,7 @@ import com.google.common.base.Splitter;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicCode;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
@@ -95,7 +96,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         /**
          * The Wallet class of bitcoinJ has a great entrophy level to generate a random seed.
          */
-        Wallet seedWallet = new Wallet(BlockchainNetworkSelector.getNetworkParameter(BitcoinNetworkConfiguration.DEFAULT_NETWORK_TYPE));
+        Wallet seedWallet = new Wallet(MainNetParams.get());
         DeterministicSeed seed = seedWallet.getKeyChainSeed();
 
         /**
