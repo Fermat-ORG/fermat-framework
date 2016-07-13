@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
@@ -89,7 +90,8 @@ import static android.widget.Toast.makeText;
 
 
 public class ConnectionsWorldFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>
+        extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>,
+        FermatListFragment<IntraUserInformation, ReferenceAppFermatSession<IntraUserModuleManager>>
         implements
         AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener,
@@ -1060,27 +1062,43 @@ public class ConnectionsWorldFragment
                 if (swipeRefresh != null)
                     swipeRefresh.setRefreshing(false);
                     adapter.setLoadingData(false);
-                if (result != null &&
-                        result.length > 0) {
+                if (result != null && result.length > 0) {
                     if (getActivity() != null && adapter != null) {
-                        lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
 
-                        if (lstIntraUserInformations.isEmpty()) {
-                            showEmpty(true, emptyView);
-                            showEmpty(false, searchEmptyView);
-                        } else {
-                            Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
-
+                        if (offset == 0) {
+                            lstIntraUserInformations.clear();
+                            lstIntraUserInformations.addAll((ArrayList) result[0]);
                             adapter.changeDataSet(lstIntraUserInformations);
-                            showEmpty(false, emptyView);
-                            showEmpty(false, searchEmptyView);
+                            ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                        } else {
+                            lstIntraUserInformations.addAll((ArrayList) result[0]);
+                            adapter.notifyItemRangeInserted(offset, lstIntraUserInformations.size() - 1);
                         }
-                    }
-                } else {
-                    showEmpty(true, emptyView);
-                    showEmpty(false, searchEmptyView);
 
+                    }
                 }
+
+/*
+                isRefreshing = false;
+                if (isAttached) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    adapter.setLoadingData(false);
+                    if (result != null && result.length > 0) {
+                        if (adapter != null) {
+                            if (offset == 0) {
+                                cryptoBrokerCommunityInformationList.clear();
+                                cryptoBrokerCommunityInformationList.addAll((ArrayList) result[0]);
+                                adapter.changeDataSet(cryptoBrokerCommunityInformationList);
+                                ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
+                            } else {
+                                cryptoBrokerCommunityInformationList.addAll((ArrayList) result[0]);
+                                adapter.notifyItemRangeInserted(offset, cryptoBrokerCommunityInformationList.size() - 1);
+                            }
+
+                        }
+                    }*/
+
+
             }
 
             @Override
@@ -1099,6 +1117,11 @@ public class ConnectionsWorldFragment
         });
         worker.execute();
 
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        
     }
 
     /*
