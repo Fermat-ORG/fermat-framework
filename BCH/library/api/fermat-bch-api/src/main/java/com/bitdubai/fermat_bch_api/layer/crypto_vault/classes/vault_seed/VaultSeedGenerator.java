@@ -20,6 +20,7 @@ import com.google.common.base.Splitter;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicCode;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
@@ -95,7 +96,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         /**
          * The Wallet class of bitcoinJ has a great entrophy level to generate a random seed.
          */
-        Wallet seedWallet = new Wallet(BlockchainNetworkSelector.getNetworkParameter(BitcoinNetworkConfiguration.DEFAULT_NETWORK_TYPE));
+        Wallet seedWallet = new Wallet(MainNetParams.get());
         DeterministicSeed seed = seedWallet.getKeyChainSeed();
 
         /**
@@ -109,13 +110,13 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         storeSeedInFile(this.fileName);
     }
 
-    private void storeSeedInFile(String filenName) throws CantCreateAssetVaultSeed {
+    private void storeSeedInFile(String seedFileName) throws CantCreateAssetVaultSeed {
         /**
          * I save the seed value into the file
          */
         PluginTextFile seedFile = null;
         try {
-            seedFile = pluginFileSystem.createTextFile(pluginId, this.filePath,  fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            seedFile = pluginFileSystem.createTextFile(pluginId, this.filePath,  seedFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             seedFile.setContent(generateFileContent());
             seedFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
@@ -245,17 +246,6 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         if (!isSeedValid(importedSeed))
             throw new CantImportSeedException(null, "Importing new seed from " + mnemonicCode, "incorrect seed format");
 
-        /**
-         * I will archive existing seed
-         */
-        try {
-            archiveExistingSeed();
-            this.delete();
-        } catch (CantDeleteExistingVaultSeed cantDeleteExistingVaultSeed) {
-            throw new CantImportSeedException(cantDeleteExistingVaultSeed, "Unable to delete previous seed", "IO Error");
-        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
-            throw new CantImportSeedException(cantCreateAssetVaultSeed, "Unable to archive previous seed", "IO Error");
-        }
 
         /**
          * I set the seed values of the class
@@ -268,14 +258,15 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
          * and Store the new seed.
          */
         try {
-            storeSeedInFile(this.fileName);
+            String newSeedFileName = this.fileName + "_" + this.getNextSeedFileOrder();
+            storeSeedInFile(newSeedFileName);
         } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
             throw new CantImportSeedException(cantCreateAssetVaultSeed, "unable to save new seed into disk.", "IO Error");
         }
     }
 
 
-    private void archiveExistingSeed() throws CantCreateAssetVaultSeed {
+    private void archiveNewSeed() throws CantCreateAssetVaultSeed {
         int seedOrder = getNextSeedFileOrder();
         try {
             this.load(this.fileName);

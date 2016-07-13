@@ -30,6 +30,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.BitcoinFaucetManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
@@ -285,7 +287,10 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
 
     @Override
     public void importSeedFromMnemonicCode(List<String> mnemonicCode, long date) throws CantImportSeedException {
+        // forces the import of the seed which creates a new file with the seed information
         bitcoinCurrencyCryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode, date);
+        // creates a new hierarchy from the imported seed, calls the maintainer to derive keys and sends them
+        // to the crypto network.
         bitcoinCurrencyCryptoVaultManager.forceImportedSeedToCryptoNetwork();
     }
 

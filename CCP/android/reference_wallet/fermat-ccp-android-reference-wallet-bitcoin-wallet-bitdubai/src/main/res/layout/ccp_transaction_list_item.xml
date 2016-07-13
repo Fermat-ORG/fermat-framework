@@ -15,8 +15,8 @@
         >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignParentRight="true"
             android:paddingRight="30dp"
@@ -35,15 +35,17 @@
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_notes"
-                android:text="@string/txt_conference_ticket_text"
+                android:text=""
                 android:textSize="14sp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
                 app:typeface="ROBOTO_REGULAR"
+                android:maxLines="1"
+                android:ellipsize="end"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

@@ -1827,6 +1827,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public void invalidate() {
+        if(!executor.isShutdown())
         executor.submit(new Runnable() {
             @Override
             public void run() {

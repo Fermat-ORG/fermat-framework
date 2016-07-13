@@ -22,7 +22,7 @@
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/description"
+            android:id="@+id/descrip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

@@ -35,6 +35,8 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
     public AppListAdapter(Context context) {
         super(context);
     }
+    //endless scroller
+    private boolean loadingData = true;
 
     public AppListAdapter(Context context, List<IntraUserInformation> dataSet,
                                 ReferenceAppFermatSession<IntraUserModuleManager> appSession,
@@ -185,6 +187,10 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setLoadingData(boolean loadingData) {
+        this.loadingData = loadingData;
     }
 
 }
