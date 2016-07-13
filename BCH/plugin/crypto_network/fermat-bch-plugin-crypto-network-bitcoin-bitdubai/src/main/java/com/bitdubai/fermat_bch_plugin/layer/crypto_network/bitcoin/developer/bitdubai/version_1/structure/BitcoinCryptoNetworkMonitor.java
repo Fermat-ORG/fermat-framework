@@ -455,7 +455,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             Futures.addCallback(future, new FutureCallback<Transaction>() {
                 @Override
                 public void onSuccess(Transaction result) {
-
                     try {
                         dao.setBroadcastStatus(Status.BROADCASTED, connectedPeers, null, txHash);
                         /**
@@ -500,10 +499,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * the future does not complete until the transaction in included in a block, which may be more than 10 minutes.
              * to generate the ON_CRYPTO_NETWORK event raising, I'm for now triggering it manually.
              */
-            wallet.setAcceptRiskyTransactions(true);
-            wallet.receivePending(finalTransaction, null, true);
-            finalTransaction.getConfidence(context).setConfidenceType(TransactionConfidence.ConfidenceType.PENDING);
-            events.onTransactionConfidenceChanged(wallet, finalTransaction);
+            BroadcastControllerAgent  broadcastControllerAgent = new BroadcastControllerAgent(10, TimeUnit.SECONDS, this.peerGroup, finalTransaction, this.wallet, this.dao, this.events);
+            try {
+                broadcastControllerAgent.start();
+                System.out.println("***CryptoNetwork*** Broadcast Controller Agent started...");
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -928,6 +930,106 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         public Transaction getBitcoinTransaction(Sha256Hash sha256Hash){
             return this.wallet.getTransaction(sha256Hash);
         }
+
+        private class BroadcastControllerAgent extends AbstractAgent implements Runnable{
+            private final PeerGroup peerGroup;
+            private final Transaction transaction;
+            private final Wallet wallet;
+            private final BitcoinCryptoNetworkDatabaseDao dao;
+            private final BitcoinNetworkEvents events;
+
+
+            public BroadcastControllerAgent(long sleepTime, TimeUnit timeUnit, PeerGroup peerGroup, Transaction transaction, Wallet wallet, BitcoinCryptoNetworkDatabaseDao dao, BitcoinNetworkEvents events) {
+                super(sleepTime, timeUnit);
+
+                this.peerGroup = peerGroup;
+                this.transaction = transaction;
+                this.wallet = wallet;
+                this.dao = dao;
+                this.events = events;
+
+
+            }
+
+            @Override
+            protected Runnable agentJob() {
+                return this;
+            }
+
+            @Override
+            protected void onErrorOccur() {
+
+            }
+
+            @Override
+            public void run() {
+                for (Peer peer : peerGroup.getConnectedPeers()){
+                    //if this is not the download Peer
+                    if (!peer.equals(peerGroup.getDownloadPeer())){
+                        // I will try to get the transaction it was broadcasted.
+                        try {
+                            Transaction peerTransaction = peer.getPeerMempoolTransaction(transaction.getHash()).get(10, TimeUnit.SECONDS);
+
+                            /**
+                             * If I got the transaction on a different peer than the one I'm broadcasting to the transaction can be considered
+                             * as broadcasted.
+                             */
+                            if (peerTransaction != null){
+                                System.out.println("***CryptoNetwork*** Transaction Broadcaster Controller: tx found on remote peer...confirming.");
+                                confirmTransactionBroadcast();
+                                this.stop();
+                            }
+                        } catch (Exception e) {
+                            // i will ignore any error.
+                        }
+                    }
+                }
+            }
+
+
+            /**
+             * forces the transaction to get confirmed on the platform
+             */
+            private void confirmTransactionBroadcast() {
+                wallet.receivePending(transaction, null, true);
+                wallet.maybeCommitTx(transaction);
+                try {
+                    dao.setBroadcastStatus(Status.BROADCASTED, peerGroup.numConnectedPeers(), null, transaction.getHashAsString());
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
+                /**
+                 * Store this outgoing transaction in the table
+                 */
+                UUID transactionId = null;
+                try {
+                    transactionId = dao.getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, transaction.getHashAsString());
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
+
+                for (CryptoTransaction cryptoTransaction : BitcoinTransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, BITCOIN, wallet, transaction)){
+                    try {
+                        dao.saveCryptoTransaction(cryptoTransaction, transactionId);
+                    } catch (CantExecuteDatabaseOperationException e) {
+                        //maybe try saving into disk if cant save it.
+                        e.printStackTrace();
+                    }
+                }
+
+                transaction.getConfidence(context).setConfidenceType(TransactionConfidence.ConfidenceType.BUILDING);
+                events.onTransactionConfidenceChanged(wallet, transaction);
+
+                /**
+                 * saves the wallet again.
+                 */
+                try {
+                    wallet.saveToFile(walletFileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -1021,6 +1123,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             }
         }
+
     }
+
 
 }
