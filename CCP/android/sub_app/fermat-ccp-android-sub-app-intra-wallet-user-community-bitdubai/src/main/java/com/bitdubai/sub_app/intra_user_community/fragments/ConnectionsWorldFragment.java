@@ -111,7 +111,6 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     private SwipeRefreshLayout swipeRefresh;
     private View searchView;
     // flags
-    private boolean isRefreshing = false;
 
     private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     private String searchName;
