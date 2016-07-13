@@ -82,6 +82,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBroke
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -843,4 +844,6 @@ public interface CryptoBrokerWalletModuleManager
     List<EarningTransaction> searchEarnings(EarningsPair earningsPair, EarningTransactionState state) throws CantListEarningTransactionsException;
 
     List<EarningTransaction> searchEarnings(EarningsPair earningsPair) throws CantListEarningTransactionsException;
+
+    CryptoBrokerIdentity setMerchandisesAsExtraDataInAssociatedIdentity() throws CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException;
 }
