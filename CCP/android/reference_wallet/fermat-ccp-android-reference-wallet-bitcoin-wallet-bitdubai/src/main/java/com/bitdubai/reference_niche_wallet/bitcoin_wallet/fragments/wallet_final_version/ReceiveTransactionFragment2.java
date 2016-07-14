@@ -321,6 +321,13 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     }
 
     @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
+
+    @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {

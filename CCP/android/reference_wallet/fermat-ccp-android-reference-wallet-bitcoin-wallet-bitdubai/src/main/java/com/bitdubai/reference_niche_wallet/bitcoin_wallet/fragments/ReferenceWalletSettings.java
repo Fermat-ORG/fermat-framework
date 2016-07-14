@@ -112,7 +112,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
 
             final Bundle networkDialog = new Bundle();
-            String items[] = new String[]{"MainNet", "TestNet", "RegTest"};
+            String items[] = new String[]{"MainNet", "TestNet"};
             networkDialog.putStringArray("items_array", items);
             networkDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
             networkDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));

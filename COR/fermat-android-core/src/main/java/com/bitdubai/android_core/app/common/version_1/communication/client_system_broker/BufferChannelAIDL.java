@@ -59,6 +59,7 @@ public class BufferChannelAIDL {
                     Log.i(TAG, "Lock is: "+lock.getIsBlock());
                 }
             }
+            locks1.remove(id);
             //semaphore.acquire();
         }
         return true;

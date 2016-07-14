@@ -224,6 +224,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
                                     setUpPresentation(false);
                                 }
+                                else
+                                {
+                                    showBlockchainProgress();
+                                }
+
                                 setRunningDailyBalance();
 
                             }
@@ -238,31 +243,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             onRefresh();
 
-            //check blockchain progress
-
-                                try {
-                                    int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
-                                    final Toolbar toolBar = getToolbar();
-                                    int toolbarColor = 0;
-                                    if (pendingBlocks > 0) {
-                                        //paint toolbar on red
-                                        toolbarColor = Color.RED;
-                                       if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
-                                            setUpBlockchainProgress(false);
-                                    } else {
-                                        toolbarColor = Color.parseColor("#12aca1");
-                                    }
-                                    final int finalToolbarColor = toolbarColor;
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            toolBar.setBackgroundColor(finalToolbarColor);
-                                                             }
-                                    });
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
-
 
 
 
@@ -271,6 +251,35 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
     }
 
+    private void showBlockchainProgress()
+    {
+        //check blockchain progress
+
+        try {
+            int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
+            final Toolbar toolBar = getToolbar();
+            int toolbarColor = 0;
+            if (pendingBlocks > 0) {
+                //paint toolbar on red
+                toolbarColor = Color.RED;
+                if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                    setUpBlockchainProgress(false);
+            } else {
+                toolbarColor = Color.parseColor("#12aca1");
+            }
+            final int finalToolbarColor = toolbarColor;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    toolBar.setBackgroundColor(finalToolbarColor);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
 
     private void setUpPresentation(boolean checkButton) {
         PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
@@ -311,6 +320,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 } else {
                     invalidate();
                 }
+
+                showBlockchainProgress();
 
             }
         });
@@ -391,6 +402,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onStop() {
         getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
         super.onStop();
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
     }
 
     private void setUp(LayoutInflater inflater){
@@ -647,7 +665,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         return walletAddress;
     }
 
-    public void GET(@SuppressWarnings("UnusedParameters") String url, final Context context){
+   /* public void GET(@SuppressWarnings("UnusedParameters") String url, final Context context){
         final Handler mHandler = new Handler();
         try {
             if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
@@ -727,7 +745,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
     }
 
-
+*/
     public void GETTestNet(@SuppressWarnings("UnusedParameters") String url, final Context context){
         final Handler mHandler = new Handler();
 
