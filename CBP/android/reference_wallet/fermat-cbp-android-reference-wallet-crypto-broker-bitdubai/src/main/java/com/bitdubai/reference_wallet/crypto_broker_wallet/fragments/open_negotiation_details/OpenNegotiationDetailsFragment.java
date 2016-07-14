@@ -362,18 +362,18 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         try {
 
             if (negotiationWrapper.isClausesConfirmed()) {
+                if(!negotiationWrapper.isAmountEmpty()){
+                    if(isCreateIdentityIntraUser(negotiationWrapper.getClauses())) {
 
-                if(isCreateIdentityIntraUser(negotiationWrapper.getClauses())) {
+                        moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
+                        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
 
-                    moduleManager.sendNegotiation(negotiationWrapper.getNegotiationInfo());
-                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-
-                } else {
-                    Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC ", Toast.LENGTH_LONG).show();
-                }
-
+                    } else
+                        Toast.makeText(getActivity(), "Need to register THE WALLET USER for user BTC.", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getActivity(), "Amounts may not be empty.", Toast.LENGTH_LONG).show();
             } else
-                Toast.makeText(getActivity(), "Need to confirm ALL the clauses", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Need to confirm ALL the clauses.", Toast.LENGTH_LONG).show();
 
         } catch (CantSendNegotiationToCryptoCustomerException e) {
             errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET,
@@ -452,26 +452,35 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal exchangeRate = MathUtils.getBigDecimal(newValue);
-                final BigDecimal amountToSell = MathUtils.getBigDecimal(clauses.get(CUSTOMER_CURRENCY_QUANTITY));
-                final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
-                final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
 
-                negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
+                if (!newValue.isEmpty()) {
 
-                adapter.changeDataSet(negotiationWrapper);
+                    final BigDecimal exchangeRate = MathUtils.getBigDecimal(newValue);
+                    final BigDecimal amountToSell = MathUtils.getBigDecimal(clauses.get(CUSTOMER_CURRENCY_QUANTITY));
+                    final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
+                    final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
+
+                    negotiationWrapper.changeClauseValue(clause, newValue);
+                    negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
+
+                    adapter.changeDataSet(negotiationWrapper);
 
 
-                BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
-                BigDecimal suggestedMaxExchangeRate = new BigDecimal(marketRateReferenceValue.doubleValue() * (1 + (spread / 100)));
+                    BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
+                    BigDecimal suggestedMaxExchangeRate = new BigDecimal(marketRateReferenceValue.doubleValue() * (1 + (spread / 100)));
 
 
-                if (exchangeRate.compareTo(suggestedMaxExchangeRate) == 1)
-                    Toast.makeText(getActivity(), "Warning: Selected Rate is higher than suggested!", Toast.LENGTH_LONG).show();
+                    if (exchangeRate.compareTo(suggestedMaxExchangeRate) == 1)
+                        Toast.makeText(getActivity(), "Warning: Selected Rate is higher than suggested!", Toast.LENGTH_LONG).show();
 
-                if (exchangeRate.compareTo(marketRateReferenceValue) == -1)
-                    Toast.makeText(getActivity(), "Warning: Selected Rate is lower than suggested!", Toast.LENGTH_LONG).show();
+                    if (exchangeRate.compareTo(marketRateReferenceValue) == -1)
+                        Toast.makeText(getActivity(), "Warning: Selected Rate is lower than suggested!", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    Toast.makeText(getActivity(), "Amount may not be empty.", Toast.LENGTH_LONG).show();
+
+                }
 
             }
         });
@@ -486,16 +495,25 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal amountToSell = MathUtils.getBigDecimal(newValue);
-                final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
 
-                final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
-                final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
+                 if(!newValue.isEmpty()){
 
-                negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
+                    final BigDecimal amountToSell = MathUtils.getBigDecimal(newValue);
+                    final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
 
-                adapter.changeDataSet(negotiationWrapper);
+                    final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
+                    final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
+
+                    negotiationWrapper.changeClauseValue(clause, newValue);
+                    negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
+
+                    adapter.changeDataSet(negotiationWrapper);
+
+                 } else {
+
+                     Toast.makeText(getActivity(), "Amount may not be empty.", Toast.LENGTH_LONG).show();
+
+                 }
             }
         });
         clauseTextDialog.show();
@@ -509,16 +527,26 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal amountToReceive = MathUtils.getBigDecimal(newValue);
-                final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
 
-                final double amountToSellValue = amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue();
-                final ClauseInformation amountToSellClause = clauses.get(CUSTOMER_CURRENCY_QUANTITY);
 
-                negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToSellClause, numberFormat.format(amountToSellValue));
+                if(!newValue.isEmpty()){
 
-                adapter.changeDataSet(negotiationWrapper);
+                    final BigDecimal amountToReceive = MathUtils.getBigDecimal(newValue);
+                    final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
+
+                    final double amountToSellValue = amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue();
+                    final ClauseInformation amountToSellClause = clauses.get(CUSTOMER_CURRENCY_QUANTITY);
+
+                    negotiationWrapper.changeClauseValue(clause, newValue);
+                    negotiationWrapper.changeClauseValue(amountToSellClause, numberFormat.format(amountToSellValue));
+
+                    adapter.changeDataSet(negotiationWrapper);
+
+                } else {
+
+                    Toast.makeText(getActivity(), "Amount may not be empty.", Toast.LENGTH_LONG).show();
+
+                }
             }
         });
         clauseTextDialog.show();
