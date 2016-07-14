@@ -40,6 +40,14 @@ public interface OpenContractManager extends FermatManager {
             throws UnexpectedResultReturnedFromDatabaseException;
 
     /**
+     * This method returns the status from the Open Contract Business Transaction.
+     * @param negotiationId
+     * @return
+     */
+    boolean isOpenContract(String negotiationId)
+            throws UnexpectedResultReturnedFromDatabaseException;
+
+    /**
      * This method returns the transaction completion date.
      * If returns 0 the transaction is processing.
      * @param contractHash
