@@ -127,9 +127,15 @@ class VaultKeyHierarchyGenerator implements Runnable {
          * I will get from the database the list of accounts to create
          * and add them to the hierarchy.
          */
-        for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
-            vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
+        if (this.isSeedImported){
+            HierarchyAccount importedSeedAccount = new HierarchyAccount(0, "ImportedSeed", HierarchyAccountType.IMPORTED_ACCOUNT);
+            vaultKeyHierarchy.addVaultAccount(importedSeedAccount);
+        } else {
+            for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
+                vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
+            }
         }
+
 
 
         /**
