@@ -19,6 +19,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -118,7 +119,6 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations = new ArrayList<>();
 
-    private android.support.v7.widget.Toolbar toolbar;
     private EditText searchEditText;
     private List<IntraUserInformation> dataSetFiltered;
     private ImageView closeSearch;
@@ -131,6 +131,8 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     private Location location = null;
     private double distance;
     private String alias;
+
+    private Toolbar toolbar;
 
 
     //endless scroller
@@ -180,6 +182,10 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
             new FetchCountTask().execute();
 
+            toolbar = getToolbar();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setElevation(10);
+            }
 
             //consult net work status
 
