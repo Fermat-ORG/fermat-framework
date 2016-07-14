@@ -6,9 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by rodrigo on 7/2/16.
  */
 public enum BitcoinFee {
-    SLOW(2500),
-    NORMAL(4500),
-    FAST(8000);
+    SLOW(20000),
+    NORMAL(30000),
+    FAST(50000);
 
     private long fee;
 
