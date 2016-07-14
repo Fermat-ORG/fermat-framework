@@ -69,7 +69,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAp
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_error_conecting_fermat_network;
+        return R.layout.comm_dialog_error_conecting_fermat_network;
     }
 
     @Override

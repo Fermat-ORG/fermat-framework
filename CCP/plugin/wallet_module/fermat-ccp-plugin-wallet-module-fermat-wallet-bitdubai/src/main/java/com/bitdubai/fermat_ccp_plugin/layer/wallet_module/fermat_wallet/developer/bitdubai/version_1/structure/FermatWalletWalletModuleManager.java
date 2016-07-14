@@ -1052,7 +1052,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         try {
             CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
+            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset, blockchainNetworkType);
 
 
                 List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
@@ -1116,35 +1116,35 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                         balanceType,
                         transactionType,
                         max,
-                        offset
+                        offset,
+                        blockchainNetworkType
                 );
 
-                List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+             //   List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
                 for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
 
-                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        if (bitcoinWalletTransactionList1.isEmpty()){
-                            bitcoinWalletTransactionList1.add(bwt);
+                        if (cryptoWalletTransactionList.isEmpty()){
+                            cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                         }else {
                             int count = 0;
-                            for (CryptoWalletTransaction bwt1 : bitcoinWalletTransactionList1) {
+                            for (FermatWalletModuleTransaction bwt1 : cryptoWalletTransactionList) {
                                 if (bwt1.getActorToPublicKey().equals(bwt.getActorToPublicKey())) {
                                     count++;
                                 }
                             }
                             if (count == 0)
-                                bitcoinWalletTransactionList1.add(bwt);
+                                cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
 
                         }
-                    }
+
                 }
 
 
 
-                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
-                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
-                }
+                //for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
+                //    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+               // }
             }
             return cryptoWalletTransactionList;
         } catch(Exception e){
@@ -1442,7 +1442,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                 }
             }
 
-            cryptoPaymentRegistry.approveRequest(requestId);
+            cryptoPaymentRegistry.approveRequest(requestId,0,FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
 
         }

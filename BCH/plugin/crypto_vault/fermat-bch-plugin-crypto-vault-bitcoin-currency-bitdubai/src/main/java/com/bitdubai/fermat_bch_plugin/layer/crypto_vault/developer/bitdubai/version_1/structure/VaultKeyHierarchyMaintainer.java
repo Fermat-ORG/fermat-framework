@@ -102,6 +102,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
     public void stop() {
         //flag to control running status
         this.shouldRun = false;
+        this.isRunning = false;
     }
 
     public boolean isRunning(){
@@ -124,7 +125,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
             while (shouldRun){
                 try {
                     doTheMainTask();
-                    Thread.sleep(1000 * 60 * 2);
+                    Thread.sleep(1000 * 60 * 10); // 10 minutes
                 } catch (CantLoadHierarchyAccountsException e) {
                     e.printStackTrace();
                 } catch (KeyMaintainerStatisticException e) {
@@ -133,7 +134,6 @@ class VaultKeyHierarchyMaintainer implements Agent{
                     e.printStackTrace();
                 }
             }
-
         }
 
 

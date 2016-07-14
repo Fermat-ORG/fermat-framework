@@ -222,6 +222,13 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     }
 
     @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
+
+    @Override
     protected boolean hasMenu() {
         return true;
     }
