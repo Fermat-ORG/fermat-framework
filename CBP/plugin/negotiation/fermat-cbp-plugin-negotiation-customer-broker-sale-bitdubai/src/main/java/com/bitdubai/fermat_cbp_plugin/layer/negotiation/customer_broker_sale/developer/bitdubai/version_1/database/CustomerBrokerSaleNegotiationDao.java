@@ -143,6 +143,8 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
     //Add Yordin Alayn 19.02.16
     public void updateNegotiationInfo(UUID negotiationId, String memo, NegotiationStatus status) throws CantUpdateCustomerBrokerSaleException {
         try {
+
+            memo = memo.replace("'","''");
             DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
 
             PurchaseNegotiationClauseTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
