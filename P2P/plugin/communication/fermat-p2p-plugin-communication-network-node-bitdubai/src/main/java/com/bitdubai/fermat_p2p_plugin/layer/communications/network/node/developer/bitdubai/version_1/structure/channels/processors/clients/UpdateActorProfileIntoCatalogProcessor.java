@@ -213,7 +213,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         actorsCatalog.setLastLocation(actorProfile.getLocation());
 
         if(actorProfile.getPhoto() != null)
-            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),null));
+            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),"JPG"));
         else
             actorsCatalog.setThumbnail(null);
 
@@ -264,7 +264,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         transaction.setLastLocation(actorProfile.getLocation());
 
         if(actorProfile.getPhoto() != null)
-            transaction.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),null));
+            transaction.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(),"JPG"));
         else
             transaction.setThumbnail(null);
 
@@ -322,7 +322,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
         }
 
         if(actorProfile.getPhoto() != null)
-            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(), null));
+            actorsCatalog.setThumbnail(ThumbnailUtil.generateThumbnail(actorProfile.getPhoto(), "JPG"));
         else
             actorsCatalog.setThumbnail(null);
 
