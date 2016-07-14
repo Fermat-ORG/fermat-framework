@@ -20,7 +20,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
@@ -77,7 +78,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
     private final IssuerAppropriationVault assetVault;
     private final UUID pluginId;
     private final AssetVaultManager assetVaultManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final BlockchainManager bitcoinNetworkManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final CryptoVaultManager cryptoVaultManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
@@ -101,7 +102,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                                            IssuerAppropriationDigitalAssetTransactionPluginRoot issuerAppropriationDigitalAssetTransactionPluginRoot,
                                            UUID pluginId,
                                            AssetVaultManager assetVaultManager,
-                                           BitcoinNetworkManager bitcoinNetworkManager,
+                                           BlockchainManager bitcoinNetworkManager,
                                            CryptoAddressBookManager cryptoAddressBookManager,
                                            CryptoVaultManager cryptoVaultManager,
                                            IntraWalletUserIdentityManager intraWalletUserIdentityManager,
