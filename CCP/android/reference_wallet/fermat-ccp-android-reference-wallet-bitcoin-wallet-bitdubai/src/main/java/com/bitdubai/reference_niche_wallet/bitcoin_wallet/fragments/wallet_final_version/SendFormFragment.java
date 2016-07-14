@@ -809,7 +809,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             {
                                 //check amount + fee less than balance
                                 long total = 0;
-                                if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS))
+                                if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
                                     total =  operator.longValueExact() +  decimalFeed.longValueExact();
                                 else
                                     total =  operator.longValueExact() -  decimalFeed.longValueExact();
