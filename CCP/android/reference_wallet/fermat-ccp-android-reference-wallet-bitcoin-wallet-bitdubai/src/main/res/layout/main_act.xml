@@ -8,6 +8,14 @@
     android:background="@drawable/background_gradient"
     android:orientation="vertical">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:visibility="visible"
+        android:background="#1273aa"
+        android:backgroundTint="#1273aa" />
+
     <LinearLayout
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
@@ -45,6 +53,16 @@
             android:textColorHint="#fff"
             android:textSize="14sp" />
 
+        <ImageButton
+            android:id="@+id/clear_search_image_button"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@string/clear_text_button"
+            android:src="@drawable/ic_action_cancel_grey"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:background="#00ffffff"
+            android:backgroundTint="#00ffffff" />
     </LinearLayout>
 
     <FrameLayout
