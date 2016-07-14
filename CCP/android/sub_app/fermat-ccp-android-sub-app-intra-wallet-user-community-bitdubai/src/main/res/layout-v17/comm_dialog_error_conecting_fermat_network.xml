@@ -49,23 +49,10 @@
             android:text="@string/description_text"
             android:textColor="#ffffff"
             android:textSize="16sp"
-            tools:ignore="HardcodedText" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/second_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingStart="8dp"
-            android:text="@string/second_description_text"
-            android:textColor="#ffffff"
-            android:textSize="15sp"
             tools:ignore="HardcodedText"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:maxLines="2"/>
+
+
 
         <View
             android:layout_width="match_parent"
