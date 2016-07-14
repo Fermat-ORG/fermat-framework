@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
@@ -34,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation_transaction.NegotiationTransaction;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.ClauseMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
@@ -41,6 +44,9 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.CustomerBrokerNewMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.SaleNegotiationMock;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendConfirmToCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
@@ -53,6 +59,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.OutgoingNotificationDao;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransactionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionManagerImpl;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
@@ -63,7 +70,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -87,6 +98,10 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
     private NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl;
 
     NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
+
+    Timer timer = new Timer();
+
+    private long reprocessTimer = 300000; //five minutes
 
     /**
      * cacha identities to register
@@ -121,6 +136,12 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
             //Initialize Manager
             negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao,incomingNotificationDao, this);
+
+            // change message state to process again first time
+            //reprocessPendingMessage();
+
+            //declare a schedule to process waiting request message
+            this.startTimer();
         } catch (CantInitializeNetworkServiceDatabaseException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -182,9 +203,59 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
     protected void onNetworkServiceRegistered() {
 
 //        testManager();
+        reprocessPendingMessage();
 
     }
 
+    protected void reprocessPendingMessage() {
+        try {
+            outgoingNotificationDao.changeStatusNotSentMessage();
+
+            //Map<String, Object> filters = new HashMap<>();
+            //filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
+            List<NegotiationTransmission> lstActorRecord = outgoingNotificationDao.findAllByTransmissionState(
+                    NegotiationTransmissionState.PROCESSING_SEND
+            );
+            System.out.println("NEGOTIATION TRANSMISSION - I found "+lstActorRecord.size()+" for sending");
+            NegotiationType negotiationType;
+            for (NegotiationTransmission nt : lstActorRecord) {
+                negotiationType = nt.getNegotiationType();
+                switch (negotiationType){
+                    case PURCHASE:
+                        negotiationTransmissionManagerImpl
+                                .sendMessage(nt.toJson(),
+                                        nt.getPublicKeyActorSend(),
+                                        Actors.CBP_CRYPTO_CUSTOMER,
+                                        nt.getPublicKeyActorReceive(),
+                                        Actors.CBP_CRYPTO_BROKER);
+                        break;
+                    case SALE:
+                        negotiationTransmissionManagerImpl
+                                .sendMessage(nt.toJson(),
+                                        nt.getPublicKeyActorSend(),
+                                        Actors.CBP_CRYPTO_CUSTOMER,
+                                        nt.getPublicKeyActorReceive(),
+                                        Actors.CBP_CRYPTO_BROKER);
+                        break;
+
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("NEGOTIATION TRANSMISSION NS EXCEPTION PROCESSING MESSAGES NOT SENT");
+            e.printStackTrace();
+        }
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        }, 0,reprocessTimer);
+    }
 
     public void testManager() {
 
