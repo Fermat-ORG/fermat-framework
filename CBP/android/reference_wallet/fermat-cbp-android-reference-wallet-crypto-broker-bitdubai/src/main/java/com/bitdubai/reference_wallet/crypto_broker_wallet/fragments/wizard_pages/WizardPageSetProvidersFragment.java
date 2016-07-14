@@ -222,6 +222,9 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                 moduleManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
 
+            // TODO desabilitado hasta hablar con matias sobre los BroadcastReceivers, que estan fallando
+            //moduleManager.setMerchandisesAsExtraDataInAssociatedIdentity();
+
             //Set CONFIGURED_DATA to true so that wizard knows its completed.
             appSession.setData(FragmentsCommons.CONFIGURED_DATA, true);
 

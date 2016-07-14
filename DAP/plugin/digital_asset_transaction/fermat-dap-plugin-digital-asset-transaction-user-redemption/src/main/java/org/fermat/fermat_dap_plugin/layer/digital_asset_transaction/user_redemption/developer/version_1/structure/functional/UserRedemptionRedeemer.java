@@ -11,7 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 
@@ -71,7 +72,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                                   AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                   UserRedemptionDao userRedemptionDao,
                                   DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault,
-                                  BitcoinNetworkManager bitcoinNetworkManager,
+                                  BlockchainManager bitcoinNetworkManager,
                                   ActorAssetUserManager actorAssetUserManager,
                                   AssetVaultManager assetVaultManager) throws CantExecuteDatabaseOperationException, CantGetAssetUserActorsException, CantSetObjectException {
 

@@ -139,10 +139,18 @@ class VaultKeyHierarchyGenerator implements Runnable {
             if (!vaultKeyHierarchyMaintainer.isRunning())
                 throw new CantLoadHierarchyAccountsException(CantLoadHierarchyAccountsException.DEFAULT_MESSAGE, null, "Maintainer Agent not started.", "Agent issue");
 
-            if (this.isSeedImported)
+            /**
+             * If we are importing a seed, will wait some minutes before stopping the Maintainer.
+             */
+            if (this.isSeedImported){
+                Thread.sleep(2000);
                 vaultKeyHierarchyMaintainer.stop();
+            }
+
         } catch (CantStartAgentException e) {
             // I will log this error for now.
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

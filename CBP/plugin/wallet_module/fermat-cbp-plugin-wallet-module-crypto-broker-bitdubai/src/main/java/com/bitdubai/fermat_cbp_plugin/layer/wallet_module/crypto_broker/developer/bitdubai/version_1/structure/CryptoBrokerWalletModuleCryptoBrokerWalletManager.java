@@ -69,6 +69,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.ListsForStatusSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -156,6 +157,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBroke
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CBPInstalledWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -1607,11 +1609,68 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
         try {
             return intraWalletUserIdentityManager.hasIntraUserIdentity();
-        } catch (CantListIntraWalletUsersException e){
+        } catch (CantListIntraWalletUsersException e) {
             throw new CantSendNegotiationException(e, "Cannot not get has intra user identity", "Cannot get the negotiation");
         }
+    }
 
+    @Override
+    public CryptoBrokerIdentity setMerchandisesAsExtraDataInAssociatedIdentity() throws CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException {
 
+        try {
+            CryptoBrokerIdentity associatedIdentity = getAssociatedIdentity(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            CryptoBrokerWalletModuleCryptoBrokerIdentity updatedIdentity = new CryptoBrokerWalletModuleCryptoBrokerIdentity(associatedIdentity);
+
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+
+            final HashSet<Currency> associatedMerchandises = new HashSet<>();
+
+            String extraText = "Merchandises: ";
+            boolean firstMerchandise = true;
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+                final Currency merchandise = associatedWallet.getMerchandise();
+
+                if (!associatedMerchandises.contains(merchandise)) {
+                    extraText += firstMerchandise ? merchandise.getCode() : ", " + merchandise.getCode();
+                    associatedMerchandises.add(merchandise);
+                    firstMerchandise = false;
+                }
+            }
+
+            final Currency merchandise = associatedWallets.get(0).getMerchandise();
+            final Currency paymentCurrency = associatedWallets.get(1).getMerchandise();
+
+            updatedIdentity.setExtraData(merchandise, paymentCurrency, extraText);
+
+            cryptoBrokerIdentityManager.updateCryptoBrokerIdentity(updatedIdentity);
+
+            return updatedIdentity;
+
+        } catch (CantListCryptoBrokerIdentitiesException e) {
+            throw new CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException(e,
+                    "Getting list of broker identity to find the associated identity",
+                    "There is no identities registered in database");
+
+        } catch (CantGetRelationBetweenBrokerIdentityAndBrokerWalletException | CantGetAssociatedIdentityException e) {
+            throw new CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException(e,
+                    "Getting list of broker identity to find the associated identity",
+                    "There is no an associated identity for this wallet");
+
+        } catch (CantUpdateBrokerIdentityException e) {
+            throw new CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException(e,
+                    "Updating the information of the associated broker identity with the new extra data",
+                    "Probably there is a problem in data base or when trying to publish the identity");
+
+        } catch (CantGetCryptoBrokerWalletSettingException e) {
+            throw new CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException(e,
+                    "Trying to get the associated wallets that have the associated merchandises",
+                    "There is no associated wallets");
+
+        } catch (CryptoBrokerWalletNotFoundException e) {
+            throw new CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException(e,
+                    "Trying to get wallet settings to obtain the associated wallets and its merchandises",
+                    "Probably there is a problem in data base");
+        }
     }
 
     private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, ClauseType paramClauseType) throws CantGetListClauseException {

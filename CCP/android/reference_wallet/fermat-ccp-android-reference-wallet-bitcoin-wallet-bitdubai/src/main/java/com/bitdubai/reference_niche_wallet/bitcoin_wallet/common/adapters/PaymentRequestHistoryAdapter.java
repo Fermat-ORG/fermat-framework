@@ -9,7 +9,13 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
@@ -33,6 +39,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     CryptoWallet cryptoWallet;
     ReferenceAppFermatSession referenceWalletSession;
     Typeface tf;
+    private BitcoinWalletSettings bitcoinWalletSettings = null;
+    private String feeLevel = "SLOW";
+
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
@@ -43,6 +52,32 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         this.referenceWalletSession =referenceWalletSession;
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
+
+
+        try {
+
+            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
+
+            if (bitcoinWalletSettings.getFeedLevel() == null)
+                bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+            else
+                feeLevel = bitcoinWalletSettings.getFeedLevel();
+
+            this.cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
@@ -181,8 +216,10 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 @Override
                 public void onClick(View view) {
                     try {
+
                         cryptoWallet.approveRequest(data.getRequestId()
-                                , cryptoWallet.getSelectedActorIdentity().getPublicKey());
+                                , cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
 //                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
