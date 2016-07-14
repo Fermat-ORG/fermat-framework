@@ -47,8 +47,8 @@ public class ChatCommunityTest extends ActivityInstrumentationTestCase2 {
 		assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
         //Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
 		assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
-        //Set default small timeout to 1119824 milliseconds
-		Timeout.setSmallTimeout(1119824);
+        //Set default small timeout to 11198 milliseconds
+		Timeout.setSmallTimeout(11198);
         //Assert that: 'ImageView' is shown
 		assertTrue("'ImageView' is not shown!", solo.waitForView(solo.getView(android.widget.ImageView.class, 1)));
         //Click on Empty Text View

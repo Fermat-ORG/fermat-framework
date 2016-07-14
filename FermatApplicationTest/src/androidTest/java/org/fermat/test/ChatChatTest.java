@@ -41,8 +41,8 @@ public class ChatRobotiumChatTest extends ActivityInstrumentationTestCase2 {
 		solo.waitForActivity("StartActivity", 2000);
         //Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
 		assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
-        //Set default small timeout to 727706 milliseconds
-		Timeout.setSmallTimeout(727706);
+        //Set default small timeout to 11198 milliseconds
+		Timeout.setSmallTimeout(11198);
         //Click on Empty Text View
 		solo.clickOnView(solo.getView("radio_fifth"));
         //Click on Got it
