@@ -56,7 +56,6 @@ import java.util.regex.Pattern;
  * <p/>
  * Created by Leon Acosta (laion.cj91@gmail.com) on 02/09/2015.
  */
-@PluginInfo(createdBy = "Leon", maintainerMail = "acosta_rodrigo@hotmail.com", platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
 public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin implements
         Crypto,
         CryptoAddressBookManager,
