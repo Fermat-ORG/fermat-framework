@@ -55,6 +55,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +147,11 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                 clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick(String newValue) {
-                        actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        if(!newValue.isEmpty()){
+                            actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        } else {
+                            Toast.makeText(getActivity(), "Amount may not be empty.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -161,7 +166,11 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
                 clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick(String newValue) {
-                        actionListener(clause, newValue);
+                        if(!newValue.isEmpty()){
+                            actionListener(clause, newValue);
+                        } else {
+                            Toast.makeText(getActivity(), "Amount may not be empty.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -479,28 +488,40 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
         if (clauses != null) {
 
-            final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-            final BigDecimal amountToBuy = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-            final BigDecimal amountToPay = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+            final List<String> evalValue = Arrays.asList(
+                    clauses.get(ClauseType.EXCHANGE_RATE).getValue(),
+                    clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue(),
+                    clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue()
+            );
 
-            if (exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
-                Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
-                return false;
-            }
+            if (!evalValue.contains("")) {
 
-            if (amountToBuy.compareTo(BigDecimal.ZERO) <= 0) {
-                Toast.makeText(getActivity(), "The  buying must be greater than zero.", Toast.LENGTH_LONG).show();
-                return false;
-            }
+                final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+                final BigDecimal amountToBuy = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+                final BigDecimal amountToPay = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
 
-            if (amountToPay.compareTo(BigDecimal.ZERO) <= 0) {
-                Toast.makeText(getActivity(), "The  paying must be greater than zero.", Toast.LENGTH_LONG).show();
-                return false;
-            }
+                if (exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
+                    Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
 
-            if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) == (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
-                Toast.makeText(getActivity(), "The currency to pay is equal to currency buy.", Toast.LENGTH_LONG).show();
-                return false;
+                if (amountToBuy.compareTo(BigDecimal.ZERO) <= 0) {
+                    Toast.makeText(getActivity(), "The  buying must be greater than zero.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                if (amountToPay.compareTo(BigDecimal.ZERO) <= 0) {
+                    Toast.makeText(getActivity(), "The  paying must be greater than zero.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) == (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+                    Toast.makeText(getActivity(), "The currency to pay is equal to currency buy.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+            } else {
+                Toast.makeText(getActivity(), "Amounts may not be empty.", Toast.LENGTH_LONG).show();
             }
 
         } else {

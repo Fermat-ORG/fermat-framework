@@ -219,7 +219,7 @@ public abstract class LocalSocketSession {
 //                                        TimeUnit.SECONDS.sleep(2);
                                     }
                                 }else{
-                                    Log.e(TAG,"end of input stream");
+                                    //Log.e(TAG,"end of input stream");
 //                                    isReceiverActive = false;
                                 }
                         }

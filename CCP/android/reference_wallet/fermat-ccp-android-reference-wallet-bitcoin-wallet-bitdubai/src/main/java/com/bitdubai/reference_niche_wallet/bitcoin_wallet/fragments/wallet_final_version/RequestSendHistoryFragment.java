@@ -149,6 +149,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

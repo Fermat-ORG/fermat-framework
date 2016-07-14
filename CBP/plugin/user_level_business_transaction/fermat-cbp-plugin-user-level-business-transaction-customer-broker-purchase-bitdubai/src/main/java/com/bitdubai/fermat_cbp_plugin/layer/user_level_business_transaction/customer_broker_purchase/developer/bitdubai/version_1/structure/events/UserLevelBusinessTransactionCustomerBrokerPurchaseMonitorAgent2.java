@@ -665,9 +665,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                 }
             }
 
-            ContractTransactionStatus contractTransactionStatus = openContractManager.getOpenContractStatus(transactionInfo.getNegotiationId().toString());
-            if(transactionInfo.getStatus().equals(NegotiationStatus.CLOSED) && contractTransactionStatus == null)
-            {
+            boolean isContract = openContractManager.isOpenContract(transactionInfo.getNegotiationId().toString());
+            if(transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)){
+
                 openContractManager.openPurchaseContract(transactionInfo, marketExchangeRate);
 
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Purchase a IN_OPEN_CONTRACT
