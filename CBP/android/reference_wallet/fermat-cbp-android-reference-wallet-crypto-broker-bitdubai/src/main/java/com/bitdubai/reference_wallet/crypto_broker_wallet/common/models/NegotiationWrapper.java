@@ -31,14 +31,17 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.DRAF
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_BANK_ACCOUNT;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CRYPTO_ADDRESS;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY_QUANTITY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_DATE_TIME_TO_DELIVER;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_PLACE_TO_DELIVER;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_TIME_ZONE;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CRYPTO_ADDRESS;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY_QUANTITY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_PAYMENT_METHOD;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_TIME_ZONE;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.EXCHANGE_RATE;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.BANK;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.CASH_DELIVERY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.CASH_ON_HAND;
@@ -212,7 +215,7 @@ final public class NegotiationWrapper {
 
     public boolean isAmountEmpty() {
         final Collection<ClauseInformation> clauseList = getClauses().values();
-        final List<ClauseType> amountList = Arrays.asList(EXCHANGE_RATE,BROKER_CURRENCY_QUANTITY,CUSTOMER_CURRENCY_QUANTITY);
+        final List<ClauseType> amountList = Arrays.asList(EXCHANGE_RATE,CUSTOMER_CURRENCY_QUANTITY,BROKER_CURRENCY_QUANTITY);
 
         for (ClauseInformation clause : clauseList) {
             if (amountList.contains(clause.getType())){
