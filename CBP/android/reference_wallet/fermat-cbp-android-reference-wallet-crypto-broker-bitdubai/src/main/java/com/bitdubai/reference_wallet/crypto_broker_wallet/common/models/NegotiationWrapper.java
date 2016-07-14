@@ -209,4 +209,17 @@ final public class NegotiationWrapper {
     public void setWalletUser(boolean walletUser){
         this.walletUser = walletUser;
     }
+
+    public boolean isAmountEmpty() {
+        final Collection<ClauseInformation> clauseList = getClauses().values();
+        final List<ClauseType> amountList = Arrays.asList(EXCHANGE_RATE,BROKER_CURRENCY_QUANTITY,CUSTOMER_CURRENCY_QUANTITY);
+
+        for (ClauseInformation clause : clauseList) {
+            if (amountList.contains(clause.getType())){
+                if(clause.getValue().isEmpty())
+                    return true;
+            }
+        }
+        return false;
+    }
 }
