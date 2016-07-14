@@ -4658,7 +4658,6 @@ public class SubAppAppsGenerator {
         listSubApp.put(chtChat.getPublicKey(), chtChat);
     }
 
-
     private void createIntraUserCommunitySubAppNavigationStructure() throws InvalidParameterException{
 
         AppNavigationStructure subAppIntraUser;
@@ -4674,7 +4673,6 @@ public class SubAppAppsGenerator {
         subAppIntraUser.setPublicKey(communityPublicKey);
         subAppIntraUser.setPlatform(Platforms.CRYPTO_CURRENCY_PLATFORM);
         //listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
-
 
         //Activity Home Browser
         runtimeActivity = new Activity();
