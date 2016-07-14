@@ -66,7 +66,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingGPSDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
@@ -89,8 +89,8 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 12;
-   private static final int SPAN_COUNT = 4;
+    private static final int MAX = 18;
+   private static final int SPAN_COUNT = 3;
     /**
      * MANAGERS
      */
@@ -104,9 +104,8 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     private int offset = 0;
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
-    private AppListAdapter adapter;
+    private AvailableActorsListAdapter adapter;
     private boolean isStartList = false;
-    private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private View searchView;
@@ -317,13 +316,13 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
         });
         //searchEditText = (EditText) searchView.findViewById(R.id.search);
         // closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
-        recyclerView.setHasFixedSize(true);
+      //  recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+       // recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+       // recyclerView.setLayoutManager(layoutManager);
         // adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
-        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations,  appSession, moduleManager);
-        recyclerView.setAdapter(adapter);
+        adapter = new AvailableActorsListAdapter(getActivity(), lstIntraUserInformations);
+       // recyclerView.setAdapter(adapter);
         adapter.setFermatListEventListener(this);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefresh.setOnRefreshListener(this);
@@ -333,7 +332,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-        showEmpty(true, emptyView);
+        //showEmpty(true, emptyView);
 
         //load cache user and online users
 
@@ -488,30 +487,31 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setDescription("The access to the Fermat Network is disabled.");
-        errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                errorConnectingFermatNetworkDialog.dismiss();
-                try {
-                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
-                        //getActivity().onBackPressed();
+        errorConnectingFermatNetworkDialog.setLeftButton("CANCEL", new View.OnClickListener() {
+           @Override
+               public void onClick(View v) {
+                   errorConnectingFermatNetworkDialog.dismiss();
+                   getActivity().onBackPressed();
+               }
+           });
+            errorConnectingFermatNetworkDialog.setRightButton("CONNECT", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    errorConnectingFermatNetworkDialog.dismiss();
+                    try {
+                        if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                            Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
+                        }
+                    } catch (CantGetCommunicationNetworkStatusException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (CantGetCommunicationNetworkStatusException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    // changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
                 }
-            }
-        });
-        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                errorConnectingFermatNetworkDialog.dismiss();
-            }
-        });
-        errorConnectingFermatNetworkDialog.show();
+            });
+            errorConnectingFermatNetworkDialog.show();
     }
 
     public void showErrorGPS() {
@@ -636,19 +636,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-     /*  inflater.inflate(R.menu.cripto_users_menu, menu);
 
-        try {
-            final MenuItem searchItem = menu.findItem(R.id.action_search);
-            menu.findItem(R.id.action_help).setVisible(true);
-            menu.findItem(R.id.action_search).setVisible(true);
-            searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-
-            });
-
-        } catch (Exception e) {
-
-        }*/
 
     }
 
@@ -1057,11 +1045,15 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
+            if(recyclerView != null)
+              recyclerView.setVisibility(View.INVISIBLE);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
+            if(recyclerView != null)
+             recyclerView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -1111,6 +1103,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
                                 showEmpty(false, emptyView);
                                 showEmpty(false, searchEmptyView);
+
                             }
                         }else {
 
@@ -1140,7 +1133,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+            adapter = new AvailableActorsListAdapter(getActivity(), lstIntraUserInformations);
             adapter.setFermatListEventListener(this);
         }
 
@@ -1156,9 +1149,9 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                 public int getSpanSize(int position) {
                     final int itemViewType = adapter.getItemViewType(position);
                     switch (itemViewType) {
-                        case 1:
+                        case AvailableActorsListAdapter.DATA_ITEM:
                             return 1;
-                        case 2:
+                        case AvailableActorsListAdapter.LOADING_ITEM:
                             return SPAN_COUNT;
                         default:
                             return GridLayoutManager.DEFAULT_SPAN_COUNT;
