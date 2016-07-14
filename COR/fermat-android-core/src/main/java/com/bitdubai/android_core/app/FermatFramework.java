@@ -352,10 +352,12 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     }
 
     public void appOnBackground(){
+        Log.i(TAG,"Disconnecting app, onBackground");
         servicesHelpers.getClientSideBrokerServiceAIDL().disconnect();
     }
 
     public void appOnForeground(){
+        Log.i(TAG,"Reconnecting app, onForeground");
         isApplicationInForeground = true;
         servicesHelpers.getClientSideBrokerServiceAIDL().connect();
     }
