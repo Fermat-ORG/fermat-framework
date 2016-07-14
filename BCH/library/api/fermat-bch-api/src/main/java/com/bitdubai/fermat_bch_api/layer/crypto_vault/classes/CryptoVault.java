@@ -91,6 +91,9 @@ public abstract class CryptoVault{
             return null;
         }
         CryptoVaultSeed cryptoVaultSeed = new CryptoVaultSeed(seed.getMnemonicCode(), seed.getCreationTimeSeconds(), seed.getSeedBytes());
+
+        System.out.println("***CryptoVault*** Export: mNemonic: " + cryptoVaultSeed.getMnemonicPhrase());
+        System.out.println("***CryptoVault*** Export: creation time: " + cryptoVaultSeed.getCreationTimeSeconds());
         return cryptoVaultSeed;
     }
 
@@ -279,21 +282,19 @@ public abstract class CryptoVault{
      * @throws CantImportSeedException
      */
     public void importSeedFromMnemonicCode(String mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException {
-        VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
-        vaultSeedGenerator.importSeed(mNemonicCode, seedCreationTimeInSeconds);
-
-
-        try {
-            vaultSeedGenerator.load(CRYPTO_VAULT_SEED_FILENAME);
-        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
-            throw new CantImportSeedException(cantLoadExistingVaultSeed, "new seed was created and saved. But we are unable to re load it from disk." , "IO error");
-        }
-
+        this.importSeedFromMnemonicCode(VaultSeedGenerator.getmNemonicAsList(mNemonicCode), seedCreationTimeInSeconds);
     }
 
+    /**
+     * Imports a new seed for the specified vault.
+     * This will erase the previous seed and created a new one based on the passed information.
+     * @param mNemonicCode
+     * @param seedCreationTimeInSeconds
+     * @throws CantImportSeedException
+     */
     public void importSeedFromMnemonicCode(List<String> mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException{
-        String mNemonicPrhase = VaultSeedGenerator.getmNemonicAsString(mNemonicCode);
-        this.importSeedFromMnemonicCode(mNemonicPrhase, seedCreationTimeInSeconds);
+        VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
+        vaultSeedGenerator.importSeed(mNemonicCode, seedCreationTimeInSeconds);
     }
 
 

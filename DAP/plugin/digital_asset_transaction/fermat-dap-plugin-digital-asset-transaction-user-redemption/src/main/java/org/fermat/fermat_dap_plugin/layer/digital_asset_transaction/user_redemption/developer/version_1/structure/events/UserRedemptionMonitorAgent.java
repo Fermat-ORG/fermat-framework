@@ -18,13 +18,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 
@@ -89,7 +90,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger {
     private AssetVaultManager assetVaultManager;
     private DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private BlockchainManager bitcoinNetworkManager;
     private UserRedemptionDao userRedemptionDao;
     private ActorAssetUserManager actorAssetUserManager;
     private ActorAssetRedeemPointManager redeemPointManager;
@@ -100,7 +101,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger {
                                       ActorAssetRedeemPointManager redeemPointManager,
                                       AssetVaultManager assetVaultManager,
                                       LogManager logManager,
-                                      BitcoinNetworkManager bitcoinNetworkManager,
+                                      BlockchainManager bitcoinNetworkManager,
                                       DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault,
                                       AssetTransmissionNetworkServiceManager assetTransmissionManager,
                                       ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
@@ -116,7 +117,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger {
         userRedemptionDao = new UserRedemptionDao(pluginDatabaseSystem, pluginId, digitalAssetUserRedemptionVault);
     }
 
-    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
+    public void setBitcoinNetworkManager(BlockchainManager bitcoinNetworkManager) throws CantSetObjectException {
         if (bitcoinNetworkManager == null) {
             throw new CantSetObjectException("bitcoinNetworkManager is null");
         }

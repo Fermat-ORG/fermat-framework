@@ -80,12 +80,12 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // getActivity().onBackPressed();
-
+                // getActivity().onBackPressed();
                 saveAndGoBack();
                 changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
             }
         });
+        toolbar.setBackgroundColor(Color.parseColor("#21386D"));
     }
 
     @Override

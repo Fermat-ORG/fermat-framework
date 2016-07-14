@@ -175,7 +175,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
 
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
+                if (bitcoinWalletSettings.getFeedLevel() == null)
                     bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
                 else
                     feeLevel = bitcoinWalletSettings.getFeedLevel();
