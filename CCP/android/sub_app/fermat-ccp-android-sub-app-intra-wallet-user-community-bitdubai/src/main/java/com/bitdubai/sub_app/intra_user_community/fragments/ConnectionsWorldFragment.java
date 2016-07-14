@@ -66,7 +66,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingGPSDialog;
@@ -90,7 +89,7 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 12;
+    private static final int MAX = 18;
    private static final int SPAN_COUNT = 3;
     /**
      * MANAGERS
@@ -107,7 +106,6 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
     private SearchView mSearchView;
     private AvailableActorsListAdapter adapter;
     private boolean isStartList = false;
-    private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private View searchView;
@@ -489,30 +487,31 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setDescription("The access to the Fermat Network is disabled.");
-        errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                errorConnectingFermatNetworkDialog.dismiss();
-                try {
-                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
-                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
-                        //getActivity().onBackPressed();
+        errorConnectingFermatNetworkDialog.setLeftButton("CANCEL", new View.OnClickListener() {
+           @Override
+               public void onClick(View v) {
+                   errorConnectingFermatNetworkDialog.dismiss();
+                   getActivity().onBackPressed();
+               }
+           });
+            errorConnectingFermatNetworkDialog.setRightButton("CONNECT", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    errorConnectingFermatNetworkDialog.dismiss();
+                    try {
+                        if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                            Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
+                        }
+                    } catch (CantGetCommunicationNetworkStatusException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (CantGetCommunicationNetworkStatusException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    // changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
                 }
-            }
-        });
-        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                errorConnectingFermatNetworkDialog.dismiss();
-            }
-        });
-        errorConnectingFermatNetworkDialog.show();
+            });
+            errorConnectingFermatNetworkDialog.show();
     }
 
     public void showErrorGPS() {
@@ -1111,9 +1110,6 @@ public class ConnectionsWorldFragment  extends FermatListFragment<IntraUserInfor
                             showEmpty(false, emptyView);
                             showEmpty(false, searchEmptyView);
                         }
-
-                        if(recyclerView != null)
-                          recyclerView.setVisibility(View.INVISIBLE);
 
                     }
                 }
