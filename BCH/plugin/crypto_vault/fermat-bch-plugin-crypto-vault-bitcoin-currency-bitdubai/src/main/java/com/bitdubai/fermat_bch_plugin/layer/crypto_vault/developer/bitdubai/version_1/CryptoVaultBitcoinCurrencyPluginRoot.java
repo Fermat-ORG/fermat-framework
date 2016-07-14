@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -211,7 +212,15 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      */
     @Override
     public CryptoAddress getAddress(BlockchainNetworkType blockchainNetworkType) {
-        return bitcoinCurrencyCryptoVaultManager.getAddress(blockchainNetworkType);
+        CryptoAddress cryptoAddress = bitcoinCurrencyCryptoVaultManager.getAddress(blockchainNetworkType);
+
+//        try {
+//            BitcoinFaucetManager.giveMeCoins(blockchainNetworkType, cryptoAddress, 500000000);
+//        } catch (CantGetCoinsFromFaucetException e) {
+//            e.printStackTrace();
+//        }
+
+        return cryptoAddress;
     }
 
     @Override

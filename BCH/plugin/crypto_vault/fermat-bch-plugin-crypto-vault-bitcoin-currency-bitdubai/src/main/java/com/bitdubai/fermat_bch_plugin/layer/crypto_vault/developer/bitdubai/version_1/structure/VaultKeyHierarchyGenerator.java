@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
@@ -124,11 +125,12 @@ class VaultKeyHierarchyGenerator implements Runnable {
 
         /**
          * I will get from the database the list of accounts to create
-         * and add them to the hierarchy
+         * and add them to the hierarchy.
          */
         for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
             vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
         }
+
 
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
@@ -143,7 +145,7 @@ class VaultKeyHierarchyGenerator implements Runnable {
              * If we are importing a seed, will wait some minutes before stopping the Maintainer.
              */
             if (this.isSeedImported){
-                Thread.sleep(2000);
+                Thread.sleep(5000);
                 vaultKeyHierarchyMaintainer.stop();
             }
 
