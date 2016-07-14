@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database;
 
+
 /**
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
@@ -10,7 +11,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_off
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants {
+public class BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants /*extends AbstractBusinessTransactionDatabaseConstants*/ {
 
     public static final String DATABASE_NAME = "broker_ack_offline_payment_database";
     /**

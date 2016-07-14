@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -64,6 +65,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -87,6 +90,10 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
     private NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl;
 
     NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
+
+    Timer timer = new Timer();
+
+    private long reprocessTimer = 300000; //five minutes
 
     /**
      * cacha identities to register
@@ -121,6 +128,12 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
             //Initialize Manager
             negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao,incomingNotificationDao, this);
+
+            // change message state to process again first time
+            //reprocessPendingMessage();
+
+            //declare a schedule to process waiting request message
+            this.startTimer();
         } catch (CantInitializeNetworkServiceDatabaseException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -182,9 +195,59 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
     protected void onNetworkServiceRegistered() {
 
 //        testManager();
+        reprocessPendingMessage();
 
     }
 
+    protected void reprocessPendingMessage() {
+        try {
+            outgoingNotificationDao.changeStatusNotSentMessage();
+
+            //Map<String, Object> filters = new HashMap<>();
+            //filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
+            List<NegotiationTransmission> lstActorRecord = outgoingNotificationDao.findAllByTransmissionState(
+                    NegotiationTransmissionState.PROCESSING_SEND
+            );
+            System.out.println("NEGOTIATION TRANSMISSION - I found "+lstActorRecord.size()+" for sending");
+            NegotiationType negotiationType;
+            for (NegotiationTransmission nt : lstActorRecord) {
+                negotiationType = nt.getNegotiationType();
+                switch (negotiationType){
+                    case PURCHASE:
+                        negotiationTransmissionManagerImpl
+                                .sendMessage(nt.toJson(),
+                                        nt.getPublicKeyActorSend(),
+                                        Actors.CBP_CRYPTO_CUSTOMER,
+                                        nt.getPublicKeyActorReceive(),
+                                        Actors.CBP_CRYPTO_BROKER);
+                        break;
+                    case SALE:
+                        negotiationTransmissionManagerImpl
+                                .sendMessage(nt.toJson(),
+                                        nt.getPublicKeyActorSend(),
+                                        Actors.CBP_CRYPTO_BROKER,
+                                        nt.getPublicKeyActorReceive(),
+                                        Actors.CBP_CRYPTO_CUSTOMER);
+                        break;
+
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("NEGOTIATION TRANSMISSION NS EXCEPTION PROCESSING MESSAGES NOT SENT");
+            e.printStackTrace();
+        }
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        }, 0,reprocessTimer);
+    }
 
     public void testManager() {
 

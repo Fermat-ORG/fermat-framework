@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
@@ -336,5 +337,34 @@ public class OutgoingNotificationDao {
         if(negotiationTransmission.getResponseToNotificationId() != null)
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId());
         return record;
+    }
+
+    public  void changeStatusNotSentMessage() throws CantReadRecordDataBaseException {
+
+        try {
+            DatabaseTable negotiationTransmissionTable = getDatabaseTable();
+
+            negotiationTransmissionTable.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
+            negotiationTransmissionTable.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            negotiationTransmissionTable.loadToMemory();
+
+
+            for (DatabaseTableRecord record : negotiationTransmissionTable.getRecords()) {
+                record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME,  NegotiationTransmissionState.PROCESSING_SEND.getCode());
+                negotiationTransmissionTable.updateRecord(record);
+            }
+
+
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "", "Cant get negotiation transmission record data.");
+
+        }
+
     }
 }
