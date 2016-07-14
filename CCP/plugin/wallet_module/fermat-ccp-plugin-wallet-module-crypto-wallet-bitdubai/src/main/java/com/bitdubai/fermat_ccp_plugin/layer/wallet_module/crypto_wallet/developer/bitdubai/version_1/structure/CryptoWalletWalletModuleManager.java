@@ -1617,7 +1617,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     public void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes,  Actors actortypeFrom, Actors actortypeTo, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType,CryptoCurrency cryptoCurrency) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
 
         try {
-            transferIntraWalletUsersManager.getOutgoingDeviceUser().sendToWallet("",cryptoAmount,notes,actortypeFrom,actortypeTo,sendingWallet,receivingWallet,sendingWalletPublicKey,receivingWalletPublicKey,blockchainNetworkType,cryptoCurrency);
+            transferIntraWalletUsersManager.getOutgoingDeviceUser().sendToWallet("", cryptoAmount, notes, actortypeFrom, actortypeTo, sendingWallet, receivingWallet, sendingWalletPublicKey, receivingWalletPublicKey, blockchainNetworkType, cryptoCurrency);
         } catch (CantSendTransactionException e) {
             throw new CantSendLossProtectedCryptoException("CAN'T SEND CRYPTO TO WALLET EXCEPTION", e);
 
@@ -1631,7 +1631,42 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantImportSeedException {
-       cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date);
+//       cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date);
+//        /**
+//         * Importing a new seed is a complex process. A new Key Hierarchy is created, new keys are derived on this hierarchy,
+//         * the keys generate public Keys and addresses that are passed to the CryptoNetwork for monitoring.
+//         * Once that is completed, we need to register those generated addresses into the addressBook so that any generated transaction
+//         * is redirected to the appropiate wallet.
+//         */
+//        String extraUserPK;
+//        try {
+//            // I create a fake actor to identify these transactions
+//            extraUserPK = extraUserManager.createActor("Imported seed").getActorPublicKey();
+//        } catch (CantCreateExtraUserException e) {
+//            extraUserPK = UUID.randomUUID().toString();
+//        }
+//
+//        List<CryptoAddress> cryptoAddressList = null;
+//        boolean running = true;
+//        while (running){
+//            // I get the list of imported address from the cryptoNetwork. This process is async, so I don't know when
+//            // they will be imported. I need to try until I get it.
+//            cryptoAddressList = bitcoinNetworkManager.getImportedAddresses(defaultBlockchainNetworkType);
+//
+//            if (!cryptoAddressList.isEmpty())
+//                running = false;
+//        }
+//
+//        // I add the imported address into the address book.
+//        for (CryptoAddress cryptoAddress : cryptoAddressList ){
+//            try {
+//                cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, extraUserPK, Actors.EXTRA_USER, extraUserPK, Actors.DAP_ASSET_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+//            } catch (CantRegisterCryptoAddressBookRecordException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+
     }
 
     int i = 2;
