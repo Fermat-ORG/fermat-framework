@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetImportedAddressesException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorCryptoNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
@@ -1094,6 +1095,24 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetActiveBlockchainNetworkTypeException(e, "error getting list of active networks.", "database issue");
         }
+    }
+
+    /**
+     * returns the list of stored cryptoaddress we are monitoing from imported seeds.
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<CryptoAddress> getImportedAddresses(BlockchainNetworkType blockchainNetworkType) {
+        List<CryptoAddress> cryptoAddressList = new ArrayList<>();
+        try {
+            for (String rawAddress : dao.getImportedAddresses(blockchainNetworkType)){
+                CryptoAddress cryptoAddress = new CryptoAddress(rawAddress, CryptoCurrency.BITCOIN);
+                cryptoAddressList.add(cryptoAddress);
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            return cryptoAddressList;
+        }
+        return cryptoAddressList;
     }
 
 }
