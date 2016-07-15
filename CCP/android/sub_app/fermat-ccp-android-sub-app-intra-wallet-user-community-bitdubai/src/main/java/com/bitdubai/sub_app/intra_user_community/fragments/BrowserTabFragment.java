@@ -210,7 +210,7 @@ public class BrowserTabFragment
                 Toast.makeText(getActivity(), "Please, turn ON your GPS", Toast.LENGTH_SHORT);
             }
 
-            IntraUserLoginIdentity identity =  moduleManager.getActiveIntraUserIdentity();
+            identity =  moduleManager.getActiveIntraUserIdentity();
 
             distance = identity.getAccuracy();
 

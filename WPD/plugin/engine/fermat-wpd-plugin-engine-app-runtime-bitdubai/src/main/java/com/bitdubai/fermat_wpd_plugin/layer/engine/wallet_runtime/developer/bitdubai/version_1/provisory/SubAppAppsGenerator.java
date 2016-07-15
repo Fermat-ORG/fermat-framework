@@ -4681,7 +4681,6 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackgroundColor("#F9F9F9");
         runtimeActivity.setColor("#F9F9F9");
         //subAppIntraUser.changeActualStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
-
         statusBar = new StatusBar();
         //statusBar.setColor("#48000000");
         statusBar.setColor("#21386D");
