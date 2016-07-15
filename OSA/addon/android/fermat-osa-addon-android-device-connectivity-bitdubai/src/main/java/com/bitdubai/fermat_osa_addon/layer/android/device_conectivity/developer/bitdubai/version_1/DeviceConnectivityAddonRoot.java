@@ -3,24 +3,21 @@ package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer
 import android.content.Context;
 import android.net.NetworkInfo;
 
-import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededOsContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetActiveConnectionException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetConnectionsException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetIsConnectedException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectionType;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityAgent;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityManager;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.Network;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.DeviceNetwork;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.NetworkStateReceiver;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,30 +30,27 @@ import java.util.UUID;
  * * * *
  */
 
-public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,DealsWithErrors, DealsWithEvents, Service {
+public class DeviceConnectivityAddonRoot extends AbstractAddon implements ConnectivityManager {
 
     /**
      * ConnectivityManager Interface member variables.
      */
+    @NeededOsContext
     private Context context;
 
     private List<Network> conecctions;
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealsWithEvents Interface member variables.
-     */
-    EventManager eventManager;
+    private List<com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver> receivers;
 
     /**
      * Plugin Interface member variables.
      */
     private UUID pluginId;
     private NetworkStateReceiver networkState = NetworkStateReceiver.getInstance();
+
+    public DeviceConnectivityAddonRoot() {
+        super(new AddonVersionReference(new Version()));
+    }
 
     @Override
     public FermatManager getManager() {
@@ -75,7 +69,7 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    ConnectivityAgent monitor;
+//    ConnectivityAgent monitor;
 
 
     /**
@@ -87,15 +81,28 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      *
      * @param context Android Context object
      */
-    @Override
+//    @Override
     public void setContext (Object context){
         this.context = (Context)context;
     }
 
     @Override
-    public void addListener(NetworkStateReceiver.NetworkStateReceiverListener networkStateReceiver) {
+    public void registerListener(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver networkStateReceiver) {
+        this.receivers.add(networkStateReceiver);
         this.networkState.addListener(networkStateReceiver);
     }
+
+    @Override
+    public void unregisterListener(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver networkStateReceiver) {
+        this.receivers.remove(networkStateReceiver);
+        this.networkState.addListener(networkStateReceiver);
+    }
+
+//    @Override
+//    public void addListener(NetworkStateReceiver.NetworkStateReceiverListener networkStateReceiver) {
+//        this.networkState.addListener(networkStateReceiver);
+//    }
+
 
     /**
      * <p> This method Returns a list of networks available on the device.
@@ -103,7 +110,7 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      * @return List of Network interface object
      * @throws CantGetConnectionsException
      */
-    @Override
+//    @Override
     public List<Network> getConnections() throws CantGetConnectionsException {
 
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -180,7 +187,7 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      * @return Network objects
      * @throws CantGetActiveConnectionException
      */
-    @Override
+//    @Override
     public Network getActiveConnection() throws CantGetActiveConnectionException {
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = connection.getActiveNetworkInfo();
@@ -240,7 +247,7 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      * @return boolean if connected
      * @throws CantGetIsConnectedException
      */
-    @Override
+//    @Override
     public boolean isConnected(ConnectionType redType) throws CantGetIsConnectedException {
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         int networkType =1;
@@ -280,32 +287,13 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
         return info.isConnected();
     }
 
-    /**
-     *DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
+    private void swithNetworkType(){
+
     }
-
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-    public EventManager getEventManager() {
-		return eventManager;
-	}
 
 	/**
      * Service Interface implementation.
      */
-    @Override
     public void start()  throws CantStartPluginException {
         /**
          * I will start the Monitor Agent.
@@ -332,7 +320,9 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
 //            throw new CantStartPluginException(Plugins.BITDUBAI_DEVICE_CONNECTIVITY);
 //        }
 
+        this.receivers = new ArrayList<>();
         this.serviceStatus = ServiceStatus.STARTED;
+
 
     }
 
@@ -358,8 +348,4 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
 }
