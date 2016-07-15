@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.osa_android;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+
 /**
  *
  *  <p>The abstract class <code>ConnectivityManager</code> is a interface
@@ -11,7 +13,7 @@ package com.bitdubai.fermat_api.layer.osa_android;
  *  @since   04/05/15.
  * */
 
- public interface ConnectivityManager {
+ public interface ConnectivityManager extends FermatManager {
 
 //    List<Network> getConnections() throws CantGetConnectionsException;
 //

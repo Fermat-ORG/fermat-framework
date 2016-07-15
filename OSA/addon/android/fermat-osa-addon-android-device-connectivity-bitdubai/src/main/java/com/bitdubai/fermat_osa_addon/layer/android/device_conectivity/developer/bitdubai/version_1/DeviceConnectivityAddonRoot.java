@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.NetworkInfo;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -52,18 +53,6 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
         super(new AddonVersionReference(new Version()));
     }
 
-    @Override
-    public FermatManager getManager() {
-        return null;
-    }
-
-    public UUID getPluginId() {
-		return pluginId;
-	}
-
-	public void setPluginId(UUID pluginId) {
-		this.pluginId = pluginId;
-	}
 
 	/**
      * Service Interface member variables.
@@ -88,6 +77,9 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
     @Override
     public void registerListener(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver networkStateReceiver) {
+        System.out.println("#################################\n");
+        System.out.println("Registrando listener device connectivity\n");
+        System.out.println("#################################\n");
         this.receivers.add(networkStateReceiver);
         this.networkState.addListener(networkStateReceiver);
     }
@@ -322,6 +314,8 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
         this.receivers = new ArrayList<>();
         this.serviceStatus = ServiceStatus.STARTED;
+        context.registerReceiver(networkState,new IntentFilter(
+                android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
 
     }
@@ -348,4 +342,8 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    @Override
+    public FermatManager getManager() {
+        return this;
+    }
 }
