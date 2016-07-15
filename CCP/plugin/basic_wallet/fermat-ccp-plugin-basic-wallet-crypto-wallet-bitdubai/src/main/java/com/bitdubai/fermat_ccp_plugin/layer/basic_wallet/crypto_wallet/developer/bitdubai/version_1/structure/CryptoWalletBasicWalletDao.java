@@ -169,7 +169,8 @@ public class CryptoWalletBasicWalletDao {
                                                                   final BalanceType balanceType,
                                                                   final TransactionType  transactionType,
                                                                   final int max,
-                                                                  final int offset) throws CantListTransactionsException {
+                                                                  final int offset,
+                                                                        BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
@@ -183,6 +184,9 @@ public class CryptoWalletBasicWalletDao {
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
 
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, TransactionState.REVERSED.getCode(), DatabaseFilterType.NOT_EQUALS);
+
+            bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+
 
             // filter by actor from or to
 
@@ -231,7 +235,8 @@ public class CryptoWalletBasicWalletDao {
     public List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
                                                                                      TransactionType transactionType,
                                                                                      int             max,
-                                                                                     int             offset) throws CantListTransactionsException {
+                                                                                     int             offset,
+                                                                                    BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
         try {
 
 //            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
@@ -270,6 +275,7 @@ public class CryptoWalletBasicWalletDao {
             //not reversed
             bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, TransactionState.REVERSED.getCode(), DatabaseFilterType.NOT_EQUALS);
 
+            bitcoinWalletTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
             if ( transactionType == TransactionType.CREDIT){
                // bitcoinWalletTable.clearAllFilters();
@@ -313,7 +319,7 @@ public class CryptoWalletBasicWalletDao {
 
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getTotal() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getTotal() : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount, transactionRecord.getBlockchainNetworkType());
             long bookRunningBalance = calculateBookRunningBalance(-bookAmount,transactionRecord.getBlockchainNetworkType());
 

@@ -19,7 +19,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -87,7 +88,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
     private final ActorAssetRedeemPointManager actorAssetRedeemPointManager;
     private final AssetRedeemPointWalletManager assetRedeemPointWalletManager;
     private final ActorAssetUserManager actorAssetUserManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final BlockchainManager bitcoinNetworkManager;
     private final ActorAssetIssuerManager actorAssetIssuerManager;
     private final IncomingCryptoManager incomingCryptoManager;
     private final TransactionProtocolManager<CryptoTransaction> protocolManager;
@@ -102,7 +103,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                              ActorAssetRedeemPointManager actorAssetRedeemPointManager,
                                              AssetRedeemPointWalletManager assetRedeemPointWalletManager,
                                              ActorAssetUserManager actorAssetUserManager,
-                                             BitcoinNetworkManager bitcoinNetworkManager,
+                                             BlockchainManager bitcoinNetworkManager,
                                              ActorAssetIssuerManager actorAssetIssuerManager,
                                              IncomingCryptoManager incomingCryptoManager) throws CantSetObjectException {
 
@@ -169,7 +170,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         private static final int WAIT_TIME = 20; //SECONDS
         private org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.database.AssetRedeemPointRedemptionDAO dao;
 
-        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager, BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException, CantOpenDatabaseException, DatabaseNotFoundException {
+        public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager, BlockchainManager bitcoinNetworkManager) throws CantSetObjectException, CantOpenDatabaseException, DatabaseNotFoundException {
             super.setPluginId(pluginId);
             super.setPluginFileSystem(pluginFileSystem);
             super.setActorAssetUserManager(actorAssetUserManager);

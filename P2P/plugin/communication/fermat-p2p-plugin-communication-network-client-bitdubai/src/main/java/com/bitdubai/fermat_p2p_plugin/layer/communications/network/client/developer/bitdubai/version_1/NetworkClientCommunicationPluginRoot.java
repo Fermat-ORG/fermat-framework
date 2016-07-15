@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
+import com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -86,6 +88,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
     private LocationManager locationManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_CONNECTIVITY)
+    private ConnectivityManager connectivityManager;
 
     //todo: esto va por ahora, más adelante se saca si o si
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.P2P_LAYER)
@@ -243,6 +248,27 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             }
 
             p2PLayerManager.register(this);
+
+            connectivityManager.registerListener(new NetworkStateReceiver() {
+                @Override
+                public void networkAvailable() {
+                    System.out.println("########################################\n");
+                    System.out.println("Netowork available!!!!\n");
+                    System.out.println("########################################\n");
+                }
+
+                @Override
+                public void networkUnavailable() {
+                    System.out.println("########################################\n");
+                    System.out.println("Netowork UNAVAILABLE!!!!\n");
+                    System.out.println("########################################\n");
+                }
+
+                @Override
+                public void networkChange() {
+
+                }
+            });
 
 
         } catch (Exception exception){

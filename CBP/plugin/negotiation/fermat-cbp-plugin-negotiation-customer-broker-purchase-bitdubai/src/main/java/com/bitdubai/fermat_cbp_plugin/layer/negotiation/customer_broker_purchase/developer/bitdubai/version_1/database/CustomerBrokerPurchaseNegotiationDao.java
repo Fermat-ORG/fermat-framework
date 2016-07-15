@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -153,6 +154,8 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
     //Add Yordin Alayn 19.02.16
     public void updateNegotiationInfo(UUID negotiationId, String memo, NegotiationStatus status) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
+
+            memo = memo.replace("'","''");
             DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
 
             PurchaseNegotiationClauseTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
@@ -435,16 +438,22 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
     @Override
     public void addNewClause(UUID negotiationId, Clause clause) throws CantAddNewClausesException {
         try {
-            DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME);
-            DatabaseTableRecord recordToInsert = PurchaseClauseTable.getEmptyRecord();
-            recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CLAUSE_ID_COLUMN_NAME, clause.getClauseId());
-            recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TYPE_COLUMN_NAME, clause.getType().getCode());
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_VALUE_COLUMN_NAME, clause.getValue());
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_STATUS_COLUMN_NAME, clause.getStatus().getCode());
-            recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_PROPOSED_BY_COLUMN_NAME, clause.getProposedBy());
-            recordToInsert.setIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_INDEX_ORDER_COLUMN_NAME, (int) clause.getIndexOrder());
-            PurchaseClauseTable.insertRecord(recordToInsert);
+
+            if(!clauseExists(clause.getClauseId())) {
+
+                DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME);
+                DatabaseTableRecord recordToInsert = PurchaseClauseTable.getEmptyRecord();
+                recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CLAUSE_ID_COLUMN_NAME, clause.getClauseId());
+                recordToInsert.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TYPE_COLUMN_NAME, clause.getType().getCode());
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_VALUE_COLUMN_NAME, clause.getValue());
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_STATUS_COLUMN_NAME, clause.getStatus().getCode());
+                recordToInsert.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_PROPOSED_BY_COLUMN_NAME, clause.getProposedBy());
+                recordToInsert.setIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_INDEX_ORDER_COLUMN_NAME, (int) clause.getIndexOrder());
+                PurchaseClauseTable.insertRecord(recordToInsert);
+
+            }
+
         } catch (CantInsertRecordException e) {
             throw new CantAddNewClausesException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
         }
@@ -761,5 +770,25 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
         } catch (CantUpdateRecordException e) {
             throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
         }
+    }
+
+    private boolean clauseExists(UUID clauseId) throws CantAddNewClausesException {
+
+        try {
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME);
+            if (table == null)
+                throw new CantAddNewClausesException("Cant check if customer broker purchase tablet exists");
+
+            table.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CLAUSE_ID_COLUMN_NAME, clauseId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantAddNewClausesException(em.getMessage(), em, "Customer Broker Purchase Negotiation Clause Id Not Exists", "Cant load " + CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantAddNewClausesException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Purchase Negotiation Clause Id Not Exists", "unknown failure.");
+        }
+
     }
 }

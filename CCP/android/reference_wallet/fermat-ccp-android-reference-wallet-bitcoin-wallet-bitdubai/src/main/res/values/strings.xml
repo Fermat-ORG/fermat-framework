@@ -38,7 +38,7 @@
     <string name="save_text">Save</string>
     <!-- dialog_error_conecting_fermat_network.xml -->
     <string name="fermat_network_offline_text">Fermat Network Offline</string>
-    <string name="description_text">You are not connected to</string>
+    <string name="description_text">You are not connected to the fermat network.</string>
     <string name="second_description_text">the fermat network.</string>
     <string name="connect_text">Connect</string>
     <!-- donut_header.xml -->
@@ -77,6 +77,7 @@
     <!-- pending_request_row.xml -->
     <string name="balance_amount_25_btc_text">25 btc</string>
     <string name="refuse_text">Refuse</string>
+    <string name="confirm_text">Your Send</string>
 
     <!-- dialog_blockchain_download.xml-->
     <string name="advertisement_text">Advertisement!</string>
@@ -108,9 +109,9 @@
     <string name="btc_text">[btc]</string>
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
-    <string name="feed_amount_text">Feed</string>
-    <string name="feed_option_text">Substract Fee from Amount</string>
-    <string name="feed_advances_text">Advanced configuration</string>
+    <string name="fee_amount_text">Fee</string>
+    <string name="fee_option_text">Substract Fee from Amount</string>
+    <string name="fee_advances_text">Advanced configuration</string>
     <!-- setting_base.xml -->
     <string name="empty_transactions_text">Empty transactions</string>
     <!-- wallet_manager_transaction_view.xml -->
@@ -252,7 +253,7 @@
     <string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>
     <!-- Custom Dialog Fragment -->
     <string name="title_label">Network Settings</string>
-    <string name="title_Feed">Fee Level Settings</string>
+    <string name="title_Fee">Fee Level Settings</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancel</string>
     <array name="items" translatable="false">
