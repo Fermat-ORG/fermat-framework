@@ -179,6 +179,12 @@ public class ChatAdapterView extends LinearLayout {
             findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
             if (appSession.getData("whocallme").equals("chatlist")) {
                 //if I choose a chat, this will retrieve the chatId
+                Chat chatData = (Chat)appSession.getData(ChatSessionReferenceApp.CHAT_DATA);
+                if(chatData!=null)
+                {
+                    if(chatData.getChatId()!=chatId)
+                        chatId= chatData.getChatId();
+                }
                 chatWasCreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 //if I choose a contact, this will search the chat previously created with this contact

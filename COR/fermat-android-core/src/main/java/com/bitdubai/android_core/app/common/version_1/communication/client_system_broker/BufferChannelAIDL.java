@@ -17,6 +17,7 @@ public class BufferChannelAIDL {
     private ConcurrentMap<String,Object> buffer;
     private ConcurrentMap<String,Lock> locks1;
 
+    private int requestQuantity = 0;
 
     public BufferChannelAIDL() {
         locks1 = new ConcurrentHashMap<>();
@@ -31,6 +32,7 @@ public class BufferChannelAIDL {
         }else {
             Lock lock = locks1.get(id);
             if (lock != null) {
+                Log.i(TAG,"Arrived Id:"+id+",Data: "+data);
                 synchronized (lock) {
                     buffer.put(id, (data != null) ? data : new EmptyObject());
                     //locks.get(id).release();
@@ -48,11 +50,12 @@ public class BufferChannelAIDL {
             Log.i(TAG,"waiting for object");
             //Semaphore semaphore = new Semaphore(1);
             //locks.put(id, semaphore);
+            requestQuantity++;
             Lock lock = new Lock();
             synchronized (lock){
                 lock.block();
                 locks1.put(id, lock);
-                Log.i(TAG, "wainting queue quantity: " + locks1.size());
+                Log.i(TAG, "wainting queue quantity: " + locks1.size()+", total: "+requestQuantity+",id:"+id);
                 while(lock.getIsBlock()){
                     lock.wait();
                     Log.i(TAG, "thread wake up");

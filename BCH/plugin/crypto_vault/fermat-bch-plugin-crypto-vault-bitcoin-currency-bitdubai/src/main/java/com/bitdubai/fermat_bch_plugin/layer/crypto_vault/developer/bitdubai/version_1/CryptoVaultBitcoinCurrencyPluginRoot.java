@@ -52,7 +52,9 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
@@ -234,7 +236,6 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     }
 
 
-
     /**
      * PlatformCryptoVault interface implementations
      */
@@ -295,12 +296,15 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     }
 
     @Override
-    public void importSeedFromMnemonicCode(List<String> mnemonicCode, long date) throws CantImportSeedException {
+    public void importSeedFromMnemonicCode(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType, List<String> mnemonicCode, long date) throws CantImportSeedException {
         // forces the import of the seed which creates a new file with the seed information
         bitcoinCurrencyCryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode, date);
         // creates a new hierarchy from the imported seed, calls the maintainer to derive keys and sends them
         // to the crypto network.
         bitcoinCurrencyCryptoVaultManager.forceImportedSeedToCryptoNetwork();
+
+        // add a registry in the database so that the monitoring agent will control this.
+        bitcoinCurrencyCryptoVaultManager.sendImportedSeedFundsToWallet(date, destinationAddress, blockchainNetworkType);
     }
 
     /**
@@ -358,4 +362,6 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
             throw exception;
         }
     }
+
+
 }

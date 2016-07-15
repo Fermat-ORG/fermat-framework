@@ -74,7 +74,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         this.proxyFactory = new ProxyFactory();
     }
 
-    public Object sendMessage(final PluginVersionReference pluginVersionReference, final Object proxy, final Method method, Object[] args) throws Exception {
+    public Object sendMessage(final PluginVersionReference pluginVersionReference, final Object proxy, final Method method, final MethodDetail methodDetail, Object[] args) throws Exception {
         //Log.i(TAG,"SendMessage start");
         ModuleObjectParameterWrapper[] parameters = null;
         Class<?>[] parametersTypes = method.getParameterTypes();
@@ -100,14 +100,13 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
          * Data id
          */
         final String dataId = UUID.randomUUID().toString();
-//        Log.e(TAG,"data id: "+dataId+" from method "+method);
+        Log.e(TAG,"data id: "+dataId+" from method "+method);
         boolean isDataChuncked = false;
         FermatModuleObjectWrapper objectArrived = null;
         /**
          * Method detail if the developer want something specific
          */
         try {
-            final MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
             final ModuleObjectParameterWrapper[] parametersTemp = parameters;
             if (methodDetail != null) {
                 long methdTimeout = methodDetail.timeout();

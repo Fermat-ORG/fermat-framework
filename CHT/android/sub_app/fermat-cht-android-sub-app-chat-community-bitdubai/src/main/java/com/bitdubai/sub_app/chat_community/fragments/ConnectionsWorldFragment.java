@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -106,7 +105,6 @@ public class ConnectionsWorldFragment
     private DeviceLocation location = null;
     private double distance = 0;
     private String alias;
-//    private LocationManager locationManager;
     Location locationGPS;
 
     //Flags
@@ -117,7 +115,6 @@ public class ConnectionsWorldFragment
     private View rootView;
     private SearchView searchView;
 
-    //View layout;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
@@ -129,7 +126,6 @@ public class ConnectionsWorldFragment
     private Button refreshButton;
     private View refreshButtonView;
 
-    //Greenbar layout
     private RelativeLayout greenBar;
     private ImageView closeGreenBar;
     private TextView greenBarCountry;
@@ -149,15 +145,11 @@ public class ConnectionsWorldFragment
 
         greenBarCountry.setText(city.getCountryName());
         greenBarCity.setText(city.getName());
-
-        //greenBar.bringToFront();
         greenBar.setVisibility(View.VISIBLE);
 
         location=new DeviceLocation();
         location.setLatitude((double) city.getLatitude());
         location.setLongitude((double) city.getLongitude());
-        //distance=identity.getAccuracy();
-        //location.setAccuracy((long) distance);
         offset=0;
         onRefresh();
 
@@ -254,7 +246,6 @@ public class ConnectionsWorldFragment
                         offset=totalItemCount;
                         final int lastItem = pastVisiblesItems + visibleItemCount;
                         if(lastItem == totalItemCount) {
-
                             refreshButtonView.setVisibility(View.VISIBLE);
                             refreshButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -266,61 +257,6 @@ public class ConnectionsWorldFragment
                         } else{
                             refreshButtonView.setVisibility(View.GONE);
                         }
-//                        if (!isRefreshing) {
-
-//                            if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-//                                isRefreshing = true;
-//                                Toast.makeText(getActivity(), "Last one",Toast.LENGTH_SHORT);
-//                                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//                                progressDialog.setMessage("Please wait");
-//                                progressDialog.setCancelable(false);
-//                                progressDialog.show();
-//                                FermatWorker worker = new FermatWorker() {
-//                                    @Override
-//                                    protected Object doInBackground() throws Exception {
-//                                        return getMoreData(location, distance, alias, MAX, pastVisiblesItems);
-//                                    }
-//                                };
-//                                worker.setContext(getActivity());
-//                                worker.setCallBack(new FermatWorkerCallBack() {
-//                                    @SuppressWarnings("unchecked")
-//                                    @Override
-//                                    public void onPostExecute(Object... result) {
-//                                        isRefreshing = false;
-//                                        if (swipeRefresh != null) {
-//                                            swipeRefresh.setRefreshing(false);
-//                                            if (result != null &&
-//                                                    result.length > 0) {
-//                                                progressDialog.dismiss();
-//                                                if (getActivity() != null && adapter != null) {
-//                                                    lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-//                                                    adapter.changeDataSet(lstChatUserInformations);
-//                                                    if (lstChatUserInformations.isEmpty()) {
-//                                                        showEmpty(true, emptyView);
-//                                                    } else {
-//                                                        showEmpty(false, emptyView);
-//                                                    }
-//                                                }
-//                                            } else
-//                                                showEmpty(true, emptyView);
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onErrorOccurred(Exception ex) {
-//                                        progressDialog.dismiss();
-//                                        isRefreshing = false;
-//                                        if (swipeRefresh != null)
-//                                            swipeRefresh.setRefreshing(false);
-//                                        if (getActivity() != null)
-//                                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-//                                    }
-//                                });
-//                                worker.execute();
-//                                //Log.v("...", "Last Item Wow !");
-//                                //Do pagination.. i.e. fetch new data
-//                            }
-//                        }
                     }
                 }
             });
@@ -333,18 +269,6 @@ public class ConnectionsWorldFragment
             //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
-//            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            onRefresh();
-//                            swipeRefresh.setRefreshing(false);
-//                        }
-//                    }, 5000);
-//                }
-//            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
@@ -410,10 +334,6 @@ public class ConnectionsWorldFragment
         try{
         if (!isRefreshing) {
             isRefreshing = true;
-//            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//            progressDialog.setMessage("Please wait");
-//            progressDialog.setCancelable(false);
-//            progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -430,7 +350,6 @@ public class ConnectionsWorldFragment
                         swipeRefresh.setRefreshing(false);
                         if (result != null &&
                                 result.length > 0) {
-//                            progressDialog.dismiss();
                             if (getActivity() != null && adapter != null) {
                                 if (offset == 0) {
                                     if (lstChatUserInformations != null) {
@@ -439,7 +358,6 @@ public class ConnectionsWorldFragment
                                     } else {
                                         lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     }
-                                    //adapter.changeDataSet(lstChatUserInformations);
                                     adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
                                 } else {
                                     ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
@@ -462,7 +380,6 @@ public class ConnectionsWorldFragment
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-//                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null && isAttached)
                         swipeRefresh.setRefreshing(false);
@@ -496,15 +413,12 @@ public class ConnectionsWorldFragment
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            //emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else {
-//            emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
             emptyView.setBackgroundResource(0);
@@ -519,51 +433,23 @@ public class ConnectionsWorldFragment
     }
 
     private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias,int max, int offset) {
-        System.out.println("****************** GETMORE DATA SYNCRHINIEZED ENTERING");
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
-//                if(location != null){
-//                    if(location.getLongitude() == 0 && location.getLatitude() == 0){
-//                        locationGPS = locationManager.getLocation();
-//                        if(locationGPS!= null){
-//                            location.setLatitude(locationGPS.getLatitude());
-//                            location.setLongitude(locationGPS.getLongitude());
-//                        }
-//                    }
-//                }else{
-//                    locationGPS = locationManager.getLocation();
-//                    if(locationGPS!= null){
-//                        location.setLatitude(locationGPS.getLatitude());
-//                        location.setLongitude(locationGPS.getLongitude());
-//                    }
-//                }
                 result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        //null, 0, null, 0, 0);
                        location, distance, alias, max, offset);
-//              for(ChatActorCommunityInformation chat: result){
-//                if(chat.getConnectionState()!= null){
-//                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
-//                        moduleManager.requestConnectionToChatActor(identity,chat);
-//                        dataSet.add(chat);
-//                    }else dataSet.add(chat);
-//                }
-//                else dataSet.add(chat);
-//            }
                 dataSet.addAll(result);
                 offset = dataSet.size();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("****************** GETMORE DATA SYNCRHINIEZED SALGO BIEN: ");
         return dataSet;
     }
 
     @Override
     public void onFragmentFocus () {
-        //onRefresh();
     }
 
     @Override
