@@ -82,9 +82,9 @@ public class ChatCommunityTest extends ActivityInstrumentationTestCase2 {
 		assertTrue("AppActivity is not found!", solo.waitForActivity("AppActivity"));
 
 		/*
-			TESTCASE TO REFRESH COMMUNITY FOR 100 TIMES
+		 *	TESTCASE TO REFRESH COMMUNITY FOR 100 TIMES
 		 */
-		for(int i = 1; i<= 100; i++){
+		for(int i = 0; i<= 100; i++){
 			//Press menu back key
 			solo.goBack();
 			//Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
