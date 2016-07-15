@@ -145,7 +145,7 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         //Determine cryptoCurrency base
         String exchangeFrom, exchangeTo;
@@ -213,7 +213,7 @@ public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseMa
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
