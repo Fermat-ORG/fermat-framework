@@ -117,6 +117,22 @@ public class ChatRobotiumChatTest extends ActivityInstrumentationTestCase2 {
 		solo.enterText((android.widget.EditText) solo.getView("messageEdit"), "Alo");
         //Click on Empty Text View
 		solo.clickOnView(solo.getView("chatSendButton"));
+
+
+		/*
+			TEST CASE: SEND MESSAGES FOR ABOUT FOUR HOURS
+		 */
+		for (int i = 0; i <= 15000; i++){
+			//Click on Empty Text View
+			solo.clickOnView(solo.getView("messageEdit"));
+			//Enter the text: 'Mensaje 2'
+			solo.clearEditText((android.widget.EditText) solo.getView("messageEdit"));
+			solo.enterText((android.widget.EditText) solo.getView("messageEdit"), "Mensaje " + "i");
+			//Click on Empty Text View
+			solo.clickOnView(solo.getView("chatSendButton"));
+		}
+
+
         //Click on Empty Text View
 		solo.clickOnView(solo.getView("messageEdit"));
         //Enter the text: 'Mensaje 2'
