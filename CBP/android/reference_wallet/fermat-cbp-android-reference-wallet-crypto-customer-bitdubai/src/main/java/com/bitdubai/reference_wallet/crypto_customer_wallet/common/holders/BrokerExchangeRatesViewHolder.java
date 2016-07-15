@@ -6,8 +6,11 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+
+import org.bitcoin.protocols.payments.Protos;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -41,6 +44,13 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     }
 
     public void bind(MerchandiseExchangeRate data) {
+
+
+        if(data.getPaymentCurrency().getType().name().equals(PaymentType.FIAT_MONEY.getCode())){
+            formatter.setMaximumFractionDigits(2);
+        }else{
+            formatter.setMaximumFractionDigits(8);
+        }
         String exchangeRate = formatter.format(data.getExchangeRate());
         String merchandiseCurrency = data.getMerchandiseCurrency().getCode();
         String paymentCurrency = data.getPaymentCurrency().getCode();
