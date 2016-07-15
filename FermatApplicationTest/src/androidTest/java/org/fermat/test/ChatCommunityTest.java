@@ -41,12 +41,6 @@ public class ChatCommunityTest extends ActivityInstrumentationTestCase2 {
 		solo.waitForActivity("StartActivity", 2000);
         //Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
 		assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
-        //Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
-		assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
-        //Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
-		assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
-        //Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
-		assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
         //Set default small timeout to 11198 milliseconds
 		Timeout.setSmallTimeout(11198);
         //Assert that: 'ImageView' is shown
@@ -86,6 +80,21 @@ public class ChatCommunityTest extends ActivityInstrumentationTestCase2 {
 		solo.clickInRecyclerView(1, 0);
         //Wait for activity: 'com.bitdubai.android_core.app.AppActivity'
 		assertTrue("AppActivity is not found!", solo.waitForActivity("AppActivity"));
+
+		/*
+			TESTCASE TO REFRESH COMMUNITY FOR 100 TIMES
+		 */
+		for(int i = 1; i<= 100; i++){
+			//Press menu back key
+			solo.goBack();
+			//Wait for activity: 'com.bitdubai.android_core.app.DesktopActivity'
+			assertTrue("DesktopActivity is not found!", solo.waitForActivity("DesktopActivity"));
+			//Click on LinearLayout
+			solo.clickInRecyclerView(1, 0);
+			//Wait for activity: 'com.bitdubai.android_core.app.AppActivity'
+			assertTrue("AppActivity is not found!", solo.waitForActivity("AppActivity"));
+		}
+
         //Click on Add Contact
 		solo.clickOnView(solo.getView("add_contact_button"));
         //Wait for dialog
