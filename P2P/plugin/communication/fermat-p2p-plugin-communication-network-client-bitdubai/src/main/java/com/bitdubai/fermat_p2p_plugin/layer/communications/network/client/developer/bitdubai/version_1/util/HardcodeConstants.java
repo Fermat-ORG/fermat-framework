@@ -13,11 +13,7 @@ public class HardcodeConstants {
     /**
      * Represent the SERVER IP DEFAULT
      */
-//    public static final String SERVER_IP_DEFAULT = "193.234.224.198";
-    //TODO IP TEST 1
-    public static final String SERVER_IP_DEFAULT = "201.209.79.19";
-    //TODO IP TEST MANUEL
-//    public static final String SERVER_IP_DEFAULT = "186.14.210.109";
+    public static final String SERVER_IP_DEFAULT = "193.234.224.198";
 
     /**
      * Represent the WS_PROTOCOL
