@@ -190,13 +190,15 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
     @Override
     public void onSentMessage(NetworkServiceMessage messageSent) {
         System.out.println("Negotiation Transmission just sent :" + messageSent.getId());
-        Gson gson = new Gson();
         try{
-            NegotiationTransmission negotiationTransmission = gson.fromJson(
-                    messageSent.toJson(),
-                    NegotiationTransmission.class);
-            negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SENT);
-            outgoingNotificationDao.update(negotiationTransmission);
+            NegotiationTransmissionImpl negotiationTransmission =
+                    NegotiationTransmissionImpl.fronJson(messageSent.getContent());
+            NegotiationTransmissionState negotiationTransmissionState =
+                    negotiationTransmission.getTransmissionState();
+            if(negotiationTransmissionState!=NegotiationTransmissionState.SENT){
+                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SENT);
+                outgoingNotificationDao.update(negotiationTransmission);
+            }
         } catch (
                 Exception e) {
             reportError(UnexpectedPluginExceptionSeverity

@@ -205,6 +205,11 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
+            BusinessTransactionMetadata metadata = getMetadata(transaction_id);
+            if(metadata==null){
+                return;
+            }
+
             BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transaction_id);
             businessTransactionMetadata.setState(transactionTransmissionStates);
 

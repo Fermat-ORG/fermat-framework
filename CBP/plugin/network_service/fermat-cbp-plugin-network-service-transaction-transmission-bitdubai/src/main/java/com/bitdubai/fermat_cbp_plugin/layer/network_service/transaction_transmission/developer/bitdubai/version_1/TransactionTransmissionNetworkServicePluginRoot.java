@@ -42,6 +42,7 @@ import com.google.gson.Gson;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
@@ -339,12 +340,11 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
         System.out.println("Transaction Transmission just sent :"+fermatMessage.getId());
-        Gson gson = new Gson();
         try{
-            BusinessTransactionMetadata businessTransactionMetadata = gson.fromJson(
-                    fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
-            businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
-            transactionTransmissionContractHashDao.update(businessTransactionMetadata);
+            UUID messageId = fermatMessage.getId();
+            transactionTransmissionContractHashDao.changeState(
+                    messageId,
+                    TransactionTransmissionStates.SENT);
         } catch (
                 Exception e) {
             reportError(UnexpectedPluginExceptionSeverity
