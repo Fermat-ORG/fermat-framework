@@ -87,6 +87,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setVIewColor(R.color.bnk_gradient_end_background)
                 .setIsCheckEnabled(false)
                 .build();
 

@@ -2,10 +2,14 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 
 import java.io.Serializable;
 
@@ -26,6 +30,7 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     private ExposureLevel exposureLevel;
     private long   accuracy;
     private GeoFrequency frequency;
+    private CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
 
     public CryptoBrokerIdentityImpl(final String        alias        ,
                                     final KeyPair       keyPair      ,
@@ -40,6 +45,28 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
         this.exposureLevel = exposureLevel;
         this.accuracy      = accuracy     ;
         this.frequency = frequency;
+        //Default CryptoBrokerIdentityExtraData
+        this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
+                CryptoCurrency.BITCOIN,
+                FiatCurrency.US_DOLLAR,
+                "Selling Bitcoin");
+    }
+
+    public CryptoBrokerIdentityImpl(
+            final String alias,
+            final KeyPair keyPair,
+            final byte[] profileImage,
+            final ExposureLevel exposureLevel,
+            final long accuracy,
+            final GeoFrequency frequency,
+            final CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData) {
+        this.alias = alias;
+        this.keyPair = keyPair;
+        this.profileImage = profileImage;
+        this.exposureLevel = exposureLevel;
+        this.accuracy = accuracy;
+        this.frequency = frequency;
+        this.cryptoBrokerIdentityExtraData = cryptoBrokerIdentityExtraData;
     }
 
     @Override
@@ -102,6 +129,10 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
         c += alias.hashCode();
         c += keyPair.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData(){
+        return cryptoBrokerIdentityExtraData;
     }
 
 }

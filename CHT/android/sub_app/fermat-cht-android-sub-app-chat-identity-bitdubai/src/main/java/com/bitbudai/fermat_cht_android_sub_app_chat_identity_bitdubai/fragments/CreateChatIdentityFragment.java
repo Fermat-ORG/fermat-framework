@@ -262,8 +262,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.chat_identity_subapp)
                     .setBannerRes(R.drawable.banner_identity_chat)
+                    .setVIewColor(R.color.cht_color_dialog_identity)
                     .setIsCheckEnabled(false)
-                    .setTextFooter(R.string.cht_chat_footer).build();
+                    .setTextFooter(R.string.cht_chat_footer)
+                    .build();
             pd.show();
         } catch (Exception e) {
             if(errorManager!=null)
@@ -281,6 +283,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                     .setCheckButtonAndTextVisible(0)
                     .setIsCheckEnabled(false)
                     .setBannerRes(R.drawable.banner_identity_chat)
+                    .setVIewColor(R.color.cht_color_dialog_identity)
                     .setTextFooter(R.string.cht_chat_footer).build();
             pd.show();
         } catch (Exception e) {
@@ -302,9 +305,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
                     else {
                         if (Build.VERSION.SDK_INT < 23) {
-                            Toast.makeText(getActivity(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
+                            makeText(getActivity(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
                         }else{
-                            Toast.makeText(getContext(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
+                            makeText(getContext(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
                         }
                         setUpDialog();
                     }
@@ -366,16 +369,16 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                        makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG);
                                     }
                                 } else {
-                                    Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
+                                    makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG);
                                 }
                             } else {
-                                Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                                makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG);
                             }
                         } else {
-                            Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                            makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG);
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -402,7 +405,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                     }
                                 });
                             } else {
-                                Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG);
                                 // cryptoBrokerBitmap = null;
                                 // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
@@ -410,7 +413,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT).show();
+                        makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT);
                     }
                     break;
                 case GALLERY_KITKAT_INTENT_CALLED:
@@ -453,14 +456,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                     }
                                 });
                             } else {
-                                Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG);
                                 //cryptoBrokerBitmap = null;
                                 // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT).show();
+                        makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT);
                     }
             }
         }
@@ -552,7 +555,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         String state = mChatConnectionState.getText().toString();
 
         if (chatNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG);
         }
         if (chatBitmap == null) {
             chatBitmap = BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length);
@@ -564,7 +567,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                         break;
@@ -583,7 +586,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                         break;
@@ -605,7 +608,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             identityConnectionNameText = "Available";
         }
         if (chatNameText.trim().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+            makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG);
         } else {
 
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
@@ -617,7 +620,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
+                            makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                         break;
@@ -685,7 +688,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         imageToUploadUri = Uri.fromFile(f);
                         startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
                     } else {
-                        Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                        makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG);
                     }
                 }
             } else {
@@ -697,9 +700,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             }
         }else {
             if (Build.VERSION.SDK_INT >= 23) {
-                Toast.makeText(getContext(), "there is no cameras available", Toast.LENGTH_SHORT);
+                makeText(getContext(), "there is no cameras available", Toast.LENGTH_SHORT);
             }else {
-                Toast.makeText(getActivity(), "there is no cameras available", Toast.LENGTH_SHORT);
+                makeText(getActivity(), "there is no cameras available", Toast.LENGTH_SHORT);
             }
         }
     }
@@ -844,7 +847,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -852,7 +855,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 }else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -860,9 +863,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 }
             }catch(Exception ex){
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                 }else{
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                 }
             }
         }

@@ -15,8 +15,6 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppWorldHolder;
 
@@ -66,7 +64,13 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
     @Override
     protected void bindHolder(AppWorldHolder holder, IntraUserInformation data, int position) {
         holder.connectionState.setVisibility(View.GONE);
-        ConnectionState connectionState = data.getConnectionState();
+        ConnectionState connectionState = null;
+        try {
+            connectionState = data.getConnectionState();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         switch (connectionState) {
             case CONNECTED:
                 if (holder.connectionState.getVisibility() == View.GONE)

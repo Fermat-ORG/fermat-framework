@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 
 /**
@@ -26,7 +27,11 @@ public interface PaintActivityFeatures {
 
     void setTabCustomImageView(int position,View view);
 
-    void cancelNotification(String appPublicKey);
+    /**
+     * NotificationId and sourcePlugin needed, se necesitan esos dos campos en el fermatBundle para cancelar la notificacion
+     * @param fermatBundle
+     */
+    void cancelNotification(FermatBundle fermatBundle);
 
     void pushNotification(String appPublicKey,Notification notification);
 

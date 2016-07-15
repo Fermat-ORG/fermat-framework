@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -76,7 +75,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private FermatTextView detailDate;
     private FermatTextView detailRate;
     private FermatTextView brokerName;
-    private FermatButton negotiationButton;
     private RecyclerView recyclerView;
 
     public static ContractDetailActivityFragment newInstance() {
@@ -136,13 +134,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
         sellingSummary = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_selling_summary);
         detailDate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_rate);
-        negotiationButton = (FermatButton) rootView.findViewById(R.id.ccw_contract_details_negotiation_details);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.ccw_contract_details_contract_steps_recycler_view);
 
         //Configure recyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, moduleManager, this));
 
+        final View negotiationButton = rootView.findViewById(R.id.ccw_contract_details_negotiation_details);
         negotiationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -366,31 +366,39 @@ public class OpenContractMonitorAgent2
                     if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_ACK_CONFIRMED.getCode())) {
 
                         System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL\n");
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_OPENED);
+
                         contractType = openContractBusinessTransactionDao.getContractType(contractHash);
                         switch (contractType) {
                             case PURCHASE:
                                 CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
-                                if (!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
+                                if (!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode()) &&
+                                    !contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
+
                                     customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
                                             ContractStatus.PENDING_PAYMENT);
 
                                     //CLOSE NEGOTIATION
                                     closeNegotiation(contractType, contractPurchase.getNegotiatiotId());
-
+                                    
                                 }
                                 break;
                             case SALE:
                                 CustomerBrokerContractSale contractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
-                                if (!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
+                                if (!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode()) &&
+                                    !contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
+
                                     customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
                                             ContractStatus.PENDING_PAYMENT);
 
                                     //CLOSE NEGOTIATION
                                     closeNegotiation(contractType, contractSale.getNegotiatiotId());
+
                                 }
                                 break;
                         }
+
+                        //CHANGE STATUS TRANSACTION
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_OPENED);
 
                         //CONFIRM RECEPTION OF TRANSMISSION
                         transactionTransmissionManager.confirmReception(transmissionId);

@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.classes;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
@@ -28,6 +31,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     private String country;
     private String place;
     private ProfileStatus profileStatus;
+    private CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
 
 
     public CryptoBrokerCommunitySubAppModuleInformation(final String publicKey,
@@ -95,6 +99,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.connectionState = null;
         this.connectionId = null;
         this.location = exposingData.getLocation();
+        this.cryptoBrokerIdentityExtraData = exposingData.getCryptoBrokerIdentityExtraData();
     }
 
     @Override
@@ -156,6 +161,18 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     @Override
     public ProfileStatus getProfileStatus() {
         return profileStatus;
+    }
+
+    @Override
+    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData() {
+        if(cryptoBrokerIdentityExtraData==null){
+            //Default CryptoBrokerIdentityExtraData
+            this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
+                    CryptoCurrency.BITCOIN,
+                    FiatCurrency.US_DOLLAR,
+                    "Selling Bitcoin");
+        }
+        return this.cryptoBrokerIdentityExtraData;
     }
 
     public void setCountry(String country) {

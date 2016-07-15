@@ -350,7 +350,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
     }
 
-    private void sendMessage(final String jsonMessage      ,
+    public void sendMessage(final String jsonMessage      ,
                              final String identityPublicKey,
                              final Actors identityType     ,
                              final String actorPublicKey   ,

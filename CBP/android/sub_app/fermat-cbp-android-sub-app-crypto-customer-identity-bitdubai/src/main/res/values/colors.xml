@@ -16,4 +16,6 @@
     <color name="crypto_customer_identity_name_item">#3b97ff</color>
     <color name="create_button_text">#FFFFFF</color>
 
+    <color name="ccc_color_dialog_identity">#2D2E82</color>
+    2D2E82
 </resources>
