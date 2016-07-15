@@ -1,8 +1,5 @@
 package com.bitdubai.android_core.app.common.version_1.communication.client_system_broker;
 
-import android.util.Log;
-
-import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodParallelQuantityExceedException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -45,15 +42,15 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
         int quantity = 0;
         if(methodDetail!=null) quantity = methodDetail.methodParallelQuantity();
 
-        if(quantity>0){
-            synchronized (this) {
-                if (methodsIdentifiers.containsKey(method.hashCode())) {
-                    throw new MethodParallelQuantityExceedException();
-                } else {
-                    methodsIdentifiers.put(method.hashCode(), method);
-                }
-            }
-        }
+//        if(quantity>0){
+//            synchronized (this) {
+//                if (methodsIdentifiers.containsKey(method.hashCode())) {
+//                    throw new MethodParallelQuantityExceedException();
+//                } else {
+//                    methodsIdentifiers.put(method.hashCode(), method);
+//                }
+//            }
+//        }
         Object returnedObject = clientSystemBrokerService.sendMessage(
                 pluginVersionReference,
                 proxy,
@@ -61,13 +58,13 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
                 methodDetail,
                 args);
 
-        if (quantity>0){
-            if (methodsIdentifiers.containsKey(method.hashCode())){
-                methodsIdentifiers.remove(method.hashCode());
-            }else{
-                Log.e(TAG,"Acá hay algo mal, contactar a furszy");
-            }
-        }
+//        if (quantity>0){
+//            if (methodsIdentifiers.containsKey(method.hashCode())){
+//                methodsIdentifiers.remove(method.hashCode());
+//            }else{
+//                Log.e(TAG,"Acá hay algo mal, contactar a furszy");
+//            }
+//        }
         if(returnedObject instanceof Exception){
             throw (Throwable) returnedObject;
         }else {
