@@ -271,7 +271,7 @@ public class NotificationService extends Service {
                     intent.setAction("org.fermat.APP_LAUNCHER");
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
                     PendingIntent pi = PendingIntent
-                            .getBroadcast(this, 0, intent, 0);
+                            .getBroadcast(this, notificationId, intent, PendingIntent.FLAG_ONE_SHOT);
                     if (remoteViews != null) {
                         builder = new Notification.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setTicker("ticker")
                                 .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
