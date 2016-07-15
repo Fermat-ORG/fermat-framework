@@ -514,11 +514,12 @@ public class BankMoneyWalletDao {
         table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN, publicKey, DatabaseFilterType.EQUAL);
         table.loadToMemory();
         try {
-            return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
+            if(table.getRecords().size() > 0)
+                return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
         }catch (Exception e){
-            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            return null;
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
+        return null;
     }
 
 }

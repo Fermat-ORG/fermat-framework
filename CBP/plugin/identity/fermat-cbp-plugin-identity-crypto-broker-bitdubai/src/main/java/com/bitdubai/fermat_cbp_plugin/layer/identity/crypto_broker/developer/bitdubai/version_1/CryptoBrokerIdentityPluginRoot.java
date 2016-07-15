@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -42,11 +44,14 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantG
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUnHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantUnHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeExposureLevelException;
@@ -125,7 +130,15 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = new ECCKeyPair();
-            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE, accuracy, frecuency);
+            /**
+             * For test
+             */
+            //Default CryptoBrokerIdentityExtraData
+            /*CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
+                    CryptoCurrency.FERMAT,
+                    FiatCurrency.VENEZUELAN_BOLIVAR,
+                    "Testing extra data");*/
+            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE, accuracy, frecuency/*,cryptoBrokerIdentityExtraData*/);
             cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser);
 
             FermatBundle fermatBundle = new FermatBundle();
@@ -157,7 +170,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
 
         try {
             CryptoBrokerIdentity broker = cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey);
-            Location location = locationManager.getLocation();
+            /*Location location = locationManager.getLocation();
             long refreshInterval = broker.getFrequency().getRefreshInterval();
             if (broker.isPublished()) {
                 cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile, location, refreshInterval, accuracy, ProfileStatus.UNKNOWN));
@@ -167,7 +180,62 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
                 fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED);
 
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
-            }
+            }*/
+            publishUpdatedIdentity(publicKey);
+        } catch (CantGetIdentityException e) {
+
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateBrokerIdentityException("CAN'T GET CRYPTO BROKER IDENTITY", FermatException.wrapException(e), "", "");
+        } catch (IdentityNotFoundException e) {
+
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateBrokerIdentityException("CRYPTO BROKER IDENTITY NOT FOUND", FermatException.wrapException(e), "", "");
+        } catch (CantExposeIdentityException e) {
+
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateBrokerIdentityException("CAN'T EXPOSE CRYPTO BROKER IDENTITY", FermatException.wrapException(e), "", "");
+        } catch (CantGetDeviceLocationException e) {
+            throw new CantUpdateBrokerIdentityException(e, "", "Problem exposing identities in Location.");
+        }
+    }
+
+    /**
+     * This method publish an updated identity.
+     * @param cryptoBrokerIdentityPublicKey
+     * @throws CantGetDeviceLocationException
+     * @throws IdentityNotFoundException
+     * @throws CantGetIdentityException
+     * @throws CantExposeIdentityException
+     */
+    private void publishUpdatedIdentity(String cryptoBrokerIdentityPublicKey) throws CantGetDeviceLocationException, IdentityNotFoundException, CantGetIdentityException, CantExposeIdentityException {
+        Location location = locationManager.getLocation();
+        CryptoBrokerIdentity cryptoBrokerIdentity = cryptoBrokerIdentityDatabaseDao.getIdentity(
+                cryptoBrokerIdentityPublicKey);
+        if (cryptoBrokerIdentity.isPublished()) {
+            cryptoBrokerANSManager.updateIdentity(
+                    new CryptoBrokerExposingData(
+                            cryptoBrokerIdentity,
+                            location,
+                            ProfileStatus.UNKNOWN));
+
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED);
+
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
+        }
+    }
+
+    /**
+     * This method updates a crypto broker identity
+     * @param cryptoBrokerIdentity
+     * @throws CantUpdateBrokerIdentityException
+     */
+    public void updateCryptoBrokerIdentity(CryptoBrokerIdentity cryptoBrokerIdentity)
+            throws CantUpdateBrokerIdentityException{
+        this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(cryptoBrokerIdentity);
+        try{
+            publishUpdatedIdentity(cryptoBrokerIdentity.getPublicKey());
         } catch (CantGetIdentityException e) {
 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -229,6 +297,23 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantPublishIdentityException(e, "", "Unhandled Exception.");
         }
+    }
+
+    @Override
+    public void unHideIdentity(String publicKey) throws CantUnHideIdentityException, IdentityNotFoundException {
+        try {
+            cryptoBrokerIdentityDatabaseDao.changeExposureLevel(publicKey, ExposureLevel.PUBLISH);
+        } catch (final CantChangeExposureLevelException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUnHideIdentityException(e, "", "There was a problem trying to change the exposure level.");
+        } catch (final IdentityNotFoundException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUnHideIdentityException(e, "", "Unhandled Exception.");
+        }
+
     }
 
     @Override
@@ -301,9 +386,9 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     private void exposeIdentity(final CryptoBrokerIdentity identity) throws CantExposeActorIdentityException {
         try {
             Location location = locationManager.getLocation();
-            long refreshInterval = 0;
-            refreshInterval = identity.getFrequency().getRefreshInterval();
-            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy(), ProfileStatus.UNKNOWN));
+            //long refreshInterval = 0;
+            //refreshInterval = identity.getFrequency().getRefreshInterval();
+            cryptoBrokerANSManager.exposeIdentity(new CryptoBrokerExposingData(identity, location, ProfileStatus.UNKNOWN));
         } catch (final CantExposeIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");

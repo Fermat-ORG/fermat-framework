@@ -18,6 +18,8 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmissio
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 
+import java.util.UUID;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/11/15.
@@ -185,6 +187,14 @@ public class OpenContractTransactionManager implements OpenContractManager {
     public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
         //TODO to implement
         return 0;
+    }
+
+    @Override
+    public boolean isOpenContract(String negotiationId)
+            throws UnexpectedResultReturnedFromDatabaseException{
+
+        return openContractBusinessTransactionDao.contractOfNegotiationExists(UUID.fromString(negotiationId));
+
     }
 
 }
