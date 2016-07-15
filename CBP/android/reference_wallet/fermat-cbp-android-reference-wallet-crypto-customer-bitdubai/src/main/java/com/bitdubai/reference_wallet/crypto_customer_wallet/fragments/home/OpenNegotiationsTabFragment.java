@@ -270,10 +270,12 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
             case CCW_NEGOTIATION_UPDATE_VIEW:
-                onRefresh();
+                if (isAttached)
+                    onRefresh();
                 break;
             case CCW_CONTRACT_UPDATE_VIEW:
-                onRefresh();
+                if (isAttached)
+                    onRefresh();
                 break;
         }
     }
