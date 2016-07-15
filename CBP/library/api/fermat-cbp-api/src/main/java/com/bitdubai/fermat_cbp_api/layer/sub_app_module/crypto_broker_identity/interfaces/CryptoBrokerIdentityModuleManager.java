@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantUnHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CryptoBrokerNotFoundException;
 
 import java.io.Serializable;
@@ -49,6 +50,14 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<Identit
      * @throws CantPublishCryptoBrokerException if something goes wrong.
      */
     void publishIdentity(String publicKey) throws CantPublishCryptoBrokerException, CryptoBrokerNotFoundException;
+
+    /**
+     * The method <code>unhideidentity</code> is used to publish a Broker identity
+     *
+     * @param publicKey the public key of the crypto Broker to publish
+     * @throws CantUnHideCryptoBrokerException if something goes wrong.
+     */
+    void unHideIdentity (String publicKey) throws CantUnHideCryptoBrokerException, CryptoBrokerNotFoundException;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity

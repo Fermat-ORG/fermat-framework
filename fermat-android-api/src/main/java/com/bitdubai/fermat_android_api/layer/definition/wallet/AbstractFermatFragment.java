@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -571,8 +572,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(), notification);
     }
 
-    public void cancelNotification(){
-        getPaintActivtyFeactures().cancelNotification(appSession.getAppPublicKey());
+    public void cancelNotification(FermatBundle fermatBundle){
+        getPaintActivtyFeactures().cancelNotification(fermatBundle);
     }
 
 
@@ -628,5 +629,17 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
             }
         }
     }
+
+    /**
+     * Override this method if yo want to implement infinite scrolling or pagination.
+     * Return a {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     *
+     * @return the {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     * This return <code>null</code> by default
+     */
+    public RecyclerView.OnScrollListener getScrollListener() {
+        return null;
+    }
+
 
 }

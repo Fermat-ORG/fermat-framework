@@ -78,7 +78,8 @@ public class SpecialistSelector {
             /**
              * If I couldn't get the specialist from the database, then I will continue with an unknown specialist.
              */
-            return Specialist.UNKNOWN_SPECIALIST;
+            //return Specialist.UNKNOWN_SPECIALIST;
+            return Specialist.EXTRA_USER_SPECIALIST;
         }
     }
 }

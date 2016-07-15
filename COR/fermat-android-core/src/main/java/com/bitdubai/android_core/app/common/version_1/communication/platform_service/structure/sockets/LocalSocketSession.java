@@ -10,9 +10,9 @@ import com.bitdubai.android_core.app.common.version_1.communication.platform_ser
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.nio.channels.IllegalBlockingModeException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias Furszyfer on 2016.05.01..
@@ -184,6 +184,10 @@ public abstract class LocalSocketSession {
 
     ObjectInputStream objectInputStream;
 
+    public boolean isConnected() {
+        return localSocket.isConnected();
+    }
+
     private class SessionRunner implements Runnable {
 
         @Override
@@ -191,22 +195,32 @@ public abstract class LocalSocketSession {
             try {
                 if(localSocket!=null) {
                     isReceiverActive = true;
+                    int read = -1;
                         while (isReceiverActive) {
-                                int read = objectInputStream.read();
+                                read =+ objectInputStream.read();
                                 if(read!=-1) {
                                     Log.i(TAG,"pidiendo objeto");
-                                    FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();
+                                    FermatModuleObjectWrapper object = null;
+                                    try {
+                                        object = (FermatModuleObjectWrapper) objectInputStream.readObject();
+                                    }catch (OptionalDataException e){
+                                        e.printStackTrace();
+                                        read=+objectInputStream.read();
+                                        Log.e(TAG, String.valueOf(read));
+                                    }
                                     //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
                                     if (object != null) {
                                         onReceiveMessage(object);
+                                        read--;
                                         //messageSize.decrementAndGet();
                                     } else {
                                         Log.e(TAG,"Object receiver null");
-                                        TimeUnit.SECONDS.sleep(2);
+                                        Log.e(TAG, "Read: "+read);
+//                                        TimeUnit.SECONDS.sleep(2);
                                     }
                                 }else{
-                                    Log.e(TAG,"end of input stream");
-                                    isReceiverActive = false;
+                                    //Log.e(TAG,"end of input stream");
+//                                    isReceiverActive = false;
                                 }
                         }
                 }

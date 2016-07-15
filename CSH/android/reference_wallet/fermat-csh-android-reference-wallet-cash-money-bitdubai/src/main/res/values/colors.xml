@@ -13,10 +13,10 @@
     <color name="csh_transaction_hold_color_progress_bar">#e08c26</color>
     <color name="csh_transaction_unhold_color">#42f57e</color>
     <color name="csh_transaction_unhold_color_progress_bar">#26e04b</color>
-    <color name="csh_transaction_deposit_color">#42a5f5</color>
-    <color name="csh_transaction_deposit_color_progress_bar">#26A9E0</color>
-    <color name="csh_transaction_withdrawal_color">#ef5350</color>
-    <color name="csh_transaction_withdrawal_color_progress_bar">#E73625</color>
+    <color name="csh_transaction_deposit_color">#424cf5</color>
+    <color name="csh_transaction_deposit_color_progress_bar">#424cf5</color>
+    <color name="csh_transaction_withdrawal_color">#de1814</color>
+    <color name="csh_transaction_withdrawal_color_progress_bar">#de1814</color>
     <color name="csh_transaction_amount_text_color">#000000</color>
     <color name="csh_transaction_memo_text_color">#000000</color>
     <color name="csh_transaction_date_text_color">#000000</color>
@@ -58,4 +58,5 @@
     <color name="accent">#E91E63</color>
     <color name="accent_pressed">#C2185B</color>
 
+    <color name="csh_color_dialog">#16698D</color>
 </resources>

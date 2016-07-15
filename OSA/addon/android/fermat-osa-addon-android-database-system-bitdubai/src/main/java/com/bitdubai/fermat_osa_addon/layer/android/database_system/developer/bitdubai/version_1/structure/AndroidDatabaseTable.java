@@ -109,7 +109,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public long getCount() throws CantLoadTableToMemoryException {
-        throw new RuntimeException("Implement me.");
+        return this.records.size();
     }
 
     /**

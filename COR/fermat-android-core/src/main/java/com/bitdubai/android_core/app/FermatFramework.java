@@ -30,6 +30,9 @@ import com.mati.fermat_osa_addon_android_loader.Smith;
 import org.acra.ACRA;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias Furszyfer on 2016.06.29..
@@ -86,6 +89,9 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     private ClassLoader mBaseClassLoader;
 
     private LoaderManager loaderManager;
+
+    private boolean isApplicationInForeground;
+    private ScheduledExecutorService scheduledExecutorService;
 
     public static FermatFramework init(Application application){
         return new FermatFramework(application);
@@ -189,6 +195,32 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
             notificationReceiver = new NotificationReceiver(this);
             IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
             application.getApplicationContext().registerReceiver(notificationReceiver, intentFilter);
+
+            //Application state observer
+            application.registerActivityLifecycleCallbacks(new ApplicationLifecycleManager());
+
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+//                    Log.i(TAG, "##########################################################3");
+//                    Log.e(TAG, "App in foreground: " + ApplicationLifecycleManager.isAppInForeground());
+//                    Log.i(TAG, "##########################################################3");
+                    if (!ApplicationLifecycleManager.isAppInForeground()) {
+                        if (isApplicationInForeground) {
+                            isApplicationInForeground = false;
+                        } else {
+                            appOnBackground();
+                        }
+                    } else {
+                        if (!isApplicationInForeground) {
+                            isApplicationInForeground = true;
+                            appOnForeground();
+                        }
+                    }
+                }
+            }, 30, 30, TimeUnit.SECONDS);
+
         }
 
 //        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
@@ -208,7 +240,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
                                 // continue with delete
                                 Log.e(TAG, "ANR:");
                                 error.printStackTrace();
-                                Log.e(TAG,"FIN ANR");
+                                Log.e(TAG, "FIN ANR");
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -229,7 +261,11 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         });
         anrWatchDog.start();
 
+
+
+
     }
+
 
 
     void handleUncaughtException(Thread thread, Throwable e) {
@@ -248,6 +284,10 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     public ServicesHelpers getServicesHelpers() {
         return servicesHelpers;
+    }
+
+    public boolean isApplicationInForeground(){
+        return isApplicationInForeground;
     }
 
     /**
@@ -309,6 +349,17 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
             }
         }
         return fermatRunning;
+    }
+
+    public void appOnBackground(){
+        Log.i(TAG,"Disconnecting app, onBackground");
+        servicesHelpers.getClientSideBrokerServiceAIDL().disconnect();
+    }
+
+    public void appOnForeground(){
+        Log.i(TAG,"Reconnecting app, onForeground");
+        isApplicationInForeground = true;
+        servicesHelpers.getClientSideBrokerServiceAIDL().connect();
     }
 
     @Override

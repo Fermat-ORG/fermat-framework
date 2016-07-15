@@ -538,6 +538,7 @@ public class EditCryptoBrokerIdentityFragment
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIconRes(R.drawable.bi_icon)
                     .setBannerRes(R.drawable.banner_identity)
+                    .setVIewColor(R.color.background_toolbar)
                     .build();
             pd.show();
         } catch (Exception e) {

@@ -29,4 +29,12 @@ public @interface MethodDetail {
 
     TimeUnit timeoutUnit() default TimeUnit.SECONDS;
 
+    /**
+     * This control how many times a methods is posibly used in parallel.
+     * 0 = unlimited,
+     *
+     * @return
+     */
+    int methodParallelQuantity() default 0;
+
 }

@@ -139,6 +139,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                     .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_providers_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                    .setVIewColor(R.color.cbw_wizard_merchandises_wallet_button_color)
                     .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
@@ -220,6 +221,9 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
 
                 moduleManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
+
+            // TODO desabilitado hasta hablar con matias sobre los BroadcastReceivers, que estan fallando
+            //moduleManager.setMerchandisesAsExtraDataInAssociatedIdentity();
 
             //Set CONFIGURED_DATA to true so that wizard knows its completed.
             appSession.setData(FragmentsCommons.CONFIGURED_DATA, true);

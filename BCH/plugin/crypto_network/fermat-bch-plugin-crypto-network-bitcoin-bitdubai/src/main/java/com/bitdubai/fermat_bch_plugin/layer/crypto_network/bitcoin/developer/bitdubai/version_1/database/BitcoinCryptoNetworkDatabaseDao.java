@@ -1478,4 +1478,29 @@ public class BitcoinCryptoNetworkDatabaseDao {
         // for every other case, we are returning TO_BE_NOTIFIED
         return ProtocolStatus.TO_BE_NOTIFIED;
     }
+
+    /**
+     * returns a list of keys from imported seeds, meaning from a vault code IMS.
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<String> getImportedAddresses(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_NETWORK_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_CRYPTO_VAULT_COLUMN_NAME, CryptoVaults.IMPORTED_SEED.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<String> addressList = new ArrayList<>();
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            addressList.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.CRYPTOVAULTS_DETAILED_STATS_MONITORED_ADDRESSES_COLUMN_NAME));
+        }
+
+        return addressList;
+    }
 }

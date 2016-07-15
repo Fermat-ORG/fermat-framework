@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -142,6 +143,8 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
     //Add Yordin Alayn 19.02.16
     public void updateNegotiationInfo(UUID negotiationId, String memo, NegotiationStatus status) throws CantUpdateCustomerBrokerSaleException {
         try {
+
+            memo = memo.replace("'","''");
             DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
 
             PurchaseNegotiationClauseTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
@@ -436,16 +439,22 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
         @Override
         public void addNewClause(UUID negotiationId, Clause clause) throws CantAddNewClausesException {
             try {
-                DatabaseTable SaleClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
-                DatabaseTableRecord recordToInsert = SaleClauseTable.getEmptyRecord();
-                recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME, clause.getClauseId());
-                recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME, clause.getType().getCode());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME, clause.getValue());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, clause.getStatus().getCode());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME, clause.getProposedBy());
-                recordToInsert.setIntegerValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME, (int) clause.getIndexOrder());
-                SaleClauseTable.insertRecord(recordToInsert);
+
+                if(!clauseExists(clause.getClauseId())) {
+
+                    DatabaseTable SaleClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
+                    DatabaseTableRecord recordToInsert = SaleClauseTable.getEmptyRecord();
+                    recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME, clause.getClauseId());
+                    recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
+                    recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TYPE_COLUMN_NAME, clause.getType().getCode());
+                    recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_VALUE_COLUMN_NAME, clause.getValue());
+                    recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, clause.getStatus().getCode());
+                    recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_PROPOSED_BY_COLUMN_NAME, clause.getProposedBy());
+                    recordToInsert.setIntegerValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME, (int) clause.getIndexOrder());
+                    SaleClauseTable.insertRecord(recordToInsert);
+
+                }
+
             } catch (CantInsertRecordException e) {
                 throw new CantAddNewClausesException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
@@ -653,4 +662,24 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             return new NegotiationSaleLocations(locationId, location, uri);
         }
 
+
+        private boolean clauseExists(UUID clauseId) throws CantAddNewClausesException {
+
+            try {
+
+                DatabaseTable table = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
+                if (table == null)
+                    throw new CantAddNewClausesException("Cant check if customer broker purchase tablet exists");
+
+                table.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_CLAUSE_ID_COLUMN_NAME, clauseId, DatabaseFilterType.EQUAL);
+                table.loadToMemory();
+                return table.getRecords().size() > 0;
+
+            } catch (CantLoadTableToMemoryException em) {
+                throw new CantAddNewClausesException(em.getMessage(), em, "Customer Broker Purchase Negotiation Clause Id Not Exists", "Cant load " + CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME + " table in memory.");
+            } catch (Exception e) {
+                throw new CantAddNewClausesException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Purchase Negotiation Clause Id Not Exists", "unknown failure.");
+            }
+
+        }
 }

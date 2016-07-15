@@ -161,7 +161,7 @@ public class CustomerBrokerNewAgent implements
         this.monitorAgentTransaction.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
         try {
-            this.monitorAgentTransaction.Initialize();
+//            this.monitorAgentTransaction.Initialize();
         } catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
@@ -257,15 +257,15 @@ public class CustomerBrokerNewAgent implements
         }
 
         /*INNER CLASS PUBLIC METHOD*/
-        public void Initialize() throws CantInitializeCBPAgent {
-            /*try {
-
-                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
-
-            } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
-                throw new CantInitializeCBPAgent(exception,"Customer Broker New Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
-            }*/
+        /*public void Initialize() throws CantInitializeCBPAgent {
+//            try {
+//
+//                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
+//
+//            } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException exception) {
+//                errorManager.reportUnexpectedPluginException(pluginVersionReference,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+//                throw new CantInitializeCBPAgent(exception,"Customer Broker New Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
+//            }
 
             try {
 
@@ -290,7 +290,7 @@ public class CustomerBrokerNewAgent implements
             }
 
 
-        }
+        }*/
 
         public void stopAgent() { agentRunning = false; }
 
@@ -307,6 +307,8 @@ public class CustomerBrokerNewAgent implements
         {
             try{
 
+//                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
+//                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
                 customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
                 String                              negotiationXML;

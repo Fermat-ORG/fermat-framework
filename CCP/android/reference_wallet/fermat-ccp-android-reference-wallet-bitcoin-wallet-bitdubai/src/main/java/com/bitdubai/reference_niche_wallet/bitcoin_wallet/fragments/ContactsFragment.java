@@ -9,10 +9,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -147,6 +149,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
+    private Toolbar toolbar;
 
     private ExecutorService _executor;
 
@@ -167,7 +170,11 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         _executor = Executors.newFixedThreadPool(2);
         try {
-        cryptoWallet = appSession.getModuleManager();
+            cryptoWallet = appSession.getModuleManager();
+            toolbar = getToolbar();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setElevation(10);
+            }
 
 
         } catch (Exception e) {
@@ -306,8 +313,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mSearchView.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-                final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
-                mClearSearchImageButton.setVisibility(visibility);
+
+                //final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
+               // mClearSearchImageButton.setVisibility(visibility);
+
                 if (mPinnedHeaderAdapter != null) {
                     mPinnedHeaderAdapter.getFilter().filter(str);
                     mPinnedHeaderAdapter.notifyDataSetChanged();
@@ -452,19 +461,21 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
-        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+
+        //mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
-        mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
+       /* mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSearchView.getText().clear();
             }
-        });
+        });*/
 
         mEmptyView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -593,8 +604,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         dialog.dismiss();
         walletContact = new WalletContact();
         walletContact.setName("");
-        registerForContextMenu(mClearSearchImageButton);
-        getActivity().openContextMenu(mClearSearchImageButton);
+       // registerForContextMenu(mClearSearchImageButton);
+        //getActivity().openContextMenu(mClearSearchImageButton);
     }
 
     public void setWalletSession(ReferenceAppFermatSession appSession) {

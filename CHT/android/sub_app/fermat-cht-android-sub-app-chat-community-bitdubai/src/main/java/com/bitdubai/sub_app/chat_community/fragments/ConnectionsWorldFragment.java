@@ -368,6 +368,7 @@ public class ConnectionsWorldFragment
                     .setTextNameLeft(R.string.cht_creation_name_left)
                     .setTextNameRight(R.string.cht_creation_name_right)
                     .setImageRight(R.drawable.ic_profile_male)
+                    .setVIewColor(R.color.cht_color_dialog_community)
                     .build();
             presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -438,7 +439,8 @@ public class ConnectionsWorldFragment
                                     } else {
                                         lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     }
-                                    adapter.changeDataSet(lstChatUserInformations);
+                                    //adapter.changeDataSet(lstChatUserInformations);
+                                    adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
                                 } else {
                                     ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
                                     for (ChatActorCommunityInformation info : temp)
@@ -488,7 +490,6 @@ public class ConnectionsWorldFragment
     }
 
     public void showEmpty(boolean show, View emptyView) {
-
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
         if (show) {
@@ -503,7 +504,7 @@ public class ConnectionsWorldFragment
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else {
-            emptyView.setAnimation(anim);
+//            emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
             emptyView.setBackgroundResource(0);
@@ -575,35 +576,6 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        //super.onCreateOptionsMenu(menu, inflater);
-        MenuItem searchItem = menu.findItem(1);
-        if (searchItem!=null) {
-            searchView = (SearchView) searchItem.getActionView();
-            //searchView.setQueryHint(getResources().getString(R.string.description_search));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    if (s.equals(searchView.getQuery().toString())) {
-                        //updatevalues();
-                        adapter.changeDataSet(lstChatUserInformations);
-                        adapter.getFilter().filter(s);
-                    }
-                    return false;
-                }
-            });
-            if (appSession.getData("filterString") != null) {
-                String filterString = (String) appSession.getData("filterString");
-                if (filterString.length() > 0) {
-                    searchView.setQuery(filterString, true);
-                    searchView.setIconified(false);
-                }
-            }
-        }
     }
 
     public void onOptionMenuPrepared(Menu menu){
@@ -611,7 +583,7 @@ public class ConnectionsWorldFragment
         final SearchAliasDialog.AdapterCallbackAlias ad = this;
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            //searchView.setQueryHint(getResources().getString(R.string.description_search));
+            searchView.setQueryHint(getResources().getString(R.string.description_search));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -810,7 +782,7 @@ public class ConnectionsWorldFragment
                 if (Build.VERSION.SDK_INT < 23) {
                     String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -818,7 +790,7 @@ public class ConnectionsWorldFragment
                 }else {
                     String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
                     if(!provider.contains("gps")){ //if gps is disabled
-                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(gpsOptionsIntent);
@@ -826,9 +798,9 @@ public class ConnectionsWorldFragment
                 }
             }catch(Exception ex){
                 if (Build.VERSION.SDK_INT < 23) {
-                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                 }else{
-                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
                 }
             }
         }

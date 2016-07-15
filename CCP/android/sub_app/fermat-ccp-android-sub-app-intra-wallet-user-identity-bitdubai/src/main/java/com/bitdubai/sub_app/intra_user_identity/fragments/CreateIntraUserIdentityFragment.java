@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -54,8 +56,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
+import com.bitdubai.sub_app.intra_user_identity.util.BitmapWorkerTask;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.bitdubai.sub_app.intra_user_identity.util.DialogCropImage;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -91,8 +95,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
+    private ImageView mphoto_header;
     private RelativeLayout relativeLayout;
     private Menu menuHelp;
+    Toolbar toolbar;
     private IntraUserModuleIdentity identitySelected;
     private boolean isUpdate = false;
     private EditText mBrokerPhrase;
@@ -163,6 +169,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 //            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
 //                moduleManager.createNewIntraWalletUser("John Doe", null);
 //            }
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -212,10 +219,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         mBrokerPhrase = (EditText) layout.findViewById(R.id.crypto_broker_phrase);
         mBrokerImage = (ImageView) layout.findViewById(R.id.img_photo);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+        mphoto_header = (ImageView) layout.findViewById(R.id.img_photo_header);
 
 
 
-        createButton.setText((!isUpdate) ? "Create" : "Update");
+        //createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mBrokerName.requestFocus();
         registerForContextMenu(mBrokerImage);
@@ -305,6 +313,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                                 loadIdentity();
                                                                 isUpdate = true;
                                                                 createButton.setText("Save changes");
+                                                                createButton.setBackgroundColor(Color.parseColor("#7DD5CA"));
                                                             }
                                                         }
                                                     }
@@ -324,15 +333,19 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             Bitmap bitmap = null;
             if (identitySelected.getImage().length > 0) {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                bitmapWorkerTask.execute(identitySelected.getImage());
+                mphoto_header.setAlpha(150);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
 
-                //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
+                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(mphoto_header);
             }
             bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             brokerImageByteArray = toByteArray(bitmap);
             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+
         }
         mBrokerName.setText(identitySelected.getAlias());
         mBrokerPhrase.setText(identitySelected.getPhrase());
@@ -386,6 +399,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                     mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                                     brokerImageByteArray = toByteArray(imageBitmap);
                                                     updateProfileImage = true;
+
+                                                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                                                    bitmapWorkerTask.execute(brokerImageByteArray );
+                                                    mphoto_header.setAlpha(150);
+
                                                 } else {
                                                     imageBitmap = null;
                                                 }
@@ -450,6 +468,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                             brokerImageByteArray = toByteArray(imageBitmap);
 
+                                            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mphoto_header,getResources(),false);
+                                            bitmapWorkerTask.execute(brokerImageByteArray);
+                                            mphoto_header.setAlpha(150);
                                             updateProfileImage = true;
                                         } else {
                                             imageBitmap = null;

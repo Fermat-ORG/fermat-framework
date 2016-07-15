@@ -196,16 +196,13 @@ public class ChatAdapterView extends LinearLayout {
         String estatus;
         ChatMessage msg;
         int oldChatMessagesCount=0;
-        //Chat chat;
         try {
-
             if (chatHistory == null)
                 chatHistory = new ArrayList<ChatMessage>();
             else {
                 oldChatMessagesCount= chatHistory.size();
                 chatHistory.clear();
             }
-
 
             if (chatId != null) {
                 List<Message> messL = chatManager.getMessagesByChatId(chatId);
@@ -217,10 +214,10 @@ public class ChatAdapterView extends LinearLayout {
                         inorout = mess.getType().toString();
                         estatus = mess.getStatus().toString();
                         msg.setId(mess.getMessageId());
-                        if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
+                        if (inorout.equals(TypeMessage.OUTGOING.toString())) msg.setMe(true);
                         else {
                             msg.setMe(false);
-                            if (estatus != MessageStatus.READ.toString()) {
+                            if (!estatus.equals(MessageStatus.READ.toString())) {
                                 messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
                                 msg.setStatus(MessageStatus.READ.toString());
                                 messagei.setStatus(MessageStatus.READ);
@@ -264,8 +261,6 @@ public class ChatAdapterView extends LinearLayout {
                     if(oldChatMessagesCount < chatHistory.size() && !isScrollingUp)
                         scroll();
                 }
-
-
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -490,11 +485,8 @@ public class ChatAdapterView extends LinearLayout {
                         textNeverChange = false;
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
-
                     }
-
                     if (s.length() > 0 && s.charAt(s.length() - 1) == '\n' && !isScrollingUp) {
-
                         scroll();
                     }
                 }
@@ -584,7 +576,6 @@ public class ChatAdapterView extends LinearLayout {
                 if (TextUtils.isEmpty(messageText) || messageText.trim().length() == 0) {
                     return;
                 }
-
                 messageText = messageText.trim();
 
 //                String text = "";

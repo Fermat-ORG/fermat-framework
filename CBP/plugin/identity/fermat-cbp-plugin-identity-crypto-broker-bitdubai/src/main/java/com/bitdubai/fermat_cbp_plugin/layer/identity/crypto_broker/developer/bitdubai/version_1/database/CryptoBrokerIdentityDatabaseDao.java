@@ -3,7 +3,9 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -27,11 +29,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.CryptoBrokerIdentityPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeExposureLevelException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerIdentityPrivateKeyException;
@@ -92,6 +98,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
             persistNewCryptoBrokerIdentityPrivateKeysFile(cryptoBroker.getPublicKey(), privateKey);
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+            CryptoBrokerIdentityExtraData cryptoBrokerExtraData;
 
             DatabaseTableRecord record = table.getEmptyRecord();
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, cryptoBroker.getPublicKey());
@@ -100,6 +107,11 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME, cryptoBroker.getExposureLevel());
             record.setLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME, cryptoBroker.getAccuracy());
             record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME, cryptoBroker.getFrequency());
+            //New fields
+            cryptoBrokerExtraData = cryptoBroker.getCryptoBrokerIdentityExtraData();
+            record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PAYMENT_CURRENCY_COLUMN_NAME, cryptoBrokerExtraData.getPaymentCurrency());
+            record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_MERCHANDISE_CURRENCY_COLUMN_NAME, cryptoBrokerExtraData.getMerchandise());
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXTRA_TEXT_COLUMN_NAME, cryptoBrokerExtraData.getExtraText());
 
             table.insertRecord(record);
 
@@ -132,7 +144,66 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             updateCryptoBrokerIdentityProfileImage(publicKey, imageProfile);
 
         } catch (Exception e) {
-            throw new CantUpdateBrokerIdentityException(e.getMessage(), e, "", "");
+            throw new CantUpdateBrokerIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Updating the Crypto Broker Identity",
+                    "Unexpected exception, please, check the cause");
+        }
+    }
+
+    /**
+     * This method updates a stored CryptoBrokerIdentity
+     * @param cryptoBrokerIdentity
+     * @throws CantUpdateBrokerIdentityException
+     */
+    public void updateCryptoBrokerIdentity(CryptoBrokerIdentity cryptoBrokerIdentity)
+            throws CantUpdateBrokerIdentityException {
+        try{
+            DatabaseTable table = this.database.getTable(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            CryptoBrokerIdentityExtraData cryptoBrokerExtraData;
+            String publicKey = cryptoBrokerIdentity.getPublicKey();
+            String alias = cryptoBrokerIdentity.getAlias();
+            long accuracy = cryptoBrokerIdentity.getAccuracy();
+            GeoFrequency frequency = cryptoBrokerIdentity.getFrequency();
+            byte[] imageProfile = cryptoBrokerIdentity.getProfileImage();
+            table.addStringFilter(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME,
+                    publicKey,
+                    DatabaseFilterType.EQUAL);
+            record.setStringValue(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME,
+                    alias);
+            record.setLongValue(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME,
+                    accuracy);
+            record.setFermatEnum(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME,
+                    frequency);
+
+            cryptoBrokerExtraData = cryptoBrokerIdentity.getCryptoBrokerIdentityExtraData();
+            record.setFermatEnum(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PAYMENT_CURRENCY_COLUMN_NAME,
+                    cryptoBrokerExtraData.getPaymentCurrency());
+            record.setFermatEnum(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_MERCHANDISE_CURRENCY_COLUMN_NAME,
+                    cryptoBrokerExtraData.getMerchandise());
+            record.setStringValue(
+                    CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXTRA_TEXT_COLUMN_NAME,
+                    cryptoBrokerExtraData.getExtraText());
+
+            table.updateRecord(record);
+
+            updateCryptoBrokerIdentityProfileImage(publicKey, imageProfile);
+
+        } catch (Exception e) {
+            throw new CantUpdateBrokerIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Updating the Crypto Broker Identity",
+                    "Unexpected exception, please, check the cause");
         }
     }
 
@@ -295,8 +366,43 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
         long accuracy = record.getLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME);
         GeoFrequency frequency = GeoFrequency.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME));
-        return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published, accuracy, frequency);
+        //New fields
+        String paymentString = record.getStringValue(
+                CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PAYMENT_CURRENCY_COLUMN_NAME);
+        Currency paymentCurrency = getCurrencyFromString(paymentString);
+        String merchandiseString = record.getStringValue(
+                CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_MERCHANDISE_CURRENCY_COLUMN_NAME);
+        Currency merchandiseCurrency = getCurrencyFromString(merchandiseString);
+        String brokerExtraTest = record.getStringValue(
+                CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXTRA_TEXT_COLUMN_NAME);
+        CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
+                merchandiseCurrency,
+                paymentCurrency,
+                brokerExtraTest);
+        return new CryptoBrokerIdentityImpl(
+                alias,
+                keyPair,
+                profileImage,
+                published,
+                accuracy,
+                frequency,
+                cryptoBrokerIdentityExtraData);
 
+    }
+
+    private Currency getCurrencyFromString(String currencyString){
+        try{
+            FiatCurrency fiatCurrency = FiatCurrency.getByCode(currencyString);
+            return fiatCurrency;
+        } catch (InvalidParameterException e) {
+            try{
+                CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(currencyString);
+                return cryptoCurrency;
+            } catch (InvalidParameterException e1) {
+                //If everything fails, I'll return Bitcoin
+                return CryptoCurrency.BITCOIN;
+            }
+        }
     }
 
     private void updateCryptoBrokerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
