@@ -104,6 +104,9 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * List of running agents per network
      */
     HashMap<BlockchainNetworkType, BitcoinCryptoNetworkMonitor> runningAgents;
+    private BitcoinCryptoNetworkMonitor regTestNetworkMonitor;
+    private BitcoinCryptoNetworkMonitor testNetNetworkMonitor;
+    private BitcoinCryptoNetworkMonitor mainNetNetworkMonitor;
 
     /**
      * Platform variables
@@ -243,6 +246,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
                 if (isWalletReset) {
                     System.out.println("***CryptoNetwork*** new keys added from " + cryptoVault.getCode() + " vault in " + blockchainNetworkType.getCode() + " network...");
 
+
                     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
                     bitcoinCryptoNetworkMonitor.stop();
                     runningAgents.remove(blockchainNetworkType);
@@ -252,8 +256,24 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
                      * once the agent is stopped, I will restart it with the new wallet and the reset option.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);;
-                    runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
+
+                    switch (blockchainNetworkType){
+                        case REG_TEST:
+                            regTestNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                            bitcoinCryptoNetworkMonitor = regTestNetworkMonitor;
+                            runningAgents.put(blockchainNetworkType, regTestNetworkMonitor);
+                            break;
+                        case TEST_NET:
+                            testNetNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                            bitcoinCryptoNetworkMonitor = testNetNetworkMonitor;
+                            runningAgents.put(blockchainNetworkType, testNetNetworkMonitor);
+                            break;
+                        case PRODUCTION:
+                            mainNetNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                            bitcoinCryptoNetworkMonitor = mainNetNetworkMonitor;
+                            runningAgents.put(blockchainNetworkType, mainNetNetworkMonitor);
+                            break;
+                    }
 
                     try {
                         bitcoinCryptoNetworkMonitor.start();
@@ -266,8 +286,25 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
-                runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
+
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = null;
+                switch (blockchainNetworkType){
+                    case REG_TEST:
+                        regTestNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                        bitcoinCryptoNetworkMonitor = regTestNetworkMonitor;
+                        runningAgents.put(blockchainNetworkType, regTestNetworkMonitor);
+                        break;
+                    case TEST_NET:
+                        testNetNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                        bitcoinCryptoNetworkMonitor = testNetNetworkMonitor;
+                        runningAgents.put(blockchainNetworkType, testNetNetworkMonitor);
+                        break;
+                    case PRODUCTION:
+                        mainNetNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, isWalletReset, walletFilename, pluginFileSystem, errorManager, dao, eventManager, blockchainProvider);
+                        bitcoinCryptoNetworkMonitor = mainNetNetworkMonitor;
+                        runningAgents.put(blockchainNetworkType, mainNetNetworkMonitor);
+                        break;
+                }
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
 
