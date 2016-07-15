@@ -263,15 +263,18 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
-            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
-            long unixTime = System.currentTimeMillis();
-            eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
-            eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
-            eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
-            eventRecord.setLongValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
-            databaseTable.insertRecord(eventRecord);
+
+            if(!eventExists(eventId)) {
+                DatabaseTable databaseTable = getDatabaseEventsTable();
+                DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+                long unixTime = System.currentTimeMillis();
+                eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
+                eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+                eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+                eventRecord.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+                eventRecord.setLongValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+                databaseTable.insertRecord(eventRecord);
+            }
 
         } catch (CantInsertRecordException exception) {
             pluginRoot.reportError(
@@ -1533,6 +1536,22 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Setting completion date from database",
                     "Cannot load the database table");
+        }
+    }
+
+    private boolean eventExists(String eventId) throws CantSaveEventException {
+        try {
+            DatabaseTable table = getDatabaseEventsTable();;
+            if (table == null) {
+                throw new CantSaveEventException("Cant check if Broker Ack Offline Payment Transaction event tablet exists");
+            }
+            table.addStringFilter(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantSaveEventException(em.getMessage(), em, "Broker Ack Offline Payment Transaction Id Not Exists", "Cant load " + BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantSaveEventException(e.getMessage(), FermatException.wrapException(e), "Broker Ack Offline Payment Transaction Id Not Exists", "unknown failure.");
         }
     }
 

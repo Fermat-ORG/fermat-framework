@@ -248,6 +248,7 @@ public class OpenContractMonitorAgent2
     }
 
     private void raiseNewContractEvent(String contractHash) {
+        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - raiseNewContractEvent() - NEW_CONTRACT_OPENED \n - Contract Hash: "+contractHash+"\n");
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
         NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
         newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
@@ -393,6 +394,9 @@ public class OpenContractMonitorAgent2
                                     //CLOSE NEGOTIATION
                                     closeNegotiation(contractType, contractSale.getNegotiatiotId());
 
+                                    //RAISE EVENT NEW_CONTRACT_OPENED
+                                    raiseNewContractEvent(contractHash);
+
                                 }
                                 break;
                         }
@@ -407,8 +411,8 @@ public class OpenContractMonitorAgent2
 //                        openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
                         //RAISE EVENT NEW_CONTRACT_OPENED
-                        if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
-                            raiseNewContractEvent(contractHash);
+//                        if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
+//                            raiseNewContractEvent(contractHash);
                     }
 
                 }
