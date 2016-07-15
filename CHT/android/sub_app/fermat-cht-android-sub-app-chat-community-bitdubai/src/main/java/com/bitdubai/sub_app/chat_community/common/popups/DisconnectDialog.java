@@ -69,7 +69,6 @@ public class DisconnectDialog
         this.identity = identity;
     }
 
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +79,14 @@ public class DisconnectDialog
         mTitle = (FermatTextView) findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
-
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
+        if(chatUserInformation!=null){
+            setDescription("Do you want to be disconnected from "+chatUserInformation.getAlias()+"?");
+        }
         mDescription.setText(description != null ? description : "");
-//        mUsername.setText(username != null ? username : "");
+        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
-
     }
 
     public void setDescription(CharSequence description) {
@@ -114,16 +114,12 @@ public class DisconnectDialog
 
     @Override
     public void onClick(View v) {
-
         int i = v.getId();
-
         if (i == R.id.positive_button) {
             try {
-                //image null
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
                             .disconnectChatActor(chatUserInformation.getConnectionId());
-
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
