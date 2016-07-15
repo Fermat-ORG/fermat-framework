@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchyMaintainer implements Agent{
+public class VaultKeyHierarchyMaintainer implements Agent{
     /**
      * This will hold all the keys that I need to pass to bitcoin network for monitoring.
      */
