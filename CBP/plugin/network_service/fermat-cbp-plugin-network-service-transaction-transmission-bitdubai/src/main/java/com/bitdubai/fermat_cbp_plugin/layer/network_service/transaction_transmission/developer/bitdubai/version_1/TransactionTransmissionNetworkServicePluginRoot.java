@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.AbstractBusinessTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
@@ -337,6 +338,19 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
-        System.out.println("Transaction Transmission just sent :"+fermatMessage);
+        System.out.println("Transaction Transmission just sent :"+fermatMessage.getId());
+        Gson gson = new Gson();
+        try{
+            BusinessTransactionMetadata businessTransactionMetadata = gson.fromJson(
+                    fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
+            businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
+            transactionTransmissionContractHashDao.update(businessTransactionMetadata);
+        } catch (
+                Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity
+                    .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
+
     }
 }
