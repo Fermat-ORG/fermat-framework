@@ -58,7 +58,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     Timer timer = new Timer();
 
-    private long reprocessTimer = 300000; //five minutes
+    private long reprocessTimer = 600000; //Ten minutes
 
     public TransactionTransmissionNetworkServicePluginRoot() {
         super(

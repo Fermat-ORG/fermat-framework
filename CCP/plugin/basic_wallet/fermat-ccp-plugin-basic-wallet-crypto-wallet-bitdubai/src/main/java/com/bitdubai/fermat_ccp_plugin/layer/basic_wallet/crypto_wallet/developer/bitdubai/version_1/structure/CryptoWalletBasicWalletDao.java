@@ -316,10 +316,14 @@ public class CryptoWalletBasicWalletDao {
      */
     public void addDebit(final CryptoWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterDebitException {
         try {
+            long total = 0;
+             if (transactionRecord.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS ))
+                 total = transactionRecord.getTotal();
+            else
+                total = transactionRecord.getAmount();
 
-
-            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getTotal() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
+            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? total : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? total : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount, transactionRecord.getBlockchainNetworkType());
             long bookRunningBalance = calculateBookRunningBalance(-bookAmount,transactionRecord.getBlockchainNetworkType());
 

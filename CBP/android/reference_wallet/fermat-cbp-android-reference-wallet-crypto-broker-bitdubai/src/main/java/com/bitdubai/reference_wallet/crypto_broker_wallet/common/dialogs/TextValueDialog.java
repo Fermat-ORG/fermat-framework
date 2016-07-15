@@ -19,6 +19,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
@@ -40,6 +41,7 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
 
     private OnClickAcceptListener acceptBtnListener;
     private boolean setTextFree;
+    private NumberFormat numberFormat=DecimalFormat.getInstance();
 
     //TEXT COUNT
     private boolean activeTextCount = false;
@@ -127,16 +129,17 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
            //change lostwood
            // editTextView.setText(editTextValue);
 
-            try {
-                if(editTextValue.equals("0.0")){
-                    editTextView.setText("");
+            if(editTextValue.equals("0.0")){
+                editTextView.setText("");
+            }else{
+                if(activeTextCount){
+                    editTextView.setText(editTextValue);
                 }else{
-                    editTextView.setText(new BigDecimal(DecimalFormat.getInstance().parse(editTextValue).toString()).toString());
+                    editTextView.setText(fixFormat(editTextValue).toString());
                 }
 
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
+
 
 
         if (setTextFree)
@@ -159,5 +162,16 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
     public void setTextCount(int maxLenghtText){
         this.maxLenghtTextCount = maxLenghtText;
         this.activeTextCount = true;
+    }
+
+    private String fixFormat(String value){
+
+        try {
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
     }
 }
