@@ -16,9 +16,10 @@ public class DeveloperBitDubai extends AbstractAddonDeveloper {
      * Constructor with params.
      * assigns a developer to the addon developer class
      *
+     * @param addonDeveloperReference
      */
-    public DeveloperBitDubai() {
-        super(new AddonDeveloperReference());
+    public DeveloperBitDubai(AddonDeveloperReference addonDeveloperReference) {
+        super(addonDeveloperReference);
     }
 
     @Override
