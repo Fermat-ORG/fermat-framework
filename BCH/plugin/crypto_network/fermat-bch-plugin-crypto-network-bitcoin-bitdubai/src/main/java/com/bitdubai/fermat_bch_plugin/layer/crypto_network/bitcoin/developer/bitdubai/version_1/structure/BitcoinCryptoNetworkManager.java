@@ -525,7 +525,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         //make sure we did have the agent running for this network
         BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
         if (monitor == null)
-            throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "Monitor is not started for this network type, retry again.", "monitor reset?");
+            throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "Monitor is not started for this network type " + blockchainNetworkType.toString() + ", retry again.", "monitor reset?");
         else
             monitor.broadcastTransaction(txHash);
     }
@@ -583,7 +583,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
 
         if (monitor == null)
-            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, null, "Monitor not started for this network type" , "Network reset");
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, null, "Monitor not started for this network type " + blockchainNetworkType.toString(), "Network reset");
 
         /**
          * will get it from the specified agent monitoring the passed network.
@@ -697,7 +697,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         monitor  = runningAgents.get(blockchainNetworkType);
 
         if (monitor == null)
-            throw new CantStoreTransactionException(null, "Network Monitor not initialized for this blockchain network type. Retry later.", "monitor not started.");
+            throw new CantStoreTransactionException(null, "Network Monitor not initialized for this blockchain network type." + blockchainNetworkType.toString() + " Retry later.", "monitor not started.");
 
         try {
             monitor.storeBitcoinTransaction(tx, transactionId, commit);
@@ -744,7 +744,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
 
         if (monitor == null)
-            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "Monitor not started for this network type." , "Monitor reset");
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "Monitor not started for this network type." + blockchainNetworkType.toString(), "Monitor reset");
 
                 /**
                  * Will invalidate the transaction in the wallet
@@ -775,7 +775,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
 
         if (monitor == null)
-            throw new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, null, "Monitor not started for this network type. Retry later.", "monitor reset");
+            throw new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, null, "Monitor not started for this network type " + blockchainNetworkType.toString() + ". Retry later.", "monitor reset");
         else
             return monitor.getBlockchainConnectionStatus();
     }
