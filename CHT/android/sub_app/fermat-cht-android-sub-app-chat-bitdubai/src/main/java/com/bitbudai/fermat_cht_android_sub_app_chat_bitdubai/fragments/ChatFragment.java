@@ -56,11 +56,8 @@ public class ChatFragment
 
     // Fermat Managers
     private ChatManager chatManager;
-    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
     ChatActorCommunitySelectableIdentity chatIdentity;
 
@@ -76,22 +73,16 @@ public class ChatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            //chatSession = ((ChatSessionReferenceApp) appSession);
             chatManager = appSession.getModuleManager();
-            //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
 
             FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
             registerReceiver(fermatIntentFilter, new ChatBroadcastReceiver());
-//            FermatIntentFilter fermatIntentFilter2 = new FermatIntentFilter(BroadcasterType.NOTIFICATION_SERVICE);
-//            registerReceiver(fermatIntentFilter2, new ChatBroadcastReceiver());
 
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
             try {
                 chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
-                //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-                //chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 chatSettings = null;
             }
@@ -126,16 +117,6 @@ public class ChatFragment
             }
 
             toolbar = getToolbar();
-            //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-
-            //ChatAdapter chatAdapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-
-//            if(contactid!=null){
-//                if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
-//                {
-//                    setHasOptionsMenu(true);
-//                }else{ setHasOptionsMenu(false); }
-//            }
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -173,7 +154,7 @@ public class ChatFragment
                 .insertInto(container)
                 .addModuleManager(null)
                 .addErrorManager(errorManager)
-                .addChatSession(chatSession)
+                .addChatSession(null)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
                 .addChatSettings(chatSettings)
@@ -192,45 +173,13 @@ public class ChatFragment
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        menu.clear();
-//        super.onCreateOptionsMenu(menu, inflater);
-        // Inflate the menu items
-        //inflater.inflate(R.menu.chat_menu, menu);
-        // Locate the search item
-//        MenuItem searchItem = menu.findItem(fermatFragmentType.getOptionsMenu().getItem(1).getId());
-        MenuItem searchItem = menu.findItem(1);
-        if (searchItem!=null) {
-            searchView = (SearchView) searchItem.getActionView();
-            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    if (s.equals(searchView.getQuery().toString())) {
-                        adapterView.getFilter(s);
-                    }
-                    return false;
-                }
-            });
-            if (appSession.getData("filterString") != null) {
-                String filterString = (String) appSession.getData("filterString");
-                if (filterString.length() > 0) {
-                    searchView.setQuery(filterString, true);
-                    searchView.setIconified(false);
-                }
-            }
-        }
     }
 
     public void onOptionMenuPrepared(Menu menu){
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -290,7 +239,6 @@ public class ChatFragment
         return super.onOptionsItemSelected(item);
     }
 
-
     /**
      * Receiver class implemented
      */
@@ -299,17 +247,19 @@ public class ChatFragment
         @Override
         public void onReceive(FermatBundle fermatBundle) {
             try {
-                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
-//                Owner owner = new Owner();
-//                owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-//                fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
+                if(isAttached){
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+    //                Owner owner = new Owner();
+    //                owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+    //                fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
 
-                if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
-                    onUpdateViewUIThread();
-                }
+                    if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
+                        onUpdateViewUIThread();
+                    }
 
-                if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
-//                    fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
+                    if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
+    //                    fermatBundle.remove(Broadcaster.NOTIFICATION_TYPE);
+                    }
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,

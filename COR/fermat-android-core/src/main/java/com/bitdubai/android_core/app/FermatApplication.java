@@ -98,6 +98,7 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
         super.onTerminate();
     }
 
+
     @Override
     public void onCreate() {
         fermatFramework.onCreate();

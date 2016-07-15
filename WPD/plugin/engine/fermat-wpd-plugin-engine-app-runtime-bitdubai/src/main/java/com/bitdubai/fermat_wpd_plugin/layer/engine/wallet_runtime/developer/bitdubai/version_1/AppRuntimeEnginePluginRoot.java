@@ -4116,7 +4116,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         // Option Menu Item - Help
         optionMenuItem = new OptionMenuItem(HELP_ACTION);
         optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_ACTION, "bw_action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
-        //optionMenuItem.setLabel("Help");
+        optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -5370,6 +5370,25 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+         optionsMenu = new OptionsMenu();
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+
+         optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(3, "add_fermat_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("fermat_user");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(101);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(5, "add_user_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("add_user");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS); //show always icon
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
 

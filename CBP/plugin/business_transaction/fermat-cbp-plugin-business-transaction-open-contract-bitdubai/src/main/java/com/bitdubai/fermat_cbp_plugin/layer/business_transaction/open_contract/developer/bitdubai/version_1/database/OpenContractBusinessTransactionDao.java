@@ -326,6 +326,26 @@ public class OpenContractBusinessTransactionDao {
         }
     }
 
+    public boolean contractOfNegotiationExists(UUID negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+
+            DatabaseTable table = getDatabaseContractTable();
+            if (table == null)
+                throw new UnexpectedResultReturnedFromDatabaseException("Cant check if customer broker purchase tablet exists");
+
+            table.addUUIDFilter(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new UnexpectedResultReturnedFromDatabaseException(em, "Open Contract, Contract of Negotiation Not Exists", "Cant load " + OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Open Contract, Contract of Negotiation", "Cant load " + OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TABLE_NAME + " table in memory.");
+        }
+
+    }
+
     private String getValue(String key,
                             String keyColumn,
                             String valueColumn)
@@ -423,6 +443,28 @@ public class OpenContractBusinessTransactionDao {
                     
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
+    }
+
+    public void updateContractTransactionStatus(UUID transactionId,
+                                                ContractTransactionStatus contractTransactionStatus)
+            throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        try {
+
+            DatabaseTable table = getDatabaseContractTable();
+            table.addUUIDFilter(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            record.setStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, contractTransactionStatus.getCode());
+            table.updateRecord(record);
+
+        } catch (CantUpdateRecordException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        } catch (Exception e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }

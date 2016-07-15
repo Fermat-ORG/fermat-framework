@@ -71,4 +71,6 @@
     <color name="ccw_contract_status_normal">#6b7378</color>
     <color name="ccw_contract_status_about_to_expire">#B93B3C</color>
 
+    <color name="ccw_wizard_wallet_button_color">#E5007E</color>
+
 </resources>

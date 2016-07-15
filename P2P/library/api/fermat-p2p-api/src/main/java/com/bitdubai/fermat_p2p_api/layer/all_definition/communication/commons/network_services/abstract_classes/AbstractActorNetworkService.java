@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationUtils;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestActorFullPhotoException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
@@ -305,6 +306,15 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
             return this.getConnection().isActorOnline(publicKey);
         else
             return false;
+    }
+
+    @Override
+    public String getActorFullPhoto(final String publicKey) throws CantRequestActorFullPhotoException {
+
+        if (this.getConnection() != null)
+            return this.getConnection().getActorFullPhoto(publicKey);
+        else
+            return null;
     }
 
     protected final void onNetworkServiceRegistered() {

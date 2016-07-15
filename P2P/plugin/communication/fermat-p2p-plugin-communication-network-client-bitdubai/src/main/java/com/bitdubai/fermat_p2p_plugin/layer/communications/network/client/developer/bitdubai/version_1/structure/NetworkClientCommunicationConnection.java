@@ -352,22 +352,22 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             }
         } else { // if it is an external node, i will raise the event for all the calls done to this connection.
 
-            for (NetworkClientCall networkClientCall : activeCalls) {
-
-                /*
-                 * Create a raise a new event whit the NETWORK_CLIENT_CALL_CONNECTED
-                 */
-                FermatEvent actorCallConnected = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CALL_CONNECTED);
-                actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
-
-                ((NetworkClientCallConnectedEvent) actorCallConnected).setNetworkClientCall(networkClientCall);
-
-                /*
-                 * Raise the event
-                 */
-                System.out.println("NetworkClientCommunicationConnection - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
-                eventManager.raiseEvent(actorCallConnected);
-            }
+//            for (NetworkClientCall networkClientCall : activeCalls) {
+//
+//                /*
+//                 * Create a raise a new event whit the NETWORK_CLIENT_CALL_CONNECTED
+//                 */
+//                FermatEvent actorCallConnected = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CALL_CONNECTED);
+//                actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
+//
+//                ((NetworkClientCallConnectedEvent) actorCallConnected).setNetworkClientCall(networkClientCall);
+//
+//                /*
+//                 * Raise the event
+//                 */
+//                System.out.println("NetworkClientCommunicationConnection - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
+//                eventManager.raiseEvent(actorCallConnected);
+//            }
         }
     }
 
@@ -686,7 +686,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     public void sendPackageMessage(final PackageContent     packageContent              ,
                                    final NetworkServiceType networkServiceType          ,
                                    final String             destinationIdentityPublicKey) throws CantSendMessageException {
-
+        System.out.println("******* IS CONNECTED: "+ isConnected() + " - TRYING NO SEND = "+ packageContent.toJson());
         if (isConnected()){
 
             try {
@@ -851,7 +851,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             if(publicKey == null)
                 throw new Exception("The publicKey must not be null");
 
-            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/profiles/actor/photo/"+publicKey);
+            URL url = new URL("http://" + nodeUrl +  "/fermat/rest/api/v1/profiles/actor/photo/"+publicKey);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");

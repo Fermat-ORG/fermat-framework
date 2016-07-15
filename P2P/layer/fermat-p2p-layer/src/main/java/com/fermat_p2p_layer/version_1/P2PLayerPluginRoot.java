@@ -8,14 +8,18 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.P2PLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +36,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     private Map<String,AbstractNetworkService> networkServices;
     private NetworkChannel client;
 
+    private List<FermatEventListener> listenersAdded;
 
 
     public P2PLayerPluginRoot() {
@@ -41,7 +46,27 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     @Override
     public void start() throws CantStartPluginException {
         networkServices = new HashMap<>();
+        this.listenersAdded        = new CopyOnWriteArrayList<>();
+
+
+//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT);
+//        fermatEventListener.setEventHandler(new FermatEventHandler() {
+//            @Override
+//            public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+//                distributeMessage(NetworkClientNewMessageTransmitEvent)
+//            }
+//        });
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
         super.start();
+    }
+
+
+    private void distributeMessage(String networkType,NetworkClientNewMessageTransmitEvent fermatEvent){
+        if(networkServices.containsKey(networkType)){
+            networkServices.get(networkType).onMessageReceived(fermatEvent.getContent());
+        }
     }
 
     @Override
@@ -58,7 +83,7 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-                if(client.isConnected()){
+                if (client.isConnected()) {
                     for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
                         try {
                             abstractNetworkService.startConnection();
@@ -68,12 +93,12 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
                     }
                     try {
                         scheduledExecutorService.shutdownNow();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
-        },5,5, TimeUnit.SECONDS);
+        }, 5, 5, TimeUnit.SECONDS);
     }
 
 

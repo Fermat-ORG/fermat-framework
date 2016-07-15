@@ -249,7 +249,7 @@ public abstract class CryptoVault{
                 vaultSeedGenerator.load(CRYPTO_VAULT_SEED_FILENAME);
             } else
                 vaultSeedGenerator.load(CRYPTO_VAULT_SEED_FILENAME);
-            DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
+            DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getMnemonicCode(), null, "", vaultSeedGenerator.getCreationTimeSeconds());
             seed.check();
             return seed;
         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
@@ -293,6 +293,29 @@ public abstract class CryptoVault{
      * @throws CantImportSeedException
      */
     public void importSeedFromMnemonicCode(List<String> mNemonicCode, long seedCreationTimeInSeconds) throws CantImportSeedException{
+        //Make sure we are not importing the same seed we are currently using.
+        try {
+            DeterministicSeed currentSeed = this.getVaultSeed();
+            if (currentSeed.getCreationTimeSeconds() == seedCreationTimeInSeconds && currentSeed.getMnemonicCode().equals(mNemonicCode))
+                throw new CantImportSeedException(null, "Seed to be imported is the same as the actual seed we are using.", "User input error");
+        } catch (InvalidSeedException e) {
+            //if for some reason I couldn't get it, I will continue.
+        }
+
+        VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
+        vaultSeedGenerator.importSeed(mNemonicCode, seedCreationTimeInSeconds);
+    }
+
+    public void importSeedFromMnemonicCode(List<String> mNemonicCode, long seedCreationTimeInSeconds, byte[] bytes) throws CantImportSeedException{
+        //Make sure we are not importing the same seed we are currently using.
+        try {
+            DeterministicSeed currentSeed = this.getVaultSeed();
+            if (currentSeed.getCreationTimeSeconds() == seedCreationTimeInSeconds && currentSeed.getMnemonicCode().equals(mNemonicCode))
+                throw new CantImportSeedException(null, "Seed to be imported is the same as the actual seed we are using.", "User input error");
+        } catch (InvalidSeedException e) {
+            //if for some reason I couldn't get it, I will continue.
+        }
+
         VaultSeedGenerator vaultSeedGenerator = new VaultSeedGenerator(this.pluginFileSystem, this.pluginId, CRYPTO_VAULT_SEED_FILEPATH, CRYPTO_VAULT_SEED_FILENAME);
         vaultSeedGenerator.importSeed(mNemonicCode, seedCreationTimeInSeconds);
     }

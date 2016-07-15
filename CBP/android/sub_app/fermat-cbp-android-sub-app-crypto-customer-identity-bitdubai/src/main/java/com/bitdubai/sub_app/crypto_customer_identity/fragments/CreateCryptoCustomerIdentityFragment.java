@@ -101,24 +101,21 @@ implements FermatWorkerCallBack{
         super.onCreate(savedInstanceState);
 
 
-        //If we landed here from CryptoCustomerImageCropperFragment, save the cropped Image.
+        //If we landed here from CryptoCustomerImageCropperFragment or geo settings fragment
+        //Use the cropped image, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
             identityImageByteArray = (byte[]) appSession.getData(FragmentsCommons.CROPPED_IMAGE);
             cryptoCustomerBitmap = BitmapFactory.decodeByteArray(identityImageByteArray, 0, identityImageByteArray.length);
             appSession.removeData(FragmentsCommons.CROPPED_IMAGE);
-
-        } else if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null) {
-            cryptoCustomerBitmap = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
-            identityImageByteArray = ImagesUtils.toByteArray(cryptoCustomerBitmap);
-            appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
         }
 
+        //And the customer name, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.CUSTOMER_NAME) != null) {
             cryptoCustomerName = (String) appSession.getData(FragmentsCommons.CUSTOMER_NAME);
             appSession.removeData(FragmentsCommons.CUSTOMER_NAME);
         }
 
-        //Check if GPS is on and coordinate are fine
+        //Check if GPS is on and coordinates are fine
         try{
             location = appSession.getModuleManager().getLocation();
         }catch (Exception e){
@@ -134,9 +131,6 @@ implements FermatWorkerCallBack{
             settings.setGpsDialogEnabled(true);
             isGpsDialogEnable=true;
         }
-
-
-
 
         turnGPSOn();
     }
@@ -228,8 +222,10 @@ implements FermatWorkerCallBack{
                 return true;
 
             case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
+
+                //Save customer name and cropped image
                 appSession.setData(FragmentsCommons.CUSTOMER_NAME, mCustomerName.getText().toString());
-                appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoCustomerBitmap);
+                appSession.setData(FragmentsCommons.CROPPED_IMAGE, identityImageByteArray);
 
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY, appSession.getAppPublicKey());
                 return true;
@@ -555,6 +551,7 @@ implements FermatWorkerCallBack{
                     .setBody(R.string.cbp_customer_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_identity_customer)
+                    .setVIewColor(R.color.ccc_color_dialog_identity)
                     .build();
             pd.show();
             settings.setGpsDialogEnabled(false);

@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -30,6 +31,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.BitcoinFaucetManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.CryptoVaultSeed;
@@ -49,7 +52,9 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCurrencyCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
 
 import java.util.ArrayList;
@@ -209,7 +214,15 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      */
     @Override
     public CryptoAddress getAddress(BlockchainNetworkType blockchainNetworkType) {
-        return bitcoinCurrencyCryptoVaultManager.getAddress(blockchainNetworkType);
+        CryptoAddress cryptoAddress = bitcoinCurrencyCryptoVaultManager.getAddress(blockchainNetworkType);
+
+//        try {
+//            BitcoinFaucetManager.giveMeCoins(blockchainNetworkType, cryptoAddress, 500000000);
+//        } catch (CantGetCoinsFromFaucetException e) {
+//            e.printStackTrace();
+//        }
+
+        return cryptoAddress;
     }
 
     @Override
@@ -221,7 +234,6 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     public synchronized String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, CryptoAmount cryptoAmount, String op_Return,  BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
         return bitcoinCurrencyCryptoVaultManager.sendBitcoins(walletPublicKey, FermatTrId, addressTo, cryptoAmount, op_Return, true, blockchainNetworkType);
     }
-
 
 
     /**
@@ -284,9 +296,15 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     }
 
     @Override
-    public void importSeedFromMnemonicCode(List<String> mnemonicCode, long date) throws CantImportSeedException {
+    public void importSeedFromMnemonicCode(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType, List<String> mnemonicCode, long date) throws CantImportSeedException {
+        // forces the import of the seed which creates a new file with the seed information
         bitcoinCurrencyCryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode, date);
+        // creates a new hierarchy from the imported seed, calls the maintainer to derive keys and sends them
+        // to the crypto network.
         bitcoinCurrencyCryptoVaultManager.forceImportedSeedToCryptoNetwork();
+
+        // add a registry in the database so that the monitoring agent will control this.
+        bitcoinCurrencyCryptoVaultManager.sendImportedSeedFundsToWallet(date, destinationAddress, blockchainNetworkType);
     }
 
     /**
@@ -344,4 +362,6 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
             throw exception;
         }
     }
+
+
 }

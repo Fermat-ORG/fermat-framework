@@ -13,4 +13,6 @@
     <string name="wallet_status_open">UPGRADE</string>
     <string name="wallet_more_details_button">READ MORE</string>
     <string name="no_preview_images">No Preview Images</string>
+    <string name="description_text">You are not connected to the fermat network.</string>
+    <string name="second_description_text">to the fermat network.</string>
 </resources>

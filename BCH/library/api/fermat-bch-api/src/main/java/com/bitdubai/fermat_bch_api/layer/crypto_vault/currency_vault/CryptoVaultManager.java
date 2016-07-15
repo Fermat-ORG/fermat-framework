@@ -84,12 +84,14 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
     CryptoVaultSeed exportCryptoVaultSeed();
 
     /**
-     * Imports the passed seed into the vault.
-     * @param mnemonicCode the mnemonic Code passed by the user
-     * @param date the date this seed was generated.
+     * * Imports the passed seed into the vault.
+     * @param destinationAddress
+     * @param blockchainNetworkType
+     * @param mnemonicCode
+     * @param date
      * @throws CantImportSeedException
      */
-    void importSeedFromMnemonicCode(List<String> mnemonicCode,long date) throws CantImportSeedException;
+    void importSeedFromMnemonicCode(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType, List<String> mnemonicCode,long date) throws CantImportSeedException;
 
 
     /**
@@ -125,4 +127,5 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws CantStoreBitcoinTransactionException
      */
     void saveTransaction(DraftTransaction draftTransaction) throws CantStoreBitcoinTransactionException;
+
 }

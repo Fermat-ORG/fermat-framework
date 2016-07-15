@@ -24,6 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -64,6 +66,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
+    private String feeLevel = "";
+    private String feeOrigin = "";
 
 
     BlockchainNetworkType blockchainNetworkType;
@@ -106,6 +110,11 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             try {
                 bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+                if (bitcoinWalletSettings.getFeedLevel() == null)
+                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                else
+                    feeLevel = bitcoinWalletSettings.getFeedLevel();
             }catch (Exception e){
 
             }
@@ -140,6 +149,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -282,7 +297,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey());
+                cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                        BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 

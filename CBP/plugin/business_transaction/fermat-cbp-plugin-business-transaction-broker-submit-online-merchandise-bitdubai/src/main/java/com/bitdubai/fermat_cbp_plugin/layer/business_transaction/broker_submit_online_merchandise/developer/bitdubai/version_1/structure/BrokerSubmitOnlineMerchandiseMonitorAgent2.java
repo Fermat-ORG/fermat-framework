@@ -169,25 +169,29 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToDeStockTransactionList = dao.getPendingDeStockTransactionList();
             for (BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList) {
-                CryptoMoneyDeStockRecord cryptoMoneyDeStockRecord = new CryptoMoneyDeStockRecord(pendingToDeStockTransaction);
+                try{
+                    CryptoMoneyDeStockRecord cryptoMoneyDeStockRecord = new CryptoMoneyDeStockRecord(pendingToDeStockTransaction);
 
-                //Execute the de stock transaction.
-                cryptoMoneyDeStockManager.createTransactionDestock(
-                        cryptoMoneyDeStockRecord.getPublicKeyActor(),
-                        cryptoMoneyDeStockRecord.getCryptoCurrency(),
-                        cryptoMoneyDeStockRecord.getCbpWalletPublicKey(),
-                        cryptoMoneyDeStockRecord.getCryptoWalletPublicKey(),
-                        cryptoMoneyDeStockRecord.getAmount(),
-                        cryptoMoneyDeStockRecord.getMemo(),
-                        cryptoMoneyDeStockRecord.getPriceReference(),
-                        cryptoMoneyDeStockRecord.getOriginTransaction(),
-                        pendingToDeStockTransaction.getContractHash(),
-                        cryptoMoneyDeStockRecord.getBlockchainNetworkType(),
-                        cryptoMoneyDeStockRecord.getFee(),
-                        cryptoMoneyDeStockRecord.getFeeOrigin()); //TODO de Manuel: crear un setting para configuar esto
+                    //Execute the de stock transaction.
+                    cryptoMoneyDeStockManager.createTransactionDestock(
+                            cryptoMoneyDeStockRecord.getPublicKeyActor(),
+                            cryptoMoneyDeStockRecord.getCryptoCurrency(),
+                            cryptoMoneyDeStockRecord.getCbpWalletPublicKey(),
+                            cryptoMoneyDeStockRecord.getCryptoWalletPublicKey(),
+                            cryptoMoneyDeStockRecord.getAmount(),
+                            cryptoMoneyDeStockRecord.getMemo(),
+                            cryptoMoneyDeStockRecord.getPriceReference(),
+                            cryptoMoneyDeStockRecord.getOriginTransaction(),
+                            pendingToDeStockTransaction.getContractHash(),
+                            cryptoMoneyDeStockRecord.getBlockchainNetworkType(),
+                            cryptoMoneyDeStockRecord.getFee(),
+                            cryptoMoneyDeStockRecord.getFeeOrigin()); //TODO de Manuel: crear un setting para configuar esto
 
-                pendingToDeStockTransaction.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE);
-                dao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
+                    pendingToDeStockTransaction.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE);
+                    dao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -195,45 +199,50 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<String> pendingToSubmitCrypto = dao.getPendingToSubmitCryptoList();
             for (String pendingContractHash : pendingToSubmitCrypto) {
-                BusinessTransactionRecord businessTransactionRecord = dao.getBrokerBusinessTransactionRecord(pendingContractHash);
+                try{
+                    BusinessTransactionRecord businessTransactionRecord = dao.getBrokerBusinessTransactionRecord(pendingContractHash);
 
-                //I'll check if the merchandise was sent in a previous loop
-                contractTransactionStatus = businessTransactionRecord
-                        .getContractTransactionStatus();
-                if (contractTransactionStatus != ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE) {
-                    /**
-                     * If the contractTransactionStatus is different to PENDING_SUBMIT_ONLINE_MERCHANDISE means
-                     * that the merchandise submit through the Crypto* Wallet was done.
-                     * We don't want to send multiple payments, we will ignore this transaction.
-                     */
-                    continue;
+                    //I'll check if the merchandise was sent in a previous loop
+                    contractTransactionStatus = businessTransactionRecord
+                            .getContractTransactionStatus();
+                    if (contractTransactionStatus != ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE) {
+                        /**
+                         * If the contractTransactionStatus is different to PENDING_SUBMIT_ONLINE_MERCHANDISE means
+                         * that the merchandise submit through the Crypto* Wallet was done.
+                         * We don't want to send multiple payments, we will ignore this transaction.
+                         */
+                        continue;
+                    }
+
+                    ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                    IntraWalletUserIdentity intraUser = intraUsers.get(0);
+
+                    System.out.println("*************************************************************************************************");
+                    System.out.println("BROKER_SUBMIT_ONLINE_MERCHANDISE - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
+                    System.out.println("*************************************************************************************************");
+                    UUID outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
+                            businessTransactionRecord.getExternalWalletPublicKey(),
+                            businessTransactionRecord.getCryptoAddress(),
+                            businessTransactionRecord.getCryptoAmount(),
+                            "Merchandise sent from a Broker",
+                            intraUser.getPublicKey(),
+                            businessTransactionRecord.getActorPublicKey(),
+                            Actors.CBP_CRYPTO_BROKER,
+                            Actors.INTRA_USER,
+                            getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
+                            businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
+                            businessTransactionRecord.getCryptoCurrency(),
+                            businessTransactionRecord.getFee(),
+                            businessTransactionRecord.getFeeOrigin());
+
+                    //Updating the business transaction record
+                    businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());
+                    businessTransactionRecord.setContractTransactionStatus(CRYPTO_MERCHANDISE_SUBMITTED);
+                    dao.updateBusinessTransactionRecord(businessTransactionRecord);
+                } catch (Exception e){
+                    reportError(e);
                 }
 
-                ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
-                IntraWalletUserIdentity intraUser = intraUsers.get(0);
-
-                System.out.println("*************************************************************************************************");
-                System.out.println("BROKER_SUBMIT_ONLINE_MERCHANDISE - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
-                System.out.println("*************************************************************************************************");
-                UUID outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
-                        businessTransactionRecord.getExternalWalletPublicKey(),
-                        businessTransactionRecord.getCryptoAddress(),
-                        businessTransactionRecord.getCryptoAmount(),
-                        "Merchandise sent from a Broker",
-                        intraUser.getPublicKey(),
-                        businessTransactionRecord.getActorPublicKey(),
-                        Actors.CBP_CRYPTO_BROKER,
-                        Actors.INTRA_USER,
-                        getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
-                        businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
-                        businessTransactionRecord.getCryptoCurrency(),
-                        businessTransactionRecord.getFee(),
-                        businessTransactionRecord.getFeeOrigin());
-
-                //Updating the business transaction record
-                businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());
-                businessTransactionRecord.setContractTransactionStatus(CRYPTO_MERCHANDISE_SUBMITTED);
-                dao.updateBusinessTransactionRecord(businessTransactionRecord);
             }
 
             /**
@@ -241,20 +250,25 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                contractHash = pendingToSubmitNotificationRecord.getContractHash();
-                transactionTransmissionManager.sendContractStatusNotification(
-                        pendingToSubmitNotificationRecord.getBrokerPublicKey(),
-                        pendingToSubmitNotificationRecord.getCustomerPublicKey(),
-                        contractHash,
-                        pendingToSubmitNotificationRecord.getTransactionId(),
-                        ONLINE_MERCHANDISE_SUBMITTED,
-                        Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                try{
+                    contractHash = pendingToSubmitNotificationRecord.getContractHash();
+                    transactionTransmissionManager.sendContractStatusNotification(
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
+                            pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            contractHash,
+                            pendingToSubmitNotificationRecord.getTransactionId(),
+                            ONLINE_MERCHANDISE_SUBMITTED,
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
-                //Updating the business transaction record
-                pendingToSubmitNotificationRecord.setContractTransactionStatus(ONLINE_MERCHANDISE_SUBMITTED);
-                dao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
+                    //Updating the business transaction record
+                    pendingToSubmitNotificationRecord.setContractTransactionStatus(ONLINE_MERCHANDISE_SUBMITTED);
+                    dao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             /**
@@ -262,22 +276,27 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmationList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                contractHash = pendingToSubmitConfirmationRecord.getContractHash();
+                try{
+                    contractHash = pendingToSubmitConfirmationRecord.getContractHash();
 
-                transactionTransmissionManager.confirmNotificationReception(
-                        pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
-                        pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
-                        contractHash,
-                        pendingToSubmitConfirmationRecord.getTransactionId(),
-                        Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                    transactionTransmissionManager.confirmNotificationReception(
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            contractHash,
+                            pendingToSubmitConfirmationRecord.getTransactionId(),
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
-                //Updating the business transaction record
-                pendingToSubmitConfirmationRecord.setContractTransactionStatus(CONFIRM_ONLINE_CONSIGNMENT);
-                dao.updateBusinessTransactionRecord(pendingToSubmitConfirmationRecord);
+                    //Updating the business transaction record
+                    pendingToSubmitConfirmationRecord.setContractTransactionStatus(CONFIRM_ONLINE_CONSIGNMENT);
+                    dao.updateBusinessTransactionRecord(pendingToSubmitConfirmationRecord);
 
-                raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
+                    raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             // from here on, all this code checks the crypto status of a transaction and updates that crypto status into the contract.
@@ -287,7 +306,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingTransactions = dao.getPendingCryptoTransactionList();
             for (BusinessTransactionRecord onlinePaymentRecord : pendingTransactions) {
-                checkPendingTransaction(onlinePaymentRecord);
+                try{
+                    checkPendingTransaction(onlinePaymentRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -295,9 +318,13 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingSubmitContractList = dao.getPendingToSubmitCryptoStatusList();
             for (BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractList) {
-                CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(pendingSubmitContractRecord.getTransactionHash());
-                pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
-                dao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
+                try{
+                    CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(pendingSubmitContractRecord.getTransactionHash());
+                    pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
+                    dao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -305,9 +332,13 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList = dao.getOnCryptoNetworkCryptoStatusList();
             for (BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList) {
-                CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onCryptoNetworkContractRecord.getTransactionHash());
-                onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
-                dao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
+                try{
+                    CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onCryptoNetworkContractRecord.getTransactionHash());
+                    onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
+                    dao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
             }
 
             /**
@@ -315,9 +346,14 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnBlockchainContractList = dao.getOnBlockchainCryptoStatusList();
             for (BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList) {
-                onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
-                onBlockchainContractRecord.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION);
-                dao.updateBusinessTransactionRecord(onBlockchainContractRecord);
+                try{
+                    onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
+                    onBlockchainContractRecord.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION);
+                    dao.updateBusinessTransactionRecord(onBlockchainContractRecord);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
             //END of the checking process for the crypto status
@@ -327,19 +363,15 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent2
              */
             List<String> pendingEventsIdList = dao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                checkPendingEvent(eventId);
+                try{
+                    checkPendingEvent(eventId);
+                } catch (Exception e){
+                    reportError(e);
+                }
+
             }
 
-        } catch (CantGetContractListException |
-                CantUpdateRecordException |
-                CantListIntraWalletUsersException |
-                CantConfirmNotificationReceptionException |
-                CantCreateCryptoMoneyDestockException |
-                OutgoingIntraActorCantSendFundsExceptions |
-                OutgoingIntraActorInsufficientFundsException |
-                OutgoingIntraActorCantGetCryptoStatusException |
-                CantSendContractNewStatusNotificationException |
-                UnexpectedResultReturnedFromDatabaseException e) {
+        } catch (Exception e) {
             reportError(e);
         }
     }

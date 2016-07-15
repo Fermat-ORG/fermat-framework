@@ -46,16 +46,16 @@ import java.util.UUID;
  */
 public final class ActorCustomerExtraDataEventActions {
 
-    private final CryptoBrokerManager                cryptoBrokerANSManager            ;
-    private final CryptoCustomerActorDao             cryptoCustomerActorDao            ;
+    private final CryptoBrokerManager cryptoBrokerANSManager;
+    private final CryptoCustomerActorDao cryptoCustomerActorDao;
     private final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
-    public ActorCustomerExtraDataEventActions(final CryptoBrokerManager                cryptoBrokerANSManager            ,
-                                              final CryptoCustomerActorDao             cryptoCustomerActorDao            ,
+    public ActorCustomerExtraDataEventActions(final CryptoBrokerManager cryptoBrokerANSManager,
+                                              final CryptoCustomerActorDao cryptoCustomerActorDao,
                                               final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager) {
 
-        this.cryptoBrokerANSManager             = cryptoBrokerANSManager            ;
-        this.cryptoCustomerActorDao             = cryptoCustomerActorDao            ;
+        this.cryptoBrokerANSManager = cryptoBrokerANSManager;
+        this.cryptoCustomerActorDao = cryptoCustomerActorDao;
         this.cryptoBrokerActorConnectionManager = cryptoBrokerActorConnectionManager;
     }
 
@@ -77,15 +77,15 @@ public final class ActorCustomerExtraDataEventActions {
 
             Collection<CustomerIdentityWalletRelationship> relationships = cryptoCustomerActorDao.getAllCustomerIdentityWalletRelationship();
 
-            for(CustomerIdentityWalletRelationship relationship : relationships){
+            for (CustomerIdentityWalletRelationship relationship : relationships) {
 
                 List<CryptoBrokerActorConnection> connections = getBrokersConnected(relationship);
 
-                for(CryptoBrokerActorConnection broker : connections){
+                for (CryptoBrokerActorConnection broker : connections) {
 
-                    if( !this.cryptoCustomerActorDao.existBrokerExtraData(relationship.getCryptoCustomer(), broker.getPublicKey()) ) {
+                    if (!this.cryptoCustomerActorDao.existBrokerExtraData(relationship.getCryptoCustomer(), broker.getPublicKey())) {
 
-                        if( !this.cryptoCustomerActorDao.existBrokerExtraData(broker.getPublicKey(), relationship.getCryptoCustomer()) ){
+                        if (!this.cryptoCustomerActorDao.existBrokerExtraData(broker.getPublicKey(), relationship.getCryptoCustomer())) {
 
                             ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage(), 0, GeoFrequency.NONE);
 
@@ -106,7 +106,7 @@ public final class ActorCustomerExtraDataEventActions {
         } catch (CantCheckIfExistsException e) {
 
             throw new CantHandleNewConnectionEventException(e, "", "Error in DAO trying to check if the extra data for the broker exists.");
-        }  catch (CantCreateNewActorExtraDataException e) {
+        } catch (CantCreateNewActorExtraDataException e) {
 
             throw new CantHandleNewConnectionEventException(e, "", "Error trying to create a new actor extra data for requesting the quotes.");
         } catch (CantRequestQuotesException e) {
@@ -147,19 +147,19 @@ public final class ActorCustomerExtraDataEventActions {
             for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
 
                 Collection<QuotesExtraData> quotes = new ArrayList<>();
-                ActorIdentity identity = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null, 0, GeoFrequency.NONE);
+                ActorIdentity identityBroker = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null, 0, GeoFrequency.NONE);
 
                 for (CryptoBrokerQuote quo : extraDate.listInformation()) {
                     QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), quo.getMerchandise(), quo.getPaymentCurrency(), quo.getPrice(), AdapterPlatformsSupported.getPlatformsSupported(quo.getSupportedPlatforms()));
                     quotes.add(quote);
                 }
 
-                ActorExtraData actorExtraData = new ActorExtraDataInformation(extraDate.getRequesterPublicKey(), identity, quotes, null);
+                ActorExtraData actorExtraData = new ActorExtraDataInformation(extraDate.getRequesterPublicKey(), identityBroker, quotes, null);
 
-                if( this.cryptoCustomerActorDao.existBrokerExtraDataQuotes( extraDate.getRequesterPublicKey(), identity.getPublicKey() ) ){
+                if (this.cryptoCustomerActorDao.existBrokerExtraDataQuotes(identityBroker.getPublicKey(), extraDate.getRequesterPublicKey())) {
 
                     this.cryptoCustomerActorDao.updateQuotes(actorExtraData);
-                }else{
+                } else {
 
                     this.cryptoCustomerActorDao.createActorQuotes(actorExtraData);
                 }

@@ -23,7 +23,11 @@ public class BitcoinWalletSearcher extends ResourceSearcher {
                 resId = R.drawable.sendbtc_icon;
                 break;
             case 3:
+                resId = R.drawable.icon_comunity_action_bar;
+                break;
 
+            case 5:
+                resId = R.drawable.add_contact_icon;
                 break;
 
         }
