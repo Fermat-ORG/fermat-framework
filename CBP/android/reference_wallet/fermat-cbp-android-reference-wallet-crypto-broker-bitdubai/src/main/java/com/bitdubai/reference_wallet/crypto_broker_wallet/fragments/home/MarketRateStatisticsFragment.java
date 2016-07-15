@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
@@ -28,6 +29,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +49,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
     private IndexInfoSummary indexInfo;
     private ReferenceAppFermatSession session;
     private Activity activity;
+    private NumberFormat numberFormat= DecimalFormat.getInstance();
 
     public static MarketRateStatisticsFragment newInstance() {
         return new MarketRateStatisticsFragment();
@@ -60,12 +65,33 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
         final FermatTextView currencies = (FermatTextView) rootView.findViewById(R.id.cbw_currencies);
         final FermatTextView providerName = (FermatTextView) rootView.findViewById(R.id.cbw_provider_name);
 
-        providerName.setText(this.providerName);
-        currencies.setText(currencyPair);
-        buyPrice.setText(buy);
-        sellPrice.setText(sell);
 
-        configChart(rootView);
+        if(indexInfo.getExchangeRateData().getToCurrency().getType().name().equals(PaymentType.CRYPTO_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(8);
+        }else{
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
+        try {
+
+            String buyAmount=buy.split(" ")[1];
+            String buyCurrency=buy.split(" ")[0];
+            String sellAmount=sell.split(" ")[1];
+            String sellCurrency=sell.split(" ")[0];
+            String buyWithFormat= numberFormat.format(numberFormat.parse(buyAmount));
+            String sellWithFormat= numberFormat.format(numberFormat.parse(sellAmount));
+            providerName.setText(this.providerName);
+            currencies.setText(currencyPair);
+            buyPrice.setText(buyCurrency+" "+buyWithFormat);
+            sellPrice.setText(sellCurrency+" "+sellWithFormat);
+
+            configChart(rootView);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
 
         return rootView;
     }

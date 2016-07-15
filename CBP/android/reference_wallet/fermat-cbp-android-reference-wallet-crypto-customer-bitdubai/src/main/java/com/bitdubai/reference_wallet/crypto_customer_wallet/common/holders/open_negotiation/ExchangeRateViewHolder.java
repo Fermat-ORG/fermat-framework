@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -34,7 +35,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateText;
     private FermatButton yourExchangeRateValue;
     private List<IndexInfoSummary> marketRateList;
-    private NumberFormat formatter;
+    private NumberFormat numberFormat;
 
 
     public ExchangeRateViewHolder(View itemView) {
@@ -48,8 +49,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         markerRateText = (TextView) itemView.findViewById(R.id.ccw_market_rate_text);
         yourExchangeRateValue.setOnClickListener(this);
 
-        formatter = DecimalFormat.getInstance();
-        formatter.setMaximumFractionDigits(8);
+        numberFormat = DecimalFormat.getInstance();
+
     //    formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
@@ -61,9 +62,13 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-
+        if(CryptoCurrency.codeExists(currencyToPay.getValue())){
+            numberFormat.setMaximumFractionDigits(8);
+        }else{
+            numberFormat.setMaximumFractionDigits(2);
+        }
         BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
-        String marketExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue());
+        String marketExchangeRateStr = numberFormat.format(marketRateReferenceValue.doubleValue());
 
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
