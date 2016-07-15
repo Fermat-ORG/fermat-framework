@@ -9,6 +9,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Map;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
@@ -26,6 +28,7 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     private FermatTextView currencyTextValue;
     private FermatTextView amountText;
     private FermatButton amountValue;
+    NumberFormat numberFormat= DecimalFormat.getInstance();
 
     public AmountViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
@@ -43,7 +46,13 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
         final ClauseType clauseType = (getHolderType() == TYPE_AMOUNT_TO_SELL) ? CUSTOMER_CURRENCY : BROKER_CURRENCY;
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
         currencyTextValue.setText(clauses.get(clauseType).getValue());
-        amountValue.setText(clause.getValue());
+
+        if(clause.getValue().equals("0.0") || clause.getValue().equals("0")){
+            amountValue.setText("0.0");
+        }else{
+            amountValue.setText(numberFormat.format(Double.valueOf(clause.getValue())));
+        }
+
     }
 
     @Override

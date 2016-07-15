@@ -18,6 +18,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Map;
 
 
@@ -30,6 +32,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private TextView buyingText;
     private FermatButton buyingValue;
     private boolean paymentBuy;
+    NumberFormat numberFormat=DecimalFormat.getInstance();
 
 
 
@@ -42,7 +45,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         buyingText              = (TextView) itemView.findViewById(R.id.ccw_buying_text);
         buyingValue             = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
 
-
+        //This not limit the decimal, it just to left the complete decimal that came in clause
 
         buyingValue.setOnClickListener(this);
     }
@@ -55,7 +58,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
 
 
-
+        numberFormat.setMaximumFractionDigits(8);
 
         int buyingTextValue = R.string.buying_text;
 
@@ -69,7 +72,14 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
         buyingText.setText(buyingTextValue);
-        buyingValue.setText(clause.getValue());
+    //    buyingValue.setText(clause.getValue());
+    //lostwood
+        if(clause.getValue().equals("0.0") || clause.getValue().equals("0")){
+            buyingValue.setText("0.0");
+        }else{
+            buyingValue.setText(numberFormat.format(Double.valueOf(clause.getValue())));
+        }
+
     }
 
     @Override
