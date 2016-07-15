@@ -76,7 +76,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.bitdubai.wallet:fermat-pip-api:1.0.2'
-    compile project(':fermat-api')
+//    compile project(':fermat-api')
     compile project(':fermat-pip-api')
 
 //    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"

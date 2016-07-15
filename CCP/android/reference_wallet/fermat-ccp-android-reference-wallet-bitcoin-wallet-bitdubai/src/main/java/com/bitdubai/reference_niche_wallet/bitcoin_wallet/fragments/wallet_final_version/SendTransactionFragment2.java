@@ -36,6 +36,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -54,6 +55,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.BitcoinFaucetManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.faucet.CantGetCoinsFromFaucetException;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -64,6 +66,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -77,6 +80,14 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.Presentat
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -746,7 +757,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     @Override
                     public void run() {
 
-                        final String[] finalResponse = {""};
+                        String finalResponse = "";
                         CryptoWalletWalletContact cryptoWalletWalletContact = null;
 
                         try {
@@ -769,11 +780,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                             } catch (CantFindWalletContactException |CantCreateWalletContactException e) {
 
-                                    finalResponse[0] = "transaccion fallida";
+                                    finalResponse = "transaccion fallida";
                                     e.printStackTrace();
 
                             } catch (Exception e) {
-                                finalResponse[0] = "transaccion fallida";
+                                finalResponse = "transaccion fallida";
                                 e.printStackTrace();
                             }
 
@@ -785,7 +796,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                     try {
                                         moduleManager.testNetGiveMeCoins(blockchainNetworkType, getWalletAddress(cryptoWalletWalletContact1[0].getActorPublicKey()));
                                     } catch (CantGetCoinsFromFaucetException e) {
-                                        finalResponse[0] = "transaccion fallida";
+
                                         e.printStackTrace();
                                     }
 
@@ -793,10 +804,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             });
 
                       } catch (Exception e) {
-                            finalResponse[0] = "transaccion fallida";
+                            finalResponse = "transaccion fallida";
                             e.printStackTrace();
                         }
-                        final String result = finalResponse[0];
+                        final String result = finalResponse;
 
 
                         mHandler.post(new Runnable() {

@@ -40,7 +40,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchy extends KeyHierarchy {
+public class VaultKeyHierarchy extends KeyHierarchy {
 
     /**
      * Holds the list of Accounts and master keys of the hierarchy

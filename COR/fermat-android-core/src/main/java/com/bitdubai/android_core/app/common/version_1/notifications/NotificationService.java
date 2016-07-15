@@ -87,21 +87,43 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
         if(action.equals("cancel")){
-            String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
-            cancelNotification(appPublicKey);
+            int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+            cancelNotification(notificationId);
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void cancelNotification(String appPublicKey) {
+//    public void cancelNotification(String appPublicKey) {
+//        NotificationManager notificationManager = (NotificationManager)
+//                getSystemService(NOTIFICATION_SERVICE);
+//        if(lstNotifications.containsKey(appPublicKey)) {
+//            int id = lstNotifications.get(appPublicKey);
+//            notificationManager.cancel(id);
+//        }else {
+//            Log.i(LOG_TAG, "Cancel notificación arrive with no public key");
+//        }
+//    }
+
+    public void cancelNotification(FermatBundle fermatBundle) {
+        String sourcePlugin = fermatBundle.getString(SOURCE_PLUGIN);
+        int notificationId = fermatBundle.getInt(NOTIFICATION_ID);
+
+        if(!dataIsValid(sourcePlugin,notificationId))return;
+
+        char[] letters = sourcePlugin.toCharArray();
+        int leeterCount = 0;
+        for (char letter : letters) {
+            leeterCount+= letter;
+        }
+        notificationId = notificationId+leeterCount;
+
+        cancelNotification(notificationId);
+    }
+
+    public void cancelNotification(int notificationId) {
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
-        if(lstNotifications.containsKey(appPublicKey)) {
-            int id = lstNotifications.get(appPublicKey);
-            notificationManager.cancel(id);
-        }else {
-            Log.i(LOG_TAG, "Cancel notificación arrive with no public key");
-        }
+        notificationManager.cancel(notificationId);
     }
 
     public void pushNotification(String appPublicKey,Notification notification) {
@@ -271,7 +293,7 @@ public class NotificationService extends Service {
                     intent.setAction("org.fermat.APP_LAUNCHER");
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN, notificationPainter.getActivityCodeResult());
                     PendingIntent pi = PendingIntent
-                            .getBroadcast(this, 0, intent, 0);
+                            .getBroadcast(this, notificationId, intent, PendingIntent.FLAG_ONE_SHOT);
                     if (remoteViews != null) {
                         builder = new Notification.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setTicker("ticker")
                                 .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
@@ -329,6 +351,19 @@ public class NotificationService extends Service {
             Log.e(LOG_TAG, "Notification Owner null");
             flag =false;
         }
+        if(notificationId==0) {
+            Log.e(LOG_TAG, "Notification notificationId 0");
+            flag =false;
+        }
+        if(sourcePlugin==null) {
+            Log.e(LOG_TAG, "Notification source plugin null ");
+            flag =false;
+        }
+        return flag;
+    }
+
+    private boolean dataIsValid(String sourcePlugin,int notificationId){
+        boolean flag = true;
         if(notificationId==0) {
             Log.e(LOG_TAG, "Notification notificationId 0");
             flag =false;
