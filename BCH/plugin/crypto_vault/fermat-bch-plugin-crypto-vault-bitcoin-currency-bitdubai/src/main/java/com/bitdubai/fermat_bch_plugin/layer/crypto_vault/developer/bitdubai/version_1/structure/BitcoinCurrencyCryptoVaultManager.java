@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.AbstractAgent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
@@ -32,10 +34,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransacti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.util.CryptoAmount;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.seed_management.ImportedSeed;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.seed_management.ImportedSeedFundsManagerAgent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.util.BitcoinBlockchainNetworkSelector;
 
 import org.bitcoinj.core.Address;
@@ -55,6 +60,7 @@ import org.bitcoinj.wallet.WalletTransaction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by rodrigo on 12/17/15.
@@ -66,6 +72,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
     UUID pluginId;
     VaultKeyHierarchyGenerator vaultKeyHierarchyGenerator;
     BitcoinCurrencyCryptoVaultDao dao;
+    ImportedSeedFundsManagerAgent importedSeedFundsManagerAgent;
 
 
     /**
@@ -113,7 +120,20 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         vaultKeyHierarchyGenerator.run();
         System.out.println("***CryptoVault*** Main seed: " + this.getVaultSeed().toString());
 
+        /**
+         * If the importing process was interrupted, I will force them. The cryptoNetwork will decide if they are missing or not.
+         */
         forceImportedSeedToCryptoNetwork();
+
+        importedSeedFundsManagerAgent = new ImportedSeedFundsManagerAgent(2, TimeUnit.MINUTES, this.bitcoinNetworkManager, getDao(), this.pluginDatabaseSystem, this.pluginId, this.pluginFileSystem, this.BITCOIN_VAULT_SEED_FILEPATH, this.BITCOIN_VAULT_SEED_FILENAME);
+        try {
+            importedSeedFundsManagerAgent.start();
+            System.out.println("***CryptoVault*** ImportedSeedFundsMAnager Agent started...");
+        } catch (CantStartAgentException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
@@ -324,6 +344,12 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         }
 
         wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
+
+        // I will import all the generated keys of any imported seed
+        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
+            VaultKeyHierarchyGenerator importedSeedHierarchy = new VaultKeyHierarchyGenerator(importedSeed, true, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+            wallet.importKeys(importedSeedHierarchy.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
+        }
 
         /**
          * Add transactions to the wallet that we can use to spend.
@@ -705,6 +731,31 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             System.out.println("***CryptoVault*** Imported Seed  Generator: " + importedSeed.toString());
             VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
             importedSeedHierarchyGenerator.run();
+        }
+
+
+    }
+
+
+    /**
+     * After a seed has been imported and transactions discovered, temporarelly we need to send those funds
+     * into our own wallet. This method will get all the available funds of the imported seed and send them to the
+     * passed address.
+     * @param seedDate
+     * @param destinationAddress
+     * @param blockchainNetworkType
+     * @throws InsufficientCryptoFundsException
+     * @throws InvalidSendToAddressException
+     * @throws CouldNotSendMoneyException
+     * @throws CryptoTransactionAlreadySentException
+     */
+    public void sendImportedSeedFundsToWallet(long seedDate, CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType)  {
+        ImportedSeed importedSeed = new ImportedSeed(seedDate, destinationAddress);
+        importedSeed.setBlockchainNetworkType(blockchainNetworkType);
+        try {
+            this.dao.addNewImportedSeed(importedSeed);
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
         }
     }
 }

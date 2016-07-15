@@ -175,6 +175,7 @@ public class BitcoinCurrencyCryptoVaultDatabaseFactory implements DealsWithPlugi
             table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_WALLET_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
             table.addIndex(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_FIRST_KEY_COLUMN);
 

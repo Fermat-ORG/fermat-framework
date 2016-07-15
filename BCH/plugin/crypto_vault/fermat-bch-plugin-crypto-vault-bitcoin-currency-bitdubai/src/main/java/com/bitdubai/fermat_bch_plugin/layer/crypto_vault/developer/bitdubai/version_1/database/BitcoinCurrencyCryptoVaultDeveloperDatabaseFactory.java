@@ -211,6 +211,7 @@ public class BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory {//implements De
         imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_NETWORK_TYPE_COLUMN_NAME);
         imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_WALLET_ADDRESS_COLUMN_NAME);
         imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_BALANCE_COLUMN_NAME);
+        imported_seedColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME);
         /**
          * Table Imported_Seeds addition.
          */

@@ -394,4 +394,10 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
 //            throw exception;
 //        }
 //    }
+
+
+    @Override
+    public void sendImportedSeedFundsToWallet(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+
+    }
 }

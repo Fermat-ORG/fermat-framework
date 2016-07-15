@@ -83,6 +83,7 @@ public class BitcoinCurrencyCryptoVaultDatabaseConstants {
     static final String IMPORTED_SEED_WALLET_ADDRESS_COLUMN_NAME = "wallet_address";
     static final String IMPORTED_SEED_NETWORK_TYPE_COLUMN_NAME = "network_type";
     static final String IMPORTED_SEED_BALANCE_COLUMN_NAME = "balance";
+    static final String IMPORTED_SEED_STATUS_COLUMN_NAME = "status";
 
     static final String IMPORTED_SEED_FIRST_KEY_COLUMN = "seed_date";
 
