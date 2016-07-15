@@ -141,8 +141,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
                                 showEmpty(false, emptyView);
                             }
                         }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
+                    }
+                       // showEmpty(adapter.getSize() < 0, emptyView);
                 }
 
                 @Override

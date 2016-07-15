@@ -122,6 +122,10 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantInsertRecordException
      */
     public void addNewHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+        //if it already exists, then don't continue
+        if(isNewHierarchyAccount(hierarchyAccount))
+            return;
+
         DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -143,6 +147,21 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
 
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "A database error.");
         }
+    }
+
+    private boolean isNewHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME, String.valueOf(hierarchyAccount.getId()), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, hierarchyAccount.getDescription(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME, hierarchyAccount.getHierarchyAccountType().getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+            return (databaseTable.getCount() == 0) ? true : false;
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+        return true;
     }
 
     /**

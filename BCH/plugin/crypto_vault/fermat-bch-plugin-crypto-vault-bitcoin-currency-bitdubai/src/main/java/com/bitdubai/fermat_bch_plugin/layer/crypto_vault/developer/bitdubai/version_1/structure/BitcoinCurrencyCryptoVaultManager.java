@@ -701,8 +701,8 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
          * derive the keys and then passed them to the crypto network.
          */
         for (DeterministicSeed importedSeed : this.getImportedSeeds()){
-            System.out.println("***CryptoVault*** Imported Generator: " + importedSeed.getMnemonicCode() + " " + importedSeed.getCreationTimeSeconds());
-            System.out.println("***CryptoVault*** Imported Generator: " + importedSeed.toString());
+            System.out.println("***CryptoVault*** Imported Seed Generator: " + importedSeed.getMnemonicCode() + " " + importedSeed.getCreationTimeSeconds());
+            System.out.println("***CryptoVault*** Imported Seed  Generator: " + importedSeed.toString());
             VaultKeyHierarchyGenerator importedSeedHierarchyGenerator = new VaultKeyHierarchyGenerator(importedSeed, true, pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
             importedSeedHierarchyGenerator.run();
         }

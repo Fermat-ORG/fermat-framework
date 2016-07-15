@@ -319,7 +319,7 @@ public class CryptoWalletBasicWalletDao {
 
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getTotal() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getTotal() : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount, transactionRecord.getBlockchainNetworkType());
             long bookRunningBalance = calculateBookRunningBalance(-bookAmount,transactionRecord.getBlockchainNetworkType());
 

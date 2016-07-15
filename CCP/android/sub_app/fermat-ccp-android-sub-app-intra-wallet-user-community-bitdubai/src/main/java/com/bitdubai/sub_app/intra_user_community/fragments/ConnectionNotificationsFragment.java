@@ -108,7 +108,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#fff"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
             onRefresh();
