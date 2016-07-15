@@ -246,7 +246,7 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
     }
 
     @Override
-    public void importSeedFromMnemonicCode(List<String> mnemonicCode, long date) throws CantImportSeedException {
+    public void importSeedFromMnemonicCode(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType, List<String> mnemonicCode, long date) throws CantImportSeedException {
 
     }
 
@@ -396,8 +396,5 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
 //    }
 
 
-    @Override
-    public void sendImportedSeedFundsToWallet(CryptoAddress destinationAddress, BlockchainNetworkType blockchainNetworkType) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
 
-    }
 }
