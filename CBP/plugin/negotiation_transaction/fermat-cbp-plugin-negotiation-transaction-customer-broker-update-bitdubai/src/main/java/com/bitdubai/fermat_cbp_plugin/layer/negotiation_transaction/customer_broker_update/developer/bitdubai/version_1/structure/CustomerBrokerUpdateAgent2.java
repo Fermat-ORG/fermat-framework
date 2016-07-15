@@ -439,40 +439,43 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
                                 System.out.print("\n**** 25.1) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE NEGOTIATION TRANSACTION CONFIRM ****\n");
 
-                                if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+                                if(negotiationTransaction == null) {
 
-                                    switch (negotiationType) {
-                                        case PURCHASE:
-                                            System.out.print("\n**** 25.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                    if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
 
-                                            purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                                            final String purchaseCancelReason = purchaseNegotiation.getCancelReason();
-                                            if (purchaseCancelReason == null || purchaseCancelReason.isEmpty() || purchaseCancelReason.equalsIgnoreCase("null"))
-                                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                        switch (negotiationType) {
+                                            case PURCHASE:
+                                                System.out.print("\n**** 25.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
 
-                                            broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
+                                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                                final String purchaseCancelReason = purchaseNegotiation.getCancelReason();
+                                                if (purchaseCancelReason == null || purchaseCancelReason.isEmpty() || purchaseCancelReason.equalsIgnoreCase("null"))
+                                                    customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
 
-                                            break;
-                                        case SALE:
-                                            System.out.print("\n**** 25.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                                broadcaster.publish(UPDATE_VIEW, CCW_NEGOTIATION_UPDATE_VIEW);
 
-                                            saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                                            final String saleCancelReason = saleNegotiation.getCancelReason();
-                                            if (saleCancelReason == null || saleCancelReason.isEmpty() || saleCancelReason.equalsIgnoreCase("null"))
-                                                customerBrokerSaleNegotiationManager.waitForCustomer(saleNegotiation);
+                                                break;
+                                            case SALE:
+                                                System.out.print("\n**** 25.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE SALE NEGOTIATION TRANSACTION CONFIRM ****\n");
 
-                                            broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+                                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                                final String saleCancelReason = saleNegotiation.getCancelReason();
+                                                if (saleCancelReason == null || saleCancelReason.isEmpty() || saleCancelReason.equalsIgnoreCase("null"))
+                                                    customerBrokerSaleNegotiationManager.waitForCustomer(saleNegotiation);
 
-                                            break;
+                                                broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+
+                                                break;
+                                        }
+
+                                        //CONFIRM TRANSACTION
+                                        dao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+
                                     }
 
-                                    //CONFIRM TRANSACTION
-                                    dao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
-
+                                    //CONFIRM TRANSACTION IS DONE
+                                    dao.confirmTransaction(transactionId);
                                 }
-
-                                //CONFIRM TRANSACTION IS DONE
-                                dao.confirmTransaction(transactionId);
 
                             }
 

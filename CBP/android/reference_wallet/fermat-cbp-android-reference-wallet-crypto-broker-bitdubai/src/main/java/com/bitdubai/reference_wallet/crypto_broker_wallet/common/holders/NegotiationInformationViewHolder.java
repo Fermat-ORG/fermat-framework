@@ -16,6 +16,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Map;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.*;
@@ -34,7 +37,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
     public final ProgressBar sendingProgressBar;
     private Resources res;
     private View itemView;
-
+    NumberFormat numberFormat= DecimalFormat.getInstance();
 
     /**
      * Public constructor for the custom child ViewHolder
@@ -78,6 +81,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         String paymentCurrency = negotiationSummary.get(ClauseType.BROKER_CURRENCY);
         String merchandiseAmount = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
 
+
         exchangeRateUnit.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRate, paymentCurrency));
         buyingText.setText(String.format("Buying %1$s %2$s", merchandiseAmount, merchandise));
     }
@@ -117,4 +121,6 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
+
+
 }

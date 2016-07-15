@@ -248,6 +248,7 @@ public class OpenContractMonitorAgent2
     }
 
     private void raiseNewContractEvent(String contractHash) {
+        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - raiseNewContractEvent() - NEW_CONTRACT_OPENED \n - Contract Hash: "+contractHash+"\n");
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
         NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
         newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
@@ -312,11 +313,11 @@ public class OpenContractMonitorAgent2
                             //CONFIRM TRANSMISSION OF SEND
                             transactionTransmissionManager.confirmReception(transmissionIdNew);
 
-                            //CONFIRM RECEPTION OF TRANSMISSION
-                            transactionTransmissionManager.confirmReception(transmissionId);
-
-                            //CONFIRM RECEPTION OF NOTIFICATION EVENT
-                            openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+//                            //CONFIRM RECEPTION OF TRANSMISSION
+//                            transactionTransmissionManager.confirmReception(transmissionId);
+//
+//                            //CONFIRM RECEPTION OF NOTIFICATION EVENT
+//                            openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
                         }
                     }
@@ -349,11 +350,11 @@ public class OpenContractMonitorAgent2
                         //CONFIRM SEND OF TRANSMISSION
                         transactionTransmissionManager.confirmReception(transmissionIdNew);
 
-                        //CONFIRM RECEPTION OF TRANSMISSION
-                        transactionTransmissionManager.confirmReception(transmissionId);
-
-                        //CONFIRM RECEPTION OF NOTIFICATION EVENT
-                        openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+//                        //CONFIRM RECEPTION OF TRANSMISSION
+//                        transactionTransmissionManager.confirmReception(transmissionId);
+//
+//                        //CONFIRM RECEPTION OF NOTIFICATION EVENT
+//                        openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                     }
 
                 }
@@ -393,6 +394,9 @@ public class OpenContractMonitorAgent2
                                     //CLOSE NEGOTIATION
                                     closeNegotiation(contractType, contractSale.getNegotiatiotId());
 
+                                    //RAISE EVENT NEW_CONTRACT_OPENED
+                                    raiseNewContractEvent(contractHash);
+
                                 }
                                 break;
                         }
@@ -400,19 +404,25 @@ public class OpenContractMonitorAgent2
                         //CHANGE STATUS TRANSACTION
                         openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_OPENED);
 
-                        //CONFIRM RECEPTION OF TRANSMISSION
-                        transactionTransmissionManager.confirmReception(transmissionId);
-
-                        //CONFIRM RECEPTION OF NOTIFICATION EVENT
-                        openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+//                        //CONFIRM RECEPTION OF TRANSMISSION
+//                        transactionTransmissionManager.confirmReception(transmissionId);
+//
+//                        //CONFIRM RECEPTION OF NOTIFICATION EVENT
+//                        openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
                         //RAISE EVENT NEW_CONTRACT_OPENED
-                        if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
-                            raiseNewContractEvent(contractHash);
+//                        if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
+//                            raiseNewContractEvent(contractHash);
                     }
 
                 }
-//                }
+
+                //CONFIRM RECEPTION OF TRANSMISSION
+                transactionTransmissionManager.confirmReception(transmissionId);
+
+                //CONFIRM RECEPTION OF NOTIFICATION EVENT
+                openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
             }
 
             //TODO: look a better way to deal with this exceptions

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.AbstractBusinessTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
@@ -39,6 +40,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
@@ -52,6 +55,10 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
      * Represent the database
      */
     private Database database;
+
+    Timer timer = new Timer();
+
+    private long reprocessTimer = 600000; //Ten minutes
 
     public TransactionTransmissionNetworkServicePluginRoot() {
         super(
@@ -120,7 +127,41 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     protected void onNetworkServiceRegistered() {
+        reprocessPendingMessage();
+    }
 
+    private void reprocessPendingMessage(){
+        try{
+            //Check if nay message not sent
+            List<BusinessTransactionMetadata> businessTransactionMetadataList =
+                    transactionTransmissionContractHashDao.findAllToSend();
+            System.out.println("Transaction Transmission found "+businessTransactionMetadataList.size()+" messages pending to send");
+            for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
+                try{
+                    System.out.println("Trying to send pending message to "+businessTransactionMetadata.getReceiverId());
+                    transactionTransmissionNetworkServiceManager.sendMessage(
+                            businessTransactionMetadata);
+                } catch (Exception e){
+                    System.out.println("Transaction Transmission found an exception sending pending messages");
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (Exception e){
+            System.out.println("Transaction Transmission cannot check if there's sending pending messages");
+            e.printStackTrace();
+        }
+
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        }, 0,reprocessTimer);
     }
 
     @Override
@@ -151,6 +192,9 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                     this,
                     transactionTransmissionContractHashDao
             );
+
+            //declare a schedule to process waiting request message
+            this.startTimer();
 
         } catch (Exception exception) {
             StringBuffer contextBuffer = new StringBuffer();
@@ -294,5 +338,19 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
+        System.out.println("Transaction Transmission just sent :"+fermatMessage.getId());
+        Gson gson = new Gson();
+        try{
+            BusinessTransactionMetadata businessTransactionMetadata = gson.fromJson(
+                    fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
+            businessTransactionMetadata.setState(TransactionTransmissionStates.SENT);
+            transactionTransmissionContractHashDao.update(businessTransactionMetadata);
+        } catch (
+                Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity
+                    .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
+
     }
 }

@@ -581,7 +581,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             try {
                 executor = new EditIdentityExecutor(appSession, identity.getPublicKey(), chatNameText, imgInBytes,
                         identity.getConnectionState());
-
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -593,7 +592,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 }
             } catch (Exception e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
             }
         }
     }

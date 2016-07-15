@@ -163,6 +163,31 @@ public class BitcoinCurrencyCryptoVaultDatabaseFactory implements DealsWithPlugi
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+
+
+            /**
+             * Create Imported_Seeds table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_TABLE_NAME);
+
+            table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.TRUE);
+            table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_WALLET_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+
+            table.addIndex(BitcoinCurrencyCryptoVaultDatabaseConstants.IMPORTED_SEED_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

@@ -358,47 +358,51 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
 
                         } else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
 
-                            if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+                            if(negotiationTransaction != null) {
 
-                                switch (negotiationType) {
-                                    case PURCHASE:
-                                        System.out.print("\n\n**** 27.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE ****\n");
-                                        //UPDATE NEGOTIATION IF PAYMENT IS CRYPTO CURRENCY
-                                        purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                                        customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
-                                                customerBrokerPurchaseNegotiationManager,
-                                                dao,
-                                                cryptoAddressBookManager,
-                                                cryptoVaultManager,
-                                                walletManagerManager,
-                                                pluginRoot,
-                                                intraWalletUserIdentityManager
-                                        );
-                                        customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseConfirm(purchaseNegotiation);
-                                        break;
-                                    case SALE:
-                                        System.out.print("\n\n**** 27.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM SALE ****\n");
-                                        //UPDATE NEGOTIATION IF MERCHANDISE IS CRYPTO CURRENCY
-                                        saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                                        customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
-                                                customerBrokerSaleNegotiationManager,
-                                                dao,
-                                                cryptoAddressBookManager,
-                                                cryptoVaultManager,
-                                                walletManagerManager,
-                                                pluginRoot,
-                                                intraWalletUserIdentityManager
-                                        );
-                                        customerBrokerCloseSaleNegotiationTransaction.receiveSaleConfirm(saleNegotiation);
-                                        break;
+                                if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+
+                                    switch (negotiationType) {
+                                        case PURCHASE:
+                                            System.out.print("\n\n**** 27.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE ****\n");
+                                            //UPDATE NEGOTIATION IF PAYMENT IS CRYPTO CURRENCY
+                                            purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                            customerBrokerClosePurchaseNegotiationTransaction = new CustomerBrokerClosePurchaseNegotiationTransaction(
+                                                    customerBrokerPurchaseNegotiationManager,
+                                                    dao,
+                                                    cryptoAddressBookManager,
+                                                    cryptoVaultManager,
+                                                    walletManagerManager,
+                                                    pluginRoot,
+                                                    intraWalletUserIdentityManager
+                                            );
+                                            customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseConfirm(purchaseNegotiation);
+                                            break;
+                                        case SALE:
+                                            System.out.print("\n\n**** 27.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM SALE ****\n");
+                                            //UPDATE NEGOTIATION IF MERCHANDISE IS CRYPTO CURRENCY
+                                            saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                            customerBrokerCloseSaleNegotiationTransaction = new CustomerBrokerCloseSaleNegotiationTransaction(
+                                                    customerBrokerSaleNegotiationManager,
+                                                    dao,
+                                                    cryptoAddressBookManager,
+                                                    cryptoVaultManager,
+                                                    walletManagerManager,
+                                                    pluginRoot,
+                                                    intraWalletUserIdentityManager
+                                            );
+                                            customerBrokerCloseSaleNegotiationTransaction.receiveSaleConfirm(saleNegotiation);
+                                            break;
+                                    }
+
+                                    //CONFIRM TRANSACTION
+                                    dao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
                                 }
 
-                                //CONFIRM TRANSACTION
-                                dao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
-                            }
+                                //CONFIRM TRANSACTION IS DONE
+                                dao.confirmTransaction(transactionId);
 
-                            //CONFIRM TRANSACTION IS DONE
-                            dao.confirmTransaction(transactionId);
+                            }
 
                         }
 
