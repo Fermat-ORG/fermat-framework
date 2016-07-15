@@ -136,7 +136,12 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
             if (editTextValue.equals("0.0")) {
                 editTextView.setText("");
             } else {
-                editTextView.setText(fixFormat(editTextValue));
+                if(activeTextCount){
+                    editTextView.setText(editTextValue);
+                }else{
+                    editTextView.setText(fixFormat(editTextValue));
+                }
+
             }
         }
 
