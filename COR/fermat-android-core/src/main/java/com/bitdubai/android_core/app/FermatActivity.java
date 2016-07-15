@@ -137,6 +137,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
@@ -2262,8 +2263,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
     @Override
-    public void cancelNotification(String appPublicKey) {
-        FermatApplication.getInstance().getNotificationService().cancelNotification(appPublicKey);
+    public void cancelNotification(FermatBundle fermatBundle) {
+        FermatApplication.getInstance().getNotificationService().cancelNotification(fermatBundle);
     }
 
     @Override
