@@ -49,10 +49,10 @@
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="160dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:id="@+id/txt_notes"
-                tools:text="Conference ticket"
+                tools:text="Conference ticket hghjghjghj jhjghjgjhghj jhghjghjgjh"
                 android:textSize="12dp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
@@ -86,10 +86,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_time"
-                tools:text="03 Feber 2014 9:30 pm"
+                tools:text="july 15 2014 9:30 pm"
                 android:textSize="10dp"
                 android:textColor="#80ffffff"
-                android:fontFamily="roboto"/>
+                android:fontFamily="roboto"
+                android:ellipsize="end"/>
         </LinearLayout>
     </LinearLayout>
 
