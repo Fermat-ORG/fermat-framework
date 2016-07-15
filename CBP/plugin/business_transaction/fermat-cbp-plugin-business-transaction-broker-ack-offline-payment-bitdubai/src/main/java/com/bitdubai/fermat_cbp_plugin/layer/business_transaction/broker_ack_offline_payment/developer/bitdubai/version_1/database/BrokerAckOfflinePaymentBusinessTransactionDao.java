@@ -1539,4 +1539,20 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         }
     }
 
+    private boolean eventExists(String eventId) throws CantSaveEventException {
+        try {
+            DatabaseTable table = getDatabaseEventsTable();;
+            if (table == null) {
+                throw new CantSaveEventException("Cant check if Broker Ack Offline Payment Transaction event tablet exists");
+            }
+            table.addStringFilter(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantSaveEventException(em.getMessage(), em, "Broker Ack Offline Payment Transaction Id Not Exists", "Cant load " + BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantSaveEventException(e.getMessage(), FermatException.wrapException(e), "Broker Ack Offline Payment Transaction Id Not Exists", "unknown failure.");
+        }
+    }
+
 }
