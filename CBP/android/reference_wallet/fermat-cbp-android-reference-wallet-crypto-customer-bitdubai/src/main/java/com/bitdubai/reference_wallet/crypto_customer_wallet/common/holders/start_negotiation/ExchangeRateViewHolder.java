@@ -15,6 +15,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.Broker
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateValueRightSide;
     private FermatButton yourExchangeRateValue;
     private List<IndexInfoSummary> marketRateList;
+    private NumberFormat numberFormat=DecimalFormat.getInstance();
 
     public ExchangeRateViewHolder(View itemView) {
         super(itemView);
@@ -41,7 +43,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         markerRateReferenceContainer = itemView.findViewById(R.id.ccw_market_rate_container);
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
         yourExchangeRateValue.setOnClickListener(this);
-
+        numberFormat.setMaximumFractionDigits(8);
     }
 
     @Override
@@ -56,9 +58,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         //String marketRate = getMarketRateValue(clauses);
         //markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, marketRate, currencyToPay));
 
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, clause.getValue(), currencyToPay));
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy,
+                numberFormat.format(Double.valueOf(clause.getValue())), currencyToPay));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy));
-        yourExchangeRateValue.setText(clause.getValue());
+        yourExchangeRateValue.setText(numberFormat.format(Double.valueOf(clause.getValue())));
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay));
     }
 

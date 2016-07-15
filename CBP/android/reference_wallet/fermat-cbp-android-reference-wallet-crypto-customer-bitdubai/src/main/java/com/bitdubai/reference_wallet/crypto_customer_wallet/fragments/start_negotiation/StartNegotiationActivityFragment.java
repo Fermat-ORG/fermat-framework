@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
@@ -82,6 +83,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
     private List<MerchandiseExchangeRate> quotes;
     private NumberFormat numberFormat = DecimalFormat.getInstance();
     private boolean walletUser = false;
+    private String buyType;
+    private String payType;
 
 
     public static StartNegotiationActivityFragment newInstance() {
@@ -266,10 +269,21 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
+
         //GET MARKET RATE
 
+
         String paymentCurrencyCode = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        String brokerMarketRate = numberFormat.format(getExchangeRate(paymentCurrencyCode));
+
+        if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
+
+        String brokerMarketRate = convertToStringFormat(String.valueOf(getExchangeRate(paymentCurrencyCode)));
+      //  String brokerMarketRate = convertToStringFormat(String.valueOf(getExchangeRate(paymentCurrencyCode)));
 
         final ClauseInformation exchangeRate = clauses.get(ClauseType.EXCHANGE_RATE);
         negotiationInfo.putClause(exchangeRate, brokerMarketRate);
@@ -315,12 +329,24 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
             negotiationInfo.setStatus(NegotiationStatus.WAITING_FOR_BROKER);
             MerchandiseExchangeRate exchangeRate = quotes.get(0);
 
+            //Buy and pay type
+
+            buyType=getQuotes().get(0).getMerchandiseCurrency().getType().name();
+            payType=getQuotes().get(0).getPaymentCurrency().getType().name();
+
+            if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+
             final Currency currency = getCurrencyToBuy();
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY, currency.getCode());
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY, exchangeRate.getPaymentCurrency().getCode());
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
-            negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, numberFormat.format(exchangeRate.getExchangeRate()));
+            negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, convertToStringFormat(String.valueOf(exchangeRate.getExchangeRate())));
+       //     negotiationInfo.putClause(ClauseType.EXCHANGE_RATE,convertToStringFormat(String.valueOf(exchangeRate.getExchangeRate())));
 
             final ActorIdentity brokerIdentity = getSelectedBrokerIdentity();
             if (brokerIdentity != null)
@@ -374,16 +400,42 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
             //ASIGNAMENT NEW VALUE
             //change lostwood
          //   newValue = numberFormat.format(getBigDecimal(newValue));
-            newValue = numberFormat.format(new BigDecimal(newValue));
+            if(newValue.equals("") || newValue.equals("0")){
+                newValue="0.0";
+            }
+
+
+            if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+
+
+
+        //    newValue = numberFormat.format(new BigDecimal(newValue));
+
+            newValue=convertToStringFormat(newValue);
+
             negotiationInfo.putClause(clause, newValue);
 
+
             //CALCULATE CUSTOMER CURRENCY QUANTITY
-            final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-            final BigDecimal amountToPay = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+            final BigDecimal exchangeRate = convertToBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+            final BigDecimal amountToPay = convertToBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
             final BigDecimal amountToBuy = amountToPay.divide(exchangeRate, 8, RoundingMode.HALF_UP);
 
             //ASIGNAMENT CUSTOMER CURRENCY QUANTITY
-            final String amountToBuyStr = numberFormat.format(amountToBuy);
+           // final String amountToBuyStr = numberFormat.format(amountToBuy);
+
+            if(buyType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+
+             String amountToBuyStr = convertToStringFormat(String.valueOf(amountToBuy));
+
             final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
             negotiationInfo.putClause(brokerCurrencyQuantity, amountToBuyStr);
 
@@ -401,7 +453,27 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         //ASIGNAMENT NEW VALUE
         //Change Lostwood
         //newValue = numberFormat.format(getBigDecimal(newValue));
-        newValue = numberFormat.format(new BigDecimal(newValue));
+
+        if(newValue.equals("") || newValue.equals("0")){
+            newValue="0.0";
+        }
+
+        if(clause.getType().name().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.name())){
+            if(buyType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+        }else{
+            if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+        }
+
+        newValue = convertToStringFormat(newValue);
+
 
         negotiationInfo.putClause(clause, newValue);
 
@@ -409,18 +481,34 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
        /* final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue().replace(",", ""));
         final BigDecimal amountToBuy = new BigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue().replace(",", ""));
         final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);*/
-        BigDecimal amountToPay=new BigDecimal(0);
-        try {
-            final BigDecimal exchangeRate = new BigDecimal(numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString());
-            final BigDecimal amountToBuy =new BigDecimal(numberFormat.parse( clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()).toString());
-            amountToPay = amountToBuy.multiply(exchangeRate);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        final BigDecimal amountToPay;
+
+        if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
         }
 
+        final BigDecimal exchangeRate = convertToBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+
+        if(buyType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
+        final BigDecimal amountToBuy =convertToBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+        amountToPay = amountToBuy.multiply(exchangeRate);
+
+        if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
 
         //ASIGNAMENT BROKER CURRENCY
-        final String amountToPayStr = numberFormat.format(amountToPay.doubleValue());
+       // final String amountToPayStr = numberFormat.format(amountToPay.doubleValue());
+        final String amountToPayStr =convertToStringFormat(String.valueOf(amountToPay.doubleValue()));
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
@@ -436,24 +524,52 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
 
+
+        if(buyType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
+
         //ASIGNAMENT NEW VALUE
         negotiationInfo.putClause(clause, payment);
 
         //GET MARKET RATE
-        BigDecimal exchangeRate = BigDecimal.valueOf(getExchangeRate(payment));
+        //BigDecimal exchangeRate = BigDecimal.valueOf(getExchangeRate(payment));
+
+        BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(getExchangeRate(payment)));
+
 
         //CALCULATE NEW PAY
         ClauseInformation currencyToBuyInfo = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-        final BigDecimal amountToBuy = getBigDecimal(currencyToBuyInfo.getValue());
+    //    final BigDecimal amountToBuy = getBigDecimal(currencyToBuyInfo.getValue());
+
+        if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
+        final BigDecimal amountToBuy= convertToBigDecimal(currencyToBuyInfo.getValue());
         final BigDecimal amountToPay = amountToBuy.multiply(exchangeRate);
 
         //ASINAMENT NEW EXCHANGE RATE
-        final String amountToExchangeRateStr = numberFormat.format(exchangeRate);
+     //   final String amountToExchangeRateStr = numberFormat.format(exchangeRate);
+        final String amountToExchangeRateStr = convertToStringFormat(String.valueOf(exchangeRate));
         final ClauseInformation exchangeRateClause = clauses.get(ClauseType.EXCHANGE_RATE);
         negotiationInfo.putClause(exchangeRateClause, amountToExchangeRateStr);
 
         //ASIGNAMENT NEW PAY
-        final String amountToPayStr = numberFormat.format(amountToPay);
+       // final String amountToPayStr = numberFormat.format(amountToPay);
+
+        if(buyType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
+        final String amountToPayStr = convertToStringFormat(String.valueOf(amountToPay));
         final ClauseInformation brokerCurrencyQuantityClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         negotiationInfo.putClause(brokerCurrencyQuantityClause, amountToPayStr);
 
@@ -479,9 +595,27 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
         if (clauses != null) {
 
-            final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+         /*   final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
             final BigDecimal amountToBuy = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-            final BigDecimal amountToPay = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
+            final BigDecimal amountToPay = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());*/
+            if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+            final BigDecimal exchangeRate = convertToBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+            if(buyType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+            final BigDecimal amountToBuy = convertToBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
+            if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+                numberFormat.setMaximumFractionDigits(2);
+            }else{
+                numberFormat.setMaximumFractionDigits(8);
+            }
+            final BigDecimal amountToPay = convertToBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
 
             if (exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
                 Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
@@ -516,7 +650,15 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+     //   final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+        if(payType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
+
+        final BigDecimal exchangeRate = convertToBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
 
         if (exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
             Toast.makeText(getActivity(), "The exchange rate must be greater than zero.", Toast.LENGTH_LONG).show();
@@ -583,7 +725,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
         return 0.0;
     }
 
-    private BigDecimal getBigDecimal(String value) {
+  /*  private BigDecimal getBigDecimal(String value) {
         //change lostwood
         //numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue()).toString()
         //return new BigDecimal(value.replace(",", ""));
@@ -594,7 +736,31 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Ref
             e.printStackTrace();
             return new BigDecimal(0);
         }
+    }*/
+
+
+    private BigDecimal convertToBigDecimal(String value){
+
+    BigDecimal convertion=new BigDecimal(0);
+        try {
+            convertion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value)))));
+        } catch (ParseException e) {
+        e.printStackTrace();
+        }
+        return convertion;
     }
+
+    private String convertToStringFormat(String value){
+
+        String convertion="0";
+        try {
+            convertion = String.valueOf(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value)))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return convertion;
+    }
+
 
     private boolean isCreateIdentityIntraUser(Map<ClauseType, ClauseInformation> clauses) throws CantSendNegotiationException{
 

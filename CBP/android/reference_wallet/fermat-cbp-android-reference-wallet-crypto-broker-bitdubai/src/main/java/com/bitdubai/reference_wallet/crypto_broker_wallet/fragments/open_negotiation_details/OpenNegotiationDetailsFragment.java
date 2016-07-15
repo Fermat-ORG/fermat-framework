@@ -30,6 +30,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -39,6 +40,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
@@ -94,12 +96,15 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "OpenNegotiationDetails";
-    private static final NumberFormat numberFormat = DecimalFormat.getInstance();
+
 
     // DATA
     private NegotiationWrapper negotiationWrapper;
     private float spread = 1;
 
+    private String sellType;
+    private String reciveType;
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
     // Fermat Managers
@@ -155,10 +160,28 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         final ActorIdentity customer = negotiationInfo.getCustomer();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
+        sellType= CryptoCurrency.codeExists(clauses.get(CUSTOMER_CURRENCY).getValue())?
+                PaymentType.CRYPTO_MONEY.getCode() : PaymentType.FIAT_MONEY.getCode();
+        reciveType= CryptoCurrency.codeExists(clauses.get(BROKER_CURRENCY).getValue())?
+                PaymentType.CRYPTO_MONEY.getCode() : PaymentType.FIAT_MONEY.getCode();
+
+        if(sellType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
         final String merchandise= clauses.get(CUSTOMER_CURRENCY).getValue();
-        final String exchangeAmount = clauses.get(EXCHANGE_RATE).getValue();
+        final String exchangeAmount =convertToStringFormat(clauses.get(EXCHANGE_RATE).getValue());
+
+        if(reciveType.equals(PaymentType.FIAT_MONEY.getCode())){
+            numberFormat.setMaximumFractionDigits(2);
+        }else{
+            numberFormat.setMaximumFractionDigits(8);
+        }
+
         final String paymentCurrency = clauses.get(BROKER_CURRENCY).getValue();
-        final String amount = clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue();
+        final String amount = convertToStringFormat(clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue());
 
         //Negotiation Summary
         customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
@@ -195,6 +218,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         return rootView;
     }
+
+
 
     private List<IndexInfoSummary> getActualExchangeRates() {
         Object data = appSession.getData(FragmentsCommons.EXCHANGE_RATES);
@@ -452,26 +477,64 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal exchangeRate = MathUtils.getBigDecimal(newValue);
+                //lostwood
+          /*      final BigDecimal exchangeRate = MathUtils.getBigDecimal(newValue);
                 final BigDecimal amountToSell = MathUtils.getBigDecimal(clauses.get(CUSTOMER_CURRENCY_QUANTITY));
-                final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
+                final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();*/
+
+                if (reciveType.equals(PaymentType.FIAT_MONEY.getCode())) {
+                    numberFormat.setMaximumFractionDigits(2);
+                } else {
+                    numberFormat.setMaximumFractionDigits(8);
+                }
+                final BigDecimal exchangeRate = convertToBigDecimal(newValue);
+
+                if (sellType.equals(PaymentType.FIAT_MONEY.getCode())) {
+                    numberFormat.setMaximumFractionDigits(2);
+                } else {
+                    numberFormat.setMaximumFractionDigits(8);
+                }
+
+                final BigDecimal amountToSell = convertToBigDecimal(String.valueOf(clauses.get(CUSTOMER_CURRENCY_QUANTITY)));
+                final BigDecimal amountToReceiveValue = exchangeRate.multiply(amountToSell);
                 final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
 
+                if (reciveType.equals(PaymentType.FIAT_MONEY.getCode())) {
+                    numberFormat.setMaximumFractionDigits(2);
+                } else {
+                    numberFormat.setMaximumFractionDigits(8);
+                }
+
                 negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
+                negotiationWrapper.changeClauseValue(amountToReceiveClause, convertToStringFormat(String.valueOf(amountToReceiveValue)));
 
                 adapter.changeDataSet(negotiationWrapper);
 
 
-                BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
-                BigDecimal suggestedMaxExchangeRate = new BigDecimal(marketRateReferenceValue.doubleValue() * (1 + (spread / 100)));
+                //BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
+                //BigDecimal suggestedMaxExchangeRate = new BigDecimal(marketRateReferenceValue.doubleValue() * (1 + (spread / 100)));
 
+
+                BigDecimal marketRateReferenceValue = convertToBigDecimal(String.valueOf(getMarketRateValue(clauses)));
+                BigDecimal suggestedMaxExchangeRate = convertToBigDecimal(String.valueOf(marketRateReferenceValue.doubleValue() * (1 + (spread / 100))));
 
                 if (exchangeRate.compareTo(suggestedMaxExchangeRate) == 1)
-                    Toast.makeText(getActivity(), "Warning: Selected Rate is higher than suggested!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+
+                            getActivity(),
+
+                            "Warning: Selected Rate is higher than suggested!", Toast.LENGTH_LONG).
+
+                            show();
 
                 if (exchangeRate.compareTo(marketRateReferenceValue) == -1)
-                    Toast.makeText(getActivity(), "Warning: Selected Rate is lower than suggested!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+
+                            getActivity(),
+
+                            "Warning: Selected Rate is lower than suggested!", Toast.LENGTH_LONG).
+
+                            show();
 
             }
         });
@@ -486,14 +549,27 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal amountToSell = MathUtils.getBigDecimal(newValue);
+                //lostwood
+               /* final BigDecimal amountToSell = MathUtils.getBigDecimal(newValue);
                 final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
 
-                final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
+                final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();*/
+
+                if(sellType.equals(PaymentType.FIAT_MONEY.getCode())){
+                    numberFormat.setMaximumFractionDigits(2);
+                }else{
+                    numberFormat.setMaximumFractionDigits(8);
+                }
+
+                final BigDecimal amountToSell = convertToBigDecimal(newValue);
+                final BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(clauses.get(EXCHANGE_RATE)));
+
+                final BigDecimal amountToReceiveValue = convertToBigDecimal(String.valueOf(exchangeRate.multiply(amountToSell)));
                 final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
 
+
                 negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
+                negotiationWrapper.changeClauseValue(amountToReceiveClause, convertToStringFormat(String.valueOf(amountToReceiveValue)));
 
                 adapter.changeDataSet(negotiationWrapper);
             }
@@ -509,14 +585,27 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
-                final BigDecimal amountToReceive = MathUtils.getBigDecimal(newValue);
-                final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
 
-                final double amountToSellValue = amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue();
+                if(reciveType.equals(PaymentType.FIAT_MONEY.getCode())){
+                    numberFormat.setMaximumFractionDigits(2);
+                }else{
+                    numberFormat.setMaximumFractionDigits(8);
+                }
+
+              /*  final BigDecimal amountToReceive = MathUtils.getBigDecimal(newValue);
+                final BigDecimal exchangeRate = MathUtils.getBigDecimal(clauses.get(EXCHANGE_RATE));
+                final double amountToSellValue = amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue();*/
+
+
+                final BigDecimal amountToReceive = convertToBigDecimal(newValue);
+                final BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(clauses.get(EXCHANGE_RATE)));
+                final BigDecimal amountToSellValue = convertToBigDecimal(String.valueOf(amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue()));
                 final ClauseInformation amountToSellClause = clauses.get(CUSTOMER_CURRENCY_QUANTITY);
 
+
+
                 negotiationWrapper.changeClauseValue(clause, newValue);
-                negotiationWrapper.changeClauseValue(amountToSellClause, numberFormat.format(amountToSellValue));
+                negotiationWrapper.changeClauseValue(amountToSellClause, convertToStringFormat(String.valueOf(amountToSellValue)));
 
                 adapter.changeDataSet(negotiationWrapper);
             }
@@ -723,5 +812,27 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
         }
 
         return true;
+    }
+
+    private BigDecimal convertToBigDecimal(String value){
+
+        BigDecimal convertion=new BigDecimal(0);
+        try {
+            convertion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value)))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return convertion;
+    }
+
+    private String convertToStringFormat(String value){
+
+        String convertion="0";
+        try {
+            convertion = String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return convertion;
     }
 }
