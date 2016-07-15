@@ -495,7 +495,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     numberFormat.setMaximumFractionDigits(8);
                 }
 
-                final BigDecimal amountToSell = convertToBigDecimal(String.valueOf(clauses.get(CUSTOMER_CURRENCY_QUANTITY)));
+                final BigDecimal amountToSell = convertToBigDecimal(String.valueOf(clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue()));
                 final BigDecimal amountToReceiveValue = exchangeRate.multiply(amountToSell);
                 final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
 
@@ -562,7 +562,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                 }
 
                 final BigDecimal amountToSell = convertToBigDecimal(newValue);
-                final BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(clauses.get(EXCHANGE_RATE)));
+                final BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(clauses.get(EXCHANGE_RATE).getValue()));
 
                 final BigDecimal amountToReceiveValue = convertToBigDecimal(String.valueOf(exchangeRate.multiply(amountToSell)));
                 final ClauseInformation amountToReceiveClause = clauses.get(BROKER_CURRENCY_QUANTITY);
@@ -598,7 +598,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
 
                 final BigDecimal amountToReceive = convertToBigDecimal(newValue);
-                final BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(clauses.get(EXCHANGE_RATE)));
+                final BigDecimal exchangeRate = convertToBigDecimal(String.valueOf(clauses.get(EXCHANGE_RATE).getValue()));
                 final BigDecimal amountToSellValue = convertToBigDecimal(String.valueOf(amountToReceive.divide(exchangeRate, 8, RoundingMode.HALF_UP).doubleValue()));
                 final ClauseInformation amountToSellClause = clauses.get(CUSTOMER_CURRENCY_QUANTITY);
 
@@ -829,7 +829,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         String convertion="0";
         try {
-            convertion = String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))));
+            convertion = String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));;
         } catch (ParseException e) {
             e.printStackTrace();
         }
