@@ -60,6 +60,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,7 +94,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     Timer timer = new Timer();
 
-    private long reprocessTimer = 300000; //five minutes
+    private long reprocessTimer = 600000; //Ten minutes
 
     /**
      * cacha identities to register
@@ -188,7 +189,22 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage messageSent) {
-
+        System.out.println("Negotiation Transmission just sent :" + messageSent.getId());
+        try{
+            NegotiationTransmissionImpl negotiationTransmission =
+                    NegotiationTransmissionImpl.fronJson(messageSent.getContent());
+            NegotiationTransmissionState negotiationTransmissionState =
+                    negotiationTransmission.getTransmissionState();
+            if(negotiationTransmissionState!=NegotiationTransmissionState.SENT){
+                negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SENT);
+                outgoingNotificationDao.update(negotiationTransmission);
+            }
+        } catch (
+                Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity
+                            .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
     }
 
     @Override
@@ -201,7 +217,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     protected void reprocessPendingMessage() {
         try {
-            outgoingNotificationDao.changeStatusNotSentMessage();
+            //outgoingNotificationDao.changeStatusNotSentMessage();
 
             //Map<String, Object> filters = new HashMap<>();
             //filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
