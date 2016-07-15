@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetImportedAddressesException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorCryptoNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreTransactionException;
@@ -520,7 +521,13 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         } catch (CantExecuteDatabaseOperationException e) {
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
-        runningAgents.get(blockchainNetworkType).broadcastTransaction(txHash);
+
+        //make sure we did have the agent running for this network
+        BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+        if (monitor == null)
+            throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "Monitor is not started for this network type, retry again.", "monitor reset?");
+        else
+            monitor.broadcastTransaction(txHash);
     }
 
 
@@ -531,8 +538,14 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @return
      */
     public Transaction getBlockchainProviderTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+        // will make sure we have a running agent for this network
+        BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+
+        if (monitor == null)
+            return null;
+
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
-        Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
+        Transaction transaction = monitor.getBitcoinTransaction(sha256Hash);
 
         return transaction;
     }
@@ -544,7 +557,13 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @return
      */
     public List<Transaction> getBlockchainProviderTransactions(BlockchainNetworkType blockchainNetworkType) {
-        return runningAgents.get(blockchainNetworkType).getWallet().getTransactionsByTime();
+        //make sure the monitor is running
+        BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+
+        if (monitor == null)
+            return null;
+        else
+            return monitor.getWallet().getTransactionsByTime();
     }
 
 
@@ -560,11 +579,17 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @throws CantGetTransactionsException
      */
     private Transaction getTransactionFromBlockChain(BlockchainNetworkType blockchainNetworkType, String parentTransactionHash, String transactionBlockHash) throws CantGetTransactionsException {
+        //make sure the agent is running
+        BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+
+        if (monitor == null)
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, null, "Monitor not started for this network type" , "Network reset");
+
         /**
          * will get it from the specified agent monitoring the passed network.
          */
         try {
-            return runningAgents.get(blockchainNetworkType).getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
+            return monitor.getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
         } catch (CantGetTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error");
@@ -668,8 +693,14 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @throws CantStoreBitcoinTransactionException
      */
     public synchronized void storeTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreTransactionException {
+        BitcoinCryptoNetworkMonitor monitor = null;
+        monitor  = runningAgents.get(blockchainNetworkType);
+
+        if (monitor == null)
+            throw new CantStoreTransactionException(null, "Network Monitor not initialized for this blockchain network type. Retry later.", "monitor not started.");
+
         try {
-            runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId, commit);
+            monitor.storeBitcoinTransaction(tx, transactionId, commit);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CantStoreTransactionException(e, blockchainProvider, "IO Error");
         }
@@ -698,6 +729,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @throws CantCancellBroadcastTransactionException
      */
     public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
+
         /**
          * I will get the network type this transaction belongs to
          */
@@ -708,11 +740,16 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
 
+        // I will make sure the agent is started
+        BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
 
-        /**
-         * Will invalidate the transaction in the wallet
-        */
-        runningAgents.get(blockchainNetworkType).cancelBroadcast(txHash);
+        if (monitor == null)
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "Monitor not started for this network type." , "Monitor reset");
+
+                /**
+                 * Will invalidate the transaction in the wallet
+                */
+        monitor.cancelBroadcast(txHash);
 
         /**
          * marks the transaction as cancelled in the database
@@ -727,7 +764,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
     }
 
     /**
-     * Will get the BlockchainConnectionStatus for the specified network.
+     * Will get the BlockchainConnectionStatus for the specified network.it
      *
      * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
      *                              then we will receive null.
@@ -735,7 +772,12 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @throws CantGetBlockchainConnectionStatusException
      */
     public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
-        return runningAgents.get(blockchainNetworkType).getBlockchainConnectionStatus();
+        BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+
+        if (monitor == null)
+            throw new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, null, "Monitor not started for this network type. Retry later.", "monitor reset");
+        else
+            return monitor.getBlockchainConnectionStatus();
     }
 
     /**
@@ -1032,7 +1074,14 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @throws CantGetBlockchainDownloadProgress
      */
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
-        return this.runningAgents.get(blockchainNetworkType).getBlockchainDownloadProgress();
+        BitcoinCryptoNetworkMonitor networkMonitor = this.runningAgents.get(blockchainNetworkType);
+        if (networkMonitor == null) {
+            //it means the monitor is not running now, probably due to a reset.
+            //will return a cero download progress
+
+            return new BlockchainDownloadProgress(blockchainNetworkType, 0, 0, 0, 0);
+        } else
+        return networkMonitor.getBlockchainDownloadProgress();
     }
 
     /**
@@ -1046,6 +1095,24 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetActiveBlockchainNetworkTypeException(e, "error getting list of active networks.", "database issue");
         }
+    }
+
+    /**
+     * returns the list of stored cryptoaddress we are monitoing from imported seeds.
+     * @param blockchainNetworkType
+     * @return
+     */
+    public List<CryptoAddress> getImportedAddresses(BlockchainNetworkType blockchainNetworkType) {
+        List<CryptoAddress> cryptoAddressList = new ArrayList<>();
+        try {
+            for (String rawAddress : dao.getImportedAddresses(blockchainNetworkType)){
+                CryptoAddress cryptoAddress = new CryptoAddress(rawAddress, CryptoCurrency.BITCOIN);
+                cryptoAddressList.add(cryptoAddress);
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            return cryptoAddressList;
+        }
+        return cryptoAddressList;
     }
 
 }

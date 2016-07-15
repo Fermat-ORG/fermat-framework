@@ -1,123 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_my_identity">
-
+    android:background="#ffff">
 
     <RelativeLayout
-        android:id="@+id/user_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/bg_circular_other_profile"
-        android:gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_image">
 
         <ImageView
-            android:id="@+id/img_photo"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:id="@+id/img_photo_header"
+            android:layout_width="match_parent"
+            android:layout_height="156dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/default2"/>
+
+        <RelativeLayout
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/circular_shape"
-            tools:ignore="ContentDescription" />
+            android:layout_marginTop="74dp"
+            android:background="@drawable/circle_frame"
+            android:gravity="center"
+            android:id="@+id/img_relativeLayout">
+
+            <ImageView
+                android:id="@+id/img_photo"
+                android:layout_width="135dp"
+                android:layout_height="135dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/default_profileimage"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_image"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical">
 
-        <RelativeLayout
+
+    <LinearLayout
+        android:layout_width="166dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/user_image"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:background="@android:color/transparent">
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:gravity="center_horizontal"
                 android:id="@+id/crypto_broker_name_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
                 android:background="@android:color/transparent"
-                android:text="Username"
-                android:textColor="#919090"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText android:id="@+id/crypto_broker_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/crypto_broker_name_title"
-                android:layout_marginTop="4dp"
-                android:maxLength="24"
-                android:hint="Username"
-                android:padding="8dp"
-                android:singleLine="true"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText"
-                android:lines="1"
-                android:digits="0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ñÑ"/>
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/crypto_broker_phrase_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@android:color/transparent"
-                android:text="Status"
-                android:textColor="#919090"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
+                android:text="USER NAME"
+                android:textColor="#21386D"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText"/>
 
             <EditText
-                android:id="@+id/crypto_broker_phrase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/crypto_broker_name"
+                android:ems="10"
+                tools:ignore="HardcodedText"
+                android:textColor="#6D6E70"
+                android:hint="username"
+                android:textColorHint="#6D6E70"
+                android:foregroundTint="#808080"
+                android:layout_below="@+id/crypto_broker_name_title"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:digits="0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ñÑ"/>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp">
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:gravity="center_horizontal"
+                android:id="@+id/crypto_broker_phrase_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/crypto_broker_phrase_title"
-                android:layout_marginTop="4dp"
-                android:hint="Write your status"
-                android:lines="1"
-                android:padding="8dp"
-                android:singleLine="true"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                android:background="@android:color/transparent"
+                android:text="STATUS"
+                android:textColor="#21386D"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText"/>
 
-        </RelativeLayout>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/crypto_broker_phrase"
+                android:ems="10"
+                tools:ignore="HardcodedText"
+                android:textColor="#6D6E70"
+                android:hint="Write your status"
+                android:textColorHint="#6D6E70"
+                android:foregroundTint="#808080"
+                android:layout_below="@+id/crypto_broker_phrase_title"
+                android:gravity="center_horizontal"
+                android:textSize="16sp"
+                android:singleLine="true"
+                android:digits="0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ñÑ"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
     <Button
         android:id="@+id/create_crypto_broker_button"
-        android:layout_width="match_parent"
+        android:layout_width="166dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:background="#0072bc"
-        android:text="@string/create"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/agree"/>
+
 </RelativeLayout>

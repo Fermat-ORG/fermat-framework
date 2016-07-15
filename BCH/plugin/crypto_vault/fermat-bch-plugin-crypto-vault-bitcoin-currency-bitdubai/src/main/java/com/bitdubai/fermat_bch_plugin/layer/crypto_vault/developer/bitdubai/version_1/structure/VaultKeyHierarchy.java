@@ -23,6 +23,7 @@ import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,11 @@ class VaultKeyHierarchy extends KeyHierarchy {
     private Map<Integer, DeterministicKey> accountsMasterKeys;
 
     /**
+     * holds the list of accounts.
+     */
+    private List<HierarchyAccount> hierarchyAccountList;
+
+    /**
      * Holds the DAO object to access the database
      */
     BitcoinCurrencyCryptoVaultDao dao;
@@ -66,6 +72,8 @@ class VaultKeyHierarchy extends KeyHierarchy {
         accountsMasterKeys = new HashMap<>();
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+
+        hierarchyAccountList = new ArrayList<>();
     }
 
     /**
@@ -74,6 +82,7 @@ class VaultKeyHierarchy extends KeyHierarchy {
      * @param account
      */
     public void addVaultAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
+        hierarchyAccountList.add(account);
         DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), true, true, ChildNumber.ZERO);
         accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
@@ -257,5 +266,9 @@ class VaultKeyHierarchy extends KeyHierarchy {
     @Override
     public CryptoVaultDao getCryptoVaultDao() {
         return this.getDao();
+    }
+
+    public List<HierarchyAccount> getHierarchyAccountList() {
+        return hierarchyAccountList;
     }
 }

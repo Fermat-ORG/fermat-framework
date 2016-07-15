@@ -130,7 +130,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             this.intraWalletUser = this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, phrase, profileImage,Long.parseLong("100"), Frequency.NORMAL,location);
 
 
-            return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
+            return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage(), intraWalletUser.getAccuracy(),
+                    intraWalletUser.getFrequency(), intraWalletUser.getLocation());
         } catch (CantCreateNewIntraWalletUserException e) {
             throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER", e, "", "Error in Intra user identity manager");
         } catch (Exception e) {
@@ -188,7 +189,8 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             List<IntraWalletUserIdentity> intraWalletUserList = this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
             for (IntraWalletUserIdentity intraWalletUser : intraWalletUserList) {
-                intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage()));
+                intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage(),
+                        intraWalletUser.getAccuracy(),intraWalletUser.getFrequency(),intraWalletUser.getLocation()));
             }
 
             return intraUserLoginIdentityList;
@@ -253,18 +255,18 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      * @throws CantGetIntraUsersListException
      */
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 35,timeoutUnit = TimeUnit.SECONDS)
     public List<IntraUserInformation> getSuggestionsToContact(Location location, double distance, String alias,int max, int offset) throws CantGetIntraUsersListException {
 
         try {
 
                 //verifico la cache para mostrar los que tenia antes y los nuevos
-                List<IntraUserInformation> userCacheList = new ArrayList<>();
+              /*  List<IntraUserInformation> userCacheList = new ArrayList<>();
                 try {
                     userCacheList = getCacheSuggestionsToContact(max, offset);
                 } catch (CantGetIntraUsersListException e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
@@ -284,7 +286,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 }
 
 
-            if(intraUserInformationModuleList!=null) {
+         /*   if(intraUserInformationModuleList!=null) {
                 if (userCacheList.size() == 0) {
 
                     //save cache records
@@ -326,9 +328,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             }
             else {
                 return userCacheList;
-            }
+            }*/
 
 
+            return intraUserInformationModuleList;
 
         }
         catch (ErrorSearchingSuggestionsException e) {
@@ -423,6 +426,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
         try {
 
+            //Get actor full profile image to save
             /**
              *Call Network Service Intra User to add request connection
              */
@@ -439,6 +443,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             /**
              *Call Actor Intra User to add request connection
              */
+
             this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage);
 
 
@@ -743,7 +748,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
             for (IntraWalletUserIdentity intraWalletUser : intraWalletUserList) {
                 //TODO: Naty lo saqué esto porque el intraUserLoggedPublicKey está siempre en null, hay que darle valor.
                 //if(intraWalletUser.getPublicKey().equals(intraUserLoggedPublicKey)) {
-                intraUserLoginIdentity = new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
+                intraUserLoginIdentity = new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage(), intraWalletUser.getAccuracy(), intraWalletUser.getFrequency(), intraWalletUser.getLocation());
                 break;
                 //}
             }

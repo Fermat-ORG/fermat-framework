@@ -9,6 +9,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantM
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorCryptoNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
@@ -66,6 +67,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
     private boolean isRunning;
     private boolean shouldRun = true;
 
+
     /**
      * platform services variables
      */
@@ -88,7 +90,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
 
     @Override
     public void start() throws CantStartAgentException {
-        VaultKeyHierarchyMaintainerAgent agent = new VaultKeyHierarchyMaintainerAgent();
+        VaultKeyHierarchyMaintainerAgent agent = new VaultKeyHierarchyMaintainerAgent(this.vaultKeyHierarchy);
         Thread agentThread = new Thread(agent, VaultKeyHierarchyMaintainer.class.getName());
         //flag to control running status
         this.shouldRun = true;
@@ -102,6 +104,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
     public void stop() {
         //flag to control running status
         this.shouldRun = false;
+        this.isRunning = false;
     }
 
     public boolean isRunning(){
@@ -114,6 +117,16 @@ class VaultKeyHierarchyMaintainer implements Agent{
          */
         int currentGeneratedKeys, currentUsedKeys, currentThreshold;
 
+        final VaultKeyHierarchy vaultKeyHierarchy;
+
+        /**
+         * Constructor
+         * @param vaultKeyHierarchy
+         */
+        public VaultKeyHierarchyMaintainerAgent(VaultKeyHierarchy vaultKeyHierarchy) {
+            this.vaultKeyHierarchy = vaultKeyHierarchy;
+        }
+
         /**
          * This will hold all the keys that I need to pass to bitcoin network for monitoring.
          */
@@ -124,7 +137,7 @@ class VaultKeyHierarchyMaintainer implements Agent{
             while (shouldRun){
                 try {
                     doTheMainTask();
-                    Thread.sleep(1000 * 60 * 2);
+                    Thread.sleep(1000 * 60 * 10); // 10 minutes
                 } catch (CantLoadHierarchyAccountsException e) {
                     e.printStackTrace();
                 } catch (KeyMaintainerStatisticException e) {
@@ -133,7 +146,6 @@ class VaultKeyHierarchyMaintainer implements Agent{
                     e.printStackTrace();
                 }
             }
-
         }
 
 
@@ -207,8 +219,16 @@ class VaultKeyHierarchyMaintainer implements Agent{
              * Now that I have all the keys I need to monitor in the bitcoin network. First I need to know which networks are active.
              * A network becomes active when it generated address for an specified network (MainNet, RegTest or TestNet)
              */
+            CryptoVaults vault = CryptoVaults.BITCOIN_CURRENCY;
+
+            HierarchyAccount hierarchyAccount = this.vaultKeyHierarchy.getHierarchyAccountList().get(0);
+            if (hierarchyAccount != null){
+                if ("ImportedSeed".equals(hierarchyAccount.getDescription()))
+                    vault = CryptoVaults.IMPORTED_SEED;
+            }
+
             try {
-                bitcoinNetworkManager.monitorCryptoNetworkFromKeyList(CryptoVaults.BITCOIN_CURRENCY, getActiveNetworks(), allAccountsKeyList);
+                bitcoinNetworkManager.monitorCryptoNetworkFromKeyList(vault, getActiveNetworks(), allAccountsKeyList);
             } catch (CantMonitorCryptoNetworkException e) {
                 e.printStackTrace();
             }
