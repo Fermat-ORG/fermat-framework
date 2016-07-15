@@ -409,7 +409,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,

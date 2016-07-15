@@ -77,6 +77,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.CantPersistWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.NewWalletCreationFailedException;
@@ -441,33 +442,11 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
-        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date);
-        /**
-         * Importing a new seed is a complex process. A new Key Hierarchy is created, new keys are derived on this hierarchy,
-         * the keys generate public Keys and addresses that are passed to the CryptoNetwork for monitoring.
-         * Once that is completed, we need to register those generated addresses into the addressBook so that any generated transaction
-         * is redirected to the appropiate wallet.
-         */
+        CryptoAddress cryptoAddress = cryptoVaultManager.getCryptoAddress(blockchainNetworkType);
+        cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
-        List<CryptoAddress> cryptoAddressList = null;
-        boolean running = true;
-        while (running){
-            // I get the list of imported address from the cryptoNetwork. This process is async, so I don't know when
-            // they will be imported. I need to try until I get it.
-            cryptoAddressList = blockchainManager.getImportedAddresses(blockchainNetworkType);
+        cryptoVaultManager.importSeedFromMnemonicCode(cryptoAddress, blockchainNetworkType,mnemonicCode, date);
 
-            if (!cryptoAddressList.isEmpty())
-                running = false;
-        }
-
-        // I add the imported address into the address book.
-        for (CryptoAddress cryptoAddress : cryptoAddressList ){
-            try {
-                cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-            } catch (CantRegisterCryptoAddressBookRecordException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**

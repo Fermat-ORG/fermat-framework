@@ -572,8 +572,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         getPaintActivtyFeactures().pushNotification(appSession.getAppPublicKey(), notification);
     }
 
-    public void cancelNotification(){
-        getPaintActivtyFeactures().cancelNotification(appSession.getAppPublicKey());
+    public void cancelNotification(FermatBundle fermatBundle){
+        getPaintActivtyFeactures().cancelNotification(fermatBundle);
     }
 
 

@@ -36,7 +36,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchyGenerator implements Runnable {
+public class VaultKeyHierarchyGenerator implements Runnable {
     /**
      * Unique seed used to generate all the hierarchies
      */

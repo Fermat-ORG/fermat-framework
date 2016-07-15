@@ -39,7 +39,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     private List<FermatEventListener> listenersAdded;
 
 
-
     public P2PLayerPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -101,8 +100,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
             }
         }, 5, 5, TimeUnit.SECONDS);
     }
-
-
 
 
 
