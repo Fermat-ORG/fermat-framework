@@ -345,12 +345,6 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
 
         wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
 
-        // I will import all the generated keys of any imported seed
-        for (DeterministicSeed importedSeed : this.getImportedSeeds()){
-            VaultKeyHierarchyGenerator importedSeedHierarchy = new VaultKeyHierarchyGenerator(importedSeed, true, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
-            wallet.importKeys(importedSeedHierarchy.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
-        }
-
         /**
          * Add transactions to the wallet that we can use to spend.
          */
