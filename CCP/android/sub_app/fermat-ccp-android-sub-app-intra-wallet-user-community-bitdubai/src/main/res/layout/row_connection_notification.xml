@@ -58,11 +58,12 @@
                     <ImageView
                         tools:ignore="ContentDescription"
                         android:id="@+id/imageView"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ccp_geolacation_light_icon"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"
+                        android:paddingBottom="5dp" />
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:layout_width="0dp"
@@ -73,7 +74,7 @@
                         android:textSize="12dp"
                         android:textColor="#aaaaab"
                         android:layout_weight="0.70"
-                        android:paddingTop="4dp" />
+                        android:paddingTop="2dp" />
 
                 </LinearLayout>
 
@@ -106,8 +107,8 @@
 
             <ImageView
                 android:id="@+id/imageView_avatar"
-                android:layout_width="47dp"
-                android:layout_height="47dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
