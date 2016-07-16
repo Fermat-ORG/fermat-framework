@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,11 +18,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -32,6 +36,9 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 
+import com.bitdubai.sub_app.intra_user_community.common.popups.DeleteAllContactsDialog;
+import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
+import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -42,7 +49,8 @@ import java.util.List;
  * Creado por Jose manuel De Sousa el 30/11/2015
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager> ,ResourceProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager> ,ResourceProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private static final int MAX = 20;
@@ -63,6 +71,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
 
+    private FermatApplicationCaller fermatApplicationCaller;
+
     /**
      * Create a new instance of this fragment
      *
@@ -79,8 +89,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
         // setting up  module
         intraUserSubAppSession = ((ReferenceAppFermatSession) appSession);
 
-            intraUserInformation = (IntraUserInformation) ((ReferenceAppFermatSession) appSession).getData(INTRA_USER_SELECTED);
+        intraUserInformation = (IntraUserInformation) ((ReferenceAppFermatSession) appSession).getData(INTRA_USER_SELECTED);
 
+        fermatApplicationCaller = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
@@ -199,6 +210,28 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+
+                showDialogHelp();
+                break;
+
+            case 2:
+
+                try{
+                    fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+
+        }
+
+        return false;
+    }
+
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
@@ -251,5 +284,75 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+    }
+
+    private void showDialogHelp() {
+        try {
+            if (moduleManager.getActiveIntraUserIdentity() != null) {
+                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            // showCriptoUsersCache();
+                            onRefresh();
+                            invalidate();
+                        }
+                    });
+                } else {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                            if (isBackPressed != null) {
+                                if (isBackPressed) {
+                                    getActivity().finish();
+                                }
+                            } else {
+                                onRefresh();
+                                //showCriptoUsersCache();
+
+                            }
+                        }
+                    });
+                }
+            } else {
+                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                        intraUserSubAppSession,
+                        null,
+                        moduleManager,
+                        PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                presentationIntraUserCommunityDialog.show();
+                presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Boolean isBackPressed = null;
+
+                        isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+
+                        if (isBackPressed != null) {
+                            if (isBackPressed) {
+                                getActivity().onBackPressed();
+                            }
+                        } else
+                            onRefresh();
+                        //showCriptoUsersCache();
+                    }
+                });
+            }
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
     }
 }
