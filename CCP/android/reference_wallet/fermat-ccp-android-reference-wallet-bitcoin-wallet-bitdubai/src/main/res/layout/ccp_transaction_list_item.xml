@@ -35,11 +35,11 @@
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="300dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_notes"
-                android:text=""
-                android:textSize="14sp"
+                android:text="dfgdfgdfgdfgdfgdfgdfgdfgdf"
+                android:textSize="12sp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_time"
                 android:text="@string/txt_time_date_text"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"

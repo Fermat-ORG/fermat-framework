@@ -24,7 +24,11 @@ import com.squareup.picasso.Picasso;
  * @author Modified byJose Manuel De Sousa 08/12/2015
  */
 public class FragmentsCommons {
-
+    public static final String CONNECTION_RESULT = "connection_result";
+    public static final int SEARCH_FILTER_OPTION_MENU_ID = 1;
+    public static final int LOCATION_FILTER_OPTION_MENU_ID = 2;
+    public static final int HELP_OPTION_MENU_ID = 3;
+    public static final int CBC_BACKGROUND_TAB_ID = 4;
 
     public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
         /**
