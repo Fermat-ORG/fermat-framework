@@ -1764,7 +1764,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                 }
             }
 
-            cryptoPaymentRegistry.approveRequest(requestId,0,FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+            cryptoPaymentRegistry.approveRequest(requestId,0,FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
 
 
         }

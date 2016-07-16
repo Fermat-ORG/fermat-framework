@@ -387,6 +387,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public void onStop() {
         getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+
+        if(worker != null)
+          worker.shutdownNow();
         super.onStop();
     }
 
@@ -734,7 +737,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 */
     public void GETTestNet( final Context context){
 
-        FermatWorker  worker = new FermatWorker() {
+         worker = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
 
@@ -794,9 +797,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     if (!result[0].toString().equals("transaccion fallida"))
                         Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
 
-                    }
-
                 }
+
+            }
 
             @Override
             public void onErrorOccurred(Exception ex) {

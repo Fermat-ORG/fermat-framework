@@ -16,8 +16,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -101,7 +99,7 @@ public class BrowserTabFragment
     private Location location;
     private double distance;
     private IntraUserLoginIdentity identity;
-
+    private FermatWorker fermatWorker;
 
     //Flags
     private boolean launchActorCreationDialog = false;
@@ -495,7 +493,7 @@ public class BrowserTabFragment
     @Override
     public void onLoadMoreData(int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
-        FermatWorker fermatWorker = new FermatWorker(getActivity(), this) {
+        fermatWorker = new FermatWorker(getActivity(), this) {
             @Override
             protected Object doInBackground() throws Exception {
                 return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
@@ -588,7 +586,7 @@ public class BrowserTabFragment
 
     private void loadSelectedActorIdentityInBackground(){
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground() throws Exception {
                 if (selectedActorIdentity == null)
@@ -602,12 +600,12 @@ public class BrowserTabFragment
             public void onPostExecute(Object... result) {
                 try {
                     selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
-                    if(selectedActorIdentity!=null) {
+                    if (selectedActorIdentity != null) {
                         Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
                         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
                         toolbar.setLogo(bitmapDrawable);
-                    }else{
-                        Log.e(TAG,"selectedActorIdentity null, Nelson fijate si esto queres que haga");
+                    } else {
+                        Log.e(TAG, "selectedActorIdentity null, Nelson fijate si esto queres que haga");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -761,6 +759,13 @@ public class BrowserTabFragment
 
     }
 
+
+    @Override
+    public void onStop() {
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+        super.onStop();
+    }
 
 }
 
