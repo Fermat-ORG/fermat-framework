@@ -334,6 +334,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throws CantInsertRecordException {
 
         try{
+            if(isContractHashInDatabase(customerBrokerContractSale.getContractId())){
+                System.out.println("The contract "+customerBrokerContractSale+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(
@@ -388,6 +392,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throws CantInsertRecordException {
 
         try{
+            if(isContractHashInDatabase(customerBrokerContractSale.getContractId())){
+                System.out.println("The contract "+customerBrokerContractSale+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(
@@ -1427,6 +1435,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase customerBrokerContractPurchase) throws CantInsertRecordException {
         try{
+            if(isContractHashInDatabase(customerBrokerContractPurchase.getContractId())){
+                System.out.println("The contract "+customerBrokerContractPurchase+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, customerBrokerContractPurchase);

@@ -328,6 +328,10 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                                           long cryptoAmount,
                                           CryptoCurrency paymentCurrency) throws CantInsertRecordException {
         try {
+            if(isContractHashInDatabase(contractSale.getContractId())){
+                System.out.println("The contract "+contractSale+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
@@ -355,6 +359,10 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase contractPurchase) throws CantInsertRecordException {
         try {
+            if(isContractHashInDatabase(contractPurchase.getContractId())){
+                System.out.println("The contract "+contractPurchase+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, contractPurchase);
