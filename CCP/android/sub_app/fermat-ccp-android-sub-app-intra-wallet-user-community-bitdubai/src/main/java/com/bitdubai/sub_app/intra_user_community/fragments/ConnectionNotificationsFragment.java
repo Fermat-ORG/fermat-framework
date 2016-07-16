@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -55,6 +56,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private AppNotificationAdapter adapter;
     private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     private LinearLayout emptyView;
+    private LinearLayout connectionSuccess;
+    private FermatTextView textConnectionSuccess;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
@@ -108,8 +111,12 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#fff"));
+           // rootView.setBackgroundColor(Color.parseColor("#ffff"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            connectionSuccess = (LinearLayout) rootView.findViewById(R.id.connection_success);
+            textConnectionSuccess = (FermatTextView) rootView.findViewById(R.id.text_connection_success);
+
+
 
             onRefresh();
 
@@ -196,6 +203,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 }
             });
             worker.execute();
+
         }
     }
 
@@ -221,8 +229,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             });
             notificationAcceptDialog.show();
 
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
+                textConnectionSuccess.setText("You're now connected with "+intraUserInformation.getName());
+                showEmpty(notificationAcceptDialog.getResultado(), connectionSuccess);
+        } catch (CantGetActiveLoginIdentityException e) {e.printStackTrace();
         }
     }
 
@@ -232,6 +241,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     }
 
 
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -239,6 +249,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
+
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
