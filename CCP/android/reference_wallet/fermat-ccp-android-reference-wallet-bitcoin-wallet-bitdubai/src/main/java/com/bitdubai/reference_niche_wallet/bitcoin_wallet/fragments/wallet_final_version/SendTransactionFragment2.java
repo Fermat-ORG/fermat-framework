@@ -231,12 +231,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
-            //list transaction on background
-
-            onRefresh();
-
-
-
 
         } catch (Exception ex) {
             ex.printStackTrace();

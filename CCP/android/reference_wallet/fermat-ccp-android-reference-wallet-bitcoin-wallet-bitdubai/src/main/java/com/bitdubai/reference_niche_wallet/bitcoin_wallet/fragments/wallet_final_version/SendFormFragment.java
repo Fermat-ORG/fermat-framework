@@ -814,7 +814,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 else
                                     total =  operator.longValueExact() -  decimalFeed.longValueExact();
 
-                                if(total < availableBalance)
+                                if(operator.longValueExact() < availableBalance)
                                 {
                                     /*cryptoWallet.send(
                                             operator.longValueExact(),

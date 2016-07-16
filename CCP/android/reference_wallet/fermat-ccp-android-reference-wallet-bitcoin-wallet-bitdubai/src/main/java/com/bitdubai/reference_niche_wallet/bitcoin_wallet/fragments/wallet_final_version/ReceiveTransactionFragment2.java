@@ -138,10 +138,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         }
 
-        //list transaction on background
-       onRefresh();
-
-
     }
 
     @Nullable
