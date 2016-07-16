@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="180dp"
-    android:layout_height="180dp"
+    android:layout_height="wrap_content"
     android:layout_margin="1dp"
     android:background="#FFF"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
 
     <RelativeLayout
         android:layout_width="72dp"
@@ -17,6 +19,7 @@
 
         <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
             android:id="@+id/profile_image"
+            android:layout_marginTop="0.5dp"
             android:layout_width="68dp"
             android:layout_height="68dp"
             android:background="@drawable/photocontact_icon"
@@ -60,6 +63,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
             android:src="@drawable/geolocalitationblue_icon" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -70,8 +74,10 @@
             android:text="Location-Venezuela"
             android:maxLines="3"
             android:textColor="#7DD5CA"
-            android:textSize="14sp"
+            android:textSize="12sp"
+            android:layout_marginTop="0dp"
             />
+
 
         <ImageView
             android:id="@+id/connection_state"
@@ -82,6 +88,7 @@
             android:src="@drawable/ic_home_friend"
             android:visibility="gone"
             tools:ignore="ContentDescription,RtlHardcoded" />
+
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/connection_state_user"
@@ -100,5 +107,40 @@
 
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#b7b7b7"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/response"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="REQUEST SEND"
+        android:textSize="12dp"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        android:textColor="#21386D"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="102dp"
+        android:layout_height="24dp"
+        android:background="#21386D"
+        android:layout_marginTop="16dp"
+        android:text="ADD CONTACT"
+        android:textSize="10dp"
+        android:textColor="#FFF"
+
+        />
 
 </LinearLayout>
