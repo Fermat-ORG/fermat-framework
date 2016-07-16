@@ -14,6 +14,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.sub_app.intra_user_community.R;
 
 /**
@@ -105,8 +106,8 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                         connectionState.setVisibility(View.GONE);
                     break;
             }
-            row_connection_state.setText(data.getState());
-            if(data.getState().equals("Offline"))
+            row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ? "Online" : "offline");
+            if(data.getState().equals(ProfileStatus.OFFLINE))
                row_connection_state.setTextColor(Color.RED);
             else
                row_connection_state.setTextColor(Color.WHITE);

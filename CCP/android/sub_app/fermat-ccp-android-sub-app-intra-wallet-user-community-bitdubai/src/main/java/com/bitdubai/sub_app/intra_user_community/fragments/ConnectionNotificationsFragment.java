@@ -117,15 +117,13 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             textConnectionSuccess = (FermatTextView) rootView.findViewById(R.id.text_connection_success);
 
 
-
-            onRefresh();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
 
+        onRefresh();
 
         return rootView;
     }
@@ -153,10 +151,10 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+           /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
             notificationsProgressDialog.setMessage("Loading Notifications");
             notificationsProgressDialog.setCancelable(false);
-            notificationsProgressDialog.show();
+            notificationsProgressDialog.show();*/
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -168,7 +166,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
+                    //notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -189,7 +187,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
+                   // notificationsProgressDialog.dismiss();
                     try {
                         isRefreshing = false;
                         if (swipeRefresh != null)
@@ -262,5 +260,12 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
     }
 }
