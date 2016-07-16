@@ -148,6 +148,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
             List<NetworkServiceMessage> networkServiceMessages = getNetworkServiceConnectionManager()
                     .getOutgoingMessagesDao()
                     .findAll(filters);
+            System.out.println("Transaction Transmission found " + networkServiceMessages.size()+" for sending");
             for(NetworkServiceMessage networkServiceMessage : networkServiceMessages){
                 try{
                     System.out.println("Trying to send pending message to " + networkServiceMessage.getReceiverPublicKey());
