@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -26,8 +27,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 
 
 /**
@@ -36,6 +39,7 @@ import java.text.NumberFormat;
 public class CloseContractDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
     private static final String TAG = "CloseContractDetails";
 
+    private NumberFormat numberFormat=DecimalFormat.getInstance();
 
 
     public static CloseContractDetailsFragment newInstance() {
@@ -80,11 +84,24 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
         amountSoldOrToSellTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.ccw_wanted_to_buy : R.string.ccw_you_bought);
 
         FermatTextView amountSoldOrToSellValue = (FermatTextView) rootView.findViewById(R.id.ccw_amount_bought_or_wanted_to_buy_value);
-        String amountToSell = DecimalFormat.getInstance().format(contractBasicInfo.getAmount());
+
+        if(CryptoCurrency.codeExists(contractBasicInfo.getMerchandise())){
+            numberFormat.setMaximumFractionDigits(8);
+        }else{
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
+        String amountToSell = fixFormat(String.valueOf(contractBasicInfo.getAmount()));
         amountSoldOrToSellValue.setText(String.format("%1$s %2$s", amountToSell, contractBasicInfo.getMerchandise()));
 
+        if(CryptoCurrency.codeExists(contractBasicInfo.getPaymentCurrency())){
+            numberFormat.setMaximumFractionDigits(8);
+        }else{
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
         FermatTextView priceValue = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_price_value);
-        String price = NumberFormat.getInstance().format(contractBasicInfo.getExchangeRateAmount());
+        String price = fixFormat(String.valueOf(contractBasicInfo.getExchangeRateAmount()));
         priceValue.setText(String.format("%1$s %2$s/%3$s", price, contractBasicInfo.getMerchandise(), contractBasicInfo.getPaymentCurrency()));
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_payment_method);
@@ -113,5 +130,18 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
             }
         });
+    }
+
+
+
+    private String fixFormat(String value){
+
+        try {
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
     }
 }

@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -32,6 +33,10 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Clos
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,6 +56,8 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
     private static final String TAG = "ClosedNegDetailsFrag";
     
     private ErrorManager errorManager;
+
+    private NumberFormat numberFormat= DecimalFormat.getInstance();
     
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
@@ -98,9 +105,25 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
     
         final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
-        final String exchangeAmount = clauses.get(EXCHANGE_RATE).getValue();
+
+
+        if(CryptoCurrency.codeExists(merchandise)){
+            numberFormat.setMaximumFractionDigits(8);
+        }else{
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
+        final String exchangeAmount = fixFormat(clauses.get(EXCHANGE_RATE).getValue());
         final String paymentCurrency = clauses.get(BROKER_CURRENCY).getValue();
-        final String amount = clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue();
+
+        if(CryptoCurrency.codeExists(paymentCurrency)){
+            numberFormat.setMaximumFractionDigits(8);
+        }else{
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
+
+        final String amount = fixFormat(clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue());
     
         //Negotiation Summary
         brokerImage.setImageDrawable(getImgDrawable(broker.getProfileImage()));
@@ -137,4 +160,16 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         Object data = appSession.getData(FragmentsCommons.NEGOTIATION_ID);
         return (data != null) ? (UUID) data : null;
     }
+
+    private String fixFormat(String value){
+
+        try {
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
 }
