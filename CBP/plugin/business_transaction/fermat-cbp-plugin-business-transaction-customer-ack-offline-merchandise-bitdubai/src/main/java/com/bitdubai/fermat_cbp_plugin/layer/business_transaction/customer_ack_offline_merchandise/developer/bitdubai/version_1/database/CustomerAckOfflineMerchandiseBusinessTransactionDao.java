@@ -330,6 +330,10 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
         try{
+            if(isContractHashInDatabase(customerBrokerContractPurchase.getContractId())){
+                System.out.println("The contract "+customerBrokerContractPurchase+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getAckMerchandiseTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord= buildDatabaseTableRecord(
@@ -833,6 +837,10 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
         try{
+            if(isContractHashInDatabase(customerBrokerContractSale.getContractId())){
+                System.out.println("The contract "+customerBrokerContractSale+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getAckMerchandiseTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord= buildDatabaseTableRecord(

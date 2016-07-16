@@ -199,8 +199,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SENT);
                 outgoingNotificationDao.update(negotiationTransmission);
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity
                             .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
@@ -247,6 +246,8 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
                         break;
 
                 }
+                nt.setTransmissionState(NegotiationTransmissionState.DONE);
+                outgoingNotificationDao.update(nt);
             }
 
         } catch (Exception e) {
