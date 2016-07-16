@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_customer_community.common.holders;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -82,6 +83,13 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         customerName.setText(data.getAlias());
+        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+            customerName.setTextColor(Color.RED);
+        else if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            customerName.setTextColor(Color.GREEN);
+        else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+            customerName.setTextColor(Color.BLACK);//res.getColor(R.color.color_black_light));
+
         customerLocation.setText(String.format("%s / %s", data.getCountry(), data.getPlace()));
         customerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }

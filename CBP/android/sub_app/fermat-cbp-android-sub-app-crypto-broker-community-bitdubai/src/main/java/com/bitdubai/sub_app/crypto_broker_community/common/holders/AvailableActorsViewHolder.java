@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_community.common.holders;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -78,6 +79,13 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         brokerName.setText(data.getAlias());
+        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+            brokerName.setTextColor(Color.RED);
+        else if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            brokerName.setTextColor(Color.GREEN);
+        else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+            brokerName.setTextColor(Color.BLACK);//res.getColor(R.color.color_black_light));
+
         brokerLocation.setText(String.format("%s / %s", data.getCountry(), data.getPlace()));
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
