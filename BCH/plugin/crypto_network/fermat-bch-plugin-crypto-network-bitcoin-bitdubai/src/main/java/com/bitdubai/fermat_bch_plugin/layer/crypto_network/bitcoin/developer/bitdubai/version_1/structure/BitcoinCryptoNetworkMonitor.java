@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
@@ -75,6 +76,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     private MonitorAgent monitorAgent;
     private String threadName;
+    BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain;
     private Thread monitorAgentThread;
     private Wallet wallet;
     private final boolean isReset;
@@ -249,11 +251,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             try {
                 // start it all
                 doTheMainTask();
-
-                //start the controller of the blocks
-                BlocksDownloadControllerAgent blocksDownloadControllerAgent = new BlocksDownloadControllerAgent(2, TimeUnit.MINUTES, this.peerGroup, this.blockChain);
-                blocksDownloadControllerAgent.start();
-                System.out.println("***CryptoNetwork*** Blocks Download agent started...");
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
@@ -277,7 +274,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * creates the blockchain object for the specified network.
                  */
-                BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(this.isReset, pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
+                cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(this.isReset, pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
                 blockChain = cryptoNetworkBlockChain.getBlockChain();
 
                 /**
@@ -328,6 +325,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 peerGroup.setDownloadTxDependencies(true);
                 peerGroup.start();
                // peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+
+                //start the controller of the blocks
+                BlocksDownloadControllerAgent blocksDownloadControllerAgent = new BlocksDownloadControllerAgent(2, TimeUnit.MINUTES, this.peerGroup, this.blockChain);
+                blocksDownloadControllerAgent.start();
+                System.out.println("***CryptoNetwork*** Blocks Download agent started...");
+
+                //start downloading the blockchain
                 peerGroup.downloadBlockChain();
 
                 System.out.println("***CryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
@@ -1108,19 +1112,20 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             for (Peer peer : peerGroup.getConnectedPeers()){
                 Long peerValue = peer.getBestHeight();
-               int delta = currentDownloadedBlocks - peerValue.intValue();
+               int delta =  peerValue.intValue() - currentDownloadedBlocks;
 
                 // if the delta is big enought, then switch.
                 if (delta > DOWNLOAD_DELTA){
                     System.out.println("***CryptoNetwork*** Block Download agent: found more blocks on new peer.");
+                    System.out.println("Local block count is " + currentDownloadedBlocks + " peer count is " + peerValue + " (" + delta + ")");
                     System.out.println("current download Peer: " + peerGroup.getDownloadPeer().toString());
                     System.out.println("New download Peer: " + peer.toString());
 
                     peer.startBlockChainDownload();
 
-                    //wait for the next round to check everything again.
-                    return;
                 }
+                blockChain.drainOrphanBlocks();
+                peerGroup.startBlockChainDownload(null);
             }
         }
 

@@ -569,7 +569,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     }
                 }
 
-                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase));
+                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus()));
             }
 
 

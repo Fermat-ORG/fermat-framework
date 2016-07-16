@@ -231,12 +231,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
-            //list transaction on background
-
-            onRefresh();
-
-
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -257,7 +251,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
                     setUpBlockchainProgress(false);
             } else {
-                toolbarColor = Color.parseColor("#12aca1");
+                toolbarColor = Color.parseColor("#05DDD2");
             }
             final int finalToolbarColor = toolbarColor;
             getActivity().runOnUiThread(new Runnable() {
@@ -832,8 +826,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 return true;
             } else
             {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+                if (id == 4) {
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
+                    return true;
+                }
+                else {
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    return true;
+                }
+
 
             }
         } catch (Exception e) {
