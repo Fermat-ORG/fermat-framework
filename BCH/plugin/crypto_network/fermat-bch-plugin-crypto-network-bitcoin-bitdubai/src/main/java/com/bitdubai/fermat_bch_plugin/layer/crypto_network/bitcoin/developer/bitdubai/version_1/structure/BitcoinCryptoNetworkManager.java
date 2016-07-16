@@ -1177,8 +1177,8 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
             //if I couldn't get it from the database, I will continue.
         }
 
-        if (isAgentRunning(blockchainNetworkType))
-            throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode(), "Agent is not running, possibly being reset just no.");
+        if (!isAgentRunning(blockchainNetworkType))
+            throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode(), "Agent is not running, possibly being reset just now?.");
 
         return runningAgents.get(blockchainNetworkType);
     }
