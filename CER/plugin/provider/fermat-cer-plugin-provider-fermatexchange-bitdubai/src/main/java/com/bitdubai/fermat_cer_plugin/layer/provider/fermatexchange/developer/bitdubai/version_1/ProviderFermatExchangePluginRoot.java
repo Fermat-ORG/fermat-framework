@@ -167,7 +167,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
 
         String url, currPairParam;
@@ -211,7 +211,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
 
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         ExchangeRate requiredExchangeRate = null;
 
@@ -271,7 +271,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
 
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
         long stdEndTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(endTimestamp);
@@ -334,7 +334,7 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         if(!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }

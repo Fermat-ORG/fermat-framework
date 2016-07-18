@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class UnsupportedCurrencyPairException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "This CurrencyPair is unsipported by this provider";
+    public static final String DEFAULT_MESSAGE = "This CurrencyPair is unsupported by this provider";
 
     public UnsupportedCurrencyPairException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

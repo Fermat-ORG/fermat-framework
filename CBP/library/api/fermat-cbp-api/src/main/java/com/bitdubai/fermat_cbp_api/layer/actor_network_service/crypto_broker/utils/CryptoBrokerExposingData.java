@@ -89,7 +89,8 @@ public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData
                 cryptoBrokerIdentity.getAlias(),
                 cryptoBrokerIdentity.getProfileImage(),
                 location,cryptoBrokerIdentity.getFrequency().getRefreshInterval(),
-                cryptoBrokerIdentity.getAccuracy(),profileStatus);
+                cryptoBrokerIdentity.getAccuracy(),
+                profileStatus);
         this.cryptoBrokerIdentityExtraData =
                 cryptoBrokerIdentity.getCryptoBrokerIdentityExtraData();
     }
