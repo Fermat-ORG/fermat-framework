@@ -846,4 +846,10 @@ public interface CryptoBrokerWalletModuleManager
     List<EarningTransaction> searchEarnings(EarningsPair earningsPair) throws CantListEarningTransactionsException;
 
     CryptoBrokerIdentity setMerchandisesAsExtraDataInAssociatedIdentity() throws CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException;
+
+    void testBroadcastReceiver();
+
+    List<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBrokerTest(int i, int i1);
+
+    List<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomerTest(int i, int i1);
 }

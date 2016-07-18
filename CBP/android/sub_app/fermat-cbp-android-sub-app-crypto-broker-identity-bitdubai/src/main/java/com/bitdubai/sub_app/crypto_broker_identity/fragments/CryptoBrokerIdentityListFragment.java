@@ -59,6 +59,8 @@ public class CryptoBrokerIdentityListFragment
     private PresentationDialog presentationDialog;
 
     private View layout;
+    private BrokerIdentityBroadcastReceiver broadcastReceiver;
+
 
     public static CryptoBrokerIdentityListFragment newInstance() {
         return new CryptoBrokerIdentityListFragment();
@@ -69,11 +71,23 @@ public class CryptoBrokerIdentityListFragment
         super.onCreate(savedInstanceState);
 
         FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
-        registerReceiver(fermatIntentFilter, new BrokerIdentityBroadcastReceiver());
+        broadcastReceiver = new BrokerIdentityBroadcastReceiver();
+        registerReceiver(fermatIntentFilter, broadcastReceiver);
 
         cleanSessionData();
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 
     @Override

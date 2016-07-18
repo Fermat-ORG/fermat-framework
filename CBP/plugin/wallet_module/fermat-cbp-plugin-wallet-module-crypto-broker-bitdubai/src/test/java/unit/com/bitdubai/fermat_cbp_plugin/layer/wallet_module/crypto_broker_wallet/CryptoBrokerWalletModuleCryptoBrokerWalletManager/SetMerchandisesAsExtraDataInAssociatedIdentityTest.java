@@ -101,7 +101,7 @@ public class SetMerchandisesAsExtraDataInAssociatedIdentityTest {
                 customerBrokerCloseManager,
                 cryptoCustomerActorConnectionManager,
                 pluginFileSystem,
-                null));
+                null, broadcaster));
     }
 
     @Test

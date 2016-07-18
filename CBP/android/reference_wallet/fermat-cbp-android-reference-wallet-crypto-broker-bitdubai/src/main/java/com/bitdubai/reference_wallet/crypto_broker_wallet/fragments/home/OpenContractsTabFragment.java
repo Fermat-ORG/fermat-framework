@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
-
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
@@ -63,10 +62,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    private View emptyListViewsContainer;
-    FermatApplicationCaller applicationsHelper;
     // Data
-    private ArrayList<GrouperItem<ContractBasicInformation>> openContractList;
+    private List<GrouperItem<ContractBasicInformation>> openContractList;
+
+    // Android Stuffs
+    private View emptyListViewsContainer;
+    private OpenContractBroadcastReceiver broadcastReceiver;
+    private FermatApplicationCaller applicationCaller;
 
 
     public static OpenContractsTabFragment newInstance() {
@@ -78,12 +80,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         super.onCreate(savedInstanceState);
 
         FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
-        registerReceiver(fermatIntentFilter, new OpenContractBroadcastReceiver());
+        broadcastReceiver = new OpenContractBroadcastReceiver();
+        registerReceiver(fermatIntentFilter, broadcastReceiver);
 
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
+            applicationCaller = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -91,10 +94,26 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                 errorManager.reportUnexpectedWalletException(
                         Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         onRefresh();
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+        onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 
     @Override
     protected void initViews(View layout) {
@@ -130,10 +149,10 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             int id = item.getItemId();
             switch (id) {
                 case FragmentsCommons.OPEN_BROKER_IDENTITY_APP_OPTION_MENU_ID:
-                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
+                    applicationCaller.openFermatApp(SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
                     break;
                 case FragmentsCommons.OPEN_CUSTOMER_COMMUNITY_APP_OPTION_MENU_ID:
-                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
+                    applicationCaller.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
                     break;
             }
 

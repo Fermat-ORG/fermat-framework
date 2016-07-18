@@ -66,10 +66,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private ErrorManager errorManager;
 
     // Data
-    private List<GrouperItem> openNegotiationList;
+    private List<GrouperItem<CustomerBrokerNegotiationInformation>> openNegotiationList;
 
+    // Android Stuffs
     private View emptyListViewsContainer;
-    FermatApplicationCaller applicationsHelper;
+    private FermatApplicationCaller applicationsHelper;
+    private OpenNegotiationBroadcastReceiver broadcastReceiver;
+
 
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
@@ -80,7 +83,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.onCreate(savedInstanceState);
 
         FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
-        registerReceiver(fermatIntentFilter, new OpenNegotiationBroadcastReceiver());
+        broadcastReceiver = new OpenNegotiationBroadcastReceiver();
+        registerReceiver(fermatIntentFilter, broadcastReceiver);
 
         try {
             moduleManager = appSession.getModuleManager();
@@ -102,7 +106,24 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
         onRefresh();
     }
 
@@ -121,6 +142,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
         emptyListViewsContainer = layout.findViewById(R.id.empty);
+
+        layout.findViewById(R.id.cbw_test_broadcast_receiver_update_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moduleManager.testBroadcastReceiver();
+            }
+        });
     }
 
     @SuppressWarnings("deprecation")
