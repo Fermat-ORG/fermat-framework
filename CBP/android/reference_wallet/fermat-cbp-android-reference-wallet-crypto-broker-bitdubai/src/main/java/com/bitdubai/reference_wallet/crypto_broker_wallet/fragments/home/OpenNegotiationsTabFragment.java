@@ -229,8 +229,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
             try {
 
-                waitingForBroker.addAll(moduleManager.getNegotiationsWaitingForBroker(0, 10));
-                waitingForCustomer.addAll(moduleManager.getNegotiationsWaitingForCustomer(0, 10));
+                waitingForBroker.addAll(moduleManager.getNegotiationsWaitingForBrokerTest(0, 10));
+                waitingForCustomer.addAll(moduleManager.getNegotiationsWaitingForCustomerTest(0, 10));
 
                 if (!waitingForBroker.isEmpty() || !waitingForCustomer.isEmpty()) {
                     grouperText = getActivity().getString(R.string.waiting_for_you);
