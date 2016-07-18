@@ -25,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -63,6 +64,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
@@ -117,6 +119,7 @@ public class BrowserTabFragment
     private ExecutorService _executor;
     LinearLayout searchEmptyView;
     private SwipeRefreshLayout swipeRefresh;
+
     //DATA
     private ActiveActorIdentityInformation selectedActorIdentity;
     private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
@@ -229,6 +232,7 @@ public class BrowserTabFragment
 
         noContacts = (LinearLayout) rootView.findViewById(R.id.empty_view);
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
+
 
        // locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
        // locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_country);
@@ -425,7 +429,19 @@ public class BrowserTabFragment
             if (moduleManager.getActiveIntraUserIdentity() != null) {
                 if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                     appSession.setData(INTRA_USER_SELECTED, data);
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+                ConnectDialog connectDialog;
+                connectDialog = new ConnectDialog(getActivity(), (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
+                connectDialog.setTitle("CONFIRM CONNECTION");
+                connectDialog.setDescription("Are you sure you want to connect with "+data.getName()+"?");
+                connectDialog.setUsername(data.getName());
+                connectDialog.setSecondDescription("");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        onRefresh();
+                    }
+                });
+                connectDialog.show();
             }
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
