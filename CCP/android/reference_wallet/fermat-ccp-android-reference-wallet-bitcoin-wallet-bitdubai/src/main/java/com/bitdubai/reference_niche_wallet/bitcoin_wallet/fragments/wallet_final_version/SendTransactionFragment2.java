@@ -905,7 +905,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
+        return 0;
     }
 
     @Override
@@ -976,7 +976,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+           // swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 //noinspection unchecked
                 openNegotiationList = (ArrayList) result[0];
@@ -1005,7 +1005,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+           // swipeRefreshLayout.setRefreshing(false);
             //errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
             ex.printStackTrace();
         }

@@ -1,11 +1,13 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,9 +47,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
@@ -256,7 +260,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
+        return 0;
     }
 
     @Override
@@ -334,7 +338,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+           // swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 //noinspection unchecked
                 openNegotiationList = (ArrayList) result[0];
@@ -364,7 +368,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+          //  swipeRefreshLayout.setRefreshing(false);
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
         }
     }
@@ -399,5 +403,28 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try {
+            if(code.equals("BlockchainDownloadComplete")) {
+                //update toolbar color
+                final Toolbar toolBar = getToolbar();
+
+                toolBar.setBackgroundColor(Color.parseColor("#05CFC2"));
+            } else {
+                if(code.equals("Btc_arrive"))
+                { //update transactions
+                    onRefresh();
+                }
+
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
