@@ -126,7 +126,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             }
 
 
-            onRefresh();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);

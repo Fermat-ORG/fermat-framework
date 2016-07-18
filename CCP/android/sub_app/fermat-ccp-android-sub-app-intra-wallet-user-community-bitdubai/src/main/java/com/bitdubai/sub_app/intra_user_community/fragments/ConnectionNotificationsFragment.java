@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,11 +18,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -32,6 +37,9 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 
+import com.bitdubai.sub_app.intra_user_community.common.popups.DeleteAllContactsDialog;
+import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
+import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -42,7 +50,8 @@ import java.util.List;
  * Creado por Jose manuel De Sousa el 30/11/2015
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager> ,ResourceProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager> ,ResourceProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private static final int MAX = 20;
@@ -55,6 +64,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private AppNotificationAdapter adapter;
     private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     private LinearLayout emptyView;
+    private LinearLayout connectionSuccess;
+    private FermatTextView textConnectionSuccess;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
@@ -62,6 +73,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private List<IntraUserInformation> lstIntraUserInformations;
     private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
+    private FermatWorker worker;
+    private FermatApplicationCaller fermatApplicationCaller;
+
 
     /**
      * Create a new instance of this fragment
@@ -79,8 +93,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
         // setting up  module
         intraUserSubAppSession = ((ReferenceAppFermatSession) appSession);
 
-            intraUserInformation = (IntraUserInformation) ((ReferenceAppFermatSession) appSession).getData(INTRA_USER_SELECTED);
+        intraUserInformation = (IntraUserInformation) ((ReferenceAppFermatSession) appSession).getData(INTRA_USER_SELECTED);
 
+        fermatApplicationCaller = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();
@@ -108,10 +123,11 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+           // rootView.setBackgroundColor(Color.parseColor("#ffff"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            connectionSuccess = (LinearLayout) rootView.findViewById(R.id.connection_success);
+            textConnectionSuccess = (FermatTextView) rootView.findViewById(R.id.text_connection_success);
 
-            onRefresh();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -119,6 +135,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
 
         }
 
+        onRefresh();
 
         return rootView;
     }
@@ -146,11 +163,11 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+           /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
             notificationsProgressDialog.setMessage("Loading Notifications");
             notificationsProgressDialog.setCancelable(false);
-            notificationsProgressDialog.show();
-            FermatWorker worker = new FermatWorker() {
+            notificationsProgressDialog.show();*/
+             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
@@ -161,7 +178,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
+                    //notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -182,7 +199,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
+                   // notificationsProgressDialog.dismiss();
                     try {
                         isRefreshing = false;
                         if (swipeRefresh != null)
@@ -196,7 +213,30 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 }
             });
             worker.execute();
+
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+
+                showDialogHelp();
+                break;
+
+            case 2:
+
+                try{
+                    fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+
+        }
+
+        return false;
     }
 
 
@@ -221,8 +261,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             });
             notificationAcceptDialog.show();
 
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
+                textConnectionSuccess.setText("You're now connected with "+ data.getName());
+                showEmpty(notificationAcceptDialog.getResultado(), connectionSuccess);
+        } catch (CantGetActiveLoginIdentityException e) {e.printStackTrace();
         }
     }
 
@@ -232,6 +273,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     }
 
 
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -239,6 +281,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
+
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
@@ -251,5 +294,91 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+    }
+
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
+
+    @Override
+    public void onStop() {
+        if (worker != null)
+            worker.shutdownNow();
+        super.onStop();
+    }
+
+    private void showDialogHelp() {
+        try {
+            if (moduleManager.getActiveIntraUserIdentity() != null) {
+                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            // showCriptoUsersCache();
+                            onRefresh();
+                            invalidate();
+                        }
+                    });
+                } else {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                            if (isBackPressed != null) {
+                                if (isBackPressed) {
+                                    getActivity().finish();
+                                }
+                            } else {
+                                onRefresh();
+                                //showCriptoUsersCache();
+
+                            }
+                        }
+                    });
+                }
+            } else {
+                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                        intraUserSubAppSession,
+                        null,
+                        moduleManager,
+                        PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                presentationIntraUserCommunityDialog.show();
+                presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Boolean isBackPressed = null;
+
+                        isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+
+                        if (isBackPressed != null) {
+                            if (isBackPressed) {
+                                getActivity().onBackPressed();
+                            }
+                        } else
+                            onRefresh();
+                        //showCriptoUsersCache();
+                    }
+                });
+            }
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+
     }
 }

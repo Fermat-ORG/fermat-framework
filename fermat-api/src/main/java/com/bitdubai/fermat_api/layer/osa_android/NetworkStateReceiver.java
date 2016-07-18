@@ -7,8 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.callback.FermatReceiver;
  */
 public interface NetworkStateReceiver extends FermatReceiver<NetworkStateReceiver> {
 
-    void networkAvailable();
+    void networkAvailable(DeviceNetwork deviceNetwork);
     void networkUnavailable();
-    void networkChange();
 
 }

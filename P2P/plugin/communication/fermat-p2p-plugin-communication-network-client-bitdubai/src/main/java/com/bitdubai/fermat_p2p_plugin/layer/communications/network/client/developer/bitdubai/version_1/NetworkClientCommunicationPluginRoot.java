@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
+import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
 import com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -251,9 +252,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             connectivityManager.registerListener(new NetworkStateReceiver() {
                 @Override
-                public void networkAvailable() {
+                public void networkAvailable(DeviceNetwork deviceNetwork) {
                     System.out.println("########################################\n");
-                    System.out.println("Netowork available!!!!\n");
+                    System.out.println("Netowork available!!!!\n+" + "NetworkType: " + deviceNetwork);
                     System.out.println("########################################\n");
                 }
 
@@ -264,11 +265,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     System.out.println("########################################\n");
                 }
 
-                @Override
-                public void networkChange() {
-
-                }
             });
+
+//            connectivityManager.isConnectedToAnyProvider()
 
 
         } catch (Exception exception){
@@ -290,6 +289,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
 
     }
+
 
     /**
      * This method validate is all required resource are injected into

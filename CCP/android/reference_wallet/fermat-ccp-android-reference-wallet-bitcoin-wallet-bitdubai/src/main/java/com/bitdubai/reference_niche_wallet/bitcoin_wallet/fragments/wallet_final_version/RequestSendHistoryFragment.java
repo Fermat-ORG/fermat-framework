@@ -122,7 +122,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             }catch (Exception e){
 
             }
-            onRefresh();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
