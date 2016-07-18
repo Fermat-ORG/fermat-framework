@@ -68,6 +68,8 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
     private PresentationDialog helpDialog;
     private LinearLayout noContacts;
 
+    private FermatWorker fermatWorker;
+
     public static ConnectionTabListFragment newInstance() {
         return new ConnectionTabListFragment();
     }
@@ -315,7 +317,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
     @Override
     public void onLoadMoreData(int page, final int totalItemsCount) {
         adapter.setLoadingData(true);
-        FermatWorker fermatWorker = new FermatWorker(getActivity(), this) {
+        fermatWorker = new FermatWorker(getActivity(), this) {
             @Override
             protected Object doInBackground() throws Exception {
                 return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
@@ -363,4 +365,10 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
     }
 
 
+    @Override
+    public void onStop() {
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+        super.onStop();
+    }
 }

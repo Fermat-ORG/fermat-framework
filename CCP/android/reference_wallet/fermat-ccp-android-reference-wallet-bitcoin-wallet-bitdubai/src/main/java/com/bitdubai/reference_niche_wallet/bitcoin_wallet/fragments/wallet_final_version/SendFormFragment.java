@@ -814,26 +814,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 else
                                     total =  operator.longValueExact() -  decimalFeed.longValueExact();
 
-                                if(operator.longValueExact() < availableBalance)
+                                if(total < availableBalance)
                                 {
-                                    /*cryptoWallet.send(
-                                            operator.longValueExact(),
-                                            validAddress,
-                                            notes,
-                                            appSession.getAppPublicKey(),
-                                            cryptoWallet.getSelectedActorIdentity().getPublicKey(),
-                                            Actors.INTRA_USER,
-                                            cryptoWalletWalletContact.getActorPublicKey(),
-                                            cryptoWalletWalletContact.getActorType(),
-                                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                            blockchainNetworkType,
-                                            CryptoCurrency.BITCOIN,
-                                            decimalFeed.longValueExact(),
-                                            FeeOrigin.getByCode(feeOrigin)
-                                    );
-                                    Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                    onBack(null);*/
-
                                     SendConfirmDialog sendConfirmDialog = new SendConfirmDialog(getActivity(),
                                             cryptoWallet,
                                             operator.longValueExact(),

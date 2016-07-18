@@ -219,7 +219,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
                         cryptoWallet.approveRequest(data.getRequestId()
                                 , cryptoWallet.getSelectedActorIdentity().getPublicKey(),
-                                BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
+                                BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
 //                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());

@@ -66,6 +66,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
 
+    private FermatWorker worker;
     /**
      * Create a new instance of this fragment
      *
@@ -155,7 +156,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             notificationsProgressDialog.setMessage("Loading Notifications");
             notificationsProgressDialog.setCancelable(false);
             notificationsProgressDialog.show();*/
-            FermatWorker worker = new FermatWorker() {
+             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
@@ -227,7 +228,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             });
             notificationAcceptDialog.show();
 
-                textConnectionSuccess.setText("You're now connected with "+intraUserInformation.getName());
+                textConnectionSuccess.setText("You're now connected with "+ data.getName());
                 showEmpty(notificationAcceptDialog.getResultado(), connectionSuccess);
         } catch (CantGetActiveLoginIdentityException e) {e.printStackTrace();
         }
@@ -267,5 +268,12 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
         super.onFragmentFocus();
 
         onRefresh();
+    }
+
+    @Override
+    public void onStop() {
+        if(worker != null)
+            worker.shutdownNow();
+        super.onStop();
     }
 }

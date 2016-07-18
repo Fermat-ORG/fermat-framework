@@ -49,6 +49,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.PrunedException;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
@@ -1114,6 +1115,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 Long peerValue = peer.getBestHeight();
                int delta =  peerValue.intValue() - currentDownloadedBlocks;
 
+                System.out.println("***CryptoNetwork*** Peer notified block difference: " + peer.getPeerBlockHeightDifference());
+
                 // if the delta is big enought, then switch.
                 if (delta > DOWNLOAD_DELTA){
                     System.out.println("***CryptoNetwork*** Block Download agent: found more blocks on new peer.");
@@ -1121,11 +1124,22 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     System.out.println("current download Peer: " + peerGroup.getDownloadPeer().toString());
                     System.out.println("New download Peer: " + peer.toString());
 
-                    peer.startBlockChainDownload();
+                    try {
 
+                        blockChain.add(peer.getBlock(blockChain.getChainHead().getHeader().getPrevBlockHash()).get(1, TimeUnit.MINUTES));
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    } catch (PrunedException e) {
+                        e.printStackTrace();
+                    }
+                    peer.setDownloadParameters(wallet.getEarliestKeyCreationTime(), true);
+                    peer.startBlockChainDownload();
                 }
-                blockChain.drainOrphanBlocks();
-                peerGroup.startBlockChainDownload(null);
             }
         }
 
