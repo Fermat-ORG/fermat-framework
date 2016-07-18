@@ -84,7 +84,11 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                     break;
                 case NO_CONNECTED:
                     if (connectionState.getVisibility() == View.VISIBLE)
+                    {
                         connectionState.setVisibility(View.GONE);
+                        response.setVisibility(View.GONE);
+                    }
+
                     break;
                 case DENIED_LOCALLY:
                     break;
