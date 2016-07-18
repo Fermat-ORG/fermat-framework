@@ -51,7 +51,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     private ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
-    private String previousSelectedFee = "SLOW";
+    private String previousSelectedFee = "NORMAL";
     private CryptoWallet moduleManager;
 
 
