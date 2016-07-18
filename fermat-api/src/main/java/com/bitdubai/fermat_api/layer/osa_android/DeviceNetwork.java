@@ -1,7 +1,4 @@
-package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure;
-
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectionType;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.Network;
+package com.bitdubai.fermat_api.layer.osa_android;
 
 /**
  * Created by Natalia on 06/05/2015.
@@ -19,6 +16,11 @@ public class DeviceNetwork implements Network {
 
     private ConnectionType type;
     private boolean isconnected;
+
+    public DeviceNetwork(ConnectionType type, boolean isconnected) {
+        this.type = type;
+        this.isconnected = isconnected;
+    }
 
     /**
      * Network Interface implementation.

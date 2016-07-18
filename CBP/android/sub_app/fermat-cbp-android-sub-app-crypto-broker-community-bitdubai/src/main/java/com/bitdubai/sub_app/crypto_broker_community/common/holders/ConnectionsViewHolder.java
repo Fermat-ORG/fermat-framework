@@ -16,7 +16,9 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  *
  * @author lnacosta
  * @version 1.0.0
+ *
  */
+
 public class ConnectionsViewHolder extends FermatViewHolder {
 
     private final Resources res;

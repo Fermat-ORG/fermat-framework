@@ -231,12 +231,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
-            //list transaction on background
-
-            onRefresh();
-
-
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -257,7 +251,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
                     setUpBlockchainProgress(false);
             } else {
-                toolbarColor = Color.parseColor("#05DDD2");
+                toolbarColor = Color.parseColor("#05CFC2");
             }
             final int finalToolbarColor = toolbarColor;
             getActivity().runOnUiThread(new Runnable() {
@@ -393,6 +387,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public void onStop() {
         getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+
+        if(worker != null)
+          worker.shutdownNow();
         super.onStop();
     }
 
@@ -740,7 +737,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 */
     public void GETTestNet( final Context context){
 
-        FermatWorker  worker = new FermatWorker() {
+         worker = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
 
@@ -800,9 +797,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     if (!result[0].toString().equals("transaccion fallida"))
                         Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
 
-                    }
-
                 }
+
+            }
 
             @Override
             public void onErrorOccurred(Exception ex) {
@@ -1232,7 +1229,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 //update toolbar color
                 final Toolbar toolBar = getToolbar();
 
-                toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+                toolBar.setBackgroundColor(Color.parseColor("#05CFC2"));
 
                // makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
             } else {
