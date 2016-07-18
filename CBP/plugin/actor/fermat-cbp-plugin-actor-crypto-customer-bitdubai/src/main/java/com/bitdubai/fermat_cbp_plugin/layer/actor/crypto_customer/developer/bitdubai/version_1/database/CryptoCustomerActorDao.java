@@ -82,13 +82,13 @@ public class CryptoCustomerActorDao {
 
         public void initializeDatabase() throws CantInitializeCryptoCustomerActorDatabaseException {
             try {
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoCustomerActorDatabaseConstants.DATABASE_NAME);
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
                 throw new CantInitializeCryptoCustomerActorDatabaseException(cantOpenDatabaseException.getMessage());
             } catch (DatabaseNotFoundException e) {
                 CryptoCustomerActorDatabaseFactory CustomerActorDatabaseFactory = new CryptoCustomerActorDatabaseFactory(pluginDatabaseSystem);
                 try {
-                    database = CustomerActorDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                    database = CustomerActorDatabaseFactory.createDatabase(pluginId, CryptoCustomerActorDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     throw new CantInitializeCryptoCustomerActorDatabaseException(cantCreateDatabaseException.getMessage());
                 }

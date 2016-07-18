@@ -969,57 +969,61 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
     protected void reprocessPendingMessage() {
         try{
-            List<ChatMetadataRecord> chatMetadataRecordList=
-                    chatMetadataRecordDAO.findAllToSend(
-                            ChatProtocolState.PROCESSING_SEND,
-                            DistributionStatus.SENT);
-            String remotePublicKey;
-            System.out.println("CHAT NS - I found "+chatMetadataRecordList.size()+" pending for sending");
-            for(ChatMetadataRecord chatMetadataRecord : chatMetadataRecordList){
-                remotePublicKey = chatMetadataRecord.getRemoteActorPublicKey();
-                System.out.println("CHAT NS - Trying to re-send to "+remotePublicKey);
+            if(chatMetadataRecordDAO != null) {
+                List<ChatMetadataRecord> chatMetadataRecordList =
+                        chatMetadataRecordDAO.findAllToSend(
+                                ChatProtocolState.PROCESSING_SEND,
+                                DistributionStatus.SENT);
 
-                String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis()));
+                String remotePublicKey;
+                System.out.println("CHAT NS - I found " + chatMetadataRecordList.size() + " pending for sending");
 
-                ChatProtocolState protocolState = ChatProtocolState.PROCESSING_SEND;
-                chatMetadataRecord.setTransactionId(chatMetadataRecord.getTransactionId());
-                chatMetadataRecord.setChatId(chatMetadataRecord.getChatId());
-                chatMetadataRecord.setObjectId(chatMetadataRecord.getObjectId());
-                chatMetadataRecord.setLocalActorType(chatMetadataRecord.getLocalActorType());
-                chatMetadataRecord.setLocalActorPublicKey(chatMetadataRecord.getLocalActorPublicKey());
-                chatMetadataRecord.setRemoteActorType(chatMetadataRecord.getRemoteActorType());
-                chatMetadataRecord.setRemoteActorPublicKey(chatMetadataRecord.getRemoteActorPublicKey());
-                chatMetadataRecord.setChatName(chatMetadataRecord.getChatName());
-                chatMetadataRecord.setChatMessageStatus(chatMetadataRecord.getChatMessageStatus());
-                chatMetadataRecord.setMessageStatus(chatMetadataRecord.getMessageStatus());
-                chatMetadataRecord.setDate(chatMetadataRecord.getDate());
-                chatMetadataRecord.setMessageId(chatMetadataRecord.getMessageId());
-                chatMetadataRecord.setMessage(chatMetadataRecord.getMessage());
-                chatMetadataRecord.setDistributionStatus(DistributionStatus.SENT);
-                chatMetadataRecord.setResponseToNotification(chatMetadataRecord.getTransactionId().toString());
-                chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
-                chatMetadataRecord.setSentDate(timeStamp);
-                chatMetadataRecord.changeState(protocolState);
-                chatMetadataRecord.setTypeChat(chatMetadataRecord.getTypeChat());
-                chatMetadataRecord.setGroupMembers(chatMetadataRecord.getGroupMembers());
-                final String EncodedMsg = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(
-                        chatMetadataRecord,
-                        chatMetadataRecord.getLocalActorType(),
-                        chatMetadataRecord.getRemoteActorType());
+                for (ChatMetadataRecord chatMetadataRecord : chatMetadataRecordList) {
+                    remotePublicKey = chatMetadataRecord.getRemoteActorPublicKey();
+                    System.out.println("CHAT NS - Trying to re-send to " + remotePublicKey);
+
+                    String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis()));
+
+                    ChatProtocolState protocolState = ChatProtocolState.PROCESSING_SEND;
+                    chatMetadataRecord.setTransactionId(chatMetadataRecord.getTransactionId());
+                    chatMetadataRecord.setChatId(chatMetadataRecord.getChatId());
+                    chatMetadataRecord.setObjectId(chatMetadataRecord.getObjectId());
+                    chatMetadataRecord.setLocalActorType(chatMetadataRecord.getLocalActorType());
+                    chatMetadataRecord.setLocalActorPublicKey(chatMetadataRecord.getLocalActorPublicKey());
+                    chatMetadataRecord.setRemoteActorType(chatMetadataRecord.getRemoteActorType());
+                    chatMetadataRecord.setRemoteActorPublicKey(chatMetadataRecord.getRemoteActorPublicKey());
+                    chatMetadataRecord.setChatName(chatMetadataRecord.getChatName());
+                    chatMetadataRecord.setChatMessageStatus(chatMetadataRecord.getChatMessageStatus());
+                    chatMetadataRecord.setMessageStatus(chatMetadataRecord.getMessageStatus());
+                    chatMetadataRecord.setDate(chatMetadataRecord.getDate());
+                    chatMetadataRecord.setMessageId(chatMetadataRecord.getMessageId());
+                    chatMetadataRecord.setMessage(chatMetadataRecord.getMessage());
+                    chatMetadataRecord.setDistributionStatus(DistributionStatus.SENT);
+                    chatMetadataRecord.setResponseToNotification(chatMetadataRecord.getTransactionId().toString());
+                    chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
+                    chatMetadataRecord.setSentDate(timeStamp);
+                    chatMetadataRecord.changeState(protocolState);
+                    chatMetadataRecord.setTypeChat(chatMetadataRecord.getTypeChat());
+                    chatMetadataRecord.setGroupMembers(chatMetadataRecord.getGroupMembers());
+                    final String EncodedMsg = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(
+                            chatMetadataRecord,
+                            chatMetadataRecord.getLocalActorType(),
+                            chatMetadataRecord.getRemoteActorType());
 
 
-                chatMetadataRecord.setMsgXML(EncodedMsg);
+                    chatMetadataRecord.setMsgXML(EncodedMsg);
 
-                sendMessage(
-                        EncodedMsg,
-                        chatMetadataRecord.getLocalActorPublicKey(),
-                        Actors.CHAT,
-                        chatMetadataRecord.getRemoteActorPublicKey(),
-                        Actors.CHAT);
+                    sendMessage(
+                            EncodedMsg,
+                            chatMetadataRecord.getLocalActorPublicKey(),
+                            Actors.CHAT,
+                            chatMetadataRecord.getRemoteActorPublicKey(),
+                            Actors.CHAT);
                 /*sendChatMetadata(
                         chatMetadataRecord.getLocalActorPublicKey(),
                         remotePublicKey,
                         chatMetadataRecord);*/
+                }
             }
         } catch (Exception e) {
             System.out.println("CHAT NS - EXCEPTION PROCESSING MESSAGES NOT SENT");

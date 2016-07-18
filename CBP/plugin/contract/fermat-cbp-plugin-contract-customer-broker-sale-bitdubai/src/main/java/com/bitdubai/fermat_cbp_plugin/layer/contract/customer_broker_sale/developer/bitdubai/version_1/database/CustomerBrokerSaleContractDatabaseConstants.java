@@ -12,6 +12,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.devel
  */
 public class CustomerBrokerSaleContractDatabaseConstants {
 
+    public static final String DATABASE_NAME = "contract_customer_broker_sale";
     /**
      * Contracts Sale database table definition.
      */
