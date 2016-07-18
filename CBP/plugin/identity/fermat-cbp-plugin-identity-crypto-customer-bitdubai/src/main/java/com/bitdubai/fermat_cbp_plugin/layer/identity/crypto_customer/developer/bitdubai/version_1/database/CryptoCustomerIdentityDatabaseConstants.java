@@ -12,6 +12,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.
  */
 public class CryptoCustomerIdentityDatabaseConstants {
 
+    public static final String DATABASE_NAME = "identity_crypto_customer";
+
     /**
      * Crypto Customer database table definition.
      */

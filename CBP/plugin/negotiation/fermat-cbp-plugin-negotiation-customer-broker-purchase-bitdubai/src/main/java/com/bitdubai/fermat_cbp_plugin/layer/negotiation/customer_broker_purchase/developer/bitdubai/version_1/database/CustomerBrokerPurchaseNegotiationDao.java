@@ -74,13 +74,13 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
 
     public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.DATABASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantOpenDatabaseException.getMessage());
         } catch (DatabaseNotFoundException e) {
             CustomerBrokerPurchaseNegotiationDatabaseFactory customerBrokerPurchaseNegotiationDatabaseFactory = new CustomerBrokerPurchaseNegotiationDatabaseFactory(pluginDatabaseSystem);
             try {
-                database = customerBrokerPurchaseNegotiationDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = customerBrokerPurchaseNegotiationDatabaseFactory.createDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
             }
