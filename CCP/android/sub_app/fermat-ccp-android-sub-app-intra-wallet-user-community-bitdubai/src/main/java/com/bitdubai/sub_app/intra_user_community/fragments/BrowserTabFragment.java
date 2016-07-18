@@ -32,6 +32,8 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -49,6 +51,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkS
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -64,7 +67,9 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
+
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
+
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
@@ -76,8 +81,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
 
 /**
@@ -124,6 +127,7 @@ public class BrowserTabFragment
     private ActiveActorIdentityInformation selectedActorIdentity;
     private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     IntraUserWalletSettings intraUserWalletSettings = null;
+    private FermatApplicationCaller fermatApplicationCaller;
 
     private Handler handler = new Handler();
 
@@ -149,6 +153,7 @@ public class BrowserTabFragment
             errorManager = appSession.getErrorManager();
 
             intraUserSubAppSession = appSession;
+            fermatApplicationCaller = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
 
             try {
                 intraUserWalletSettings = moduleManager.loadAndGetSettings(intraUserSubAppSession.getAppPublicKey());
@@ -384,13 +389,12 @@ public class BrowserTabFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            int id = item.getItemId();
 
-            if (id == 3)
-                showDialogHelp();
+        switch (item.getItemId()) {
+            case 1:
+                break;
+            case 2:
 
-            if (id == 2)
                 try {
                     GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
                     geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -412,15 +416,23 @@ public class BrowserTabFragment
                     e.printStackTrace();
                 }
 
-           // if (id == 1)
-               // searchIntraUsers();
+                break;
+            case 3:
+                showDialogHelp();
+                break;
 
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
+            case 4:
+                try{
+                    fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+
         }
-        return super.onOptionsItemSelected(item);
+
+            return false;
+
     }
 
     @Override
