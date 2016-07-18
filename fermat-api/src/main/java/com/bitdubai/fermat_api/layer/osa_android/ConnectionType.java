@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces;
+package com.bitdubai.fermat_api.layer.osa_android;
 
 /**
  *

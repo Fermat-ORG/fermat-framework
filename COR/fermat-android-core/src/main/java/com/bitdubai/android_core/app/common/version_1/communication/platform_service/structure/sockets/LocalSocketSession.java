@@ -35,6 +35,8 @@ public abstract class LocalSocketSession {
     }
 
     public void startReceiving(){
+        if (objectInputStream!=null) throw new RuntimeException("InvalidState");
+        if (runner!=null) runner.interrupt();
         try{
             if(objectInputStream==null) objectInputStream = new ObjectInputStream(localSocket.getInputStream());
         }catch (Exception e){
@@ -227,6 +229,13 @@ public abstract class LocalSocketSession {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    reconnect();
+                    startReceiving();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
             }catch (Exception e){
                 e.printStackTrace();
             }
