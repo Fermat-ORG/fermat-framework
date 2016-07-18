@@ -146,7 +146,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return this;
     }
 
     /**
@@ -217,35 +217,42 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 /*
                 * get NodesProfile List From Restful in Seed Node
                 */
-                nodesProfileList = getNodesProfileList();
+                if(executorService==null) executorService = Executors.newSingleThreadExecutor();
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        nodesProfileList = getNodesProfileList();
 
-                if (nodesProfileList != null && nodesProfileList.size() > 0) {
+                        if (nodesProfileList != null && nodesProfileList.size() > 0) {
 
-                    networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                            nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort(),
-                            eventManager,
-                            locationManager,
-                            identity,
-                            this,
-                            0,
-                            Boolean.FALSE,
-                            nodesProfileList.get(0)
-                    );
+                            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                                    nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort(),
+                                    eventManager,
+                                    locationManager,
+                                    identity,
+                                    NetworkClientCommunicationPluginRoot.this,
+                                    0,
+                                    Boolean.FALSE,
+                                    nodesProfileList.get(0)
+                            );
 
-                } else {
+                        } else {
 
-                    networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                            NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT,
-                            eventManager,
-                            locationManager,
-                            identity,
-                            this,
-                            -1,
-                            Boolean.FALSE,
-                            null
-                    );
+                            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                                    NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT,
+                                    eventManager,
+                                    locationManager,
+                                    identity,
+                                    NetworkClientCommunicationPluginRoot.this,
+                                    -1,
+                                    Boolean.FALSE,
+                                    null
+                            );
 
-                }
+                        }
+                    }
+                });
+
             }
 
             p2PLayerManager.register(this);
@@ -453,8 +460,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     public void intentToConnectToOtherNode(Integer i){
 
-        if(executorService != null)
-            executorService.shutdownNow();
+//        if(executorService != null)
+//            executorService.shutdownNow();
 
         /*
          * if is the last index then connect to networkNode Harcoded
@@ -488,15 +495,15 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         }
 
-        Thread thread = new Thread(){
+        Runnable runnable = new Runnable(){
             @Override
             public void run(){
                 networkClientCommunicationConnection.initializeAndConnect();
             }
         };
 
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(thread);
+        if(executorService==null) executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(runnable);
 
     }
 
@@ -654,6 +661,18 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
         }
 
 
+    }
+
+    @Override
+    public void stop() {
+        try {
+            executorService.shutdownNow();
+        }catch (Exception e){
+
+        }
+
+        scheduledExecutorService.shutdownNow();
+        super.stop();
     }
 
     @Override
