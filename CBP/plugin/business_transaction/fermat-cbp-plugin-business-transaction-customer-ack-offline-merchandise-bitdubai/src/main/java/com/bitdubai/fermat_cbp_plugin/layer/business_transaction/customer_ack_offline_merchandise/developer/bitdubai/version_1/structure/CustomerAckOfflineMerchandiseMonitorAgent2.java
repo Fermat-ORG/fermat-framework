@@ -116,6 +116,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
 
             }
 
@@ -141,6 +143,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             /**
@@ -153,6 +157,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
         } catch (Exception e) {
@@ -253,7 +259,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
             //EVENT FOR ACK PAYMENT CONFIRMED
             if (eventTypeCode.equals(EventType.BROKER_ACK_PAYMENT_CONFIRMED.getCode())) {
 
-                System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE\n");
+                System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - BROKER_ACK_PAYMENT_CONFIRMED\n");
 
                 //the eventId from this event is the contractId - Customer side
                 CustomerBrokerContractPurchase customerBrokerContractPurchase =
@@ -269,6 +275,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
                     customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
                 }
+                customerAckOfflineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
             }
 
         } catch (CantGetListPurchaseNegotiationsException exception) {

@@ -119,6 +119,8 @@ public class CustomerOfflinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
 
             }
 
@@ -143,6 +145,8 @@ public class CustomerOfflinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             // Check if pending events
@@ -153,6 +157,8 @@ public class CustomerOfflinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
         } catch (Exception e) {

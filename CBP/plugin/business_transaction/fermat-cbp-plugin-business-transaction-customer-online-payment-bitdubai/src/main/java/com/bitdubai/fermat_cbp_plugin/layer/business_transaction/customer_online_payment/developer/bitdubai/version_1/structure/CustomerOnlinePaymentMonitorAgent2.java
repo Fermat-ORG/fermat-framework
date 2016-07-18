@@ -171,6 +171,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             /**
@@ -195,6 +197,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             /**
@@ -220,6 +224,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
 
@@ -234,6 +240,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             /**
@@ -251,6 +259,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             /**
@@ -268,6 +278,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             /**
@@ -282,6 +294,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
 
             }
             //END of the checking process for the crypto status
@@ -297,6 +311,8 @@ public class CustomerOnlinePaymentMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
         } catch (Exception e) {

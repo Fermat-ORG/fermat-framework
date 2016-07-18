@@ -186,6 +186,8 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
                             NegotiationTransactionStatus.SENDING_NEGOTIATION);
 
                 }
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
@@ -214,6 +216,8 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
                     //CONFIRM TRANSACTION IS DONE
                     dao.confirmTransaction(transactionId);
+                    //I'll test to make a return at the end of each loop, each loop can take some time
+                    return;
                 }
 
             }
@@ -222,6 +226,8 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
             List<UUID> pendingEventsIdList = dao.getPendingEvents();
             for(UUID eventId : pendingEventsIdList){
                 checkPendingEvent(eventId);
+                //I'll test to make a return at the end of each loop, each loop can take some time
+                return;
             }
 
             //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
