@@ -105,7 +105,7 @@ final public class NegotiationWrapper {
 
             String youTimeZoneValue = TimeZone.getDefault().getID();
 //            if ((clauses.get(BROKER_TIME_ZONE) == null) || (youTimeZoneValue.equals(clauses.get(BROKER_TIME_ZONE).getValue()))){
-                addClause(BROKER_TIME_ZONE, youTimeZoneValue);
+            addClause(BROKER_TIME_ZONE, youTimeZoneValue);
 //            }
 
 
@@ -195,8 +195,16 @@ final public class NegotiationWrapper {
      * @param value  the new value (change the state to {@link ClauseStatus#CHANGED}) or the same (change the state to {@link ClauseStatus#ACCEPTED})
      */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
-        final ClauseStatus clauseStatus = clause.getValue().equals(value) && clause.getStatus() == DRAFT ? ACCEPTED : CHANGED;
-        //todo: ver esto, core comentado
+        final ClauseStatus clauseStatus;
+
+        if(!clause.getValue().equals(value)) {      //If the clause has been changed, set ClauseStatus to CHANGED
+            clauseStatus = ClauseStatus.CHANGED;
+        } else {
+            if (clause.getStatus().equals(ClauseStatus.DRAFT))      //If the clause hasn't been changed AND status is DRAFT, set status to ACCEPTED
+                clauseStatus = ClauseStatus.ACCEPTED;
+            else
+                clauseStatus = clause.getStatus();                  //Otherwise keep the same status
+        }
 
         final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
         clauseInformation.setStatus(clauseStatus);
