@@ -83,8 +83,12 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                     }
                     break;
                 case NO_CONNECTED:
-                    if (connectionState.getVisibility() == View.VISIBLE)
-                        connectionState.setVisibility(View.GONE);
+                    if (response.getVisibility() == View.VISIBLE){
+                        response.setText("");
+                        response.setVisibility(View.GONE);
+                        button_add.setVisibility(View.VISIBLE);
+                    }
+
                     break;
                 case DENIED_LOCALLY:
                     break;
@@ -128,9 +132,9 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
             }
             row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ? "Online" : "offline");
             if(data.getState().equals(ProfileStatus.OFFLINE))
-               row_connection_state.setTextColor(Color.RED);
+                button_add.setBackgroundColor(Color.RED);
             else
-               row_connection_state.setTextColor(Color.WHITE);
+                button_add.setBackgroundColor(Color.parseColor("#21386D"));
           name.setText(data.getName());
             byte[] profileImage = data.getProfileImage();
             if (profileImage != null && profileImage.length > 0) {

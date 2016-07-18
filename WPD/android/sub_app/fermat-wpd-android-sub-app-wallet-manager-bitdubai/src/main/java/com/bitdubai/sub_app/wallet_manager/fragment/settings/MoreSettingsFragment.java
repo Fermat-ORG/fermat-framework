@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_manager.fragment.settings;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatSettingsFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -17,6 +18,7 @@ public class MoreSettingsFragment extends AbstractFermatSettingsFragment<Desktop
 
     private final String PREFERENCE_IMPORT = "preference_import_key";
     private final String PREFERENCE_EXPORT = "preference_export_key";
+    private final String PREFERENCE_LOW_CONSUMPTION = "preference_low_consumtion";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,15 @@ public class MoreSettingsFragment extends AbstractFermatSettingsFragment<Desktop
         findPreference("preference_import_key").setOnPreferenceClickListener(this);
 
         findPreference("preference_export_key").setOnPreferenceClickListener(this);
+
+        findPreference("preference_low_consumtion").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                Toast.makeText(getActivity(), newValue.toString(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
 
@@ -46,6 +57,7 @@ public class MoreSettingsFragment extends AbstractFermatSettingsFragment<Desktop
             case PREFERENCE_EXPORT:
                 changeActivity(Activities.DESKTOP_SETTING_EXPORT_KEY);
                 break;
+
         }
 
         return false;

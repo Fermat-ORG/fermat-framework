@@ -477,7 +477,5 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
 
     @Override
     public void onMethodCallback(ExtendedCity cityFromList) {
-
-
     }
 }

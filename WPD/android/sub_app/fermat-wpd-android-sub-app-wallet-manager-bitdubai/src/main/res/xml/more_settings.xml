@@ -2,6 +2,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="Network">
+
+        <SwitchPreference
+            android:key="preference_low_consumtion"
+            android:checked="false"
+            android:title="Low Consumption"
+            android:summary="Active low network consumption"/>
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="Vault">
 
         <Preference
