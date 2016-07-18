@@ -9,8 +9,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -183,16 +186,28 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                 break;
             case 2:
 
+
                 try {
-                    DeleteAllContactsDialog deleteAllContactsDialog = new DeleteAllContactsDialog(
-                            getActivity(),
-                            appSession,
-                            null,
-                            moduleManager.getActiveIntraUserIdentity());
-                    deleteAllContactsDialog.show();
-                } catch (CantGetActiveLoginIdentityException e) {
+                    GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
+                    geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    });
+                    Window window = geolocationDialog.getWindow();
+                    WindowManager.LayoutParams wlp = window.getAttributes();
+                    wlp.gravity = Gravity.TOP;
+                    //wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                    window.setAttributes(wlp);
+                    //geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    geolocationDialog.show();
+
+
+
+                } catch ( Exception e) {
                     e.printStackTrace();
                 }
+
                 break;
 
             case 3:
