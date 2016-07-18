@@ -27,4 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 
     void registerListener(NetworkStateReceiver networkStateReceiver);
     void unregisterListener(NetworkStateReceiver networkStateReceiver);
+
+    boolean isOnline();
+    boolean isConnected(ConnectionType connectionType) throws Exception;
 }
