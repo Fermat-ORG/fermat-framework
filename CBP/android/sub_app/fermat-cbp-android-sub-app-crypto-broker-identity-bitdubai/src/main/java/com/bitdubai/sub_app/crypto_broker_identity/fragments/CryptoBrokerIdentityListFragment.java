@@ -104,7 +104,7 @@ public class CryptoBrokerIdentityListFragment
             subappSettings.setIsPresentationHelpEnabled(true);
             try {
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
-            }catch (Exception ignore){
+            } catch (Exception ignore) {
 
             }
         }
@@ -263,7 +263,7 @@ public class CryptoBrokerIdentityListFragment
     /**
      * Receiver class implemented
      */
-    private class BrokerIdentityBroadcastReceiver extends FermatBroadcastReceiver{
+    private class BrokerIdentityBroadcastReceiver extends FermatBroadcastReceiver {
 
         @Override
         public void onReceive(FermatBundle fermatBundle) {
@@ -271,17 +271,21 @@ public class CryptoBrokerIdentityListFragment
                 String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
                 if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
-                    onRefresh();
-                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
+                    if (isAttached) {
+                        onRefresh();
+                        View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                        emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
-                    onRefresh();
-                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
+                    if (isAttached) {
+                        onRefresh();
+                        View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                        emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
                 }
 
             } catch (ClassCastException e) {

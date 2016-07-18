@@ -43,6 +43,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,6 +70,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     //Data
     private List<ContractDetail> contractInformation;
     private ContractBasicInformation data;
+
+    private NumberFormat numberFormat= DecimalFormat.getInstance();
 
 
     // UI
@@ -154,8 +159,16 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private void bindData() {
         final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
         final String paymentCurrency = data.getPaymentCurrency();
+
+        if(CryptoCurrency.codeExists(paymentCurrency)){
+            numberFormat.setMaximumFractionDigits(8);
+        }else{
+            numberFormat.setMaximumFractionDigits(2);
+        }
+
+
         final String merchandise = data.getMerchandise();
-        final double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
+        final String exchangeRateAmount = fixFormat(String.valueOf(data.getExchangeRateAmount()));
         final Date lastUpdate = new Date(data.getLastUpdate());
 
         brokerImage.setImageDrawable(getImgDrawable(data.getCryptoBrokerImage()));
@@ -343,5 +356,17 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
     public void goToWalletHome() {
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+    }
+
+
+    private String fixFormat(String value){
+
+        try {
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
     }
 }

@@ -100,6 +100,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.connectionId = null;
         this.location = exposingData.getLocation();
         this.cryptoBrokerIdentityExtraData = exposingData.getCryptoBrokerIdentityExtraData();
+        if(exposingData.getProfileStatus() != null)
+            this.profileStatus = exposingData.getProfileStatus();
     }
 
     @Override

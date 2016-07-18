@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -69,6 +70,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private ProvidersAdapter adapter;
+    private ExecutorService executorService;
 
 
     public static WizardPageSetProvidersFragment newInstance() {
@@ -227,7 +229,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
             }
 
             FermatWorker fermatWorker = setMerchandisesAsExtraDataInAssociatedIdentity();
-            fermatWorker.execute();
+            executorService = fermatWorker.execute();
 
             //Set CONFIGURED_DATA to true so that wizard knows its completed.
             appSession.setData(FragmentsCommons.CONFIGURED_DATA, true);
@@ -263,6 +265,16 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
         });
 
         builder.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (executorService != null) {
+            executorService.shutdown();
+            executorService = null;
+        }
+
+        super.onDestroy();
     }
 
     private void showOrHideNoProvidersView() {

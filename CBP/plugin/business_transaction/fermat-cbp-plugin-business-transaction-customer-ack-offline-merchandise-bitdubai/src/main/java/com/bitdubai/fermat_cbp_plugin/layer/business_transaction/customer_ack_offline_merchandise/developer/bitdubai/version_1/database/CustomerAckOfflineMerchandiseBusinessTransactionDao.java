@@ -146,6 +146,9 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
+            if(isContractHashInDatabase(eventId)){
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseEventsTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             long unixTime = System.currentTimeMillis();
@@ -327,6 +330,10 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
         try{
+            if(isContractHashInDatabase(customerBrokerContractPurchase.getContractId())){
+                System.out.println("The contract "+customerBrokerContractPurchase+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getAckMerchandiseTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord= buildDatabaseTableRecord(
@@ -830,6 +837,10 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
         try{
+            if(isContractHashInDatabase(customerBrokerContractSale.getContractId())){
+                System.out.println("The contract "+customerBrokerContractSale+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getAckMerchandiseTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord= buildDatabaseTableRecord(

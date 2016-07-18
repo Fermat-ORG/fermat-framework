@@ -343,26 +343,31 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
                             } else if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
 
                                 System.out.print("\n**** 25.1) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW NEGOTIATION TRANSACTION CONFIRM ****\n");
-                                switch (negotiationType) {
-                                    case PURCHASE:
 
-                                        if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+                                if(negotiationTransaction == null) {
 
-                                            //CREATE CONFIRM NEGOTIATION
-                                            System.out.print("\n**** 25.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
-                                            purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                                            customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+                                    switch (negotiationType) {
+                                        case PURCHASE:
 
-                                            //CONFIRM TRANSACTION
-                                            dao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
-                                                    transactionId,
-                                                    NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
-                                        }
+                                            if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
 
-                                        //CONFIRM TRANSACTION IS DONE
-                                        dao.confirmTransaction(transactionId);
+                                                //CREATE CONFIRM NEGOTIATION
+                                                System.out.print("\n**** 25.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
 
-                                        break;
+                                                //CONFIRM TRANSACTION
+                                                dao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                                                        transactionId,
+                                                        NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                                            }
+
+                                            //CONFIRM TRANSACTION IS DONE
+                                            dao.confirmTransaction(transactionId);
+
+                                            break;
+                                    }
+
                                 }
 
                             }
