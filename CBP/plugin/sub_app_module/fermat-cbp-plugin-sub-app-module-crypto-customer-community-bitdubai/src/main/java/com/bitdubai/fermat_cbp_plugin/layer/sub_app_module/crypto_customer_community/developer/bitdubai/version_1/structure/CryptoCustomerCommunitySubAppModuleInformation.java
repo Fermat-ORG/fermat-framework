@@ -82,6 +82,8 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
         this.connectionState = null;
         this.connectionId = null;
         this.location = exposingData.getLocation();
+        if(exposingData.getProfileStatus() != null)
+            this.profileStatus = exposingData.getProfileStatus();
     }
 
     @Override

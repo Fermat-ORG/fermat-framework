@@ -19,7 +19,7 @@ import com.bitdubai.sub_app.intra_user_community.R;
 /**
  * Created by natalia on 13/07/16.
  */
-public class AvailableActorsViewHolder extends FermatViewHolder {
+public class  AvailableActorsViewHolder extends FermatViewHolder {
 
     public SquareImageView thumbnail;
     public FermatTextView name;
@@ -69,6 +69,8 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
                     }
                     break;
                 case NO_CONNECTED:
+                    if (connectionState.getVisibility() == View.VISIBLE)
+                        connectionState.setVisibility(View.GONE);
                     break;
                 case DENIED_LOCALLY:
                     break;
