@@ -69,7 +69,8 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+//            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +91,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
                   /*
                    * We create the new database
                    */
-                database = customerBrokerUpdateNegotiationTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = customerBrokerUpdateNegotiationTransactionDatabaseFactory.createDatabase(pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,7 +107,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Customer Broker Update", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -190,7 +191,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record
