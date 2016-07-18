@@ -142,7 +142,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
 //            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
             customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
-
+            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
             //Initialize manager
             customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(
                     customerBrokerNewNegotiationTransactionDatabaseDao,

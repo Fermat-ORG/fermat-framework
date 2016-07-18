@@ -142,7 +142,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
              //Initialize Dao
              customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
-
+             customerBrokerCloseNegotiationTransactionDatabaseDao.initialize();
              //Initialize manager
              customerBrokerCloseManagerImpl = new CustomerBrokerCloseManagerImpl(
                      customerBrokerCloseNegotiationTransactionDatabaseDao,

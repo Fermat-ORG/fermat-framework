@@ -132,7 +132,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             //Initialize Dao
 //            customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem,pluginId);
             customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem,pluginId,dataBase);
-
+            customerBrokerUpdateNegotiationTransactionDatabaseDao.initialize();
             //Initialize manager
             customerBrokerUpdateManagerImpl = new CustomerBrokerUpdateManagerImpl(
                 customerBrokerUpdateNegotiationTransactionDatabaseDao,
