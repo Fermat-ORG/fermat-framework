@@ -116,8 +116,6 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
-                //I'll test to make a return at the end of each loop, each loop can take some time
-                return;
 
             }
 
@@ -143,8 +141,6 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
-                //I'll test to make a return at the end of each loop, each loop can take some time
-                return;
             }
 
             /**
@@ -157,8 +153,6 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
-                //I'll test to make a return at the end of each loop, each loop can take some time
-                return;
             }
 
         } catch (Exception e) {
@@ -259,22 +253,24 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
             //EVENT FOR ACK PAYMENT CONFIRMED
             if (eventTypeCode.equals(EventType.BROKER_ACK_PAYMENT_CONFIRMED.getCode())) {
 
-                System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - BROKER_ACK_PAYMENT_CONFIRMED\n");
+                System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - BROKER_SUBMIT_MERCHANDISE_CONFIRMED\n");
 
                 //the eventId from this event is the contractId - Customer side
                 CustomerBrokerContractPurchase customerBrokerContractPurchase =
                         customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(eventId);
+                if(customerBrokerContractPurchase!=null){
+                    String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+                    CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+                            getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
-                String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
-                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
-                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                    Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
 
-                Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
-                String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
-
-                if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
-                    customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
+                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                        customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
+                    }
                 }
+
                 customerAckOfflineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
             }
 

@@ -112,8 +112,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
-                //I'll test to make a return at the end of each loop, each loop can take some time
-                return;
 
             }
 
@@ -146,8 +144,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
-                //I'll test to make a return at the end of each loop, each loop can take some time
-                return;
 
             }
 
@@ -177,8 +173,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                 } catch (Exception e){
                     reportError(e);
                 }
-                //I'll test to make a return at the end of each loop, each loop can take some time
-                return;
 
             }
 
@@ -188,8 +182,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
             List<String> pendingEventsIdList = dao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
                 checkPendingEvent(eventId);
-                //I'll test to make a return at the end of each loop, each loop can take some time
-                return;
             }
 
         } catch (Exception e) {
