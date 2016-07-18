@@ -83,10 +83,10 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                     }
                     break;
                 case NO_CONNECTED:
-                    if (connectionState.getVisibility() == View.VISIBLE)
-                    {
-                        connectionState.setVisibility(View.GONE);
+                    if (response.getVisibility() == View.VISIBLE){
+                        response.setText("");
                         response.setVisibility(View.GONE);
+                        button_add.setVisibility(View.VISIBLE);
                     }
 
                     break;
