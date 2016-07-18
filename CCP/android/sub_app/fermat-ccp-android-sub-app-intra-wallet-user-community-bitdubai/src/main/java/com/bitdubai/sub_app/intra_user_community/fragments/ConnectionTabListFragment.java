@@ -185,8 +185,6 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
             case 1:
                 break;
             case 2:
-
-
                 try {
                     GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
                     geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -202,8 +200,6 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                     //geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     geolocationDialog.show();
 
-
-
                 } catch ( Exception e) {
                     e.printStackTrace();
                 }
@@ -211,18 +207,23 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                 break;
 
             case 3:
+                DeleteAllContactsDialog deleteAllContactsDialog = null;
+                try {
+                    deleteAllContactsDialog = new DeleteAllContactsDialog(getActivity(),appSession,null,moduleManager.getActiveIntraUserIdentity());
+                    deleteAllContactsDialog.show();
+                } catch (CantGetActiveLoginIdentityException e) {
+                    e.printStackTrace();
+                }
 
+            case 4:
                 try{
                     fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
                 break;
-
-            case 4:
-
+            case 5:
                 showDialogHelp();
-
                 break;
         }
 
