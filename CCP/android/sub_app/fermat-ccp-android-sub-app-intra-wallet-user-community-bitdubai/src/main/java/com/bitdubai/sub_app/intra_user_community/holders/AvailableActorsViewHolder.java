@@ -33,7 +33,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
     public ImageView connectionState;
     public FermatTextView row_connection_state;
     public ProgressBar progressBar;
-    private Button button_add;
+    private TextView button_add;
     private Resources res;
     private TextView response;
 
@@ -48,7 +48,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
         super(itemView, type);
         res = itemView.getResources();
         response = (TextView) itemView.findViewById(R.id.response);
-        button_add = (Button) itemView.findViewById(R.id.button_add);
+        button_add = (TextView) itemView.findViewById(R.id.button_add);
         connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
         row_connection_state = (FermatTextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
@@ -132,9 +132,18 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
             }
             row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ? "Online" : "offline");
             if(data.getState().equals(ProfileStatus.OFFLINE))
-                button_add.setBackgroundColor(Color.RED);
-            else
+            {
+                //button_add.setBackgroundColor(Color.RED);
+                button_add.setVisibility(View.GONE);
+                response.setText("OFFLINE");
+                response.setTextColor(Color.RED);
+                response.setVisibility(View.VISIBLE);
+            }
+            else{
                 button_add.setBackgroundColor(Color.parseColor("#21386D"));
+                button_add.setVisibility(View.VISIBLE);
+            }
+
           name.setText(data.getName());
             byte[] profileImage = data.getProfileImage();
             if (profileImage != null && profileImage.length > 0) {
