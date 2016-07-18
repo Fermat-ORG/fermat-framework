@@ -14,10 +14,10 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetActiveConnectionException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetConnectionsException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetIsConnectedException;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectionType;
+import com.bitdubai.fermat_api.layer.osa_android.ConnectionType;
 import com.bitdubai.fermat_api.layer.osa_android.ConnectivityManager;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.Network;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.DeviceNetwork;
+import com.bitdubai.fermat_api.layer.osa_android.Network;
+import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.NetworkStateReceiver;
 
 import java.util.ArrayList;
@@ -90,6 +90,7 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
         this.networkState.addListener(networkStateReceiver);
     }
 
+
 //    @Override
 //    public void addListener(NetworkStateReceiver.NetworkStateReceiverListener networkStateReceiver) {
 //        this.networkState.addListener(networkStateReceiver);
@@ -112,59 +113,60 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
 
         for (NetworkInfo n : netinfo)
         {
-            Network connectionIfo = new DeviceNetwork();
+
 
 
             
-            switch( n.getType()) {
+//            switch( n.getType()) {
+//
+//                case android.net.ConnectivityManager.TYPE_MOBILE_DUN://4
+//                    connectionIfo.setType(ConnectionType.MOBILE_DUN);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_MOBILE_HIPRI://5
+//                    connectionIfo.setType(ConnectionType.MOBILE_HIPRI);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_MOBILE_SUPL://3
+//                    connectionIfo.setType(ConnectionType.MOBILE_SUPL);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_MOBILE_MMS://2
+//                    connectionIfo.setType(ConnectionType.MOBILE_MMS);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_MOBILE:  //0
+//                    connectionIfo.setType(ConnectionType.MOBILE_DATA);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_WIFI: //1
+//                    connectionIfo.setType(ConnectionType.WI_FI);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_WIMAX: //6
+//                    connectionIfo.setType(ConnectionType.WIMAX);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_ETHERNET://9
+//                    connectionIfo.setType(ConnectionType.ETHERNET);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                case android.net.ConnectivityManager.TYPE_BLUETOOTH://7
+//                    connectionIfo.setType(ConnectionType.BLUETOOTH);
+//                    connectionIfo.setIsConnected(n.isConnected());
+//                    this.conecctions.add(connectionIfo);
+//                    break;
+//                default:
+//                	break;
+//            }
 
-                case android.net.ConnectivityManager.TYPE_MOBILE_DUN://4
-                    connectionIfo.setType(ConnectionType.MOBILE_DUN);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                case android.net.ConnectivityManager.TYPE_MOBILE_HIPRI://5
-                    connectionIfo.setType(ConnectionType.MOBILE_HIPRI);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                case android.net.ConnectivityManager.TYPE_MOBILE_SUPL://3
-                    connectionIfo.setType(ConnectionType.MOBILE_SUPL);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                case android.net.ConnectivityManager.TYPE_MOBILE_MMS://2
-                    connectionIfo.setType(ConnectionType.MOBILE_MMS);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                case android.net.ConnectivityManager.TYPE_MOBILE:  //0
-                    connectionIfo.setType(ConnectionType.MOBILE_DATA);
-                    break;
-                case android.net.ConnectivityManager.TYPE_WIFI: //1
-                    connectionIfo.setType(ConnectionType.WI_FI);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                case android.net.ConnectivityManager.TYPE_WIMAX: //6
-                    connectionIfo.setType(ConnectionType.WIMAX);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                case android.net.ConnectivityManager.TYPE_ETHERNET://9
-                    connectionIfo.setType(ConnectionType.ETHERNET);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                case android.net.ConnectivityManager.TYPE_BLUETOOTH://7
-                    connectionIfo.setType(ConnectionType.BLUETOOTH);
-                    connectionIfo.setIsConnected(n.isConnected());
-                    this.conecctions.add(connectionIfo);
-                    break;
-                default:
-                	break;
-            }
-
+//            Network connectionIfo = new DeviceNetwork();
 
         }
 
@@ -183,52 +185,51 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
     public Network getActiveConnection() throws CantGetActiveConnectionException {
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = connection.getActiveNetworkInfo();
-        Network connectionIfo = new DeviceNetwork();
 
-        connectionIfo.setIsConnected(netinfo.isConnected());
-
+        boolean isConnected = netinfo.isConnected();
+        ConnectionType connectionType = null;
         switch(netinfo.getType()) {
 
             case android.net.ConnectivityManager.TYPE_MOBILE_DUN:
-                connectionIfo.setType(ConnectionType.MOBILE_DUN);
+                connectionType = ConnectionType.MOBILE_DUN ;
 
                 break;
             case android.net.ConnectivityManager.TYPE_MOBILE_HIPRI:
-                connectionIfo.setType(ConnectionType.MOBILE_HIPRI);
+                connectionType = ConnectionType.MOBILE_HIPRI;
 
                 break;
             case android.net.ConnectivityManager.TYPE_MOBILE_SUPL:
-                connectionIfo.setType(ConnectionType.MOBILE_SUPL);
+                connectionType = ConnectionType.MOBILE_SUPL;
 
                 break;
             case android.net.ConnectivityManager.TYPE_MOBILE_MMS:
-                connectionIfo.setType(ConnectionType.MOBILE_MMS);
+                connectionType = ConnectionType.MOBILE_MMS;
 
                 break;
             case android.net.ConnectivityManager.TYPE_MOBILE:  //0
-                connectionIfo.setType(ConnectionType.MOBILE_DATA);
+                connectionType = ConnectionType.MOBILE_DATA;
                 break;
             case android.net.ConnectivityManager.TYPE_WIFI: //1
-                connectionIfo.setType(ConnectionType.WI_FI);
+                connectionType = ConnectionType.WI_FI;
 
                 break;
             case android.net.ConnectivityManager.TYPE_WIMAX: //6
-                connectionIfo.setType(ConnectionType.WIMAX);
+                connectionType = ConnectionType.WIMAX;
 
                 break;
             case android.net.ConnectivityManager.TYPE_ETHERNET://9
-                connectionIfo.setType(ConnectionType.ETHERNET);
+                connectionType = ConnectionType.ETHERNET;
 
                 break;
             case android.net.ConnectivityManager.TYPE_BLUETOOTH://7
-                connectionIfo.setType(ConnectionType.BLUETOOTH);
+                connectionType = ConnectionType.BLUETOOTH;
 
                 break;
             default:
             	break;
         }
 
-        return connectionIfo;
+        return new DeviceNetwork(connectionType,isConnected);
     }
 
 
@@ -240,7 +241,7 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
      * @throws CantGetIsConnectedException
      */
 //    @Override
-    public boolean isConnected(ConnectionType redType) throws CantGetIsConnectedException {
+    public boolean isConnected(ConnectionType redType) throws Exception {
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         int networkType =1;
         switch(redType) {
@@ -279,8 +280,11 @@ public class DeviceConnectivityAddonRoot extends AbstractAddon implements Connec
         return info.isConnected();
     }
 
-    private void swithNetworkType(){
-
+    public boolean isOnline() {
+        android.net.ConnectivityManager cm =
+                (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 	/**
