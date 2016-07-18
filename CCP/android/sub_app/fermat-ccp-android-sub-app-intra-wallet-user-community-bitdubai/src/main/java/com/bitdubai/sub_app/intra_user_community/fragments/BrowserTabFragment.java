@@ -25,12 +25,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -43,14 +46,13 @@ import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -63,6 +65,9 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
+
+import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
+
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
@@ -74,8 +79,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
 
 /**
@@ -117,10 +120,12 @@ public class BrowserTabFragment
     private ExecutorService _executor;
     LinearLayout searchEmptyView;
     private SwipeRefreshLayout swipeRefresh;
+
     //DATA
     private ActiveActorIdentityInformation selectedActorIdentity;
     private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     IntraUserWalletSettings intraUserWalletSettings = null;
+    private FermatApplicationCaller fermatApplicationCaller;
 
     private Handler handler = new Handler();
 
@@ -146,6 +151,7 @@ public class BrowserTabFragment
             errorManager = appSession.getErrorManager();
 
             intraUserSubAppSession = appSession;
+            fermatApplicationCaller = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
 
             try {
                 intraUserWalletSettings = moduleManager.loadAndGetSettings(intraUserSubAppSession.getAppPublicKey());
@@ -229,6 +235,7 @@ public class BrowserTabFragment
 
         noContacts = (LinearLayout) rootView.findViewById(R.id.empty_view);
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
+
 
        // locationFilterBar = (RelativeLayout) rootView.findViewById(R.id.cbc_location_filter_footer_bar);
        // locationFilterBarCountry = (FermatTextView) rootView.findViewById(R.id.cbc_location_filter_footer_bar_country);
@@ -380,13 +387,12 @@ public class BrowserTabFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            int id = item.getItemId();
 
-            if (id == 3)
-                showDialogHelp();
+        switch (item.getItemId()) {
+            case 1:
+                break;
+            case 2:
 
-            if (id == 2)
                 try {
                     GeolocationDialog geolocationDialog = new GeolocationDialog(getActivity(),appSession, null, this);
                     geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -408,15 +414,23 @@ public class BrowserTabFragment
                     e.printStackTrace();
                 }
 
-           // if (id == 1)
-               // searchIntraUsers();
+                break;
+            case 3:
+                showDialogHelp();
+                break;
 
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
+            case 4:
+                try{
+                    fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+
         }
-        return super.onOptionsItemSelected(item);
+
+            return false;
+
     }
 
     @Override
@@ -425,7 +439,19 @@ public class BrowserTabFragment
             if (moduleManager.getActiveIntraUserIdentity() != null) {
                 if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                     appSession.setData(INTRA_USER_SELECTED, data);
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+                ConnectDialog connectDialog;
+                connectDialog = new ConnectDialog(getActivity(), (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
+                connectDialog.setTitle("CONFIRM CONNECTION");
+                connectDialog.setDescription("Are you sure you want to connect with "+data.getName()+"?");
+                connectDialog.setUsername(data.getName());
+                connectDialog.setSecondDescription("");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        onRefresh();
+                    }
+                });
+                connectDialog.show();
             }
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();

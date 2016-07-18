@@ -60,4 +60,9 @@ private ProfileStatus state;
     public void setProfileImageNull() {
         profileImage = new byte[0];
     }
+
+    @Override
+    public long getContactRegistrationDate() {
+        return 0;
+    }
 }

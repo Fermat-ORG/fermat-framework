@@ -57,4 +57,10 @@ public interface IntraUserInformation extends IdentityUserInformation {
     public ProfileStatus getState();
 
     void setProfileImageNull();
+
+    /**
+     * The method <code>getContactRegistrationDate</code> returns the Connection Registration Date
+     * @return
+     */
+    long getContactRegistrationDate();
 }
