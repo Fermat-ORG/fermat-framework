@@ -121,7 +121,7 @@
         />
 
     <TextView
-        android:id="@+id/response"
+        android:id="@+id/response   "
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="REQUEST SEND"
@@ -143,7 +143,6 @@
         android:text="ADD CONTACT"
         android:textSize="10dp"
         android:textColor="#FFF"
-
         />
 
 </LinearLayout>
