@@ -79,10 +79,10 @@
         android:layout_height="1dp"
         android:background="#F9F9F9" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <!--<android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content">-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/gridView"
@@ -91,7 +91,7 @@
             android:divider="@drawable/cht_list_divider"
             tools:listitem="@layout/cht_comm_world_item"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+  <!--  </android.support.v4.widget.SwipeRefreshLayout>-->
     <!--Empty view-->
     <LinearLayout
         android:id="@+id/empty_view"
@@ -240,7 +240,15 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
-</RelativeLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/progressBar"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 <RelativeLayout
     android:id="@+id/show_more_layout"
     android:layout_width="match_parent"

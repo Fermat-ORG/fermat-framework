@@ -1,9 +1,7 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -12,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,7 +44,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
@@ -53,13 +51,11 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
-import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -105,6 +101,7 @@ public class ContactsListFragment
     TextView noDatalabel;
     FermatApplicationCaller applicationsHelper;
     ImageView noData;
+    private ProgressBar progressBar;
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
@@ -173,10 +170,12 @@ public class ContactsListFragment
             recyclerView.setAdapter(adapter);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+//            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+//            swipeRefresh.setOnRefreshListener(this);
+//            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             showEmpty(true, emptyView);
+            progressBar.setVisibility(View.VISIBLE);
             onRefresh();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -200,7 +199,7 @@ public class ContactsListFragment
         try {
             if (!isRefreshing) {
                 isRefreshing = true;
-                FermatWorker worker = new FermatWorker() {
+                final FermatWorker worker = new FermatWorker() {
                     @Override
                     protected Object doInBackground() throws Exception {
                         return getMoreData();
@@ -212,8 +211,8 @@ public class ContactsListFragment
                     @Override
                     public void onPostExecute(Object... result) {
                         isRefreshing = false;
-                        if (swipeRefresh != null)
-                            swipeRefresh.setRefreshing(false);
+                       /* if (swipeRefresh != null)
+                            swipeRefresh.setRefreshing(false);*/
                         if (result != null &&
                                 result.length > 0) {
                             if (getActivity() != null && adapter != null) {
@@ -233,13 +232,12 @@ public class ContactsListFragment
                     public void onErrorOccurred(Exception ex) {
                         try {
                             isRefreshing = false;
-                            if (swipeRefresh != null)
-                                swipeRefresh.setRefreshing(false);
-
+//                            if (swipeRefresh != null)
+//                                swipeRefresh.setRefreshing(false);
+                            worker.shutdownNow();
                             if (getActivity() != null)
                                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                         UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-                            ex.printStackTrace();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -336,6 +334,7 @@ public class ContactsListFragment
             emptyView.setBackground(bgcolor);
             rootView.setBackground(bgcolor);
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
