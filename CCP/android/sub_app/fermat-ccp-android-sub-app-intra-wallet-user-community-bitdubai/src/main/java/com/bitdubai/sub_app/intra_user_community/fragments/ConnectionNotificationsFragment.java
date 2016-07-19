@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -38,6 +41,7 @@ import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 
 import com.bitdubai.sub_app.intra_user_community.common.popups.DeleteAllContactsDialog;
+import com.bitdubai.sub_app.intra_user_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
@@ -221,17 +225,19 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-
-                showDialogHelp();
                 break;
-
             case 2:
-
+                break;
+            case 3:
                 try{
                     fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+                break;
+
+            case 4:
+                showDialogHelp();
                 break;
 
         }

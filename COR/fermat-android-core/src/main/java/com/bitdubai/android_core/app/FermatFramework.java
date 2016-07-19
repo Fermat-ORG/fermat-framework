@@ -253,13 +253,13 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 //                        .show();
             }
         });
-        anrWatchDog.setIgnoreDebugger(true);
-        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
-            @Override
-            public void onInterrupted(InterruptedException exception) {
-                exception.printStackTrace();
-            }
-        });
+        anrWatchDog.setIgnoreDebugger(false);
+//        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
+//            @Override
+//            public void onInterrupted(InterruptedException exception) {
+//                exception.printStackTrace();
+//            }
+//        });
         anrWatchDog.start();
 
 

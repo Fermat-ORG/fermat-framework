@@ -115,8 +115,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
     BrokerAckOnlinePaymentMonitorAgent2 processorAgent;
 
     //Agent configuration
-    private final long SLEEP_TIME = 5000;
-    private final long DELAY_TIME = 500;
+    private final long SLEEP_TIME = 10000;
+    private final long DELAY_TIME = 1000;
     private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public BrokerAckOnlinePaymentPluginRoot() {

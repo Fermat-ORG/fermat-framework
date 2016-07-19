@@ -147,8 +147,8 @@ public class GeolocationBrokerIdentityFragment
                 frequency.setSelection(spinnerPosition);
             }
         } else {
-            accuracy.setText("0");
-            frequency.setSelection(0);
+            accuracy.setText("10");
+            frequency.setSelection(1);
         }
     }
 }
