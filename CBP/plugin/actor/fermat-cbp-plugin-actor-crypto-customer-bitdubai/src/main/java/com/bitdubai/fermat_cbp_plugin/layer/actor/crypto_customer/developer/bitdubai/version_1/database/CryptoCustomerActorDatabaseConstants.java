@@ -12,6 +12,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bit
  */
 public class CryptoCustomerActorDatabaseConstants {
 
+    public static final String DATABASE_NAME = "actor_crypto_customer";
     /**
      * Crypto Customer Actor Relationship database table definition.
      */

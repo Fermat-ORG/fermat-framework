@@ -576,7 +576,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             getTask.setCallBack(this);
             getTask.execute();
 
-            executorService = Executors.newFixedThreadPool(5);
+            executorService = Executors.newCachedThreadPool();
 
         }catch (Exception e){
             e.printStackTrace();

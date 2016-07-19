@@ -312,6 +312,7 @@ public class OpenContractMonitorAgent2
 
                             //CONFIRM TRANSMISSION OF SEND
                             transactionTransmissionManager.confirmReception(transmissionIdNew);
+                            break;
 
 //                            //CONFIRM RECEPTION OF TRANSMISSION
 //                            transactionTransmissionManager.confirmReception(transmissionId);
@@ -349,6 +350,7 @@ public class OpenContractMonitorAgent2
 
                         //CONFIRM SEND OF TRANSMISSION
                         transactionTransmissionManager.confirmReception(transmissionIdNew);
+                        break;
 
 //                        //CONFIRM RECEPTION OF TRANSMISSION
 //                        transactionTransmissionManager.confirmReception(transmissionId);
@@ -413,6 +415,7 @@ public class OpenContractMonitorAgent2
                         //RAISE EVENT NEW_CONTRACT_OPENED
 //                        if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
 //                            raiseNewContractEvent(contractHash);
+                        break;
                     }
 
                 }
@@ -421,10 +424,11 @@ public class OpenContractMonitorAgent2
                 transactionTransmissionManager.confirmReception(transmissionId);
 
                 //CONFIRM RECEPTION OF NOTIFICATION EVENT
-                openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+                //openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
             }
-
+            //CONFIRM RECEPTION OF NOTIFICATION EVENT
+            openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
             //TODO: look a better way to deal with this exceptions
         } catch (CantDeliverPendingTransactionsException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(

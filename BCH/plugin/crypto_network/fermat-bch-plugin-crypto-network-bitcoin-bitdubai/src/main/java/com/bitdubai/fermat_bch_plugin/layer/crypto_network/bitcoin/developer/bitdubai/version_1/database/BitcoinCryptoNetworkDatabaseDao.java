@@ -1503,4 +1503,21 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
         return addressList;
     }
+
+
+    /**
+     * true if the network is active by existing in the database, false if not.
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public boolean isNetworkActive(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException {
+        for (BlockchainNetworkType activeBlockchainNetworkType : this.getActiveBlockchainNetworkTypes()){
+            if (activeBlockchainNetworkType.getCode().equals(blockchainNetworkType.getCode()))
+                return true;
+        }
+
+        return false;
+
+    }
 }

@@ -288,7 +288,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
         accept.setVisibility(View.VISIBLE);
-        accept.setBackgroundResource(R.drawable.bg_shape_blue);
+       // accept.setBackgroundResource(R.drawable.bg_shape_blue);
 
     }
 

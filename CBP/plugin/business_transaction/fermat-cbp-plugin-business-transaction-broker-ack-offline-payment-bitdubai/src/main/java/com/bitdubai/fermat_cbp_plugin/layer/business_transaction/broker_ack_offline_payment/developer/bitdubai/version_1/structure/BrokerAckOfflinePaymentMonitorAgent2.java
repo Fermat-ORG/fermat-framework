@@ -245,7 +245,6 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                 } catch (Exception e) {
                     reportError(e);
                 }
-
             }
 
             /**
@@ -275,7 +274,6 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                 } catch (Exception e) {
                     reportError(e);
                 }
-
             }
 
             /**
