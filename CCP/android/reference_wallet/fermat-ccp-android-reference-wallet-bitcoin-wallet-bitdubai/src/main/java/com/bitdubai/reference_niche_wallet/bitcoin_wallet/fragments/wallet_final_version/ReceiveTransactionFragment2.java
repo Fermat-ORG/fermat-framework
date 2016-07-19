@@ -154,6 +154,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         }
 
+        onRefresh();
+
     }
 
     @Nullable
@@ -337,13 +339,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     public void onLongItemClickListener(CryptoWalletTransaction data, int position) {
-    }
-
-    @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
-        isRefreshing = false;
-        onRefresh();
     }
 
     @Override
