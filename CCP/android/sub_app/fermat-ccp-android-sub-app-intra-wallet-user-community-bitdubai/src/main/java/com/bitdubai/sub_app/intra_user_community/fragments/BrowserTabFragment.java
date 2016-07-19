@@ -416,15 +416,15 @@ public class BrowserTabFragment
 
                 break;
             case 3:
-                showDialogHelp();
-                break;
-
-            case 4:
                 try{
                     fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+                break;
+
+            case 4:
+                showDialogHelp();
                 break;
 
         }

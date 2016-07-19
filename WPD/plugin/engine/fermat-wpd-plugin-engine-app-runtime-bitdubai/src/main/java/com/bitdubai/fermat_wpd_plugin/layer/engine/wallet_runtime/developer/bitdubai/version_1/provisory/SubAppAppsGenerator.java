@@ -4730,17 +4730,13 @@ public class SubAppAppsGenerator {
         optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
-        optionMenuItemBrowser = new OptionMenuItem(3);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemBrowser.setLabel("Help");
-        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
-
         optionMenuItemBrowser = new OptionMenuItem(4);
         optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Edit My Profile");
         optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
+
+
 
 
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
@@ -4765,21 +4761,27 @@ public class SubAppAppsGenerator {
         optionMenuItemConn.setLabel("Search");
         optionMenuItemConn.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
-        optionsMenuConn.addMenuItem(optionMenuItemBrowser);
+        optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         optionMenuItemConn = new OptionMenuItem(2);
+        optionMenuItemConn.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setLabel("Geolocalitation");
+        optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenuConn.addMenuItem(optionMenuItemConn);
+
+        optionMenuItemConn = new OptionMenuItem(3);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Delete all contacts");
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-        optionMenuItemConn = new OptionMenuItem(3);
+        optionMenuItemConn = new OptionMenuItem(4);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Edit My Profile");
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-        optionMenuItemConn = new OptionMenuItem(4);
+        optionMenuItemConn = new OptionMenuItem(5);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(3, "help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
         optionMenuItemConn.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -4801,17 +4803,33 @@ public class SubAppAppsGenerator {
         runtimeFragment.setOwner(owner);
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
+
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
-        optionMenuItemNot.setFermatDrawable(new FermatDrawable(3, "help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemNot.setLabel("Help");
+        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "search_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setLabel("Search");
+        optionMenuItemNot.setActionViewClass(OptionMenuViewsAvailables.SEARCH_VIEW);
         optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
 
-        optionMenuItemBrowser = new OptionMenuItem(2);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemBrowser.setLabel("Edit My Profile");
-        optionMenuItemBrowser.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
+        optionMenuItemNot = new OptionMenuItem(2);
+        optionMenuItemNot.setFermatDrawable(new FermatDrawable(2, "geolocalitation_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setLabel("Geolocalitation");
+        optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);
+
+        optionMenuItemNot = new OptionMenuItem(3);
+        optionMenuItemNot.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setLabel("Edit My Profile");
+        optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);
+
+        optionMenuItemNot = new OptionMenuItem(4);
+        optionMenuItemNot.setFermatDrawable(new FermatDrawable(3, "help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setLabel("Help");
+        optionMenuItemNot.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        optionsMenuNot.addMenuItem(optionMenuItemNot);
+
+
 
         runtimeFragment.setOptionsMenu(optionsMenuNot);
 

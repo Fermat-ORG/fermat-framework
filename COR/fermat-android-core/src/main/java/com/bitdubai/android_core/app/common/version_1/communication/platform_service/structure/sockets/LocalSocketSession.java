@@ -119,11 +119,11 @@ public abstract class LocalSocketSession {
 //            ObjectOutput out = null;
             try {
 //                objectOutputStream.flush();
-                objectOutputStream.write(1);
+//                objectOutputStream.write(1);
                 objectOutputStream.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
-                if(localSocket.isClosed()){
-                    if (localSocket.isOutputShutdown()){
+                if(!localSocket.isConnected()){
+                    if (!localSocket.isOutputShutdown()){
                         try {
                             localSocket.getOutputStream().flush();
                         } catch (IOException e1) {
@@ -199,30 +199,42 @@ public abstract class LocalSocketSession {
                     isReceiverActive = true;
                     int read = -1;
                         while (isReceiverActive) {
-                                read =+ objectInputStream.read();
-                                if(read!=-1) {
-                                    Log.i(TAG,"pidiendo objeto");
-                                    FermatModuleObjectWrapper object = null;
-                                    try {
-                                        object = (FermatModuleObjectWrapper) objectInputStream.readObject();
-                                    }catch (OptionalDataException e){
-                                        e.printStackTrace();
-                                        read=+objectInputStream.read();
-                                        Log.e(TAG, String.valueOf(read));
-                                    }
-                                    //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
-                                    if (object != null) {
-                                        onReceiveMessage(object);
-                                        read--;
-                                        //messageSize.decrementAndGet();
-                                    } else {
-                                        Log.e(TAG,"Object receiver null");
-                                        Log.e(TAG, "Read: "+read);
+                                if(objectInputStream.available()!=0) {
+                                    read = +objectInputStream.read();
+                                }else {
+                                    read = 0;
+                                    if (read != -1) {
+                                        Log.i(TAG, "pidiendo objeto");
+                                        FermatModuleObjectWrapper object = null;
+                                        try {
+                                            if(localSocket.isConnected()) {
+                                                Object o = objectInputStream.readObject();
+                                                if(o instanceof FermatModuleObjectWrapper){
+                                                    object = (FermatModuleObjectWrapper) o;
+                                                }else{
+                                                    Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
+                                                }
+                                            }
+                                            else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
+                                        } catch (OptionalDataException e) {
+                                            e.printStackTrace();
+                                            read = +objectInputStream.read();
+                                            Log.e(TAG, String.valueOf(read));
+                                        }
+                                        //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
+                                        if (object != null) {
+                                            onReceiveMessage(object);
+                                            read--;
+                                            //messageSize.decrementAndGet();
+                                        } else {
+                                            Log.e(TAG, "Object receiver null");
+                                            Log.e(TAG, "Read: " + read);
 //                                        TimeUnit.SECONDS.sleep(2);
-                                    }
-                                }else{
-                                    //Log.e(TAG,"end of input stream");
+                                        }
+                                    } else {
+                                        //Log.e(TAG,"end of input stream");
 //                                    isReceiverActive = false;
+                                    }
                                 }
                         }
                 }
