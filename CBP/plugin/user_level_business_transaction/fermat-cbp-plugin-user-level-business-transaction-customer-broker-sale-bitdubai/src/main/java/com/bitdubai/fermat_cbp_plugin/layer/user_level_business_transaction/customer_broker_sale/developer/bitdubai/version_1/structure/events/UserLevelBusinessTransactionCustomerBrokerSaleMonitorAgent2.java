@@ -285,7 +285,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                 customerBrokerSale.setTransactionStatus(IN_OPEN_CONTRACT);
                 dao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
 
-                FermatBundle fermatBundle = new FermatBundle();
+                /*FermatBundle fermatBundle = new FermatBundle();
                 fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
                 fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
                 fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
@@ -294,7 +294,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);*/
             }
         }
     }

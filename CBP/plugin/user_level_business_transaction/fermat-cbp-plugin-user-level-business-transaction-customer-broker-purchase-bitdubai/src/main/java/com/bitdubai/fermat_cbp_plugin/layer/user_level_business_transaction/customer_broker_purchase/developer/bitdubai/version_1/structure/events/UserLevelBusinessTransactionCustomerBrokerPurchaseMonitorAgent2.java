@@ -658,7 +658,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                 userLevelTransaction.setTransactionStatus(IN_OPEN_CONTRACT);
                 dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
-                FermatBundle fermatBundle = new FermatBundle();
+                /*FermatBundle fermatBundle = new FermatBundle();
                 fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_PURCHASE.getCode());
                 fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
                 fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
@@ -667,7 +667,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
 
                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);*/
             }
         }
     }
