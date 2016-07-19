@@ -325,6 +325,7 @@ public class OpenContractMonitorAgent2
 
                             //CONFIRM TRANSMISSION OF SEND
                             transactionTransmissionManager.confirmReception(transmissionIdNew);
+                            break;
 
                         }
                     }
@@ -356,6 +357,7 @@ public class OpenContractMonitorAgent2
 
                         //CONFIRM SEND OF TRANSMISSION
                         transactionTransmissionManager.confirmReception(transmissionIdNew);
+                        break;
 
                     }
 
@@ -417,10 +419,10 @@ public class OpenContractMonitorAgent2
                 //CONFIRM RECEPTION OF TRANSMISSION
                 transactionTransmissionManager.confirmReception(transmissionId);
 
-                //CONFIRM RECEPTION OF NOTIFICATION EVENT
-                openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-
             }
+
+            //CONFIRM RECEPTION OF NOTIFICATION EVENT
+            openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
 
             //TODO: look a better way to deal with this exceptions
         } catch (CantDeliverPendingTransactionsException e) {
