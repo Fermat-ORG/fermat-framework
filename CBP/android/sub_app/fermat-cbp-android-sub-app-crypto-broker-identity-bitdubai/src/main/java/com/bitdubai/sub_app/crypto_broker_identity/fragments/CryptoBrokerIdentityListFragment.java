@@ -282,19 +282,17 @@ public class CryptoBrokerIdentityListFragment
         @Override
         public void onReceive(FermatBundle fermatBundle) {
             try {
-                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+                if(isAttached) {
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
-                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
-                    if (isAttached) {
+                    if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
                         onRefresh();
                         View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
                         emptyListViewsContainer.setVisibility(View.INVISIBLE);
                         recyclerView.setVisibility(View.VISIBLE);
                     }
-                }
 
-                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
-                    if (isAttached) {
+                    if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
                         onRefresh();
                         View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
                         emptyListViewsContainer.setVisibility(View.INVISIBLE);
