@@ -120,6 +120,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
     BlockchainNetworkType blockchainNetworkType;
     private ExecutorService _executor;
 
+    private FermatWorker fermatWorker;
+
     private List<WalletContact> walletContactList = new ArrayList<>();
 
     public static RequestFormFragment newInstance() {
@@ -343,7 +345,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
     private void setUpContactAddapter() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -613,6 +615,15 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         } else if (id == R.id.imageView_contact) {
             // if user press the profile image
         }
+    }
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+        super.onStop();
     }
 
     private void sendRequest() {
