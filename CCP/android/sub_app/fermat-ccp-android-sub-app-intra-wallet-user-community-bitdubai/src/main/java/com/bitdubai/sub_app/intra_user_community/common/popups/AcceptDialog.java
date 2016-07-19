@@ -74,9 +74,9 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
-            title       = (FermatTextView) findViewById(R.id.title          );
-            description = (FermatTextView) findViewById(R.id.description    );
-            userName    = (FermatTextView) findViewById(R.id.user_name      );
+            title       = (FermatTextView) findViewById(R.id.title);
+            description = (FermatTextView) findViewById(R.id.description);
+            userName    = (FermatTextView) findViewById(R.id.second_description);
             positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
             negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
 
