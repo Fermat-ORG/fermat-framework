@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -100,6 +101,7 @@ public class ContactsListFragment
     TextView noDatalabel;
     FermatApplicationCaller applicationsHelper;
     ImageView noData;
+    private ProgressBar progressBar;
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
@@ -168,10 +170,12 @@ public class ContactsListFragment
             recyclerView.setAdapter(adapter);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 //            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
 //            swipeRefresh.setOnRefreshListener(this);
 //            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             showEmpty(true, emptyView);
+            progressBar.setVisibility(View.VISIBLE);
             onRefresh();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -330,6 +334,7 @@ public class ContactsListFragment
             emptyView.setBackground(bgcolor);
             rootView.setBackground(bgcolor);
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

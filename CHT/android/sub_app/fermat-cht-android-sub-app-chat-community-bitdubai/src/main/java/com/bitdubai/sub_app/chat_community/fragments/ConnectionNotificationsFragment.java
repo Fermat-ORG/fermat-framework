@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +82,7 @@ public class ConnectionNotificationsFragment
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
     private View rootView;
+    private ProgressBar progressBar;
     private NotificationAdapter adapter;
     private LinearLayout emptyView;
     private int offset = 0;
@@ -169,12 +171,14 @@ public class ConnectionNotificationsFragment
             recyclerView.setAdapter(adapter);
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 //            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
 //            swipeRefresh.setOnRefreshListener(this);
 //            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             showEmpty(true, emptyView);
+            progressBar.setVisibility(View.VISIBLE);
             onRefresh();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -333,6 +337,7 @@ public class ConnectionNotificationsFragment
             emptyView.setBackground(bgcolor);
             rootView.setBackground(bgcolor);
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
