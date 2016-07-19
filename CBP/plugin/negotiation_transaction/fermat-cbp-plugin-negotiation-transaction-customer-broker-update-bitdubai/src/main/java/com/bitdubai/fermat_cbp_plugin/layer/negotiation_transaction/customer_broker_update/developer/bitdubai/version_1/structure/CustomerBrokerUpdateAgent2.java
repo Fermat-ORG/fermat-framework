@@ -315,13 +315,12 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                                                 fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
                                                 fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION);
                                                 fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getCode());
-
                                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
                                                 fermatBundle = new FermatBundle();
                                                 fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
                                                 fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
-                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
+                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
                                             } else {
                                                 System.out.print("\n**** 20) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE PURCHASE NEGOTIATION TRANSACTION  ****\n");
@@ -334,13 +333,12 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                                                 fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
                                                 fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION);
                                                 fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
-
                                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
                                                 fermatBundle = new FermatBundle();
                                                 fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
                                                 fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
-                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(), fermatBundle);
+                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                                             }
 
                                             break;

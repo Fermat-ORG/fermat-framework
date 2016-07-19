@@ -319,7 +319,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
         }
     }
 
@@ -379,7 +379,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         fermatBundle = new FermatBundle();
                         fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                         fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
                     }
                 }
@@ -415,7 +415,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     FermatBundle fermatBundle = new FermatBundle();
                     fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
         }
@@ -454,7 +454,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
         }
@@ -493,7 +493,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
         }
@@ -528,7 +528,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     FermatBundle fermatBundle = new FermatBundle();
                     fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
         }
@@ -590,7 +590,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         fermatBundle = new FermatBundle();
                         fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                         fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                     }
                 }
             }
@@ -625,7 +625,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     FermatBundle fermatBundle = new FermatBundle();
                     fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
         }
@@ -676,7 +676,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
         }
@@ -730,7 +730,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                     fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
         }

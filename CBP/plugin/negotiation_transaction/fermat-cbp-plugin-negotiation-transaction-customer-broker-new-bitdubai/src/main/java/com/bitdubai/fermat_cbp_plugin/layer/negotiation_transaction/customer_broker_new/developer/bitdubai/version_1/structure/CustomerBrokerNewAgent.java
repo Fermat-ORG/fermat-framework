@@ -476,7 +476,7 @@ public class CustomerBrokerNewAgent implements
                                                 fermatBundle = new FermatBundle();
                                                 fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
                                                 fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW);
-                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+                                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
                                             } else {
 

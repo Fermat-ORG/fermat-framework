@@ -10,19 +10,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
@@ -33,9 +27,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
-import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
@@ -170,7 +162,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantSetAssociatedMerchandisesAsExtradataInAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CBPInstalledWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.classes.CryptoCustomerWalletModuleClauseInformation;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
@@ -196,7 +187,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -205,15 +195,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
-
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
-import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 
 /**
@@ -1694,106 +1677,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                     "Trying to get wallet settings to obtain the associated wallets and its merchandises",
                     "Probably there is a problem in data base");
         }
-    }
-
-    List<CustomerBrokerNegotiationInformation> negotiations = new ArrayList<>();
-    int count = 0;
-
-    @Override
-    public void testBroadcastReceiver() {
-        count++;
-
-        Random random = new Random(321515131);
-        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-
-        float currencyQtyVal = random.nextFloat() * 100;
-        float exchangeRateVal = random.nextFloat();
-        String customerCurrencyQty = decimalFormat.format(currencyQtyVal);
-        String exchangeRate = decimalFormat.format(exchangeRateVal);
-        String brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
-        long timeInMillisVal = System.currentTimeMillis();
-        String timeInMillisStr = String.valueOf(timeInMillisVal);
-
-        if (count % 2 == 0) {
-            CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation item;
-
-            item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("broker test " + count, NegotiationStatus.WAITING_FOR_BROKER);
-            item.setLastNegotiationUpdateDate(timeInMillisVal);
-            item.setExpirationDatetime(timeInMillisVal);
-            item.setNote("Le dices al portero que vas a nombre del señor Bastidas");
-            item.getClauses().put(ClauseType.BROKER_CURRENCY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_CURRENCY_QUANTITY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_CURRENCY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.EXCHANGE_RATE, new CryptoCustomerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_PAYMENT_METHOD, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, MoneyType.CASH_DELIVERY.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_PLACE_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_PLACE_TO_DELIVER, "BROKER_LOCATION_1", ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_PAYMENT_METHOD, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, MoneyType.CRYPTO.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_CRYPTO_ADDRESS, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "CUSTOMER_CRYPTO_ADDRESS", ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_DATE_TIME_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-            negotiations.add(item);
-        } else {
-            CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation item;
-
-            item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("broker test " + count, NegotiationStatus.WAITING_FOR_CUSTOMER);
-            item.setLastNegotiationUpdateDate(timeInMillisVal);
-            item.setExpirationDatetime(timeInMillisVal);
-            item.setNote("Le dices al portero que vas a nombre del señor Bastidas");
-            item.getClauses().put(ClauseType.BROKER_CURRENCY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_CURRENCY_QUANTITY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_CURRENCY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.EXCHANGE_RATE, new CryptoCustomerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_PAYMENT_METHOD, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, MoneyType.CASH_DELIVERY.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_PLACE_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_PLACE_TO_DELIVER, "BROKER_LOCATION_1", ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_PAYMENT_METHOD, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, MoneyType.CRYPTO.getCode(), ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_CRYPTO_ADDRESS, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "CUSTOMER_CRYPTO_ADDRESS", ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.BROKER_DATE_TIME_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-            item.getClauses().put(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-            negotiations.add(item);
-        }
-
-        FermatBundle fermatBundle;
-
-        fermatBundle = new FermatBundle();
-        fermatBundle.put(SOURCE_PLUGIN, Plugins.CRYPTO_BROKER.getCode());
-        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode()));
-        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode());
-        fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBC_ACTOR_CONNECTED);
-        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-
-        fermatBundle = new FermatBundle();
-        fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW);
-        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
-
-
-    }
-
-    @Override
-    public List<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBrokerTest(int i, int i1) {
-        List<CustomerBrokerNegotiationInformation> filteredList = new ArrayList<>();
-
-        for (CustomerBrokerNegotiationInformation negotiation : negotiations) {
-            if(negotiation.getStatus() == NegotiationStatus.WAITING_FOR_BROKER)
-                filteredList.add(negotiation);
-        }
-
-        return filteredList;
-    }
-
-    @Override
-    public List<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomerTest(int i, int i1) {
-        List<CustomerBrokerNegotiationInformation> filteredList = new ArrayList<>();
-
-        for (CustomerBrokerNegotiationInformation negotiation : negotiations) {
-            if(negotiation.getStatus() == NegotiationStatus.WAITING_FOR_CUSTOMER)
-                filteredList.add(negotiation);
-        }
-
-        return filteredList;
     }
 
     private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, ClauseType paramClauseType) throws CantGetListClauseException {
