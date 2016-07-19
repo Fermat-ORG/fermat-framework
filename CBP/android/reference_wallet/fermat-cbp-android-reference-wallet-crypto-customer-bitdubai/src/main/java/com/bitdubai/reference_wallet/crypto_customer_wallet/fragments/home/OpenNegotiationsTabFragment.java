@@ -60,17 +60,18 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
 public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
-    private static final String TAG = "OpenNegotiationsTab";
-
     // Fermat Managers
+    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
-    private List<GrouperItem> openNegotiationList;
-    private CryptoCustomerWalletModuleManager moduleManager;
+    private List<GrouperItem<CustomerBrokerNegotiationInformation>> openNegotiationList;
 
+    // Android Stuffs
     private View emptyListViewsContainer;
-    FermatApplicationCaller applicationsHelper;
+    private FermatApplicationCaller applicationCaller;
+    private OpenNegotiationBroadcastReceiver broadcastReceiver;
+
 
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
@@ -81,12 +82,14 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.onCreate(savedInstanceState);
 
         FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
-        registerReceiver(fermatIntentFilter, new OpenNegotiationBroadcastReceiver());
+        broadcastReceiver = new OpenNegotiationBroadcastReceiver();
+        registerReceiver(fermatIntentFilter, broadcastReceiver);
 
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
+
+            applicationCaller = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
 
             CryptoCustomerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             if (settings.isWizardStartActivity()) {
@@ -97,15 +100,34 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             }
 
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         onRefresh();
     }
 
+    @Override
+    public void onDestroy() {
+        if (broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+        if (isAttached) onRefresh();
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
 
     @Override
     protected void initViews(View layout) {
@@ -119,6 +141,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         emptyListViewsContainer = layout.findViewById(R.id.empty);
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -134,10 +157,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             int id = item.getItemId();
             switch (id) {
                 case FragmentsCommons.OPEN_CUSTOMER_IDENTITY_APP_OPTION_MENU_ID:
-                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode());
+                    applicationCaller.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode());
                     break;
                 case FragmentsCommons.OPEN_BROKER_COMMUNITY_APP_OPTION_MENU_ID:
-                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode());
+                    applicationCaller.openFermatApp(SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode());
                     break;
             }
         } catch (Exception e) {
@@ -149,15 +172,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     }
 
     @Override
-    protected boolean hasMenu() {
-        return true;
-    }
-
-    @Override
+    @SuppressWarnings("unchecked")
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
             adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
-            // setting up event listeners
             adapter.setChildItemFermatEventListeners(this);
         }
         return adapter;
@@ -192,14 +210,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         String grouperText;
 
         if (moduleManager != null) {
+            GrouperItem<CustomerBrokerNegotiationInformation> grouper;
+            List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
+            List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+
             try {
-                GrouperItem<CustomerBrokerNegotiationInformation> grouper;
 
-
-                List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
                 waitingForCustomer.addAll(moduleManager.getNegotiationsWaitingForCustomer(0, 10));
-
-                List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
                 waitingForBroker.addAll(moduleManager.getNegotiationsWaitingForBroker(0, 10));
 
                 if (!waitingForCustomer.isEmpty() || !waitingForBroker.isEmpty()) {
@@ -213,11 +230,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 }
 
             } catch (Exception ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
-                if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                }
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
 
         } else {
@@ -243,6 +257,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
@@ -266,20 +281,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
     }
 
-    @Override
-    public void onUpdateViewOnUIThread(String code) {
-        switch (code) {
-            case CCW_NEGOTIATION_UPDATE_VIEW:
-                if (isAttached)
-                    onRefresh();
-                break;
-            case CCW_CONTRACT_UPDATE_VIEW:
-                if (isAttached)
-                    onRefresh();
-                break;
-        }
-    }
-
     private void showOrHideEmptyView() {
         if (openNegotiationList == null || openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -299,18 +300,17 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
                 switch (code) {
                     case CCW_NEGOTIATION_UPDATE_VIEW:
-                        onRefresh();
+                        if (isAttached) onRefresh();
                         break;
                     case CCW_CONTRACT_UPDATE_VIEW:
-                        onRefresh();
+                        if (isAttached) onRefresh();
                         break;
                 }
 
             } catch (ClassCastException e) {
-                appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
     }
 }
-

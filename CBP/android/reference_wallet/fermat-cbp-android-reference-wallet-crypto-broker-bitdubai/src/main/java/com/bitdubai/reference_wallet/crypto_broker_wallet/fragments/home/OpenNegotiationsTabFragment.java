@@ -124,7 +124,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-        onRefresh();
+        if (isAttached) onRefresh();
     }
 
     @Override
@@ -236,11 +236,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 }
 
             } catch (Exception ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
-                if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                }
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
 
         } else {
@@ -308,12 +305,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
                 switch (code) {
                     case CBW_NEGOTIATION_UPDATE_VIEW:
-                        if (isAttached)
-                            onRefresh();
+                        if (isAttached) onRefresh();
                         break;
                     case CBW_CONTRACT_UPDATE_VIEW:
-                        if (isAttached)
-                            onRefresh();
+                        if (isAttached) onRefresh();
                         break;
                 }
 
@@ -324,4 +319,3 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
     }
 }
-

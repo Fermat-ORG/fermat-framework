@@ -60,10 +60,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     private ErrorManager errorManager;
 
     // Data
-    private ArrayList<GrouperItem<ContractBasicInformation>> openContractList;
+    private List<GrouperItem<ContractBasicInformation>> openContractList;
 
+    // Android Stuffs
     private View emptyListViewsContainer;
-    FermatApplicationCaller applicationsHelper;
+    private FermatApplicationCaller applicationCaller;
+    private OpenContractBroadcastReceiver broadcastReceiver;
+
 
     public static OpenContractsTabFragment newInstance() {
         return new OpenContractsTabFragment();
@@ -74,22 +77,43 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         super.onCreate(savedInstanceState);
 
         FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
-        registerReceiver(fermatIntentFilter, new OpenContractBroadcastReceiver());
+        broadcastReceiver = new OpenContractBroadcastReceiver();
+        registerReceiver(fermatIntentFilter, broadcastReceiver);
 
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
+            applicationCaller = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
 
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_CUSTOMER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+        if (isAttached) onRefresh();
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return true;
     }
 
     @Override
@@ -119,10 +143,10 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             int id = item.getItemId();
             switch (id) {
                 case FragmentsCommons.OPEN_CUSTOMER_IDENTITY_APP_OPTION_MENU_ID:
-                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode());
+                    applicationCaller.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode());
                     break;
                 case FragmentsCommons.OPEN_BROKER_COMMUNITY_APP_OPTION_MENU_ID:
-                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode());
+                    applicationCaller.openFermatApp(SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode());
                     break;
             }
         } catch (Exception e) {
@@ -131,11 +155,6 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected boolean hasMenu() {
-        return true;
     }
 
     @Override
@@ -252,18 +271,6 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         }
     }
 
-    @Override
-    public void onUpdateViewOnUIThread(String code) {
-        switch (code) {
-            case CCW_CONTRACT_UPDATE_VIEW:
-                onRefresh();
-                break;
-            case CCW_NEGOTIATION_UPDATE_VIEW:
-                onRefresh();
-                break;
-        }
-    }
-
     private void showOrHideEmptyView() {
         if (openContractList == null || openContractList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -283,12 +290,10 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
                 switch (code) {
                     case CCW_NEGOTIATION_UPDATE_VIEW:
-                        if (isAttached)
-                            onRefresh();
+                        if (isAttached) onRefresh();
                         break;
                     case CCW_CONTRACT_UPDATE_VIEW:
-                        if (isAttached)
-                            onRefresh();
+                        if (isAttached) onRefresh();
                         break;
                 }
 
