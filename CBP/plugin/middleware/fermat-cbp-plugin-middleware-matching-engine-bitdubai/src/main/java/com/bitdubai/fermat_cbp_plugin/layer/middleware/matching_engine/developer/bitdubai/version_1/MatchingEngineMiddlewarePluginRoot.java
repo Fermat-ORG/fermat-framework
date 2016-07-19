@@ -97,9 +97,9 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
     private MatchingEngineMiddlewareEarningsTransactionGeneratorAgent2 transactionGeneratorAgent;
 
     //Agent configuration
-    private final long SLEEP_TIME = 5000;
-    private final long DELAY_TIME = 500;
-    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+    private final long SLEEP_TIME = 1;
+    private final long DELAY_TIME = 1;
+    private final TimeUnit TIME_UNIT = TimeUnit.MINUTES;
 
     @Override
     public FermatManager getManager() {
