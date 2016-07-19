@@ -220,9 +220,16 @@ public class NetworkClientCommunicationChannel {
         getClientConnection().getBasicRemote().sendPing(pingData);
     }
 
+    public void sendPong() throws IOException {
+        String pingString = "PING";
+        ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
+        pingData.put(pingString.getBytes()).flip();
+        getClientConnection().getBasicRemote().sendPong(pingData);
+    }
+
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        //System.out.println("NetworkClientCommunicationChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
+        System.out.println("NetworkClientCommunicationChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
     }
 
     /**
