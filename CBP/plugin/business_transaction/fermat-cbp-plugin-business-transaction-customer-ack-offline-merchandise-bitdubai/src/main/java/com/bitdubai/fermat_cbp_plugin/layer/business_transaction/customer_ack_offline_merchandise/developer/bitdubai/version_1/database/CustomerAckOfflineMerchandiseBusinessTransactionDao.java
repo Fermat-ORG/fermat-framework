@@ -811,7 +811,10 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
+            //checkDatabaseRecords(records);
+            if(records==null||records.isEmpty()){
+                return;
+            }
             DatabaseTableRecord record=records.get(0);
             record.setStringValue(
                     CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,

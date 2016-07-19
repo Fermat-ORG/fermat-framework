@@ -85,12 +85,7 @@ public class CloseContractMonitorAgent2
                 }
 
             }
-        } catch (CantGetContractListException |
-                UnexpectedResultReturnedFromDatabaseException |
-                CantSendContractNewStatusNotificationException |
-                CantConfirmNotificationReceptionException |
-                CantUpdateRecordException |
-                CantConfirmTransactionException e) {
+        } catch (Exception e) {
             reportError(e);
         }
     }
