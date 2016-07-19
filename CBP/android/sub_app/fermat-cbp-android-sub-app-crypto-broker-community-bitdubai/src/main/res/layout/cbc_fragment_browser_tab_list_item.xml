@@ -44,13 +44,13 @@
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbc_broker_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/cbc_broker_image"
             android:layout_toEndOf="@+id/cbc_broker_image"
             android:layout_toRightOf="@+id/cbc_broker_image"
             android:ellipsize="end"
-            android:gravity="center"
+            android:gravity="start"
             android:maxLines="2"
             android:textColor="@color/color_black_light"
             android:textSize="16sp"
@@ -58,7 +58,7 @@
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbc_merchandises"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cbc_broker_name"
             android:layout_toEndOf="@+id/cbc_broker_image"

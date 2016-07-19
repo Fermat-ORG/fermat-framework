@@ -230,26 +230,8 @@ public class BrowserTabFragment
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-//            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
-//            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//                @Override
-//                public int getSpanSize(int position) {
-//                    final int itemViewType = adapter.getItemViewType(position);
-//                    switch (itemViewType) {
-//                        case AvailableActorsListAdapter.DATA_ITEM:
-//                            return 1;
-//                        case AvailableActorsListAdapter.LOADING_ITEM:
-//                            return SPAN_COUNT;
-//                        default:
-//                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
-//                    }
-//                }
-//            });
-//
-//            layoutManager = gridLayoutManager;
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
-
 
         return layoutManager;
     }
