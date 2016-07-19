@@ -40,7 +40,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     ReferenceAppFermatSession referenceWalletSession;
     Typeface tf;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
-    private String feeLevel = "SLOW";
+    private String feeLevel = "NORMAL";
 
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
@@ -59,7 +59,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
 
             if (bitcoinWalletSettings.getFeedLevel() == null)
-                bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
             else
                 feeLevel = bitcoinWalletSettings.getFeedLevel();
 

@@ -101,7 +101,7 @@ public class SetMerchandisesAsExtraDataInAssociatedIdentityTest {
                 customerBrokerCloseManager,
                 cryptoCustomerActorConnectionManager,
                 pluginFileSystem,
-                null));
+                null, broadcaster));
     }
 
     @Test
@@ -184,6 +184,43 @@ public class SetMerchandisesAsExtraDataInAssociatedIdentityTest {
         List<CryptoBrokerWalletAssociatedSetting> associatedWallets = new ArrayList<>();
         associatedWallets.add(new CryptoBrokerWalletAssociatedSettingMock(CryptoCurrency.BITCOIN));
         associatedWallets.add(new CryptoBrokerWalletAssociatedSettingMock(FiatCurrency.US_DOLLAR));
+        associatedWallets.add(new CryptoBrokerWalletAssociatedSettingMock(FiatCurrency.US_DOLLAR));
+        doReturn(associatedWallets).when(moduleManagerSpy).getCryptoBrokerWalletAssociatedSettings(WALLET_PUBLIC_KEY);
+
+        // exercise
+        CryptoBrokerIdentity updatedIdentity = moduleManagerSpy.setMerchandisesAsExtraDataInAssociatedIdentity();
+
+        // assert
+        final CryptoBrokerIdentity expectedIdentity = new CryptoBrokerWalletModuleCryptoBrokerIdentity(BROKER_IDENTITY_PUBLIC_KEY,
+                "testAlias", new byte[0], ExposureLevel.PUBLISH, GeoFrequency.NORMAL, 10, CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR,
+                "Merchandises: BTC, USD");
+
+        CryptoBrokerIdentityExtraData expectedExtraData = expectedIdentity.getCryptoBrokerIdentityExtraData();
+        CryptoBrokerIdentityExtraData updatedExtraData = updatedIdentity.getCryptoBrokerIdentityExtraData();
+
+        assertThat(updatedIdentity.getAccuracy()).isEqualTo(expectedIdentity.getAccuracy());
+        assertThat(updatedIdentity.getAlias()).isEqualTo(expectedIdentity.getAlias());
+        assertThat(updatedIdentity.getExposureLevel()).isEqualTo(expectedIdentity.getExposureLevel());
+        assertThat(updatedIdentity.getFrequency()).isEqualTo(expectedIdentity.getFrequency());
+        assertThat(updatedIdentity.getProfileImage()).isEqualTo(expectedIdentity.getProfileImage());
+        assertThat(updatedIdentity.getPublicKey()).isEqualTo(expectedIdentity.getPublicKey());
+        assertThat(updatedExtraData.getExtraText()).isEqualTo(expectedExtraData.getExtraText());
+        assertThat(updatedExtraData.getMerchandise()).isEqualTo(expectedExtraData.getMerchandise());
+        assertThat(updatedExtraData.getPaymentCurrency()).isEqualTo(expectedExtraData.getPaymentCurrency());
+
+        verify(cryptoBrokerIdentityManager).updateCryptoBrokerIdentity(eq(updatedIdentity));
+    }
+
+    @Test
+    public void updateExtraDataWithTwoWalletsAndTwoDifferentMerchandises() throws Exception {
+
+        // setup
+        final CryptoBrokerIdentity baseIdentity = new CryptoBrokerWalletModuleCryptoBrokerIdentity(BROKER_IDENTITY_PUBLIC_KEY, "testAlias",
+                new byte[0], ExposureLevel.PUBLISH, GeoFrequency.NORMAL, 10);
+        doReturn(baseIdentity).when(moduleManagerSpy).getAssociatedIdentity(WALLET_PUBLIC_KEY);
+
+        List<CryptoBrokerWalletAssociatedSetting> associatedWallets = new ArrayList<>();
+        associatedWallets.add(new CryptoBrokerWalletAssociatedSettingMock(CryptoCurrency.BITCOIN));
         associatedWallets.add(new CryptoBrokerWalletAssociatedSettingMock(FiatCurrency.US_DOLLAR));
         doReturn(associatedWallets).when(moduleManagerSpy).getCryptoBrokerWalletAssociatedSettings(WALLET_PUBLIC_KEY);
 
