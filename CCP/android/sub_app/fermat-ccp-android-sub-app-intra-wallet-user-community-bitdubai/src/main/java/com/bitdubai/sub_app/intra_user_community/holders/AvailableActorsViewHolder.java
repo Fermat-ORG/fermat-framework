@@ -59,13 +59,28 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
     }
 
     public void bind(IntraUserInformation data) {
+
+        row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ? "Online" : "offline");
+        if(data.getState().equals(ProfileStatus.OFFLINE))
+        {
+            //button_add.setBackgroundColor(Color.RED);
+            button_add.setVisibility(View.GONE);
+            response.setText("OFFLINE");
+            response.setTextColor(Color.RED);
+            response.setVisibility(View.VISIBLE);
+        }
+        // else{
+        //   button_add.setBackgroundColor(Color.parseColor("#21386D"));
+        //  button_add.setVisibility(View.VISIBLE);
+        //  }
+
         if (data.getConnectionState() != null) {
 
             switch (data.getConnectionState()) {
                 case CONNECTED:
-                    if (response.getVisibility() == View.GONE)
                         response.setVisibility(View.VISIBLE);
                         response.setText("IS A CONTACT");
+                        response.setTextColor(Color.parseColor("#21386D"));
                         button_add.setVisibility(View.GONE);
                     break;
                 case BLOCKED_LOCALLY:
@@ -75,40 +90,40 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                 case CANCELLED_LOCALLY:
                     break;
                 case CANCELLED_REMOTELY:
-                    if (response.getVisibility() == View.GONE){
-                        //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                       //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
                         response.setText("REQUEST CANCELLED");
                         response.setVisibility(View.VISIBLE);
+                    response.setTextColor(Color.parseColor("#21386D"));
                         button_add.setVisibility(View.GONE);
-                    }
+
                     break;
                 case NO_CONNECTED:
-                    if (response.getVisibility() == View.VISIBLE){
-                        response.setText("");
+                    response.setText("");
                         response.setVisibility(View.GONE);
                         button_add.setVisibility(View.VISIBLE);
-                    }
+
 
                     break;
                 case DENIED_LOCALLY:
                     break;
                 case DENIED_REMOTELY:
-                    if (response.getVisibility() == View.GONE){
-                        //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+
                         response.setText("DENIED BY CONTACT");
+                    response.setTextColor(Color.parseColor("#21386D"));
                         response.setVisibility(View.VISIBLE);
                         button_add.setVisibility(View.GONE);
-                    }
+
                     break;
                 case DISCONNECTED_LOCALLY:
                     break;
                 case DISCONNECTED_REMOTELY:
-                    if (response.getVisibility() == View.GONE){
+
                         response.setText("IS NOT CONNECTED");
+                    response.setTextColor(Color.parseColor("#21386D"));
                         //connectionState.setImageResource(R.drawable.icon_contact_no_conect);
                         response.setVisibility(View.VISIBLE);
                         button_add.setVisibility(View.GONE);
-                    }
+
                     break;
                 case ERROR:
                     break;
@@ -117,12 +132,13 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                 case PENDING_LOCALLY_ACCEPTANCE:
                     break;
                 case PENDING_REMOTELY_ACCEPTANCE:
-                    if (response.getVisibility() == View.GONE){
+
                         response.setText("REQUEST SENT");
+                    response.setTextColor(Color.parseColor("#21386D"));
                         //connectionState.setImageResource(R.drawable.icon_contact_standby);
                         response.setVisibility(View.VISIBLE);
                         button_add.setVisibility(View.GONE);
-                    }
+
                     break;
                 default:
                     if (response.getVisibility() == View.VISIBLE)
@@ -130,19 +146,7 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
                         button_add.setVisibility(View.VISIBLE);
                     break;
             }
-            row_connection_state.setText((data.getState().equals(ProfileStatus.ONLINE)) ? "Online" : "offline");
-            if(data.getState().equals(ProfileStatus.OFFLINE))
-            {
-                //button_add.setBackgroundColor(Color.RED);
-                button_add.setVisibility(View.GONE);
-                response.setText("OFFLINE");
-                response.setTextColor(Color.RED);
-                response.setVisibility(View.VISIBLE);
-            }
-            else{
-                button_add.setBackgroundColor(Color.parseColor("#21386D"));
-                button_add.setVisibility(View.VISIBLE);
-            }
+
 
           name.setText(data.getName());
             byte[] profileImage = data.getProfileImage();
