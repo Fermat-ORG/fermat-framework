@@ -10,8 +10,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -204,6 +208,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 
 /**
@@ -1744,10 +1754,22 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             negotiations.add(item);
         }
 
-        FermatBundle fermatBundle = new FermatBundle();
+        FermatBundle fermatBundle;
+
+        fermatBundle = new FermatBundle();
+        fermatBundle.put(SOURCE_PLUGIN, Plugins.CRYPTO_BROKER.getCode());
+        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode()));
+        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode());
+        fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBC_ACTOR_CONNECTED);
+        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+        fermatBundle = new FermatBundle();
         fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
         fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW);
-        broadcaster.publish(BroadcasterType.UPDATE_VIEW, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(), fermatBundle);
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+
+
     }
 
     @Override

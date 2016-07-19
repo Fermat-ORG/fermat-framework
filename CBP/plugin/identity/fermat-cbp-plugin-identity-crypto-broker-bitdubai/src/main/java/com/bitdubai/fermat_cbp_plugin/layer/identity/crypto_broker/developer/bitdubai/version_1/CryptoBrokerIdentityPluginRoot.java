@@ -198,8 +198,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED);
-
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
         }
     }
 
@@ -257,8 +256,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED);
-
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
         } catch (final CantExposeActorIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
