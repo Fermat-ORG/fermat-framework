@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectedToNodeEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -146,6 +147,7 @@ public class NetworkClientCommunicationChannel {
          */
         connection.setServerIdentity((String) session.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
 
+        raiseClientConnectedNotificationEvent();
     }
 
     @OnMessage
@@ -236,6 +238,18 @@ public class NetworkClientCommunicationChannel {
         System.out.println("NetworkClientCommunicationChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED");
     }
 
+    /**
+     * Notify when the network client channel connection is closed.
+     */
+    public void raiseClientConnectedNotificationEvent() {
+
+        System.out.println("NetworkClientCommunicationChannel - raiseClientConnectedNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE);
+        platformEvent.setSource(EventSource.NETWORK_CLIENT);
+        ((NetworkClientConnectedToNodeEvent) platformEvent).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("NetworkClientCommunicationChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE");
+    }
     /**
      * Notify when the network client channel connection is lost.
      */
