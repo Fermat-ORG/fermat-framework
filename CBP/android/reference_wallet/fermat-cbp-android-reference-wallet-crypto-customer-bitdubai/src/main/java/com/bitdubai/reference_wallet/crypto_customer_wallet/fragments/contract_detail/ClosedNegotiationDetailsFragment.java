@@ -107,20 +107,9 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
 
 
-        if(CryptoCurrency.codeExists(merchandise)){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
 
         final String exchangeAmount = fixFormat(clauses.get(EXCHANGE_RATE).getValue());
         final String paymentCurrency = clauses.get(BROKER_CURRENCY).getValue();
-
-        if(CryptoCurrency.codeExists(paymentCurrency)){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
 
 
         final String amount = fixFormat(clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue());
@@ -164,12 +153,33 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
     private String fixFormat(String value){
 
         try {
-            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
+                    Double.valueOf(numberFormat.parse(value).toString()))))));
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
         }
 
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 
 }

@@ -50,10 +50,10 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
 
     // DATA
     private NegotiationWrapper negotiationWrapper;
-
+    NumberFormat numberFormat= DecimalFormat.getInstance();
     // Fermat Managers
     private ErrorManager errorManager;
-    private NumberFormat numberFormat= DecimalFormat.getInstance();
+
 
 
     public static ClosedNegotiationDetailsFragment newInstance() {
@@ -101,20 +101,7 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         final String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         final String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
-        if(CryptoCurrency.codeExists(paymentCurrency)){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
-
         final String exchangeAmount = fixFormat(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-
-
-        if(CryptoCurrency.codeExists(merchandise)){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
 
         final String amount = fixFormat(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
 
@@ -152,12 +139,35 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
     private String fixFormat(String value){
 
         try {
-            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
-        } catch (ParseException e) {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
+                    Double.valueOf(numberFormat.parse(value).toString()))))));
+                    } catch (ParseException e) {
             e.printStackTrace();
             return "0";
         }
 
+    }
+
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 
 }

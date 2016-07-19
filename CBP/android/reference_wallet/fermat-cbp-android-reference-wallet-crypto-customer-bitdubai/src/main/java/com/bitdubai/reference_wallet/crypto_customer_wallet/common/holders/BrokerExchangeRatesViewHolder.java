@@ -12,9 +12,11 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import org.bitcoin.protocols.payments.Protos;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 /**
@@ -26,7 +28,7 @@ import java.util.Locale;
  */
 public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
 
-    private NumberFormat formatter;
+    private NumberFormat numberFormat=DecimalFormat.getInstance();
 
     private final Resources res;
 
@@ -36,9 +38,7 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
         super(itemView);
         res = itemView.getResources();
 
-        formatter = DecimalFormat.getInstance();
-        formatter.setMaximumFractionDigits(6);
-        formatter.setRoundingMode(RoundingMode.DOWN);
+
 
         exchangeRateItem = (FermatTextView) itemView.findViewById(R.id.ccw_broker_exchange_rate_item);
     }
@@ -46,12 +46,8 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
     public void bind(MerchandiseExchangeRate data) {
 
 
-        if(data.getPaymentCurrency().getType().name().equals(PaymentType.FIAT_MONEY.getCode())){
-            formatter.setMaximumFractionDigits(2);
-        }else{
-            formatter.setMaximumFractionDigits(8);
-        }
-        String exchangeRate = formatter.format(data.getExchangeRate());
+
+        String exchangeRate = fixFormat(String.valueOf(data.getExchangeRate()));
         String merchandiseCurrency = data.getMerchandiseCurrency().getCode();
         String paymentCurrency = data.getPaymentCurrency().getCode();
 
@@ -70,4 +66,38 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
         String text = res.getString(R.string.ccw_broker_exchange_rate_for_selling_item, merchandiseCurrency, exchangeRate, paymentCurrency);
         exchangeRateItem.setText(text);
     }
+
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
+                    Double.valueOf(numberFormat.parse(value).toString()))))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
+    }
+
 }

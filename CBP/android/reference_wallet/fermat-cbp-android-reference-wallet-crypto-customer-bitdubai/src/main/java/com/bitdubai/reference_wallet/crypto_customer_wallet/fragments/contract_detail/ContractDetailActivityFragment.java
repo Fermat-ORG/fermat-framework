@@ -160,11 +160,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
         final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
         final String paymentCurrency = data.getPaymentCurrency();
 
-        if(CryptoCurrency.codeExists(paymentCurrency)){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
 
 
         final String merchandise = data.getMerchandise();
@@ -362,11 +357,32 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private String fixFormat(String value){
 
         try {
-            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
+                    Double.valueOf(numberFormat.parse(value).toString()))))));
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
         }
 
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 }
