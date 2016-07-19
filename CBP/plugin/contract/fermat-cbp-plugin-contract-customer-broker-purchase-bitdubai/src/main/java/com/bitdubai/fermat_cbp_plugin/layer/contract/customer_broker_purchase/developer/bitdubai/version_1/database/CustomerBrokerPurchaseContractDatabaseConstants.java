@@ -12,6 +12,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.d
  */
 public class CustomerBrokerPurchaseContractDatabaseConstants {
 
+    public static final String DATABASE_NAME = "contract_customer_broker_purchase";
     /**
      * Contracts Purchase database table definition.
      */

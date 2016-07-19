@@ -85,20 +85,10 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
 
         FermatTextView amountSoldOrToSellValue = (FermatTextView) rootView.findViewById(R.id.ccw_amount_bought_or_wanted_to_buy_value);
 
-        if(CryptoCurrency.codeExists(contractBasicInfo.getMerchandise())){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
 
         String amountToSell = fixFormat(String.valueOf(contractBasicInfo.getAmount()));
         amountSoldOrToSellValue.setText(String.format("%1$s %2$s", amountToSell, contractBasicInfo.getMerchandise()));
 
-        if(CryptoCurrency.codeExists(contractBasicInfo.getPaymentCurrency())){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
 
         FermatTextView priceValue = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_price_value);
         String price = fixFormat(String.valueOf(contractBasicInfo.getExchangeRateAmount()));
@@ -137,11 +127,31 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
     private String fixFormat(String value){
 
         try {
-            return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(Double.valueOf(value))))));
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
         }
 
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 }

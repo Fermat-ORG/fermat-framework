@@ -146,7 +146,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     @Override
     public FermatManager getManager() {
-        return null;
+        return this;
     }
 
     /**
@@ -214,7 +214,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             }else {
 
-                /*
+                 /*
                 * get NodesProfile List From Restful in Seed Node
                 */
                 nodesProfileList = getNodesProfileList();
@@ -246,6 +246,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     );
 
                 }
+
             }
 
             p2PLayerManager.register(this);
@@ -453,8 +454,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     public void intentToConnectToOtherNode(Integer i){
 
-        if(executorService != null)
-            executorService.shutdownNow();
+//        if(executorService != null)
+//            executorService.shutdownNow();
 
         /*
          * if is the last index then connect to networkNode Harcoded
@@ -488,15 +489,15 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         }
 
-        Thread thread = new Thread(){
+        Runnable runnable = new Runnable(){
             @Override
             public void run(){
                 networkClientCommunicationConnection.initializeAndConnect();
             }
         };
 
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(thread);
+        if(executorService==null) executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(runnable);
 
     }
 
@@ -654,6 +655,24 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
         }
 
 
+    }
+
+    @Override
+    public void stop() {
+        if(executorService != null)
+            try {
+                executorService.shutdownNow();
+                executorService = null;
+            }catch (Exception ignore){
+
+            }
+
+        if(scheduledExecutorService != null){
+            scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
+        }
+
+        super.stop();
     }
 
     @Override

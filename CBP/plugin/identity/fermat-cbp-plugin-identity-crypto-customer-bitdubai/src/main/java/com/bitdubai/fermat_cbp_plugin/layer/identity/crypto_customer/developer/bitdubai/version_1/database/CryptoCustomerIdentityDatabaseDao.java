@@ -77,11 +77,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCryptoCustomerIdentityDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
             try {
                 CryptoCustomerIdentityDatabaseFactory databaseFactory = new CryptoCustomerIdentityDatabaseFactory(pluginDatabaseSystem);
-                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = databaseFactory.createDatabase(pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCryptoCustomerIdentityDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {

@@ -220,36 +220,37 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
             //Map<String, Object> filters = new HashMap<>();
             //filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
-            List<NegotiationTransmission> lstActorRecord = outgoingNotificationDao.findAllByTransmissionState(
-                    NegotiationTransmissionState.PROCESSING_SEND
-            );
-            System.out.println("NEGOTIATION TRANSMISSION - I found "+lstActorRecord.size()+" for sending");
-            NegotiationType negotiationType;
-            for (NegotiationTransmission nt : lstActorRecord) {
-                negotiationType = nt.getNegotiationType();
-                switch (negotiationType){
-                    case PURCHASE:
-                        negotiationTransmissionManagerImpl
-                                .sendMessage(nt.toJson(),
-                                        nt.getPublicKeyActorSend(),
-                                        Actors.CBP_CRYPTO_CUSTOMER,
-                                        nt.getPublicKeyActorReceive(),
-                                        Actors.CBP_CRYPTO_BROKER);
-                        break;
-                    case SALE:
-                        negotiationTransmissionManagerImpl
-                                .sendMessage(nt.toJson(),
-                                        nt.getPublicKeyActorSend(),
-                                        Actors.CBP_CRYPTO_BROKER,
-                                        nt.getPublicKeyActorReceive(),
-                                        Actors.CBP_CRYPTO_CUSTOMER);
-                        break;
+            if(outgoingNotificationDao != null) {
+                List<NegotiationTransmission> lstActorRecord = outgoingNotificationDao.findAllByTransmissionState(
+                        NegotiationTransmissionState.PROCESSING_SEND
+                );
+                System.out.println("NEGOTIATION TRANSMISSION - I found " + lstActorRecord.size() + " for sending");
+                NegotiationType negotiationType;
+                for (NegotiationTransmission nt : lstActorRecord) {
+                    negotiationType = nt.getNegotiationType();
+                    switch (negotiationType) {
+                        case PURCHASE:
+                            negotiationTransmissionManagerImpl
+                                    .sendMessage(nt.toJson(),
+                                            nt.getPublicKeyActorSend(),
+                                            Actors.CBP_CRYPTO_CUSTOMER,
+                                            nt.getPublicKeyActorReceive(),
+                                            Actors.CBP_CRYPTO_BROKER);
+                            break;
+                        case SALE:
+                            negotiationTransmissionManagerImpl
+                                    .sendMessage(nt.toJson(),
+                                            nt.getPublicKeyActorSend(),
+                                            Actors.CBP_CRYPTO_BROKER,
+                                            nt.getPublicKeyActorReceive(),
+                                            Actors.CBP_CRYPTO_CUSTOMER);
+                            break;
 
+                    }
+                    nt.setTransmissionState(NegotiationTransmissionState.DONE);
+                    outgoingNotificationDao.update(nt);
                 }
-                nt.setTransmissionState(NegotiationTransmissionState.DONE);
-                outgoingNotificationDao.update(nt);
             }
-
         } catch (Exception e) {
             System.out.println("NEGOTIATION TRANSMISSION NS EXCEPTION PROCESSING MESSAGES NOT SENT");
             e.printStackTrace();
