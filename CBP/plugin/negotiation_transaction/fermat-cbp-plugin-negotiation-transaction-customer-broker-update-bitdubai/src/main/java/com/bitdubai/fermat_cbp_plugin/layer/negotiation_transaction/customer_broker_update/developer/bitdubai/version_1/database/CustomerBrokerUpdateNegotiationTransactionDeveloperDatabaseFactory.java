@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,12 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Yordin Alayn - (y.alayn@gmail.com) on 17/12/15.
  *
  * @version 1.0
@@ -69,7 +67,8 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+//            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +89,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
                   /*
                    * We create the new database
                    */
-                database = customerBrokerUpdateNegotiationTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = customerBrokerUpdateNegotiationTransactionDatabaseFactory.createDatabase(pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,7 +105,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Customer Broker Update", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -155,7 +154,6 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
         tables.add(customerBrokerNewEventTable);
 
 
-
         return tables;
     }
 
@@ -165,43 +163,43 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()){
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            /**
+             * return the list of DeveloperRecords for the passed table.
+             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
+            return returnedRecords;
+        } catch (Exception e){
+            database.closeDatabase();
             return returnedRecords;
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
+        database.closeDatabase();
         return returnedRecords;
     }
 

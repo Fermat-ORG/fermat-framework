@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#48000000">
+
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:elevation="24dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="#272727"
+            android:text="TITLE"
+            android:layout_marginTop="26dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="#272727"
+            android:text="Description of dialog"
+            android:layout_marginTop="26dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="8dp">
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/negative_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FFF"
+                android:text="CANCEL"
+                android:textColor="#272727"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/positive_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:background="#FFF"
+                android:text="OK"
+                android:textColor="#272727"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

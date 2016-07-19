@@ -69,7 +69,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +90,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
                   /*
                    * We create the new database
                    */
-                database = customerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = customerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,7 +106,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory {//implements De
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Customer Broker Sale", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
