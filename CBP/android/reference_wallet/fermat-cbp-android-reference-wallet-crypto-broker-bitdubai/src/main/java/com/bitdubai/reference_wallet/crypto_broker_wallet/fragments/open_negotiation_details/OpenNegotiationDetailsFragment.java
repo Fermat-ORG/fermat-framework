@@ -28,7 +28,6 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -38,7 +37,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
@@ -769,7 +767,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             }else{
                 numberFormat.setMaximumFractionDigits(2);
             }
-            convertion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
+            conversion = new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
                     Double.valueOf(numberFormat.parse(value).toString())))));
         } catch (ParseException e) {
             e.printStackTrace();
