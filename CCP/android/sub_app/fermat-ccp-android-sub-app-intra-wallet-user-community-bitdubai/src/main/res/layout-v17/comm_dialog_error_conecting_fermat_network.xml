@@ -100,7 +100,7 @@
                 android:text="Connect"
                 android:textColor="#6d6e70"
                 android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"/>
 
         </LinearLayout>
 

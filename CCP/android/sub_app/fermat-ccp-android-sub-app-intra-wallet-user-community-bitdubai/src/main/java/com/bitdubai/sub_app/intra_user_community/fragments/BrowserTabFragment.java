@@ -440,7 +440,8 @@ public class BrowserTabFragment
                 if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                     appSession.setData(INTRA_USER_SELECTED, data);
                 ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(), (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
+                connectDialog = new ConnectDialog(getActivity(),
+                        (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
                 connectDialog.setTitle("CONFIRM CONNECTION");
                 connectDialog.setDescription("Are you sure you want to connect with "+data.getName()+"?");
                 connectDialog.setUsername(data.getName());
