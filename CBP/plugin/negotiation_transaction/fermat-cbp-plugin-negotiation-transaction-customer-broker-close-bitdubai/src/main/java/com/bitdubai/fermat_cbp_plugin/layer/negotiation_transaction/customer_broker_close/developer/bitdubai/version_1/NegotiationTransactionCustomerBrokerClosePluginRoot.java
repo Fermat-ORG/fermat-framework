@@ -134,7 +134,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
          try {
 
              //Initialize database
-             initializeDb();
+//             initializeDb();
 
              //Initialize Developer Database Factory
              customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory = new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
@@ -142,7 +142,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
              //Initialize Dao
              customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
-
+             customerBrokerCloseNegotiationTransactionDatabaseDao.initialize();
              //Initialize manager
              customerBrokerCloseManagerImpl = new CustomerBrokerCloseManagerImpl(
                      customerBrokerCloseNegotiationTransactionDatabaseDao,
@@ -283,27 +283,27 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     /*END IMPLEMENTATION LogManagerForDevelopers*/
 
     /*PRIVATE METHOD*/
-    private void initializeDb() throws CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException {
-        try {
-            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
-        } catch (DatabaseNotFoundException e) {
-            try {
-                CustomerBrokerCloseNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerCloseNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
-                dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
-            } catch (CantCreateDatabaseException f) {
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
-            } catch (Exception z) {
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
-            }
-        } catch (CantOpenDatabaseException e) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        } catch (Exception e) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
-        }
-    }
+//    private void initializeDb() throws CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException {
+//        try {
+//            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+//        } catch (DatabaseNotFoundException e) {
+//            try {
+//                CustomerBrokerCloseNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerCloseNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
+//                dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+//            } catch (CantCreateDatabaseException f) {
+//                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+//            } catch (Exception z) {
+//                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
+//            }
+//        } catch (CantOpenDatabaseException e) {
+//            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+//        } catch (Exception e) {
+//            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            throw new CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
+//        }
+//    }
     /*END PRIVATE METHOD*/
 }
