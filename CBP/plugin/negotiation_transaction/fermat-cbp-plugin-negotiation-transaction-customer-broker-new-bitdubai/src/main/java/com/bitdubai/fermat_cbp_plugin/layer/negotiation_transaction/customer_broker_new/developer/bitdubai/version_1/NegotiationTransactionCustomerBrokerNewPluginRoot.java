@@ -132,7 +132,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
         try {
 
             //Initialize database
-            initializeDb();
+//            initializeDb();
 
             //Initialize Developer Database Factory
             customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory = new CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
@@ -142,7 +142,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 //            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
 //            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
             customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
-
+            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
             //Initialize manager
             customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(
                     customerBrokerNewNegotiationTransactionDatabaseDao,
@@ -278,33 +278,33 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*END IMPLEMENTATION LogManagerForDevelopers*/
 
     /*PRIVATE METHOD*/
-    private void initializeDb() throws CantInitializeDatabaseException {
-        try {
-
-//            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
-            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
-
-        } catch (DatabaseNotFoundException e) {
-            try {
-                CustomerBrokerNewNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerNewNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
-//                dataBase = databaseFactory.createDatabase(pluginId, pluginId.toString());
-                dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
-            } catch (CantCreateDatabaseException f) {
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, f);
-                throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
-            } catch (Exception z) {
-                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, z);
-                throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
-            }
-        } catch (CantOpenDatabaseException e) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        } catch (Exception e) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
-        }
-
-    }
+//    private void initializeDb() throws CantInitializeDatabaseException {
+//        try {
+//
+////            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
+//            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+//
+//        } catch (DatabaseNotFoundException e) {
+//            try {
+//                CustomerBrokerNewNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerNewNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
+////                dataBase = databaseFactory.createDatabase(pluginId, pluginId.toString());
+//                dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
+//            } catch (CantCreateDatabaseException f) {
+//                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, f);
+//                throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+//            } catch (Exception z) {
+//                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, z);
+//                throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
+//            }
+//        } catch (CantOpenDatabaseException e) {
+//            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+//        } catch (Exception e) {
+//            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
+//        }
+//
+//    }
     /*END PRIVATE METHOD*/
 
 }
