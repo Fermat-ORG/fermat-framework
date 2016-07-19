@@ -122,8 +122,8 @@ public abstract class LocalSocketSession {
 //                objectOutputStream.write(1);
                 objectOutputStream.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
-                if(localSocket.isClosed()){
-                    if (localSocket.isOutputShutdown()){
+                if(!localSocket.isConnected()){
+                    if (!localSocket.isOutputShutdown()){
                         try {
                             localSocket.getOutputStream().flush();
                         } catch (IOException e1) {
@@ -207,8 +207,14 @@ public abstract class LocalSocketSession {
                                         Log.i(TAG, "pidiendo objeto");
                                         FermatModuleObjectWrapper object = null;
                                         try {
-                                            if(localSocket.isConnected())
-                                                object = (FermatModuleObjectWrapper) objectInputStream.readObject();
+                                            if(localSocket.isConnected()) {
+                                                Object o = objectInputStream.readObject();
+                                                if(o instanceof FermatModuleObjectWrapper){
+                                                    object = (FermatModuleObjectWrapper) o;
+                                                }else{
+                                                    Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
+                                                }
+                                            }
                                             else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
                                         } catch (OptionalDataException e) {
                                             e.printStackTrace();
