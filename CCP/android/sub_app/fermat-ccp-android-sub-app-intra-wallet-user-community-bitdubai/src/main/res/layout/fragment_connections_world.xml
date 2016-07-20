@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
+    android:background="#FFF"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -77,24 +77,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/img_home_empty"
+            android:src="@drawable/nousergray_icon"
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="There are no users"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="available"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
+            android:text="NO USERS"
+            android:textColor="#b7b7b7"
+            android:textSize="21sp"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>

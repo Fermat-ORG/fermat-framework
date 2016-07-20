@@ -122,6 +122,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private BitcoinConverter bitcoinConverter;
     private TextView txt_balance;
 
+    private FermatWorker fermatWorker;
+
     /**
      * Adapters
      */
@@ -516,7 +518,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setUpContactAddapter() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+         fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -907,7 +909,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
        /* imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);*/
 
+    }
 
+    @Override
+    public void onStop() {
 
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+        super.onStop();
     }
 }

@@ -4698,13 +4698,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         FermatRuntimeFragment runtimeFragment;
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
-        SideMenu runtimeSideMenu;
-        OptionsMenu runtimeOptionsMenu;
-        MenuItem runtimeMenuItem;
+
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
-        Footer fermatFooter;
 
         Tab runtimeTab;
 
@@ -4733,15 +4730,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setFont("Roboto-Regular.ttf");
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#05DDD2");
+        runtimeActivity.setColor("#05CFC2");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
@@ -4834,7 +4831,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabel("bitdubai bitcoin Wallet");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         runtimeActivity.setBackgroundColor("#ffffff");
@@ -4842,7 +4839,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -4899,14 +4896,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5040,14 +5037,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5081,7 +5078,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Send Request To Contact");
         runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -5090,7 +5087,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5122,7 +5119,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //        runtimeAppNavigationStructure.addPosibleStartActivity(Activities.CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY);
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
@@ -5150,13 +5147,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5192,13 +5189,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5233,14 +5230,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5273,13 +5270,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5318,7 +5315,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabel("Contact detail");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -5326,7 +5323,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5362,13 +5359,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 
@@ -5465,13 +5462,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#05DDD2");
+        runtimeTitleBar.setColor("#05CFC2");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#05DDD2");
+        runtimeStatusBar.setColor("#05CFC2");
 
         runtimeTabStrip = new TabStrip();
 

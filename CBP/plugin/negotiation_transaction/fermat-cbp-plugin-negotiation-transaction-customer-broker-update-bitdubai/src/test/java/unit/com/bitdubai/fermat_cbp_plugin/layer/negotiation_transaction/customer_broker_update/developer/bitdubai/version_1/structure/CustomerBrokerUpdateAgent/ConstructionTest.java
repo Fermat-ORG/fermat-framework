@@ -80,11 +80,8 @@ public class ConstructionTest {
                 pluginDatabaseSystem,
                 logManager,
                 errorManager,
-                eventManager,
                 pluginId,
                 negotiationTransmissionManager,
-                customerBrokerPurchaseNegotiation,
-                customerBrokerSaleNegotiation,
                 customerBrokerPurchaseNegotiationManager,
                 customerBrokerSaleNegotiationManager,
                 broadcaster);

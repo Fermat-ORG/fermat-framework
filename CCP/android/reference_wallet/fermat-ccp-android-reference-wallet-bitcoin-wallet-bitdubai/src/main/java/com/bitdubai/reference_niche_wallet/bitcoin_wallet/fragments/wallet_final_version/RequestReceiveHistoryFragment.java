@@ -126,7 +126,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             }
 
 
-            onRefresh();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -143,6 +143,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
+
+            onRefresh();
             //setUp();
             return rootView;
         }catch (Exception e){
@@ -310,13 +312,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         try {
 
-            try {
-                bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-            }catch (Exception e){
-
-            }
-            //when refresh offset set 0
+       //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);

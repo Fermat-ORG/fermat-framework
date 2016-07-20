@@ -126,7 +126,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private String feeLevel = "";
     private String feeOrigin = "";
     private LinearLayout feed_advances;
-    private TextView advances_btn;
+    private LinearLayout advances_btn;
 
     private List<WalletContact> walletContactList = new ArrayList<>();
     /**
@@ -177,7 +177,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 }
 
                 if (bitcoinWalletSettings.getFeedLevel() == null)
-                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
                 else
                     feeLevel = bitcoinWalletSettings.getFeedLevel();
 
@@ -290,7 +290,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         feed_Substract= (CheckBox) rootView.findViewById(R.id.checkBoxSubstract);
 
 
-        advances_btn = (TextView) rootView.findViewById(R.id.advances_btn);
+        advances_btn = (LinearLayout) rootView.findViewById(R.id.advances_btn);
         layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
         feeGroup = (RadioGroup) rootView.findViewById(R.id.feeGroup);
         fee_low_btn = (RadioButton) rootView.findViewById(R.id.fee_low);
@@ -816,24 +816,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                                 if(total < availableBalance)
                                 {
-                                    /*cryptoWallet.send(
-                                            operator.longValueExact(),
-                                            validAddress,
-                                            notes,
-                                            appSession.getAppPublicKey(),
-                                            cryptoWallet.getSelectedActorIdentity().getPublicKey(),
-                                            Actors.INTRA_USER,
-                                            cryptoWalletWalletContact.getActorPublicKey(),
-                                            cryptoWalletWalletContact.getActorType(),
-                                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                            blockchainNetworkType,
-                                            CryptoCurrency.BITCOIN,
-                                            decimalFeed.longValueExact(),
-                                            FeeOrigin.getByCode(feeOrigin)
-                                    );
-                                    Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                    onBack(null);*/
-
                                     SendConfirmDialog sendConfirmDialog = new SendConfirmDialog(getActivity(),
                                             cryptoWallet,
                                             operator.longValueExact(),

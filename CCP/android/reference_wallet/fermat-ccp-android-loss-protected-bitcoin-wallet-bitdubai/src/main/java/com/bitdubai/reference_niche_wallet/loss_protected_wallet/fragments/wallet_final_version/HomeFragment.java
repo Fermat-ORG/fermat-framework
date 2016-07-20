@@ -118,6 +118,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     private long balanceAvailable;
     private long realBalance;
     private View rootView;
+    private FermatWorker fermatWorker;
 
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
@@ -428,7 +429,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             //Get all wallet spending from the manager
             //for especific network
 
-            FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+           fermatWorker = new FermatWorker(getActivity()) {
                 @Override
                 protected Object doInBackground()  {
 
@@ -818,7 +819,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         final int MAX_DECIMAL_FOR_RATE = 2;
         final int MIN_DECIMAL_FOR_RATE = 2;
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+         fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
 
@@ -955,5 +956,13 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if(activity.getCurrentFocus() != null)
          inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+
+    @Override
+    public void onStop() {
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+        super.onStop();
     }
 }

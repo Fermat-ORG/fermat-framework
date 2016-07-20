@@ -70,7 +70,7 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
               * Open new database connection
               */
                database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
-//            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*

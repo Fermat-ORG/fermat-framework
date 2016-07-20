@@ -80,6 +80,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException;
 
 
@@ -409,7 +410,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,
@@ -432,7 +433,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @return
      * @throws CantListTransactionsException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                  TransactionType transactionType,
                                                                  String walletPublicKey,
@@ -573,6 +574,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @return
      * @throws CantListReceivePaymentRequestException
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListReceivePaymentRequestException;
 
     /**

@@ -123,7 +123,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
     private BalanceType balanceType = BalanceType.AVAILABLE;
-    
+
+    private ActiveActorIdentityInformation intraUserLoginIdentity;
+
     private BitcoinWalletSettings bitcoinWalletSettings = null;
 
     private ExecutorService _executor;
@@ -163,6 +165,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         try {
             moduleManager = appSession.getModuleManager();
+
+            intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+
 
             if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
                 balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
@@ -213,14 +218,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     try {
                         handler.postDelayed(new Runnable() {
                             public void run() {
-                                if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
-                                    setUpPresentation(false);
-                                }
-                                else
-                                {
-                                    showBlockchainProgress();
-                                }
+                                try {
 
+                                    if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
+                                        setUpPresentation(false);
+                                    }
+                                    else
+                                    {
+                                        showBlockchainProgress();
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 setRunningDailyBalance();
 
                             }
@@ -230,12 +240,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     }
                 }
             });
-
-            //list transaction on background
-
-            onRefresh();
-
-
 
 
         } catch (Exception ex) {
@@ -257,7 +261,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
                     setUpBlockchainProgress(false);
             } else {
-                toolbarColor = Color.parseColor("#05DDD2");
+                toolbarColor = Color.parseColor("#05CFC2");
             }
             final int finalToolbarColor = toolbarColor;
             getActivity().runOnUiThread(new Runnable() {
@@ -277,15 +281,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
                 null;
         try {
+
+
             presentationBitcoinWalletDialog = new PresentationBitcoinWalletDialog(
                     getActivity(),
                     appSession,
                     null,
-                    (moduleManager.getSelectedActorIdentity() == null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                    (intraUserLoginIdentity == null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                     checkButton);
-        } catch (CantGetSelectedActorIdentityException e) {
-            e.printStackTrace();
-        } catch (ActorIdentityNotSelectedException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -380,6 +385,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUp(inflater);
 
+        onRefresh();
         return rootView;
     }
 
@@ -393,13 +399,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public void onStop() {
         getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+
+        if(worker != null)
+          worker.shutdownNow();
         super.onStop();
     }
 
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-
+        isRefreshing = false;
         onRefresh();
     }
 
@@ -632,7 +641,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //noinspection TryWithIdenticalCatches
         try {
             CryptoAddress cryptoAddress = moduleManager.requestAddressToKnownUser(
-                    appSession.getModuleManager().getSelectedActorIdentity().getPublicKey(),
+                    moduleManager.getSelectedActorIdentity().getPublicKey(),
                     Actors.INTRA_USER,
                     actorPublicKey,
                     Actors.EXTRA_USER,
@@ -740,7 +749,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 */
     public void GETTestNet( final Context context){
 
-        FermatWorker  worker = new FermatWorker() {
+         worker = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
 
@@ -800,9 +809,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     if (!result[0].toString().equals("transaccion fallida"))
                         Toast.makeText(context, "TestNet bitcoin arrived", Toast.LENGTH_SHORT).show();
 
-                    }
-
                 }
+
+            }
 
             @Override
             public void onErrorOccurred(Exception ex) {
@@ -918,7 +927,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         //noinspection TryWithIdenticalCatches
         try {
-            ActiveActorIdentityInformation intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+
             if(intraUserLoginIdentity!=null) {
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
@@ -979,7 +988,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+           swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 //noinspection unchecked
                 openNegotiationList = (ArrayList) result[0];
@@ -1232,7 +1241,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 //update toolbar color
                 final Toolbar toolBar = getToolbar();
 
-                toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+                toolBar.setBackgroundColor(Color.parseColor("#05CFC2"));
 
                // makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
             } else {

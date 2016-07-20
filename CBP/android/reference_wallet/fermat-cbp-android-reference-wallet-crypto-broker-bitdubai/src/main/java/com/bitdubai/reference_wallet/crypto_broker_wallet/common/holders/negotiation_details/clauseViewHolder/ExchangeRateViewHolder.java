@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -73,20 +74,15 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
         yourExchangeRateValue.setText(clause.getValue());
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
 
         BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
 
-        if(CryptoCurrency.codeExists(currencyToPay.getValue())){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
-        String marketExchangeRateStr = numberFormat.format(marketRateReferenceValue.doubleValue());
-        String suggestedMaxExchangeRateStr = numberFormat.format(marketRateReferenceValue.doubleValue() * (1+(spread/100)));
+
+        String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
+        String suggestedMaxExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue() * (1+(spread/100))));
 
         String suggestedRateCurrencyStr = "";
         if (suggestedRate != null)
@@ -223,5 +219,38 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
         return null;
     }
+
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+                } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
+    }
+
 
 }
