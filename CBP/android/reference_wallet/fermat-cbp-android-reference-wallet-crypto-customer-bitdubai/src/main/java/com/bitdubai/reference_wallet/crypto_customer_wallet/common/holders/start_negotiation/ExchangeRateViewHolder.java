@@ -103,7 +103,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
 
 
-    private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
+    /*private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
@@ -124,9 +124,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         }
 
         return exchangeRateStr;
-    }
+    }*/
 
-    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
+/*    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
 
         if (marketRateList != null)
             for (IndexInfoSummary item : marketRateList) {
@@ -139,7 +139,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             }
 
         return null;
-    }
+    }*/
 
 
     private String fixFormat(String value){

@@ -42,6 +42,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private float spread;
     private boolean suggestedRateLoaded;
     private NumberFormat numberFormat=DecimalFormat.getInstance();
+    private View separatorLineUp;
+    private View separatorLineMiddle;
+    private View separatorLineDown;
 
 
 
@@ -58,6 +61,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValueLeftSide = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_left_side);
         yourExchangeRateValueRightSide = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_right_side);
         yourExchangeRateValue = (FermatButton) itemView.findViewById(R.id.cbw_your_exchange_rate_value);
+        separatorLineDown= itemView.findViewById(R.id.cbw_line_down);
+        separatorLineMiddle= itemView.findViewById(R.id.cbw_line_middle);
+        separatorLineUp= itemView.findViewById(R.id.cbw_line_up);
         yourExchangeRateValue.setOnClickListener(this);
 
 
@@ -75,7 +81,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
-        yourExchangeRateValue.setText(clause.getValue());
+        yourExchangeRateValue.setText(fixFormat(clause.getValue()));
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
 
         BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
@@ -155,6 +161,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
         yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.description_text_status_accepted));
         yourExchangeRateValueRightSide.setTextColor(getColor(R.color.description_text_status_accepted));
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineMiddle.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
     }
 
     @Override
@@ -166,6 +175,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
         yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.description_text_status_changed));
         yourExchangeRateValueRightSide.setTextColor(getColor(R.color.description_text_status_changed));
+        separatorLineDown.setBackgroundColor(getColor(R.color.description_text_status_changed));
+        separatorLineMiddle.setBackgroundColor(getColor(R.color.description_text_status_changed));
+        separatorLineUp.setBackgroundColor(getColor(R.color.description_text_status_changed));
     }
 
     @Override
