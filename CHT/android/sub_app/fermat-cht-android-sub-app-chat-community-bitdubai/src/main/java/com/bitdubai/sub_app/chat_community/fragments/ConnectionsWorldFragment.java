@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -114,7 +116,7 @@ public class ConnectionsWorldFragment
     //UI
     private View rootView;
     private SearchView searchView;
-
+    private ProgressBar progressBar;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
@@ -236,6 +238,7 @@ public class ConnectionsWorldFragment
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             refreshButtonView = (View) rootView.findViewById(R.id.show_more_layout);
             refreshButton = (Button) rootView.findViewById(R.id.show_more_button);
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -250,8 +253,9 @@ public class ConnectionsWorldFragment
                             refreshButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    onRefresh();
                                     refreshButtonView.setVisibility(View.GONE);
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    onRefresh();
                                 }
                             });
                         } else{
@@ -267,12 +271,13 @@ public class ConnectionsWorldFragment
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             //Set up swipeRefresher
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+//            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+//            swipeRefresh.setOnRefreshListener(this);
+//            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             showEmpty(true, emptyView);
+            progressBar.setVisibility(View.VISIBLE);
             launchPresentationDialog();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -332,63 +337,68 @@ public class ConnectionsWorldFragment
     @Override
     public void onRefresh() {
         try{
-        if (!isRefreshing) {
-            isRefreshing = true;
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreDataAsync(location, distance, alias, MAX, offset);
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    isRefreshing = false;
-                    if (swipeRefresh != null && isAttached) {
-                        swipeRefresh.setRefreshing(false);
-                        if (result != null &&
-                                result.length > 0) {
-                            if (getActivity() != null && adapter != null) {
-                                if (offset == 0) {
-                                    if (lstChatUserInformations != null) {
-                                        lstChatUserInformations.clear();
-                                        lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                    } else {
-                                        lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                    }
-                                    adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
-                                } else {
-                                    ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                    for (ChatActorCommunityInformation info : temp)
-                                        if (notInList(info)) {
-                                            lstChatUserInformations.add(info);
-                                        }
-                                    adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
-                                }
-                                if (lstChatUserInformations.isEmpty()) {
-                                    showEmpty(true, emptyView);
-                                } else {
-                                    showEmpty(false, emptyView);
-                                }
-                            }
-                        } else
-                            showEmpty(true, emptyView);
+            if (!isRefreshing) {
+                isRefreshing = true;
+                final FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        return getMoreDataAsync(location, distance, alias, MAX, offset);
                     }
-                }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @SuppressWarnings("unchecked")
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        isRefreshing = false;
+                        if (/*swipeRefresh != null &&*/ isAttached) {
+                            //swipeRefresh.setRefreshing(false);
+                            if (result != null &&
+                                    result.length > 0) {
+                                if (getActivity() != null && adapter != null) {
+                                    if (offset == 0) {
+                                        if (lstChatUserInformations != null) {
+                                            lstChatUserInformations.clear();
+                                            lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
+                                        } else {
+                                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                        }
+                                        adapter.refreshEvents((ArrayList<ChatActorCommunityInformation>) result[0]);
+                                    } else {
+                                        ArrayList<ChatActorCommunityInformation> temp = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                        for (ChatActorCommunityInformation info : temp)
+                                            if (notInList(info)) {
+                                                lstChatUserInformations.add(info);
+                                            }
+                                        adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
+                                    }
+                                    if (lstChatUserInformations.isEmpty()) {
+                                        showEmpty(true, emptyView);
+                                    } else {
+                                        showEmpty(false, emptyView);
+                                    }
+                                }
+                            } else
+                                showEmpty(true, emptyView);
+                        }
+                    }
 
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    isRefreshing = false;
-                    if (swipeRefresh != null && isAttached)
-                        swipeRefresh.setRefreshing(false);
-                    if (getActivity() != null)
-                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-                }
-            });
-            worker.execute();
-        }
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        try{
+                            isRefreshing = false;
+                            /*if (swipeRefresh != null && isAttached)
+                                swipeRefresh.setRefreshing(false);*/
+                            worker.shutdownNow();
+                            if (getActivity() != null)
+                                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                worker.execute();
+            }
         }catch (Exception ignore){
             if (executor != null) {
                 executor.shutdown();
@@ -430,6 +440,7 @@ public class ConnectionsWorldFragment
             emptyView.setBackground(bgcolor);
             rootView.setBackground(bgcolor);
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias,int max, int offset) {

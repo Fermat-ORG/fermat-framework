@@ -19,7 +19,9 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerA
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -27,6 +29,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
@@ -61,10 +66,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private ErrorManager errorManager;
 
     // Data
-    private List<GrouperItem> openNegotiationList;
+    private List<GrouperItem<CustomerBrokerNegotiationInformation>> openNegotiationList;
 
+    // Android Stuffs
     private View emptyListViewsContainer;
-    FermatApplicationCaller applicationsHelper;
+    private FermatApplicationCaller applicationsHelper;
+    private OpenNegotiationBroadcastReceiver broadcastReceiver;
+
 
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
@@ -74,13 +82,15 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-//            setHasOptionsMenu(true);
+        FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
+        broadcastReceiver = new OpenNegotiationBroadcastReceiver();
+        registerReceiver(fermatIntentFilter, broadcastReceiver);
 
+        try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
+            applicationsHelper = ((FermatApplicationSession) getActivity().getApplicationContext()).getApplicationManager();
 
             CryptoBrokerWalletPreferenceSettings settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             if (settings.isWizardStartActivity()) {
@@ -96,8 +106,25 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+        if (isAttached) onRefresh();
     }
 
     @Override
@@ -117,6 +144,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         emptyListViewsContainer = layout.findViewById(R.id.empty);
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -130,10 +158,30 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            switch (id) {
+                case FragmentsCommons.OPEN_BROKER_IDENTITY_APP_OPTION_MENU_ID:
+                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
+                    break;
+                case FragmentsCommons.OPEN_CUSTOMER_COMMUNITY_APP_OPTION_MENU_ID:
+                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
+                    break;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error", LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
             adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
-            // setting up event listeners
             adapter.setChildItemFermatEventListeners(this);
         }
         return adapter;
@@ -188,11 +236,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 }
 
             } catch (Exception ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
-                if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                }
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
 
         } else {
@@ -218,6 +263,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
@@ -240,19 +286,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
     }
 
-    @Override
-    public void onUpdateViewOnUIThread(String code) {
-        switch (code) {
-            case CBW_NEGOTIATION_UPDATE_VIEW:
-                onRefresh();
-                break;
-            case CBW_CONTRACT_UPDATE_VIEW:
-                onRefresh();
-                break;
-        }
-
-    }
-
     private void showOrHideEmptyView() {
         if (openNegotiationList == null || openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -263,33 +296,26 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            int id = item.getItemId();
-            switch (id) {
-                case 6:
-                    try {
-                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case 7:
-                    try {
-                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
+    private class OpenNegotiationBroadcastReceiver extends FermatBroadcastReceiver {
+
+        @Override
+        public void onReceive(FermatBundle fermatBundle) {
+            try {
+                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+
+                switch (code) {
+                    case CBW_NEGOTIATION_UPDATE_VIEW:
+                        if (isAttached) onRefresh();
+                        break;
+                    case CBW_CONTRACT_UPDATE_VIEW:
+                        if (isAttached) onRefresh();
+                        break;
+                }
+
+            } catch (ClassCastException e) {
+                appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
-                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
         }
-        return super.onOptionsItemSelected(item);
     }
 }
-

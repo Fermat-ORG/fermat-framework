@@ -126,7 +126,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private String feeLevel = "";
     private String feeOrigin = "";
     private LinearLayout feed_advances;
-    private TextView advances_btn;
+    private LinearLayout advances_btn;
 
     private List<WalletContact> walletContactList = new ArrayList<>();
     /**
@@ -177,7 +177,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 }
 
                 if (bitcoinWalletSettings.getFeedLevel() == null)
-                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
                 else
                     feeLevel = bitcoinWalletSettings.getFeedLevel();
 
@@ -290,7 +290,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         feed_Substract= (CheckBox) rootView.findViewById(R.id.checkBoxSubstract);
 
 
-        advances_btn = (TextView) rootView.findViewById(R.id.advances_btn);
+        advances_btn = (LinearLayout) rootView.findViewById(R.id.advances_btn);
         layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
         feeGroup = (RadioGroup) rootView.findViewById(R.id.feeGroup);
         fee_low_btn = (RadioButton) rootView.findViewById(R.id.fee_low);
