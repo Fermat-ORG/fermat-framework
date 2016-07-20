@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
@@ -30,7 +31,7 @@ public class ContractListViewHolder extends FermatViewHolder {
     public FermatTextView soldQuantityAndCurrency;
     public FermatTextView exchangeRateAmountAndCurrency;
     public FermatTextView lastUpdateDate;
-
+    public FermatTextView statusHistoryBroker;
 
     /**
      * Public constructor for the custom child ViewHolder
@@ -48,6 +49,7 @@ public class ContractListViewHolder extends FermatViewHolder {
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_sold_quantity_and_currency);
         exchangeRateAmountAndCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount_and_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_last_update_date);
+        statusHistoryBroker = (FermatTextView) itemView.findViewById(R.id.cbw_broker_status_history);
     }
 
     public void bind(ContractBasicInformation itemInfo) {
@@ -57,6 +59,7 @@ public class ContractListViewHolder extends FermatViewHolder {
         customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
+        statusHistoryBroker.setText(contractStatus.getFriendlyName());
         String soldQuantityAndCurrencyText = getSoldQuantityAndCurrencyText(itemInfo, contractStatus);
         soldQuantityAndCurrency.setText(soldQuantityAndCurrencyText);
 
@@ -86,16 +89,18 @@ public class ContractListViewHolder extends FermatViewHolder {
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {
-        if (status == ContractStatus.PENDING_PAYMENT)
-            return res.getColor(R.color.waiting_for_customer_list_item_background);
+        int color = -1;
+
+//        if (status == ContractStatus.PENDING_PAYMENT)
+//            return res.getColor(R.color.waiting_for_customer_list_item_background);
 
         if (status == ContractStatus.CANCELLED)
-            return res.getColor(R.color.contract_cancelled_list_item_background);
+            color = Color.parseColor("#c6c6c6");//res.getColor(R.color.contract_cancelled_list_item_background);
 
         if (status == ContractStatus.COMPLETED)
-            return res.getColor(R.color.contract_completed_list_item_background);
+            color = Color.parseColor("#f3f3f3");//res.getColor(R.color.contract_completed_list_item_background);
 
-        return res.getColor(R.color.waiting_for_broker_list_item_background);
+        return color;//res.getColor(R.color.waiting_for_broker_list_item_background);
     }
 
     private String getSellingOrSoldText(ContractStatus status) {

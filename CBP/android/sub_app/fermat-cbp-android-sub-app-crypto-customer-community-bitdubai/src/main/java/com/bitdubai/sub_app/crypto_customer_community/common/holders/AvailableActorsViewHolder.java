@@ -30,6 +30,8 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
     private FermatTextView customerName;
     private FermatTextView customerLocation;
     private FermatTextView connectionText;
+    private String placeAddress;
+    private String countryAddress;
 
     private Resources res;
 
@@ -90,7 +92,13 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
             customerName.setTextColor(Color.BLACK);//res.getColor(R.color.color_black_light));
 
-        customerLocation.setText(String.format("%s / %s", data.getCountry(), data.getPlace()));
+        if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
+            countryAddress= "--";
+        else countryAddress =  data.getCountry();
+        if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
+            placeAddress= "--";
+        else placeAddress =  data.getPlace();
+        customerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
         customerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 
