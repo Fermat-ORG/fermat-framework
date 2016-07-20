@@ -87,6 +87,7 @@ public class ReceivetransactionsExpandableAdapter
      */
     @Override
     public void onBindChildViewHolder(TransactionViewHolder childViewHolder, int position, CryptoWalletTransaction childListItem) {
+
         String intraUser = childListItem.getInvolvedActor().getActorPublicKey();
         childViewHolder.bind(childListItem,intraUser);
     }
