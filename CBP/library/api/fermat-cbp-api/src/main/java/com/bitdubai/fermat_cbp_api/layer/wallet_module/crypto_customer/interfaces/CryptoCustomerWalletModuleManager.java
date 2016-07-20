@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGe
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
@@ -444,5 +445,12 @@ public interface CryptoCustomerWalletModuleManager
      * @throws CantSendNegotiationException
      */
     boolean isCreateIdentityIntraUser() throws CantSendNegotiationException;
+
+    /**
+     * Return if stock in wallet for send payment
+     * @return
+     * @throws CantSubmitMerchandiseException
+     */
+    boolean stockInTheWallet(String contractHash) throws CantSubmitMerchandiseException;
 
 }
