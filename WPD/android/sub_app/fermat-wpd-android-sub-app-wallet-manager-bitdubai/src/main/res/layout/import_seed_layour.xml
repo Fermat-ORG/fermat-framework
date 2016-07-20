@@ -5,69 +5,100 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="#FFFFFF">
 
-    <ImageView
-        android:layout_marginTop="12dp"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_help_grey"/>
+        android:layout_height="match_parent">
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Mnemonic password can be used to recover your password if you forget it in the folder. Without the mnemonic there is no way we can help recover a forgotten password."
-        android:gravity="center"
-        android:textSize="16sp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="22dp"
-        app:typeface="CAVIAR_DREAMS"
-        android:textColor="#000"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <ImageView
+                android:layout_marginTop="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_help_grey"/>
 
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:paddingRight="20dp"
-        android:text="Input your mnemonic code to import your balance inside a Fermat Wallet:"
-        android:gravity="center"
-        android:textColor="#000"
-        android:paddingLeft="20dp"
-        />
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mnemonic password can be used to recover your password if you forget it in the folder. Without the mnemonic there is no way we can help recover a forgotten password."
+                android:gravity="center"
+                android:textSize="16sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="22dp"
+                android:textColor="#272727"
+                />
 
 
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-        android:id="@+id/editText_mnemonic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:inputType="textMultiLine"
-        android:lines="6"
-        android:minLines="4"
-        android:gravity="top|left"
-        android:maxLines="10"
-        android:hint="Put your Mnemonic code here!"
-        android:scrollbars="vertical"
-        android:textColor="#000"
-        android:textColorHint="#a9a9a9"
-        android:layout_marginTop="20dp"
-        />
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:paddingRight="20dp"
+                android:text="Input your mnemonic code to import your balance inside a Fermat Wallet:"
+                android:gravity="center"
+                android:textColor="#000"
+                android:paddingLeft="20dp"
+                />
 
 
-    <Button
-        android:layout_marginTop="32dp"
-        android:id="@+id/btn_import"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="Import"
-        android:layout_gravity="center"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/editText_mnemonic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top|left"
+                android:maxLines="10"
+                android:hint="Put your Mnemonic code here!"
+                android:scrollbars="vertical"
+                android:textColor="#000"
+                android:textColorHint="#a9a9a9"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/editText_mnemonic_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:textSize="16sp"
+                android:inputType="textMultiLine"
+                android:minLines="1"
+                android:gravity="top|left"
+                android:maxLines="10"
+                android:hint="Put your Mnemonic date here!"
+                android:scrollbars="vertical"
+                android:textColor="#000"
+                android:textColorHint="#a9a9a9"
+                android:layout_marginTop="10dp"
+                />
+
+
+            <Button
+                android:layout_marginTop="20dp"
+                android:id="@+id/btn_import"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Import"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 
 
