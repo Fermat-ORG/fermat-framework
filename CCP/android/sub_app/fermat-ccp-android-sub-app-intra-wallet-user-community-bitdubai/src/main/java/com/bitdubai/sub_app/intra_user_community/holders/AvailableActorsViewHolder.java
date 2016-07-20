@@ -98,9 +98,19 @@ public class  AvailableActorsViewHolder extends FermatViewHolder {
 
                     break;
                 case NO_CONNECTED:
-                    response.setText("");
+                    if(data.getState().equals(ProfileStatus.OFFLINE))
+                    {
+                        //button_add.setBackgroundColor(Color.RED);
+                        button_add.setVisibility(View.GONE);
+                        response.setText("OFFLINE");
+                        response.setTextColor(Color.RED);
+                        response.setVisibility(View.VISIBLE);
+                    }else
+                    {
+                        response.setText("");
                         response.setVisibility(View.GONE);
                         button_add.setVisibility(View.VISIBLE);
+                    }
 
 
                     break;

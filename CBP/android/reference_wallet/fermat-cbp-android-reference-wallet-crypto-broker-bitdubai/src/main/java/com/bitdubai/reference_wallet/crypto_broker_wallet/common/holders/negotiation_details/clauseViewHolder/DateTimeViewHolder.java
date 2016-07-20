@@ -25,6 +25,8 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     private TextView descriptionTextView;
     private TextView youTimeZone;
     private TextView otheTimeZone;
+    private View separatorLineUp;
+    private View separatorLineDown;
 
 
     public DateTimeViewHolder(View itemView, int holderType) {
@@ -38,6 +40,8 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
         buttonTime.setOnClickListener(this);
         youTimeZone = (TextView) itemView.findViewById(R.id.cbw_text_you_time_zone);
         otheTimeZone = (TextView) itemView.findViewById(R.id.cbw_text_other_date);
+        separatorLineDown= itemView.findViewById(R.id.cbw_line_down);
+        separatorLineUp= itemView.findViewById(R.id.cbw_line_up);
     }
 
     @Override
@@ -102,12 +106,20 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
 
     @Override
     protected void onAcceptedStatus() {
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
         descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+        youTimeZone.setTextColor(getColor(R.color.card_title_color_status_accepted));
+        otheTimeZone.setTextColor(getColor(R.color.card_title_color_status_accepted));
     }
 
     @Override
     protected void setChangedStatus() {
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
         descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+        youTimeZone.setTextColor(getColor(R.color.card_title_color_status_changed));
+        otheTimeZone.setTextColor(getColor(R.color.card_title_color_status_changed));
     }
 
     @Override

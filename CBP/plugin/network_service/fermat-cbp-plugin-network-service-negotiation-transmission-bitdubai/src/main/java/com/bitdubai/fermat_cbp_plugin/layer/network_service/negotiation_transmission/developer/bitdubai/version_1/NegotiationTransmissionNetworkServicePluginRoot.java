@@ -113,10 +113,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     protected void onNetworkServiceStart() throws CantStartPluginException {
-
         try {
-
-
             initializeDb();
 
             //Initialize Developer Database Factory
@@ -524,12 +521,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try {
-            return negotiationTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ArrayList<>();
-        }
+        return negotiationTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     private void initializeDb() throws CantInitializeNetworkServiceDatabaseException {

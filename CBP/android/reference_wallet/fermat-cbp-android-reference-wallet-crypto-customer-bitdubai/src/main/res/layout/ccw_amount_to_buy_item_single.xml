@@ -45,7 +45,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#1271A7"/>
+                android:background="#1271A7"
+                android:id="@+id/ccw_line_up" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,7 +105,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#1271A7"/>
+                    android:background="#1271A7"
+                    android:id="@+id/ccw_line_down" />
 
                 <Button
                     android:id="@+id/ccw_confirm_button"

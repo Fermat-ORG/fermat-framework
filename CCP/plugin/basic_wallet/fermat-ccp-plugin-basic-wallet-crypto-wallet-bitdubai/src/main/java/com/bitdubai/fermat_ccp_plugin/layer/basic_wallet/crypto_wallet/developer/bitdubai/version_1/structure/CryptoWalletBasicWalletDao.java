@@ -345,10 +345,10 @@ public class CryptoWalletBasicWalletDao {
         try {
             //verify fee origin and add or deducted to balance
             long total = 0;
-            if(transactionRecord.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode()))
-                total = transactionRecord.getAmount() - transactionRecord.getFee();
+            if (transactionRecord.getFeeOrigin().equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS ))
+                total = transactionRecord.getTotal();
             else
-                total = transactionRecord.getAmount() + transactionRecord.getFee();
+                total = transactionRecord.getAmount();
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? total : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? total : 0L;

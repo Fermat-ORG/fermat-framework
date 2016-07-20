@@ -2,7 +2,7 @@
 <resources>
     <!-- balance_header.xml -->
     <string name="available_balance_text">Available balance</string>
-    <string name="touch_to_change_text">Touch to change</string>
+    <string name="touch_to_change_text">Tap to change</string>
     <!-- ccp_grouper_list_item.xml -->
     <string name="txt_total_balance_15_btc_text">15 BTC</string>
     <!-- ccp_transaction_list_item.xml -->
@@ -45,7 +45,7 @@
     <string name="txt_balance_amount_29_text">0.00</string>
     <string name="balance_amount_type_text">btc</string>
     <!-- fragment_add_connections_list.xml -->
-    <string name="click_me_to_search_text">Touch me\nto look for contacts</string>
+    <string name="click_me_to_search_text">Tap me\nto look for contacts</string>
     <!-- fragment_base_bitcoin_wallet_receive.xml -->
     <string name="receive_text">Receive</string>
     <string name="give_me_an_address_address_text">Give me an Address!</string>
@@ -56,7 +56,7 @@
     <string name="balance_amount_0_bits_text">0 bits</string>
     <string name="notes_text">Notes</string>
     <!-- fragment_transaction_main.xml -->
-    <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
+    <string name="no_history_send_or_receive">No history</string>
     <!-- header.xml -->
     <string name="header_text">Header</string>
     <!-- history_request_row.xml -->
@@ -64,7 +64,7 @@
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
     <!-- home_receive_main.xml -->
-    <string name="no_transactions_text">No transactions</string>
+    <string name="no_transactions_text">No transactions yet</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
     <string name="you_dont_have_requests_text">You don\'t have\n requests</string>
@@ -231,7 +231,7 @@
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
     <!-- TAB BALANCE STRINGS -->
-    <string name="available_balance">available balance</string>
+    <string name="available_balance">Current balance</string>
     <string name="book_balance">book balance</string>
     <string name="search_hint">Contact name</string>
     <string name="empty_list_msg">No contacts</string>

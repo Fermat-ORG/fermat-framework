@@ -68,7 +68,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="#2bd5ca"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:layout_alignParentEnd="false">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="fill_parent"

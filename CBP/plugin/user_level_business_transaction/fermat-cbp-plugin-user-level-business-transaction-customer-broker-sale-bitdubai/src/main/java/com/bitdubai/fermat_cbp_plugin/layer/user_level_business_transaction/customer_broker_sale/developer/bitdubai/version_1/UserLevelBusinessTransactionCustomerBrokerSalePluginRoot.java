@@ -151,20 +151,12 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory factory;
-
-        factory = new UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory(pluginDatabaseSystem, pluginId);
-
-        return factory.getDatabaseList(developerObjectFactory);
+        return new UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory factory;
-
-        factory = new UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory(pluginDatabaseSystem, pluginId);
-
-        return factory.getDatabaseTableList(developerObjectFactory);
+        return new UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
