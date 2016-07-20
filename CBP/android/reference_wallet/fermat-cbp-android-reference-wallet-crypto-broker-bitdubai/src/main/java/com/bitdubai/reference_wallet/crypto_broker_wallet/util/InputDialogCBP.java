@@ -160,28 +160,28 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
 
             //Set up bankAccountType Spinner
             ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(),R.layout.cbw_simple_spinner_item, bankAccountTypesFriendly);
-            bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown_item);
-
+            bankAccountTypeAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            bankAccountTypeAdapter.notifyDataSetChanged();
             bankAccountTypeSpinner.setAdapter(bankAccountTypeAdapter);
-            bankAccountTypeSpinner.setBackgroundColor(0);
             bankAccountTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     try {
                         selectedBankAccountType = BankAccountType.getByCode(bankAccountTypes.get(position));
-                    } catch (InvalidParameterException e) {}
+                    } catch (InvalidParameterException e) {
+                    }
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
 
 
             //Set up currency Spinner
-            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
-            currencyAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown_item);
-
-            bankAccountCurrencySpinner.setAdapter(currencyAdapter);
-            bankAccountCurrencySpinner.setBackgroundColor(0);
+            ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
+            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            currencySpinnerAdapter.notifyDataSetChanged();
+            bankAccountCurrencySpinner.setAdapter(currencySpinnerAdapter);
             bankAccountCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     try {
@@ -206,11 +206,10 @@ public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubA
             buttonActionCash.setOnClickListener(this);
 
             //Set up currency Spinner
-            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
-            currencyAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_dropdown_item);
-//            currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            cashCurrencySpinner.setAdapter(currencyAdapter);
-            cashCurrencySpinner.setBackgroundColor(0);
+            ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_simple_spinner_item, fiatCurrenciesFriendly);
+            currencySpinnerAdapter.setDropDownViewResource(R.layout.cbw_simple_spinner_item);
+            currencySpinnerAdapter.notifyDataSetChanged();
+            cashCurrencySpinner.setAdapter(currencySpinnerAdapter);
             cashCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     try {

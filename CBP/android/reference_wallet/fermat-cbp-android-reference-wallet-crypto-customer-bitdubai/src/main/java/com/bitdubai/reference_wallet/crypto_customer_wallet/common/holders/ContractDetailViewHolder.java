@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
@@ -154,42 +155,49 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             case 1:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
-                switch (itemInfo.getContractStatus()) {
-                    case PENDING_PAYMENT:
 
-                        //Check internal "in_process" status (If broker clicked Confirm button already but the status has not yet changed)
-                        if (inProcessStatus == PAYMENT_SENDING_IN_PROCESS) {
+                if(stockInWallet(contractDetail.getContractId())){
+                    switch (itemInfo.getContractStatus()) {
+                        case PENDING_PAYMENT:
+
+                            //Check internal "in_process" status (If broker clicked Confirm button already but the status has not yet changed)
+                            if (inProcessStatus == PAYMENT_SENDING_IN_PROCESS) {
+                                textDescription.setText("You sent:");
+                                textDescriptionDate.setVisibility(View.INVISIBLE);
+    //                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+
+                                cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_changed));
+                                stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_changed));
+                                textDescription.setTextColor(res.getColor(R.color.description_text_status_changed));
+    //                            textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_changed));
+                                amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_changed));
+
+                                confirmButton.setVisibility(View.VISIBLE);
+                                confirmButton.setText("CONFIRMED");
+                                confirmButton.setEnabled(false);
+                            } else {
+                                textDescription.setText("Send:");
+                                textDescriptionDate.setVisibility(View.INVISIBLE);
+                                cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_confirm));
+                                confirmButton.setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        default:
                             textDescription.setText("You sent:");
-                            textDescriptionDate.setVisibility(View.INVISIBLE);
-//                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
-
-                            cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_changed));
-                            stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_changed));
-                            textDescription.setTextColor(res.getColor(R.color.description_text_status_changed));
-//                            textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_changed));
-                            amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_changed));
-
-                            confirmButton.setVisibility(View.VISIBLE);
-                            confirmButton.setText("CONFIRMED");
-                            confirmButton.setEnabled(false);
-                        } else {
-                            textDescription.setText("Send:");
-                            textDescriptionDate.setVisibility(View.INVISIBLE);
-                            cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_confirm));
-                            confirmButton.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    default:
-                        textDescription.setText("You sent:");
-                        textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
-                        cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
-                        stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
-                        textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
-                        textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_accepted));
-                        amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                            textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+                            cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                            stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
+                            textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                            textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                            amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                    }
+                    break;
+                } else {
+                    textDescription.setText("You send:");
+                    textDescriptionPending.setVisibility(View.VISIBLE);
+                    textDescriptionPending.setText("NOT HAD ENOUGH STOCK IN THE WALLET");
+                    cardView.setCardBackgroundColor(res.getColor(R.color.card_background_status_inactive));
                 }
-                break;
-
             case 2:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");
@@ -322,5 +330,28 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         Date date = new Date(timestamp);
         SimpleDateFormat df2 = new SimpleDateFormat("dd-MM-yy", Locale.getDefault());
         return df2.format(date);
+    }
+
+    /**
+     * This method validate if has enough stock for send a merchandise according the contract elements.
+     *
+     * @param contractId the contract ID
+     */
+    private boolean stockInWallet(String contractId) {
+        try {
+            return walletManager.stockInTheWallet(contractId);
+        } catch (CantSubmitMerchandiseException ex) {
+            Toast.makeText(this.parentFragment.getActivity(), "Please try again, an error occurred.", Toast.LENGTH_SHORT).show();
+
+            Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+        }
+        return Boolean.FALSE;
+
     }
 }
