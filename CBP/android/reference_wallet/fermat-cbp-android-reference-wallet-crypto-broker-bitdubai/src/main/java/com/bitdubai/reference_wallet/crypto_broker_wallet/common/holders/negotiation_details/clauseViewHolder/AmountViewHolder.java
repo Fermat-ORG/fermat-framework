@@ -31,6 +31,8 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     private FermatTextView amountText;
     private FermatButton amountValue;
     NumberFormat numberFormat= DecimalFormat.getInstance();
+    private View separatorLineUp;
+    private View separatorLineDown;
 
     public AmountViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
@@ -38,6 +40,8 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
         currencyTextValue = (FermatTextView) itemView.findViewById(R.id.cbw_amount_currency);
         amountText = (FermatTextView) itemView.findViewById(R.id.cbw_amount_text);
         amountValue = (FermatButton) itemView.findViewById(R.id.cbw_amount_value);
+        separatorLineDown= itemView.findViewById(R.id.cbw_line_down);
+        separatorLineUp= itemView.findViewById(R.id.cbw_line_up);
         amountValue.setOnClickListener(this);
     }
 
@@ -89,12 +93,16 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     protected void onAcceptedStatus() {
         amountText.setTextColor(getColor(R.color.description_text_status_accepted));
         currencyTextValue.setTextColor(getColor(R.color.description_text_status_accepted));
+        separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+        separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
     }
 
     @Override
     protected void setChangedStatus() {
         amountText.setTextColor(getColor(R.color.description_text_status_changed));
         currencyTextValue.setTextColor(getColor(R.color.description_text_status_changed));
+        separatorLineDown.setBackgroundColor(getColor(R.color.description_text_status_changed));
+        separatorLineUp.setBackgroundColor(getColor(R.color.description_text_status_changed));
     }
 
     @Override
