@@ -347,6 +347,7 @@ public class BrowserTabFragment
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         updateSelectedActorInList(data, position);
+                        onRefresh();
                     }
                 });
 
