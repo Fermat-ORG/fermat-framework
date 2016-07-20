@@ -470,24 +470,29 @@ public class OpenContractMonitorAgent2
 
     private void closeNegotiation(ContractType contractType, String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
 
+        UUID uuidNegotiationId = UUID.fromString(negotiationId);
         try {
 
             System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
-                    "\n - closeNegotiation "+contractType+" : "+negotiationId+"\n");
+                    "\n - closeNegotiation("+contractType+","+negotiationId+")\n");
 
             if (contractType.equals(ContractType.PURCHASE)) {
 
+                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
+                        "\n - closeNegotiation - PURCHASE\n");
                 //CLOSE PURCHASE NEGOTIATION
-                CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.
-                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                customerBrokerPurchaseNegotiationManager.closeNegotiation(purchaseNegotiation);
+//                CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+//                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                customerBrokerPurchaseNegotiationManager.closeNegotiation(uuidNegotiationId);
 
             } else if (contractType.equals(ContractType.SALE)) {
 
+                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
+                        "\n - closeNegotiation - SALE\n");
                 //CLOSE SALE NEGOTIATION
-                CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
-                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                customerBrokerSaleNegotiationManager.closeNegotiation(saleNegotiation);
+//                CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
+//                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                customerBrokerSaleNegotiationManager.closeNegotiation(uuidNegotiationId);
 
             } else {
 
@@ -496,21 +501,21 @@ public class OpenContractMonitorAgent2
             }
 
 
-        } catch (CantGetListPurchaseNegotiationsException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(
-                    e,
-                    "Close Purchase Negotiation",
-                    "Error in get negotiation");
+//        } catch (CantGetListPurchaseNegotiationsException e) {
+//            throw new UnexpectedResultReturnedFromDatabaseException(
+//                    e,
+//                    "Close Purchase Negotiation",
+//                    "Error in get negotiation");
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
                     "Close Purchase Negotiation",
                     "Error Closing negotiation");
-        } catch (CantGetListSaleNegotiationsException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(
-                    e,
-                    "Close Sale Negotiation",
-                    "Error in get negotiation");
+//        } catch (CantGetListSaleNegotiationsException e) {
+//            throw new UnexpectedResultReturnedFromDatabaseException(
+//                    e,
+//                    "Close Sale Negotiation",
+//                    "Error in get negotiation");
         } catch (CantUpdateCustomerBrokerSaleException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
@@ -521,9 +526,10 @@ public class OpenContractMonitorAgent2
 
     private void notificationNewOpenContract(ContractType contractType) throws UnexpectedResultReturnedFromDatabaseException{
 
+        FermatBundle fermatBundle;
         if (contractType.equals(ContractType.PURCHASE)) {
 
-            FermatBundle fermatBundle = new FermatBundle();
+            /*FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_PURCHASE.getCode());
             fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
             fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
@@ -532,11 +538,16 @@ public class OpenContractMonitorAgent2
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);*/
+
+            fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
         } else if (contractType.equals(ContractType.SALE)) {
 
-            FermatBundle fermatBundle = new FermatBundle();
+            /*FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
             fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
             fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
@@ -545,7 +556,12 @@ public class OpenContractMonitorAgent2
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);*/
+
+            fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
         } else {
 
