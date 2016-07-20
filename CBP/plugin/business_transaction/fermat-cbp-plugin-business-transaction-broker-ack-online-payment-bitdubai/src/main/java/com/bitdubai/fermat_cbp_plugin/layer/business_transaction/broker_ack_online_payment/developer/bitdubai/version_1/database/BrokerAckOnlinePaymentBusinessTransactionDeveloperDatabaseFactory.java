@@ -78,7 +78,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory {
                   /*
                    * We create the new database
                    */
-                database = brokerAckOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = brokerAckOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId, BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -94,7 +94,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory {
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Broker Ack Online Payment", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {

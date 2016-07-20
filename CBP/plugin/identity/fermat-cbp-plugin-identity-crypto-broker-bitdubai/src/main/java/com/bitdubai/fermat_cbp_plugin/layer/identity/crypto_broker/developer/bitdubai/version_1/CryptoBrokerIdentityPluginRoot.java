@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
@@ -14,8 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -31,7 +31,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
@@ -49,9 +48,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantU
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantUnHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeExposureLevelException;
@@ -60,7 +57,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bit
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetIdentityException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerIdentityDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
@@ -79,33 +75,32 @@ import java.util.List;
 public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements CryptoBrokerIdentityManager, DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
-    private DeviceUserManager deviceUserManager;
+    DeviceUserManager deviceUserManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
+    PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
-    private LocationManager locationManager;
+    LocationManager locationManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER)
-    private CryptoBrokerManager cryptoBrokerANSManager;
+    CryptoBrokerManager cryptoBrokerANSManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    private Broadcaster broadcaster;
-
-    /*Variables.*/
-    private CryptoBrokerIdentityDatabaseDao cryptoBrokerIdentityDatabaseDao;
+    Broadcaster broadcaster;
 
     public static final String CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME = "cryptoBrokerIdentityProfileImage";
     public static final String CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME = "cryptoBrokerIdentityPrivateKey";
 
+    private CryptoBrokerIdentityDatabaseDao cryptoBrokerIdentityDatabaseDao;
+
+
     public CryptoBrokerIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-
 
     /*CryptoBrokerIdentityManager Interface implementation.*/
     public final List<CryptoBrokerIdentity> listIdentitiesFromCurrentDeviceUser() throws CantListCryptoBrokerIdentitiesException {
@@ -130,22 +125,14 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = new ECCKeyPair();
-            /**
-             * For test
-             */
-            //Default CryptoBrokerIdentityExtraData
-            /*CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
-                    CryptoCurrency.FERMAT,
-                    FiatCurrency.VENEZUELAN_BOLIVAR,
-                    "Testing extra data");*/
+
             CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE, accuracy, frecuency/*,cryptoBrokerIdentityExtraData*/);
             cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser);
 
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED);
-
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
             return cryptoBroker;
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -169,18 +156,6 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
         this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(alias, publicKey, imageProfile, accuracy, frequency);
 
         try {
-            CryptoBrokerIdentity broker = cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey);
-            /*Location location = locationManager.getLocation();
-            long refreshInterval = broker.getFrequency().getRefreshInterval();
-            if (broker.isPublished()) {
-                cryptoBrokerANSManager.updateIdentity(new CryptoBrokerExposingData(publicKey, alias, imageProfile, location, refreshInterval, accuracy, ProfileStatus.UNKNOWN));
-
-                FermatBundle fermatBundle = new FermatBundle();
-                fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
-                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED);
-
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
-            }*/
             publishUpdatedIdentity(publicKey);
         } catch (CantGetIdentityException e) {
 
@@ -201,7 +176,9 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
 
     /**
      * This method publish an updated identity.
-     * @param cryptoBrokerIdentityPublicKey
+     *
+     * @param cryptoBrokerIdentityPublicKey the broker identity public key
+     *
      * @throws CantGetDeviceLocationException
      * @throws IdentityNotFoundException
      * @throws CantGetIdentityException
@@ -221,20 +198,21 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED);
-
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
         }
     }
 
     /**
      * This method updates a crypto broker identity
-     * @param cryptoBrokerIdentity
+     *
+     * @param cryptoBrokerIdentity the broker identity
+     *
      * @throws CantUpdateBrokerIdentityException
      */
     public void updateCryptoBrokerIdentity(CryptoBrokerIdentity cryptoBrokerIdentity)
-            throws CantUpdateBrokerIdentityException{
+            throws CantUpdateBrokerIdentityException {
         this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(cryptoBrokerIdentity);
-        try{
+        try {
             publishUpdatedIdentity(cryptoBrokerIdentity.getPublicKey());
         } catch (CantGetIdentityException e) {
 
@@ -278,8 +256,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
             fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED);
-
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(), fermatBundle);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
         } catch (final CantExposeActorIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -352,11 +329,10 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     private void exposeIdentities() throws CantExposeActorIdentitiesException {
         try {
             Location location = locationManager.getLocation();
-            long refreshInterval = 0;
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
             for (final CryptoBrokerIdentity identity : listIdentitiesFromCurrentDeviceUser()) {
-                refreshInterval = identity.getFrequency().getRefreshInterval();
+                int refreshInterval = identity.getFrequency().getRefreshInterval();
                 if (identity.isPublished()) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoBrokerExposingData(

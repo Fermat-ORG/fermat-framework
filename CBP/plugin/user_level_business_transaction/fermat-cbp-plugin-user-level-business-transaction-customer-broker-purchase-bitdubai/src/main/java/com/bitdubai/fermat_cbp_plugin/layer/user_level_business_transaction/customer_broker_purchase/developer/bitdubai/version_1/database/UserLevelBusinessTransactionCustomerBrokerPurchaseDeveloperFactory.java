@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 11/12/15.
  */
-public class UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -49,25 +49,12 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory 
         this.pluginId = pluginId;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseDatabaseException
-    {
+    public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseDatabaseException {
         try {
-
              /*
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
-            database.closeDatabase();
 
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -89,7 +76,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory 
                    * We create the new database
                    */
                 database = userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory.createDatabase(pluginId, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME);
-                database.closeDatabase();
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
@@ -105,7 +91,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDeveloperFactory 
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME, UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME, this.pluginId.toString()));
 
         return databases;
     }

@@ -12,6 +12,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdu
  */
 public class CryptoBrokerActorDatabaseConstants {
 
+    public static final String DATABASE_NAME = "actor_crypto_broker";
     /**
      * Crypto Broker Actor Relationship database table definition.
      */

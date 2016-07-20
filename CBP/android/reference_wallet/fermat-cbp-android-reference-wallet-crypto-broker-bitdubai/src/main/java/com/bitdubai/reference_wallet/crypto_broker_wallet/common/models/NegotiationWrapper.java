@@ -11,8 +11,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.classes.CryptoBrokerWalletModuleClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.ACCEPTED;
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.CHANGED;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.DRAFT;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_BANK_ACCOUNT;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CRYPTO_ADDRESS;
@@ -105,7 +103,7 @@ final public class NegotiationWrapper {
 
             String youTimeZoneValue = TimeZone.getDefault().getID();
 //            if ((clauses.get(BROKER_TIME_ZONE) == null) || (youTimeZoneValue.equals(clauses.get(BROKER_TIME_ZONE).getValue()))){
-                addClause(BROKER_TIME_ZONE, youTimeZoneValue);
+            addClause(BROKER_TIME_ZONE, youTimeZoneValue);
 //            }
 
 
@@ -195,8 +193,16 @@ final public class NegotiationWrapper {
      * @param value  the new value (change the state to {@link ClauseStatus#CHANGED}) or the same (change the state to {@link ClauseStatus#ACCEPTED})
      */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
-        final ClauseStatus clauseStatus = clause.getValue().equals(value) && clause.getStatus() == DRAFT ? ACCEPTED : CHANGED;
-        //todo: ver esto, core comentado
+        final ClauseStatus clauseStatus;
+
+        if(!clause.getValue().equals(value)) {      //If the clause has been changed, set ClauseStatus to CHANGED
+            clauseStatus = ClauseStatus.CHANGED;
+        } else {
+            if (clause.getStatus().equals(ClauseStatus.DRAFT))      //If the clause hasn't been changed AND status is DRAFT, set status to ACCEPTED
+                clauseStatus = ClauseStatus.ACCEPTED;
+            else
+                clauseStatus = clause.getStatus();                  //Otherwise keep the same status
+        }
 
         final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
         clauseInformation.setStatus(clauseStatus);

@@ -97,7 +97,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     private Database                                                            dataBase;
 
     /*Represent DeveloperDatabaseFactory*/
-    private CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory   customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
+    CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory   customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
     private CustomerBrokerCloseNegotiationTransactionDatabaseDao                customerBrokerCloseNegotiationTransactionDatabaseDao;
@@ -132,17 +132,22 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
      @Override
      public void start() throws CantStartPluginException {
          try {
-
-             //Initialize database
+             /**
+              * Initialize database
+              */
              initializeDb();
+             /**
+              * Initialize Developer Database Factory
+              */
+             customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory = new
+                     CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+                     pluginId);
 
-             //Initialize Developer Database Factory
-             customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory = new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
              customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
              //Initialize Dao
              customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
-
+             customerBrokerCloseNegotiationTransactionDatabaseDao.initialize();
              //Initialize manager
              customerBrokerCloseManagerImpl = new CustomerBrokerCloseManagerImpl(
                      customerBrokerCloseNegotiationTransactionDatabaseDao,
@@ -226,22 +231,17 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     /*IMPLEMENTATION DatabaseManagerForDevelopers*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+        return customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        return customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try{
-            return new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ArrayList<>();
-        }
+        return customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
     /*END IMPLEMENTATION DatabaseManagerForDevelopers*/
 

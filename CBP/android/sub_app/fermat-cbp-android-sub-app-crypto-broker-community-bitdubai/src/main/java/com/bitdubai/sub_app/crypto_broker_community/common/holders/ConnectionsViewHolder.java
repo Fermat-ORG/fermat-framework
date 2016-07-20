@@ -16,7 +16,9 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  *
  * @author lnacosta
  * @version 1.0.0
+ *
  */
+
 public class ConnectionsViewHolder extends FermatViewHolder {
 
     private final Resources res;
@@ -41,7 +43,7 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     public void bind(CryptoBrokerCommunityInformation data) {
         brokerName.setText(data.getAlias());
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
-        brokerLocation.setText(data.getPlace()+" / "+data.getCountry());
+        brokerLocation.setText(String.format("%s / %s", data.getPlace(), data.getCountry()));
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

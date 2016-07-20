@@ -1,11 +1,13 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +37,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -45,9 +49,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
@@ -84,6 +90,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private Handler mHandler;
     private int offset = 0;
+
+    ActiveActorIdentityInformation intraUserLoginIdentity;
 
 
     public static ReceiveTransactionFragment2 newInstance() {
@@ -138,9 +146,13 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         }
 
-        //list transaction on background
-       onRefresh();
-
+        try {
+            intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -186,8 +198,15 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else {
-                setUpPresentation();
-                return true;
+                if (id == 4) {
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
+                    return true;
+                }
+                else {
+                    setUpPresentation();
+                    return true;
+                }
+
             }
 
         } catch (Exception e) {
@@ -253,7 +272,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
+        return 0;
     }
 
     @Override
@@ -263,7 +282,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         //noinspection TryWithIdenticalCatches
         try {
-            ActiveActorIdentityInformation intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+
             if(intraUserLoginIdentity!=null) {
 
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
@@ -323,7 +342,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-
+        isRefreshing = false;
         onRefresh();
     }
 
@@ -331,7 +350,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+           // swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 //noinspection unchecked
                 openNegotiationList = (ArrayList) result[0];
@@ -361,7 +380,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+          //  swipeRefreshLayout.setRefreshing(false);
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
         }
     }
@@ -396,5 +415,28 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try {
+            if(code.equals("BlockchainDownloadComplete")) {
+                //update toolbar color
+                final Toolbar toolBar = getToolbar();
+
+                toolBar.setBackgroundColor(Color.parseColor("#05CFC2"));
+            } else {
+                if(code.equals("Btc_arrive"))
+                { //update transactions
+                    onRefresh();
+                }
+
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

@@ -244,7 +244,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(),
                 "sub-app-asset-community-issuer",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.aissuer_community);
         installedSubApp.setBanner(R.drawable.asset_issuer_community);
@@ -259,7 +259,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode(),
                 "sub-app-asset-community-user",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.auser_community);
         installedSubApp.setBanner(R.drawable.asset_user_community);
@@ -274,7 +274,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode(),
                 "sub-app-asset-community-redeem-point",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.reddem_point_community);
         installedSubApp.setBanner(R.drawable.redeem_community);

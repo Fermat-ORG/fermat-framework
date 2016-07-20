@@ -44,28 +44,18 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         FermatTextView providerName = (FermatTextView) rootView.findViewById(R.id.ccw_provider_name);
 
 
-        if(indexInfoSummary.getExchangeRateData().getToCurrency().getType().name().equals(PaymentType.CRYPTO_MONEY.getCode())){
-            numberFormat.setMaximumFractionDigits(8);
-        }else{
-            numberFormat.setMaximumFractionDigits(2);
-        }
 
-        try {
 
             String buyAmount=buy.split(" ")[1];
             String buyCurrency=buy.split(" ")[0];
             String sellAmount=sell.split(" ")[1];
             String sellCurrency=sell.split(" ")[0];
-            String buyWithFormat= numberFormat.format(numberFormat.parse(buyAmount));
-            String sellWithFormat= numberFormat.format(numberFormat.parse(sellAmount));
+            String buyWithFormat= fixFormat(buyAmount);
+            String sellWithFormat= fixFormat(sellAmount);
             providerName.setText(this.providerName);
             currencies.setText(currencyPair);
             buyPrice.setText(buyCurrency+" "+buyWithFormat);
             sellPrice.setText(sellCurrency+" "+sellWithFormat);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
 
 
@@ -78,5 +68,36 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         buy = indexInfo.getPurchasePriceAndCurrency();
         providerName = indexInfo.getProviderName();
         indexInfoSummary=indexInfo;
+    }
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 }
