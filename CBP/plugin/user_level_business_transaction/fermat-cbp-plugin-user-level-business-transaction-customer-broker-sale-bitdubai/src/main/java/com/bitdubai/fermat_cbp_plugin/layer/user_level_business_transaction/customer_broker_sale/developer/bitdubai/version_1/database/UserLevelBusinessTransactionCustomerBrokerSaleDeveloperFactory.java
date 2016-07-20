@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 11/12/15.
  */
-public class UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -49,26 +49,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory impl
         this.pluginId = pluginId;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    public void initializeDatabase() throws CantInitializeCustomerBrokerSaleDatabaseException
-    {
+    public void initializeDatabase() throws CantInitializeCustomerBrokerSaleDatabaseException {
         try {
 
              /*
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_DATABASE_NAME);
-            database.closeDatabase();
-
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
@@ -89,7 +76,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory impl
                    * We create the new database
                    */
                 database = userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory.createDatabase(pluginId, UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_DATABASE_NAME);
-                database.closeDatabase();
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
@@ -105,7 +91,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory impl
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_DATABASE_NAME, UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_DATABASE_NAME));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_DATABASE_NAME, this.pluginId.toString()));
 
         return databases;
     }

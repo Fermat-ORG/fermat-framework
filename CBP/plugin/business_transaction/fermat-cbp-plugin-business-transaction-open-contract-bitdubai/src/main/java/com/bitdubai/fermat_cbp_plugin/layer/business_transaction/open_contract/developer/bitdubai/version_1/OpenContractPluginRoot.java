@@ -238,12 +238,6 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             recorderService.start();
 
             /**
-             * Init developer database factory
-             */
-            databaseFactory = new OpenContractBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            databaseFactory.initializeDatabase();
-
-            /**
              * Init monitor Agent
              */
             /*OpenContractMonitorAgent monitorAgent = new OpenContractMonitorAgent(

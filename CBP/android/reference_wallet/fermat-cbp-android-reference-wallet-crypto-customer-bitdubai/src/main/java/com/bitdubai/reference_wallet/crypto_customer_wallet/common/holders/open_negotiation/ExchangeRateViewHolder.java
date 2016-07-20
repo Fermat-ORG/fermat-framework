@@ -37,6 +37,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private FermatButton yourExchangeRateValue;
     private List<IndexInfoSummary> marketRateList;
     private NumberFormat numberFormat;
+    private View separatorLineUp;
+    private View separatorLineDown;
 
 
     public ExchangeRateViewHolder(View itemView) {
@@ -48,6 +50,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText = (TextView) itemView.findViewById(R.id.ccw_exchange_rate_text);
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
         markerRateText = (TextView) itemView.findViewById(R.id.ccw_market_rate_text);
+        separatorLineDown= itemView.findViewById(R.id.ccw_line_down);
+        separatorLineUp= itemView.findViewById(R.id.ccw_line_up);
         yourExchangeRateValue.setOnClickListener(this);
 
         numberFormat = DecimalFormat.getInstance();
@@ -64,13 +68,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
 
-        BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
-        String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
+    //    BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
+    //    String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
 
 
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(),
+                fixFormat(clause.getValue()), currencyToPay.getValue()));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
-        yourExchangeRateValue.setText(clause.getValue());
+        yourExchangeRateValue.setText(fixFormat(clause.getValue()));
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
     }
 
@@ -116,13 +121,17 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                 yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 yourExchangeRateValueRightSide.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 yourExchangeRateText.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
+                separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+                separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
                 break;
             case CHANGED:
-                markerRateReference.setTextColor(getColor(R.color.text_value_status_changed));
-                markerRateText.setTextColor(getColor(R.color.text_value_status_changed));
-                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_changed));
-                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_changed));
-                yourExchangeRateText.setTextColor(getColor(R.color.text_value_status_changed));
+                markerRateReference.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                markerRateText.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                yourExchangeRateText.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                separatorLineDown.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
+                separatorLineUp.setBackgroundColor(getColor(R.color.card_title_color_status_accepted));
                 break;
             case CONFIRM:
                 markerRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
@@ -144,7 +153,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return brokerMarketRate;
     }
 
-    private BigDecimal getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
+/*    private BigDecimal getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
@@ -178,7 +187,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             }
 
         return null;
-    }
+    }*/
 
 
 

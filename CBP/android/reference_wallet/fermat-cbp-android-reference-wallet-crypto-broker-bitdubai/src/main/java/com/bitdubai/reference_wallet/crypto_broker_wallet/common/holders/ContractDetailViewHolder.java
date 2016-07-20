@@ -97,7 +97,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     //Confirm the payment from the customer
                     walletManager.ackPayment(contractDetail.getContractId());
 
-                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
 
                     //Set internal status of this contract to PAYMENT_RECEPTION_IN_PROCESS
                     walletSession.setData(contractDetail.getContractId(), PAYMENT_RECEPTION_IN_PROCESS);

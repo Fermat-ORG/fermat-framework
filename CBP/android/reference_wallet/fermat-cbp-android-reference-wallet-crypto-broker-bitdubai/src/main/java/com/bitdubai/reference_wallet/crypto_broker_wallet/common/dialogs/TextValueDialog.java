@@ -173,7 +173,7 @@ public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<Cryp
                 numberFormat.setMaximumFractionDigits(2);
             }
             return String.valueOf(new BigDecimal(String.valueOf(numberFormat.parse(numberFormat.format(
-                    Double.valueOf(numberFormat.parse(value).toString()))))));
+                   Double.valueOf(numberFormat.parse(value).toString()))))));
         } catch (ParseException e) {
             e.printStackTrace();
             return "0";
