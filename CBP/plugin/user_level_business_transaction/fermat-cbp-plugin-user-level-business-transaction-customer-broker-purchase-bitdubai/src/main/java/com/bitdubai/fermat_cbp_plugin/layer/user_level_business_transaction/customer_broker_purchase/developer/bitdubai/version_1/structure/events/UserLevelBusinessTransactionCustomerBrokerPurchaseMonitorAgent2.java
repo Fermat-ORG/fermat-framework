@@ -673,7 +673,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                 userLevelTransaction.setTransactionStatus(IN_OPEN_CONTRACT);
                 dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
-                FermatBundle fermatBundle = new FermatBundle();
+                /*FermatBundle fermatBundle = new FermatBundle();
                 fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_PURCHASE.getCode());
                 fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
                 fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
@@ -681,10 +681,14 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
                 fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
+<<<<<<< HEAD
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);*/
+/*=======
                 fermatBundle = new FermatBundle();
                 fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
                 fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+>>>>>>> 0b77e4ac982dacacaff5541307b362f1affcafad*/
             }
         }
     }
