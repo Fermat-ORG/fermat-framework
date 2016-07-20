@@ -205,7 +205,6 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
 
             }
         }
-
     }
 
     @Override
@@ -367,9 +366,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return brokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(
-                developerObjectFactory);
-        //return null;
+        return brokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override

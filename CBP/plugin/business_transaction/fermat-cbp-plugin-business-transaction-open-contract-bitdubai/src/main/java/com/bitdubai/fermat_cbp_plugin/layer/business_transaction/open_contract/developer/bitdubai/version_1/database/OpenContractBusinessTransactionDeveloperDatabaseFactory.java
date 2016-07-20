@@ -75,7 +75,7 @@ public class OpenContractBusinessTransactionDeveloperDatabaseFactory {//implemen
                   /*
                    * We create the new database
                    */
-                database = openContractBusinessTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = openContractBusinessTransactionDatabaseFactory.createDatabase(pluginId, OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.

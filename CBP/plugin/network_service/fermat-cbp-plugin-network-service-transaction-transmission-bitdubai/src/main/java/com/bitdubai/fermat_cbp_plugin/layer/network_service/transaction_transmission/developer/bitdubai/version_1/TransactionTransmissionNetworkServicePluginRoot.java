@@ -91,23 +91,14 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
-
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseList(
-                developerObjectFactory
-        );
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory,
                                                              DeveloperDatabase developerDatabase) {
 
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseTableList(
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(
                 developerObjectFactory,
                 developerDatabase
         );
@@ -118,10 +109,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                                                                       DeveloperDatabase developerDatabase,
                                                                       DeveloperDatabaseTable developerDatabaseTable) {
 
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseTableContent(
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(
                 developerObjectFactory,
                 developerDatabase,
                 developerDatabaseTable
