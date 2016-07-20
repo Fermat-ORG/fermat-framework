@@ -178,7 +178,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 }
+                else
+                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
                 if (bitcoinWalletSettings.getFeedLevel() == null)
                     bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
@@ -190,7 +193,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }
 
 
-            blockchainNetworkType = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
+
 
 
             availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
