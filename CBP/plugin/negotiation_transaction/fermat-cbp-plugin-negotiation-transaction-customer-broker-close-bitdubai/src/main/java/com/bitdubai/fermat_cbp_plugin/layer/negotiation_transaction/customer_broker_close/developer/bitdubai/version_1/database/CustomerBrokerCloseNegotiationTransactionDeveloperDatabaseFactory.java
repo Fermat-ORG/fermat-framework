@@ -44,7 +44,6 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
      */
     UUID pluginId;
 
-
     Database database;
 
     /**
@@ -100,7 +99,6 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
         }
     }
 
-
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
          * I only have one database on my plugin. I will return its name.
@@ -109,7 +107,6 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
         databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
-
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
@@ -152,8 +149,6 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
          */
         DeveloperDatabaseTable customerBrokerCloseEventTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME, customerBrokerCloseEventColumns);
         tables.add(customerBrokerCloseEventTable);
-
-
 
         return tables;
     }
@@ -203,14 +198,4 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
         database.closeDatabase();
         return returnedRecords;
     }
-
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
 }
