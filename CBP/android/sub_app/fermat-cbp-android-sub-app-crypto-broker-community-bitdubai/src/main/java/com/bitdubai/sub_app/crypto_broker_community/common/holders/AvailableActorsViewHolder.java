@@ -95,10 +95,10 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         final CryptoBrokerIdentityExtraData brokerExtraData = data.getCryptoBrokerIdentityExtraData();
         if (brokerExtraData != null) {
             String extraText = brokerExtraData.getExtraText();
-            if (extraText != null && !extraText.isEmpty())
-                merchandises.setText(extraText);
+            extraText = (extraText != null && !extraText.isEmpty()) ? extraText : "Not Available Merchandises.";
+            merchandises.setText(extraText);
         } else
-            merchandises.setText("Not available Merchandises.");
+            merchandises.setText("Not Available Merchandises.");
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

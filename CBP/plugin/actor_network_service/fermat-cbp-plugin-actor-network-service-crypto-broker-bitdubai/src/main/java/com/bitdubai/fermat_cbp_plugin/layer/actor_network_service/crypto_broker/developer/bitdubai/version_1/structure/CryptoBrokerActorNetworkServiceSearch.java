@@ -146,8 +146,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             for (final ActorProfile actorProfile : list) {
 
                 System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
-                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
-                        actorProfile.getExtraData());
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
                 System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
                 if(cryptoBrokerIdentityExtraData==null){
                     cryptoBrokerExposingDataList.add(
