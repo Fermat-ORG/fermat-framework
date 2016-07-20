@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -92,6 +93,9 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
     /**
      * Represent the database
@@ -265,7 +269,8 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     customerBrokerPurchaseNegotiationManager,
-                    customerBrokerSaleNegotiationManager
+                    customerBrokerSaleNegotiationManager,
+                    broadcaster
             );
             processorAgent.start();
 
