@@ -61,6 +61,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_offl
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_online_merchandise.interfaces.BrokerSubmitOnlineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_offline_merchandise.interfaces.CustomerAckOfflineMerchandiseManager;
@@ -127,6 +128,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.develo
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -143,6 +145,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -241,7 +244,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     @Override
     public Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException, CantGetListCustomerBrokerContractPurchaseException {
 
-
         try {
             List<ContractBasicInformation> filteredList = new ArrayList<>();
             CryptoBrokerWalletModuleContractBasicInformation contract;
@@ -289,20 +291,21 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                         paymentCurrency = getClauseType(PurchaseNegotiation, ClauseType.BROKER_CURRENCY);
 
                         ActorIdentity cryptoCustomerIdentity = cryptoCustomerIdentityManager.getCryptoCustomerIdentity(PurchaseNegotiation.getCustomerPublicKey());
+                        ActorIdentity brokerIdentity = getBrokerInfoByPublicKey(PurchaseNegotiation.getCustomerPublicKey(), PurchaseNegotiation.getBrokerPublicKey());
 
                         contract = new CryptoBrokerWalletModuleContractBasicInformation(
                                 cryptoCustomerIdentity.getAlias(),
                                 cryptoCustomerIdentity.getProfileImage(),
-                                null,
-                                null,
+                                brokerIdentity.getAlias(),
+                                brokerIdentity.getProfileImage(),
                                 merchandise,
                                 typeOfPayment,
                                 paymentCurrency,
                                 statusContractCancelled,
                                 false,
                                 PurchaseNegotiation,
-                                "",
-                                "");
+                                null,
+                                PurchaseNegotiation.getCancelReason());
 
                         filteredList.add(contract);
                     }
@@ -346,21 +349,22 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                     merchandise = getClauseType(PurchaseNegotiation, ClauseType.CUSTOMER_CURRENCY);
                     typeOfPayment = getClauseType(PurchaseNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
                     paymentCurrency = getClauseType(PurchaseNegotiation, ClauseType.BROKER_CURRENCY);
+                    ActorIdentity brokerIdentity = getBrokerInfoByPublicKey(PurchaseNegotiation.getCustomerPublicKey(), PurchaseNegotiation.getBrokerPublicKey());
 
                     ActorIdentity cryptoCustomerIdentity = cryptoCustomerIdentityManager.getCryptoCustomerIdentity(PurchaseNegotiation.getCustomerPublicKey());
                     contract = new CryptoBrokerWalletModuleContractBasicInformation(
                             cryptoCustomerIdentity.getAlias(),
                             cryptoCustomerIdentity.getProfileImage(),
-                            null,
-                            null,
+                            brokerIdentity.getAlias(),
+                            brokerIdentity.getProfileImage(),
                             merchandise,
                             typeOfPayment,
                             paymentCurrency,
                             statusContractCancelled,
                             false,
                             PurchaseNegotiation,
-                            "",
-                            "");
+                            null,
+                            PurchaseNegotiation.getCancelReason());
 
                     filteredList.add(contract);
                 }
@@ -1298,6 +1302,60 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
     }
 
+    @Override
+    public boolean stockInTheWallet(String contractHash) throws CantSubmitMerchandiseException {
+
+        try {
+
+            double balance;
+            CryptoCustomerWalletPreferenceSettings preferenceSettings;
+
+            String cryptoCustomerPublicKey = WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode();
+            String referenceWallet = WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode();
+
+            CustomerBrokerContractPurchase customerBrokerContractPurchase = this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+            String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+            CustomerBrokerPurchaseNegotiation customerBrokerPruchaseNegotiation = this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+            final Collection<Clause> clauses = customerBrokerPruchaseNegotiation.getClauses();
+            final double amount = parseToDouble(NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY_QUANTITY));
+            final String moneyTypeCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+
+            final MoneyType moneyType = MoneyType.getByCode(moneyTypeCode);
+
+            if(moneyType.equals(MoneyType.CRYPTO)) {
+                try {
+                    preferenceSettings = loadAndGetSettings(cryptoCustomerPublicKey);
+                } catch (Exception e) {
+                    preferenceSettings = new CryptoCustomerWalletPreferenceSettings();
+                }
+
+                final CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(referenceWallet);
+                balance = (double) cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(preferenceSettings.getBlockchainNetworkType());
+
+                System.out.print("\nTEST - CRYPTO CUSTOMER MENAGER STOCK IN WALLET balance ("+balance+") >= amount("+amount+")\n");
+                
+                return balance >= amount;
+            }
+
+            return true;
+
+        } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            throw new CantSubmitMerchandiseException(e, "Submitting the payment, Validate Stock", "Cannot get the contract");
+        } catch (CantGetListPurchaseNegotiationsException e) {
+            throw new CantSubmitMerchandiseException(e, "Submitting the payment, Validate Stock", "Cannot get the contract");
+        } catch (CantGetListClauseException e){
+            throw new CantSubmitMerchandiseException(e, "Submitting the payment, Validate Stock", "Cannot get the contract");
+        } catch (CantLoadWalletsException e){
+            throw new CantSubmitMerchandiseException(e, "Submitting the payment, Validate Stock", "Cannot get the contract");
+        } catch (CantCalculateBalanceException e){
+            throw new CantSubmitMerchandiseException(e, "Submitting the payment, Validate Stock", "Cannot get the contract");
+        } catch (InvalidParameterException e){
+            throw new CantSubmitMerchandiseException(e, "Submitting the payment, Validate Stock", "Cannot get the contract");
+        }
+
+    }
+
     private Collection<Clause> getClause(Collection<ClauseInformation> clauseInformation) {
 
         Collection<Clause> collectionClause = new ArrayList<>();
@@ -1427,15 +1485,28 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         String value = null;
         try {
             if (purchaseNegotiation != null && clauseType != null) {
-                for (Clause clause : purchaseNegotiation.getClauses()) {
-                    if (clause.getType() == clauseType) {
-                        value = clause.getValue();
-                    }
-                }
+                for (Clause clause : purchaseNegotiation.getClauses())
+                    if (clause.getType() == clauseType)
+                        return clause.getValue();
+
+
             }
         } catch (CantGetListClauseException e) {
-            throw new CantGetListClauseException("Cant get the clauses", e);
+            return "No value";
         }
-        return value;
+        return "No value";
+    }
+
+    private double parseToDouble(String stringValue) throws InvalidParameterException {
+        if (stringValue == null) {
+            throw new InvalidParameterException("Cannot parse a null string value to long");
+        } else {
+            try {
+                return NumberFormat.getInstance().parse(stringValue).doubleValue();
+            } catch (Exception exception) {
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
+                        "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
+            }
+        }
     }
 }

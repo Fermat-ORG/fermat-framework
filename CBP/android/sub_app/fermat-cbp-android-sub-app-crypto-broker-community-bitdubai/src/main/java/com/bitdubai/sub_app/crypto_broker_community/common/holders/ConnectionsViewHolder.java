@@ -25,6 +25,8 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     private ImageView brokerImage;
     private FermatTextView brokerName;
     private FermatTextView brokerLocation;
+    private String placeAddress;
+    private String countryAddress;
 
     /**
      * Constructor
@@ -43,7 +45,13 @@ public class ConnectionsViewHolder extends FermatViewHolder {
     public void bind(CryptoBrokerCommunityInformation data) {
         brokerName.setText(data.getAlias());
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
-        brokerLocation.setText(data.getPlace()+" / "+data.getCountry());
+        if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
+            countryAddress= "--";
+        else countryAddress =  data.getCountry();
+        if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
+            placeAddress= "--";
+        else placeAddress =  data.getPlace();
+        brokerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

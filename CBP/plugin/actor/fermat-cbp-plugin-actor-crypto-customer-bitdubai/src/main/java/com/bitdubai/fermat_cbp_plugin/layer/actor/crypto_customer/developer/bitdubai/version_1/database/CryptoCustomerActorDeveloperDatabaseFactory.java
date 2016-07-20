@@ -69,7 +69,7 @@ public class CryptoCustomerActorDeveloperDatabaseFactory {//implements DealsWith
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoCustomerActorDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +90,7 @@ public class CryptoCustomerActorDeveloperDatabaseFactory {//implements DealsWith
                   /*
                    * We create the new database
                    */
-                database = cryptoCustomerActorDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = cryptoCustomerActorDatabaseFactory.createDatabase(pluginId, CryptoCustomerActorDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,7 +106,7 @@ public class CryptoCustomerActorDeveloperDatabaseFactory {//implements DealsWith
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Crypto Customer", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CryptoCustomerActorDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -196,7 +196,7 @@ public class CryptoCustomerActorDeveloperDatabaseFactory {//implements DealsWith
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

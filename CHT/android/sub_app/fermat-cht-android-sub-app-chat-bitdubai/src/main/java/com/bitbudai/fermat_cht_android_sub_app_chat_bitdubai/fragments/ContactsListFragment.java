@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -85,6 +86,8 @@ public class ContactsListFragment
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";
+
+    private ProgressBar progressBar;
     ArrayList<String> contactname=new ArrayList<>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<String> contactid=new ArrayList<>();

@@ -148,19 +148,19 @@ public class BroadcastManager implements BroadcasterInterface {
 
 
     private void sendUpdateIntent(String appPublicKey,@Nullable String code,@Nullable FermatBundle data){
-        Intent intnet = new Intent(UpdateViewReceiver.INTENT_NAME);
-        intnet.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,appPublicKey);
-        intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA,code);
-        intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
-        FermatApplication.getInstance().sendBroadcast(intnet);
+        Intent intent = new Intent(UpdateViewReceiver.INTENT_NAME);
+        intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
+        intent.putExtra(ApplicationConstants.INTENT_EXTRA_DATA, code);
+        intent.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
+        FermatApplication.getInstance().sendBroadcast(intent);
     }
 
     private void sendNotificationIntent(String appPublicKey,@Nullable String code,@Nullable FermatBundle data) {
-        Intent intnet = new Intent(NotificationReceiver.INTENT_NAME);
-        intnet.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,appPublicKey);
-        intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA,code);
-        intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
-        FermatApplication.getInstance().sendBroadcast(intnet);
+        Intent intent = new Intent(NotificationReceiver.INTENT_NAME);
+        intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
+        intent.putExtra(ApplicationConstants.INTENT_EXTRA_DATA, code);
+        intent.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
+        FermatApplication.getInstance().sendBroadcast(intent);
     }
 
 

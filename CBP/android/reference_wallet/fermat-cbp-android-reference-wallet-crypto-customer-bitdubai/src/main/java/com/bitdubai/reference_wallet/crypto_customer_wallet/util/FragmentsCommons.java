@@ -39,6 +39,8 @@ public class FragmentsCommons {
     public static final int CANCELED_FILTER_OPTION_MENU_ID = 5;
     public static final int START_NEGOTIATION_OPTION_MENU_ID = 6;
     public static final int REQUEST_QUOTES_OPTION_MENU_ID = 7;
+    public static final int OPEN_CUSTOMER_IDENTITY_APP_OPTION_MENU_ID = 8;
+    public static final int OPEN_BROKER_COMMUNITY_APP_OPTION_MENU_ID = 9;
 
     public static int getClauseNumberImageRes(int clauseNumber) {
         switch (clauseNumber) {

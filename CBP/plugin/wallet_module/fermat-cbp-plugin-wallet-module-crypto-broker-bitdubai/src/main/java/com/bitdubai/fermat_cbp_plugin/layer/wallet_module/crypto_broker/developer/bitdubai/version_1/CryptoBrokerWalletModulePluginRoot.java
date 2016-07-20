@@ -1,12 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
@@ -21,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -28,7 +27,6 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.all_definition.util.UniversalTime;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
@@ -68,7 +66,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,10 +173,13 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     CustomerBrokerCloseManager customerBrokerCloseManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_CUSTOMER)
-    private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+    CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
     public CryptoBrokerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -195,24 +195,6 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("CryptoBrokerWalletModulePluginRoot");
-//        returnedClasses.add("SingleValueStepImp");
-//        returnedClasses.add("NegotiationBankAccountImpl");
-//        returnedClasses.add("ExchangeRateStepImp");
-//        returnedClasses.add("CustomerBrokerSaleNegotiationImpl");
-//        returnedClasses.add("CurrencyPairImpl");
-//        returnedClasses.add("CryptoBrokerWalletSettingSpreadImpl");
-//        returnedClasses.add("CryptoBrokerWalletProviderSettingImpl");
-//        returnedClasses.add("CryptoBrokerWalletModuleIndexInfoSummary");
-//        returnedClasses.add("CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation");
-//        returnedClasses.add("CryptoBrokerWalletModuleCryptoBrokerWalletManager");
-//        returnedClasses.add("CryptoBrokerWalletModuleContractBasicInformation");
-//        returnedClasses.add("CryptoBrokerWalletModuleClauseInformation");
-//        returnedClasses.add("CryptoBrokerWalletAssociatedSettingImpl");
-//        returnedClasses.add("CryptoBrokerWalletActorIdentity");
-//        returnedClasses.add("ClauseImpl");
-//        returnedClasses.add("CBPInstalledWalletImpl");
-//        returnedClasses.add("BankAccountNumberImpl");
-//        returnedClasses.add("AmountToSellStepImp");
 
         return returnedClasses;
     }
@@ -259,8 +241,6 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @Override
     public void start() throws CantStartPluginException {
         super.start();
-        //universalTimeTest();
-        //preConfigureWallet();
     }
 
     @Override
@@ -296,7 +276,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     customerBrokerCloseManager,
                     cryptoCustomerActorConnectionManager,
                     pluginFileSystem,
-                    pluginId);
+                    pluginId,
+                    broadcaster);
 
         return moduleManager;
     }
