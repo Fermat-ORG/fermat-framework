@@ -5,8 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,10 +18,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
@@ -162,8 +160,8 @@ public class GeolocationCustomerIdentityFragment
                 frequency.setSelection(spinnerPosition);
             }
         } else {
-            accuracy.setText("0");
-            frequency.setSelection(0);
+            accuracy.setText("10");
+            frequency.setSelection(1);
         }
     }
 }

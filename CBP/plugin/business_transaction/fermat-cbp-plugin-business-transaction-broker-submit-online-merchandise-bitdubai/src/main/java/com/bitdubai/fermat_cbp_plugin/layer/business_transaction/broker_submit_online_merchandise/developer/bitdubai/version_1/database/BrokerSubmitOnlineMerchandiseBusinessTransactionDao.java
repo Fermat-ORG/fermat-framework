@@ -187,6 +187,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
+            if(isContractHashInDatabase(eventId)){
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseEventsTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             long unixTime = System.currentTimeMillis();
@@ -250,6 +253,10 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                           String currencyCode,
                                           long cryptoAmount) throws CantInsertRecordException {
         try {
+            if(isContractHashInDatabase(purchaseContract.getContractId())){
+                System.out.println("The contract "+purchaseContract+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseSubmitTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
@@ -294,6 +301,10 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                           FeeOrigin feeOrigin,
                                           long fee) throws CantInsertRecordException {
         try {
+            if(isContractHashInDatabase(saleContract.getContractId())){
+                System.out.println("The contract "+saleContract+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseSubmitTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 

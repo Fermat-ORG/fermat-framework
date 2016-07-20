@@ -214,44 +214,38 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             }else {
 
-                /*
+                 /*
                 * get NodesProfile List From Restful in Seed Node
                 */
-                if(executorService==null) executorService = Executors.newSingleThreadExecutor();
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        nodesProfileList = getNodesProfileList();
+                nodesProfileList = getNodesProfileList();
 
-                        if (nodesProfileList != null && nodesProfileList.size() > 0) {
+                if (nodesProfileList != null && nodesProfileList.size() > 0) {
 
-                            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                                    nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort(),
-                                    eventManager,
-                                    locationManager,
-                                    identity,
-                                    NetworkClientCommunicationPluginRoot.this,
-                                    0,
-                                    Boolean.FALSE,
-                                    nodesProfileList.get(0)
-                            );
+                    networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                            nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort(),
+                            eventManager,
+                            locationManager,
+                            identity,
+                            this,
+                            0,
+                            Boolean.FALSE,
+                            nodesProfileList.get(0)
+                    );
 
-                        } else {
+                } else {
 
-                            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                                    NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT,
-                                    eventManager,
-                                    locationManager,
-                                    identity,
-                                    NetworkClientCommunicationPluginRoot.this,
-                                    -1,
-                                    Boolean.FALSE,
-                                    null
-                            );
+                    networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                            NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT,
+                            eventManager,
+                            locationManager,
+                            identity,
+                            this,
+                            -1,
+                            Boolean.FALSE,
+                            null
+                    );
 
-                        }
-                    }
-                });
+                }
 
             }
 
@@ -665,13 +659,19 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     @Override
     public void stop() {
-        try {
-            executorService.shutdownNow();
-        }catch (Exception e){
+        if(executorService != null)
+            try {
+                executorService.shutdownNow();
+                executorService = null;
+            }catch (Exception ignore){
 
+            }
+
+        if(scheduledExecutorService != null){
+            scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
         }
 
-        scheduledExecutorService.shutdownNow();
         super.stop();
     }
 

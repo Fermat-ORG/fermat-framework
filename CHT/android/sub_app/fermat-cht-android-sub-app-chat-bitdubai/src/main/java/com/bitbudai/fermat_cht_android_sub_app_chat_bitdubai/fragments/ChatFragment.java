@@ -249,9 +249,6 @@ public class ChatFragment
             try {
                 if(isAttached){
                     String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
-    //                Owner owner = new Owner();
-    //                owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-    //                fermatBundle.put(NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM,owner );
 
                     if (code.equals(ChatBroadcasterConstants.CHAT_UPDATE_VIEW)) {
                         onUpdateViewUIThread();

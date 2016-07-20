@@ -1,9 +1,7 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -12,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,12 +51,11 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
-import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -85,6 +83,9 @@ public class ContactsListFragment
     private static final int MAX = 1000;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
+    private String cityAddress;
+    private String stateAddress;
+    private String countryAddress;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
@@ -100,6 +101,7 @@ public class ContactsListFragment
     TextView noDatalabel;
     FermatApplicationCaller applicationsHelper;
     ImageView noData;
+    private ProgressBar progressBar;
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
@@ -168,22 +170,12 @@ public class ContactsListFragment
             recyclerView.setAdapter(adapter);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-            swipeRefresh.setOnRefreshListener(this);
-//            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            onRefresh();
-//                            swipeRefresh.setRefreshing(false);
-//                        }
-//                    }, 5000);
-//                }
-//            });
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+//            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+//            swipeRefresh.setOnRefreshListener(this);
+//            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             showEmpty(true, emptyView);
+            progressBar.setVisibility(View.VISIBLE);
             onRefresh();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -200,9 +192,6 @@ public class ContactsListFragment
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
-//        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), appSession.getModuleManager().getSelectedActorIdentity()));
-        //AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
-//        setNavigationDrawer(appNavigationAdapter);
     }
 
     @Override
@@ -210,11 +199,7 @@ public class ContactsListFragment
         try {
             if (!isRefreshing) {
                 isRefreshing = true;
-//                final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-//                connectionsProgressDialog.setMessage("Loading Contacts");
-//                connectionsProgressDialog.setCancelable(false);
-//                connectionsProgressDialog.show();
-                FermatWorker worker = new FermatWorker() {
+                final FermatWorker worker = new FermatWorker() {
                     @Override
                     protected Object doInBackground() throws Exception {
                         return getMoreData();
@@ -225,10 +210,9 @@ public class ContactsListFragment
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-//                        connectionsProgressDialog.dismiss();
                         isRefreshing = false;
-                        if (swipeRefresh != null)
-                            swipeRefresh.setRefreshing(false);
+                       /* if (swipeRefresh != null)
+                            swipeRefresh.setRefreshing(false);*/
                         if (result != null &&
                                 result.length > 0) {
                             if (getActivity() != null && adapter != null) {
@@ -246,17 +230,14 @@ public class ContactsListFragment
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-//                        connectionsProgressDialog.dismiss();
                         try {
                             isRefreshing = false;
-                            if (swipeRefresh != null)
-                                swipeRefresh.setRefreshing(false);
-
+//                            if (swipeRefresh != null)
+//                                swipeRefresh.setRefreshing(false);
+                            worker.shutdownNow();
                             if (getActivity() != null)
                                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                         UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-                            //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                            ex.printStackTrace();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -282,13 +263,10 @@ public class ContactsListFragment
         @Override
         protected Void doInBackground(Void... params) {
             try {
-//               con = chatManager.listWorldChatActor(identity, MAX, offset);
-//                contactname.clear();
-//                contactid.clear();
-//                contacticon.clear();
-//                contactStatus.clear();
                 if(identity!=null) {
-                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), null, 0, "", MAX, offset);
+                    List<ChatActorCommunityInformation> con =
+                            moduleManager.listWorldChatActor(identity.getPublicKey(),
+                                    identity.getActorType(), null, 0, "", MAX, offset);
                     if (con != null) {
                         int size = con.size();
                         if (size > 0) {
@@ -310,7 +288,6 @@ public class ContactsListFragment
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println("****************** doInBackground saling: ");
             return null;
         }
     }
@@ -336,20 +313,16 @@ public class ContactsListFragment
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show /*&&
-                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
+        if (show) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-           // emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
-            emptyView.setAnimation(anim);
+        } else {
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
             emptyView.setBackgroundResource(0);
@@ -361,28 +334,64 @@ public class ContactsListFragment
             emptyView.setBackground(bgcolor);
             rootView.setBackground(bgcolor);
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         appSession.setData(CHAT_USER_SELECTED, data);
-//        changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
         if (Build.VERSION.SDK_INT < 23) {
-            ContactDialog contact = new ContactDialog(getActivity(), appSession, null);
-            contact.setProfileName(data.getAlias());
-            contact.setCountryText("Country" + " - " + "place"); //TODO completar los campos de "country" y "place" con la implementación de la geolocaclización.
-            ByteArrayInputStream bytes = new ByteArrayInputStream(data.getImage());
-            BitmapDrawable bmd = new BitmapDrawable(bytes);
-            contact.setProfilePhoto(bmd.getBitmap());
-            contact.show();
+            CommonLogger.info(TAG, "User connection state " +
+                    data.getConnectionState());
+            final DisconnectDialog disconnectDialog;
+            try {
+                disconnectDialog =
+                        new DisconnectDialog(getActivity(), appSession, null,
+                                data, moduleManager.getSelectedActorIdentity());
+                disconnectDialog.setTitle("Disconnect");
+                disconnectDialog.setDescription("Do you want to disconnect from");
+                disconnectDialog.setUsername(data.getAlias()+"?");
+                disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            onRefresh();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                disconnectDialog.show();
+            } catch ( CantGetSelectedActorIdentityException
+                    | ActorIdentityNotSelectedException e) {
+                e.printStackTrace();
+            }
         }else{
-            ContactDialog contact = new ContactDialog(getContext(), appSession, null);
-            contact.setProfileName(data.getAlias());
-            contact.setCountryText("Country" + " - " + "place"); //TODO completar los campos de "country" y "place" con la implementación de la geolocalización.
-            ByteArrayInputStream bytes = new ByteArrayInputStream(data.getImage());
-            BitmapDrawable bmd = new BitmapDrawable(bytes);
-            contact.setProfilePhoto(bmd.getBitmap());
-            contact.show();
+            CommonLogger.info(TAG, "User connection state " +
+                    data.getConnectionState());
+            final DisconnectDialog disconnectDialog;
+            try {
+                disconnectDialog =
+                        new DisconnectDialog(getContext(), appSession, null,
+                                data, moduleManager.getSelectedActorIdentity());
+                disconnectDialog.setTitle("Disconnect");
+                disconnectDialog.setDescription("Do you want to disconnect from");
+                disconnectDialog.setUsername(data.getAlias()+"?");
+                disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                           onRefresh();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                disconnectDialog.show();
+            } catch ( CantGetSelectedActorIdentityException
+                    | ActorIdentityNotSelectedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

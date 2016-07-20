@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
@@ -132,6 +133,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSav
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -238,8 +240,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     private final CustomerBrokerCloseManager customerBrokerCloseManager;
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
 
+    private Broadcaster broadcaster;
+
+
     public CryptoBrokerWalletModuleCryptoBrokerWalletManager(WalletManagerManager walletManagerManager,
-                                                             com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                             CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                              BankMoneyWalletManager bankMoneyWalletManagerManager,
                                                              CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
                                                              BankMoneyRestockManager bankMoneyRestockManager,
@@ -267,7 +272,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                                                              MatchingEngineManager matchingEngineManager,
                                                              CustomerBrokerCloseManager customerBrokerCloseManager,
                                                              CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager,
-                                                             PluginFileSystem pluginFileSystem, UUID pluginId) {
+                                                             PluginFileSystem pluginFileSystem, UUID pluginId, Broadcaster broadcaster) {
         super(pluginFileSystem, pluginId);
 
         this.walletManagerManager = walletManagerManager;
@@ -299,6 +304,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         this.matchingEngineManager = matchingEngineManager;
         this.customerBrokerCloseManager = customerBrokerCloseManager;
         this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
+        this.broadcaster = broadcaster;
     }
 
     @Override
