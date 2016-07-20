@@ -72,4 +72,19 @@
         android:textColor="@color/ccw_contract_history_exchange_rate_text"
         android:textSize="@dimen/ccw_regular_text_size"
         android:text="@string/ccw_contract_history_exchange_rate_amount_and_currency"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_customer_status_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ccw_last_update_date"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:singleLine="true"
+        android:textColor="@color/ccw_contract_history_customer_name_text"
+        android:textSize="@dimen/ccw_subtitle_text"
+        tools:text="@string/ccw_contract_history_action_filter_succeed_text"/>
 </RelativeLayout>
