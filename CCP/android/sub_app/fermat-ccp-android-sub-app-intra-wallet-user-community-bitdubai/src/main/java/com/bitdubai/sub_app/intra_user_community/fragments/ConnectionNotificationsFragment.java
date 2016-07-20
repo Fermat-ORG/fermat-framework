@@ -52,6 +52,7 @@ import java.util.List;
 
 /**
  * Creado por Jose manuel De Sousa el 30/11/2015
+ * updated Andres Abreu aabreu1 - 20/07/2016
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager> ,ResourceProviderManager>
@@ -133,6 +134,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             textConnectionSuccess = (FermatTextView) rootView.findViewById(R.id.text_connection_success);
 
 
+
+
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -146,7 +150,6 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
 
     private synchronized ArrayList<IntraUserInformation> getMoreData() {
         ArrayList<IntraUserInformation> dataSet = new ArrayList<>();
-
         try {
 
             List list = moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset);
