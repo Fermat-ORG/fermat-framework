@@ -37,6 +37,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -88,6 +90,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private Handler mHandler;
     private int offset = 0;
+
+    ActiveActorIdentityInformation intraUserLoginIdentity;
 
 
     public static ReceiveTransactionFragment2 newInstance() {
@@ -141,6 +145,16 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        }
+
+        onRefresh();
 
     }
 
@@ -270,7 +284,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         //noinspection TryWithIdenticalCatches
         try {
-            ActiveActorIdentityInformation intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+
             if(intraUserLoginIdentity!=null) {
 
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
@@ -325,13 +339,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     public void onLongItemClickListener(CryptoWalletTransaction data, int position) {
-    }
-
-    @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
-
-        onRefresh();
     }
 
     @Override

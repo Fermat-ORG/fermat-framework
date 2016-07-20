@@ -123,6 +123,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
             }
 
+            onRefresh();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -156,7 +158,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-
+        isRefreshing = false;
         onRefresh();
     }
 
@@ -233,12 +235,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
-        if(lstPaymentRequest!=null){
-            return lstPaymentRequest;
-        }else{
-            return  new ArrayList<>();
-        }
 
+            return lstPaymentRequest;
 
     }
 
