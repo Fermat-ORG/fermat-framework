@@ -12,22 +12,19 @@ import java.io.Serializable;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/07/16.
  */
 public class CryptoBrokerIdentityExtraData implements Serializable {
-
     private final Currency merchandise;
     private final Currency paymentCurrency;
     private final String extraText;
 
+
     /**
      * Default constructor with parameters
      *
-     * @param merchandise
-     * @param paymentCurrency
-     * @param extraText
+     * @param merchandise     the merchandise
+     * @param paymentCurrency the payment currency
+     * @param extraText       the extra text
      */
-    public CryptoBrokerIdentityExtraData(
-            Currency merchandise,
-            Currency paymentCurrency,
-            String extraText) {
+    public CryptoBrokerIdentityExtraData(Currency merchandise, Currency paymentCurrency, String extraText) {
         this.merchandise = merchandise;
         this.paymentCurrency = paymentCurrency;
         this.extraText = extraText;
@@ -36,7 +33,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
     /**
      * This method returns the broker merchandise.
      *
-     * @return
+     * @return the merchandise
      */
     public Currency getMerchandise() {
         return merchandise;
@@ -45,7 +42,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
     /**
      * This method returns the broker payment currency.
      *
-     * @return
+     * @return the payment currency
      */
     public Currency getPaymentCurrency() {
         return paymentCurrency;
@@ -54,7 +51,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
     /**
      * This method returns the extra text.
      *
-     * @return
+     * @return the extra text
      */
     public String getExtraText() {
         return extraText;
@@ -63,7 +60,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
     /**
      * This method returns a json String from this class.
      *
-     * @return
+     * @return the string with the json representation
      */
     public String toJson() {
         final Gson gson = new GsonBuilder().
@@ -74,11 +71,11 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
     }
 
     /**
-     * This method returns a CryptoBrokerIdentityExtraData from a json String.
+     * This method returns a CryptoBrokerIdentityExtraData from a json String or null if the jsonString is corrupted or bad formatted.
      *
-     * @param jsonString
+     * @param jsonString the string with the json representation
      *
-     * @return
+     * @return the CryptoBrokerIdentityExtraData or null
      */
     public static CryptoBrokerIdentityExtraData fromJson(String jsonString) {
         final Gson gson = new GsonBuilder().
@@ -88,7 +85,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
         try {
             return gson.fromJson(jsonString, CryptoBrokerIdentityExtraData.class);
         } catch (Exception e) {
-            return null;
+            return null; //I don't want to report this exception, the data could be corrupted
         }
     }
 
