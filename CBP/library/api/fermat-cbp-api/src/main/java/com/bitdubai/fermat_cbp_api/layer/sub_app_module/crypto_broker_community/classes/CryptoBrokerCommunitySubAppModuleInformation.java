@@ -68,6 +68,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
                                                         final ConnectionState connectionState,
                                                         final UUID connectionId,
                                                         final Location location,
+                                                        final CryptoBrokerIdentityExtraData brokerExtraData,
                                                         String country,
                                                         String place) {
 
@@ -79,6 +80,18 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.location = location;
         this.country = country;
         this.place = place;
+        this.cryptoBrokerIdentityExtraData = brokerExtraData;
+    }
+
+    public CryptoBrokerCommunitySubAppModuleInformation(CryptoBrokerCommunityInformation actorInformation, ConnectionState connectionState) {
+
+        this.publicKey = actorInformation.getPublicKey();
+        this.alias = actorInformation.getAlias();
+        this.image = actorInformation.getImage();
+        this.connectionState = connectionState;
+        this.connectionId = actorInformation.getConnectionId();
+        this.location = actorInformation.getLocation();
+        this.cryptoBrokerIdentityExtraData = actorInformation.getCryptoBrokerIdentityExtraData();
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection, Location location) {
@@ -172,7 +185,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
             this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
                     CryptoCurrency.BITCOIN,
                     FiatCurrency.US_DOLLAR,
-                    "Selling Bitcoin");
+                    "Not Available Merchandises");
         }
         return this.cryptoBrokerIdentityExtraData;
     }

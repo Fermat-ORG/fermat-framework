@@ -615,15 +615,7 @@ public class BrowserTabFragment
             final ConnectionState newConnectionState = (ConnectionState) appSession.getData(FragmentsCommons.CONNECTION_RESULT);
             appSession.removeData(FragmentsCommons.CONNECTION_RESULT);
 
-            CryptoBrokerCommunityInformation updatedInfo = new CryptoBrokerCommunitySubAppModuleInformation(
-                    actorInformation.getPublicKey(),
-                    actorInformation.getAlias(),
-                    actorInformation.getImage(),
-                    newConnectionState,
-                    actorInformation.getConnectionId(),
-                    actorInformation.getLocation(),
-                    actorInformation.getCountry(),
-                    actorInformation.getPlace());
+            CryptoBrokerCommunityInformation updatedInfo = new CryptoBrokerCommunitySubAppModuleInformation(actorInformation, newConnectionState);
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);
