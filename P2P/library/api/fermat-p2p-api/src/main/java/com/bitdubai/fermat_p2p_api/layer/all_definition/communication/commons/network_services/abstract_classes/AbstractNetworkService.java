@@ -698,8 +698,13 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                     System.out.println("***************** ID DUPLICATED. GENERATING A NEW ONE *****************");
                     networkServiceMessage.setId(UUID.randomUUID());
                 }
-            }catch(CantReadRecordDataBaseException | RecordNotFoundException e){
+            } catch(CantReadRecordDataBaseException e) {
                 e.printStackTrace();
+            } catch(RecordNotFoundException e){
+                /**
+                 * Exception empty because not import if Record not found ¿? need better that
+                 * explication for Jose Vilchez
+                 */
             }
 
             networkServiceConnectionManager.getIncomingMessagesDao().create(networkServiceMessage);

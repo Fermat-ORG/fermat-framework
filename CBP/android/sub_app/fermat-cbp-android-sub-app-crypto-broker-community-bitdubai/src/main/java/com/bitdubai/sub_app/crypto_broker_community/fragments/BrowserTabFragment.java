@@ -408,7 +408,8 @@ public class BrowserTabFragment
             try {
                 offset = pos;
                 List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
-                dataSet.addAll(result);
+                if(result != null)
+                    dataSet.addAll(result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
