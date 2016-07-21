@@ -100,9 +100,10 @@ public class BrowserTabFragment
     private ArrayList<IntraUserInformation> lstIntraUserInformations = new ArrayList<>();
     private int offset = 0;
     private Location location;
-    private double distance;
+    private double distance = 100;
     private IntraUserLoginIdentity identity;
     private FermatWorker fermatWorker;
+
 
     //Flags
     private boolean launchActorCreationDialog = false;
@@ -116,6 +117,7 @@ public class BrowserTabFragment
     private RelativeLayout locationFilterBar;
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
+
     private Toolbar toolbar;
     private ExecutorService _executor;
     LinearLayout searchEmptyView;
@@ -199,7 +201,7 @@ public class BrowserTabFragment
                                 }
 
                             }
-                        }, 500);
+                        }, 400);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -216,7 +218,8 @@ public class BrowserTabFragment
 
             identity =  moduleManager.getActiveIntraUserIdentity();
 
-            distance = identity.getAccuracy();
+            if(identity != null)
+              distance = identity.getAccuracy();
 
             // turnGPSOn();
 
@@ -440,7 +443,8 @@ public class BrowserTabFragment
                 if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
                     appSession.setData(INTRA_USER_SELECTED, data);
                 ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(), (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
+                connectDialog = new ConnectDialog(getActivity(),
+                        (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
                 connectDialog.setTitle("CONFIRM CONNECTION");
                 connectDialog.setDescription("Are you sure you want to connect with "+data.getName()+"?");
                 connectDialog.setUsername(data.getName());
@@ -480,7 +484,7 @@ public class BrowserTabFragment
                 try {
                     if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
                         Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
-                        getActivity().onBackPressed();
+                        //getActivity().onBackPressed();
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
                     e.printStackTrace();

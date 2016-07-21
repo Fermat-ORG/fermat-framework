@@ -132,7 +132,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
         if(currencyPair.getFrom() == FiatCurrency.US_DOLLAR)
             purchasePrice = salePrice = 1150;
         else
-            purchasePrice = salePrice = 1/1150;
+            purchasePrice = salePrice = 1/ (double) 1150;
 
 //        double purchasePrice = 0;
 //        double salePrice = 0;
