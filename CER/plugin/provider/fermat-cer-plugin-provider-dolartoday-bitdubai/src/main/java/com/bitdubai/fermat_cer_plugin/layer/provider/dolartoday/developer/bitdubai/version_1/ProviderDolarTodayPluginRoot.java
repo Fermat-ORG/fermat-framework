@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -31,13 +30,10 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfo
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpHelper;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.database.DolarTodayProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.dolartoday.developer.bitdubai.version_1.exceptions.CantInitializeDolarTodayProviderDatabaseException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,12 +60,14 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
     DolarTodayProviderDao dao;
     List<CurrencyPair> supportedCurrencyPairs = new ArrayList<>();
 
+
     /*
      * PluginRoot Constructor
      */
     public ProviderDolarTodayPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
+
 
     /*
      * Service interface implementation
@@ -86,11 +84,14 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
             dao.initialize();
             dao.initializeProvider("DolarToday");
         } catch (Exception e) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
     }
+
+
+
 
     /*
      * CurrencyExchangeRateProviderManager interface implementation
@@ -123,38 +124,40 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
     @Override
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
-        if (!isCurrencyPairSupported(currencyPair))
+        if(!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
-    /*    double purchasePrice = 0;
+        double purchasePrice = 0;
         double salePrice = 0;
         if(currencyPair.getFrom() == FiatCurrency.US_DOLLAR)
             purchasePrice = salePrice = 1150;
         else
-            purchasePrice = salePrice = 1/1150;*/
+            purchasePrice = salePrice = 1/1150;
 
-        double purchasePrice = 0;
-        double salePrice = 0;
-        try {
-            JSONObject json = new JSONObject(HttpHelper.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
+//        double purchasePrice = 0;
+//        double salePrice = 0;
+//        try{
+//            JSONObject json = new JSONObject(HttpHelper.getHTTPContent("http://api.bitcoinvenezuela.com/DolarToday.php?json=yes"));
+//
+//            purchasePrice = json.getJSONObject("USD").getDouble("transferencia");
+//            salePrice = json.getJSONObject("USD").getDouble("transferencia");
+//        }catch (JSONException e) {
+//            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"DolarToday CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+//        }
+//
+//        if(currencyPair.getTo() == FiatCurrency.US_DOLLAR)
+//        {
+//            purchasePrice = 1 / purchasePrice;
+//            salePrice = 1 / salePrice;
+//        }
 
-            purchasePrice = json.getJSONObject("USD").getDouble("transferencia");
-            salePrice = json.getJSONObject("USD").getDouble("transferencia");
-        } catch (JSONException e) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "DolarToday CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
-        }
-
-        if (currencyPair.getTo() == FiatCurrency.US_DOLLAR) {
-            purchasePrice = 1 / purchasePrice;
-            salePrice = 1 / salePrice;
-        }
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
         try {
             dao.saveExchangeRate(exchangeRate);
-        } catch (CantSaveExchangeRateException e) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }catch (CantSaveExchangeRateException e) {
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -198,7 +201,7 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeDolarTodayProviderDatabaseException e) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
