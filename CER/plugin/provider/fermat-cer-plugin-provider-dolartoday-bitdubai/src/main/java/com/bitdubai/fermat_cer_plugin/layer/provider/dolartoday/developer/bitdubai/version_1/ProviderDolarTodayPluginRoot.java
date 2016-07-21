@@ -128,6 +128,8 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
 
         double purchasePrice = 0;
         double salePrice = 0;
+        boolean providerIsDown = false;
+        boolean invertExchange=true;
 
         try {
 
@@ -136,27 +138,29 @@ public class ProviderDolarTodayPluginRoot extends AbstractPlugin implements Data
             purchasePrice = json.getJSONObject("USD").getDouble("transferencia");
             salePrice = json.getJSONObject("USD").getDouble("transferencia");
 
-            if (currencyPair.getTo() == FiatCurrency.US_DOLLAR) {
-                purchasePrice = 1 / purchasePrice;
-                salePrice = 1 / salePrice;
-            }
 
         } catch (JSONException e) {
 
-            if(currencyPair.getFrom() == FiatCurrency.US_DOLLAR)
-                purchasePrice = salePrice = 1150;
-            else
-                purchasePrice = salePrice = 1/(double)1150;
+            purchasePrice = 0;
+            salePrice = 0;
+            invertExchange = false;
+            providerIsDown = true;
         //    this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         //    throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "DolarToday CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
+        if (currencyPair.getTo() == FiatCurrency.US_DOLLAR && invertExchange) {
+            purchasePrice = 1 / purchasePrice;
+            salePrice = 1 / salePrice;
+        }
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), purchasePrice, salePrice, (new Date().getTime() / 1000));
-        try {
-            dao.saveExchangeRate(exchangeRate);
-        } catch (CantSaveExchangeRateException e) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        if(!providerIsDown) {
+            try {
+                dao.saveExchangeRate(exchangeRate);
+            } catch (CantSaveExchangeRateException e) {
+                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
         }
         return exchangeRate;
     }

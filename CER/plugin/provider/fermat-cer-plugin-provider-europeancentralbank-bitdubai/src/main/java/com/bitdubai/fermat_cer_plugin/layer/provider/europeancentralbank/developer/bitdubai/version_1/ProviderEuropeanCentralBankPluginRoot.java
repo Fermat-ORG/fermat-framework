@@ -151,6 +151,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         String url = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode();
         double price = 0;
         String aux;
+        boolean providerIsDown = false;
 
         try {
             JSONObject json = new JSONObject(HttpHelper.getHTTPContent(url));
@@ -159,15 +160,21 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             price = Double.valueOf(aux);
 
         } catch (JSONException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "EuropeanCentralBank CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
+         //   throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "EuropeanCentralBank CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
+            price = 0;
+            providerIsDown = true;
         }
 
 
+
+
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
-        try {
-            dao.saveCurrentExchangeRate(exchangeRate);
-        } catch (CantSaveExchangeRateException e) {
-            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        if(!providerIsDown) {
+            try {
+                dao.saveCurrentExchangeRate(exchangeRate);
+            } catch (CantSaveExchangeRateException e) {
+                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
         }
         return exchangeRate;
     }
