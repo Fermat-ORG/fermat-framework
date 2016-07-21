@@ -32,6 +32,8 @@ public class FragmentsCommons {
     public static final int NO_FILTER_OPTION_MENU_ID = 3;
     public static final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
     public static final int CANCELED_FILTER_OPTION_MENU_ID = 5;
+    public static final int OPEN_BROKER_IDENTITY_APP_OPTION_MENU_ID = 6;
+    public static final int OPEN_CUSTOMER_COMMUNITY_APP_OPTION_MENU_ID = 7;
 
 
     public static int getClauseNumberImageRes(int clauseNumber) {

@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         markerRateReferenceContainer = itemView.findViewById(R.id.ccw_market_rate_container);
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
         yourExchangeRateValue.setOnClickListener(this);
-        numberFormat.setMaximumFractionDigits(8);
+
     }
 
     @Override
@@ -59,9 +60,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         //markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, marketRate, currencyToPay));
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy,
-                numberFormat.format(Double.valueOf(clause.getValue())), currencyToPay));
+                fixFormat(clause.getValue()), currencyToPay));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy));
-        yourExchangeRateValue.setText(numberFormat.format(Double.valueOf(clause.getValue())));
+        yourExchangeRateValue.setText(fixFormat(clause.getValue()));
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay));
     }
 
@@ -102,7 +103,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
 
 
-    private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
+    /*private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
@@ -123,9 +124,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         }
 
         return exchangeRateStr;
-    }
+    }*/
 
-    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
+/*    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
 
         if (marketRateList != null)
             for (IndexInfoSummary item : marketRateList) {
@@ -138,6 +139,38 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             }
 
         return null;
+    }*/
+
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 
 }

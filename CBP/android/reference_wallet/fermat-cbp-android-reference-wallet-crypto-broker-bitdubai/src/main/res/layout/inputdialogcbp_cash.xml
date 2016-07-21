@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/txt_title"
-        android:text="CREATE A CASH ACCOUNT"
+        android:text="NEW CASH WALLET"
         android:textSize="16sp"
         android:textColor="#FFF"
         android:gravity="center"
@@ -35,26 +35,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Currency"
+            android:text="Currency:"
             android:textColor="#7A7A7A"
             android:paddingTop="20dp"
             android:paddingBottom="1dp"
             />
+
         <Spinner
+            android:id="@+id/idcbp_cash_currency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/idcbp_cash_currency"
-            android:text="Account Type"
-            android:theme="@style/Base.TextAppearance.AppCompat.Button"
-            android:textColor="#000000"
-            android:backgroundTint="#a5a5a5"
-            android:backgroundTintMode="add"
-            android:background="#c2c2c2"
-            android:foregroundTint="#000000"
-            android:foregroundTintMode="add"
+            android:textAlignment="center"
+            android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             />
+
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/idcbp_button_action_cash"

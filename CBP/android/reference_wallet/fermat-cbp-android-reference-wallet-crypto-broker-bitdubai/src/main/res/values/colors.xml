@@ -14,7 +14,7 @@
     <color name="cbw_list_divider">#a7a7a7</color>
     <color name="cbw_grouper_text">#343434</color>
     <color name="cbw_contract_history_background">#ffffff</color>
-    <color name="cbw_contract_history_customer_name_text">#6b7378</color>
+    <color name="cbw_contract_history_broker_name_text">#6b7378</color>
     <color name="cbw_contract_history_sold_text">#00b3dc</color>
     <color name="cbw_contract_history_exchange_rate_text">#6b7378</color>
     <color name="cbw_contract_history_date_text">#6b7378</color>
