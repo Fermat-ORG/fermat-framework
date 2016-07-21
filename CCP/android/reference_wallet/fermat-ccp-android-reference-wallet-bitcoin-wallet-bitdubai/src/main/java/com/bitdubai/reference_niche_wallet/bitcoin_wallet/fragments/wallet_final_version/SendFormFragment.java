@@ -128,6 +128,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private LinearLayout feed_advances;
     private LinearLayout advances_btn;
 
+    private FermatWorker fermatWorker;
+
     private List<WalletContact> walletContactList = new ArrayList<>();
     /**
      * Adapters
@@ -168,7 +170,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         setHasOptionsMenu(true);
         try {
 
-            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            cryptoWallet = appSession.getModuleManager();
+
+            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
 
             if(bitcoinWalletSettings != null) {
 
@@ -181,14 +185,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 else
                     feeLevel = bitcoinWalletSettings.getFeedLevel();
 
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
             }
 
 
-            blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
+            blockchainNetworkType = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
 
-            cryptoWallet = appSession.getModuleManager();
+
             availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
 
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -580,7 +584,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void setUpContactAddapter() {
 
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -748,6 +752,15 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
 
 
+    }
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+        super.onStop();
     }
 
 
