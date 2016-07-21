@@ -282,46 +282,46 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
 
         lstInstalledWallet.add(installedWallet);
 
-        installedWallet = new WalletManagerMiddlewareInstalledWallet(
-                WalletCategory.REFERENCE_WALLET, // CATEGORY
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "loss_protected_wallet_icon", // ICOIN
-                "Loss Protected Wallet", // WALLET NAME
-                WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(), // PUBLIC KEY
-                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
-                new Version(1, 0, 0), //VERSION
-                WalletType.REFERENCE, // WALLET TYPE
-                "medium",
-                "1.0.0",
-                null,
-                "bitDubai",
-                "",
-                Platforms.CRYPTO_CURRENCY_PLATFORM,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType()
-        );
-        lstInstalledWallet.add(installedWallet);
+//        installedWallet = new WalletManagerMiddlewareInstalledWallet(
+//                WalletCategory.REFERENCE_WALLET, // CATEGORY
+//                new ArrayList<InstalledSkin>(),
+//                new ArrayList<InstalledLanguage>(),
+//                "loss_protected_wallet_icon", // ICOIN
+//                "Loss Protected Wallet", // WALLET NAME
+//                WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(), // PUBLIC KEY
+//                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+//                new Version(1, 0, 0), //VERSION
+//                WalletType.REFERENCE, // WALLET TYPE
+//                "medium",
+//                "1.0.0",
+//                null,
+//                "bitDubai",
+//                "",
+//                Platforms.CRYPTO_CURRENCY_PLATFORM,
+//                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+//        );
+//        lstInstalledWallet.add(installedWallet);
 
-        installedWallet = new WalletManagerMiddlewareInstalledWallet(
-                WalletCategory.REFERENCE_WALLET, // CATEGORY
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "fermat_wallet_icon", // ICOIN
-                "Fermat Wallet", // WALLET NAME
-                WalletsPublicKeys.CCP_FERMAT_WALLET.getCode(), // PUBLIC KEY
-                ReferenceWallet.BASIC_WALLET_FERMAT_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
-                new Version(1, 0, 0), //VERSION
-                WalletType.REFERENCE, // WALLET TYPE
-                "medium",
-                "1.0.0",
-                null,
-                "bitDubai",
-                "",
-                Platforms.CRYPTO_CURRENCY_PLATFORM,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType(),
-                CryptoCurrency.FERMAT
-        );
-        lstInstalledWallet.add(installedWallet);
+//        installedWallet = new WalletManagerMiddlewareInstalledWallet(
+//                WalletCategory.REFERENCE_WALLET, // CATEGORY
+//                new ArrayList<InstalledSkin>(),
+//                new ArrayList<InstalledLanguage>(),
+//                "fermat_wallet_icon", // ICOIN
+//                "Fermat Wallet", // WALLET NAME
+//                WalletsPublicKeys.CCP_FERMAT_WALLET.getCode(), // PUBLIC KEY
+//                ReferenceWallet.BASIC_WALLET_FERMAT_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+//                new Version(1, 0, 0), //VERSION
+//                WalletType.REFERENCE, // WALLET TYPE
+//                "medium",
+//                "1.0.0",
+//                null,
+//                "bitDubai",
+//                "",
+//                Platforms.CRYPTO_CURRENCY_PLATFORM,
+//                BlockchainNetworkType.getDefaultBlockchainNetworkType(),
+//                CryptoCurrency.FERMAT
+//        );
+//        lstInstalledWallet.add(installedWallet);
 
 
         installedWallet = new WalletManagerMiddlewareInstalledWallet(
@@ -404,65 +404,65 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         );
         lstInstalledWallet.add(installedWallet);
 
-        installedWallet = new WalletManagerMiddlewareInstalledWallet(
-                WalletCategory.REFERENCE_WALLET, // CATEGORY
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "asset_issuer", // ICOIN
-                "Asset Issuer", // WALLET NAME
-                WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(), // PUBLIC KEY
-                ReferenceWallet.DAP_ASSET_ISSUER_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
-                new Version(1, 0, 0), //VERSION
-                WalletType.REFERENCE, // WALLET TYPE
-                "medium",
-                "1.0.0",
-                null,
-                "bitDubai",
-                "",
-                Platforms.DIGITAL_ASSET_PLATFORM,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType()
-        );
-        lstInstalledWallet.add(installedWallet);
+//        installedWallet = new WalletManagerMiddlewareInstalledWallet(
+//                WalletCategory.REFERENCE_WALLET, // CATEGORY
+//                new ArrayList<InstalledSkin>(),
+//                new ArrayList<InstalledLanguage>(),
+//                "asset_issuer", // ICOIN
+//                "Asset Issuer", // WALLET NAME
+//                WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(), // PUBLIC KEY
+//                ReferenceWallet.DAP_ASSET_ISSUER_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+//                new Version(1, 0, 0), //VERSION
+//                WalletType.REFERENCE, // WALLET TYPE
+//                "medium",
+//                "1.0.0",
+//                null,
+//                "bitDubai",
+//                "",
+//                Platforms.DIGITAL_ASSET_PLATFORM,
+//                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+//        );
+//        lstInstalledWallet.add(installedWallet);
+//
+//        installedWallet = new WalletManagerMiddlewareInstalledWallet(
+//                WalletCategory.REFERENCE_WALLET, // CATEGORY
+//                new ArrayList<InstalledSkin>(),
+//                new ArrayList<InstalledLanguage>(),
+//                "asset_user", // ICOIN
+//                "Asset User", // WALLET NAME
+//                WalletsPublicKeys.DAP_USER_WALLET.getCode(), // PUBLIC KEY
+//                ReferenceWallet.DAP_ASSET_USER_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+//                new Version(1, 0, 0), //VERSION
+//                WalletType.REFERENCE, // WALLET TYPE
+//                "medium",
+//                "1.0.0",
+//                null,
+//                "bitDubai",
+//                "",
+//                Platforms.DIGITAL_ASSET_PLATFORM,
+//                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+//        );
+//        lstInstalledWallet.add(installedWallet);
 
-        installedWallet = new WalletManagerMiddlewareInstalledWallet(
-                WalletCategory.REFERENCE_WALLET, // CATEGORY
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "asset_user", // ICOIN
-                "Asset User", // WALLET NAME
-                WalletsPublicKeys.DAP_USER_WALLET.getCode(), // PUBLIC KEY
-                ReferenceWallet.DAP_ASSET_USER_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
-                new Version(1, 0, 0), //VERSION
-                WalletType.REFERENCE, // WALLET TYPE
-                "medium",
-                "1.0.0",
-                null,
-                "bitDubai",
-                "",
-                Platforms.DIGITAL_ASSET_PLATFORM,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType()
-        );
-        lstInstalledWallet.add(installedWallet);
-
-        installedWallet = new WalletManagerMiddlewareInstalledWallet(
-                WalletCategory.REFERENCE_WALLET, // CATEGORY
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "redeem_point", // ICOIN
-                "Redeem Point", // WALLET NAME
-                WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), // PUBLIC KEY
-                ReferenceWallet.DAP_REDEEM_POINT_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
-                new Version(1, 0, 0), //VERSION
-                WalletType.REFERENCE, // WALLET TYPE
-                "medium",
-                "1.0.0",
-                null,
-                "bitDubai",
-                "",
-                Platforms.DIGITAL_ASSET_PLATFORM,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType()
-        );
-        lstInstalledWallet.add(installedWallet);
+//        installedWallet = new WalletManagerMiddlewareInstalledWallet(
+//                WalletCategory.REFERENCE_WALLET, // CATEGORY
+//                new ArrayList<InstalledSkin>(),
+//                new ArrayList<InstalledLanguage>(),
+//                "redeem_point", // ICOIN
+//                "Redeem Point", // WALLET NAME
+//                WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), // PUBLIC KEY
+//                ReferenceWallet.DAP_REDEEM_POINT_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+//                new Version(1, 0, 0), //VERSION
+//                WalletType.REFERENCE, // WALLET TYPE
+//                "medium",
+//                "1.0.0",
+//                null,
+//                "bitDubai",
+//                "",
+//                Platforms.DIGITAL_ASSET_PLATFORM,
+//                BlockchainNetworkType.getDefaultBlockchainNetworkType()
+//        );
+//        lstInstalledWallet.add(installedWallet);
 
 
         return lstInstalledWallet;

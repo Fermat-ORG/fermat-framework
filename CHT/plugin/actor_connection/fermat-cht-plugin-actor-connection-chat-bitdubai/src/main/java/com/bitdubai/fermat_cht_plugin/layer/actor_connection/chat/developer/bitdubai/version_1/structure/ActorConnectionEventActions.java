@@ -15,9 +15,14 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.enums.ActorConnectionNotificationType;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
@@ -32,6 +37,12 @@ import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitd
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.exceptions.CantHandleUpdateEventException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
+
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_ACTIVITY_TO_OPEN_CODE;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_NOTIFICATION_PAINTER_FROM;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.APP_TO_OPEN_PUBLIC_KEY;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
+import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
 import java.util.List;
 import java.util.UUID;
@@ -97,9 +108,23 @@ public class ActorConnectionEventActions {
                 switch (request.getRequestAction()) {
 
                     case ACCEPT:
-                        this.handleAcceptConnection(request.getRequestId());
-                        //TODO: IMPLEMENT BROADCASTER
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
+                        this.handleAcceptConnection(request.getRequestId());//TODO check this, exception when connectionID is not found
+
+                        FermatBundle fermatBundle = new FermatBundle();
+                        fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
+                        fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
+                        fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                        fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_CONNECTION_ACCEPTED_NOTIFICATION);
+                        fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
+
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+//                        FermatBundle fermatBundle = new FermatBundle();
+//                        fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+//                        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
+
+//                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle);
+//                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
 
                         break;
                    /* case CANCEL:
@@ -129,7 +154,6 @@ public class ActorConnectionEventActions {
 
             throw new CantHandleUpdateEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
-
     }
 
     public void handleRequestConnection(final ChatConnectionRequest request) throws CantRequestActorConnectionException,
@@ -169,15 +193,30 @@ public class ActorConnectionEventActions {
                 case CHAT:
                     dao.registerChatActorConnection(actorConnection,oldActorConnection);
 
+                    FermatBundle fermatBundle = new FermatBundle();
+                    fermatBundle.put(SOURCE_PLUGIN, Plugins.CHAT_ACTOR_CONNECTION.getCode());
+                    fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(SubAppsPublicKeys.CHT_COMMUNITY.getCode()));
+                    fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                    fermatBundle.put(NOTIFICATION_ID, ChatBroadcasterConstants.CHAT_COMMUNITY_REQUEST_CONNECTION_NOTIFICATION);
+                    fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
+
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+//                    FermatBundle fermatBundle = new FermatBundle();
+//                    fermatBundle.put(Broadcaster.PUBLISH_ID, SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+//                    fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+//
+//                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), fermatBundle);
+
+//
+//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+
+
                     chatNetworkService.confirm(request.getRequestId());
                     break;
                 default:
                     throw new UnsupportedActorTypeException("request: " + request, "Unsupported actor type exception.");
             }
-
-            //TODO: IMPLEMENT BROADCASTER
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_COMMUNITY.getCode(), ActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
-
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
 

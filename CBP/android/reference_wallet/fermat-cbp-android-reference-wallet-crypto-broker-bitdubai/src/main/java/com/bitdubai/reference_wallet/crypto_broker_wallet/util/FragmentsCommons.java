@@ -4,10 +4,14 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -28,6 +32,8 @@ public class FragmentsCommons {
     public static final int NO_FILTER_OPTION_MENU_ID = 3;
     public static final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
     public static final int CANCELED_FILTER_OPTION_MENU_ID = 5;
+    public static final int OPEN_BROKER_IDENTITY_APP_OPTION_MENU_ID = 6;
+    public static final int OPEN_CUSTOMER_COMMUNITY_APP_OPTION_MENU_ID = 7;
 
 
     public static int getClauseNumberImageRes(int clauseNumber) {
@@ -53,8 +59,13 @@ public class FragmentsCommons {
         }
     }
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, CryptoBrokerIdentity identity) throws CantGetActiveLoginIdentityException {
-        View view = inflater.inflate(R.layout.cbw_navigation_view_header, null, true);
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, CryptoBrokerIdentity identity,
+                                         final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+
+        RelativeLayout relativeLayout = new RelativeLayout(activity);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400);
+        relativeLayout.setLayoutParams(layoutParams);
+        View view = inflater.inflate(R.layout.cbw_navigation_view_header, relativeLayout, true);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.cbw_image_view_profile);
             if (identity != null) {
@@ -72,7 +83,16 @@ public class FragmentsCommons {
                 fermatTextView.setText(R.string.cbw_identity_alias_default_text);
             }
 
-            return view;
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } catch (OutOfMemoryError outOfMemoryError) {
             Toast.makeText(activity, "Error: out of memory ", Toast.LENGTH_SHORT).show();
         }

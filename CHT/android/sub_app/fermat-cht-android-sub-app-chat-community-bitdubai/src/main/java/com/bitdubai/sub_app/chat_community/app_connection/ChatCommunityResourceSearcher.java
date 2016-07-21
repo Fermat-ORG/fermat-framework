@@ -10,8 +10,7 @@ import com.bitdubai.sub_app.chat_community.R;
  */
 public class ChatCommunityResourceSearcher extends ResourceSearcher {
 
-    @Override
-    public int obtainResDrawable(Context context, int id) {
+    public int obtainResDrawable(Context context,int id){
         int resId = 0;
         switch (id){
             case 1:

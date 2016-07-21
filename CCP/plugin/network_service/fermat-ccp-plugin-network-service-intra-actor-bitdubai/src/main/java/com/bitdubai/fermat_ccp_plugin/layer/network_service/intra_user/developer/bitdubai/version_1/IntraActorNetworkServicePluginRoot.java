@@ -23,8 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -56,6 +56,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraActorNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.UpdateTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
@@ -179,10 +180,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                             + "\n-------------------------------------------------");
 
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
-
-                    System.out.println("----------------------------\n" +
-                            "CREANDO REGISTRO EN EL INCOMING NOTIFICATION DAO:"
-                            + "\n-------------------------------------------------");
 
                     actorNetworkServiceRecord.setFlagReadead(false);
                     incomingNotificationsDao.createNotification(actorNetworkServiceRecord);
@@ -309,7 +306,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public void handleActorUnreachable(ActorProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
@@ -517,7 +514,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset, DeviceLocation location) throws ErrorSearchingSuggestionsException {
+    public List<IntraUserInformation> getIntraUsersSuggestions(double distance, String alias,int max, int offset, Location location) throws ErrorSearchingSuggestionsException {
 
         final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
@@ -526,7 +523,23 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
             /* This is for test and example of how to use
                     * Construct the filter
             */
+
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    Actors.INTRA_USER.getCode(),
+                    null,
+                    alias,
+                    null,
+                    location,
+                    distance,
+                    true,
+                    null,
+                    max,
+                    offset,
+                    false);
+
+           /* DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.INTRA_USER.getCode(),
                     alias,
                     distance,
@@ -538,7 +551,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     NetworkServiceType.UNDEFINED,
                     offset,
                     NetworkServiceType.INTRA_USER
-            );                  // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+            );    */              // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
             final List<ActorProfile> list = getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
@@ -556,7 +569,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     }
                 }
 
-                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase));
+                lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase,actorProfile.getStatus()));
             }
 
 
@@ -824,10 +837,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public void registerActors(List<Actor> actors) {
+    public void registerActors(List<Actor> actors, final Location location       ,
+                               final long     refreshInterval,
+                               final long     accuracy) {
 
         for (Actor actor : actors)
-            registerActor(actor);
+            registerActor(actor,location,refreshInterval,accuracy);
     }
 
     private ActorProfile constructActorProfile(Actor actor) {
@@ -854,13 +869,29 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public void registerActor(Actor actor) {
+    public void registerActor(Actor actor,
+                              final Location location       ,
+                              final long     refreshInterval,
+                              final long     accuracy     ) {
 
         try {
 
-            registerActor(
-                    constructActorProfile(actor),
-                    0, 0
+
+            Gson gson = new Gson();
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("PHRASE", gson.toJson(actor.getPhrase()));
+
+            String extraData = gson.toJson(jsonObject);
+
+            registerActor(actor.getActorPublicKey(),
+                    actor.getName(),
+                    actor.getName(),
+                    extraData,
+                    location,
+                    actor.getType(),
+                    actor.getPhoto(),
+                    refreshInterval,accuracy
             );
 
         } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
@@ -889,7 +920,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
             final ActorProfile actorProfile = constructActorProfile(actor);
 
             updateRegisteredActor(
-                    actorProfile
+                    actorProfile,
+                    UpdateTypes.FULL
             );
 
         } catch (final CantUpdateRegisteredActorException e) {

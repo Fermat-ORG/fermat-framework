@@ -51,13 +51,13 @@ public class CryptoBrokerActorDao {
 
         public void initializeDatabase() throws CantInitializeCryptoBrokerActorDatabaseException{
             try {
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoBrokerActorDatabaseConstants.DATABASE_NAME);
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
                 throw new CantInitializeCryptoBrokerActorDatabaseException(cantOpenDatabaseException.getMessage());
             } catch (DatabaseNotFoundException e) {
                 CryptoBrokerActorDatabaseFactory BrokerActorDatabaseFactory = new CryptoBrokerActorDatabaseFactory(pluginDatabaseSystem);
                 try {
-                    database = BrokerActorDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                    database = BrokerActorDatabaseFactory.createDatabase(pluginId, CryptoBrokerActorDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     throw new CantInitializeCryptoBrokerActorDatabaseException(cantCreateDatabaseException.getMessage());
                 }

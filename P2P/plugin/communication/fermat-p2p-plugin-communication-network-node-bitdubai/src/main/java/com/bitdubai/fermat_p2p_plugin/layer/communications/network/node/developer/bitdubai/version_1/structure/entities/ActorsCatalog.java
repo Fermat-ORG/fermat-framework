@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Arrays;
-
 
 /**
  * The persistent class for the "ACTORS_CATALOG" database table.
@@ -26,7 +26,11 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	private Timestamp hostedTimestamp;
 
-	private NetworkNodeCommunicationDeviceLocation lastLocation;
+	private Timestamp lastUpdateTime;
+
+	private Timestamp lastConnection;
+
+	private Location lastLocation;
 
 	private String name;
 
@@ -34,12 +38,32 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	private String clientIdentityPublicKey;
 
+	private byte[] thumbnail;
+
 	private byte[] photo;
 
 	public ActorsCatalog() {
 		super();
-		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
-        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
+		long currentMillis = System.currentTimeMillis();
+		this.hostedTimestamp = new Timestamp(currentMillis);
+		this.lastUpdateTime = new Timestamp(currentMillis);
+		this.lastConnection = new Timestamp(currentMillis);
+	}
+
+	public Timestamp getLastConnection() {
+		return lastConnection;
+	}
+
+	public void setLastConnection(Timestamp lastConnection) {
+		this.lastConnection = lastConnection;
+	}
+
+	public Timestamp getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(Timestamp lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
 	}
 
 	public String getActorType() {
@@ -114,16 +138,24 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 		this.photo = photo;
 	}
 
-    @Override
+	public byte[] getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(byte[] thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	@Override
     public String getId() {
         return identityPublicKey;
     }
 
-	public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+	public Location getLastLocation() {
 		return lastLocation;
 	}
 
-	public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+	public void setLastLocation(Location lastLocation) {
 		this.lastLocation = lastLocation;
 	}
 
@@ -153,17 +185,13 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 			return false;
 		if (getExtraData() != null ? !getExtraData().equals(that.getExtraData()) : that.getExtraData() != null)
 			return false;
-		if (getHostedTimestamp() != null ? !getHostedTimestamp().equals(that.getHostedTimestamp()) : that.getHostedTimestamp() != null)
-			return false;
-		if (getLastLocation() != null ? !getLastLocation().equals(that.getLastLocation()) : that.getLastLocation() != null)
-			return false;
 		if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
 			return false;
 		if (getNodeIdentityPublicKey() != null ? !getNodeIdentityPublicKey().equals(that.getNodeIdentityPublicKey()) : that.getNodeIdentityPublicKey() != null)
 			return false;
 		if (getClientIdentityPublicKey() != null ? !getClientIdentityPublicKey().equals(that.getClientIdentityPublicKey()) : that.getClientIdentityPublicKey() != null)
 			return false;
-		return Arrays.equals(getPhoto(), that.getPhoto());
+		return Arrays.equals(getPhoto(), that.getPhoto()) || Arrays.equals(getThumbnail(), that.getThumbnail());
 
 	}
 
@@ -173,12 +201,11 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 		result = 31 * result + (getActorType() != null ? getActorType().hashCode() : 0);
 		result = 31 * result + (getAlias() != null ? getAlias().hashCode() : 0);
 		result = 31 * result + (getExtraData() != null ? getExtraData().hashCode() : 0);
-		result = 31 * result + (getHostedTimestamp() != null ? getHostedTimestamp().hashCode() : 0);
-		result = 31 * result + (getLastLocation() != null ? getLastLocation().hashCode() : 0);
 		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
 		result = 31 * result + (getNodeIdentityPublicKey() != null ? getNodeIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getClientIdentityPublicKey() != null ? getClientIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getPhoto() != null ? Arrays.hashCode(getPhoto()) : 0);
+		result = 31 * result + (getThumbnail() != null ? Arrays.hashCode(getThumbnail()) : 0);
 		return result;
 	}
 

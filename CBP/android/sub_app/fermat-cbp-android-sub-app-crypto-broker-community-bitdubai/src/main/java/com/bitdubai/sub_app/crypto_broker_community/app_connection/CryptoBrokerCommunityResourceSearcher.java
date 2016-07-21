@@ -12,24 +12,27 @@ import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
  */
 public class CryptoBrokerCommunityResourceSearcher extends ResourceSearcher {
 
-    @Override
-    public int obtainResDrawable(Context context, int id) {
+
+    public int obtainResDrawable(Context context,int id){
+        int resId = 0;
         switch (id) {
             case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.interrogacion_blanco;
-
+                resId = R.drawable.interrogacion_blanco;
+                break;
             case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
-                return R.drawable.localizacion_blanco;
-
+                resId = R.drawable.localizacion_blanco;
+                break;
             case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                return R.drawable.lupa;
-
+                resId = R.drawable.lupa;
+                break;
             case FragmentsCommons.CBC_BACKGROUND_TAB_ID:
-                return R.drawable.cbc_action_bar_gradient_colors;
-
+                resId = R.drawable.cbc_action_bar_gradient_colors;
+                break;
             default:
-                return 0;
+                resId = 0;
+                break;
         }
+        return resId;
     }
 
 }

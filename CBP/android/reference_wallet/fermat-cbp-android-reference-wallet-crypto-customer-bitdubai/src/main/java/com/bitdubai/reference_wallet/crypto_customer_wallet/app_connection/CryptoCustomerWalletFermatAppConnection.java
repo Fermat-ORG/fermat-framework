@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.header.CryptoCustomerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
@@ -70,7 +72,7 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Refe
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return new CustomerNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override
@@ -84,8 +86,10 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Refe
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code) {
-        switch (code) {
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle) {
+        int notificationID = fermatBundle.getInt(NotificationBundleConstants.NOTIFICATION_ID);
+
+        switch (notificationID) {
             case CCW_WAITING_FOR_CUSTOMER_NOTIFICATION:
                 return new CryptoCustomerNotificationPainter("Negotiation Update", "You have received a negotiation update, check your wallet.", "");
             case CCW_CANCEL_NEGOTIATION_NOTIFICATION:
@@ -103,7 +107,7 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Refe
             case CCW_CONTRACT_EXPIRATION_NOTIFICATION:
                 return new CryptoCustomerNotificationPainter("Expiring contract.", "A contract is about to expire, check your wallet.", "");
             default:
-                return super.getNotificationPainter(code);
+                return super.getNotificationPainter(fermatBundle);
         }
     }
 

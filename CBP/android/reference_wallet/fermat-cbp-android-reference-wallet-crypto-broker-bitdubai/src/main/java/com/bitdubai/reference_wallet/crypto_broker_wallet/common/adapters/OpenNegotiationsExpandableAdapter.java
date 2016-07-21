@@ -26,7 +26,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param context        the activity context where the RecyclerView is going to be displayed
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem> parentItemList) {
+    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem<CustomerBrokerNegotiationInformation>> parentItemList) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
     }

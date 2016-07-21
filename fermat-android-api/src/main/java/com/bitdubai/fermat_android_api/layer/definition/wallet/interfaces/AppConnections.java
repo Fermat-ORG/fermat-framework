@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import android.content.Context;
-import android.view.View;
 
 import com.bitdubai.fermat_android_api.core.ResourceSearcher;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.lang.ref.WeakReference;
 
@@ -49,6 +49,10 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         return null;
     }
 
+    public NotificationPainter getNotificationPainter(FermatBundle fermatBundle){
+        return null;
+    }
+
 
     protected  FermatSession getSession(){return null;};
 
@@ -73,30 +77,6 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
     public void setContext(Context context) {
         this.activity = new WeakReference<Context>(context);
     }
-
-
-    /**
-     *  Method to share resources with other apps
-     * @param id
-     * @return
-     */
-
-    public int getResource(int id) {
-        return 0;
-    }
-
-
-    /**
-     *  Method to share Views with other apps
-     *
-     * @param activity
-     * @param resourceId
-     * @return
-     */
-    public View getSharedView(Context activity, int resourceId) {
-        return null;
-    }
-
 
     public ResourceSearcher getResourceSearcher(){
         return null;

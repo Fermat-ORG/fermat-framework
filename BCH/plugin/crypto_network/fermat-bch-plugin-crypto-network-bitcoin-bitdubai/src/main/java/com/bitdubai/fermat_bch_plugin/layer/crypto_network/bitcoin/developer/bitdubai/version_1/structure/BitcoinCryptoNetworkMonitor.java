@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.BitcoinTransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
@@ -45,9 +47,12 @@ import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.PrunedException;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -72,8 +77,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     private MonitorAgent monitorAgent;
     private String threadName;
+    BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain;
     private Thread monitorAgentThread;
     private Wallet wallet;
+    private final boolean isReset;
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
     private final BitcoinCryptoNetworkDatabaseDao dao;
@@ -102,6 +109,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     public BitcoinCryptoNetworkMonitor(UUID pluginId,
                                        Wallet wallet,
+                                       boolean isReset,
                                        File walletFilename,
                                        PluginFileSystem pluginFileSystem,
                                        ErrorManager errorManager,
@@ -112,6 +120,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * I initialize the local variables
          */
         this.wallet = wallet;
+        this.isReset = isReset;
         this.pluginId = pluginId;
         this.walletFileName = walletFilename;
         this.pluginFileSystem = pluginFileSystem;
@@ -138,7 +147,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I define the MonitorAgent private class
          */
-        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, dao, this.context);
+        monitorAgent = new MonitorAgent(this.wallet, this.isReset, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, dao, this.context);
 
         // I define the thread name and start it.
         threadName = "CryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
@@ -175,7 +184,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         }
     }
 
-
     /**
      * private class that runs on a separate thread
      */
@@ -184,6 +192,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * private class variables
          */
         Wallet wallet;
+        final boolean isReset;
         PeerGroup peerGroup;
         File walletFileName;
         BlockChain blockChain;
@@ -216,6 +225,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param blockchainNetworkType
          */
         public MonitorAgent(Wallet wallet,
+                            boolean isReset,
                             File walletFileName,
                             UUID pluginId,
                             PluginFileSystem pluginFileSystem,
@@ -226,6 +236,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                             Context context) {
 
             this.wallet = wallet;
+            this.isReset = isReset;
             this.walletFileName = walletFileName;
             this.pluginId = pluginId;
             this.pluginFileSystem = pluginFileSystem;
@@ -242,7 +253,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 // start it all
                 doTheMainTask();
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }
@@ -254,11 +265,17 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         private void doTheMainTask() throws Exception {
             System.out.println("***CryptoNetwork***  starting and connecting on " + BLOCKCHAIN_NETWORKTYPE.getCode() + "...");
 
+            System.out.println("***cryptoNetwork*** keys " + wallet.getImportedKeys().toString());
+
+            //reset the wallet if needed
+            if (this.isReset)
+                this.wallet.reset();
+
             try{
                 /**
                  * creates the blockchain object for the specified network.
                  */
-                BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
+                cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(this.isReset, pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
                 blockChain = cryptoNetworkBlockChain.getBlockChain();
 
                 /**
@@ -308,7 +325,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 peerGroup.setDownloadTxDependencies(true);
                 peerGroup.start();
-                peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+               // peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+
+                //start the controller of the blocks
+                BlocksDownloadControllerAgent blocksDownloadControllerAgent = new BlocksDownloadControllerAgent(2, TimeUnit.MINUTES, this.peerGroup, this.blockChain);
+                blocksDownloadControllerAgent.start();
+                System.out.println("***CryptoNetwork*** Blocks Download agent started...");
+
+                //start downloading the blockchain
+                peerGroup.downloadBlockChain();
 
                 System.out.println("***CryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
                 System.out.println("***CryptoNetwork*** PeerGroup running?: " + peerGroup.isRunning() + " with " + peerGroup.getConnectedPeers().size() + " connected peers.");
@@ -321,7 +346,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             } catch (Exception e){
                 e.printStackTrace();
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw e;
             }
         }
@@ -425,16 +450,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             final Transaction finalTransaction = transaction;
 
 
+            TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction, blockchainProvider.getMinimumBroadcastConnections());
+            ListenableFuture<Transaction> future = transactionBroadcast.future();
 
-            ListenableFuture<Transaction> future = peerGroup.broadcastTransaction(transaction, blockchainProvider.getMinimumBroadcastConnections()).future();
-            wallet.receivePending(finalTransaction, null);
+
             /**
              * I add the future that will get the broadcast result into a call back to respond to it.
              */
             Futures.addCallback(future, new FutureCallback<Transaction>() {
                 @Override
                 public void onSuccess(Transaction result) {
-
                     try {
                         dao.setBroadcastStatus(Status.BROADCASTED, connectedPeers, null, txHash);
                         /**
@@ -470,10 +495,23 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                         dao.setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
                 }
             });
+
+            /**
+             * the future does not complete until the transaction in included in a block, which may be more than 10 minutes.
+             * to generate the ON_CRYPTO_NETWORK event raising, I'm for now triggering it manually.
+             */
+            BroadcastControllerAgent  broadcastControllerAgent = new BroadcastControllerAgent(10, TimeUnit.SECONDS, this.peerGroup, finalTransaction, this.wallet, this.dao, this.events);
+            try {
+                broadcastControllerAgent.start();
+                System.out.println("***CryptoNetwork*** Broadcast Controller Agent started...");
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
+
         }
 
         /**
@@ -623,7 +661,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     Transaction storedTransaction = wallet.getTransaction(tx.getHash());
                     if (storedTransaction == null){
                         CantStoreBitcoinTransactionException e = new  CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction was not correctly stored at the wallet.", null);
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                         throw e;
 
                     }
@@ -635,7 +673,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
                 System.out.println("***CryptoNetwork*** Transaction successfully stored for broadcasting: " + tx.getHashAsString());
             } catch (CantExecuteDatabaseOperationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
             } catch (Exception e) {
                 /**
@@ -652,7 +690,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
 
                 CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
         }
@@ -776,7 +814,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 System.out.println("***CryptoNetwork*** Transaction " + txHash + " cancelled.");
             } catch (Exception e) {
                 CantCancellBroadcastTransactionException exception = new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
         }
@@ -809,7 +847,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 return blockchainConnectionStatus;
             } catch (Exception e){
                 CantGetBlockchainConnectionStatusException exception = new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
 
@@ -843,7 +881,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             if (transactionBlockHash == null ){
                 CantGetTransactionException e = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw e;
 
             }
@@ -871,7 +909,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             } catch (Exception e) {
                 CantGetTransactionException exception = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "error getting the Transaction from the blockchain" , null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
 
@@ -896,6 +934,106 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
         public Transaction getBitcoinTransaction(Sha256Hash sha256Hash){
             return this.wallet.getTransaction(sha256Hash);
+        }
+
+        private class BroadcastControllerAgent extends AbstractAgent implements Runnable{
+            private final PeerGroup peerGroup;
+            private final Transaction transaction;
+            private final Wallet wallet;
+            private final BitcoinCryptoNetworkDatabaseDao dao;
+            private final BitcoinNetworkEvents events;
+
+
+            public BroadcastControllerAgent(long sleepTime, TimeUnit timeUnit, PeerGroup peerGroup, Transaction transaction, Wallet wallet, BitcoinCryptoNetworkDatabaseDao dao, BitcoinNetworkEvents events) {
+                super(sleepTime, timeUnit);
+
+                this.peerGroup = peerGroup;
+                this.transaction = transaction;
+                this.wallet = wallet;
+                this.dao = dao;
+                this.events = events;
+
+
+            }
+
+            @Override
+            protected Runnable agentJob() {
+                return this;
+            }
+
+            @Override
+            protected void onErrorOccur() {
+
+            }
+
+            @Override
+            public void run() {
+                for (Peer peer : peerGroup.getConnectedPeers()){
+                    //if this is not the download Peer
+                    if (!peer.equals(peerGroup.getDownloadPeer())){
+                        // I will try to get the transaction it was broadcasted.
+                        try {
+                            Transaction peerTransaction = peer.getPeerMempoolTransaction(transaction.getHash()).get(10, TimeUnit.SECONDS);
+
+                            /**
+                             * If I got the transaction on a different peer than the one I'm broadcasting to the transaction can be considered
+                             * as broadcasted.
+                             */
+                            if (peerTransaction != null){
+                                System.out.println("***CryptoNetwork*** Transaction Broadcaster Controller: tx found on remote peer...confirming.");
+                                confirmTransactionBroadcast();
+                                this.stop();
+                            }
+                        } catch (Exception e) {
+                            // i will ignore any error.
+                        }
+                    }
+                }
+            }
+
+
+            /**
+             * forces the transaction to get confirmed on the platform
+             */
+            private void confirmTransactionBroadcast() {
+                wallet.receivePending(transaction, null, true);
+                wallet.maybeCommitTx(transaction);
+                try {
+                    dao.setBroadcastStatus(Status.BROADCASTED, peerGroup.numConnectedPeers(), null, transaction.getHashAsString());
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
+                /**
+                 * Store this outgoing transaction in the table
+                 */
+                UUID transactionId = null;
+                try {
+                    transactionId = dao.getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, transaction.getHashAsString());
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
+
+                for (CryptoTransaction cryptoTransaction : BitcoinTransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, BITCOIN, wallet, transaction)){
+                    try {
+                        dao.saveCryptoTransaction(cryptoTransaction, transactionId);
+                    } catch (CantExecuteDatabaseOperationException e) {
+                        //maybe try saving into disk if cant save it.
+                        e.printStackTrace();
+                    }
+                }
+
+                transaction.getConfidence(context).setConfidenceType(TransactionConfidence.ConfidenceType.BUILDING);
+                events.onTransactionConfidenceChanged(wallet, transaction);
+
+                /**
+                 * saves the wallet again.
+                 */
+                try {
+                    wallet.saveToFile(walletFileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -929,7 +1067,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     }
 
     public Wallet getWallet(){
-        return this.monitorAgent.getWallet();
+        if (this.monitorAgent == null)
+            return this.wallet;
+        else
+            return this.monitorAgent.getWallet();
     }
 
     public BlockchainDownloadProgress getBlockchainDownloadProgress(){
@@ -939,5 +1080,70 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     public Transaction getBitcoinTransaction(Sha256Hash sha256Hash){
         return this.monitorAgent.wallet.getTransaction(sha256Hash);
     }
+
+    /**
+     * This class controls if there is a difference between our blockchain and our peers.
+     * If there is, it will switch to that peer and download the blocks.
+     */
+    private class BlocksDownloadControllerAgent extends AbstractAgent implements Runnable{
+        private final PeerGroup peerGroup;
+        private final BlockChain blockChain;
+        private final int DOWNLOAD_DELTA = 5; // meaning 5 blocks of difference will trigger a switch on the peer.
+        public BlocksDownloadControllerAgent(long sleepTime, TimeUnit timeUnit, PeerGroup peerGroup, BlockChain blockChain) {
+            super(sleepTime, timeUnit);
+
+            this.peerGroup = peerGroup;
+            this.blockChain = blockChain;
+        }
+
+        @Override
+        protected Runnable agentJob() {
+            return this;
+        }
+
+        @Override
+        protected void onErrorOccur() {
+
+        }
+
+        @Override
+        public void run() {
+            int currentDownloadedBlocks = blockChain.getBestChainHeight();
+
+
+            for (Peer peer : peerGroup.getConnectedPeers()){
+                Long peerValue = peer.getBestHeight();
+               int delta =  peerValue.intValue() - currentDownloadedBlocks;
+
+                System.out.println("***CryptoNetwork*** Peer notified block difference: " + peer.getPeerBlockHeightDifference());
+
+                // if the delta is big enought, then switch.
+                if (delta > DOWNLOAD_DELTA){
+                    System.out.println("***CryptoNetwork*** Block Download agent: found more blocks on new peer.");
+                    System.out.println("Local block count is " + currentDownloadedBlocks + " peer count is " + peerValue + " (" + delta + ")");
+                    System.out.println("current download Peer: " + peerGroup.getDownloadPeer().toString());
+                    System.out.println("New download Peer: " + peer.toString());
+
+                    try {
+
+                        blockChain.add(peer.getBlock(blockChain.getChainHead().getHeader().getPrevBlockHash()).get(1, TimeUnit.MINUTES));
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    } catch (PrunedException e) {
+                        e.printStackTrace();
+                    }
+                    peer.setDownloadParameters(wallet.getEarliestKeyCreationTime(), true);
+                    peer.startBlockChainDownload();
+                }
+            }
+        }
+
+    }
+
 
 }

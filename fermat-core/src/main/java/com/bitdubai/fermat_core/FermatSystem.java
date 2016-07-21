@@ -46,9 +46,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-//import com.bitdubai.fermat_art_core.ARTPlatform;
-//import com.bitdubai.fermat_tky_core.TKYPlatform;
-
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystem</code>
  * starts all the component of the platform and manage it.
@@ -107,7 +104,6 @@ public final class FermatSystem {
         }
 
         try {
-
 
            // fermatSystemContext.registerPlatform(new ARTPlatform());
             fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
@@ -524,5 +520,16 @@ public final class FermatSystem {
 
     public void setFermatContext(FermatContext fermatContext) {
         this.fermatContext = fermatContext;
+    }
+
+    public void onDestroy() {
+        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
+        for (ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
+            try {
+                plugin.getValue().stop();
+            } catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
     }
 }

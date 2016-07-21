@@ -1,6 +1,12 @@
-var app = angular.module("serverApp",  ["chart.js"]);
+var app = angular.module("serverApp",  ["ngRoute", "ngMap", "chart.js"]);
 
- app.config(function (ChartJsProvider) {
+ app.config(function ($locationProvider, ChartJsProvider) {
+
+    $locationProvider.html5Mode({
+                                   enabled: true,
+                                   requireBase: false,
+                                   rewriteLinks: false
+                                 });
 
     // Configure all charts
     ChartJsProvider.setOptions({

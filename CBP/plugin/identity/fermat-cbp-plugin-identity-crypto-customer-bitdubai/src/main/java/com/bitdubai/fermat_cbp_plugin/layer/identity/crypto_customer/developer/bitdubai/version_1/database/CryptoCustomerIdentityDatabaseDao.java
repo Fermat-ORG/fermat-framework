@@ -24,7 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
@@ -77,11 +77,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCryptoCustomerIdentityDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
             try {
                 CryptoCustomerIdentityDatabaseFactory databaseFactory = new CryptoCustomerIdentityDatabaseFactory(pluginDatabaseSystem);
-                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = databaseFactory.createDatabase(pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCryptoCustomerIdentityDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
@@ -99,7 +99,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                                                 final String privateKey,
                                                 final DeviceUser deviceUser,
                                                 long accuracy,
-                                                Frequency frequency) throws CantCreateNewDeveloperException {
+                                                GeoFrequency frequency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(cryptoCustomer.getAlias()))
@@ -133,7 +133,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
     public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
                                              long accuracy,
-                                             Frequency frequency) throws CantUpdateCustomerIdentityException {
+                                             GeoFrequency frequency) throws CantUpdateCustomerIdentityException {
         try {
             DatabaseTable table = this.database.getTable(CRYPTO_CUSTOMER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
@@ -347,10 +347,10 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         String alias = record.getStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME);
         boolean published = Boolean.parseBoolean(record.getStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME));
         long accuracy = record.getLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME);
-        Frequency frequency = Frequency.NONE;
+        GeoFrequency frequency = GeoFrequency.NONE;
         try {
 
-            frequency = Frequency.getByCode(record.getStringValue(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME));
+            frequency = GeoFrequency.getByCode(record.getStringValue(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME));
 
         } catch (InvalidParameterException e) {
             e.printStackTrace();

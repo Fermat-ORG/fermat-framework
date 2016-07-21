@@ -2,9 +2,11 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.manager;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetImportedAddressesException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.util.BroadcastStatus;
@@ -29,7 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 6/29/16.
  */
-public interface BlockchainManager <T1, T2> {
+public interface BlockchainManager <T1, T2> extends TransactionSender<CryptoTransaction> {
     /**
      * Starts monitoring the network active networks with the list of keys passed.
      * @param requester the Vault that is passing us the Keys to monitor the networks.
@@ -177,4 +179,12 @@ public interface BlockchainManager <T1, T2> {
     BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
 
 
+    /**
+     * When a seed is imported into a vault, a bunch of addresses are generated from that seed.
+     * This method returns that list if any.
+     * @param blockchainNetworkType the network to get the list from.
+     * @return a list of CryptoAddresses
+     * @throws CantGetImportedAddressesException
+     */
+    List<CryptoAddress> getImportedAddresses(BlockchainNetworkType blockchainNetworkType);
 }

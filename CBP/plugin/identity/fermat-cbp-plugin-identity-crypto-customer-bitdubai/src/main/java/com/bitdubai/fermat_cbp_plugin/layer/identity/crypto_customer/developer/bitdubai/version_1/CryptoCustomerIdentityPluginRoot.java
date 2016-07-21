@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
@@ -52,6 +52,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.b
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerIdentityDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantListCryptoCustomerIdentitiesException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityImpl;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -133,7 +134,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
     public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage,
                                                                long accuracy,
-                                                               Frequency frequency) throws CantCreateCryptoCustomerIdentityException {
+                                                               GeoFrequency frequency) throws CantCreateCryptoCustomerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
@@ -141,7 +142,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
             CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true, accuracy, frequency);
             cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser, accuracy, frequency);
             //We will expose this identity
-            exposeIdentity(cryptoCustomer);
+//            exposeIdentity(cryptoCustomer);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_customer_creado");
 
             return cryptoCustomer;
@@ -160,7 +161,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
     }
 
     @Override
-    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile, long accuracy, Frequency frequency) throws CantUpdateCustomerIdentityException {
+    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile, long accuracy, GeoFrequency frequency) throws CantUpdateCustomerIdentityException {
         cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile, accuracy, frequency);
 
         try {
@@ -168,7 +169,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
             Location location = locationManager.getLocation();
             long refreshInterval = customer.getFrequency().getRefreshInterval();
             if( customer.isPublished() ){
-                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location, refreshInterval, customer.getAccuracy()));
+                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location, refreshInterval, customer.getAccuracy(), ProfileStatus.UNKNOWN));
             }
         } catch (CantGetIdentityException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -262,7 +263,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
                                     identity.getProfileImage(),
                                     location,
                                     refreshInterval,
-                                    identity.getAccuracy()
+                                    identity.getAccuracy(),
+                                    ProfileStatus.UNKNOWN
                             )
                     );
                 }
@@ -288,7 +290,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
         try {
             Location location = locationManager.getLocation();
             long refreshInterval = identity.getFrequency().getRefreshInterval();
-            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy()));
+            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location, refreshInterval, identity.getAccuracy(), ProfileStatus.UNKNOWN));
 
         } catch (final CantExposeIdentityException e) {
 

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
@@ -46,12 +46,12 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
     }
 
     @Override
-    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetUserException {
+    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantCreateNewIdentityAssetUserException {
         return identityAssetUserManager.createNewIdentityAssetUser(alias, profileImage, accuracy, frequency);
     }
 
     @Override
-    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetUserException {
+    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, GeoFrequency frequency) throws CantUpdateIdentityAssetUserException {
         identityAssetUserManager.updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
     }
 
@@ -95,7 +95,7 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
     }
 
     @Override
-    public Frequency getFrequencyDataDefault() {
+    public GeoFrequency getFrequencyDataDefault() {
         return identityAssetUserManager.getFrequencyDataDefault();
     }
 }

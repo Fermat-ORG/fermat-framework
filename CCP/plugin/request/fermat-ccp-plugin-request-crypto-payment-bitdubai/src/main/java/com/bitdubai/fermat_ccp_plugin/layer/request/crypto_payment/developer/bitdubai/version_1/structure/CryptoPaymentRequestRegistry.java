@@ -9,6 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformApprovalException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformRefusalException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantSendRequestException;
@@ -277,7 +279,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     }
 
     @Override
-    public void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException,
+    public void approveRequest(UUID requestId,long fee, FeeOrigin feeOrigin) throws CantApproveCryptoPaymentRequestException,
                                                       CryptoPaymentRequestNotFoundException   ,
                                                       InsufficientFundsException              {
 
@@ -296,7 +298,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.IN_APPROVING_PROCESS);
 
-            fromInApprovingProcessToPaymentProcessStarted(requestId, cryptoPayment);
+            fromInApprovingProcessToPaymentProcessStarted(requestId, cryptoPayment, fee, feeOrigin);
 
             fromPaymentProcessStartedToApproved(requestId);
 
@@ -334,7 +336,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
      * if not i set in pending response (initial state).
      */
     private void fromInApprovingProcessToPaymentProcessStarted(UUID          requestId    ,
-                                                               CryptoPayment cryptoPayment) throws CantChangeCryptoPaymentRequestStateException,
+                                                               CryptoPayment cryptoPayment,
+                                                               long fee, FeeOrigin feeOrigin) throws CantChangeCryptoPaymentRequestStateException,
             CryptoPaymentRequestNotFoundException       ,
             CantApproveCryptoPaymentRequestException    ,
             InsufficientFundsException                  {
@@ -353,7 +356,9 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     cryptoPayment.getActorType(),
                     cryptoPayment.getReferenceWallet(),
                     cryptoPayment.getNetworkType(),
-                    cryptoPayment.getCryptoCurrency()
+                    cryptoPayment.getCryptoCurrency(),
+                    fee,
+                    feeOrigin
             );
 
             cryptoPaymentRequestDao.changeState(
@@ -609,7 +614,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
                         try {
 
-                            fromInApprovingProcessToPaymentProcessStarted(cryptoPayment.getRequestId(), cryptoPayment);
+                            fromInApprovingProcessToPaymentProcessStarted(cryptoPayment.getRequestId(), cryptoPayment, BitcoinFee.SLOW.getFee(),FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
                         } catch(InsufficientFundsException                   |
                                 CantChangeCryptoPaymentRequestStateException |
@@ -636,7 +641,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     case IN_APPROVING_PROCESS:
                         try {
 
-                            fromInApprovingProcessToPaymentProcessStarted(cryptoPayment.getRequestId(), cryptoPayment);
+                            fromInApprovingProcessToPaymentProcessStarted(cryptoPayment.getRequestId(), cryptoPayment, BitcoinFee.SLOW.getFee(),FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
 
                         } catch(InsufficientFundsException                   |
                                 CantChangeCryptoPaymentRequestStateException |

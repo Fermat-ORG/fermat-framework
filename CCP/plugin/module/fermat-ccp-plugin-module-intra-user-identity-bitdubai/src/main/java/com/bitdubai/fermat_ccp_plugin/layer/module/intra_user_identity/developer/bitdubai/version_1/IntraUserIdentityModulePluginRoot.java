@@ -17,12 +17,14 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +54,8 @@ public class IntraUserIdentityModulePluginRoot extends AbstractModule implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     public IntraUserIdentityModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -129,6 +132,6 @@ public class IntraUserIdentityModulePluginRoot extends AbstractModule implements
 
     @Override
     public ModuleManager getModuleManager() throws CantGetModuleManagerException {
-        return new IntraUserIdentityModuleManager(pluginId,errorManager,pluginFileSystem,intraWalletUserIdentityManager);
+        return new IntraUserIdentityModuleManager(pluginId,errorManager,pluginFileSystem,intraWalletUserIdentityManager, locationManager);
     }
 }

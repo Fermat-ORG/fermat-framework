@@ -347,7 +347,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             Actors.INTRA_USER,
                             getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
                             businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
-                            businessTransactionRecord.getCryptoCurrency());
+                            businessTransactionRecord.getCryptoCurrency(),
+                            businessTransactionRecord.getFee(),
+                            businessTransactionRecord.getFeeOrigin());
 
                     dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
                     dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);

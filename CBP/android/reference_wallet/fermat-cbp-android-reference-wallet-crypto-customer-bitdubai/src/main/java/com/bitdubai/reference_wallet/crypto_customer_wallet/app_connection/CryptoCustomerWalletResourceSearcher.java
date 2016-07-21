@@ -17,6 +17,8 @@ public class CryptoCustomerWalletResourceSearcher extends ResourceSearcher {
         switch (id) {
             case FragmentsCommons.CONTRACT_HISTORY_FILTER_OPTION_MENU_ID:
                 return R.drawable.ccw_action_filters;
+            case FragmentsCommons.REQUEST_QUOTES_OPTION_MENU_ID:
+                return R.drawable.ccw_update_icon;
             default:
                 return 0;
         }

@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClearAssociatedCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
@@ -82,13 +82,13 @@ public class CryptoCustomerActorDao {
 
         public void initializeDatabase() throws CantInitializeCryptoCustomerActorDatabaseException {
             try {
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoCustomerActorDatabaseConstants.DATABASE_NAME);
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
                 throw new CantInitializeCryptoCustomerActorDatabaseException(cantOpenDatabaseException.getMessage());
             } catch (DatabaseNotFoundException e) {
                 CryptoCustomerActorDatabaseFactory CustomerActorDatabaseFactory = new CryptoCustomerActorDatabaseFactory(pluginDatabaseSystem);
                 try {
-                    database = CustomerActorDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                    database = CustomerActorDatabaseFactory.createDatabase(pluginId, CryptoCustomerActorDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     throw new CantInitializeCryptoCustomerActorDatabaseException(cantCreateDatabaseException.getMessage());
                 }
@@ -340,7 +340,7 @@ public class CryptoCustomerActorDao {
                     } catch (CantGetCryptoCustomerActorProfileImageException e) {
                         throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                     }
-                    ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image, 0, Frequency.NONE);
+                    ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image, 0, GeoFrequency.NONE);
                     Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(brokerPublicKey, customerPublicKey);
                     Map<Currency, Collection<Platforms>> currencies = null;
                     ActorExtraData data = new ActorExtraDataInformation(
@@ -376,7 +376,7 @@ public class CryptoCustomerActorDao {
                         } catch (CantGetCryptoCustomerActorProfileImageException e) {
                             throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                         }
-                        ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image, 0, Frequency.NONE);
+                        ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image, 0, GeoFrequency.NONE);
                         Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(brokerPublicKey, customerPublicKey);
                         Map<Currency, Collection<Platforms>> currencies = null;
                         ActorExtraData data = new ActorExtraDataInformation(
@@ -413,7 +413,7 @@ public class CryptoCustomerActorDao {
                         } catch (CantGetCryptoCustomerActorProfileImageException e) {
                             throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                         }
-                        return new ActorExtraDataIdentity(alias, publicKey, image, 0, Frequency.NONE);
+                        return new ActorExtraDataIdentity(alias, publicKey, image, 0, GeoFrequency.NONE);
                     }
                     return null;
                 }

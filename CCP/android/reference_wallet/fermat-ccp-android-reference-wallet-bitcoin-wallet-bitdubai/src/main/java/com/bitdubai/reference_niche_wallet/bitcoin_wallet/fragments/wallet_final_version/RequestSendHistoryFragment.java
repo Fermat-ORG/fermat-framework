@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -22,8 +25,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -64,6 +70,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
+    private String feeLevel = "";
+    private String feeOrigin = "";
 
 
     BlockchainNetworkType blockchainNetworkType;
@@ -106,10 +114,15 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             try {
                 bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+                if (bitcoinWalletSettings.getFeedLevel() == null)
+                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                else
+                    feeLevel = bitcoinWalletSettings.getFeedLevel();
             }catch (Exception e){
 
             }
-            onRefresh();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -140,6 +153,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -155,7 +174,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -282,7 +301,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey());
+                cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                        BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT);
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 
@@ -290,6 +310,36 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             showMessage(getActivity(), "Cant Accept or Denied Send Payment Exception- " + e.getMessage());
         }
 
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            if (id == 1) {
+//                moduleManager.launchNotification();
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
+                return true;
+            }
+
+            if (id == 4) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, appSession.getAppPublicKey());
+                return true;
+            }
+        } catch (Exception e) {
+            // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

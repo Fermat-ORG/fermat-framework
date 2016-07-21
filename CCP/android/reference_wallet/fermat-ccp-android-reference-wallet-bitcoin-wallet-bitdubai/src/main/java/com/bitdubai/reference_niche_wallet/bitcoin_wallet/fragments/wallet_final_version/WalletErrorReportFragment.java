@@ -48,6 +48,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
     private Button cancelBtn;
     private Toolbar toolbar;
     private String textToCopy;
+    private  FermatWorker worker;
 
     public static WalletErrorReportFragment newInstance() { return new WalletErrorReportFragment(); }
 
@@ -131,7 +132,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
                         progressDialog.setMessage("Please wait");
                         progressDialog.setCancelable(false);
                         progressDialog.show();
-                        FermatWorker worker = new FermatWorker() {
+                        worker = new FermatWorker() {
                             @Override
                             protected Object doInBackground() throws Exception {
                                 return getMoreData();

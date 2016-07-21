@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -49,7 +52,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     //UI
     private View noBrokersView;
-
+    private ProgressBar progressBar;
 
     public static BrokerListActivityFragment newInstance() {
         return new BrokerListActivityFragment();
@@ -79,16 +82,18 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         configureToolbar();
 
         noBrokersView = layout.findViewById(R.id.ccw_no_brokers);
+        progressBar = (ProgressBar) layout.findViewById(R.id.ccw_brokerlist_progressBar);
 
         showOrHideNoBrokersView(brokerList.isEmpty());
     }
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new BrokerListAdapter(getActivity(), brokerList);
@@ -112,7 +117,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
+        return 0;//R.id.swipe_refresh;
     }
 
     @Override
@@ -125,6 +130,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -135,10 +141,6 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
             drawable = getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors);
 
         toolbar.setBackground(drawable);
-
-        if (toolbar.getMenu() != null) {
-            toolbar.getMenu().clear();
-        }
     }
 
     @Override
@@ -151,6 +153,28 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     public void onLongItemClickListener(BrokerIdentityBusinessInfo data, int position) {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == FragmentsCommons.REQUEST_QUOTES_OPTION_MENU_ID) {
+            try {
+                progressBar.setVisibility(View.VISIBLE);
+                moduleManager.requestQuotes();
+                Toast.makeText(getActivity(), "Request for quotations sent", Toast.LENGTH_LONG).show();
+
+            } catch (CantGetCryptoBrokerListException e) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+
+            progressBar.setVisibility(View.GONE);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -175,10 +199,11 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+            //swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 brokerList = (ArrayList) result[0];
                 if (adapter != null)
@@ -193,7 +218,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
         if (isAttached) {
-            swipeRefreshLayout.setRefreshing(false);
+            //swipeRefreshLayout.setRefreshing(false);
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
@@ -202,9 +227,11 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         if (show) {
             recyclerView.setVisibility(View.GONE);
             noBrokersView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noBrokersView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
     }
 }

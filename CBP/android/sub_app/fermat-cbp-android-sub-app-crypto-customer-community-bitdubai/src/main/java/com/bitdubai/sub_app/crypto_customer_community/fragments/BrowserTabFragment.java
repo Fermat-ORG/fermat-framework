@@ -1,7 +1,13 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,7 +31,9 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
 import com.bitdubai.fermat_api.FermatException;
@@ -35,8 +43,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
@@ -51,6 +61,8 @@ import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
+
 
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
@@ -62,7 +74,7 @@ public class BrowserTabFragment
         implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreDataListener, GeolocationDialog.AdapterCallback {
 
     //Constants
-    private static final int MAX = 15;
+    private static final int MAX = 10;
     protected static final String TAG = "BrowserTabFragment";
 
     //Managers
@@ -88,7 +100,12 @@ public class BrowserTabFragment
     private RelativeLayout locationFilterBar;
     private FermatTextView locationFilterBarCountry;
     private FermatTextView locationFilterBarPlace;
+    private Toolbar toolbar;
 
+    //DATA
+    private ActiveActorIdentityInformation selectedActorIdentity;
+    //Obtain Settings or create new Settings if first time opening subApp
+    CryptoCustomerCommunitySettings appSettings;
 
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
@@ -103,23 +120,31 @@ public class BrowserTabFragment
 
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
+        toolbar = getToolbar();
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+        loadSelectedActorIdentityInBackground();
+
 
         loadSettings();
 
         //Check if a default identity is configured
         try {
             identity = moduleManager.getSelectedActorIdentity();
-        } catch (CantGetSelectedActorIdentityException e) {
-            launchActorCreationDialog = true;   //There are no identities in device
-        } catch (ActorIdentityNotSelectedException e) {
-            launchListIdentitiesDialog = true;  //There are identities in device, but none selected
+            if (identity == null) {
+                List<CryptoCustomerCommunitySelectableIdentity> identities = moduleManager.listSelectableIdentities();
+                if (identities.isEmpty())
+                    launchActorCreationDialog = true; //There are no identities in device
+                else
+                    launchListIdentitiesDialog = true; //There are identities in device, but none selected
+            }
+
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException | CantListIdentitiesToSelectException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
     private void loadSettings() {
-        //Obtain Settings or create new Settings if first time opening subApp
-        CryptoCustomerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -162,7 +187,10 @@ public class BrowserTabFragment
             }
         });
 
-        launchPresentationDialog();
+        if (identity == null)
+            launchPresentationDialog();
+        else
+            onRefresh();
     }
 
     @SuppressWarnings("deprecation")
@@ -220,15 +248,13 @@ public class BrowserTabFragment
 
     @Override
     public RecyclerView.OnScrollListener getScrollListener() {
-        //TODO: Descomentar esto para activar la paginacion cuando esta funcionando en los Actor Network Service
-//        if (scrollListener == null) {
-//            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
-//            endlessScrollListener.setOnLoadMoreDataListener(this);
-//            scrollListener = endlessScrollListener;
-//        }
-//
-//        return scrollListener;
-        return null;
+        if (scrollListener == null) {
+            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+            endlessScrollListener.setOnLoadMoreDataListener(this);
+            scrollListener = endlessScrollListener;
+        }
+
+        return scrollListener;
     }
 
     @Override
@@ -265,17 +291,6 @@ public class BrowserTabFragment
         });
     }
 
-    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
-        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
-        for (CryptoCustomerCommunityInformation item : baseList) {
-            if (item.getAlias().contains(filterText)) {
-                filteredList.add(item);
-            }
-        }
-
-        return filteredList;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -287,7 +302,8 @@ public class BrowserTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setVIewColor(R.color.ccc_color_dialog)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -303,10 +319,6 @@ public class BrowserTabFragment
                     errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                             UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
-
-            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                //TODO: colocar aqui el codigo para mostrar el SearchView
-                return true;
         }
 
         return false;
@@ -350,15 +362,15 @@ public class BrowserTabFragment
     @Override
     public List<CryptoCustomerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
-
-        try {
-            offset = pos;
-            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias,  MAX, offset);
-            dataSet.addAll(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isVisible) {
+            try {
+                offset = pos;
+                List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias, MAX, offset);
+                dataSet.addAll(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
         return dataSet;
     }
 
@@ -376,6 +388,7 @@ public class BrowserTabFragment
                         cryptoCustomerCommunityInformationList.clear();
                         cryptoCustomerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.changeDataSet(cryptoCustomerCommunityInformationList);
+                        ((EndlessScrollListener) scrollListener).notifyDataSetChanged();
                     } else {
                         cryptoCustomerCommunityInformationList.addAll((ArrayList) result[0]);
                         adapter.notifyItemRangeInserted(offset, cryptoCustomerCommunityInformationList.size() - 1);
@@ -399,8 +412,98 @@ public class BrowserTabFragment
         Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onFragmentFocus() {
+        super.onFragmentFocus();
+
+        onRefresh();
+    }
+
+
+    private void loadSelectedActorIdentityInBackground() {
+
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                if (selectedActorIdentity == null)
+                    return moduleManager.getSelectedActorIdentity();
+                return selectedActorIdentity;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                try {
+                    selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
+                    if (selectedActorIdentity != null) {
+                        Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
+                        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
+                        toolbar.setLogo(bitmapDrawable);
+                    }
+//                    else {
+//                        Log.e(TAG, "selectedActorIdentity is null");
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                final ErrorManager errorManager = appSession.getErrorManager();
+                errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            }
+        });
+
+        fermatWorker.execute();
+    }
+
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
+        // TODO Auto-generated method stub
+        int targetWidth = width;
+        int targetHeight = width;
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+                targetHeight, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(targetBitmap);
+        Path path = new Path();
+        path.addCircle(((float) targetWidth - 1) / 2,
+                ((float) targetHeight - 1) / 2,
+                (Math.min(((float) targetWidth),
+                        ((float) targetHeight)) / 2),
+                Path.Direction.CCW);
+        canvas.clipPath(path);
+        Bitmap sourceBitmap = scaleBitmapImage;
+        canvas.drawBitmap(sourceBitmap,
+                new Rect(0, 0, sourceBitmap.getWidth(),
+                        sourceBitmap.getHeight()),
+                new Rect(0, 0, targetWidth,
+                        targetHeight), null);
+        return targetBitmap;
+    }
+
     private void launchPresentationDialog() {
         try {
+            DialogInterface.OnDismissListener onDismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    try {
+                        identity = moduleManager.getSelectedActorIdentity();
+                        loadSelectedActorIdentityInBackground();
+                        if (identity == null)
+                            getActivity().onBackPressed();
+                        else {
+                            invalidate();
+                            onRefresh();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
             if (launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
@@ -411,33 +514,20 @@ public class BrowserTabFragment
                         .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_ccc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_ccc_launch_action_creation_name_right)
-                        .setIsCheckEnabled(true)
+                        .setVIewColor(R.color.ccc_color_dialog)
+                        .setIsCheckEnabled(false)
                         .build();
 
-                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
-                    }
-                });
-
+                presentationDialog.setOnDismissListener(onDismissListener);
                 presentationDialog.show();
 
             } else if (launchListIdentitiesDialog) {
                 ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-                listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
-                    }
-                });
 
+                listIdentitiesDialog.setOnDismissListener(onDismissListener);
                 listIdentitiesDialog.show();
 
             } else {
-                invalidate();
                 onRefresh();
             }
 
@@ -464,11 +554,15 @@ public class BrowserTabFragment
         }
     }
 
-    @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
+    private List<CryptoCustomerCommunityInformation> filterList(String filterText, List<CryptoCustomerCommunityInformation> baseList) {
+        final ArrayList<CryptoCustomerCommunityInformation> filteredList = new ArrayList<>();
+        for (CryptoCustomerCommunityInformation item : baseList) {
+            if (item.getAlias().toLowerCase().contains(filterText.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
 
-        onRefresh();
+        return filteredList;
     }
 }
 

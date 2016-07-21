@@ -65,6 +65,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
 
+        ActorCallMsgRespond actorCallMsgRespond;
         try {
 
             System.out.println("***** ACTOR CALL REQUEST PROCESSOR: ENTERING IN TRY");
@@ -85,10 +86,14 @@ public class ActorCallRequestProcessor extends PackageProcessor {
 
                 ResultDiscoveryTraceActor traceActor = getActor(messageContent.getActorTo().getIdentityPublicKey());
 
+                if (traceActor != null)
+                    actorCallMsgRespond = new ActorCallMsgRespond(messageContent.getNetworkServiceType(), traceActor, ActorCallMsgRespond.STATUS.SUCCESS, ActorCallMsgRespond.STATUS.SUCCESS.toString());
+                else
+                    actorCallMsgRespond = new ActorCallMsgRespond(null, null, ActorCallMsgRespond.STATUS.FAIL, "Actor data could not be found.");
+
                 /*
                  * If all ok, respond whit success message
                  */
-                ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(messageContent.getNetworkServiceType(), traceActor, ActorCallMsgRespond.STATUS.SUCCESS, ActorCallMsgRespond.STATUS.SUCCESS.toString());
                 Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -98,7 +103,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
 
             }
 
-        }catch (Exception exception){
+        } catch (Exception exception){
 
             try {
 
@@ -108,7 +113,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(null, null, ActorsProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage());
+                actorCallMsgRespond = new ActorCallMsgRespond(null, null, ActorCallMsgRespond.STATUS.FAIL, exception.getLocalizedMessage());
                 Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -132,7 +137,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
      */
     private ResultDiscoveryTraceActor getActor(String publicKey) throws CantReadRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
-        ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(publicKey);
+            ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(publicKey);
 
             ActorProfile actorProfile = new ActorProfile();
             actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 import java.io.Serializable;
@@ -19,9 +20,13 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	public static final String ADD_TRANSACTION_TYPE = "ADD";
 
-	public static final String DELETE_TRANSACTION_TYPE = "DELETE";
+	public static final String DELETE_TRANSACTION_TYPE = "DEL";
 
-	public static final String UPDATE_TRANSACTION_TYPE = "UPDATE";
+	public static final String UPDATE_TRANSACTION_TYPE = "UPD";
+
+	public static final String UPDATE_GEOLOCATION_TRANSACTION_TYPE = "GEO";
+
+	public static final String UPDATE_LAST_CONNECTION_TRANSACTION_TYPE = "LST";
 
 	private String hashId;
 
@@ -35,7 +40,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private String identityPublicKey;
 
-	private NetworkNodeCommunicationDeviceLocation lastLocation;
+	private Location lastLocation;
 
 	private String name;
 
@@ -45,13 +50,35 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private byte[] photo;
 
+	private byte[] thumbnail;
+
 	private String transactionType;
+
+	private Timestamp generationTime;
+
+	private Timestamp lastConnection;
 
 	public ActorsCatalogTransaction() {
 		super();
-		this.hashId = UUID.randomUUID().toString();
-		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
-        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
+
+		this.hashId         = UUID.randomUUID().toString();
+		this.generationTime = new Timestamp(System.currentTimeMillis());
+	}
+
+	public void setGenerationTime(Timestamp generationTime) {
+		this.generationTime = generationTime;
+	}
+
+	public Timestamp getGenerationTime() {
+		return generationTime;
+	}
+
+	public Timestamp getLastConnection() {
+		return lastConnection;
+	}
+
+	public void setLastConnection(Timestamp lastConnection) {
+		this.lastConnection = lastConnection;
 	}
 
 	public String getTransactionType() {
@@ -142,16 +169,24 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		this.photo = photo;
 	}
 
+	public byte[] getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(byte[] thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
 	@Override
 	public String getId() {
 		return hashId;
 	}
 
-	public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+	public Location getLastLocation() {
 		return lastLocation;
 	}
 
-	public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+	public void setLastLocation(Location lastLocation) {
 		this.lastLocation = lastLocation;
 	}
 
@@ -183,6 +218,8 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 			return false;
 		if (getHostedTimestamp() != null ? !getHostedTimestamp().equals(that.getHostedTimestamp()) : that.getHostedTimestamp() != null)
 			return false;
+		if (getLastConnection() != null ? !getLastConnection().equals(that.getLastConnection()) : that.getLastConnection() != null)
+			return false;
 		if (getIdentityPublicKey() != null ? !getIdentityPublicKey().equals(that.getIdentityPublicKey()) : that.getIdentityPublicKey() != null)
 			return false;
 		if (getLastLocation() != null ? !getLastLocation().equals(that.getLastLocation()) : that.getLastLocation() != null)
@@ -194,6 +231,8 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		if (getClientIdentityPublicKey() != null ? !getClientIdentityPublicKey().equals(that.getClientIdentityPublicKey()) : that.getClientIdentityPublicKey() != null)
 			return false;
 		if (!Arrays.equals(getPhoto(), that.getPhoto())) return false;
+		if (!Arrays.equals(getThumbnail(), that.getThumbnail())) return false;
+
 		return !(getTransactionType() != null ? !getTransactionType().equals(that.getTransactionType()) : that.getTransactionType() != null);
 
 	}
@@ -205,12 +244,14 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		result = 31 * result + (getAlias() != null ? getAlias().hashCode() : 0);
 		result = 31 * result + (getExtraData() != null ? getExtraData().hashCode() : 0);
 		result = 31 * result + (getHostedTimestamp() != null ? getHostedTimestamp().hashCode() : 0);
+		result = 31 * result + (getLastConnection() != null ? getLastConnection().hashCode() : 0);
 		result = 31 * result + (getIdentityPublicKey() != null ? getIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getLastLocation() != null ? getLastLocation().hashCode() : 0);
 		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
 		result = 31 * result + (getNodeIdentityPublicKey() != null ? getNodeIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getClientIdentityPublicKey() != null ? getClientIdentityPublicKey().hashCode() : 0);
 		result = 31 * result + (getPhoto() != null ? Arrays.hashCode(getPhoto()) : 0);
+		result = 31 * result + (getThumbnail() != null ? Arrays.hashCode(getThumbnail()) : 0);
 		result = 31 * result + (getTransactionType() != null ? getTransactionType().hashCode() : 0);
 		return result;
 	}

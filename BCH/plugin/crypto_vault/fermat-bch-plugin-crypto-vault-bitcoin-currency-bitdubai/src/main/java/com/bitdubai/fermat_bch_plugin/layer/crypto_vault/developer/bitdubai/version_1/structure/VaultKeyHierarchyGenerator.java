@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
@@ -33,7 +36,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchyGenerator implements Runnable {
+public class VaultKeyHierarchyGenerator implements Runnable {
     /**
      * Unique seed used to generate all the hierarchies
      */
@@ -64,6 +67,12 @@ class VaultKeyHierarchyGenerator implements Runnable {
      */
     private VaultKeyHierarchy vaultKeyHierarchy;
 
+    /**
+     * if the hierarhcy we are creating and maintaining is from an imported seed, then we are not maintining it. just execute
+     * the Maintainer agent once.
+     */
+    private final boolean isSeedImported;
+
 
     /**
      * Platform services
@@ -72,13 +81,16 @@ class VaultKeyHierarchyGenerator implements Runnable {
     private BlockchainManager<ECKey, Transaction> bitcoinNetworkManager;
     UUID pluginId;
 
+
+
     /**
      * Constructor
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem,  BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, boolean isSeedImported, PluginDatabaseSystem pluginDatabaseSystem,  BlockchainManager<ECKey, Transaction> bitcoinNetworkManager, UUID pluginId) {
         this.seed = seed;
+        this.isSeedImported = isSeedImported;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.pluginId = pluginId;
@@ -113,11 +125,18 @@ class VaultKeyHierarchyGenerator implements Runnable {
 
         /**
          * I will get from the database the list of accounts to create
-         * and add them to the hierarchy
+         * and add them to the hierarchy.
          */
-        for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
-            vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
+        if (this.isSeedImported){
+            HierarchyAccount importedSeedAccount = new HierarchyAccount(0, "ImportedSeed", HierarchyAccountType.IMPORTED_ACCOUNT);
+            vaultKeyHierarchy.addVaultAccount(importedSeedAccount);
+        } else {
+            for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
+                vaultKeyHierarchy.addVaultAccount(hierarchyAccount);
+            }
         }
+
+
 
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
@@ -125,8 +144,21 @@ class VaultKeyHierarchyGenerator implements Runnable {
         vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
             vaultKeyHierarchyMaintainer.start();
+            if (!vaultKeyHierarchyMaintainer.isRunning())
+                throw new CantLoadHierarchyAccountsException(CantLoadHierarchyAccountsException.DEFAULT_MESSAGE, null, "Maintainer Agent not started.", "Agent issue");
+
+            /**
+             * If we are importing a seed, will wait some minutes before stopping the Maintainer.
+             */
+            if (this.isSeedImported){
+                Thread.sleep(5000);
+                vaultKeyHierarchyMaintainer.stop();
+            }
+
         } catch (CantStartAgentException e) {
             // I will log this error for now.
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

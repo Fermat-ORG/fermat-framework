@@ -64,22 +64,25 @@
             android:layout_centerVertical="true"
             />
     </RelativeLayout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/community_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F9F9F9"
         android:layout_below="@+id/green_bar_layout"
+        android:layout_above="@+id/show_more_layout"
         android:orientation="vertical">
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#F9F9F9" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <!--<android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content">-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/gridView"
@@ -88,7 +91,7 @@
             android:divider="@drawable/cht_list_divider"
             tools:listitem="@layout/cht_comm_world_item"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+  <!--  </android.support.v4.widget.SwipeRefreshLayout>-->
     <!--Empty view-->
     <LinearLayout
         android:id="@+id/empty_view"
@@ -237,5 +240,38 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/progressBar"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+<RelativeLayout
+    android:id="@+id/show_more_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:visibility="gone"
+    >
+
+    <Button
+        android:layout_centerVertical="true"
+        android:layout_width="150dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:text="Show more"
+        android:textColor="#47BF73"
+        android:textAllCaps="false"
+        android:textSize="12dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/cht_comm_button_add_contact_bg"
+        android:shadowRadius="0"
+        android:id="@+id/show_more_button"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        />
 </RelativeLayout>
 </RelativeLayout>

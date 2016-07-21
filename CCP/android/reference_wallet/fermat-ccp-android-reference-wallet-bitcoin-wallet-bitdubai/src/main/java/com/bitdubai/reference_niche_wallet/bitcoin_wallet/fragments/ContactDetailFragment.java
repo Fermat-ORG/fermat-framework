@@ -327,7 +327,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                        try {
 
 
-                           if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress()== null){
+                           if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType)== null){
 
 
                            cryptoWallet.sendAddressExchangeRequest(

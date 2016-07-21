@@ -95,6 +95,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
         if (blocksLeft % 1000 == 0)
+            System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft + ". Block date: " + block.getTime());
+
+        if (blocksLeft < 50)
             System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
 
 
@@ -104,8 +107,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         blockchainDownloadProgress.setPendingBlocks(blocksLeft);
         blockchainDownloadProgress.setLastBlockDownloadTime(block.getTimeSeconds());
 
-        if (blockchainDownloadProgress.getTotalBlocks() == 0)
-            blockchainDownloadProgress.setTotalBlocks(blocksLeft);
 
         blockchainDownloadProgress.setDownloader(peer.toString());
 

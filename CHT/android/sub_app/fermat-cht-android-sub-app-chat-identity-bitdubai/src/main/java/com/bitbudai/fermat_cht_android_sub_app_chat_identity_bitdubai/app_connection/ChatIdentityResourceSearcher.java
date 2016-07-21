@@ -10,9 +10,9 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
  */
 public class ChatIdentityResourceSearcher extends ResourceSearcher {
 
-    @Override
-    public int obtainResDrawable(Context context, int id) {
+    public int obtainResDrawable(Context context,int id){
         int resId = 0;
+
         switch (id){
             case 7:
                 resId = R.drawable.cht_ic_back_buttom;;

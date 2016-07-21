@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
@@ -456,7 +457,10 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 actorToType,
                 actorFromType,
                 blockchainNetworkType,
-                cryptoCurrency);
+                cryptoCurrency,
+                0,
+                FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT,
+                amount);
 
         return bitcoinLossProtectedWalletTransactionRecord;
 

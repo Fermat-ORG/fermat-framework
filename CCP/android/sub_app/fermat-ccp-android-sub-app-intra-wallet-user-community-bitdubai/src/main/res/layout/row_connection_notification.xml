@@ -1,72 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#010c12"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="330dp"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_border_shadow"
+            android:paddingLeft="20dp"
+            android:layout_marginLeft="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_below="@+id/img_layout"
+            android:layout_alignParentStart="false"
+            android:layout_alignBottom="@+id/img_layout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="165dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingLeft="4dp"
+                    android:singleLine="true"
+                    android:text="UserName"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText,RtlHardcoded"
+                    android:paddingTop="5dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        tools:ignore="ContentDescription"
+                        android:id="@+id/imageView"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ccp_geolacation_light_icon"
+                        android:layout_gravity="center"
+                        android:paddingBottom="5dp" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:id="@+id/notification_location"
+                        android:layout_gravity="center"
+                        android:text="City - State"
+                        android:textSize="12dp"
+                        android:textColor="#aaaaab"
+                        android:layout_weight="0.70"
+                        android:paddingTop="2dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableRight="@drawable/ic_profile_connect"
+                android:ellipsize="end"
+                android:gravity="center_vertical|right"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="reception time"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText,RtlHardcoded"
+                android:textColor="#aaeae5"
+                android:layout_gravity="center"
+                android:editable="false"
+                android:id="@+id/reception_time"
+                android:paddingTop="14dp" />
+
+        </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/bg_circula_friend_list">
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:background="@drawable/circleuser_icon"
+            android:id="@+id/img_layout">
 
             <ImageView
                 android:id="@+id/imageView_avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                android:background="@drawable/photocontact_icon" />
+
         </RelativeLayout>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="#010c12"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
-            android:singleLine="true"
-            android:text="UserName"
-            android:textColor="#0072bb"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="#010c12"
-            android:drawableRight="@drawable/ic_profile_connect"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="wants to connect with you"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:background="#ffffff" />
 
 </LinearLayout>

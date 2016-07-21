@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,13 +47,16 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CreateIdentityWorker;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 
 
@@ -77,6 +81,9 @@ implements FermatWorkerCallBack{
     private int maxLenghtTextCount = 30;
     FermatTextView textCount;
 
+    IdentityCustomerPreferenceSettings settings;
+    boolean isGpsDialogEnable;
+
     private ExecutorService executor;
 
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -94,28 +101,35 @@ implements FermatWorkerCallBack{
         super.onCreate(savedInstanceState);
 
 
-        //If we landed here from CryptoCustomerImageCropperFragment, save the cropped Image.
+        //If we landed here from CryptoCustomerImageCropperFragment or geo settings fragment
+        //Use the cropped image, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.CROPPED_IMAGE) != null) {
             identityImageByteArray = (byte[]) appSession.getData(FragmentsCommons.CROPPED_IMAGE);
             cryptoCustomerBitmap = BitmapFactory.decodeByteArray(identityImageByteArray, 0, identityImageByteArray.length);
             appSession.removeData(FragmentsCommons.CROPPED_IMAGE);
-
-        } else if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null) {
-            cryptoCustomerBitmap = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
-            identityImageByteArray = ImagesUtils.toByteArray(cryptoCustomerBitmap);
-            appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
         }
 
+        //And the customer name, if there is one (!=null)
         if (appSession.getData(FragmentsCommons.CUSTOMER_NAME) != null) {
             cryptoCustomerName = (String) appSession.getData(FragmentsCommons.CUSTOMER_NAME);
             appSession.removeData(FragmentsCommons.CUSTOMER_NAME);
         }
 
-        //Check if GPS is on and coordinate are fine
+        //Check if GPS is on and coordinates are fine
         try{
             location = appSession.getModuleManager().getLocation();
         }catch (Exception e){
             e.printStackTrace();
+        }
+
+        try {
+            isGpsDialogEnable=true;
+            settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            isGpsDialogEnable = settings.isGpsDialogEnabled();
+        } catch (Exception e) {
+            settings = new IdentityCustomerPreferenceSettings();
+            settings.setGpsDialogEnabled(true);
+            isGpsDialogEnable=true;
         }
 
         turnGPSOn();
@@ -150,7 +164,7 @@ implements FermatWorkerCallBack{
         mCustomerName.performClick();
         mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
         mCustomerName.addTextChangedListener(textWatcher);
-        textCount.setText(String.valueOf(maxLenghtTextCount));
+        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.getText().length()));
 
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -178,6 +192,8 @@ implements FermatWorkerCallBack{
 
         mCustomerName.requestFocus();
 
+        textCount.setText(String.valueOf(maxLenghtTextCount - mCustomerName.length()));
+
         checkGPSOn();
 
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -197,11 +213,6 @@ implements FermatWorkerCallBack{
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final int menuItemId = item.getItemId();
 
@@ -211,8 +222,10 @@ implements FermatWorkerCallBack{
                 return true;
 
             case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
+
+                //Save customer name and cropped image
                 appSession.setData(FragmentsCommons.CUSTOMER_NAME, mCustomerName.getText().toString());
-                appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoCustomerBitmap);
+                appSession.setData(FragmentsCommons.CROPPED_IMAGE, identityImageByteArray);
 
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY, appSession.getAppPublicKey());
                 return true;
@@ -249,8 +262,12 @@ implements FermatWorkerCallBack{
                             }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
-                        //Bundle extras = data.getExtras();
-                        cryptoCustomerBitmap = (Bitmap) extras.get("data");
+                        Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
+                        if (reducedSizeBitmap != null) {
+                            cryptoCustomerBitmap = reducedSizeBitmap;
+                        }
+//                        Bundle extras = data.getExtras();
+//                        cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     }
                     break;
                 case REQUEST_LOAD_IMAGE:
@@ -291,7 +308,7 @@ implements FermatWorkerCallBack{
 
         } else {
             final int accuracy = getAccuracyData();
-            final Frequency frequency = getFrequencyData();
+            final GeoFrequency frequency = getFrequencyData();
 
             FermatWorker fermatWorker = new CreateIdentityWorker(getActivity(), appSession.getModuleManager(), this,
                     customerAlias, identityImageByteArray, accuracy, frequency);
@@ -379,9 +396,67 @@ implements FermatWorkerCallBack{
                 (int) appSession.getData(FragmentsCommons.ACCURACY_DATA);
     }
 
-    private Frequency getFrequencyData() {
-        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
-                (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    private GeoFrequency getFrequencyData() {
+        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? GeoFrequency.NONE :
+                (GeoFrequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    }
+
+    private Bitmap getBitmap(String path) {
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            in = getActivity().getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+
+            Bitmap b = null;
+            in = getActivity().getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE
+                        / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
+                    b.getHeight());
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
+        }
     }
 
     public void turnGPSOn() {
@@ -458,10 +533,15 @@ implements FermatWorkerCallBack{
     private void checkGPSOn(){
         if(location!= null){
             if(location.getLongitude()==0 || location.getLatitude()==0){
-                turnOnGPSDialog();
+                if (isGpsDialogEnable ) {
+                    turnOnGPSDialog();
+                }
+
             }
         }else
+        if (isGpsDialogEnable) {
             turnOnGPSDialog();
+        }
     }
 
     public void turnOnGPSDialog() {
@@ -471,8 +551,11 @@ implements FermatWorkerCallBack{
                     .setBody(R.string.cbp_customer_identity_gps)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_identity_customer)
+                    .setVIewColor(R.color.ccc_color_dialog_identity)
                     .build();
             pd.show();
+            settings.setGpsDialogEnabled(false);
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
         } catch (Exception e) {
             e.printStackTrace();
         }

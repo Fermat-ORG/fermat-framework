@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -37,16 +38,20 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private static final int TYPE_ITEM_AMOUNT_TO_PAY = 6;
     private static final int TYPE_FOOTER = 5;
 
+
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
     private List <IndexInfoSummary> marketRateList;
+    private boolean walletUser = false;
 
 
-    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation ) {
+
+    public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation, boolean walletUser ) {
         super(context);
 
         this.negotiationInformation = negotiationInformation;
+        this.walletUser = walletUser;
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
@@ -54,6 +59,14 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
 
     public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo) {
         this.negotiationInformation = negotiationInfo;
+
+        final List<ClauseInformation> items = buildListOfItems();
+        super.changeDataSet(items);
+    }
+
+    public void changeDataSet(EmptyCustomerBrokerNegotiationInformation negotiationInfo, boolean walletUser) {
+        this.negotiationInformation = negotiationInfo;
+        this.walletUser = walletUser;
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
@@ -80,13 +93,19 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
                 return new AmountToBuyViewHolder(itemView);
 
             case TYPE_ITEM_AMOUNT_TO_PAY:
-                final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
-                amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
-                return amountToPayViewHolder;
+
+                    final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
+                    amountToPayViewHolder.setPaymentBuy(Boolean.FALSE);
+                    return amountToPayViewHolder;
+
 
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView);
                 footerViewHolder.setListener(footerListener);
+
+//                if(this.walletUser == false)
+//                    footerViewHolder.HideButtonsWalletUser();
+
                 return footerViewHolder;
 
             default:

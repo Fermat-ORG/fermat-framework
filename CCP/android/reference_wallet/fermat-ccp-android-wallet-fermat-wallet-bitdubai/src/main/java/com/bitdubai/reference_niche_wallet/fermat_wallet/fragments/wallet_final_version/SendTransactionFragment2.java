@@ -373,12 +373,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         }catch (Exception e){
             e.printStackTrace();
         }
-       /* final int sdk = android.os.Build.VERSION.SDK_INT;
+        final int sdk = android.os.Build.VERSION.SDK_INT;
         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
         } else {
             container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
-        }*/
+        }
 
         final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
@@ -480,14 +480,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
             // Give the TabLayout the ViewPager
             tabLayout.setupWithViewPager(vpPager);
+            tabLayout.setLeft(5);
+            tabLayout.setTop(5);
 
         } catch (CantGetCurrencyExchangeProviderException e) {
             e.printStackTrace();
         }
-
-
-
-
 
         long balance = 0;
 
@@ -502,115 +500,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         updateBalances();
     }
 
-    /*private String getWalletAddress(String actorPublicKey) {
-        String walletAddress="";
-        //noinspection TryWithIdenticalCatches
-        try {
-            CryptoAddress cryptoAddress = moduleManager.requestAddressToKnownUser(
-                    moduleManager.getSelectedActorIdentity().getPublicKey(),
-                    Actors.INTRA_USER,
-                    actorPublicKey,
-                    Actors.EXTRA_USER,
-                    Platforms.CRYPTO_CURRENCY_PLATFORM,
-                    VaultType.CRYPTO_CURRENCY_VAULT,
-                    "BITV",
-                    appSession.getAppPublicKey(),
-                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
-                    blockchainNetworkType
-            );
-            walletAddress = cryptoAddress.getAddress();
-        } catch (CantRequestFermatAddressException e) {
-            // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-
-        } catch (CantGetSelectedActorIdentityException e) {
-            e.printStackTrace();
-        } catch (ActorIdentityNotSelectedException e) {
-            e.printStackTrace();
-        }
-        return walletAddress;
-    }*/
-
-    /*public void GET(@SuppressWarnings("UnusedParameters") String url, final Context context){
-        final Handler mHandler = new Handler();
-        try {
-            if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String receivedAddress = "";
-                        final HttpClient Client = new DefaultHttpClient();
-                        //noinspection TryWithIdenticalCatches
-                        try {
-                            // Create Request to server and get response
-                            String SetServerString;
-                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/address/");
-                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                            SetServerString = Client.execute(httpget, responseHandler);
-                            // Show response on activity
-
-                            receivedAddress = SetServerString;
-                        } catch (ClientProtocolException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        final String finalReceivedAddress = receivedAddress;
-
-                        String response = "";
-                        try {
-                            String SetServerString;
-                            CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
-                            FermatWalletWalletContact cryptoWalletWalletContact = null;
-                            try {
-                                cryptoWalletWalletContact = moduleManager.createWalletContact(
-                                        cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
-                            } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
-                                try {
-                                    cryptoWalletWalletContact = moduleManager.findWalletContactByName(
-                                            "regtest_bitcoins", appSession.getAppPublicKey(), moduleManager.getSelectedActorIdentity().getPublicKey());
-                                } catch (CantFindWalletContactException |
-                                        WalletContactNotFoundException  e3) {
-                                    e.printStackTrace();
-                                } catch (CantGetSelectedActorIdentityException e1) {
-                                    e1.printStackTrace();
-                                } catch (ActorIdentityNotSelectedException e1) {
-                                    e1.printStackTrace();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            assert cryptoWalletWalletContact != null;
-                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
-                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                            SetServerString = Client.execute(httpget, responseHandler);
-
-                            response = SetServerString;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-
-                        final String finalResponse = response;
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!finalResponse.equals("transaccion fallida"))
-                                    Toast.makeText(context, "Regtest bitcoin arrived", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                });
-                thread.start();
-            }
-        } catch (CantGetBalanceException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -1018,103 +907,5 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     }
 
 
-
-/*   private void getAndShowMarketExchangeRateData(final View container) {
-
-        final int MAX_DECIMAL_FOR_RATE = 2;
-        final int MIN_DECIMAL_FOR_RATE = 2;
-
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
-            @Override
-            protected Object doInBackground()  {
-
-                ExchangeRate rate = null;
-                try{
-
-                    //default Exchange rate Provider
-
-                    if(moduleManager.getExchangeProvider()==null) {
-                        List<ExchangeRateProvider> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
-
-                        exchangeProviderId = providers.get(0).getProviderId();
-                        moduleManager.setExchangeProvider(exchangeProviderId);
-
-                    }
-                    else
-                    {
-                        exchangeProviderId =moduleManager.getExchangeProvider();
-                    }
-
-
-                    rate =  moduleManager.getCurrencyExchange(exchangeProviderId);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return rate;
-            }
-        };
-
-        fermatWorker.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                if (result != null && result.length > 0) {
-
-                    ExchangeRate rate = (ExchangeRate) result[0];
-                    if(rate != null)
-                    {
-                        // progressBar.setVisibility(View.GONE);
-                        txt_rate_amount.setText("1 BTC = " + String.valueOf(
-                                WalletUtils.formatAmountStringWithDecimalEntry(
-                                        rate.getPurchasePrice(),
-                                        MAX_DECIMAL_FOR_RATE,
-                                        MIN_DECIMAL_FOR_RATE)) + " USD");
-
-                        //get available balance to actual exchange rate
-                        actuaExchangeRate = Double.parseDouble(
-                                WalletUtils.formatAmountStringWithDecimalEntry(rate.getPurchasePrice(),
-                                        MAX_DECIMAL_FOR_RATE,
-                                        MIN_DECIMAL_FOR_RATE));
-
-                        appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, actuaExchangeRate);
-
-                        updateBalances();
-
-                    }
-                    else {
-                        //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                        //dialog_error.show();
-                    }
-
-
-                }
-                else {
-                    //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                    //dialog_error.show();
-                    //makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                //  progressBar.setVisibility(View.GONE);
-
-                txt_rate_amount.setVisibility(View.GONE);
-
-                ErrorManager errorManager = appSession.getErrorManager();
-                if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                else
-                    Log.e("Exchange Rate", ex.getMessage(), ex);
-
-                //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                //dialog_error.show();
-            }
-        });
-
-        fermatWorker.execute();
-    }
-*/}
+}
 

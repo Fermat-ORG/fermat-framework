@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.event_handler.CustomerAckOnlineMerchandiseRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseMonitorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
@@ -109,6 +111,16 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
     public CustomerAckOnlineMerchandisePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
+
+    /**
+     * Represents the plugin processor agent
+     */
+    CustomerAckOnlineMerchandiseMonitorAgent2 processorAgent;
+
+    //Agent configuration
+    private final long SLEEP_TIME = 10000;
+    private final long DELAY_TIME = 1000;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
@@ -229,8 +241,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             /**
              * Init monitor Agent
              */
-
-            CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent = new CustomerAckOnlineMerchandiseMonitorAgent(
+            /*CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent = new CustomerAckOnlineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     this,
@@ -240,7 +251,20 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     customerBrokerPurchaseNegotiationManager);
-            customerAckOnlineMerchandiseMonitorAgent.start();
+            customerAckOnlineMerchandiseMonitorAgent.start();*/
+            processorAgent = new CustomerAckOnlineMerchandiseMonitorAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
+                    this,
+                    eventManager,
+                    dao,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager,
+                    customerBrokerPurchaseNegotiationManager
+            );
+            processorAgent.start();
 
             /**
              * Initialize plugin manager
@@ -307,6 +331,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
     @Override
     public void stop() {
         try {
+            processorAgent.stop();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception) {
             reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

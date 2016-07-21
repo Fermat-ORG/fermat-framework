@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -22,6 +23,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPrefer
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
+import static android.widget.Toast.makeText;
+
 
 /**
  * Created by memo on 13/01/16.
@@ -30,7 +33,6 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
-    private BankMoneyWalletPreferenceSettings walletSettings;
 
     EditText bankName;
 
@@ -52,22 +54,18 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
         //Obtain walletSettings or create new wallet settings if first time opening wallet
-        walletSettings = null;
+        BankMoneyWalletPreferenceSettings walletSettings = null;
         try {
             walletSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
-            walletSettings = null;
-            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+            walletSettings = new BankMoneyWalletPreferenceSettings();
         }
 
-        if (walletSettings == null) {
-            walletSettings = new BankMoneyWalletPreferenceSettings();
-            walletSettings.setIsPresentationHelpEnabled(true);
-            try {
-                moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-            }
+        walletSettings.setIsPresentationHelpEnabled(true);
+        try {
+            moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
 
@@ -104,9 +102,12 @@ public class SetupFragment extends AbstractFermatFragment<ReferenceAppFermatSess
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.bw_setup_ok_btn) {
-            moduleManager.createBankName(bankName.getText().toString());
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+            if(!bankName.getText().toString().trim().isEmpty()) {
+                moduleManager.createBankName(bankName.getText().toString());
+                changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+            } else {
+                makeText(getActivity(), "Enter a Name valid Bank", Toast.LENGTH_SHORT).show();
+            }
         }
     }
-
 }

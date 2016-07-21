@@ -47,11 +47,12 @@
 
         <ImageButton
             android:id="@+id/clear_search_image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:contentDescription="@string/clear_text_button"
             android:src="@drawable/ic_action_cancel_grey"
-            android:visibility="invisible" />
+            android:visibility="gone"
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <FrameLayout

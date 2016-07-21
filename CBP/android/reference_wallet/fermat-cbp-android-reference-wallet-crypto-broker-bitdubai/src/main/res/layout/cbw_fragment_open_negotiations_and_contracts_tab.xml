@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/cbw_footer_bar_height"
+    android:paddingBottom="@dimen/cbw_footer_bar_height"
     android:background="@color/app_background">
 
     <android.support.v4.widget.SwipeRefreshLayout

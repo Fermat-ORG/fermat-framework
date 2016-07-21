@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -63,7 +65,6 @@ import com.bitdubai.android_core.app.common.version_1.builders.option_menu.Optio
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
-import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
@@ -101,7 +102,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
@@ -134,6 +137,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
@@ -175,8 +179,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Screen adapters
      */
     private FermatScreenAdapter adapter;
-//    private ScreenPagerAdapter<?> screenPagerAdapter;
-
     /**
      * WizardTypes
      */
@@ -245,6 +247,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             // add new fragments.
             super.onCreate(savedInstanceState);
         } else {
+            Log.e(TAG, String.valueOf(savedInstanceState.getInt("a")));
 
             super.onCreate(new Bundle());
             // Otherwise, the activity is coming back after being destroyed.
@@ -252,17 +255,49 @@ public abstract class FermatActivity extends AppCompatActivity implements
             // need to create any new ones here.
         }
 
-        executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
+
+        if (executor==null) {
+            executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
+        }else{
+            if(executor.isShutdown()){
+                executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
+            }
+        }
 
         if(!AndroidCoreUtils.getInstance().isStarted())
             AndroidCoreUtils.getInstance().setStarted(true);
-        runtimeStructureManager = new RuntimeStructureManager(this);
 
-        updateViewReceiver = new UpdateViewReceiver(this);
+        if(updateViewReceiver==null) updateViewReceiver = new UpdateViewReceiver(this,getFermatFramework());
         IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
         registerReceiver(updateViewReceiver, intentFilter);
 
     }
+
+    @Override
+    public final void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putInt("a",2);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        try {
+            if (savedInstanceState == null) {
+                savedInstanceState = new Bundle();
+            } else {
+                Log.e(TAG, String.valueOf(savedInstanceState.getInt("a")));
+                super.onRestoreInstanceState(savedInstanceState);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -433,6 +468,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 }
             }
 
+            if (runtimeStructureManager != null) {
+                runtimeStructureManager.clear();
+            }
+
+            executor.shutdownNow();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -814,10 +854,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 FermatView fermatView = tab.getFermatView();
                 if(fermatView!=null) {
                     //ver esto
-                    if(fermatView.getOwner()!=null) {
-                        View view = ResourceLocationSearcherHelper.obtainView(this, fermatView.getId(), fermatView.getSourceLocation(), fermatView.getOwner().getOwnerAppPublicKey());
-                        tabsViews[i] = view;
-                    }
+                    View view = ResourceLocationSearcherHelper.obtainView(this, fermatView);
+                    tabsViews[i] = view;
+
                 }
             }
             tabLayout.setVisibility(View.VISIBLE);
@@ -852,6 +891,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
             pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
             tabLayout.setupWithViewPager(pagertabs);
 
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                if(tabsViews[i]!=null){
+                    tabLayout.getTabAt(i).setCustomView(tabsViews[i]);//.setIcon(ResourceLocationSearcherHelper.obtainDrawable(this,tabsDrawables[i]));
+                }
+            }
+
             // fragment focus
             pagertabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -871,6 +916,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
             });
         } catch (InvalidParameterException e) {
             Log.e(TAG, "Invalid parameter, please check your runtime");
+            e.printStackTrace();
+            handleExceptionAndRestart();
+        }catch (Resources.NotFoundException e){
+            Log.e(TAG,"Resource not found exception, "+e.getMessage());
             e.printStackTrace();
             handleExceptionAndRestart();
         } catch (Exception e){
@@ -1143,11 +1192,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     protected void onResume() {
+        if(!FermatApplication.getInstance().getFermatFramework().isApplicationInForeground()){
+            FermatApplication.getInstance().getFermatFramework().appOnForeground();
+        }
         if(updateViewReceiver==null){
-            updateViewReceiver = new UpdateViewReceiver(this);
+            updateViewReceiver = new UpdateViewReceiver(this,getFermatFramework());
             IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
             registerReceiver(updateViewReceiver, intentFilter);
         }
+
         super.onResume();
 
     }
@@ -1355,14 +1408,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             //clean page adapter
 
-            ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            if (pager != null) {
-                pager.removeAllViews();
-                pager.removeAllViewsInLayout();
-                pager.clearOnPageChangeListeners();
-                pager.setVisibility(View.GONE);
-                ((ViewGroup) pager.getParent()).removeView(pager);
-                pager = null;
+            if (pagertabs != null) {
+                pagertabs.removeAllViews();
+                pagertabs.removeAllViewsInLayout();
+                pagertabs.clearOnPageChangeListeners();
+                pagertabs.setVisibility(View.GONE);
+                ((ViewGroup) pagertabs.getParent()).removeView(pagertabs);
+                pagertabs = null;
             }
             System.gc();
 
@@ -1725,8 +1777,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void onDestroy() {
         try {
             wizards = null;
-            Intent intent = new Intent(this, NotificationService.class);
-            stopService(intent);
+//            Intent intent = new Intent(this, NotificationService.class);
+//            stopService(intent);
 
             //navigationDrawerFragment.onDetach();
 
@@ -1747,7 +1799,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }catch (Exception e){
                 //nothing
             }
-            executor.shutdownNow();
+//            executor.shutdownNow();
             super.onDestroy();
         }catch (Exception e){
             e.printStackTrace();
@@ -1776,6 +1828,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public void invalidate() {
+        if(!executor.isShutdown())
         executor.submit(new Runnable() {
             @Override
             public void run() {
@@ -1789,6 +1842,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         public void run() {
                             paintSideMenu(activity, activity.getSideMenu(), appsConnections);
                             paintFooter(activity.getFooter(), appsConnections.getFooterViewPainter());
+                            invalidateTabs(activity.getTabStrip());
                         }
                     });
                 }catch (Exception e){
@@ -1799,6 +1853,38 @@ public abstract class FermatActivity extends AppCompatActivity implements
         });
 
 
+    }
+
+    private void invalidateTabs(TabStrip tabStrip) {
+        if(tabLayout!=null && tabStrip!=null) {
+            List<Tab> tabs = tabStrip.getTabs();
+            int size = tabs.size();
+            String[] tabTitles = new String[size];
+            FermatDrawable[] tabsDrawables = new FermatDrawable[size];
+            final View[] tabsViews = new View[size];
+            for (int i = 0; i < tabs.size(); i++) {
+                Tab tab = tabs.get(i);
+                tabTitles[i] = tab.getLabel();
+                tabsDrawables[i] = tab.getDrawable();
+                FermatView fermatView = tab.getFermatView();
+                if (fermatView != null) {
+                    //ver esto
+                    View view = ResourceLocationSearcherHelper.obtainView(this, fermatView);
+                    tabsViews[i] = view;
+                }
+            }
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                if (tabsViews[i] != null) {
+                    final int finalI = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tabLayout.getTabAt(finalI).setCustomView(tabsViews[finalI]);//.setIcon(ResourceLocationSearcherHelper.obtainDrawable(this,tabsDrawables[i]));
+                        }
+                    });
+                }
+            }
+        }
     }
 
     protected void refreshSideMenu(final AppConnections appConnections){
@@ -2112,6 +2198,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public FermatRuntime getRuntimeManager(){
+        if(runtimeStructureManager==null) runtimeStructureManager = new RuntimeStructureManager(this);
         return runtimeStructureManager;
     }
 
@@ -2176,13 +2263,24 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
     @Override
-    public void cancelNotification(String appPublicKey) {
-        FermatApplication.getInstance().getNotificationService().cancelNotification(appPublicKey);
+    public void cancelNotification(FermatBundle fermatBundle) {
+        FermatApplication.getInstance().getNotificationService().cancelNotification(fermatBundle);
     }
 
     @Override
     public void pushNotification(String appPublicKey,Notification notification) {
-        FermatApplication.getInstance().getNotificationService().pushNotification(appPublicKey,notification);
+        FermatApplication.getInstance().getNotificationService().pushNotification(appPublicKey, notification);
+    }
+
+    /**
+     * Receivers
+     */
+    public void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver,@Nullable String appPublicKey){
+        FermatApplication.getInstance().registerReceiver(fermatIntentFilter, fermatBroadcastReceiver, appPublicKey);
+    }
+
+    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,@Nullable String appPublicKey){
+        FermatApplication.getInstance().unregisterReceiver(fermatBroadcastReceiver, appPublicKey);
     }
 
     /**
@@ -2190,12 +2288,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     @Override
     public int obtainRes(int resType,int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainRes(resType,this, id, sourceLocation, appOwnerPublicKey);
+        return ResourceLocationSearcherHelper.obtainRes(resType, this, id, sourceLocation, appOwnerPublicKey);
     }
 
     @Override
-    public View obtainClassView(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainView(this, id, sourceLocation, appOwnerPublicKey);
+    public View obtainClassView(FermatView fermatView) {
+        return ResourceLocationSearcherHelper.obtainView(this, fermatView);
     }
 
     @Override
@@ -2229,4 +2327,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
+    public FermatFramework getFermatFramework() {
+        return FermatApplication.getInstance().getFermatFramework();
+    }
 }

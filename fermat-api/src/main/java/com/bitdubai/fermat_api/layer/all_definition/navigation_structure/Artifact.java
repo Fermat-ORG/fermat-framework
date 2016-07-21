@@ -2,10 +2,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.06.08..
  */
-public class Artifact {
+public class Artifact implements Serializable {
 
     private int id;
     private Owner owner;

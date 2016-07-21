@@ -78,11 +78,8 @@ public class StopTest {
                 pluginDatabaseSystem,
                 logManager,
                 errorManager,
-                eventManager,
                 pluginId,
                 negotiationTransmissionManager,
-                customerBrokerPurchaseNegotiation,
-                customerBrokerSaleNegotiation,
                 customerBrokerPurchaseNegotiationManager,
                 customerBrokerSaleNegotiationManager,
                 broadcaster);

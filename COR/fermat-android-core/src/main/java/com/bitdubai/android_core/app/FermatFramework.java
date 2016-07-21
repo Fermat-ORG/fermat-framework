@@ -16,8 +16,11 @@ import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatContext;
+import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_core.FermatSystem;
+import com.github.anrwatchdog.ANRError;
 import com.github.anrwatchdog.ANRWatchDog;
 import com.mati.fermat_osa_addon_android_loader.LoaderManager;
 import com.mati.fermat_osa_addon_android_loader.Smith;
@@ -25,6 +28,9 @@ import com.mati.fermat_osa_addon_android_loader.Smith;
 import org.acra.ACRA;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias Furszyfer on 2016.06.29..
@@ -53,6 +59,11 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
     private FermatSystem fermatSystem;
 
     /**
+     * Receivers
+     */
+    private ReceiversManager receiversManager;
+
+    /**
      *  Application state
      */
     public static int applicationState=STATE_NOT_CREATED;
@@ -77,6 +88,9 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     private LoaderManager loaderManager;
 
+    private boolean isApplicationInForeground;
+    private ScheduledExecutorService scheduledExecutorService;
+
     public static FermatFramework init(Application application){
         return new FermatFramework(application);
     }
@@ -91,6 +105,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         this.application = application;
         fermatSystem = FermatSystem.getInstance();
         fermatSystem.setFermatContext(this);
+        receiversManager = new ReceiversManager();
     }
 
 
@@ -178,6 +193,32 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
             notificationReceiver = new NotificationReceiver(this);
             IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
             application.getApplicationContext().registerReceiver(notificationReceiver, intentFilter);
+
+            //Application state observer
+            application.registerActivityLifecycleCallbacks(new ApplicationLifecycleManager());
+
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+//                    Log.i(TAG, "##########################################################3");
+//                    Log.e(TAG, "App in foreground: " + ApplicationLifecycleManager.isAppInForeground());
+//                    Log.i(TAG, "##########################################################3");
+                    if (!ApplicationLifecycleManager.isAppInForeground()) {
+                        if (isApplicationInForeground) {
+                            isApplicationInForeground = false;
+                        } else {
+                            appOnBackground();
+                        }
+                    } else {
+                        if (!isApplicationInForeground) {
+                            isApplicationInForeground = true;
+                            appOnForeground();
+                        }
+                    }
+                }
+            }, 30, 30, TimeUnit.SECONDS);
+
         }
 
 //        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
@@ -185,9 +226,47 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 //        intentFilter.addAction("org.fermat.SYSTEM_RUNNING");
 //        bManager.registerReceiver(new FermatSystemRunningReceiver(this), intentFilter);
 
-        new ANRWatchDog().start();
+        ANRWatchDog anrWatchDog = new ANRWatchDog();
+        anrWatchDog.setANRListener(new ANRWatchDog.ANRListener() {
+            @Override
+            public void onAppNotResponding(final ANRError error) {
+                Log.e(TAG,"Imprimiendo errod:");
+                error.printStackTrace();
+
+//                new AlertDialog.Builder(application.getApplicationContext())
+//                        .setTitle("ANR")
+//                        .setMessage("ANR")
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // continue with delete
+//                                Log.e(TAG, "ANR:");
+//                                error.printStackTrace();
+//                                Log.e(TAG, "FIN ANR");
+//                            }
+//                        })
+//                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // do nothing
+//                            }
+//                        })
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
+            }
+        });
+        anrWatchDog.setIgnoreDebugger(false);
+//        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
+//            @Override
+//            public void onInterrupted(InterruptedException exception) {
+//                exception.printStackTrace();
+//            }
+//        });
+        anrWatchDog.start();
+
+
+
 
     }
+
 
 
     void handleUncaughtException(Thread thread, Throwable e) {
@@ -206,6 +285,10 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     public ServicesHelpers getServicesHelpers() {
         return servicesHelpers;
+    }
+
+    public boolean isApplicationInForeground(){
+        return isApplicationInForeground;
     }
 
     /**
@@ -269,6 +352,17 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         return fermatRunning;
     }
 
+    public void appOnBackground(){
+        Log.i(TAG,"Disconnecting app, onBackground");
+        servicesHelpers.getClientSideBrokerServiceAIDL().disconnect();
+    }
+
+    public void appOnForeground(){
+        Log.i(TAG,"Reconnecting app, onForeground");
+        isApplicationInForeground = true;
+        servicesHelpers.getClientSideBrokerServiceAIDL().connect();
+    }
+
     @Override
     public ClassLoader getBaseClassLoader() {
         return mBaseClassLoader;
@@ -288,7 +382,7 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     @Override
     public Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... args) {
-        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
+        return loaderManager.objectProxyFactory(moduleName, interfaceLoader, interfaces, returnInterface, args);
     }
 
     public ClassLoader getExternalLoader(String name){
@@ -306,5 +400,18 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
 
     public LoaderManager getLoaderManager() {
         return loaderManager;
+    }
+
+    public void registerReceiver(FermatIntentFilter fermatIntentFilter,FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
+        fermatBroadcastReceiver.setBroadcasterType(fermatIntentFilter.getBroadcasterType());
+        receiversManager.registerReceiver(fermatIntentFilter.getBroadcasterType(),fermatBroadcastReceiver,appPublicKey);
+    }
+
+    public void unregisterReceiver(FermatBroadcastReceiver fermatBroadcastReceiver,String appPublicKey){
+        receiversManager.unregisterReceiver(fermatBroadcastReceiver, appPublicKey);
+    }
+
+    public void pushReceiverIntent(FermatIntentFilter fermatIntentFilter) {
+        receiversManager.pushIntent(fermatIntentFilter);
     }
 }

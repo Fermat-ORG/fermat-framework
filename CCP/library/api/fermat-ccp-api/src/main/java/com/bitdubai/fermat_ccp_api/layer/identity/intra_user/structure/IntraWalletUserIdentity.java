@@ -2,7 +2,8 @@ package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
@@ -30,14 +31,15 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
     private String privateKey;
 
     private long accuracy;
-    private Frecuency frecuency;
+    private Frequency frequency;
+    private Location location;
 
 
     /**
      * Constructor
      */
 
-    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image,long accuracy,Frecuency frecuency) {
+    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image,long accuracy,Frequency frequency,Location location) {
 
         this.alias = alias;
         this.phrase = phrase;
@@ -45,8 +47,9 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
         this.image = image;
         this.privateKey = privateKey;
 
-        this.frecuency = frecuency;
+        this.frequency = frequency;
         this.accuracy = accuracy;
+        this.location = location;
 
 //        this.pluginFileSystem = pluginFileSystem;
 //        this.pluginId = pluginId;
@@ -68,8 +71,8 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
     }
 
     @Override
-    public Frecuency getFrecuency() {
-        return frecuency;
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     @Override
@@ -85,6 +88,11 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
     @Override
     public String getPublicKey() {
         return this.publicKey;
+    }
+
+    @Override
+    public Location getLocation() {
+        return this.location;
     }
 
     @Override
@@ -177,7 +185,7 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
                 ", publicKey='" + publicKey + '\'' +
                 ", privateKey='" + privateKey + '\'' +
                 ", Accuracy='" + accuracy + '\'' +
-                ", Frecuency='" + frecuency.getCode() + '\'' +
+                ", Frequency='" + frequency.getCode() + '\'' +
                 '}';
     }
 }

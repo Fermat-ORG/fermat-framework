@@ -250,7 +250,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
     private void sendLargeData(String dataId, String clientKey, Serializable data) {
         try {
-            Log.i(TAG,"Socket sending response to client");
+            Log.i(TAG, "Socket sending response to client");
             LocalServerSocketSession localServerSocketSession = socketsClients.get(clientKey);
             if(localServerSocketSession!=null) {
                 if (!localServerSocketSession.isSenderActive()) {
@@ -269,7 +269,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
     private final IPlatformService.Stub mBinder = new IPlatformService.Stub() {
 
-
+        @Override
         public String register() {
             String clientKey = null;
             try {
@@ -305,6 +305,37 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             }
             return clientKey;
         }
+
+//        @Override
+//        public Class<?>[] obtainModuleInterfaces(String platformCode, String layerCode, String pluginsCode, String developerCode, String version)  {
+//            Class<?>[] interfaces = null;
+//            try {
+//                PluginVersionReference pluginVersionReference = PluginVersionReference.PluginVersionReferenceFactory(platformCode, layerCode, pluginsCode, developerCode, version);
+//                try {
+//                    ModuleManager moduleManagerBase = FermatSystem.getInstance().getModuleManager2(pluginVersionReference);
+//                    if (moduleManagerBase == null)
+//                        throw new RuntimeException("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                    Class clazz = moduleManagerBase.getClass();
+//                    interfaces = clazz.getInterfaces();
+//                } catch (CantGetModuleManagerException e) {
+//                    try {
+//                        Class clazz = FermatSystem.getInstance().getModuleManager3(pluginVersionReference);
+//                        if (clazz == null)
+//                            throw new RuntimeException("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                        interfaces = clazz.getInterfaces();
+//                    } catch (Exception e2) {
+//                        Log.e(TAG, "Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                        throw new CantCreateProxyException("Cant get module manager from system", e, "factory", "");
+//                    }
+//                } catch (ModuleManagerNotFoundException e) {
+//                    Log.e(TAG, "Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: " + pluginVersionReference.toString3());
+//                    throw new CantCreateProxyException("Cant fount module manager from system", e, "factory", "");
+//                }
+//            }catch (Exception e){
+//                throw new RuntimeException(e);
+//            }
+//            return interfaces;
+//        }
 
         @Override
         public FermatModuleObjectWrapper invoqueModuleMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {
@@ -545,7 +576,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             getTask.setCallBack(this);
             getTask.execute();
 
-            executorService = Executors.newFixedThreadPool(5);
+            executorService = Executors.newCachedThreadPool();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -571,17 +602,30 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         executorService.shutdownNow();
-        try {
-            localServerSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         for (LocalServerSocketSession localServerSocketSession : socketsClients.values()) {
             try {
                 localServerSocketSession.destroy();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        try {
+            serverThread.interrupt();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            localServerSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            fermatSystem.onDestroy();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

@@ -21,10 +21,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -91,7 +92,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final UUID pluginId;
     private final AssetVaultManager assetVaultManager;
     private final AssetUserWalletManager assetUserWalletManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final BlockchainManager bitcoinNetworkManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final CryptoVaultManager cryptoVaultManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
@@ -116,7 +117,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                           UUID pluginId,
                                           AssetVaultManager assetVaultManager,
                                           AssetUserWalletManager assetUserWalletManager,
-                                          BitcoinNetworkManager bitcoinNetworkManager,
+                                          BlockchainManager bitcoinNetworkManager,
                                           CryptoAddressBookManager cryptoAddressBookManager,
                                           CryptoVaultManager cryptoVaultManager,
                                           IntraWalletUserIdentityManager intraWalletUserIdentityManager,
@@ -348,7 +349,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                 if (identity.getAlias().equals(alias)) assetIdentity = identity;
             }
             if (assetIdentity == null)
-                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null, Long.parseLong("0"), Frecuency.NONE);
+                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null, Long.parseLong("0"), Frequency.NONE);
             return assetIdentity;
         }
 

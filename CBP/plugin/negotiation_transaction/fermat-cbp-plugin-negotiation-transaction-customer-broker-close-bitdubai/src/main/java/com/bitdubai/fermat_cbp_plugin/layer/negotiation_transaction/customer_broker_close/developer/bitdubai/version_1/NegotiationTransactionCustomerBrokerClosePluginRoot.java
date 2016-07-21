@@ -41,7 +41,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.event_handler.CustomerBrokerCloseServiceEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -96,7 +97,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     private Database                                                            dataBase;
 
     /*Represent DeveloperDatabaseFactory*/
-    private CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory   customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
+    CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory   customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
     private CustomerBrokerCloseNegotiationTransactionDatabaseDao                customerBrokerCloseNegotiationTransactionDatabaseDao;
@@ -105,7 +106,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     private CustomerBrokerCloseManagerImpl                                      customerBrokerCloseManagerImpl;
 
     /*Represent Agent*/
-    private CustomerBrokerCloseAgent                                            customerBrokerCloseAgent;
+    private CustomerBrokerCloseAgent2                                            customerBrokerCloseAgent;
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiation                                   customerBrokerPurchaseNegotiation;
@@ -118,6 +119,11 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+
     public NegotiationTransactionCustomerBrokerClosePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -126,17 +132,22 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
      @Override
      public void start() throws CantStartPluginException {
          try {
-
-             //Initialize database
+             /**
+              * Initialize database
+              */
              initializeDb();
+             /**
+              * Initialize Developer Database Factory
+              */
+             customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory = new
+                     CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+                     pluginId);
 
-             //Initialize Developer Database Factory
-             customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory = new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
              customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
              //Initialize Dao
              customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
-
+             customerBrokerCloseNegotiationTransactionDatabaseDao.initialize();
              //Initialize manager
              customerBrokerCloseManagerImpl = new CustomerBrokerCloseManagerImpl(
                      customerBrokerCloseNegotiationTransactionDatabaseDao,
@@ -158,12 +169,16 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
              customerBrokerCloseServiceEventHandler.start();
 
              //Init monitor Agent
-             customerBrokerCloseAgent = new CustomerBrokerCloseAgent(
+             customerBrokerCloseAgent = new CustomerBrokerCloseAgent2(
+                     SLEEP_TIME,
+                     TIME_UNIT,
+                     DELAY_TIME,
                      pluginDatabaseSystem,
                      logManager,
                      this,
                      eventManager,
                      pluginId,
+                     customerBrokerCloseNegotiationTransactionDatabaseDao,
                      negotiationTransmissionManager,
                      customerBrokerPurchaseNegotiation,
                      customerBrokerSaleNegotiation,
@@ -178,6 +193,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
              //Startes Service
              this.serviceStatus = ServiceStatus.STARTED;
+             System.out.print("-----------------------\n CUSTOMER BROKER CLOSE: SUCCESSFUL START "+pluginId.toString()+" \n-----------------------\n");
 
          } catch (CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException e){
              reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -215,22 +231,17 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     /*IMPLEMENTATION DatabaseManagerForDevelopers*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+        return customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        return customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try{
-            return new CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ArrayList<>();
-        }
+        return customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
     /*END IMPLEMENTATION DatabaseManagerForDevelopers*/
 

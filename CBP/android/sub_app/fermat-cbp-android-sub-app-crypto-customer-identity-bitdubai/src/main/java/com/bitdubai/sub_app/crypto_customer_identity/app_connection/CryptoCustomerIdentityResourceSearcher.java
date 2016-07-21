@@ -12,23 +12,26 @@ import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
  */
 public class CryptoCustomerIdentityResourceSearcher extends ResourceSearcher {
 
-    @Override
-    public int obtainResDrawable(Context context, int id) {
+
+    public int obtainResDrawable(Context context,int id){
+        int resId = 0;
         switch (id) {
             case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:
-                return R.drawable.new_identity_button;
-
+                resId = R.drawable.new_identity_button;
+                break;
             case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.help_button;
-
+                resId = R.drawable.help_button;
+                break;
             case FragmentsCommons.CREATE_IDENTITY_MENU_ID:
-                return R.drawable.save_changes_button;
-
+                resId = R.drawable.save_changes_button;
+                break;
             case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
-                return R.drawable.cbp_id_geolocation_icon;
-
+                resId = R.drawable.cbp_id_geolocation_icon;
+                break;
             default:
-                return 0;
+                resId = 0;
+                break;
         }
+        return resId;
     }
 }

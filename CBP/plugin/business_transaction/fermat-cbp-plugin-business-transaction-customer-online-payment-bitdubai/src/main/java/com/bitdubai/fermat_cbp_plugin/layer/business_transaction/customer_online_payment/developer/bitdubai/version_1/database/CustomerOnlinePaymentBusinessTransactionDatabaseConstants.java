@@ -34,8 +34,10 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
     public static final String ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "blockchain_network_type";
     public static final String ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME = "completion_date";
+    public static final String ONLINE_PAYMENT_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME = "origin_fee";
+    public static final String ONLINE_PAYMENT_MERCHANDISE_FEE_COLUMN_NAME = "fee";
 
-    public static final String ONLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
+    public static final String ONLINE_PAYMENT_FIRST_KEY_COLUMN = "contract_hash";
 
     /**
      * Events recorded database table definition.

@@ -12,20 +12,28 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
  */
 public class CryptoBrokerIdentityResourceSearcher extends ResourceSearcher {
 
+
     @Override
-    public int obtainResDrawable(Context context, int id) {
+    public int obtainResDrawable(Context context,int id){
+        int resId = 0;
         switch (id) {
             case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:
-                return R.drawable.add_identity;
+                resId = R.drawable.add_identity;
+                break;
 
             case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.help_icon_identity_broker;
+                resId = R.drawable.help_icon_identity_broker;
+                break;
 
             case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
-                return R.drawable.cbp_id_geolocation_icon;
+                resId = R.drawable.cbp_id_geolocation_icon;
+                break;
 
             default:
-                return 0;
+                resId = 0;
+                break;
         }
+        return resId;
     }
+
 }

@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
@@ -454,8 +456,14 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                                           long cryptoAmount,
                                           CryptoCurrency paymentCurrency,
                                           BlockchainNetworkType blockchainNetworkType,
-                                          String intraActorReceiverPublicKey) throws CantInsertRecordException {
+                                          String intraActorReceiverPublicKey,
+                                          FeeOrigin feeOrigin,
+                                          long fee) throws CantInsertRecordException {
         try {
+            if(isContractHashInDatabase(contractPurchase.getContractId())){
+                System.out.println("The contract "+contractPurchase+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
@@ -467,7 +475,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     cryptoAmount,
                     paymentCurrency,
                     blockchainNetworkType,
-                    intraActorReceiverPublicKey);
+                    intraActorReceiverPublicKey,
+                    feeOrigin,
+                    fee);
 
             databaseTable.insertRecord(databaseTableRecord);
 
@@ -531,6 +541,19 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
             businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
 
+            businessTransactionRecord.setFee(record.getLongValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_FEE_COLUMN_NAME));
+            String feeOriginString = record.getStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME);
+            FeeOrigin feeOrigin;
+            if(feeOriginString==null||feeOriginString.isEmpty()){
+                feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+            } else {
+                try{
+                    feeOrigin = FeeOrigin.getByCode(feeOriginString);
+                } catch (InvalidParameterException ex){
+                    feeOrigin=FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
+                }
+            }
+            businessTransactionRecord.setFeeOrigin(feeOrigin);
             return businessTransactionRecord;
 
         } catch (CantLoadTableToMemoryException e) {
@@ -598,6 +621,10 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     public void persistContractInDatabase(CustomerBrokerContractSale saleContract, String currencyCode, long cryptoAmount)
             throws CantInsertRecordException, UnexpectedResultReturnedFromDatabaseException {
         try {
+            if(isContractHashInDatabase(saleContract.getContractId())){
+                System.out.println("The contract "+saleContract+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
@@ -892,6 +919,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setStringValue(ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME, businessTransactionRecord.getExternalWalletPublicKey());
         final ContractTransactionStatus contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
         record.setStringValue(ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, contractTransactionStatus.getCode());
+        //new fields
+        //Origin Fee
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME, businessTransactionRecord.getFeeOrigin().getCode());
+        //Fee
+        record.setLongValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_FEE_COLUMN_NAME, businessTransactionRecord.getFee());
+
 
         return record;
     }
@@ -917,7 +950,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                                                          long cryptoAmount,
                                                          CryptoCurrency paymentCurrency,
                                                          BlockchainNetworkType blockchainNetworkType,
-                                                         String intraActorReceiverPublicKey) {
+                                                         String intraActorReceiverPublicKey,
+                                                         FeeOrigin feeOrigin,
+                                                         long fee) {
 
 
         UUID transactionId = UUID.randomUUID();
@@ -939,6 +974,10 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         if (blockchainNetworkType == null)
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         record.setStringValue(ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
+        //Origin Fee
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME, feeOrigin.getCode());
+        //Fee
+        record.setLongValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_FEE_COLUMN_NAME, fee);
 
         return record;
     }

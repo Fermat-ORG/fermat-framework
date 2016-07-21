@@ -128,6 +128,16 @@ public class CustomerBrokerSaleManager implements CustomerBrokerSaleNegotiationM
     }
 
     @Override
+    public void waitForClosing(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        try {
+            this.customerBrokerSaleNegotiationDao.waitForClosing(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Sale Negotiation");
+        }
+    }
+
+    @Override
     public void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
 
     }

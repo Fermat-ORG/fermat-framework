@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGe
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.common.exceptions.CantSendNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CBPWalletsModuleManager;
@@ -139,6 +141,11 @@ public interface CryptoCustomerWalletModuleManager
      */
     Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises()
             throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
+
+    /**
+     * Request quotes from online brokers
+     */
+    void requestQuotes() throws CantGetCryptoBrokerListException;
 
     /**
      *
@@ -431,5 +438,19 @@ public interface CryptoCustomerWalletModuleManager
      * @return a Completion Date in millis
      */
     long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod);
+
+    /**
+     * Return if is create intra user wallet
+     * @return
+     * @throws CantSendNegotiationException
+     */
+    boolean isCreateIdentityIntraUser() throws CantSendNegotiationException;
+
+    /**
+     * Return if stock in wallet for send payment
+     * @return
+     * @throws CantSubmitMerchandiseException
+     */
+    boolean stockInTheWallet(String contractHash) throws CantSubmitMerchandiseException;
 
 }

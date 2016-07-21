@@ -2,10 +2,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias furszyfer on 2016.06.07..
  */
-public class FermatDrawable extends Artifact {
+public class FermatDrawable extends Artifact implements Serializable {
 
     private String resName;
 
@@ -21,6 +23,11 @@ public class FermatDrawable extends Artifact {
      */
     public FermatDrawable(int id,String resName, Owner owner, SourceLocation sourceLocation) {
         super(id, owner, sourceLocation);
+        this.resName = resName;
+    }
+
+    public FermatDrawable(int id,String resName, SourceLocation sourceLocation) {
+        super(id, null, sourceLocation);
         this.resName = resName;
     }
 

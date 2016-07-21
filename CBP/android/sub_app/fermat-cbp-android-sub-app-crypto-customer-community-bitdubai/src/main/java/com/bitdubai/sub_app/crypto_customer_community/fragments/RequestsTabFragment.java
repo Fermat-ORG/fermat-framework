@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.crypto_customer_community.fragments;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -111,9 +110,6 @@ public class RequestsTabFragment
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.ccc_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -185,7 +181,8 @@ public class RequestsTabFragment
                             .setIconRes(R.drawable.crypto_customer)
                             .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                             .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
-                            .setIsCheckEnabled(true)
+                            .setVIewColor(R.color.ccc_color_dialog)
+                            .setIsCheckEnabled(false)
                             .build();
 
                 helpDialog.show();
@@ -238,16 +235,16 @@ public class RequestsTabFragment
     @Override
     public List<LinkedCryptoCustomerIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LinkedCryptoCustomerIdentity> dataSet = new ArrayList<>();
-
-        try {
-            offset = pos;
-            final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-            List<LinkedCryptoCustomerIdentity> result = moduleManager.listCryptoCustomersPendingLocalAction(selectedActorIdentity, MAX, offset);
-            dataSet.addAll(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isVisible) {
+            try {
+                offset = pos;
+                final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<LinkedCryptoCustomerIdentity> result = moduleManager.listCryptoCustomersPendingLocalAction(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
         return dataSet;
     }
 

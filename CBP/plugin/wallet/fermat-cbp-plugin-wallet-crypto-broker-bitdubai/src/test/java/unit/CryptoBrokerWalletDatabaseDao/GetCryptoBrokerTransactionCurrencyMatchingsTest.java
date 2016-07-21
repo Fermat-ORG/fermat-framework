@@ -1,8 +1,8 @@
 package unit.CryptoBrokerWalletDatabaseDao;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -14,10 +14,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     private Database database;
 
     @Mock
-    ErrorManager errorManager;
+    CryptoBrokerWalletPluginRoot pluginRoot;
 
     List<DatabaseTableRecord> availableSaleRecordsFromTable;
     List<DatabaseTableRecord> creditRecords;
@@ -65,7 +64,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         creditRecords = new ArrayList<>();
         debitRecords = new ArrayList<>();
 
-        cryptoBrokerWalletDatabaseDaoSpy = Mockito.spy(new CryptoBrokerWalletDatabaseDao(database, errorManager));
+        cryptoBrokerWalletDatabaseDaoSpy = Mockito.spy(new CryptoBrokerWalletDatabaseDao(database, pluginRoot));
         availableSaleRecordsFromTable = null;
     }
 
@@ -346,8 +345,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         Mockito.doReturn(creditRecords).when(cryptoBrokerWalletDatabaseDaoSpy).getAvailableSaleRecordsFromTable(TransactionType.CREDIT);
         Mockito.doReturn(debitRecords).when(cryptoBrokerWalletDatabaseDaoSpy).getAvailableSaleRecordsFromTable(TransactionType.DEBIT);
 
-        doNothing().when(errorManager).reportUnexpectedPluginException(eq(Plugins.CRYPTO_BROKER_WALLET),
-                eq(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT), any(InvalidParameterException.class));
+        doNothing().when(pluginRoot).reportError(eq(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT), any(InvalidParameterException.class));
 
         // exercise
         List<CurrencyMatching> currencyMatchings = cryptoBrokerWalletDatabaseDaoSpy.getCryptoBrokerTransactionCurrencyMatchings();
@@ -362,8 +360,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
         assertThat(currencyMatching.getAmountReceiving()).isEqualTo(5);
 
-        Mockito.verify(errorManager).reportUnexpectedPluginException(eq(Plugins.CRYPTO_BROKER_WALLET),
-                eq(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT), any(InvalidParameterException.class));
+        Mockito.verify(pluginRoot).reportError(eq(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT), any(InvalidParameterException.class));
     }
 
     private void addOneSaleDebit() {

@@ -41,7 +41,6 @@ import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTran
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -103,7 +102,8 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
                 .setIconRes(R.drawable.csh_wallet_logo)
                 .setSubTitle(R.string.csh_home_tut_present_dialog_sub_title)
                 .setBody(R.string.csh_home_tut_present_dialog_body)
-                .setIsCheckEnabled(true)
+                .setVIewColor(R.color.csh_color_dialog)
+                .setIsCheckEnabled(false)
                 .build();
         homeTutorialPresentationDialog.setOnDismissListener(this);
 

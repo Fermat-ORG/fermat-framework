@@ -75,7 +75,7 @@ public class CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory {/
                   /*
                    * We create the new database
                    */
-                database = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(pluginId, CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -89,7 +89,7 @@ public class CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory {/
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Customer Online Payment", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
@@ -114,6 +114,8 @@ public class CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory {/
         onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
+        onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_ORIGIN_FEE_COLUMN_NAME);
+        onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_MERCHANDISE_FEE_COLUMN_NAME);
 
         /**
          * Table Online Payment addition.

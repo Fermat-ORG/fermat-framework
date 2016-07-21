@@ -332,7 +332,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractActorNetwo
     }
 
     @Override
-    public void handleActorUnreachable(ActorProfile remoteParticipant) {
+    public void onActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }

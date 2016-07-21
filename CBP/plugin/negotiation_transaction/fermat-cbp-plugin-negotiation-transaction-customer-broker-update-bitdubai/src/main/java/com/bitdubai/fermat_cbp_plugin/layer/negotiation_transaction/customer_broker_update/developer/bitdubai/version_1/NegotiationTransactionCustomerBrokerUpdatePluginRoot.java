@@ -40,7 +40,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.event_handler.CustomerBrokerUpdateServiceEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure.CustomerBrokerUpdateAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure.CustomerBrokerUpdateAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.structure.CustomerBrokerUpdateManagerImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 /**
  * Created by Yordin Alayn on 16.09.15.
@@ -83,7 +84,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     private Database                                                            dataBase;
 
     /*Represent DeveloperDatabaseFactory*/
-    private CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory  customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory;
+    CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory  customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
     private CustomerBrokerUpdateNegotiationTransactionDatabaseDao               customerBrokerUpdateNegotiationTransactionDatabaseDao;
@@ -92,7 +93,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     private CustomerBrokerUpdateManagerImpl                                     customerBrokerUpdateManagerImpl;
 
     /*Represent Agent*/
-    private CustomerBrokerUpdateAgent                                           customerBrokerUpdateAgent;
+    private CustomerBrokerUpdateAgent2                                           customerBrokerUpdateAgent;
+//    private CustomerBrokerUpdateAgent                                           customerBrokerUpdateAgent;
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiation                                   customerBrokerPurchaseNegotiation;
@@ -105,6 +107,11 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+
     public NegotiationTransactionCustomerBrokerUpdatePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -112,7 +119,6 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     /*IMPLEMENTATION Service.*/
     @Override
     public void start() throws CantStartPluginException {
-
         try {
 
             //Initialize database
@@ -124,7 +130,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             //Initialize Dao
             customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem,pluginId,dataBase);
-
+            customerBrokerUpdateNegotiationTransactionDatabaseDao.initialize();
             //Initialize manager
             customerBrokerUpdateManagerImpl = new CustomerBrokerUpdateManagerImpl(
                 customerBrokerUpdateNegotiationTransactionDatabaseDao,
@@ -142,15 +148,13 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             customerBrokerUpdateServiceEventHandler.start();
 
             //Init monitor Agent
-            customerBrokerUpdateAgent = new CustomerBrokerUpdateAgent(
-                    pluginDatabaseSystem,
-                    logManager,
+            customerBrokerUpdateAgent = new CustomerBrokerUpdateAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     this,
-                    eventManager,
-                    pluginId,
+                    customerBrokerUpdateNegotiationTransactionDatabaseDao,
                     negotiationTransmissionManager,
-                    customerBrokerPurchaseNegotiation,
-                    customerBrokerSaleNegotiation,
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerSaleNegotiationManager,
                     broadcaster
@@ -159,6 +163,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
+            System.out.print("-----------------------\n CUSTOMER BROKER UPDATE: SUCCESSFUL START "+pluginId.toString()+" \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException e){
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -188,20 +193,21 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     @Override
     public FermatManager getManager() { return customerBrokerUpdateManagerImpl; }
     /*END IMPLEMENTATION Service.*/
+
     /*IMPLEMENTATION DatabaseManagerForDevelopers*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        return customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
     /*END IMPLEMENTATION DatabaseManagerForDevelopers*/
     /*IMPLEMENTATION LogManagerForDevelopers*/
@@ -244,9 +250,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     /*PRIVATE METHOD*/
     private void initializeDb() throws CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException {
         try {
-
             dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
-
         } catch (DatabaseNotFoundException e) {
             try {
                 CustomerBrokerUpdateNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerUpdateNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);

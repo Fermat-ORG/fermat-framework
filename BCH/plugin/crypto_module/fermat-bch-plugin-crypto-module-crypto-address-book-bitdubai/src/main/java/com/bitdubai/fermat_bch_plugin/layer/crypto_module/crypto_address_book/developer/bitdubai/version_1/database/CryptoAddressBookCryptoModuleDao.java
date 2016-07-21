@@ -218,6 +218,15 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
         }
 
         try {
+            CryptoAddressBookRecord existingRecord = getCryptoAddressBookRecordByCryptoAddress(cryptoAddressBookRecord.getCryptoAddress());
+            if (existingRecord != null)
+                // the record already exists, won't insert it.
+                return;
+        } catch (Exception e) {
+            //If there was an error, I will continue, because if it already exists, then I won't be able to insert it due to PK constraint.
+        }
+
+        try {
             DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
             DatabaseTableRecord entityRecord = buildDatabaseRecord(cryptoAddressBookTable.getEmptyRecord(), cryptoAddressBookRecord);
 

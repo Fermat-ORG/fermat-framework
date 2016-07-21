@@ -30,16 +30,16 @@ dependencies {
 //    compile project(':fermat-wpd-plugin-middleware-wallet-factory-bitdubai')
 //    compile project(':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai')
 //    compile project(':fermat-wpd-plugin-middleware-wallet-settings-bitdubai')
-    compile project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai')
+//    compile project(':fermat-wpd-plugin-middleware-wallet-store-bitdubai')
 
     compile project(':fermat-wpd-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-wpd-plugin-network-service-wallet-resources-bitdubai')
 //    compile project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
-    compile project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai')
+//    compile project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai')
 
 //    compile project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
 //    compile project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
-    compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
+//    compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

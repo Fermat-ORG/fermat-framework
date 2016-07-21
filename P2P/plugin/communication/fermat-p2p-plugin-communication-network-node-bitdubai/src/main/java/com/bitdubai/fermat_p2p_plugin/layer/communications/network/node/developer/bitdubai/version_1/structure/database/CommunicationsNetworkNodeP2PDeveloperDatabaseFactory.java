@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.*;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
@@ -61,7 +63,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -82,7 +84,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
                   /*
                    * We create the new database
                    */
-                database = communicationsNetworkNodeP2PDatabaseFactory.createDatabase(pluginId, CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME);
+                database = communicationsNetworkNodeP2PDatabaseFactory.createDatabase(pluginId, DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -98,7 +100,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Communications Network Node", CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Communications Network Node", DATA_BASE_NAME));
         return databases;
     }
 
@@ -113,21 +115,24 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> actorcatalogColumns = new ArrayList<>();
 
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NAME_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ALIAS_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_PHOTO_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_NAME_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_ALIAS_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_PHOTO_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_THUMBNAIL_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_LAST_UPDATE_TIME_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_LAST_CONNECTION_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogColumns.add(ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         /**
          * Table actor catalog addition.
          */
-        DeveloperDatabaseTable actorcatalogTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TABLE_NAME, actorcatalogColumns);
+        DeveloperDatabaseTable actorcatalogTable = developerObjectFactory.getNewDeveloperDatabaseTable(ACTOR_CATALOG_TABLE_NAME, actorcatalogColumns);
         tables.add(actorcatalogTable);
 
         /**
@@ -135,23 +140,26 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> actorcatalogtransactionColumns = new ArrayList<>();
 
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_NAME_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_NAME_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_CONNECTION_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(ACTOR_CATALOG_TRANSACTION_GENERATION_TIME_COLUMN_NAME);
         /**
          * Table actor catalog transaction addition.
          */
-        DeveloperDatabaseTable actorcatalogtransactionTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_TABLE_NAME, actorcatalogtransactionColumns);
+        DeveloperDatabaseTable actorcatalogtransactionTable = developerObjectFactory.getNewDeveloperDatabaseTable(ACTOR_CATALOG_TRANSACTION_TABLE_NAME, actorcatalogtransactionColumns);
         tables.add(actorcatalogtransactionTable);
 
         /**
@@ -159,23 +167,25 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> actorscatalogtransactionspendingforpropagationColumns = new ArrayList<>();
 
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NAME_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_ALIAS_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_ACTOR_TYPE_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_PHOTO_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LATITUDE_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LONGITUDE_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_EXTRA_DATA_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HOSTED_TIMESTAMP_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_NAME_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_ALIAS_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_ACTOR_TYPE_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_PHOTO_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_THUMBNAIL_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_LAST_CONNECTION_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(ACTOR_CATALOG_TRANSACTION_GENERATION_TIME_COLUMN_NAME);
         /**
          * Table actors catalog transactions pending for propagation addition.
          */
-        DeveloperDatabaseTable actorscatalogtransactionspendingforpropagationTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME, actorscatalogtransactionspendingforpropagationColumns);
+        DeveloperDatabaseTable actorscatalogtransactionspendingforpropagationTable = developerObjectFactory.getNewDeveloperDatabaseTable(ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME, actorscatalogtransactionspendingforpropagationColumns);
         tables.add(actorscatalogtransactionspendingforpropagationTable);
 
         /**
@@ -183,15 +193,15 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> callslogColumns = new ArrayList<>();
 
-        callslogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_ID_COLUMN_NAME);
-        callslogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_TIMESTAMP_COLUMN_NAME);
-        callslogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_FINISH_TIMESTAMP_COLUMN_NAME);
-        callslogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_START_TIMESTAMP_COLUMN_NAME);
-        callslogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_STEP_COLUMN_NAME);
+        callslogColumns.add(CALLS_LOG_CALL_ID_COLUMN_NAME);
+        callslogColumns.add(CALLS_LOG_CALL_TIMESTAMP_COLUMN_NAME);
+        callslogColumns.add(CALLS_LOG_FINISH_TIMESTAMP_COLUMN_NAME);
+        callslogColumns.add(CALLS_LOG_START_TIMESTAMP_COLUMN_NAME);
+        callslogColumns.add(CALLS_LOG_STEP_COLUMN_NAME);
         /**
          * Table calls log addition.
          */
-        DeveloperDatabaseTable callslogTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_TABLE_NAME, callslogColumns);
+        DeveloperDatabaseTable callslogTable = developerObjectFactory.getNewDeveloperDatabaseTable(CALLS_LOG_TABLE_NAME, callslogColumns);
         tables.add(callslogTable);
 
         /**
@@ -199,22 +209,22 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedinactorColumns = new ArrayList<>();
 
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_PHOTO_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LATITUDE_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LONGITUDE_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_NAME_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_PHOTO_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_LATITUDE_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_LONGITUDE_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedinactorColumns.add(CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
 
         /**
          * Table checked in actor addition.
          */
-        DeveloperDatabaseTable checkedinactorTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_TABLE_NAME, checkedinactorColumns);
+        DeveloperDatabaseTable checkedinactorTable = developerObjectFactory.getNewDeveloperDatabaseTable(CHECKED_IN_ACTOR_TABLE_NAME, checkedinactorColumns);
         tables.add(checkedinactorTable);
 
         /**
@@ -222,15 +232,15 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedinclientsColumns = new ArrayList<>();
 
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME);
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME);
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_DEVICE_TYPE_COLUMN_NAME);
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
+        checkedinclientsColumns.add(CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedinclientsColumns.add(CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME);
+        checkedinclientsColumns.add(CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME);
+        checkedinclientsColumns.add(CHECKED_IN_CLIENTS_DEVICE_TYPE_COLUMN_NAME);
+        checkedinclientsColumns.add(CHECKED_IN_CLIENTS_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
         /**
          * Table checked in clients addition.
          */
-        DeveloperDatabaseTable checkedinclientsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_TABLE_NAME, checkedinclientsColumns);
+        DeveloperDatabaseTable checkedinclientsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CHECKED_IN_CLIENTS_TABLE_NAME, checkedinclientsColumns);
         tables.add(checkedinclientsTable);
 
         /**
@@ -238,16 +248,16 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedinnetworkserviceColumns = new ArrayList<>();
 
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME);
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LONGITUDE_COLUMN_NAME);
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME);
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
+        checkedinnetworkserviceColumns.add(CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedinnetworkserviceColumns.add(CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME);
+        checkedinnetworkserviceColumns.add(CHECKED_IN_NETWORK_SERVICE_LONGITUDE_COLUMN_NAME);
+        checkedinnetworkserviceColumns.add(CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedinnetworkserviceColumns.add(CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME);
+        checkedinnetworkserviceColumns.add(CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
         /**
          * Table checked in network service addition.
          */
-        DeveloperDatabaseTable checkedinnetworkserviceTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_TABLE_NAME, checkedinnetworkserviceColumns);
+        DeveloperDatabaseTable checkedinnetworkserviceTable = developerObjectFactory.getNewDeveloperDatabaseTable(CHECKED_IN_NETWORK_SERVICE_TABLE_NAME, checkedinnetworkserviceColumns);
         tables.add(checkedinnetworkserviceTable);
 
         /**
@@ -255,22 +265,22 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedactorshistoryColumns = new ArrayList<>();
 
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_UUID_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_NAME_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_ALIAS_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_ACTOR_TYPE_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_PHOTO_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LATITUDE_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_EXTRA_DATA_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME);
-        checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECK_TYPE_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_UUID_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_NAME_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_ALIAS_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_ACTOR_TYPE_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_PHOTO_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_LAST_LATITUDE_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_EXTRA_DATA_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME);
+        checkedactorshistoryColumns.add(CHECKED_ACTORS_HISTORY_CHECK_TYPE_COLUMN_NAME);
         /**
          * Table checked actors history addition.
          */
-        DeveloperDatabaseTable checkedactorshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_TABLE_NAME, checkedactorshistoryColumns);
+        DeveloperDatabaseTable checkedactorshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CHECKED_ACTORS_HISTORY_TABLE_NAME, checkedactorshistoryColumns);
         tables.add(checkedactorshistoryTable);
 
         /**
@@ -278,17 +288,17 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> clientsRegistrationHistoryColumns = new ArrayList<>();
 
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_ID_COLUMN_NAME                 );
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME      );
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME     );
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME        );
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME  );
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME               );
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME             );
-        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME             );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_ID_COLUMN_NAME                 );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME      );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME     );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME        );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME  );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME               );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME             );
+        clientsRegistrationHistoryColumns.add(CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME             );
 
-        DeveloperDatabaseTable clientsRegistrationHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TABLE_NAME, clientsRegistrationHistoryColumns);
+        DeveloperDatabaseTable clientsRegistrationHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CLIENTS_REGISTRATION_HISTORY_TABLE_NAME, clientsRegistrationHistoryColumns);
         tables.add(clientsRegistrationHistoryTable);
 
         /**
@@ -296,18 +306,18 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkednetworkservicehistoryColumns = new ArrayList<>();
 
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_UUID_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LATITUDE_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME);
-        checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_UUID_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_LAST_LATITUDE_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME);
+        checkednetworkservicehistoryColumns.add(CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME);
         /**
          * Table checked network service history addition.
          */
-        DeveloperDatabaseTable checkednetworkservicehistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_TABLE_NAME, checkednetworkservicehistoryColumns);
+        DeveloperDatabaseTable checkednetworkservicehistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CHECKED_NETWORK_SERVICE_HISTORY_TABLE_NAME, checkednetworkservicehistoryColumns);
         tables.add(checkednetworkservicehistoryTable);
 
         /**
@@ -315,17 +325,17 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> clientsconnectionshistoryColumns = new ArrayList<>();
 
-        clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_UUID_COLUMN_NAME);
-        clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_LAST_LATITUDE_COLUMN_NAME);
-        clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
-        clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME);
-        clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME);
-        clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME);
+        clientsconnectionshistoryColumns.add(CLIENTS_CONNECTIONS_HISTORY_UUID_COLUMN_NAME);
+        clientsconnectionshistoryColumns.add(CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        clientsconnectionshistoryColumns.add(CLIENTS_CONNECTIONS_HISTORY_LAST_LATITUDE_COLUMN_NAME);
+        clientsconnectionshistoryColumns.add(CLIENTS_CONNECTIONS_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
+        clientsconnectionshistoryColumns.add(CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME);
+        clientsconnectionshistoryColumns.add(CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME);
+        clientsconnectionshistoryColumns.add(CLIENTS_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME);
         /**
          * Table clients connections history addition.
          */
-        DeveloperDatabaseTable clientsconnectionshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_TABLE_NAME, clientsconnectionshistoryColumns);
+        DeveloperDatabaseTable clientsconnectionshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CLIENTS_CONNECTIONS_HISTORY_TABLE_NAME, clientsconnectionshistoryColumns);
         tables.add(clientsconnectionshistoryTable);
 
         /**
@@ -333,18 +343,18 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> nodesconnectionshistoryColumns = new ArrayList<>();
 
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_UUID_COLUMN_NAME);
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_IP_COLUMN_NAME);
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_DEFAULT_PORT_COLUMN_NAME);
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_LAST_LATITUDE_COLUMN_NAME);
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME);
-        nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_UUID_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_IP_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_DEFAULT_PORT_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_LAST_LATITUDE_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME);
+        nodesconnectionshistoryColumns.add(NODES_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME);
         /**
          * Table nodes connections history addition.
          */
-        DeveloperDatabaseTable nodesconnectionshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_TABLE_NAME, nodesconnectionshistoryColumns);
+        DeveloperDatabaseTable nodesconnectionshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(NODES_CONNECTIONS_HISTORY_TABLE_NAME, nodesconnectionshistoryColumns);
         tables.add(nodesconnectionshistoryTable);
 
         /**
@@ -352,15 +362,15 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> methodcallshistoryColumns = new ArrayList<>();
 
-        methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME);
-        methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME);
-        methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME);
-        methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME);
+        methodcallshistoryColumns.add(METHOD_CALLS_HISTORY_UUID_COLUMN_NAME);
+        methodcallshistoryColumns.add(METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME);
+        methodcallshistoryColumns.add(METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME);
+        methodcallshistoryColumns.add(METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        methodcallshistoryColumns.add(METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME);
         /**
          * Table method calls history addition.
          */
-        DeveloperDatabaseTable methodcallshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_TABLE_NAME, methodcallshistoryColumns);
+        DeveloperDatabaseTable methodcallshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(METHOD_CALLS_HISTORY_TABLE_NAME, methodcallshistoryColumns);
         tables.add(methodcallshistoryTable);
 
         /**
@@ -368,20 +378,20 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> nodescatalogColumns = new ArrayList<>();
 
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_NAME_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IP_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME);
-        nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_NAME_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_IP_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME);
+        nodescatalogColumns.add(NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
         /**
          * Table nodes catalog addition.
          */
-        DeveloperDatabaseTable nodescatalogTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TABLE_NAME, nodescatalogColumns);
+        DeveloperDatabaseTable nodescatalogTable = developerObjectFactory.getNewDeveloperDatabaseTable(NODES_CATALOG_TABLE_NAME, nodescatalogColumns);
         tables.add(nodescatalogTable);
 
         /**
@@ -389,20 +399,20 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> nodescatalogtransactionColumns = new ArrayList<>();
 
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_NAME_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_IP_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_DEFAULT_PORT_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_REGISTERED_TIMESTAMP_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
-        nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_NAME_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_IP_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_DEFAULT_PORT_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_LAST_LATITUDE_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_LAST_LONGITUDE_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_REGISTERED_TIMESTAMP_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
+        nodescatalogtransactionColumns.add(NODES_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
         /**
          * Table nodes catalog transaction addition.
          */
-        DeveloperDatabaseTable nodescatalogtransactionTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_TABLE_NAME, nodescatalogtransactionColumns);
+        DeveloperDatabaseTable nodescatalogtransactionTable = developerObjectFactory.getNewDeveloperDatabaseTable(NODES_CATALOG_TRANSACTION_TABLE_NAME, nodescatalogtransactionColumns);
         tables.add(nodescatalogtransactionTable);
 
         /**
@@ -410,20 +420,20 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> nodescatalogtransactionspendingforpropagationColumns = new ArrayList<>();
 
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NAME_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_IP_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_DEFAULT_PORT_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LATITUDE_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LONGITUDE_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_REGISTERED_TIMESTAMP_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
-        nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NAME_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_IP_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_DEFAULT_PORT_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LATITUDE_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_LONGITUDE_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_REGISTERED_TIMESTAMP_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
+        nodescatalogtransactionspendingforpropagationColumns.add(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME);
         /**
          * Table nodes catalog transactions pending for propagation addition.
          */
-        DeveloperDatabaseTable nodescatalogtransactionspendingforpropagationTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME, nodescatalogtransactionspendingforpropagationColumns);
+        DeveloperDatabaseTable nodescatalogtransactionspendingforpropagationTable = developerObjectFactory.getNewDeveloperDatabaseTable(NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME, nodescatalogtransactionspendingforpropagationColumns);
         tables.add(nodescatalogtransactionspendingforpropagationTable);
 
         return tables;

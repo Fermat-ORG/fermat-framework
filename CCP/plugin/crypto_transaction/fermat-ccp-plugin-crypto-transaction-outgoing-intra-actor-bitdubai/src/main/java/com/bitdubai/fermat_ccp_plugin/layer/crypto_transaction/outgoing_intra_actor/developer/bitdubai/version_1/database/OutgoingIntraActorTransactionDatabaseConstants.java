@@ -45,4 +45,7 @@ public class OutgoingIntraActorTransactionDatabaseConstants {
     public static final String OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE = "runningNetworkType";
     public static final String OUTGOING_INTRA_ACTOR_FIRST_KEY_COLUMN = "transaction_id";
     public static final String OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_TYPE = "cryptoCurrencyType";
+    public static final String OUTGOING_INTRA_ACTOR_TRANSACTION_FEE = "transactionFee";
+    public static final String OUTGOING_INTRA_ACTOR_TRANSACTION_FEE_ORIGIN = "transactionFeeOrigin";
+    public static final String OUTGOING_INTRA_ACTOR_TRANSACTION_TOTAL = "transactionTotal";
 }

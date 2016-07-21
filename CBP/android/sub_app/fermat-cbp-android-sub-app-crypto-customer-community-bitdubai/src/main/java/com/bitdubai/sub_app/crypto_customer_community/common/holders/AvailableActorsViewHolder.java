@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_customer_community.common.holders;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -29,6 +30,8 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
     private FermatTextView customerName;
     private FermatTextView customerLocation;
     private FermatTextView connectionText;
+    private String placeAddress;
+    private String countryAddress;
 
     private Resources res;
 
@@ -54,27 +57,48 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         if (data.getConnectionState() != null) {
             switch (data.getConnectionState()) {
                 case CONNECTED:
+                    connectionState.setVisibility(View.VISIBLE);
                     connectionState.setImageResource(R.drawable.ccc_added_contact);
                     connectionText.setText(R.string.ccc_connection_state_connected);
                     connectionText.setVisibility(View.VISIBLE);
                     break;
                 case PENDING_REMOTELY_ACCEPTANCE:
+                    connectionState.setVisibility(View.VISIBLE);
                     connectionState.setImageResource(R.drawable.ccc_add_contact);
                     connectionText.setText(R.string.ccc_connection_state_pending_acceptance);
                     connectionText.setVisibility(View.VISIBLE);
+                    break;
                 case PENDING_LOCALLY_ACCEPTANCE:
+                    connectionState.setVisibility(View.VISIBLE);
                     connectionState.setImageResource(R.drawable.ccc_add_contact);
                     connectionText.setText(R.string.ccc_connection_state_pending_acceptance);
                     connectionText.setVisibility(View.VISIBLE);
+                    break;
                 default:
-                    connectionState.setImageResource(R.drawable.ccc_add_contact);
+                    connectionState.setVisibility(View.INVISIBLE);
                     connectionText.setVisibility(View.INVISIBLE);
                     break;
             }
+        } else {
+            connectionState.setVisibility(View.INVISIBLE);
+            connectionText.setVisibility(View.INVISIBLE);
         }
 
         customerName.setText(data.getAlias());
-        customerLocation.setText("-- / --");
+        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+            customerName.setTextColor(Color.RED);
+        else if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            customerName.setTextColor(Color.GREEN);
+        else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+            customerName.setTextColor(Color.parseColor("#4d4d4d"));//res.getColor(R.color.color_black_light));
+
+        if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
+            countryAddress= "--";
+        else countryAddress =  data.getCountry();
+        if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
+            placeAddress= "--";
+        else placeAddress =  data.getPlace();
+        customerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
         customerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 

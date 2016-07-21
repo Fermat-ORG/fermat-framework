@@ -42,6 +42,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.structure.CustomerBrokerNewManagerImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -85,7 +87,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     private Database                                                        dataBase;
 
     /*Represent DeveloperDatabaseFactory*/
-    private CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
+    CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
     private CustomerBrokerNewNegotiationTransactionDatabaseDao              customerBrokerNewNegotiationTransactionDatabaseDao;
@@ -94,7 +96,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     private CustomerBrokerNewManagerImpl                                    customerBrokerNewManagerImpl;
 
     /*Represent Agent*/
-    private CustomerBrokerNewAgent                                          customerBrokerNewAgent;
+    private CustomerBrokerNewAgent2                                          customerBrokerNewAgent;
+//    private CustomerBrokerNewAgent                                          customerBrokerNewAgent;
 
     /*Represent the Negotiation Purchase*/
     private CustomerBrokerPurchaseNegotiation                               customerBrokerPurchaseNegotiation;
@@ -110,6 +113,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     //TEA
     private final List<FermatEventListener> listenersAdded;
 
+    //Agent configuration
+    private final long SLEEP_TIME = 5000;
+    private final long DELAY_TIME = 500;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public NegotiationTransactionCustomerBrokerNewPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -121,7 +128,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*IMPLEMENTATION Service.*/
     @Override
     public void start() throws CantStartPluginException {
-
         try {
 
             //Initialize database
@@ -132,9 +138,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             //Initialize Dao
-//            customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
             customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
-
+            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
             //Initialize manager
             customerBrokerNewManagerImpl = new CustomerBrokerNewManagerImpl(
                     customerBrokerNewNegotiationTransactionDatabaseDao,
@@ -148,12 +153,16 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             customerBrokerNewServiceEventHandler.start();
 
             //Init monitor Agent
-            customerBrokerNewAgent = new CustomerBrokerNewAgent(
+            customerBrokerNewAgent = new CustomerBrokerNewAgent2(
+                    SLEEP_TIME,
+                    TIME_UNIT,
+                    DELAY_TIME,
                     pluginDatabaseSystem,
                     logManager,
                     this,
                     eventManager,
                     pluginId,
+                    customerBrokerNewNegotiationTransactionDatabaseDao,
                     negotiationTransmissionManager,
                     customerBrokerPurchaseNegotiation,
                     customerBrokerSaleNegotiation,
@@ -161,11 +170,24 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                     customerBrokerSaleNegotiationManager,
                     broadcaster
             );
+//            customerBrokerNewAgent = new CustomerBrokerNewAgent(
+//                    pluginDatabaseSystem,
+//                    logManager,
+//                    this,
+//                    eventManager,
+//                    pluginId,
+//                    negotiationTransmissionManager,
+//                    customerBrokerPurchaseNegotiation,
+//                    customerBrokerSaleNegotiation,
+//                    customerBrokerPurchaseNegotiationManager,
+//                    customerBrokerSaleNegotiationManager,
+//                    broadcaster
+//            );
             customerBrokerNewAgent.start();
 
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
-//            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START \n-----------------------\n");
+            System.out.print("-----------------------\n CUSTOMER BROKER NEW: SUCCESSFUL START "+pluginId.toString()+" \n-----------------------\n");
 
         } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e){
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -196,22 +218,17 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
     /*IMPLEMENTATION DatabaseManagerForDevelopers.*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+        return customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        return customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try{
-            return new CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ArrayList<>();
-        }
+        return customerBrokerNewNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
     /*END IMPLEMENTATION DatabaseManagerForDevelopers.*/
 
@@ -254,15 +271,6 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
     /*PRIVATE METHOD*/
     private void initializeDb() throws CantInitializeDatabaseException {
-        /*try {
-
-            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
-
-        } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "There is a problem and i cannot create the database.");
-        }*/
-
         try {
 
 //            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
