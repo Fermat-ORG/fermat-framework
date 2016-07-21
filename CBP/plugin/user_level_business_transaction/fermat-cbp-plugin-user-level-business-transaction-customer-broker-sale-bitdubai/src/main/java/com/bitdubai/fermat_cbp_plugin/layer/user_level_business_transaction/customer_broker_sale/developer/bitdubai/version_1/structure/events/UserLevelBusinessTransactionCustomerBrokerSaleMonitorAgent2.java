@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
@@ -260,17 +261,23 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
             //Find the negotiation's customerCurrency, to find the marketExchangeRate of that currency vs. USD
 
+//            Collection<Clause> clauses = null;
+//            try {
+//                clauses = transactionInfo.getClauses();
+//            } catch (CantGetListClauseException e) {
+//                e.printStackTrace();
+//            }
             final Collection<Clause> clauses = transactionInfo.getClauses();
             final String customerCurrency = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
 
             float marketExchangeRate = 1;
-            if (customerCurrency != null) {
+            /*if (customerCurrency != null) {
                 try {
                     marketExchangeRate = getMarketExchangeRate(customerCurrency);
                 } catch (CantGetExchangeRateException e) {
                     marketExchangeRate = 1;
                 }
-            }
+            }*/
 
             boolean isContract = openContractManager.isOpenContract(transactionInfo.getNegotiationId().toString());
             if(transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)){
