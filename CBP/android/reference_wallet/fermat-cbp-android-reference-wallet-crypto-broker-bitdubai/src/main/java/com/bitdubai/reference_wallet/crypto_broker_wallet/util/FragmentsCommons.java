@@ -27,6 +27,7 @@ public class FragmentsCommons {
     public static final String CONTRACT_DATA = "contract_data";
     public static final String CONFIGURED_DATA = "configured_data";
     public static final String EXCHANGE_RATES = "EXCHANGE_RATES";
+    public static final String LAST_ACTIVITY = "LAST_ACTIVITY";
     public static final int CANCEL_NEGOTIATION_OPTION_MENU_ID = 1;
     public static final int CONTRACT_HISTORY_FILTER_OPTION_MENU_ID = 2;
     public static final int NO_FILTER_OPTION_MENU_ID = 3;
