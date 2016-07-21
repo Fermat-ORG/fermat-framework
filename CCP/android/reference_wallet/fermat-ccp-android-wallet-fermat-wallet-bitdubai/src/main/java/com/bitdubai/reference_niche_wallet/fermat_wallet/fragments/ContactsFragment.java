@@ -308,8 +308,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mSearchView.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-                final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
-                mClearSearchImageButton.setVisibility(visibility);
+            //    final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
+            //    mClearSearchImageButton.setVisibility(visibility);
                 if (mPinnedHeaderAdapter != null) {
                     mPinnedHeaderAdapter.getFilter().filter(str);
                     mPinnedHeaderAdapter.notifyDataSetChanged();
@@ -431,19 +431,19 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void setupViews(View rootView) {
         mSearchView = (EditText) rootView.findViewById(R.id.search_view);
-        mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
+       // mClearSearchImageButton = (ImageButton) rootView.findViewById(R.id.clear_search_image_button);
         contacts_container = (FrameLayout) rootView.findViewById(R.id.contacts_container);
         mLoadingView = (ProgressBar) rootView.findViewById(R.id.loading_view);
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
 
-        mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
+/*        mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSearchView.getText().clear();
             }
-        });
+        });*/
 
         mEmptyView.setOnClickListener(new View.OnClickListener() {
             @Override

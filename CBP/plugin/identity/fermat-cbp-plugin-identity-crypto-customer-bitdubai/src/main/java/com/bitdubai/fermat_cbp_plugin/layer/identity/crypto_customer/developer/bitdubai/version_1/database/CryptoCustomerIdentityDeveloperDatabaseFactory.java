@@ -69,7 +69,7 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory {//implements DealsW
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +90,7 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory {//implements DealsW
                   /*
                    * We create the new database
                    */
-                database = cryptoCustomerIdentityDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = cryptoCustomerIdentityDatabaseFactory.createDatabase(pluginId, CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -106,7 +106,7 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory {//implements DealsW
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Crypto Customer", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CryptoCustomerIdentityDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 

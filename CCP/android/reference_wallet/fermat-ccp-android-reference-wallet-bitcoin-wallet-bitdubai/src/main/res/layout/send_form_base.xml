@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transacion_form"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:background="#fff">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/send_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -256,14 +259,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:id="@+id/advances_btn">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
-                        android:id="@+id/advances_btn"
-                        android:text="@string/feed_advances_text"
+                        android:text="@string/fee_advances_text"
                         android:textColor="#12aca1"
                         android:textSize="12sp" />
 
@@ -300,7 +303,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:paddingTop="10dp"
-                            android:text="@string/feed_amount_text"
+                            android:text="@string/fee_amount_text"
                             android:textColor="#12aca1"
                             android:textSize="12sp" />
 
@@ -346,7 +349,7 @@
                             android:id="@+id/checkBoxSubstract"
                             android:checked="true"
                             android:gravity="center_vertical"
-                            android:text="@string/feed_option_text"
+                            android:text="@string/fee_option_text"
                             android:textColor="#333"
                             android:textSize="12sp"/>
 
@@ -363,7 +366,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:paddingTop="0dp"
-                            android:text="@string/title_Feed"
+                            android:text="@string/title_Fee"
                             android:textColor="#12aca1"
                             android:textSize="12sp" />
 
@@ -442,5 +445,5 @@
         </RelativeLayout>
 
     </LinearLayout>
-
+    </ScrollView>
 </RelativeLayout>

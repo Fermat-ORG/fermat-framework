@@ -2,20 +2,26 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.DATABASE_NAME;
@@ -129,6 +135,41 @@ public class OutgoingMessagesDao extends AbstractBaseDao<NetworkServiceMessage> 
 
     }
 
+    public void markAsFailed(NetworkServiceMessage fermatMessage) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+
+        if (fermatMessage == null) {
+            throw new IllegalArgumentException("The fermatMessage is required, can not be null");
+        }
+
+        fermatMessage.setDeliveryTimestamp(new Timestamp(System.currentTimeMillis()));
+        fermatMessage.setFermatMessagesStatus(FermatMessagesStatus.FAILED);
+        update(fermatMessage);
+
+    }
+
+    public void markAsPendingToSend(NetworkServiceMessage fermatMessage) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+
+        if (fermatMessage == null) {
+            throw new IllegalArgumentException("The fermatMessage is required, can not be null");
+        }
+
+        System.out.println("12345P2P markAsPendingToSend FAIL COUNT = "+fermatMessage.getFailCount());
+
+//        final int MAX_FAIL_COUNT = 15;
+//
+//        if(fermatMessage.getFailCount()>=MAX_FAIL_COUNT) {
+//            System.out.println("12345P2P MAX FAIL COUNT REACHED");
+//            markAsFailed(fermatMessage);
+//            return;
+//        }
+
+        fermatMessage.setDeliveryTimestamp(new Timestamp(System.currentTimeMillis()));
+        fermatMessage.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+        fermatMessage.setFailCount(fermatMessage.getFailCount() + 1);
+        update(fermatMessage);
+
+    }
+
     /**
      * Method that list the all the network services messages pending to send which had between @countFailMin and @countFailMax intents.
      *
@@ -138,22 +179,92 @@ public class OutgoingMessagesDao extends AbstractBaseDao<NetworkServiceMessage> 
      */
     public List<NetworkServiceMessage> findByFailCount(final Integer countFailMin,
                                                        final Integer countFailMax) throws CantReadRecordDataBaseException {
+        final Map<String, Object> filters = new HashMap();
 
         try {
 
             DatabaseTable templateTable = getDatabaseTable();
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
-            templateTable.addFermatEnumFilter(OUTGOING_MESSAGES_STATUS_COLUMN_NAME, FermatMessagesStatus.PENDING_TO_SEND, DatabaseFilterType.EQUAL);
+//            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+//            templateTable.addFermatEnumFilter(OUTGOING_MESSAGES_STATUS_COLUMN_NAME, FermatMessagesStatus.PENDING_TO_SEND, DatabaseFilterType.EQUAL);
+            {
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+                newFilter.setValue(MessagesStatus.PENDING_TO_SEND.getCode());
+                tableFilters.add(newFilter);
+            }
 
-            if (countFailMin != null)
-                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFailMin.toString(), DatabaseFilterType.GREATER_OR_EQUAL_THAN);
+            if (countFailMin != null) {
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.GREATER_OR_EQUAL_THAN);
+                newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                newFilter.setValue( countFailMin.toString());
 
-            if (countFailMax != null)
-                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFailMax.toString(), DatabaseFilterType.LESS_OR_EQUAL_THAN);
+                tableFilters.add(newFilter);
+//                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFailMin.toString(), DatabaseFilterType.GREATER_OR_EQUAL_THAN);
+            }
 
-            if (countFailMax == null && countFailMin == null)
-                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, "0", DatabaseFilterType.EQUAL);
+            if (countFailMax != null){
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.LESS_OR_EQUAL_THAN);
+                newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                newFilter.setValue(countFailMax.toString());
 
+                tableFilters.add(newFilter);
+//                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFailMax.toString(), DatabaseFilterType.LESS_OR_EQUAL_THAN);
+            }
+
+//            if (countFailMax == null && countFailMin == null)
+//                templateTable.addStringFilter(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, "0", DatabaseFilterType.EQUAL);
+
+            templateTable.setFilterGroup(tableFilters, null, DatabaseFilterOperator.AND);
+            templateTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = templateTable.getRecords();
+
+            List<NetworkServiceMessage> list = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records)
+                list.add(getEntityFromDatabaseTableRecord(record));
+
+            return list;
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            throw new CantReadRecordDataBaseException(
+                    cantLoadTableToMemory,
+                    "Database Name: " + DATABASE_NAME,
+                    "The data no exist"
+            );
+        } catch (InvalidParameterException invalidParameterException) {
+
+            throw new CantReadRecordDataBaseException(
+                    invalidParameterException,
+                    "Database Name: " + DATABASE_NAME,
+                    "Data is inconsistent."
+            );
+        }
+    }
+
+    public List<NetworkServiceMessage> findBySentMessages() throws CantReadRecordDataBaseException {
+        final Map<String, Object> filters = new HashMap();
+
+        try {
+
+            DatabaseTable templateTable = getDatabaseTable();
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+
+            {
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+                newFilter.setValue(MessagesStatus.SENT.getCode());
+                tableFilters.add(newFilter);
+            }
+
+            templateTable.setFilterGroup(tableFilters, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
 
             List<DatabaseTableRecord> records = templateTable.getRecords();

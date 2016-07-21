@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bitdubai.android_fermat_pip_addon" >
+    package="com.bitdubai.android_fermat_pip_addon.connectivity" >
 
     <application
         android:allowBackup="true"

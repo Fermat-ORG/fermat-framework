@@ -103,6 +103,7 @@
                             android:layout_gravity="bottom"
                             android:gravity="center_horizontal"
                             android:text="More Settings"
+                            android:textColor="#8b8b8b"
                             android:id="@+id/more_settings"
                             />
 

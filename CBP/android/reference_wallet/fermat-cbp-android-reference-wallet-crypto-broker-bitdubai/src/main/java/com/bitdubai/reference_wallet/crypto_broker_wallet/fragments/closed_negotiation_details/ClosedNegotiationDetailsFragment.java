@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -32,6 +33,10 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.Negotiat
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Map;
 
 
@@ -45,9 +50,10 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
 
     // DATA
     private NegotiationWrapper negotiationWrapper;
-
+    NumberFormat numberFormat= DecimalFormat.getInstance();
     // Fermat Managers
     private ErrorManager errorManager;
+
 
 
     public static ClosedNegotiationDetailsFragment newInstance() {
@@ -93,9 +99,11 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
         final String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-        final String exchangeAmount = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
         final String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        final String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
+
+        final String exchangeAmount = fixFormat(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+
+        final String amount = fixFormat(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
 
         //Negotiation Summary
         customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
@@ -126,6 +134,39 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Ref
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+    }
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+                    } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 
 }

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
@@ -54,9 +55,37 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
+            CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
+
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
+                        actorProfile.getExtraData());
+                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
+                if(cryptoBrokerIdentityExtraData==null){
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus()));
+                } else {
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus(),
+                                    cryptoBrokerIdentityExtraData));
+                }
+
+
             }
 
             return cryptoBrokerExposingDataList;
@@ -112,9 +141,38 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
+            CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
+
             for (final ActorProfile actorProfile : list) {
+
                 System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
+                        actorProfile.getExtraData());
+                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
+                if(cryptoBrokerIdentityExtraData==null){
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus()));
+                } else {
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus(),
+                                    cryptoBrokerIdentityExtraData));
+                }
+
+
             }
 
             return cryptoBrokerExposingDataList;
@@ -154,9 +212,37 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
+            CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
+
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
+                        actorProfile.getExtraData());
+                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
+                if(cryptoBrokerIdentityExtraData==null){
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus()));
+                } else {
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus(),
+                                    cryptoBrokerIdentityExtraData));
+                }
+
+
             }
 
             return cryptoBrokerExposingDataList;
@@ -196,9 +282,37 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
+            CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
+
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
+                        actorProfile.getExtraData());
+                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
+                if(cryptoBrokerIdentityExtraData==null){
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus()));
+                } else {
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus(),
+                                    cryptoBrokerIdentityExtraData));
+                }
+
+
             }
 
             return cryptoBrokerExposingDataList;
@@ -238,9 +352,38 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
+            CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
+
             for (final ActorProfile actorProfile : list) {
+
                 System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
+                        actorProfile.getExtraData());
+                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
+                if(cryptoBrokerIdentityExtraData==null){
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus()));
+                } else {
+                    cryptoBrokerExposingDataList.add(
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus(),
+                                    cryptoBrokerIdentityExtraData));
+                }
+
+
             }
 
             return cryptoBrokerExposingDataList;
@@ -282,9 +425,37 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             CryptoBrokerExposingData cryptoBrokerExposingData = null;
 
+            CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
+
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingData = new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation(), 0, 0, actorProfile.getStatus());
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
+                        actorProfile.getExtraData());
+                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
+                if(cryptoBrokerIdentityExtraData==null){
+
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus());
+                } else {
+
+                            new CryptoBrokerExposingData(
+                                    actorProfile.getIdentityPublicKey(),
+                                    actorProfile.getAlias(),
+                                    actorProfile.getPhoto(),
+                                    actorProfile.getLocation(),
+                                    0,
+                                    0,
+                                    actorProfile.getStatus(),
+                                    cryptoBrokerIdentityExtraData);
+                }
+
+
             }
 
             return cryptoBrokerExposingData;
@@ -304,5 +475,17 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     @Override
     public List<CryptoBrokerExposingData> getResult(final Integer max) throws CantListCryptoBrokersException {
         return null;
+    }
+
+    private CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData(String extraData){
+        if(extraData==null||extraData.isEmpty()){
+            return null;
+        }
+        try{
+            return CryptoBrokerIdentityExtraData.fromJson(extraData);
+        } catch (Exception e){
+            //I don't want to report this exception, the data could be corrupted
+            return null;
+        }
     }
 }

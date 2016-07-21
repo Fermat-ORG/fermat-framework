@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityExtraData;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.io.Serializable;
@@ -81,5 +82,11 @@ public interface CryptoBrokerCommunityInformation extends Serializable {
      * @return The Profile Status
      */
     ProfileStatus getProfileStatus();
+
+    /**
+     * This method returns the CryptoBrokerIdentityExtraData.
+     * @return
+     */
+    CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData();
 }
 

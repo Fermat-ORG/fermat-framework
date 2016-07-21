@@ -39,7 +39,6 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
     private List<FermatEventListener> listenersAdded;
 
 
-
     public P2PLayerPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -102,8 +101,30 @@ public class P2PLayerPluginRoot extends AbstractPlugin implements P2PLayerManage
         }, 5, 5, TimeUnit.SECONDS);
     }
 
-
-
+    @Override
+    public void registerReconnect(NetworkChannel networkChannel) {
+        client = networkChannel;
+        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                if (client.isConnected()) {
+                    for (AbstractNetworkService abstractNetworkService : networkServices.values()) {
+                        try {
+                            abstractNetworkService.startConnection();
+                        } catch (CantRegisterProfileException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        scheduledExecutorService.shutdownNow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, 5, 5, TimeUnit.SECONDS);
+    }
 
 
 }

@@ -2,41 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/bw_body_gradient_background">
+    android:background="@drawable/bw_body_gradient_background"
+    android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/setup_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="-86dp"
         android:background="@drawable/bw_reflex_image"
         android:orientation="vertical"
-        android:layout_marginTop="-86dp"
         android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="120dp"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="120dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/transaction_type"
-                android:textSize="@dimen/text_size"
-                android:textColor="@color/background_header_blue"/>
+                android:textColor="@color/background_header_blue"
+                android:textSize="@dimen/text_size" />
 
             <EditText
                 android:id="@+id/transaction_type"
                 android:layout_width="match_parent"
-                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:editable="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size" />
         </LinearLayout>
@@ -44,25 +44,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/transaction_amount"
-                android:textSize="@dimen/text_size"
-                android:textColor="@color/background_header_blue"/>
+                android:textColor="@color/background_header_blue"
+                android:textSize="@dimen/text_size" />
 
             <EditText
                 android:id="@+id/transaction_amount"
                 android:layout_width="match_parent"
-                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:editable="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size" />
         </LinearLayout>
@@ -70,25 +70,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/transaction_date"
-                android:textSize="@dimen/text_size"
-                android:textColor="@color/background_header_blue"/>
+                android:textColor="@color/background_header_blue"
+                android:textSize="@dimen/text_size" />
 
             <EditText
                 android:id="@+id/transaction_date"
                 android:layout_width="match_parent"
-                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:editable="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size" />
         </LinearLayout>
@@ -96,27 +96,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/transaction_description"
-                android:textSize="@dimen/text_size"
-                android:textColor="@color/background_header_blue" />
+                android:textColor="@color/background_header_blue"
+                android:textSize="@dimen/text_size" />
 
             <EditText
                 android:id="@+id/transaction_concept"
                 android:layout_width="match_parent"
-                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:editable="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/bw_transaction_detail_btn_container"
             android:layout_width="match_parent"
@@ -129,8 +130,10 @@
                 android:id="@+id/bw_transaction_detail_delete_btn"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginEnd="12dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="12dp"
+                android:layout_marginStart="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/bw_button_background_selector"
                 android:text="Delete"
@@ -142,8 +145,10 @@
                 android:id="@+id/bw_transaction_detail_update_btn"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginEnd="40dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="40dp"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:background="@drawable/bw_button_background_selector"
                 android:text="Update"

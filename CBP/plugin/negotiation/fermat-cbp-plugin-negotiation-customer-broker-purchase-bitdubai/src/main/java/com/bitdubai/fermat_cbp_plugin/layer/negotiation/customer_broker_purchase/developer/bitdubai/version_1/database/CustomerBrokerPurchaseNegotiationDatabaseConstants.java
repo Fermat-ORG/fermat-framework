@@ -12,6 +12,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
  */
 public class CustomerBrokerPurchaseNegotiationDatabaseConstants {
 
+    public static final String DATABASE_NAME = "negotiation_customer_broker_purchase";
+
     /**
      * Negotiations Purchase database table definition.
      */

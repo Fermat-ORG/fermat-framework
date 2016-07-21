@@ -10,9 +10,9 @@ import com.bitdubai.android_core.app.common.version_1.communication.platform_ser
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.nio.channels.IllegalBlockingModeException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias Furszyfer on 2016.05.01..
@@ -35,6 +35,8 @@ public abstract class LocalSocketSession {
     }
 
     public void startReceiving(){
+        if (objectInputStream!=null) throw new RuntimeException("InvalidState");
+        if (runner!=null) runner.interrupt();
         try{
             if(objectInputStream==null) objectInputStream = new ObjectInputStream(localSocket.getInputStream());
         }catch (Exception e){
@@ -117,11 +119,11 @@ public abstract class LocalSocketSession {
 //            ObjectOutput out = null;
             try {
 //                objectOutputStream.flush();
-                objectOutputStream.write(1);
+//                objectOutputStream.write(1);
                 objectOutputStream.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
-                if(localSocket.isClosed()){
-                    if (localSocket.isOutputShutdown()){
+                if(!localSocket.isConnected()){
+                    if (!localSocket.isOutputShutdown()){
                         try {
                             localSocket.getOutputStream().flush();
                         } catch (IOException e1) {
@@ -195,28 +197,57 @@ public abstract class LocalSocketSession {
             try {
                 if(localSocket!=null) {
                     isReceiverActive = true;
+                    int read = -1;
                         while (isReceiverActive) {
-                                int read = objectInputStream.read();
-                                if(read!=-1) {
-                                    Log.i(TAG,"pidiendo objeto");
-                                    FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();
-                                    //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
-                                    if (object != null) {
-                                        onReceiveMessage(object);
-                                        //messageSize.decrementAndGet();
+                                if(objectInputStream.available()!=0) {
+                                    read = +objectInputStream.read();
+                                }else {
+                                    read = 0;
+                                    if (read != -1) {
+                                        Log.i(TAG, "pidiendo objeto");
+                                        FermatModuleObjectWrapper object = null;
+                                        try {
+                                            if(localSocket.isConnected()) {
+                                                Object o = objectInputStream.readObject();
+                                                if(o instanceof FermatModuleObjectWrapper){
+                                                    object = (FermatModuleObjectWrapper) o;
+                                                }else{
+                                                    Log.e(TAG,"ERROR, object returned is not FermatModuleObjectWrapper. Object: "+o.getClass().getName());
+                                                }
+                                            }
+                                            else Log.e(TAG,"Socket cerrado, hace falta cerrar hilo");
+                                        } catch (OptionalDataException e) {
+                                            e.printStackTrace();
+                                            read = +objectInputStream.read();
+                                            Log.e(TAG, String.valueOf(read));
+                                        }
+                                        //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
+                                        if (object != null) {
+                                            onReceiveMessage(object);
+                                            read--;
+                                            //messageSize.decrementAndGet();
+                                        } else {
+                                            Log.e(TAG, "Object receiver null");
+                                            Log.e(TAG, "Read: " + read);
+//                                        TimeUnit.SECONDS.sleep(2);
+                                        }
                                     } else {
-                                        Log.e(TAG,"Object receiver null");
-                                        TimeUnit.SECONDS.sleep(2);
+                                        //Log.e(TAG,"end of input stream");
+//                                    isReceiverActive = false;
                                     }
-                                }else{
-                                    Log.e(TAG,"end of input stream");
-                                    isReceiverActive = false;
                                 }
                         }
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    reconnect();
+                    startReceiving();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
             }catch (Exception e){
                 e.printStackTrace();
             }

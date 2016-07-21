@@ -26,6 +26,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserProfileImageException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletCacheUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -285,7 +286,7 @@ public class IntraActorNetworkServiceDao {
                 profileImage = new  byte[0];
             }
 
-            return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase);
+            return new IntraUserNetworkService(intraUserPublicKey, profileImage,intraUserAlias, intraUserPhrase, ProfileStatus.OFFLINE);
         }
         catch(Exception e)
         {

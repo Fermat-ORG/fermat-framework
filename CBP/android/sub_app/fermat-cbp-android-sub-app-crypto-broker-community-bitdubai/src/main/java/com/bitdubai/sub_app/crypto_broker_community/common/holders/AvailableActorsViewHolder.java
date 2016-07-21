@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_community.common.holders;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,8 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
     private FermatTextView brokerName;
     private FermatTextView brokerLocation;
     private FermatTextView connectionText;
+    private String placeAddress;
+    private String countryAddress;
 
     private Resources res;
 
@@ -78,7 +81,20 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         brokerName.setText(data.getAlias());
-        brokerLocation.setText(String.format("%s / %s", data.getCountry(), data.getPlace()));
+        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+            brokerName.setTextColor(Color.RED);
+        else if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+            brokerName.setTextColor(Color.GREEN);
+        else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+            brokerName.setTextColor(Color.parseColor("#4d4d4d"));//BLACK);//res.getColor(R.color.color_black_light));
+
+        if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
+            countryAddress= "--";
+        else countryAddress =  data.getCountry();
+        if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
+            placeAddress= "--";
+        else placeAddress =  data.getPlace();
+        brokerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 
