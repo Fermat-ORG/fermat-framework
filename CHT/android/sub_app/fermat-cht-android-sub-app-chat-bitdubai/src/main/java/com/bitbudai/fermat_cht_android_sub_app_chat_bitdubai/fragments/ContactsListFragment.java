@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -85,6 +86,8 @@ public class ContactsListFragment
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";
+
+    private ProgressBar progressBar;
     ArrayList<String> contactname=new ArrayList<>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<String> contactid=new ArrayList<>();
@@ -129,8 +132,6 @@ public class ContactsListFragment
         }
         try {
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
-            //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            //chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e) {
             chatSettings = null;
         }
@@ -230,7 +231,6 @@ public class ContactsListFragment
                     @Override
                     public int compare(ChatActorCommunityInformation actorA, ChatActorCommunityInformation actorB) {
                         return (actorA.getAlias().trim().toLowerCase().compareTo(actorB.getAlias().trim().toLowerCase()));
-
                     }
                 });
                 if (con != null) {
@@ -326,18 +326,10 @@ public class ContactsListFragment
         list.setAdapter(adapter);
         registerForContextMenu(list);
 
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-//            }
-//        });
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener()/*new AdapterView.OnItemClickListener()*/ {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //public void onClick(View view) {
                 try {
                     displayChat(position);
                 } catch (Exception e) {
@@ -411,51 +403,13 @@ public class ContactsListFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        menu.clear();
-//        super.onCreateOptionsMenu(menu, inflater);
-        // Inflate the menu items
-        //inflater.inflate(R.menu.contact_list_menu, menu);
-
-        // Locate the search item
-        //MenuItem searchItem = menu.findItem(R.id.menu_search);
-        MenuItem searchItem = menu.findItem(1);
-        if (searchItem!=null) {
-            searchView = (SearchView) searchItem.getActionView();
-            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    if (s.equals(searchView.getQuery().toString())) {
-                        updateValues();
-                        adapter.refreshEvents(contactname, contacticon, contactid);
-                        adapter.getFilter().filter(s);
-                    }
-                    return false;
-                }
-            });
-            if (appSession.getData("filterString") != null) {
-                String filterString = (String) appSession.getData("filterString");
-                if (filterString.length() > 0) {
-                    searchView.setQuery(filterString, true);
-                    searchView.setIconified(false);
-                }else{
-                    updateValues();
-                    adapter.refreshEvents(contactname, contacticon, contactid);
-                }
-            }
-        }
     }
 
     public void onOptionMenuPrepared(Menu menu){
         MenuItem searchItem = menu.findItem(1);
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -501,6 +455,7 @@ public class ContactsListFragment
                         .setSubTitle(R.string.cht_chat_subtitle)
                         .setBody(R.string.cht_chat_body)
                         .setTextFooter(R.string.cht_chat_footer)
+                        .setVIewColor(R.color.cht_color_dialog)
                         .build();
                      presentationDialog.show();
                     break;

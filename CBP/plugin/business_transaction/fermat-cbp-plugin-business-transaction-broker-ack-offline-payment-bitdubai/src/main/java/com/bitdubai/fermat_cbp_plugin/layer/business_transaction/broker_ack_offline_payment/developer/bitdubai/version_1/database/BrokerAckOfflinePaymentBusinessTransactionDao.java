@@ -263,6 +263,9 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
+            if(isContractHashInDatabase(eventId)){
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseEventsTable();
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             long unixTime = System.currentTimeMillis();
@@ -331,6 +334,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throws CantInsertRecordException {
 
         try{
+            if(isContractHashInDatabase(customerBrokerContractSale.getContractId())){
+                System.out.println("The contract "+customerBrokerContractSale+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(
@@ -385,6 +392,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throws CantInsertRecordException {
 
         try{
+            if(isContractHashInDatabase(customerBrokerContractSale.getContractId())){
+                System.out.println("The contract "+customerBrokerContractSale+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(
@@ -1424,6 +1435,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase customerBrokerContractPurchase) throws CantInsertRecordException {
         try{
+            if(isContractHashInDatabase(customerBrokerContractPurchase.getContractId())){
+                System.out.println("The contract "+customerBrokerContractPurchase+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, customerBrokerContractPurchase);
@@ -1533,6 +1548,22 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Setting completion date from database",
                     "Cannot load the database table");
+        }
+    }
+
+    private boolean eventExists(String eventId) throws CantSaveEventException {
+        try {
+            DatabaseTable table = getDatabaseEventsTable();;
+            if (table == null) {
+                throw new CantSaveEventException("Cant check if Broker Ack Offline Payment Transaction event tablet exists");
+            }
+            table.addStringFilter(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantSaveEventException(em.getMessage(), em, "Broker Ack Offline Payment Transaction Id Not Exists", "Cant load " + BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantSaveEventException(e.getMessage(), FermatException.wrapException(e), "Broker Ack Offline Payment Transaction Id Not Exists", "unknown failure.");
         }
     }
 

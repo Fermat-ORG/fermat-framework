@@ -5,14 +5,17 @@
     android:layout_height="match_parent"
     android:touchscreenBlocksFocus="false"
     android:orientation="vertical"
-    android:background="@drawable/bg_my_identity">
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:background="#ffffff">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accuracy (km)"
+        android:text="ACCURACY (km)"
         android:id="@+id/textView"
-        android:textColor="#ffffff"
+        android:textColor="#272727"
+        android:textSize="16sp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="5dp" />
@@ -22,7 +25,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="#0072bc"/>
+        android:background="#7DD5CA"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -31,8 +34,9 @@
         android:numeric="integer"
         android:inputType="number"
         android:hint="100 km"
-        android:textColor="#CC000000"
-        android:textColorHint="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:textColor="#6D6E70"
+        android:textColorHint="#7DD5CA"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:maxLength="4" />
@@ -40,19 +44,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Frequency"
+        android:text="FREQUENCY"
         android:id="@+id/textView2"
-        android:textColor="#ffffff"
+        android:textColor="#272727"
+        android:textSize="16sp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="5dp" />
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="#838383"/>
+        android:background="#7DD5CA"/>
 
     <Spinner
         android:layout_width="match_parent"

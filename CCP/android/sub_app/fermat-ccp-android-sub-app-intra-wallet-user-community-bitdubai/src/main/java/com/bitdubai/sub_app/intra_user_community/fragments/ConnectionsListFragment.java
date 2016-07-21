@@ -28,7 +28,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetInt
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppFriendsListAdapter;
 
@@ -59,6 +58,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private List<IntraUserInformation> lstIntraUserInformations;
+    private FermatWorker worker;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
@@ -115,7 +115,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
             connectionsProgressDialog.setMessage("Loading Connections");
             connectionsProgressDialog.setCancelable(false);
             connectionsProgressDialog.show();
-            FermatWorker worker = new FermatWorker() {
+            worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
@@ -141,8 +141,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
                                 showEmpty(false, emptyView);
                             }
                         }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
+                    }
+                       // showEmpty(adapter.getSize() < 0, emptyView);
                 }
 
                 @Override
@@ -202,5 +202,12 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
     @Override
     public void onLongItemClickListener(IntraUserInformation data, int position) {
 
+    }
+
+    @Override
+    public void onStop() {
+        if(worker != null)
+            worker.shutdownNow();
+        super.onStop();
     }
 }

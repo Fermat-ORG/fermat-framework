@@ -4,7 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -30,7 +31,7 @@ public class DigitalAssetTransferVault extends AbstractDigitalAssetVault {
                                      AssetTransferDigitalAssetTransactionPluginRoot assetTransferDigitalAssetTransactionPluginRoot,
                                      AssetUserWalletManager assetUserWalletManager,
                                      ActorAssetUserManager actorAssetUserManager,
-                                     BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
+                                     BlockchainManager bitcoinNetworkManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         this.assetTransferDigitalAssetTransactionPluginRoot = assetTransferDigitalAssetTransactionPluginRoot;

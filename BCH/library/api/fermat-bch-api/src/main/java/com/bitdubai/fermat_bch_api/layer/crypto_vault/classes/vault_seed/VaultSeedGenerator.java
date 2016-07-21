@@ -17,9 +17,11 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.excepti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantImportSeedException;
 import com.google.common.base.Splitter;
 
+import org.apache.commons.codec.binary.Hex;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicCode;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
@@ -95,8 +97,8 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         /**
          * The Wallet class of bitcoinJ has a great entrophy level to generate a random seed.
          */
-        Wallet seedWallet = new Wallet(BlockchainNetworkSelector.getNetworkParameter(BitcoinNetworkConfiguration.DEFAULT_NETWORK_TYPE));
-        DeterministicSeed seed = seedWallet.getKeyChainSeed();
+        Wallet seedWallet = new Wallet(MainNetParams.get());
+        DeterministicSeed seed = new DeterministicSeed(seedWallet.getKeyChainSeed().getMnemonicCode(), null, "", seedWallet.getKeyChainSeed().getCreationTimeSeconds());
 
         /**
          * I set the class values
@@ -109,13 +111,13 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         storeSeedInFile(this.fileName);
     }
 
-    private void storeSeedInFile(String filenName) throws CantCreateAssetVaultSeed {
+    private void storeSeedInFile(String seedFileName) throws CantCreateAssetVaultSeed {
         /**
          * I save the seed value into the file
          */
         PluginTextFile seedFile = null;
         try {
-            seedFile = pluginFileSystem.createTextFile(pluginId, this.filePath,  fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            seedFile = pluginFileSystem.createTextFile(pluginId, this.filePath,  seedFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             seedFile.setContent(generateFileContent());
             seedFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
@@ -228,7 +230,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         }
 
         //remove the last space
-        return phrase.substring(0, phrase.length()-1);
+        return phrase.substring(0, phrase.length() - 1);
     }
 
 
@@ -245,17 +247,6 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         if (!isSeedValid(importedSeed))
             throw new CantImportSeedException(null, "Importing new seed from " + mnemonicCode, "incorrect seed format");
 
-        /**
-         * I will archive existing seed
-         */
-        try {
-            archiveExistingSeed();
-            this.delete();
-        } catch (CantDeleteExistingVaultSeed cantDeleteExistingVaultSeed) {
-            throw new CantImportSeedException(cantDeleteExistingVaultSeed, "Unable to delete previous seed", "IO Error");
-        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
-            throw new CantImportSeedException(cantCreateAssetVaultSeed, "Unable to archive previous seed", "IO Error");
-        }
 
         /**
          * I set the seed values of the class
@@ -268,14 +259,41 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
          * and Store the new seed.
          */
         try {
-            storeSeedInFile(this.fileName);
+            String newSeedFileName = this.fileName + "_" + this.getNextSeedFileOrder();
+            storeSeedInFile(newSeedFileName);
+        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
+            throw new CantImportSeedException(cantCreateAssetVaultSeed, "unable to save new seed into disk.", "IO Error");
+        }
+    }
+
+    public void importSeed(List<String> mnemonicCode, long seedCreationTimeSeconds, byte[] bytes) throws CantImportSeedException{
+        DeterministicSeed importedSeed = null;
+        importedSeed = new DeterministicSeed(mnemonicCode, bytes, "", seedCreationTimeSeconds);
+
+        if (!isSeedValid(importedSeed))
+            throw new CantImportSeedException(null, "Importing new seed from " + mnemonicCode, "incorrect seed format");
+
+
+        /**
+         * I set the seed values of the class
+         */
+        this.mnemonicCode = importedSeed.getMnemonicCode();
+        this.creationTimeSeconds = importedSeed.getCreationTimeSeconds();
+        this.seedBytes = importedSeed.getSeedBytes();
+
+        /**
+         * and Store the new seed.
+         */
+        try {
+            String newSeedFileName = this.fileName + "_" + this.getNextSeedFileOrder();
+            storeSeedInFile(newSeedFileName);
         } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
             throw new CantImportSeedException(cantCreateAssetVaultSeed, "unable to save new seed into disk.", "IO Error");
         }
     }
 
 
-    private void archiveExistingSeed() throws CantCreateAssetVaultSeed {
+    private void archiveNewSeed() throws CantCreateAssetVaultSeed {
         int seedOrder = getNextSeedFileOrder();
         try {
             this.load(this.fileName);
@@ -340,7 +358,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         while (true){
             try {
                 load(this.fileName + "_" + i);
-                DeterministicSeed importedSeed = new DeterministicSeed(this.mnemonicCode, this.seedBytes, "", this.creationTimeSeconds);
+                DeterministicSeed importedSeed = new DeterministicSeed(this.mnemonicCode, null, "", this.creationTimeSeconds);
                 importedSeedsList.add(importedSeed);
 
                 i++;

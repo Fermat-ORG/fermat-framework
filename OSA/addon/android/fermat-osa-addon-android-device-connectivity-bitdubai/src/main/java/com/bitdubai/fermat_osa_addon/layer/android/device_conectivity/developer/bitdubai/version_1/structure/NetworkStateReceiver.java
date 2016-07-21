@@ -7,6 +7,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.bitdubai.fermat_api.layer.osa_android.ConnectionType;
+import com.bitdubai.fermat_api.layer.osa_android.DeviceNetwork;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
  */
 public class NetworkStateReceiver extends BroadcastReceiver {
 
-    protected List<NetworkStateReceiverListener> listeners;
+    protected List<com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver> listeners;
     protected Boolean connected;
 
     private static final NetworkStateReceiver instance = new NetworkStateReceiver();
@@ -25,7 +28,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     private NetworkStateReceiver() {
-        listeners = new ArrayList<NetworkStateReceiverListener>();
+        listeners = new ArrayList<com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver>();
         connected = null;
     }
 
@@ -46,7 +49,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             connected = false;
         }
 
-        Log.i("FERMAT network type", ni.getTypeName());
+//        Log.i("FERMAT network type", ni.getTypeName());
 
         for (String key : intent.getExtras().keySet()) {
             Log.i("FERMAT", key);
@@ -63,30 +66,31 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         }
 
 
-        notifyStateToAll();
+        notifyStateToAll(ni);
     }
 
-    private void notifyStateToAll() {
-        for(NetworkStateReceiverListener listener : listeners)
-            notifyState(listener);
+    private void notifyStateToAll(NetworkInfo ni) {
+        DeviceNetwork deviceNetwork = buildDeviceNetwork(ni);
+        for(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver listener : listeners) {
+            notifyState(listener,deviceNetwork);
+        }
     }
 
-    private void notifyState(NetworkStateReceiverListener listener) {
+    private void notifyState(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver listener,DeviceNetwork deviceNetwork) {
         if(connected == null || listener == null)
             return;
-
         if(connected == true)
-            listener.networkAvailable();
+            listener.networkAvailable(deviceNetwork);
         else
             listener.networkUnavailable();
     }
 
-    public void addListener(NetworkStateReceiverListener l) {
+    public void addListener(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver l) {
         listeners.add(l);
-        notifyState(l);
+//        notifyState(l);
     }
 
-    public void removeListener(NetworkStateReceiverListener l) {
+    public void removeListener(com.bitdubai.fermat_api.layer.osa_android.NetworkStateReceiver l) {
         listeners.remove(l);
     }
 
@@ -94,8 +98,52 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         listeners.clear();
     }
 
-    public interface NetworkStateReceiverListener {
-        void networkAvailable();
-        void networkUnavailable();
+
+    private DeviceNetwork buildDeviceNetwork(NetworkInfo netinfo){
+        boolean isConnected = netinfo.isConnected();
+        ConnectionType connectionType = null;
+        switch(netinfo.getType()) {
+
+            case android.net.ConnectivityManager.TYPE_MOBILE_DUN:
+                connectionType = ConnectionType.MOBILE_DUN ;
+
+                break;
+            case android.net.ConnectivityManager.TYPE_MOBILE_HIPRI:
+                connectionType = ConnectionType.MOBILE_HIPRI;
+
+                break;
+            case android.net.ConnectivityManager.TYPE_MOBILE_SUPL:
+                connectionType = ConnectionType.MOBILE_SUPL;
+
+                break;
+            case android.net.ConnectivityManager.TYPE_MOBILE_MMS:
+                connectionType = ConnectionType.MOBILE_MMS;
+
+                break;
+            case android.net.ConnectivityManager.TYPE_MOBILE:  //0
+                connectionType = ConnectionType.MOBILE_DATA;
+                break;
+            case android.net.ConnectivityManager.TYPE_WIFI: //1
+                connectionType = ConnectionType.WI_FI;
+
+                break;
+            case android.net.ConnectivityManager.TYPE_WIMAX: //6
+                connectionType = ConnectionType.WIMAX;
+
+                break;
+            case android.net.ConnectivityManager.TYPE_ETHERNET://9
+                connectionType = ConnectionType.ETHERNET;
+
+                break;
+            case android.net.ConnectivityManager.TYPE_BLUETOOTH://7
+                connectionType = ConnectionType.BLUETOOTH;
+
+                break;
+            default:
+                break;
+        }
+
+        return new DeviceNetwork(connectionType,isConnected);
     }
+
 }

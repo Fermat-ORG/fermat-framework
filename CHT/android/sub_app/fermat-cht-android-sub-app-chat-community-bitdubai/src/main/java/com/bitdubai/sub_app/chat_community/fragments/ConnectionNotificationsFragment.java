@@ -1,11 +1,9 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,9 +51,8 @@ import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
 
 /**
  * ConnectionNotificationsFragment
@@ -74,7 +72,7 @@ public class ConnectionNotificationsFragment
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 1000;
+    private static final int MAX = 100;
     private ChatActorCommunitySelectableIdentity identity;
     FermatApplicationCaller applicationsHelper;
     protected final String TAG = "ConnectionNotificationsFragment";
@@ -84,14 +82,16 @@ public class ConnectionNotificationsFragment
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
     private View rootView;
+    private ProgressBar progressBar;
     private NotificationAdapter adapter;
     private LinearLayout emptyView;
     private int offset = 0;
     private ChatActorCommunityInformation chatUserInformation;
-    private List<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerInformationList;
+    private List<ChatActorCommunityInformation> lstChatUserInformations;
     private ChatActorCommunitySettings appSettings;
     ImageView noData;
     TextView noDatalabel;
+    private ExecutorService executor;
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
     /**
@@ -151,7 +151,6 @@ public class ConnectionNotificationsFragment
         }
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -168,45 +167,19 @@ public class ConnectionNotificationsFragment
             recyclerView.setHasFixedSize(true);
             adapter = new NotificationAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
-            //rootView.setBackgroundResource(R.drawable.cht_comm_background_empty_screen);
 
             recyclerView.setAdapter(adapter);
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
-            swipeRefresh.setOnRefreshListener(this);
-//            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                lstChatUserInformations = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
-//                                        identity.getActorType(), MAX, offset);
-//                                adapter.changeDataSet(lstChatUserInformations);
-//                                if (lstChatUserInformations.isEmpty()) {
-//                                    showEmpty(true, emptyView);
-//                                } else {
-//                                    showEmpty(false, emptyView);
-//                                }
-//                            }catch (CantListChatActorException e){
-//                                e.printStackTrace();
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                            swipeRefresh.setRefreshing(false);
-//                        }
-//                    }, 5000);
-//                }
-//            });
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+//            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
+//            swipeRefresh.setOnRefreshListener(this);
+//            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             showEmpty(true, emptyView);
+            progressBar.setVisibility(View.VISIBLE);
             onRefresh();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -242,61 +215,61 @@ public class ConnectionNotificationsFragment
 
     @Override
     public void onRefresh() {
-        if (!isRefreshing) {
-            isRefreshing = true;
-//            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-//            notificationsProgressDialog.setMessage("Loading Notifications");
-//            notificationsProgressDialog.setCancelable(false);
-//            notificationsProgressDialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreData();
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-//                    notificationsProgressDialog.dismiss();
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
-                    if (result != null &&
-                            result.length > 0) {
-                        if (getActivity() != null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                            adapter.changeDataSet(lstChatUserInformations);
-                            if (lstChatUserInformations.isEmpty()) {
-                                showEmpty(true, emptyView);
-                            } else {
-                                showEmpty(false, emptyView);
-                            }
-                        }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-//                    notificationsProgressDialog.dismiss();
-                    try {
-                        isRefreshing = false;
-                        if (swipeRefresh != null)
-                            swipeRefresh.setRefreshing(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        try {
+            if (!isRefreshing) {
+                isRefreshing = true;
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        return getMoreData();
                     }
-                }
-            });
-            worker.execute();
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @SuppressWarnings("unchecked")
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        isRefreshing = false;
+//                        if (swipeRefresh != null)
+//                            swipeRefresh.setRefreshing(false);
+                        if (result != null &&
+                                result.length > 0) {
+                            if (getActivity() != null && adapter != null) {
+                                lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                adapter.changeDataSet(lstChatUserInformations);
+                                if (lstChatUserInformations.isEmpty()) {
+                                    showEmpty(true, emptyView);
+                                } else {
+                                    showEmpty(false, emptyView);
+                                }
+                            }
+                        } else
+                            showEmpty(adapter.getSize() < 0, emptyView);
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        try {
+                            isRefreshing = false;
+//                            if (swipeRefresh != null)
+//                                swipeRefresh.setRefreshing(false);
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            ex.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                executor = worker.execute();
+            }
+        }catch (Exception ignore){
+            if (executor != null) {
+                executor.shutdown();
+                executor = null;
+            }
         }
     }
-
 
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
@@ -343,20 +316,16 @@ public class ConnectionNotificationsFragment
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show/* &&
-                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
+        if (show) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            //emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
-            emptyView.setAnimation(anim);
+        } else {
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
             emptyView.setBackgroundResource(0);
@@ -368,6 +337,7 @@ public class ConnectionNotificationsFragment
             emptyView.setBackground(bgcolor);
             rootView.setBackground(bgcolor);
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -375,16 +345,11 @@ public class ConnectionNotificationsFragment
         onRefresh();
     }
 
-//    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
             switch (id) {
-
                 case 1:
                     try {
                         applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
@@ -412,7 +377,6 @@ public class ConnectionNotificationsFragment
 
     private void showDialogHelp() {
         try {
-            //moduleManager = appSession.getModuleManager();
             if (identity != null) {
                 if (!identity.getPublicKey().isEmpty()) {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =

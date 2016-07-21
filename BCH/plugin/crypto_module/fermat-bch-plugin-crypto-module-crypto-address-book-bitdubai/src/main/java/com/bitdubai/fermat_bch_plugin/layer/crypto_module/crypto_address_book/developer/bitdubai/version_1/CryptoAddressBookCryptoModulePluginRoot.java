@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -55,7 +56,6 @@ import java.util.regex.Pattern;
  * <p/>
  * Created by Leon Acosta (laion.cj91@gmail.com) on 02/09/2015.
  */
-
 public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin implements
         Crypto,
         CryptoAddressBookManager,

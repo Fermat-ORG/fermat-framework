@@ -57,13 +57,13 @@ public class CustomerBrokerContractSaleDao {
 
     public void initializeDatabase() throws CantInitializeCustomerBrokerSaleContractDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeCustomerBrokerSaleContractDatabaseException(cantOpenDatabaseException.getMessage());
         } catch (DatabaseNotFoundException e) {
             CustomerBrokerSaleContractDatabaseFactory CustomerBrokerSaleContractDatabaseFactory = new CustomerBrokerSaleContractDatabaseFactory(pluginDatabaseSystem);
             try {
-                database = CustomerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = CustomerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, CustomerBrokerSaleContractDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 throw new CantInitializeCustomerBrokerSaleContractDatabaseException(cantCreateDatabaseException.getMessage());
             }

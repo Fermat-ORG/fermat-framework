@@ -45,7 +45,9 @@
         android:maxLines="1"
         android:text="desc"
         android:textColor="#757575"
-        android:textSize="12dip" />
+        android:textSize="12dip"
+        android:layout_alignRight="@+id/tvtitle"
+        android:layout_alignEnd="@+id/tvtitle"/>
 
     <TextView
         android:id="@+id/tvdate"

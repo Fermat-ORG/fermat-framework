@@ -460,6 +460,10 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                                           FeeOrigin feeOrigin,
                                           long fee) throws CantInsertRecordException {
         try {
+            if(isContractHashInDatabase(contractPurchase.getContractId())){
+                System.out.println("The contract "+contractPurchase+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
@@ -617,6 +621,10 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     public void persistContractInDatabase(CustomerBrokerContractSale saleContract, String currencyCode, long cryptoAmount)
             throws CantInsertRecordException, UnexpectedResultReturnedFromDatabaseException {
         try {
+            if(isContractHashInDatabase(saleContract.getContractId())){
+                System.out.println("The contract "+saleContract+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 

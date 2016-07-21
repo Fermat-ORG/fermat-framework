@@ -250,7 +250,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
 
     private void sendLargeData(String dataId, String clientKey, Serializable data) {
         try {
-            Log.i(TAG,"Socket sending response to client");
+            Log.i(TAG, "Socket sending response to client");
             LocalServerSocketSession localServerSocketSession = socketsClients.get(clientKey);
             if(localServerSocketSession!=null) {
                 if (!localServerSocketSession.isSenderActive()) {
@@ -576,7 +576,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             getTask.setCallBack(this);
             getTask.execute();
 
-            executorService = Executors.newFixedThreadPool(5);
+            executorService = Executors.newCachedThreadPool();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -602,17 +602,30 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         executorService.shutdownNow();
-        try {
-            localServerSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         for (LocalServerSocketSession localServerSocketSession : socketsClients.values()) {
             try {
                 localServerSocketSession.destroy();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        try {
+            serverThread.interrupt();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            localServerSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            fermatSystem.onDestroy();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

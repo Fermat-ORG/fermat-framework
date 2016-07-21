@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:elevation="24dp"
+        android:background="#21386D"
+        android:orientation="vertical">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:id="@+id/user_name"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:text="User Name"/>
+
+        <ImageView
+            android:id="@+id/image_user_profile"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile_male"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/negative_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:textSize="10sp"
+            android:textColor="#21386D"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/delete_connection_text"/>
+
+    </LinearLayout>
+
+</LinearLayout>

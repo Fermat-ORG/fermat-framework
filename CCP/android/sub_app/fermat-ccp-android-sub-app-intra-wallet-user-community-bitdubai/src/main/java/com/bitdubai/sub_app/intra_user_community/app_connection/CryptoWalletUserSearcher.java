@@ -18,7 +18,7 @@ public class CryptoWalletUserSearcher extends ResourceSearcher {
                 resId = R.drawable.search_icon;
                 break;
             case 2:
-                resId = R.drawable.cht_id_geolocation_icon;
+                resId = R.drawable.geolocalitation_icon;
                 break;
             case 3:
                 resId = R.drawable.help_icon;

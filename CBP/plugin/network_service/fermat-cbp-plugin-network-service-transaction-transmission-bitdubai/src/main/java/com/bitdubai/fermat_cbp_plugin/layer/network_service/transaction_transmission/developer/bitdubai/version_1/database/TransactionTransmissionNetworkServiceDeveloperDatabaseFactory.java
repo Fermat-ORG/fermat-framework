@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,10 +74,10 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
                 }
                 break;
 
-            case CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME:
+            case NetworkServiceDatabaseConstants.DATABASE_NAME:
                 try {
 
-                    this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                    this.database = this.pluginDatabaseSystem.openDatabase(pluginId, NetworkServiceDatabaseConstants.DATABASE_NAME);
 
                 } catch (CantOpenDatabaseException e) {
 
@@ -89,7 +89,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
 
                     try {
 
-                        this.database = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                        this.database = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, NetworkServiceDatabaseConstants.DATABASE_NAME);
 
                     } catch (CantCreateDatabaseException z) {
 
@@ -111,7 +111,7 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
 
         databases.add(developerObjectFactory.getNewDeveloperDatabase(
                 "Network Service Template",
-                CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
+                NetworkServiceDatabaseConstants.DATABASE_NAME
         ));
         return databases;
     }
@@ -165,25 +165,25 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
                 DeveloperDatabaseTable componentVersionsDetailsTable = developerObjectFactory.getNewDeveloperDatabaseTable(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME, componentVersionsDetailsColumns);
                 tables.add(componentVersionsDetailsTable);
                 break;
-            case CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME:
+            case NetworkServiceDatabaseConstants.DATABASE_NAME:
 
                 /**
                  * Table incoming messages columns.
                  */
                 List<String> incomingMessagesColumns = new ArrayList<>();
 
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                );
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME         );
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME       );
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME              );
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME            );
-                incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                    );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME     );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME   );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME    );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME    );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME          );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME                );
+                incomingMessagesColumns.add(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_CONTENT_COLUMN_NAME               );
                 /**
                  * Table incoming messages addition.
                  */
-                DeveloperDatabaseTable incomingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingMessagesColumns);
+                DeveloperDatabaseTable incomingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingMessagesColumns);
                 tables.add(incomingMessagesTable);
 
                 /**
@@ -191,28 +191,41 @@ public final class TransactionTransmissionNetworkServiceDeveloperDatabaseFactory
                  */
                 List<String> outgoingMessagesColumns = new ArrayList<>();
 
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME         );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME       );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME    );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME       );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME     );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME  );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME              );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME        );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME            );
-                outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                    );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME     );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME   );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME    );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME    );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME          );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME                );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME     );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME            );
+                outgoingMessagesColumns.add(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_COLUMN_NAME               );
                 /**
                  * Table outgoing messages addition.
                  */
-                DeveloperDatabaseTable outgoingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingMessagesColumns);
+                DeveloperDatabaseTable outgoingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingMessagesColumns);
                 tables.add(outgoingMessagesTable);
+
+                /**
+                 * Table outgoing messages columns.
+                 */
+                List<String> queriesColumns = new ArrayList<>();
+
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_ID_COLUMN_NAME                       );
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_BROADCAST_CODE_COLUMN_NAME           );
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_DISCOVERY_QUERY_PARAMS_COLUMN_NAME   );
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_EXECUTION_TIME_COLUMN_NAME           );
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_TYPE_COLUMN_NAME                     );
+                queriesColumns.add(NetworkServiceDatabaseConstants.QUERIES_STATUS_COLUMN_NAME                   );
+
+                /**
+                 * Table queries messages addition.
+                 */
+                DeveloperDatabaseTable queriesTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkServiceDatabaseConstants.QUERIES_TABLE_NAME, queriesColumns);
+                tables.add(queriesTable);
                 break;
         }
-
-
         return tables;
     }
 
