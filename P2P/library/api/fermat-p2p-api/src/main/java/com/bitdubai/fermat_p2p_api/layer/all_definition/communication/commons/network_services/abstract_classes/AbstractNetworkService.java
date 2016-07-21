@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -716,7 +717,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         try {
             if (networkServicePendingMessagesSupervisorAgent == null)
                 this.networkServicePendingMessagesSupervisorAgent = new NetworkServicePendingMessagesSupervisorAgent(this);
-
+            if(networkServicePendingMessagesSupervisorAgent.getStatus()!=null && networkServicePendingMessagesSupervisorAgent.getStatus().equals(AgentStatus.STARTED))
+                return;
             this.networkServicePendingMessagesSupervisorAgent.start();
             System.out.println("12345CBP handleNetworkServiceRegisteredEvent starteado");
         } catch (Exception ex) {
