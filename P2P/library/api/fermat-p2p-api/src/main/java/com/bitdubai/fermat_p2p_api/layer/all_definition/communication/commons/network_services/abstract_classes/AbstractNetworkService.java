@@ -679,18 +679,22 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             */
             networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.NEW_RECEIVED);
 
-            NetworkServiceMessage networkServiceMessageOld = networkServiceConnectionManager.getIncomingMessagesDao().findById(networkServiceMessage.getId().toString());
+            NetworkServiceMessage networkServiceMessageOld;
 
-            if(networkServiceMessageOld!=null && networkServiceMessageOld.equals(networkServiceMessage)) {
-                System.out.println("***************** MESSAGE DUPLICATED. IGNORING MESSAGE *****************");
-                return;
+            try {
+                networkServiceMessageOld = networkServiceConnectionManager.getIncomingMessagesDao().findById(networkServiceMessage.getId().toString());
+                if(networkServiceMessageOld!=null && networkServiceMessageOld.equals(networkServiceMessage)) {
+                    System.out.println("***************** MESSAGE DUPLICATED. IGNORING MESSAGE *****************");
+                    return;
+                }
+
+                if(networkServiceMessageOld!=null){
+                    System.out.println("***************** ID DUPLICATED. GENERATING A NEW ONE *****************");
+                    networkServiceMessage.setId(UUID.randomUUID());
+                }
+            }catch(CantReadRecordDataBaseException e){
+            }catch(RecordNotFoundException e){
             }
-
-            if(networkServiceMessageOld!=null){
-                System.out.println("***************** ID DUPLICATED. GENERATING A NEW ONE *****************");
-                networkServiceMessage.setId(UUID.randomUUID());
-            }
-
 
             networkServiceConnectionManager.getIncomingMessagesDao().create(networkServiceMessage);
             networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(networkServiceMessage);
