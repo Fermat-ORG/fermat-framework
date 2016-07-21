@@ -222,7 +222,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
                             //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
                             // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                            Thread.sleep(1000);
+                            Thread.sleep(5000);
 
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -236,7 +236,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
                         //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
                         // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                        Thread.sleep(1000);
+                        Thread.sleep(5000);
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
