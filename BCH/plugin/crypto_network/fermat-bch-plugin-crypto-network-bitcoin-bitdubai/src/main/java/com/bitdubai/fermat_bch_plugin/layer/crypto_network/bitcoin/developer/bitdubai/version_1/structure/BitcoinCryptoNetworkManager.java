@@ -1182,10 +1182,22 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
             //if I couldn't get it from the database, I will continue.
         }
 
-        if (!isAgentRunning(blockchainNetworkType))
-            throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode(), "Agent is not running, possibly being reset just now?.");
-
-        return runningAgents.get(blockchainNetworkType);
+        switch (blockchainNetworkType){
+            case REG_TEST:
+                if (regTestNetworkMonitor == null)
+                    throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode() + " agent is null." , "Possible being restarted");
+                return regTestNetworkMonitor;
+            case TEST_NET:
+                if (testNetNetworkMonitor == null)
+                    throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode() + " agent is null." , "Possible being restarted");
+                return testNetNetworkMonitor;
+            case PRODUCTION:
+                if (mainNetNetworkMonitor == null)
+                    throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode() + " agent is null." , "Possible being restarted");
+                return mainNetNetworkMonitor;
+            default:
+                throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode() + " is not a valid blockchain network code." , "Wrong network code.");
+        }
     }
 
 }
