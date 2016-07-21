@@ -68,9 +68,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
                                                         final ConnectionState connectionState,
                                                         final UUID connectionId,
                                                         final Location location,
-                                                        final CryptoBrokerIdentityExtraData brokerExtraData,
-                                                        String country,
-                                                        String place) {
+                                                        final ProfileStatus profileStatus,
+                                                        CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData) {
 
         this.publicKey = publicKey;
         this.alias = alias;
@@ -78,20 +77,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.connectionState = connectionState;
         this.connectionId = connectionId;
         this.location = location;
-        this.country = country;
-        this.place = place;
-        this.cryptoBrokerIdentityExtraData = brokerExtraData;
-    }
-
-    public CryptoBrokerCommunitySubAppModuleInformation(CryptoBrokerCommunityInformation actorInformation, ConnectionState connectionState) {
-
-        this.publicKey = actorInformation.getPublicKey();
-        this.alias = actorInformation.getAlias();
-        this.image = actorInformation.getImage();
-        this.connectionState = connectionState;
-        this.connectionId = actorInformation.getConnectionId();
-        this.location = actorInformation.getLocation();
-        this.cryptoBrokerIdentityExtraData = actorInformation.getCryptoBrokerIdentityExtraData();
+        this.profileStatus = profileStatus;
+        this.cryptoBrokerIdentityExtraData = cryptoBrokerIdentityExtraData;
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection, Location location) {
@@ -115,6 +102,26 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.cryptoBrokerIdentityExtraData = exposingData.getCryptoBrokerIdentityExtraData();
         if(exposingData.getProfileStatus() != null)
             this.profileStatus = exposingData.getProfileStatus();
+    }
+
+    public CryptoBrokerCommunitySubAppModuleInformation(String publicKey,
+                                                        String alias,
+                                                        byte[] image,
+                                                        ConnectionState connectionState,
+                                                        UUID connectionId,
+                                                        Location location,
+                                                        String country,
+                                                        String place,
+                                                        CryptoBrokerIdentityExtraData brokerExtraData) {
+        this.publicKey = publicKey;
+        this.alias = alias;
+        this.image = image;
+        this.connectionState = connectionState;
+        this.connectionId = connectionId;
+        this.location = location;
+        this.country = country;
+        this.place = place;
+        this.cryptoBrokerIdentityExtraData = brokerExtraData;
     }
 
     @Override

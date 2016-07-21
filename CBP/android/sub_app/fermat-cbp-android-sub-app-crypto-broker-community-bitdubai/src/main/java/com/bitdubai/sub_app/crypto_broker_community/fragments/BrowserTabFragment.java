@@ -319,7 +319,7 @@ public class BrowserTabFragment
     @Override
     public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
         try {
-            if(data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
+            if (data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, identity);
 
                 connectDialog.setTitle("Connection Request");
@@ -440,7 +440,7 @@ public class BrowserTabFragment
         onRefresh();
     }
 
-    private void loadSelectedActorIdentityInBackground(){
+    private void loadSelectedActorIdentityInBackground() {
 
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
@@ -456,7 +456,7 @@ public class BrowserTabFragment
             public void onPostExecute(Object... result) {
                 try {
                     selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
-                    if(selectedActorIdentity!=null) {
+                    if (selectedActorIdentity != null) {
                         Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
                         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
                         toolbar.setLogo(bitmapDrawable);
@@ -479,12 +479,13 @@ public class BrowserTabFragment
 
         fermatWorker.execute();
     }
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
+                targetHeight, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();
@@ -502,6 +503,7 @@ public class BrowserTabFragment
                         targetHeight), null);
         return targetBitmap;
     }
+
     /**
      * Obtain Settings or create new Settings if first time opening subApp
      */
@@ -584,7 +586,7 @@ public class BrowserTabFragment
     private void showOrHideEmptyView() {
         final boolean show = cryptoBrokerCommunityInformationList.isEmpty();
         final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
-        if(isAttached) {
+        if (isAttached) {
             Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
             if (show && (noContacts.getVisibility() == View.GONE || noContacts.getVisibility() == View.INVISIBLE)) {
                 noContacts.setAnimation(anim);
@@ -596,8 +598,8 @@ public class BrowserTabFragment
                 noContacts.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
-        }else{
-            Log.e(TAG,"Fragment not attached");
+        } else {
+            Log.e(TAG, "Fragment not attached");
         }
     }
 
@@ -615,7 +617,16 @@ public class BrowserTabFragment
             final ConnectionState newConnectionState = (ConnectionState) appSession.getData(FragmentsCommons.CONNECTION_RESULT);
             appSession.removeData(FragmentsCommons.CONNECTION_RESULT);
 
-            CryptoBrokerCommunityInformation updatedInfo = new CryptoBrokerCommunitySubAppModuleInformation(actorInformation, newConnectionState);
+            CryptoBrokerCommunityInformation updatedInfo = new CryptoBrokerCommunitySubAppModuleInformation(
+                    actorInformation.getPublicKey(),
+                    actorInformation.getAlias(),
+                    actorInformation.getImage(),
+                    newConnectionState,
+                    actorInformation.getConnectionId(),
+                    actorInformation.getLocation(),
+                    actorInformation.getCountry(),
+                    actorInformation.getPlace(),
+                    actorInformation.getCryptoBrokerIdentityExtraData());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);

@@ -161,7 +161,8 @@ public class CryptoBrokerCommunityManager
                             connectedBroker.getConnectionState(),
                             connectedBroker.getConnectionId(),
                             worldBroker.getLocation(),
-                            worldBroker.getProfileStatus()));
+                            worldBroker.getProfileStatus(),
+                            worldBroker.getCryptoBrokerIdentityExtraData()));
             }
         }
 
