@@ -404,15 +404,16 @@ public class BrowserTabFragment
     @Override
     public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-        if(isVisible) {
+//        if(isVisible) {
             try {
                 offset = pos;
                 List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
-                dataSet.addAll(result);
+                if(result != null)
+                    dataSet.addAll(result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+//        }
         return dataSet;
     }
 
