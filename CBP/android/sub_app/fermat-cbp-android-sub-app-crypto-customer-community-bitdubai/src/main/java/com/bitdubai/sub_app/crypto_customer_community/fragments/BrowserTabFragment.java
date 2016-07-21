@@ -362,7 +362,7 @@ public class BrowserTabFragment
     @Override
     public List<CryptoCustomerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
-//        if (isVisible) {
+        if (isVisible) {
             try {
                 offset = pos;
                 List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias, MAX, offset);
@@ -371,7 +371,7 @@ public class BrowserTabFragment
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//        }
+        }
         return dataSet;
     }
 
