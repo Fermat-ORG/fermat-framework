@@ -371,7 +371,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      *
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) throws UnreadableWalletException {
+    private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) throws UnreadableWalletException {
         Wallet wallet = null;
         File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
@@ -379,7 +379,12 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
-            BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+            BitcoinCryptoNetworkMonitor monitor = null;
+            try {
+                monitor = getMonitor(blockchainNetworkType);
+            } catch (NetworkMonitorIsNotRunningException e) {
+                //if there was an error, I will continue and try to get the wallet from file.
+            }
 
             if (monitor != null)
                 wallet = monitor.getWallet();
