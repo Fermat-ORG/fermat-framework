@@ -1174,7 +1174,7 @@ public class BitcoinCryptoNetworkManager  implements TransactionProtocolManager 
      * @param blockchainNetworkType
      * @return
      */
-    private BitcoinCryptoNetworkMonitor getMonitor(BlockchainNetworkType blockchainNetworkType) throws NetworkMonitorIsNotRunningException {
+    private synchronized BitcoinCryptoNetworkMonitor getMonitor(BlockchainNetworkType blockchainNetworkType) throws NetworkMonitorIsNotRunningException {
         try {
             if (!dao.isNetworkActive(blockchainNetworkType))
                 throw new NetworkMonitorIsNotRunningException(blockchainNetworkType.getCode(), "Network is not activated. Generate an address in the requested network to active.");
