@@ -27,16 +27,14 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
     private final CryptoBrokerActorNetworkServicePluginRoot pluginRoot;
 
-    public CryptoBrokerActorNetworkServiceSearch(final CryptoBrokerActorNetworkServicePluginRoot pluginRoot) {
 
+    public CryptoBrokerActorNetworkServiceSearch(final CryptoBrokerActorNetworkServicePluginRoot pluginRoot) {
         this.pluginRoot = pluginRoot;
     }
 
     @Override
     public List<CryptoBrokerExposingData> getResult(Integer max, Integer offset) throws CantListCryptoBrokersException {
-
         try {
-
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.CBP_CRYPTO_BROKER.getCode(),
                     null,
@@ -52,17 +50,20 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             );
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
-
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
-
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
-                        actorProfile.getExtraData());
-                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
-                if(cryptoBrokerIdentityExtraData==null){
+                System.out.println("************** I\'m a crypto Broker: "
+                        + actorProfile.getAlias() + " - "
+                        + actorProfile.getStatus() + " - "
+                        + actorProfile.getExtraData());
+
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
+
+                if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoBrokerExposingData(
                                     actorProfile.getIdentityPublicKey(),
@@ -84,19 +85,15 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                                     actorProfile.getStatus(),
                                     cryptoBrokerIdentityExtraData));
                 }
-
-
             }
 
             return cryptoBrokerExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
@@ -105,9 +102,8 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     @Override
     public List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantListCryptoBrokersException {
         try {
-
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    null, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa solo para buscar por publicKey del Actor
+                    null, //TODO: Se coloco null ya que leon necesita que esta valor null porque esto solo se usa para buscar por publicKey del Actor
                     NetworkServiceType.UNDEFINED,
                     Actors.CBP_CRYPTO_BROKER.getCode(),
                     null,
@@ -121,34 +117,21 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     offset,
                     false);
 
-
-//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-//                    Actors.CBP_CRYPTO_BROKER.getCode(),
-//                    alias,
-//                    distance,
-//                    null,
-//                    //TODO: Se coloco null ya que leon necesita que esta valor null ya que solo esto se usa solo para buscar por publicKey del Actor
-//                    null, //publicKey,
-//                    deviceLocation,
-//                    max,
-//                    null,
-//                    NetworkServiceType.UNDEFINED,
-//                    offset,
-//                    NetworkServiceType.CRYPTO_BROKER
-//            );
-
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
-
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
-
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus() +" - " + actorProfile.getExtraData());
+                System.out.println("************** I\'m a crypto Broker: "
+                        + actorProfile.getAlias() + " - "
+                        + actorProfile.getStatus() + " - "
+                        + actorProfile.getExtraData());
+
                 cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
-                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
-                if(cryptoBrokerIdentityExtraData==null){
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
+
+                if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoBrokerExposingData(
                                     actorProfile.getIdentityPublicKey(),
@@ -170,19 +153,15 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                                     actorProfile.getStatus(),
                                     cryptoBrokerIdentityExtraData));
                 }
-
-
             }
 
             return cryptoBrokerExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
@@ -190,9 +169,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
     @Override
     public List<CryptoBrokerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offset) throws CantListCryptoBrokersException {
-
         try {
-
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.CBP_CRYPTO_BROKER.getCode(),
                     null,
@@ -208,17 +185,20 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             );
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
-
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
-
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
-                        actorProfile.getExtraData());
-                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
-                if(cryptoBrokerIdentityExtraData==null){
+                System.out.println("************** I\'m a crypto Broker: "
+                        + actorProfile.getAlias() + " - "
+                        + actorProfile.getStatus() + " - "
+                        + actorProfile.getExtraData());
+
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
+
+                if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoBrokerExposingData(
                                     actorProfile.getIdentityPublicKey(),
@@ -240,19 +220,15 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                                     actorProfile.getStatus(),
                                     cryptoBrokerIdentityExtraData));
                 }
-
-
             }
 
             return cryptoBrokerExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
@@ -260,9 +236,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
     @Override
     public List<CryptoBrokerExposingData> getResultDistance(double distance, Integer max, Integer offset) throws CantListCryptoBrokersException {
-
         try {
-
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.CBP_CRYPTO_BROKER.getCode(),
                     null,
@@ -278,17 +252,20 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             );
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
-
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
-
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
-                        actorProfile.getExtraData());
-                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
-                if(cryptoBrokerIdentityExtraData==null){
+                System.out.println("************** I\'m a crypto Broker: "
+                        + actorProfile.getAlias() + " - "
+                        + actorProfile.getStatus() + " - "
+                        + actorProfile.getExtraData());
+
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
+
+                if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoBrokerExposingData(
                                     actorProfile.getIdentityPublicKey(),
@@ -310,19 +287,15 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                                     actorProfile.getStatus(),
                                     cryptoBrokerIdentityExtraData));
                 }
-
-
             }
 
             return cryptoBrokerExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
@@ -330,9 +303,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
     @Override
     public List<CryptoBrokerExposingData> getResultAlias(String alias, Integer max, Integer offset) throws CantListCryptoBrokersException {
-
         try {
-
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.CBP_CRYPTO_BROKER.getCode(),
                     alias,
@@ -348,18 +319,20 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             );
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
-
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
-
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I\'m a crypto Broker: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
-                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
-                        actorProfile.getExtraData());
-                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
-                if(cryptoBrokerIdentityExtraData==null){
+                System.out.println("************** I\'m a crypto Broker: "
+                        + actorProfile.getAlias() + " - "
+                        + actorProfile.getStatus() + " - "
+                        + actorProfile.getExtraData());
+
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
+
+                if (cryptoBrokerIdentityExtraData == null) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoBrokerExposingData(
                                     actorProfile.getIdentityPublicKey(),
@@ -381,19 +354,15 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                                     actorProfile.getStatus(),
                                     cryptoBrokerIdentityExtraData));
                 }
-
-
             }
 
             return cryptoBrokerExposingDataList;
 
         } catch (final CantRequestProfileListException e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
@@ -401,13 +370,9 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
     @Override
     public CryptoBrokerExposingData getResult(String publicKey) throws CantListCryptoBrokersException {
-
         try {
-
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    //TODO:Hay que pasarle null porque no esta implementado de esa forma en p2p
-                    //Actors.CBP_CRYPTO_BROKER.getCode(),
-                    null,
+                    null, //TODO:Hay que pasarle null porque no esta implementado de esa forma en p2p
                     null,
                     null,
                     null,
@@ -421,51 +386,48 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
             );
 
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
-
             CryptoBrokerExposingData cryptoBrokerExposingData = null;
 
             CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
-
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(
-                        actorProfile.getExtraData());
-                System.out.println("Broker extra data : "+cryptoBrokerIdentityExtraData);
-                if(cryptoBrokerIdentityExtraData==null){
+                System.out.println("************** I\'m a crypto Broker: "
+                        + actorProfile.getAlias() + " - "
+                        + actorProfile.getStatus() + " - "
+                        + actorProfile.getExtraData());
 
-                            new CryptoBrokerExposingData(
-                                    actorProfile.getIdentityPublicKey(),
-                                    actorProfile.getAlias(),
-                                    actorProfile.getPhoto(),
-                                    actorProfile.getLocation(),
-                                    0,
-                                    0,
-                                    actorProfile.getStatus());
+                cryptoBrokerIdentityExtraData = getCryptoBrokerIdentityExtraData(actorProfile.getExtraData());
+                System.out.println("Broker extra data : " + cryptoBrokerIdentityExtraData);
+
+                if (cryptoBrokerIdentityExtraData == null) {
+                    cryptoBrokerExposingData = new CryptoBrokerExposingData(
+                            actorProfile.getIdentityPublicKey(),
+                            actorProfile.getAlias(),
+                            actorProfile.getPhoto(),
+                            actorProfile.getLocation(),
+                            0,
+                            0,
+                            actorProfile.getStatus());
                 } else {
-
-                            new CryptoBrokerExposingData(
-                                    actorProfile.getIdentityPublicKey(),
-                                    actorProfile.getAlias(),
-                                    actorProfile.getPhoto(),
-                                    actorProfile.getLocation(),
-                                    0,
-                                    0,
-                                    actorProfile.getStatus(),
-                                    cryptoBrokerIdentityExtraData);
+                    cryptoBrokerExposingData = new CryptoBrokerExposingData(
+                            actorProfile.getIdentityPublicKey(),
+                            actorProfile.getAlias(),
+                            actorProfile.getPhoto(),
+                            actorProfile.getLocation(),
+                            0,
+                            0,
+                            actorProfile.getStatus(),
+                            cryptoBrokerIdentityExtraData);
                 }
-
-
             }
 
             return cryptoBrokerExposingData;
 
         } catch (final CantRequestProfileListException e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
-
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
@@ -476,15 +438,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
         return null;
     }
 
-    private CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData(String extraData){
-        if(extraData==null||extraData.isEmpty()){
+    private CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData(String extraData) {
+        if (extraData == null || extraData.isEmpty()) {
             return null;
         }
-        try{
-            return CryptoBrokerIdentityExtraData.fromJson(extraData);
-        } catch (Exception e){
-            //I don't want to report this exception, the data could be corrupted
-            return null;
-        }
+        return CryptoBrokerIdentityExtraData.fromJson(extraData);
     }
 }
