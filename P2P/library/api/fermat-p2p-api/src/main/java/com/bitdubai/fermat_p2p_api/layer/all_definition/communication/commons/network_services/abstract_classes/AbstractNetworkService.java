@@ -242,11 +242,12 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              */
 //            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
 //            this.networkServiceRegistrationProcessAgent.start();
-            p2PLayerManager.register(this);
 
             handleNetworkServiceRegisteredEvent();
 
             onNetworkServiceStart();
+
+            p2PLayerManager.register(this);
 
         } catch (Exception exception) {
 
@@ -827,7 +828,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              * Read all pending message from database
              */
             Map<String, Object> filters = new HashMap<>();
-            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey                    );
+            filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey);
             filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
 
             List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
@@ -861,7 +862,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             }
 
-        } catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
         }
 
