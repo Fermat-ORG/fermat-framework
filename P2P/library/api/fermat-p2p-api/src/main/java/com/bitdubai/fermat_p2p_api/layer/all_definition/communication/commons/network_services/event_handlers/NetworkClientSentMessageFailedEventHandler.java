@@ -4,12 +4,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageDeliveredEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageFailedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 14/07/16.
  */
-public class NetworkClientSentMessageFailedEventHandler implements FermatEventHandler<NetworkClientNewMessageDeliveredEvent> {
+public class NetworkClientSentMessageFailedEventHandler implements FermatEventHandler<NetworkClientNewMessageFailedEvent> {
 
     /**
      * Represent the networkService
@@ -35,7 +36,7 @@ public class NetworkClientSentMessageFailedEventHandler implements FermatEventHa
      * @throws com.bitdubai.fermat_api.FermatException if something goes wrong.
      */
     @Override
-    public void handleEvent(NetworkClientNewMessageDeliveredEvent fermatEvent) throws FermatException {
+    public void handleEvent(NetworkClientNewMessageFailedEvent fermatEvent) throws FermatException {
 //        System.out.println("12345P2P INSIDE FAILED MESSAGE EVENT");
 
         if (this.networkService.isStarted() &&
