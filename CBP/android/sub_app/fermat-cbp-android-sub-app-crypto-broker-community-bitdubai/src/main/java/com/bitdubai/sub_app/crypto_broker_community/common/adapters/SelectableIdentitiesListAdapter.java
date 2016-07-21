@@ -10,6 +10,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
@@ -41,22 +42,25 @@ public class SelectableIdentitiesListAdapter
     @Override
     protected void bindHolder(AppSelectableIdentityHolder holder, CryptoBrokerCommunitySelectableIdentity data, int position) {
 
-        if (data.getPublicKey() != null) {
-            holder.friendName.setText(data.getAlias());
-            if (data.getImage() != null) {
-                Bitmap bitmap;
-                if (data.getImage().length > 0) {
-                    bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
+        if (data.getActorType()== Actors.CBP_CRYPTO_CUSTOMER) {
+
+            if (data.getPublicKey() != null) {
+                holder.friendName.setText(data.getAlias());
+                if (data.getImage() != null) {
+                    Bitmap bitmap;
+                    if (data.getImage().length > 0) {
+                        bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
+                    } else {
+                        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+                    }
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+                    holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
                 } else {
+                    Bitmap bitmap;
                     bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
+                    holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
                 }
-                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
-                holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-            }else{
-                Bitmap bitmap;
-                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
-                holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }
         }
     }
