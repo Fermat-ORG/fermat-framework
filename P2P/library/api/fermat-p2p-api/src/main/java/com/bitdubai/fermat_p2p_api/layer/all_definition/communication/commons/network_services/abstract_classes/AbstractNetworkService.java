@@ -245,9 +245,15 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 //            this.networkServiceRegistrationProcessAgent.start();
             p2PLayerManager.register(this);
 
-            handleNetworkServiceRegisteredEvent();
-
+            /**
+             * Start elements
+             */
             onNetworkServiceStart();
+
+            /**
+             * Register Elements after Start
+             */
+            handleNetworkServiceRegisteredEvent();
 
         } catch (Exception exception) {
 
@@ -692,8 +698,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                     System.out.println("***************** ID DUPLICATED. GENERATING A NEW ONE *****************");
                     networkServiceMessage.setId(UUID.randomUUID());
                 }
-            }catch(CantReadRecordDataBaseException e){
-            }catch(RecordNotFoundException e){
+            }catch(CantReadRecordDataBaseException | RecordNotFoundException e){
+                e.printStackTrace();
             }
 
             networkServiceConnectionManager.getIncomingMessagesDao().create(networkServiceMessage);
