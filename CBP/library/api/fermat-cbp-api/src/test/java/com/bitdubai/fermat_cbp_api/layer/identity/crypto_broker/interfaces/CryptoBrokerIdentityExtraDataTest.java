@@ -46,6 +46,12 @@ public class CryptoBrokerIdentityExtraDataTest {
                 "\"paymentCurrency\":{\"type\":\"FIAT\",\"code\":\"VEF\"}," +
                 "\"extraText\":\"Merchandises: USD, VEF\"" +
                 "}");
+
+        extraData = new CryptoBrokerIdentityExtraData(null, null, "Selling Bitcoin");
+        jsonString = extraData.toJson();
+        assertThat(jsonString).isEqualTo("{" +
+                "\"extraText\":\"Selling Bitcoin\"" +
+                "}");
     }
 
     @Test
@@ -91,5 +97,12 @@ public class CryptoBrokerIdentityExtraDataTest {
                 "}";
         extraData = CryptoBrokerIdentityExtraData.fromJson(jsonString);
         assertThat(extraData).isNull();
+
+        jsonString = "{\"extraText\":\"Merchandises: USD, VEF\"}";
+        extraData = CryptoBrokerIdentityExtraData.fromJson(jsonString);
+        assertThat(extraData).isNotNull();
+        assertThat(extraData.getMerchandise()).isNull();
+        assertThat(extraData.getPaymentCurrency()).isNull();
+        assertThat(extraData.getExtraText()).isEqualTo("Merchandises: USD, VEF");
     }
 }
