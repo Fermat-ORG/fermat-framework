@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.adapters.CurrencyTypeHierarchyAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.Serializable;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/07/16.
@@ -16,6 +19,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * Default constructor with parameters
+     *
      * @param merchandise
      * @param paymentCurrency
      * @param extraText
@@ -31,6 +35,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns the broker merchandise.
+     *
      * @return
      */
     public Currency getMerchandise() {
@@ -39,6 +44,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns the broker payment currency.
+     *
      * @return
      */
     public Currency getPaymentCurrency() {
@@ -47,6 +53,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns the extra text.
+     *
      * @return
      */
     public String getExtraText() {
@@ -55,21 +62,34 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns a json String from this class.
+     *
      * @return
      */
     public String toJson() {
-        Gson gson = new Gson();
+        final Gson gson = new GsonBuilder().
+                registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeHierarchyAdapter()).
+                create();
+
         return gson.toJson(this);
     }
 
     /**
      * This method returns a CryptoBrokerIdentityExtraData from a json String.
+     *
      * @param jsonString
+     *
      * @return
      */
-    public static CryptoBrokerIdentityExtraData fromJson(String jsonString){
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, CryptoBrokerIdentityExtraData.class);
+    public static CryptoBrokerIdentityExtraData fromJson(String jsonString) {
+        final Gson gson = new GsonBuilder().
+                registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeHierarchyAdapter()).
+                create();
+
+        try {
+            return gson.fromJson(jsonString, CryptoBrokerIdentityExtraData.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
