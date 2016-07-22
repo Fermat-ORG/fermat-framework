@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class BitcoinWalletSettings implements WalletSettings,Serializable {
+public class BitcoinWalletSettings extends LossProtectedWalletSettings implements WalletSettings, Serializable {
 
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
