@@ -5172,7 +5172,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
 
         /**
-         * Contacts Activity
+         * Setting Activity
          */
 
         runtimeActivity = new Activity();
@@ -5451,7 +5451,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT.getCode());
         runtimeActivity.setColor("#12aca1");
-        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
 
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
