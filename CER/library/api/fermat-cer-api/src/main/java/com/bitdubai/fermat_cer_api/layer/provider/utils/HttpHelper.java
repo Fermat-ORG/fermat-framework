@@ -62,8 +62,8 @@ public class HttpHelper {
           //  stream = new URL(url).openStream();
             URL url=new URL(receiveurl);
             URLConnection con = url.openConnection();
-            con.setConnectTimeout(10000);
-            con.setReadTimeout(10000);
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
           //  reader = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8")));
             reader = new BufferedReader(new InputStreamReader(con.getInputStream(), Charset.forName("UTF-8")));
             content = readAll(reader);
