@@ -90,7 +90,7 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         else if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
             customerName.setTextColor(Color.GREEN);
         else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
-            customerName.setTextColor(Color.BLACK);//res.getColor(R.color.color_black_light));
+            customerName.setTextColor(Color.parseColor("#4d4d4d"));//res.getColor(R.color.color_black_light));
 
         if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
             countryAddress= "--";

@@ -432,13 +432,15 @@ public class CryptoBrokerCommunityManager
                 Address address;
                 try{
                     address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                    cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                    cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity());
                 } catch (CantCreateAddressException ex){
-                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
-                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
+//                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
+//                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
+                    cryptoBrokerCommunitySubAppModuleInformation.setCountry("");
+                    cryptoBrokerCommunitySubAppModuleInformation.setPlace("");
                 }
 
-                cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
-                cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity());
                 filteredConnectedActors.add(cryptoBrokerCommunitySubAppModuleInformation);
 
             }

@@ -235,16 +235,16 @@ public class RequestsTabFragment
     @Override
     public List<LinkedCryptoCustomerIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LinkedCryptoCustomerIdentity> dataSet = new ArrayList<>();
-
-        try {
-            offset = pos;
-            final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-            List<LinkedCryptoCustomerIdentity> result = moduleManager.listCryptoCustomersPendingLocalAction(selectedActorIdentity, MAX, offset);
-            dataSet.addAll(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isVisible) {
+            try {
+                offset = pos;
+                final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                List<LinkedCryptoCustomerIdentity> result = moduleManager.listCryptoCustomersPendingLocalAction(selectedActorIdentity, MAX, offset);
+                dataSet.addAll(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
         return dataSet;
     }
 
