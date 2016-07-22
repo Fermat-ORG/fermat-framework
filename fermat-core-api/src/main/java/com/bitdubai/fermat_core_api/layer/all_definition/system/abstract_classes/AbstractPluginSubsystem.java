@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The abstract class <code>AbstractPluginSubsystem</code>
  * contains all the basic functionality of a plugin Subsystem class.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
 public abstract class AbstractPluginSubsystem {
@@ -37,7 +37,7 @@ public abstract class AbstractPluginSubsystem {
         this.developers = new ConcurrentHashMap<>();
     }
 
-    public AbstractPluginSubsystem(PluginReference pluginReference,FermatContext fermatContext) {
+    public AbstractPluginSubsystem(PluginReference pluginReference, FermatContext fermatContext) {
         this.fermatContext = fermatContext;
         this.pluginReference = pluginReference;
         this.developers = new ConcurrentHashMap<>();
@@ -51,8 +51,7 @@ public abstract class AbstractPluginSubsystem {
      * Through the method <code>registerDeveloper</code> you can add new developers to the plugin subsystem.
      * Here we'll corroborate too that the developer is not added twice.
      *
-     * @param pluginDeveloper  pluginDeveloper in-self.
-     *
+     * @param pluginDeveloper pluginDeveloper in-self.
      * @throws CantRegisterDeveloperException if something goes wrong.
      */
     protected final void registerDeveloper(final DeveloperPluginInterface pluginDeveloper) throws CantRegisterDeveloperException {
@@ -63,7 +62,7 @@ public abstract class AbstractPluginSubsystem {
 
         try {
 
-            if(developers.containsKey(pluginDeveloperReference))
+            if (developers.containsKey(pluginDeveloperReference))
                 throw new CantRegisterDeveloperException(pluginDeveloperReference.toString(), "developer already exists for this plugin.");
 
             pluginDeveloper.start();
@@ -84,7 +83,7 @@ public abstract class AbstractPluginSubsystem {
         pluginDeveloperReference.setPluginReference(this.pluginReference);
         try {
 
-            if(developers.containsKey(pluginDeveloperReference))
+            if (developers.containsKey(pluginDeveloperReference))
                 throw new CantRegisterDeveloperException(pluginDeveloperReference.toString(), "developer already exists for this plugin.");
 
             pluginDeveloper.start();
@@ -107,7 +106,6 @@ public abstract class AbstractPluginSubsystem {
     }
 
 
-
     public final DeveloperPluginInterface getDeveloperByReference(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
         if (developers.containsKey(pluginDeveloperReference)) {
             return developers.get(pluginDeveloperReference);
@@ -118,10 +116,10 @@ public abstract class AbstractPluginSubsystem {
     }
 
     public final void fillVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
-        for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
+        for (ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
             try {
                 versions.putAll(developer.getValue().listVersions());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -129,10 +127,10 @@ public abstract class AbstractPluginSubsystem {
     }
 
     public final void fillVersionsMati(final List<PluginVersionReference> versions) {
-        for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
+        for (ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
             try {
                 versions.addAll(developer.getValue().listVersionsMati());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
