@@ -12,9 +12,9 @@ import java.net.URL;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/04/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public final class IPAddressHelper {
 
@@ -50,7 +50,7 @@ public final class IPAddressHelper {
             throw new CantGetCurrentIPAddressException(
                     ioException,
                     "",
-                    "There was an error trying to get the ip address from the site: "+PUBLIC_ADDRESS_URL
+                    new StringBuilder().append("There was an error trying to get the ip address from the site: ").append(PUBLIC_ADDRESS_URL).toString()
             );
         } finally {
 

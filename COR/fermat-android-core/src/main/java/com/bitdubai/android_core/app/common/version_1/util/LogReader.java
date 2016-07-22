@@ -27,7 +27,7 @@ public class LogReader {
 
 
         try {
-            String[] command = new String[] { "logcat", "-v", "threadtime" };
+            String[] command = new String[]{"logcat", "-v", "threadtime"};
 
             Process process = Runtime.getRuntime().exec(command);
 
@@ -41,7 +41,7 @@ public class LogReader {
                     lineNumber++;
                     //Code here
                 }
-                if(lineNumber==500){
+                if (lineNumber == 500) {
                     break;
                 }
             }
@@ -52,7 +52,7 @@ public class LogReader {
         return builder;
     }
 
-    public static StringBuilder getLog(Context context,String mail) {
+    public static StringBuilder getLog(Context context, String mail) {
 
         int lineNumber = 0;
 
@@ -60,7 +60,7 @@ public class LogReader {
 
 
         try {
-            String[] command = new String[] { "logcat", "-v", "threadtime" };
+            String[] command = new String[]{"logcat", "-v", "threadtime"};
 
             Process process = Runtime.getRuntime().exec(command);
 
@@ -75,8 +75,8 @@ public class LogReader {
                     lineNumber++;
                     //Code here
                 }
-                if(lineNumber==300){
-                    yourOwnSender.send(mail,builder.toString());
+                if (lineNumber == 300) {
+                    yourOwnSender.send(mail, builder.toString());
                     lineNumber = 0;
                 }
             }

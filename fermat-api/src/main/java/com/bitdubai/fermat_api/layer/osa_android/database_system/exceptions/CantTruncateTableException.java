@@ -8,9 +8,9 @@ import com.bitdubai.fermat_api.FermatException;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/05/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class CantTruncateTableException extends FermatException {
 

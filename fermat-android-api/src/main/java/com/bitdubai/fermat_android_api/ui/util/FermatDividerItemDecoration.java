@@ -136,7 +136,7 @@ public class FermatDividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void setMargin(int left,int top,int rigth,int bottom){
+    public void setMargin(int left, int top, int rigth, int bottom) {
         this.leftMargin = left;
     }
 

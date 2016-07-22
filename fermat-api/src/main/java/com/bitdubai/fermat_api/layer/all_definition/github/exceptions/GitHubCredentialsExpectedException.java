@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * The Exception <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.GitHubCredentialsExpectedException</code>
  * is thrown when a we cannot add a language string.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/08/15.
  *
  * @version 1.0

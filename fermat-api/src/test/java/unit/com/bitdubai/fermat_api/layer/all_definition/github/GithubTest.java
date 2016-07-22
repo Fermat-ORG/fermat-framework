@@ -11,9 +11,9 @@ import java.io.IOException;
  * Created by rodrigo on 8/22/15.
  */
 public class GithubTest {
-    final String USERNAME="guillermo20";
-    final String PASSWORD ="";
-    final String REPOSITORY ="guillermo20/testFermat";
+    final String USERNAME = "guillermo20";
+    final String PASSWORD = "";
+    final String REPOSITORY = "guillermo20/testFermat";
 
     @Ignore
     @Test
@@ -26,8 +26,9 @@ public class GithubTest {
     @Test
     public void testCreateImage() throws com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException {
         GitHubConnection gitHubConnection = new GitHubConnection(REPOSITORY, USERNAME, PASSWORD);
-        gitHubConnection.createGitHubImageFile("NuevaImage3", new byte[]{3,4}, "commit message");
+        gitHubConnection.createGitHubImageFile("NuevaImage3", new byte[]{3, 4}, "commit message");
     }
+
     @Ignore
     @Test
     public void getFile() throws IOException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException, com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException {
