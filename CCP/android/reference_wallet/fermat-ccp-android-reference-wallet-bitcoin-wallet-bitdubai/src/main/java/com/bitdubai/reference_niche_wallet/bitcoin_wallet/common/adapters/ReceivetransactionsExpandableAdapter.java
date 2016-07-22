@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.TransactionViewHolder;
@@ -86,6 +87,8 @@ public class ReceivetransactionsExpandableAdapter
      */
     @Override
     public void onBindChildViewHolder(TransactionViewHolder childViewHolder, int position, CryptoWalletTransaction childListItem) {
-        childViewHolder.bind(childListItem);
+
+        String intraUser = childListItem.getInvolvedActor().getActorPublicKey();
+        childViewHolder.bind(childListItem,intraUser);
     }
 }

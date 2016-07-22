@@ -46,14 +46,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWall
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
-
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
@@ -153,6 +149,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
+
+        onRefresh();
 
     }
 
@@ -272,7 +270,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;
+        return R.id.swipe_refresh;
     }
 
     @Override
@@ -340,17 +338,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     }
 
     @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
-        isRefreshing = false;
-        onRefresh();
-    }
-
-    @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
-           // swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 //noinspection unchecked
                 openNegotiationList = (ArrayList) result[0];
@@ -380,7 +371,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
         if (isAttached) {
-          //  swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
         }
     }

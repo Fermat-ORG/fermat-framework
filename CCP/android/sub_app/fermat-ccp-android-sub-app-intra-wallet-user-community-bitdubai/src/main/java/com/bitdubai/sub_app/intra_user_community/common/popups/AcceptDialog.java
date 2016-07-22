@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.intra_user_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -22,7 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.sub_app.intra_user_community.R;
 
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
-
+import android.content.Intent;
 /**
  * Created by Joaquin C on 12/11/15.
  * Modified by Jose Manuel De Sousa 08/12/2015
@@ -36,6 +37,10 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
     private final IntraUserInformation   intraUserInformation;
     private final IntraUserLoginIdentity identity            ;
 
+    private final Activity                       activity;
+    private final ReferenceAppFermatSession intraUserSubAppSession;
+    private final SubAppResourcesProviderManager subAppResources ;
+
     private FermatTextView title      ;
     private FermatTextView description;
     private FermatTextView userName   ;
@@ -43,6 +48,7 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
     private FermatButton   negativeBtn;
 
     private FermatTextView textConnectionSuccess;
+    private View ConnectionSuccess;
     private boolean result = false;
 
     public AcceptDialog(final Activity                       activity              ,
@@ -53,8 +59,13 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
 
         super(activity, intraUserSubAppSession, subAppResources);
 
+
+
         this.intraUserInformation = intraUserInformation;
         this.identity             = identity            ;
+        this.activity = activity;
+        this.intraUserSubAppSession = intraUserSubAppSession;
+        this.subAppResources = subAppResources;
     }
 
 
@@ -62,19 +73,30 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try{
+            title       = (FermatTextView) findViewById(R.id.title);
+            description = (FermatTextView) findViewById(R.id.description);
+            userName    = (FermatTextView) findViewById(R.id.second_description);
+            positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
+            negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
 
-        title       = (FermatTextView) findViewById(R.id.title          );
-        description = (FermatTextView) findViewById(R.id.description    );
-        userName    = (FermatTextView) findViewById(R.id.user_name      );
-        positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
+            positiveBtn.setOnClickListener(this);
+            negativeBtn.setOnClickListener(this);
 
-        positiveBtn.setOnClickListener(this);
-        negativeBtn.setOnClickListener(this);
-
-        title.setText("CONNECTION REQUEST");
-        description.setText("New Connection");
-        userName.setText(intraUserInformation.getName()+" wants to connect with you");
+            title.setText("CONNECTION REQUEST");
+            title.setTextColor(Color.BLACK);
+            description.setText("New Connection");
+            description.setTextColor(Color.parseColor("#5ddad1"));
+            userName.setText(intraUserInformation.getName() + " wants to connect with you");
+            userName.setTextColor(Color.parseColor("#3f3f3f"));
+            userName.setVisibility(View.VISIBLE);
+            userName.setTextSize(14);
+            //userName.addRule(RelativeLayout.BELOW, R.id.below_id)
+            positiveBtn.setTextColor(Color.BLACK);
+            negativeBtn.setTextColor(Color.parseColor("#3f3f3f"));
+        }catch(Exception exc){
+            Toast.makeText(getContext(), "Whoops! an unespected error has ocurred!", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
@@ -101,6 +123,9 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<IntraUs
                     getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED, Boolean.TRUE);
                     //Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                    //Crear un nuevo intent
+                 //   Intent intent = new Intent(AccpetMessage);
+                 //   startActivity(intent);
                     result = true;
                 } else {
                     super.toastDefaultError();
