@@ -7,7 +7,9 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 
@@ -26,6 +28,13 @@ import java.util.List;
 public interface CryptoCustomerIdentityModuleManager extends ModuleManager<IdentityCustomerPreferenceSettings, ActiveActorIdentityInformation>,
         ModuleSettingsImpl<IdentityCustomerPreferenceSettings>, Serializable {
 
+    /**
+     * The method <code>listIdentities</code> returns the list of all crypto Broker published
+     *
+     * @return the list of crypto Broker published
+     * @throws CantListCryptoBrokersException if something goes wrong.
+     */
+    List<CryptoBrokerIdentityInformation> listIdentities(int max, int offset) throws CantListCryptoBrokersException;
     /**
      * The method <code>createCryptoCustomerIdentity</code> is used to create a new crypto Customer identity
      *
