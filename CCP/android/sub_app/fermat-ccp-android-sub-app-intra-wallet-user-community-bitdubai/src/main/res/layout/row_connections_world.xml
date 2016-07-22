@@ -143,7 +143,6 @@
         android:text="ADD CONTACT"
         android:textSize="10dp"
         android:textColor="#FFF"
-
         />
 
 </LinearLayout>

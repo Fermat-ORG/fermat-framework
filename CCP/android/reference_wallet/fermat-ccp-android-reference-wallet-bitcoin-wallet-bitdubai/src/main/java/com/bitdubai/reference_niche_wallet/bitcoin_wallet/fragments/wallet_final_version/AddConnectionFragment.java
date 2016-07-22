@@ -384,12 +384,12 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     public void addMenuEnabled() {
         try {
             connectionPickCounter++;
-            if (!isMenuVisible) {
+         /*   if (!isMenuVisible) {
                 isMenuVisible = true;
                 menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                         .setIcon(R.drawable.button_add_connection)
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }
+            }*/
         }catch (Exception e){
             e.printStackTrace();
         }

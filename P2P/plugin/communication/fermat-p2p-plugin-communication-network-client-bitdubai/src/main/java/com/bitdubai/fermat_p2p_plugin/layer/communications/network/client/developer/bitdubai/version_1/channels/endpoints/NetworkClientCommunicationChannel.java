@@ -147,7 +147,7 @@ public class NetworkClientCommunicationChannel {
          */
         connection.setServerIdentity((String) session.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
 
-        raiseClientConnectedNotificationEvent();
+        //raiseClientConnectedNotificationEvent();
     }
 
     @OnMessage
