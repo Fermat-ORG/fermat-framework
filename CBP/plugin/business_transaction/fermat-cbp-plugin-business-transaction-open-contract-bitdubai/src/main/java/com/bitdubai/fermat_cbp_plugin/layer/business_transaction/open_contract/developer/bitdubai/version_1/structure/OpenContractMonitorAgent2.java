@@ -60,6 +60,7 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 03/07/16.
  */
@@ -263,7 +264,7 @@ public class OpenContractMonitorAgent2
     }
 
     private void raiseNewContractEvent(String contractHash) {
-        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - raiseNewContractEvent() - NEW_CONTRACT_OPENED \n - Contract Hash: "+contractHash+"\n");
+        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - raiseNewContractEvent() - NEW_CONTRACT_OPENED \n - Contract Hash: " + contractHash + "\n");
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
         NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
         newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
@@ -288,6 +289,14 @@ public class OpenContractMonitorAgent2
             for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
 
                 businessTransactionMetadata = record.getInformation();
+                Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                System.out.println("OPEN_CONTRACT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                if (remoteBusinessTransaction != Plugins.OPEN_CONTRACT)
+                    continue;
+
+                System.out.println("OPEN_CONTRACT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+
                 contractHash = businessTransactionMetadata.getContractHash();
                 transactionId = businessTransactionMetadata.getTransactionContractId();
                 transmissionId = record.getTransactionID();
@@ -377,7 +386,7 @@ public class OpenContractMonitorAgent2
                             case PURCHASE:
                                 CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                                 if (!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode()) &&
-                                    !contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
+                                        !contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
 
                                     customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
                                             ContractStatus.PENDING_PAYMENT);
@@ -392,7 +401,7 @@ public class OpenContractMonitorAgent2
                             case SALE:
                                 CustomerBrokerContractSale contractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                                 if (!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode()) &&
-                                    !contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
+                                        !contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
 
                                     customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
                                             ContractStatus.PENDING_PAYMENT);
@@ -473,7 +482,7 @@ public class OpenContractMonitorAgent2
         try {
 
             System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
-                    "\n - closeNegotiation "+contractType+" : "+negotiationId+"\n");
+                    "\n - closeNegotiation " + contractType + " : " + negotiationId + "\n");
 
             if (contractType.equals(ContractType.PURCHASE)) {
 
@@ -519,7 +528,7 @@ public class OpenContractMonitorAgent2
         }
     }
 
-    private void notificationNewOpenContract(ContractType contractType) throws UnexpectedResultReturnedFromDatabaseException{
+    private void notificationNewOpenContract(ContractType contractType) throws UnexpectedResultReturnedFromDatabaseException {
 
         if (contractType.equals(ContractType.PURCHASE)) {
 

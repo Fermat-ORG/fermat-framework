@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -31,7 +30,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetBankTransactionParametersRecordException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetCashTransactionParameterException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BankTransactionParametersRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
@@ -49,8 +47,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
@@ -62,7 +58,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.BrokerAckOfflinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
 
@@ -313,6 +308,13 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("ACK_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_ACK_OFFLINE_PAYMENT)
+                        continue;
+
+                    System.out.println("ACK_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         contractTransactionStatus = brokerAckOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
@@ -345,6 +347,14 @@ public class BrokerAckOfflinePaymentMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("ACK_OFFLINE_PAYMENT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_ACK_OFFLINE_PAYMENT)
+                        continue;
+
+                    System.out.println("ACK_OFFLINE_PAYMENT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+
                     if (brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
                         businessTransactionRecord = brokerAckOfflinePaymentBusinessTransactionDao.getBrokerBusinessTransactionRecordByContractHash(contractHash);
                         contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();

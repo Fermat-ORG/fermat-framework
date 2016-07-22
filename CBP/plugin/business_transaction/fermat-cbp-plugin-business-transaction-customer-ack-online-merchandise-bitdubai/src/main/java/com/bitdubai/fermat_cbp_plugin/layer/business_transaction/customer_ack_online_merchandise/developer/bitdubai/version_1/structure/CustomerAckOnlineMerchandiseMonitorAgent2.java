@@ -24,7 +24,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.CustomerAckMerchandiseConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionAgent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper;
@@ -39,8 +38,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.CustomerAckOnlineMerchandisePluginRoot;
@@ -205,6 +202,13 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (!dao.isContractHashInDatabase(contractHash)) {
                         CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
@@ -240,6 +244,13 @@ public class CustomerAckOnlineMerchandiseMonitorAgent2
                 for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("CUSTOMER_ACK_ONLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (dao.isContractHashInDatabase(contractHash)) {
                         businessTransactionRecord = dao.getBusinessTransactionRecordByContractHash(contractHash);
