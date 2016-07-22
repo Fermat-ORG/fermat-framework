@@ -260,10 +260,10 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             }
 
             p2PLayerManager.register(this);
-            FermatEventListener networkClientConnected = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE);
-            networkClientConnected.setEventHandler(new NetworkClientConnectedToNodeEventHandler(this));
-            eventManager.addListener(networkClientConnected);
-            listenersAdded.add(networkClientConnected);
+//            FermatEventListener networkClientConnected = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNNECTED_TO_NODE);
+//            networkClientConnected.setEventHandler(new NetworkClientConnectedToNodeEventHandler(this));
+//            eventManager.addListener(networkClientConnected);
+//            listenersAdded.add(networkClientConnected);
 
             connectivityManager.registerListener(new NetworkStateReceiver() {
                 @Override
