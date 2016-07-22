@@ -308,8 +308,8 @@ public class OpenContractMonitorAgent2
                                 "\n - Exist Contract: " +Boolean.toString(openContractBusinessTransactionDao.isContractHashExists(contractHash)) +
                                 "\n - contractXML: \n"+contractXML);
 
-                        if(contractXML != null){
-//                        if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
+//                        if(contractXML != null){
+                        if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
 
                             System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - HASH - VAL\n");
 
