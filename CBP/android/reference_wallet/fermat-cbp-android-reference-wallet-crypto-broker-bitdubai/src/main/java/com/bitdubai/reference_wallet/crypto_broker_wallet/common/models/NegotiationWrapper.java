@@ -194,16 +194,21 @@ final public class NegotiationWrapper {
      */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
         final ClauseStatus clauseStatus;
-
-        if(!clause.getValue().equals(value)) {      //If the clause has been changed, set ClauseStatus to CHANGED
-            clauseStatus = ClauseStatus.CHANGED;
+        if(!clause.getValue().equals("")) {
+            if (!clause.getValue().equals(value)) {      //If the clause has been changed, set ClauseStatus to CHANGED
+                clauseStatus = ClauseStatus.CHANGED;
+            } else {
+                if (clause.getStatus().equals(ClauseStatus.DRAFT))      //If the clause hasn't been changed AND status is DRAFT, set status to ACCEPTED
+                    clauseStatus = ClauseStatus.ACCEPTED;
+                else
+                    clauseStatus = clause.getStatus();                  //Otherwise keep the same status
+            }
         } else {
             if (clause.getStatus().equals(ClauseStatus.DRAFT))      //If the clause hasn't been changed AND status is DRAFT, set status to ACCEPTED
                 clauseStatus = ClauseStatus.ACCEPTED;
             else
                 clauseStatus = clause.getStatus();                  //Otherwise keep the same status
         }
-
         final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
         clauseInformation.setStatus(clauseStatus);
         clauseInformation.setValue(value);
