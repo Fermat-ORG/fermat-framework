@@ -649,7 +649,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             * Create and Scheduled the supervisorConnectionAgent
             */
             final NetworkClientCommunicationSupervisorConnectionAgent supervisorConnectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
-            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 20, TimeUnit.SECONDS);
+            scheduledExecutorService.scheduleAtFixedRate(supervisorConnectionAgent, 10, 7, TimeUnit.SECONDS);
 
 //            executorService = Executors.newSingleThreadExecutor();
 //            executorService.submit(thread);
