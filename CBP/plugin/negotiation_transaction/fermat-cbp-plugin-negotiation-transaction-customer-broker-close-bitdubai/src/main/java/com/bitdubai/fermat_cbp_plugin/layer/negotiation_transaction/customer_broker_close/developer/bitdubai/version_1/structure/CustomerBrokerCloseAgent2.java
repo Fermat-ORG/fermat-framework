@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -74,7 +73,7 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
 
     private int                 iterationConfirmSend    = 0;
     private Map<UUID,Integer>   transactionSend         = new HashMap<>();
-    
+
     public CustomerBrokerCloseAgent2(
             long                                                    sleepTime,
             TimeUnit                                                timeUnit,
@@ -113,7 +112,7 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
         this.cryptoVaultManager                         = cryptoVaultManager;
         this.walletManagerManager                       = walletManagerManager;
         this.intraWalletUserIdentityManager             = intraWalletUserIdentityManager;
-        
+
     }
 
     @Override
@@ -127,8 +126,8 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                     doTheMainTask();
 
                 } catch (
-                        CantSendCustomerBrokerCloseNegotiationTransactionException | 
-                        CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException | 
+                        CantSendCustomerBrokerCloseNegotiationTransactionException |
+                        CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException |
                         CantUpdateRecordException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
@@ -273,7 +272,7 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
         }
-        
+
     }
 
     //CHECK PENDING EVEN
@@ -286,10 +285,10 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
             NegotiationTransaction negotiationTransaction;
             NegotiationType                     negotiationType;
             String                              negotiationXML;
-            
+
             CustomerBrokerClosePurchaseNegotiationTransaction   customerBrokerClosePurchaseNegotiationTransaction;
             CustomerBrokerCloseSaleNegotiationTransaction       customerBrokerCloseSaleNegotiationTransaction;
-                    
+
             CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
             CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
@@ -301,6 +300,11 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                 for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                     negotiationTransmission = record.getInformation();
+
+                    final NegotiationTransactionType negotiationTransactionType = negotiationTransmission.getNegotiationTransactionType();
+                    if (negotiationTransactionType != NegotiationTransactionType.CUSTOMER_BROKER_CLOSE)
+                        continue;
+
                     negotiationXML          = negotiationTransmission.getNegotiationXML();
                     transmissionId          = negotiationTransmission.getTransmissionId();
                     transactionId           = negotiationTransmission.getTransactionId();
