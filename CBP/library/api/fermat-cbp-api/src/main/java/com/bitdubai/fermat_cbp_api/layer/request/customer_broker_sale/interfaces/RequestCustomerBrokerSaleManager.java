@@ -26,9 +26,9 @@ public interface RequestCustomerBrokerSaleManager {
     void rejectRequestSale(UUID requestId) throws FailedToRejectTheRequestSaleException;
 
     RequestCustomerBrokerSale createRequestCustomerBrokerSale(String senderWalletPublicKey,
-                                                                      String requestSenderPublicKey,
-                                                                      String requestDestinationPublicKey,
-                                                                      String requestDescription,
-                                                                      CryptoAddress addressToSendThePayment,
-                                                                      long cryptoAmount) throws com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.CantRequestCustomerBrokerSaleException;
+                                                              String requestSenderPublicKey,
+                                                              String requestDestinationPublicKey,
+                                                              String requestDescription,
+                                                              CryptoAddress addressToSendThePayment,
+                                                              long cryptoAmount) throws com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.CantRequestCustomerBrokerSaleException;
 }

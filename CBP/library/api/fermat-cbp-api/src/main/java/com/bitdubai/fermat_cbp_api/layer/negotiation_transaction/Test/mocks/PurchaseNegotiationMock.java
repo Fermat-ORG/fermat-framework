@@ -13,22 +13,22 @@ import java.util.UUID;
  * Created by Yordin Alayn 04.01.16.
  */
 public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiation, Serializable {
-    private final UUID   negotiationId;
-    String              customerPublicKey;
-    String              brokerPublicKey;
-    Long                startDate;
-    private final Long   negotiationExpirationDate;
-    NegotiationStatus   status;
+    private final UUID negotiationId;
+    String customerPublicKey;
+    String brokerPublicKey;
+    Long startDate;
+    private final Long negotiationExpirationDate;
+    NegotiationStatus status;
     private final Collection<Clause> clauses;
 
     private final Boolean nearExpirationDatetime;
 
-    private Long   lastNegotiationUpdateDate;
+    private Long lastNegotiationUpdateDate;
     private String cancelReason;
     private String memo;
 
-    public  PurchaseNegotiationMock(
-            UUID   negotiationId,
+    public PurchaseNegotiationMock(
+            UUID negotiationId,
             String customerPublicKey,
             String brokerPublicKey,
             Long startDate,
@@ -37,7 +37,7 @@ public class PurchaseNegotiationMock implements CustomerBrokerPurchaseNegotiatio
             Collection<Clause> clauses,
             Boolean nearExpirationDatetime,
             Long lastNegotiationUpdateDate
-    ){
+    ) {
         this.negotiationId = negotiationId;
         this.customerPublicKey = customerPublicKey;
         this.brokerPublicKey = brokerPublicKey;

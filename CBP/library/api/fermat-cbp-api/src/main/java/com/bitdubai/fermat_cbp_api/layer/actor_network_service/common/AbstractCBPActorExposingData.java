@@ -11,8 +11,8 @@ import java.util.Arrays;
 public abstract class AbstractCBPActorExposingData {
 
     private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
+    private final String alias;
+    private final byte[] image;
     private final Location location;
     private final long refreshInterval;
     private final long accuracy;
@@ -20,6 +20,7 @@ public abstract class AbstractCBPActorExposingData {
 
     /**
      * Default constructor with parameters
+     *
      * @param publicKey
      * @param alias
      * @param image
@@ -36,9 +37,9 @@ public abstract class AbstractCBPActorExposingData {
                                         final ProfileStatus profileStatus) {
 
         this.publicKey = publicKey;
-        this.alias     = alias    ;
-        this.image     = image    ;
-        this.location  = location;
+        this.alias = alias;
+        this.image = image;
+        this.location = location;
         this.refreshInterval = refreshInterval;
         this.accuracy = accuracy;
         this.profileStatus = profileStatus;
@@ -96,14 +97,17 @@ public abstract class AbstractCBPActorExposingData {
 
     @Override
     public String toString() {
-        return "AbstractCBPActorExposingData{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", image=" + Arrays.toString(image) +
-                ", location=" + location +
-                ", refreshInterval=" + refreshInterval +
-                ", accuracy=" + accuracy +
-                '}';
+        return new StringBuilder()
+                .append("AbstractCBPActorExposingData{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", image=").append(Arrays.toString(image))
+                .append(", location=").append(location)
+                .append(", refreshInterval=").append(refreshInterval)
+                .append(", accuracy=").append(accuracy)
+                .append('}').toString();
     }
 
 }

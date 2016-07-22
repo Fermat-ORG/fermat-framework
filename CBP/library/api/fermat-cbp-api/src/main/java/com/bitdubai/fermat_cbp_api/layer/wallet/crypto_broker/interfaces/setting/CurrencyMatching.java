@@ -2,11 +2,9 @@ package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.settin
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
-import java.util.UUID;
-
 /**
  * TODO add description
- *
+ * <p/>
  * Created by franklin on 14/02/16.
  */
 public interface CurrencyMatching {

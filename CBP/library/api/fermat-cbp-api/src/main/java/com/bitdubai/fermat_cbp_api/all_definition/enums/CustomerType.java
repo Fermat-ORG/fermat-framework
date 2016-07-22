@@ -6,9 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by natalia on 17/09/15.
  */
-public enum CustomerType  implements FermatEnum {
+public enum CustomerType implements FermatEnum {
     SPORADIC("SPO"),
-    FREQUENT ("FRQ");
+    FREQUENT("FRQ");
 
     private String code;
 
@@ -23,9 +23,12 @@ public enum CustomerType  implements FermatEnum {
 
     public static CustomerType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "SPO": return CustomerType.SPORADIC;
-            case "FRQ": return CustomerType.FREQUENT;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
+            case "SPO":
+                return CustomerType.SPORADIC;
+            case "FRQ":
+                return CustomerType.FREQUENT;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ContactState enum");
         }
     }
 }

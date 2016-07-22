@@ -12,21 +12,23 @@ public enum EventStatus implements FermatEnum {
 
     String code;
 
-    EventStatus(String code){
-        this.code=code;
+    EventStatus(String code) {
+        this.code = code;
     }
 
     @Override
-    public String getCode() { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     public static EventStatus getByCode(String code) throws InvalidParameterException {
-        switch (code){
+        switch (code) {
             case "NOTD":
                 return EventStatus.NOTIFIED;
             case "PEND":
                 return EventStatus.PENDING;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the EventStatus enum.");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the EventStatus enum.");
         }
     }
 }

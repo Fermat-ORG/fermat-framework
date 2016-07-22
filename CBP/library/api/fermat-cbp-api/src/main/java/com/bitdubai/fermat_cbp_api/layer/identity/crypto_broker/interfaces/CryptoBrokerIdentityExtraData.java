@@ -16,6 +16,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * Default constructor with parameters
+     *
      * @param merchandise
      * @param paymentCurrency
      * @param extraText
@@ -31,6 +32,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns the broker merchandise.
+     *
      * @return
      */
     public Currency getMerchandise() {
@@ -39,6 +41,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns the broker payment currency.
+     *
      * @return
      */
     public Currency getPaymentCurrency() {
@@ -47,6 +50,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns the extra text.
+     *
      * @return
      */
     public String getExtraText() {
@@ -55,6 +59,7 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns a json String from this class.
+     *
      * @return
      */
     public String toJson() {
@@ -64,20 +69,23 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     /**
      * This method returns a CryptoBrokerIdentityExtraData from a json String.
+     *
      * @param jsonString
      * @return
      */
-    public static CryptoBrokerIdentityExtraData fromJson(String jsonString){
+    public static CryptoBrokerIdentityExtraData fromJson(String jsonString) {
         Gson gson = new Gson();
         return gson.fromJson(jsonString, CryptoBrokerIdentityExtraData.class);
     }
 
     @Override
     public String toString() {
-        return "CryptoBrokerIdentityExtraData{" +
-                "merchandise=" + merchandise +
-                ", paymentCurrency=" + paymentCurrency +
-                ", extraText='" + extraText + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerIdentityExtraData{")
+                .append("merchandise=").append(merchandise)
+                .append(", paymentCurrency=").append(paymentCurrency)
+                .append(", extraText='").append(extraText)
+                .append('\'')
+                .append('}').toString();
     }
 }

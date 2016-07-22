@@ -29,7 +29,7 @@ public class CantSendNotificationReviewNegotiation extends CBPException {
      * @param possibleReason
      */
     public CantSendNotificationReviewNegotiation(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**
