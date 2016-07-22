@@ -118,7 +118,8 @@ public abstract class LocalSocketSession {
 //            ObjectOutput out = null;
             try {
 //                objectOutputStream.flush();
-                Log.i(TAG,"send method: object type return"+object.getClass().getName()+", number: "+i++);
+//                Log.e(TAG,"LocalSocket states: "+ "connected: "+localSocket.isConnected()+", bound: "+localSocket.isBound());
+                Log.i(TAG, "send method: object type return" + object.getClass().getName() + ", number: " + i++);
                 sendPackage(fermatModuleObjectWrapper);
 //                if (localSocket.isBound()) {
 //                    sendPackage(fermatModuleObjectWrapper);
@@ -235,6 +236,7 @@ public abstract class LocalSocketSession {
                                         Log.i(TAG, "pidiendo objeto");
                                         FermatModuleObjectWrapper object = null;
                                         try {
+//                                            Log.e(TAG,"LocalSocket states: "+ "connected: "+localSocket.isConnected()+", bound: "+localSocket.isBound());
                                             if(localSocket.isConnected()) {
                                                 Object o = objectInputStream.readObject();
                                                 if(o instanceof FermatModuleObjectWrapper){
