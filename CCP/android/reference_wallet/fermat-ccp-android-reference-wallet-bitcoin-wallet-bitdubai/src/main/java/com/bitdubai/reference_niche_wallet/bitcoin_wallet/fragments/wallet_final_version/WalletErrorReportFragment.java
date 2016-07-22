@@ -115,12 +115,12 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
         okBtn = (Button) layout.findViewById(R.id.okButton);
         cancelBtn = (Button) layout.findViewById(R.id.cancelButton);
         copyEdit.setText("");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        /*toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
             }
-        });
+        });*/
 
 
         copyEdit.setOnLongClickListener(new View.OnLongClickListener() {
