@@ -304,11 +304,11 @@ public class OpenContractMonitorAgent2
 
                         String contractXML = openContractBusinessTransactionDao.getContractXML(contractHash);
 
-                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH "+contractHash+"" +
+                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH " +
+                                "\n - contractHash: "+contractHash+"" +
                                 "\n - Exist Contract: " +Boolean.toString(openContractBusinessTransactionDao.isContractHashExists(contractHash)) +
                                 "\n - contractXML: \n"+contractXML);
 
-//                        if(contractXML != null){
                         if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
 
                             System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - HASH - VAL\n");
@@ -326,7 +326,7 @@ public class OpenContractMonitorAgent2
                             );
 
                             //CHANGE STATUS TRANSACTION
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(transactionContractId, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
+                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
 
                             //CONFIRM TRANSMISSION OF SEND
                             transactionTransmissionManager.confirmReception(transmissionIdNew);
@@ -358,7 +358,7 @@ public class OpenContractMonitorAgent2
                         );
 
                         //CHANGE STATUS TRANSACTION
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionContractId, ContractTransactionStatus.CONTRACT_CONFIRMED);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
 
                         //CONFIRM SEND OF TRANSMISSION
                         transactionTransmissionManager.confirmReception(transmissionIdNew);
@@ -415,7 +415,7 @@ public class OpenContractMonitorAgent2
                         }
 
                         //CHANGE STATUS TRANSACTION
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionContractId, ContractTransactionStatus.CONTRACT_OPENED);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_OPENED);
 
                     }
 
