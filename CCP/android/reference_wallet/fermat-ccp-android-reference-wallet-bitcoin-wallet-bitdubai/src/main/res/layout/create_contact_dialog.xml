@@ -103,7 +103,7 @@
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/set_address_text"
+        android:text="Type address"
         android:textColor="#12aca1"
         android:paddingLeft="24dp"
         android:layout_alignParentTop="true"

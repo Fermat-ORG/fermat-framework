@@ -46,7 +46,7 @@ public final class CryptoBrokerExposingData extends AbstractCBPActorExposingData
         this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
                 CryptoCurrency.BITCOIN,
                 FiatCurrency.US_DOLLAR,
-                "Selling Bitcoin");
+                "No Available Merchandises.");
     }
 
     /**

@@ -623,9 +623,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             locations = new ArrayList<>();
         }
 
-        if (locations.isEmpty())
+        if (locations.isEmpty()) {
+            appSession.setData(FragmentsCommons.LAST_ACTIVITY, Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
             Toast.makeText(getActivity(), "You don't have Locations. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
-        else {
+            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS, appSession.getAppPublicKey());
+              }else {
             final SimpleListDialogFragment<NegotiationLocations> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("placeToDelivery", locations);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<NegotiationLocations>() {

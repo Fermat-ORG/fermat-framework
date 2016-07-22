@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:text="Location"
+            android:text="Not Location"
             android:maxLines="3"
             android:textColor="#7DD5CA"
             android:textSize="12sp"
@@ -143,7 +143,6 @@
         android:text="ADD CONTACT"
         android:textSize="10dp"
         android:textColor="#FFF"
-
         />
 
 </LinearLayout>

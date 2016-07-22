@@ -641,7 +641,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             });
             dialogFragment.show(getFragmentManager(), "bankAccountDialog");
         } else {
+            appSession.setData(FragmentsCommons.LAST_ACTIVITY, Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
             Toast.makeText(getActivity(), "The Bank Account List is Empty. Add Your Bank Account in the Settings Wallet.", Toast.LENGTH_LONG).show();
+            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS, appSession.getAppPublicKey());
         }
 
     }

@@ -16,6 +16,7 @@ import com.bitdubai.sub_app.intra_user_community.R;
 /**
  * Created by Gian Barboza on 14/07/16.
  */
+
 public class AvailableIntraUserViewHolder extends FermatViewHolder {
 
     private ImageView imageView_avatar;

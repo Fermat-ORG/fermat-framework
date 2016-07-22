@@ -279,7 +279,6 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException {
         try {
 
@@ -873,14 +872,14 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     public void testNetGiveMeCoins(BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetCoinsFromFaucetException{
 
-            BitcoinFaucetManager.giveMeCoins(blockchainNetworkType,cryptoAddress , 500000000);
+            BitcoinFaucetManager.giveMeCoins(blockchainNetworkType,cryptoAddress , 100000000);
 
     }
 
 
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                         TransactionType transactionType,
                                                                         String walletPublicKey,
@@ -938,7 +937,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 40,timeoutUnit = TimeUnit.SECONDS,methodParallelQuantity = 1)
     public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                     final TransactionType transactionType,
                                                                                     String walletPublicKey,

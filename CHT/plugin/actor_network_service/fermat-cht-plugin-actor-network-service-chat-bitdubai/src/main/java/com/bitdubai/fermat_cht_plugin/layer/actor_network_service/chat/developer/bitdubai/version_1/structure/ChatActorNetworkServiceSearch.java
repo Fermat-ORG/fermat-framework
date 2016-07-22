@@ -213,23 +213,25 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             for (final ActorProfile actorProfile : list) {
 
-                JsonParser parser = new JsonParser();
+//                JsonParser parser = new JsonParser();
+//
+//                Gson gson = new Gson();
 
-                Gson gson = new Gson();
+//                if(actorProfile.getExtraData()!=null) {
+//
+//                    JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
+//
+//                    String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+//
+//                    String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+//
+//                    String status = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS), String.class);
+//
+//                    String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
+//                }
+                    System.out.println("************** I\'m a crypto Chat: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
 
-                JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
-
-                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
-
-                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
-
-                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
-
-                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
-
-                System.out.println("************** I\'m a crypto Chat: " + actorProfile.getAlias() + " - " + actorProfile.getStatus());
-
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), "", "", "", "", actorProfile.getLocation(), 0, 0, actorProfile.getStatus()));
             }
 
             return chatExposingDataArrayList;
