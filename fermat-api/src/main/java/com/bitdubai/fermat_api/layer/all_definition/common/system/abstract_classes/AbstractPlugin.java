@@ -623,6 +623,21 @@ public abstract class AbstractPlugin implements AbstractPluginInterface {
         }
     }
 
+    public void reportError(UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception,String extraData){
+        PluginInfo pluginInfo = getClass().getAnnotation(PluginInfo.class);
+        if(pluginInfo!=null) {
+            String[] mailTo = new String[]{pluginInfo.maintainerMail()};
+            if (errorManager != null)
+                errorManager.reportUnexpectedPluginException(pluginInfo.plugin(),pluginVersionReference.getPlatform(),unexpectedPluginExceptionSeverity,exception,mailTo,extraData);
+            else {
+                System.out.println("************ ERROR MANAGER NULL: "+this.getPluginVersionReference());
+                exception.printStackTrace();
+            }
+        }else {
+            System.err.println("The plugin is not implementing the annotation class,Error in Plugin: "+getClass().getName());
+        }
+    }
+
 
 
 }

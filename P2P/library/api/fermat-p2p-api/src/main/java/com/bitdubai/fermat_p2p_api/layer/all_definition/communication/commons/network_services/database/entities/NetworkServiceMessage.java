@@ -150,8 +150,9 @@ public class NetworkServiceMessage extends PackageContent implements AbstractBas
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NetworkServiceMessage)) return false;
-        NetworkServiceMessage that = (NetworkServiceMessage) o;
-        return Objects.equals(getId(), that.getId());
+        return this.toJson().equals(((NetworkServiceMessage) o).toJson());
+//        NetworkServiceMessage that = (NetworkServiceMessage) o;
+//        return Objects.equals(getId(), that.getId());
     }
 
     @Override
