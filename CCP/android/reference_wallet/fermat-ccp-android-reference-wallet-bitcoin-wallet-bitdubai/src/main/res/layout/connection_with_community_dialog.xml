@@ -22,8 +22,7 @@
             android:textColor="#fff"
             android:textStyle="bold"
             android:textSize="18sp"
-            app:typeface="ROBOTO_REGULAR"
-            />
+            app:typeface="ROBOTO_REGULAR"       />
 
 
     </LinearLayout>
@@ -37,43 +36,44 @@
         android:text="@string/add_user_in_your_contact_list_text"
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
-        android:paddingLeft="10dp"
+        android:paddingLeft="16dp"
         android:textColor="#1d1d26"
-        android:paddingRight="30dp"/>
+        android:paddingRight="16dp"/>
 
     <LinearLayout
         android:id="@+id/linear_create_contact"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="3dip"
         android:layout_marginTop="20dp"
         android:background="#FFFFFF"
-        android:paddingRight="50dp"
         >
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/cancel_btn"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
             android:background="#efefef"
             android:text="@string/cancel_text"
             android:textColor="#666666"
             android:textStyle="bold"
             android:textSize="14sp"
+            android:gravity="center"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/search_contact_btn"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
             android:background="#1173aa"
             android:text="@string/search_text"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:gravity="center"
             />
     </LinearLayout>
 
