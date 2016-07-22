@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -55,6 +55,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog;
@@ -231,25 +232,8 @@ public class BrowserTabFragment
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    final int itemViewType = adapter.getItemViewType(position);
-                    switch (itemViewType) {
-                        case AvailableActorsListAdapter.DATA_ITEM:
-                            return 1;
-                        case AvailableActorsListAdapter.LOADING_ITEM:
-                            return SPAN_COUNT;
-                        default:
-                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
-                    }
-                }
-            });
-
-            layoutManager = gridLayoutManager;
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
-
 
         return layoutManager;
     }
@@ -337,7 +321,7 @@ public class BrowserTabFragment
     @Override
     public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
         try {
-            if(data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
+            if (data.getConnectionState() == null || data.getConnectionState() != ConnectionState.CONNECTED) {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, identity);
 
                 connectDialog.setTitle("Connection Request");
@@ -402,15 +386,16 @@ public class BrowserTabFragment
     @Override
     public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-
-        try {
-            offset = pos;
-            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
-            dataSet.addAll(result);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(isVisible) {
+            try {
+                offset = pos;
+                List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(identity, location, 0, null, MAX, offset);
+                if(result != null)
+                    dataSet.addAll(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
         return dataSet;
     }
 
@@ -459,7 +444,7 @@ public class BrowserTabFragment
         onRefresh();
     }
 
-    private void loadSelectedActorIdentityInBackground(){
+    private void loadSelectedActorIdentityInBackground() {
 
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
@@ -475,7 +460,7 @@ public class BrowserTabFragment
             public void onPostExecute(Object... result) {
                 try {
                     selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
-                    if(selectedActorIdentity!=null) {
+                    if (selectedActorIdentity != null) {
                         Bitmap image = BitmapFactory.decodeByteArray(selectedActorIdentity.getImage(), 0, selectedActorIdentity.getImage().length);
                         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), getRoundedShape(image, 120));
                         toolbar.setLogo(bitmapDrawable);
@@ -498,12 +483,13 @@ public class BrowserTabFragment
 
         fermatWorker.execute();
     }
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int width) {
         // TODO Auto-generated method stub
         int targetWidth = width;
         int targetHeight = width;
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
+                targetHeight, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(targetBitmap);
         Path path = new Path();
@@ -521,6 +507,7 @@ public class BrowserTabFragment
                         targetHeight), null);
         return targetBitmap;
     }
+
     /**
      * Obtain Settings or create new Settings if first time opening subApp
      */
@@ -603,7 +590,7 @@ public class BrowserTabFragment
     private void showOrHideEmptyView() {
         final boolean show = cryptoBrokerCommunityInformationList.isEmpty();
         final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
-        if(isAttached) {
+        if (isAttached) {
             Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
             if (show && (noContacts.getVisibility() == View.GONE || noContacts.getVisibility() == View.INVISIBLE)) {
                 noContacts.setAnimation(anim);
@@ -615,8 +602,8 @@ public class BrowserTabFragment
                 noContacts.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
-        }else{
-            Log.e(TAG,"Fragment not attached");
+        } else {
+            Log.e(TAG, "Fragment not attached");
         }
     }
 
@@ -642,7 +629,8 @@ public class BrowserTabFragment
                     actorInformation.getConnectionId(),
                     actorInformation.getLocation(),
                     actorInformation.getCountry(),
-                    actorInformation.getPlace());
+                    actorInformation.getPlace(),
+                    actorInformation.getCryptoBrokerIdentityExtraData());
 
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);

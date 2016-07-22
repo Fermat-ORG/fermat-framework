@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,10 +75,15 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
             String sellCurrency=sell.split(" ")[0];
             String buyWithFormat= fixFormat(buyAmount);
             String sellWithFormat= fixFormat(sellAmount);
-            providerName.setText(this.providerName);
+            if(buyAmount.equals("0") && sellAmount.equals("0")){
+                providerName.setText(this.providerName.concat(" is down"));
+                providerName.setTextColor(ContextCompat.getColor(getActivity(), R.color.cbw_provider_is_down));
+            }else{
+                providerName.setText(this.providerName);
+            }
             currencies.setText(currencyPair);
-            buyPrice.setText(buyCurrency+" "+buyWithFormat);
-            sellPrice.setText(sellCurrency+" "+sellWithFormat);
+            buyPrice.setText(buyCurrency.concat(" ").concat(buyWithFormat));
+            sellPrice.setText(sellCurrency.concat(" ").concat(sellWithFormat));
 
             configChart(rootView);
 

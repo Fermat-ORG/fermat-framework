@@ -235,7 +235,6 @@ public class RequestsTabFragment
     @Override
     public List<LinkedCryptoCustomerIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LinkedCryptoCustomerIdentity> dataSet = new ArrayList<>();
-
         try {
             offset = pos;
             final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
@@ -329,7 +328,6 @@ public class RequestsTabFragment
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-
-        onRefresh();
+        if (isAttached) onRefresh();
     }
 }

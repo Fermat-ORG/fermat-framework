@@ -49,5 +49,9 @@ public interface WalletManager extends AppManager,ModuleSettingsImpl<DesktopMana
 
     List<String> getMnemonicCode() throws Exception;
 
+    String getMnemonicPhrase() throws Exception;
+
+    long getCreationTimeSeconds() throws Exception;
+
     public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception;
 }

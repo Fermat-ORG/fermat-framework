@@ -1,7 +1,10 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 
 import android.app.Fragment;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,16 +49,22 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
 
 
 
-            String buyAmount=buy.split(" ")[1];
-            String buyCurrency=buy.split(" ")[0];
-            String sellAmount=sell.split(" ")[1];
-            String sellCurrency=sell.split(" ")[0];
-            String buyWithFormat= fixFormat(buyAmount);
-            String sellWithFormat= fixFormat(sellAmount);
+        String buyAmount=buy.split(" ")[1];
+        String buyCurrency=buy.split(" ")[0];
+        String sellAmount=sell.split(" ")[1];
+        String sellCurrency=sell.split(" ")[0];
+        String buyWithFormat=fixFormat(buyAmount);
+        String sellWithFormat= fixFormat(sellAmount);
+        if(buyAmount.equals("0") && sellAmount.equals("0")){
+            providerName.setText(this.providerName.concat(" is down"));
+            providerName.setTextColor(ContextCompat.getColor(getActivity(), R.color.ccw_provider_is_down));
+        }else{
             providerName.setText(this.providerName);
-            currencies.setText(currencyPair);
-            buyPrice.setText(buyCurrency+" "+buyWithFormat);
-            sellPrice.setText(sellCurrency+" "+sellWithFormat);
+        }
+
+        currencies.setText(currencyPair);
+        buyPrice.setText(buyCurrency.concat(" ").concat(buyWithFormat));
+        sellPrice.setText(sellCurrency.concat(" ").concat(sellWithFormat));
 
 
 
