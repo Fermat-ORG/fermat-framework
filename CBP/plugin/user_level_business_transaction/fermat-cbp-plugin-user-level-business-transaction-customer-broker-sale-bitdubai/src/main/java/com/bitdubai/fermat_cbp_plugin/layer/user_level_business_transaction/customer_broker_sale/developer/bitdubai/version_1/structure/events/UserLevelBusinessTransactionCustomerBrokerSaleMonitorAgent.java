@@ -692,7 +692,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * Se debe enviar un Broadcast para actualizar la UI
      *
      * @param brokerWalletPublicKey the broker wallet public key
-     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -742,7 +741,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * @param brokerWalletPublicKey the broker wallet public key
      * @param contractSale          the sale contract information
      * @param negotiationId         the negotiation ID associated with the contract
-     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -789,8 +787,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         cryptoWalletPublicKey = WalletsPublicKeys.CCP_FERMAT_WALLET.getCode();
                         break;
                     default:
-                        throw new UnsupportedOperationException("The Crypto Restock operation is not supported for the currency " +
-                                cryptoCurrency.getFriendlyName());
+                        throw new UnsupportedOperationException(new StringBuilder().append("The Crypto Restock operation is not supported for the currency ").append(cryptoCurrency.getFriendlyName()).toString());
                 }
 
                 cryptoMoneyRestockManager.createTransactionRestock(
@@ -854,7 +851,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      *
      * @param valueFilter the value of the filter
      * @param columnValue the column name which is going to be queried
-     *
      * @return the filter object
      */
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
@@ -900,9 +896,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * Return the market exchange rate for the currency to sell vs USD
      *
      * @param customerCurrency the code of the currency to sell
-     *
      * @return the market exchange rate fot this currency vs USD
-     *
      * @throws CantGetExchangeRateException
      */
     private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {

@@ -11,7 +11,6 @@ import java.util.UUID;
 public class ContractDetail {
 
 
-
     private int contractStep;
     private ContractStatus contractStatus;
     private String contractId;
@@ -21,11 +20,11 @@ public class ContractDetail {
     private String paymentOrMerchandiseTypeOfPayment;
     private String paymentOrMerchandiseCurrencyCode;
     private long paymentOrMerchandiseDeliveryDate;
-    
+
     private MoneyType paymentMethodType;
 
     public ContractDetail(int contractStep, ContractStatus contractStatus, String contractId, UUID negotiationId,
-                          String amount, String typeOfPayment, String currencyCode, long deliveryDate,MoneyType paymentMethodType) {
+                          String amount, String typeOfPayment, String currencyCode, long deliveryDate, MoneyType paymentMethodType) {
         this.contractStep = contractStep;
         this.contractStatus = contractStatus;
         this.contractId = contractId;
@@ -37,32 +36,48 @@ public class ContractDetail {
         this.paymentMethodType = paymentMethodType;
     }
 
-    public int getContractStep() {return contractStep;}
+    public int getContractStep() {
+        return contractStep;
+    }
     //public void setContractStep(int contractStep) {this.contractStep = contractStep;}
 
-    public ContractStatus getContractStatus() {return contractStatus;}
+    public ContractStatus getContractStatus() {
+        return contractStatus;
+    }
     //public void setContractStatus(ContractStatus contractStatus) {this.contractStatus = contractStatus;}
 
-    public String getContractId() {return contractId;}
+    public String getContractId() {
+        return contractId;
+    }
     //public void setContractId(UUID contractId) {this.contractId = contractId;}
 
-    public UUID getNegotiationId() {return negotiationId;}
+    public UUID getNegotiationId() {
+        return negotiationId;
+    }
     //public void setNegotiationId(UUID negotiationId) {this.negotiationId = negotiationId;}
 
 
-    public String getPaymentOrMerchandiseAmount() {return paymentOrMerchandiseAmount;}
+    public String getPaymentOrMerchandiseAmount() {
+        return paymentOrMerchandiseAmount;
+    }
     //public void setPaymentOrMerchandiseAmount(float paymentOrMerchandiseAmount) {this.paymentOrMerchandiseAmount = paymentOrMerchandiseAmount;}
 
 
-    public String getPaymentOrMerchandiseTypeOfPayment() {return paymentOrMerchandiseTypeOfPayment;}
+    public String getPaymentOrMerchandiseTypeOfPayment() {
+        return paymentOrMerchandiseTypeOfPayment;
+    }
     //public void setPaymentOrMerchandiseMoneyType(MoneyType paymentOrMerchandiseTypeOfPayment) {this.paymentOrMerchandiseTypeOfPayment = paymentOrMerchandiseTypeOfPayment;}
 
 
-    public String getPaymentOrMerchandiseCurrencyCode() {return paymentOrMerchandiseCurrencyCode;}
+    public String getPaymentOrMerchandiseCurrencyCode() {
+        return paymentOrMerchandiseCurrencyCode;
+    }
     //public void setPaymentOrMerchandiseCurrencyCode(String paymentOrMerchandiseCurrencyCode) {this.paymentOrMerchandiseCurrencyCode = paymentOrMerchandiseCurrencyCode;}
 
 
-    public long getPaymentOrMerchandiseDeliveryDate() {return paymentOrMerchandiseDeliveryDate;}
+    public long getPaymentOrMerchandiseDeliveryDate() {
+        return paymentOrMerchandiseDeliveryDate;
+    }
     //public void setPaymentOrMerchandiseDeliveryDate(long paymentOrMerchandiseDeliveryDate) {this.paymentOrMerchandiseDeliveryDate = paymentOrMerchandiseDeliveryDate;}
 
     public MoneyType getPaymentMethodType() {

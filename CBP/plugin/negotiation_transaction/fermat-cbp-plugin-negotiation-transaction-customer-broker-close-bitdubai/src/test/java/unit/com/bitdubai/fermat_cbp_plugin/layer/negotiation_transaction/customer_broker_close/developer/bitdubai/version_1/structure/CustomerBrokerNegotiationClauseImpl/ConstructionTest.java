@@ -19,29 +19,29 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private final UUID          clauseId    = UUID.randomUUID();
+    private final UUID clauseId = UUID.randomUUID();
 
-    private final ClauseType    type        = ClauseType.BROKER_CRYPTO_ADDRESS;
+    private final ClauseType type = ClauseType.BROKER_CRYPTO_ADDRESS;
 
-    private final String        value       = "value";
+    private final String value = "value";
 
-    private final ClauseStatus  status      = ClauseStatus.AGREED;
+    private final ClauseStatus status = ClauseStatus.AGREED;
 
-    private final String        proposedBy  = "proposedBy";
+    private final String proposedBy = "proposedBy";
 
-    private final short         indexOrder  = 1;
+    private final short indexOrder = 1;
 
     private CustomerBrokerNegotiationClauseImpl testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new CustomerBrokerNegotiationClauseImpl(
-            clauseId,
-            type,
-            value,
-            status,
-            proposedBy,
-            indexOrder
+                clauseId,
+                type,
+                value,
+                status,
+                proposedBy,
+                indexOrder
         );
     }
 

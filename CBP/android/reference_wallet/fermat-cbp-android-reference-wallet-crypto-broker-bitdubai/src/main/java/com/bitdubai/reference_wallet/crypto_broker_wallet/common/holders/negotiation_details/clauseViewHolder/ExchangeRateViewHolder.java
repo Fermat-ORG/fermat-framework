@@ -4,9 +4,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -15,7 +13,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -41,16 +38,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private Quote suggestedRate;
     private float spread;
     private boolean suggestedRateLoaded;
-    private NumberFormat numberFormat=DecimalFormat.getInstance();
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
     private View separatorLineUp;
     private View separatorLineMiddle;
     private View separatorLineDown;
 
 
-
     public ExchangeRateViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
-
 
 
         exchangeRateReferenceText = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_text);
@@ -61,15 +56,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValueLeftSide = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_left_side);
         yourExchangeRateValueRightSide = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_right_side);
         yourExchangeRateValue = (FermatButton) itemView.findViewById(R.id.cbw_your_exchange_rate_value);
-        separatorLineDown= itemView.findViewById(R.id.cbw_line_down);
-        separatorLineMiddle= itemView.findViewById(R.id.cbw_line_middle);
-        separatorLineUp= itemView.findViewById(R.id.cbw_line_up);
+        separatorLineDown = itemView.findViewById(R.id.cbw_line_down);
+        separatorLineMiddle = itemView.findViewById(R.id.cbw_line_middle);
+        separatorLineUp = itemView.findViewById(R.id.cbw_line_up);
         yourExchangeRateValue.setOnClickListener(this);
 
 
-
-      //change lostwood
-     //   formatter.setRoundingMode(RoundingMode.DOWN);
+        //change lostwood
+        //   formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override
@@ -88,7 +82,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
 
         String marketExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue()));
-        String suggestedMaxExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue() * (1+(spread/100))));
+        String suggestedMaxExchangeRateStr = fixFormat(String.valueOf(marketRateReferenceValue.doubleValue() * (1 + (spread / 100))));
 
         String suggestedRateCurrencyStr = "";
         if (suggestedRate != null)
@@ -99,8 +93,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                     currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
             exchangeRateReferenceValue.setText(String.format("Min: %1$s %3$s    Max: %2$s %3$s",
                     marketExchangeRateStr, suggestedMaxExchangeRateStr, suggestedRateCurrencyStr));
-        }
-        else {
+        } else {
             markerRateReference.setText("Can't get Market Exchange Rate");
             exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
         }
@@ -233,30 +226,30 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     }
 
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
-                } catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
             return "0";
         }
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

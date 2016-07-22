@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
 /**
  * The interface <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage</code>
  * indicates all the basic functionality of a network service message,
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/11/2015.
  */
 public class NetworkServiceMessage {
@@ -61,7 +61,7 @@ public class NetworkServiceMessage {
 
     }
 
-    public static NetworkServiceMessage fromJson(String jsonString){
+    public static NetworkServiceMessage fromJson(String jsonString) {
 
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
@@ -72,8 +72,9 @@ public class NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return "NetworkServiceMessage{" +
-                "messageType=" + messageType +
-                '}';
+        return new StringBuilder()
+                .append("NetworkServiceMessage{")
+                .append("messageType=").append(messageType)
+                .append('}').toString();
     }
 }

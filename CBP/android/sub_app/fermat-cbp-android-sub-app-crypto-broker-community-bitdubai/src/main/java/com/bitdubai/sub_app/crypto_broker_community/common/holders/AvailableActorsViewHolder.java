@@ -81,19 +81,19 @@ public class AvailableActorsViewHolder extends FermatViewHolder {
         }
 
         brokerName.setText(data.getAlias());
-        if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
+        if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("OF"))
             brokerName.setTextColor(Color.RED);
-        else if(data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
+        else if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
             brokerName.setTextColor(Color.GREEN);
-        else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+        else if (data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
             brokerName.setTextColor(Color.parseColor("#4d4d4d"));//BLACK);//res.getColor(R.color.color_black_light));
 
         if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
-            countryAddress= "--";
-        else countryAddress =  data.getCountry();
+            countryAddress = "--";
+        else countryAddress = data.getCountry();
         if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
-            placeAddress= "--";
-        else placeAddress =  data.getPlace();
+            placeAddress = "--";
+        else placeAddress = data.getPlace();
         brokerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }

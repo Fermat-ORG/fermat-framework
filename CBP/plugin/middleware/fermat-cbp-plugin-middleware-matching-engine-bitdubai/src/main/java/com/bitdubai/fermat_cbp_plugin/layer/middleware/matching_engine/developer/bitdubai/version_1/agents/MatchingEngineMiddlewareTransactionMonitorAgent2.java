@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents;
 
 import com.bitdubai.fermat_api.AbstractAgent;
-import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
@@ -42,9 +40,9 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent2 extends Abst
 
     private Thread agentThread;
 
-    private final CryptoBrokerWalletManager           cryptoBrokerWalletManager;
-    private final MatchingEngineMiddlewarePluginRoot  pluginRoot               ;
-    private final MatchingEngineMiddlewareDao         dao                      ;
+    private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private final MatchingEngineMiddlewarePluginRoot pluginRoot;
+    private final MatchingEngineMiddlewareDao dao;
 
     public MatchingEngineMiddlewareTransactionMonitorAgent2(long sleepTime,
                                                             TimeUnit timeUnit,
@@ -54,8 +52,8 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent2 extends Abst
                                                             final MatchingEngineMiddlewareDao dao) {
         super(sleepTime, timeUnit, initDelayTime);
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
-        this.pluginRoot                = pluginRoot               ;
-        this.dao                       = dao                      ;
+        this.pluginRoot = pluginRoot;
+        this.dao = dao;
 
     }
 
@@ -150,22 +148,23 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent2 extends Abst
 
         MatchingEngineMiddlewareCurrencyPair currencyPair;
 
-        List<String > transactionsToMarkAsSeen = new ArrayList<>();
+        List<String> transactionsToMarkAsSeen = new ArrayList<>();
 
         for (CurrencyMatching currencyMatching : currencyMatchingList) {
 
             try {
 
                 currencyPair = new MatchingEngineMiddlewareCurrencyPair(
-                        currencyMatching.getCurrencyGiving()   ,
+                        currencyMatching.getCurrencyGiving(),
                         currencyMatching.getCurrencyReceiving()
                 );
 
                 UUID earningPairId = linkedEarningPairs.get(currencyPair);
 
                 if (earningPairId == null) {
-
-                    System.out.println("currencyMatching: " + currencyMatching+" - "+"There's no earnings pair set for this currency matching.");
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("currencyMatching: ").append(currencyMatching).append(" - ").append("There's no earnings pair set for this currency matching.");
+                    System.out.println(stringBuilder.toString());
                     transactionsToMarkAsSeen.add(currencyMatching.getOriginTransactionId());
                     //I'll remove this report from this agent, is very annoying and doesn't have any porpoise
                     //pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new CantCreateInputTransactionException("currencyMatching: " + currencyMatching, "There's no earnings pair set for this currency matching."));

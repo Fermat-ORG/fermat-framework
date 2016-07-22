@@ -180,7 +180,7 @@ public class CryptoBrokerCommunityManager
             brokerActor.setCountry(country);
             brokerActor.setPlace(place);
 
-            System.out.println("************** Actor Broker Register: " + brokerActor.getAlias() + " - " + brokerActor.getProfileStatus() + " - " + brokerActor.getConnectionState());
+            System.out.println(new StringBuilder().append("************** Actor Broker Register: ").append(brokerActor.getAlias()).append(" - ").append(brokerActor.getProfileStatus()).append(" - ").append(brokerActor.getConnectionState()).toString());
         }
 
         return worldBrokerList;
@@ -420,21 +420,21 @@ public class CryptoBrokerCommunityManager
             CryptoBrokerExposingData cryptoBrokerExposingData;
             CryptoBrokerCommunitySubAppModuleInformation cryptoBrokerCommunitySubAppModuleInformation;
 
-            for (CryptoBrokerActorConnection connectedActor : connectedActors){
+            for (CryptoBrokerActorConnection connectedActor : connectedActors) {
                 cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
-                if (cryptoBrokerExposingData != null){
+                if (cryptoBrokerExposingData != null) {
                     cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
-                } else{
+                } else {
                     cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
                 }
 
                 Location actorLocation = cryptoBrokerCommunitySubAppModuleInformation.getLocation();
                 Address address;
-                try{
+                try {
                     address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
                     cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
                     cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity());
-                } catch (CantCreateAddressException ex){
+                } catch (CantCreateAddressException ex) {
 //                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
 //                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
                     cryptoBrokerCommunitySubAppModuleInformation.setCountry("");

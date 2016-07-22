@@ -20,7 +20,7 @@ public class QuotesExtraDataInformation implements QuotesExtraData, Serializable
     private Float price;
     private List<Platforms> platformsSupported;
 
-    public QuotesExtraDataInformation(UUID quoteId, Currency mechandise, Currency paymentCurrency, Float price, List<Platforms> platformsSupported){
+    public QuotesExtraDataInformation(UUID quoteId, Currency mechandise, Currency paymentCurrency, Float price, List<Platforms> platformsSupported) {
         this.mechandise = mechandise;
         this.paymentCurrency = paymentCurrency;
         this.price = price;

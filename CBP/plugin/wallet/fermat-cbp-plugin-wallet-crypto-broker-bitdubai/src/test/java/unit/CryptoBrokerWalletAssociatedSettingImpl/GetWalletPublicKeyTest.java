@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetWalletPublicKeyTest {
 
     @Test
-    public void getWalletPublicKey(){
+    public void getWalletPublicKey() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class);
         when(cryptoBrokerWalletAssociatedSetting.getWalletPublicKey()).thenReturn(new String());
         assertThat(cryptoBrokerWalletAssociatedSetting.getWalletPublicKey()).isNotNull();

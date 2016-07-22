@@ -12,8 +12,8 @@ public class NumberInputFilter implements InputFilter {
     private Pattern mPattern;
 
     public NumberInputFilter(int precision, int scale) {
-        String pattern="^\\-?(\\d{0," + (precision-scale) + "}|\\d{0," + (precision-scale) + "}\\.\\d{0," + scale + "})$";
-        this.mPattern=Pattern.compile(pattern);
+        String pattern = new StringBuilder().append("^\\-?(\\d{0,").append(precision - scale).append("}|\\d{0,").append(precision - scale).append("}\\.\\d{0,").append(scale).append("})$").toString();
+        this.mPattern = Pattern.compile(pattern);
 
     }
 

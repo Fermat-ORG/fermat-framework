@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDaoTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -8,13 +9,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -44,15 +43,15 @@ public class getCustomerOnlinePaymentRecordTest {
     private UUID testId;
 
     @Before
-    public void setup()throws Exception{
+    public void setup() throws Exception {
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
-                mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+                mockPluginDatabaseSystem, testId, mockDatabase, errorManager);
         setupGeneralMockitoRules();
     }
 
-    public void setupGeneralMockitoRules()throws Exception{
+    public void setupGeneralMockitoRules() throws Exception {
         doNothing().when(databaseTable).loadToMemory();
         when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).
                 thenReturn(databaseTable);
@@ -68,24 +67,27 @@ public class getCustomerOnlinePaymentRecordTest {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                         ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME)).thenReturn("contract_hash");
     }
+
     @Test
-    public void getCustomerOnlinePaymentRecord_Should_Equal_contract_hash() throws Exception{
+    public void getCustomerOnlinePaymentRecord_Should_Equal_contract_hash() throws Exception {
         when(databaseTableRecord.getStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                         ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).thenReturn("POMC");
         assertEquals("Test",
                 customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord("Test").getTransactionHash());
     }
+
     //this test catch the InvalidParameterException
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getCustomerOnlinePaymentRecord_Should_Throw_Exception() throws Exception{
+    public void getCustomerOnlinePaymentRecord_Should_Throw_Exception() throws Exception {
         customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord("Test");
     }
+
     //this test catch the Generic Exception
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getCustomerOnlinePaymentRecord_Should_Throw_Generic_Exception() throws Exception{
+    public void getCustomerOnlinePaymentRecord_Should_Throw_Generic_Exception() throws Exception {
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
-                null,null,null,errorManager);
+                null, null, null, errorManager);
         customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(null);
     }
 }

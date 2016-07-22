@@ -7,11 +7,11 @@ import java.util.UUID;
  * Created by ciencias on 01.02.15.
  */
 public interface DatabaseTableRecord {
-    
+
     public String getStringValue(String columnName);
-    
+
     public UUID getUUIDValue(String columnName);
-    
+
     public long getLongValue(String columnName);
 
     public Integer getIntegerValue(String columnName);
@@ -19,7 +19,7 @@ public interface DatabaseTableRecord {
     public float getFloatValue(String columnName);
 
     public double getDoubleValue(String columnName);
-    
+
     public void setStringValue(String columnName, String value);
 
     public void setUUIDValue(String columnName, UUID value);
@@ -31,7 +31,6 @@ public interface DatabaseTableRecord {
     public void setFloatValue(String columnName, float value);
 
     public void setDoubleValue(String columnName, double value);
-
 
 
     //public List<DatabaseRecord> getValues();

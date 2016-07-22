@@ -6,8 +6,8 @@ import android.util.Base64;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * This class define methods to create and open Databases
- *
+ * <p/>
  * *
  */
 
@@ -37,7 +37,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
     }
 
     @Override
-    public final Database openDatabase(final String databaseName) throws CantOpenDatabaseException ,
+    public final Database openDatabase(final String databaseName) throws CantOpenDatabaseException,
             DatabaseNotFoundException {
 
         try {
@@ -46,17 +46,17 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.openDatabase();
             return database;
-        } catch (final NoSuchAlgorithmException e){
+        } catch (final NoSuchAlgorithmException e) {
 
-            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final Exception e){
+            throw new CantOpenDatabaseException(e, new StringBuilder().append("Database Name : ").append(databaseName).toString(), "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final Exception e) {
 
             throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
         }
     }
 
     @Override
-    public final Database createDatabase (final String databaseName) throws CantCreateDatabaseException {
+    public final Database createDatabase(final String databaseName) throws CantCreateDatabaseException {
 
         try {
             AndroidDatabase database;
@@ -64,11 +64,10 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.createDatabase(hasDBName);
             return database;
-        }
-        catch (final NoSuchAlgorithmException e){
+        } catch (final NoSuchAlgorithmException e) {
 
-            throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (Exception e){
+            throw new CantCreateDatabaseException(e, new StringBuilder().append("Database Name : ").append(databaseName).toString(), "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (Exception e) {
 
             throw new CantCreateDatabaseException(e, null, "Unhandled Exception.");
         }
@@ -76,18 +75,18 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
     }
 
     @Override
-    public final void deleteDatabase(final String databaseName) throws CantOpenDatabaseException ,
+    public final void deleteDatabase(final String databaseName) throws CantOpenDatabaseException,
             DatabaseNotFoundException {
-        try{
+        try {
             String hasDBName = hashDataBaseName(databaseName);
             AndroidDatabase database;
             database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.deleteDatabase();
 
-        } catch (final NoSuchAlgorithmException e){
+        } catch (final NoSuchAlgorithmException e) {
 
-            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final Exception e){
+            throw new CantOpenDatabaseException(e, new StringBuilder().append("Database Name : ").append(databaseName).toString(), "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final Exception e) {
 
             throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
         }
@@ -95,7 +94,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
 
     private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
         String encryptedString;
-        try{
+        try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(databaseName.getBytes(Charset.forName("UTF-8")));
             byte[] digest = md.digest();
@@ -104,14 +103,14 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             try {
                 encryptedString = new String(encoded, "UTF-8");
             } catch (Exception e) {
-                throw new NoSuchAlgorithmException (e);
+                throw new NoSuchAlgorithmException(e);
             }
 
 
-        }catch(NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
             throw e;
         }
-        encryptedString = encryptedString.replace("+","");
-        return encryptedString.replace("/","");
+        encryptedString = encryptedString.replace("+", "");
+        return encryptedString.replace("/", "");
     }
 }

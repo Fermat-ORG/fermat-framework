@@ -78,9 +78,9 @@ public class CloseContractMonitorAgent2
              */
             List<String> pendingEventsIdList = closeContractBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                try{
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -122,7 +122,7 @@ public class CloseContractMonitorAgent2
                         return;
                     }
 
-                    System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + contractTransactionStatus);
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
                     if (contractTransactionStatus == ContractTransactionStatus.CHECKING_CLOSING_CONTRACT) {
 
                         switch (contractType) {
@@ -168,7 +168,7 @@ public class CloseContractMonitorAgent2
                         return;
                     }
 
-                    System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = " + contractTransactionStatus);
+                    System.out.println(new StringBuilder().append("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = ").append(contractTransactionStatus).toString());
                     if (contractTransactionStatus == ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION) {
                         closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
                         raiseNewContractClosedEvent();

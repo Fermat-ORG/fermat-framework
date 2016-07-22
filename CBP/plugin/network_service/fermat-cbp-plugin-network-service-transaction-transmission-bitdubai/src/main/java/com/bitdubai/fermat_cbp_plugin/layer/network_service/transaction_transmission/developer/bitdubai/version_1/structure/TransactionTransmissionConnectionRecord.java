@@ -13,7 +13,7 @@ public class TransactionTransmissionConnectionRecord {
     private String ipkNetworkService;
     private String lastConnection;
 
-    public TransactionTransmissionConnectionRecord(UUID id,String actorPublicKey, String ipkNetworkService,String lastConnection) {
+    public TransactionTransmissionConnectionRecord(UUID id, String actorPublicKey, String ipkNetworkService, String lastConnection) {
         this.id = id;
         this.actorPublicKey = actorPublicKey;
         this.ipkNetworkService = ipkNetworkService;

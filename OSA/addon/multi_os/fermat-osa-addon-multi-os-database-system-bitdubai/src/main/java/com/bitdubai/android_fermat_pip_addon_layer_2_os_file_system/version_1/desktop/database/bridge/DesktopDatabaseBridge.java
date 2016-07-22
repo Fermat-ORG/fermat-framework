@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Matias
  */
 
@@ -31,45 +30,44 @@ public class DesktopDatabaseBridge {
      */
     private Connection c = null;
     private Statement stmt = null;
-    private boolean transaccionSatisfactoria=false;
+    private boolean transaccionSatisfactoria = false;
     private String databasePath;
-    
-    
+
+
     /**
      * Constructor
      */
-    public DesktopDatabaseBridge(String databasePath){
-        this.databasePath=databasePath;
+    public DesktopDatabaseBridge(String databasePath) {
+        this.databasePath = databasePath;
     }
-    
-    
-    
+
+
     /**
      * Method who open the database connection
      * if the database not exist the method create a new one
-     * @exception SQLException	//if the Driver is not available
+     * @exception SQLException    //if the Driver is not available
      **/
-    public void connect(){
+    public void connect() {
         try {
-          //SQLite Driver
-          Class.forName("org.sqlite.JDBC");
-          //c = DriverManager.getConnection("jdbc:sqlite:"+databasePath);
-          c = DriverManager.getConnection("jdbc:sqlite:"+databasePath);
-          c.setAutoCommit(false);
-          //Testing purpose
-          //System.out.println("database open");
-        }catch(Exception e){
-                e.printStackTrace();
-                close();
-                //Luis acá iria una Excepción del tipo SQLiteException
+            //SQLite Driver
+            Class.forName("org.sqlite.JDBC");
+            //c = DriverManager.getConnection("jdbc:sqlite:"+databasePath);
+            c = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            c.setAutoCommit(false);
+            //Testing purpose
+            //System.out.println("database open");
+        } catch (Exception e) {
+            e.printStackTrace();
+            close();
+            //Luis acá iria una Excepción del tipo SQLiteException
         }
     }
-    
+
     /**
      * Method who close the database connection
-     * @exception SQLException	//if the database is not open
+     * @exception SQLException    //if the database is not open
      **/
-    private void close(){
+    private void close() {
         try {
             c.close();
             stmt.close();
@@ -77,58 +75,58 @@ public class DesktopDatabaseBridge {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
             //Luis acá iria una Excepcion de que no abrío la base de datos
         }
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param sql   //the SQL query
      * @param selectionArgs  //The values will be bound as Strings.
-     * @exception SQLException	//if the SQL string is invalid
+     * @exception SQLException    //if the SQL string is invalid
      * @return  //A Cursor object, which is positioned before the first entry. 
      */
-    
-    public ResultSet rawQuery(String sql,String[] selectionArgs) {
+
+    public ResultSet rawQuery(String sql, String[] selectionArgs) {
         connect();
-        ResultSet rs=null;
-        try {  
-          stmt = c.createStatement();
-          rs = stmt.executeQuery(sql);
-          c.commit();
-        }catch(SQLException ex){
+        ResultSet rs = null;
+        try {
+            stmt = c.createStatement();
+            rs = stmt.executeQuery(sql);
+            c.commit();
+        } catch (SQLException ex) {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
             //Luis acá iria la Excepcion de SQLite que deberia crear
-        }finally{
+        } finally {
             close();
         }
         return rs;
     }
 
-    
+
     /**
      * Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
      * @param sql  //the SQL query
      * Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
-                   "VALUES (1, 'Paul', 32, 'California', 20000.00 );"; 
-     @exception SQLException	//if the SQL string is invalid
+    "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
+     @exception SQLException    //if the SQL string is invalid
      */
     public void execSQL(String sql) {
         connect();
-        ResultSet rs=null;
-        try {  
-          stmt = c.createStatement();
-          stmt.executeUpdate(sql);
-          stmt.close();
-          c.commit();
-          c.close();
-        }catch(SQLException ex){
+        ResultSet rs = null;
+        try {
+            stmt = c.createStatement();
+            stmt.executeUpdate(sql);
+            stmt.close();
+            c.commit();
+            c.close();
+        } catch (SQLException ex) {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
             //Luis acá iria la Excepcion de SQLite que deberia crear
-        }finally{
+        } finally {
             close();
         }
-        
-        
+
+
     }
 
     /**
@@ -140,7 +138,7 @@ public class DesktopDatabaseBridge {
     public void beginTransaction() {
         connect();
     }
-    
+
     /**
      * Marks the current transaction as successful. 
      * Do not do any more database work between calling this and calling endTransaction. 
@@ -148,7 +146,7 @@ public class DesktopDatabaseBridge {
      * If any errors are encountered between this and endTransaction the transaction will still be committed.
      */
     public void setTransactionSuccessful() {
-        transaccionSatisfactoria=true;
+        transaccionSatisfactoria = true;
     }
 
     /**
@@ -156,7 +154,7 @@ public class DesktopDatabaseBridge {
      * @exception SQLException if the database connection is not open
      */
     public void endTransaction() {
-        if (transaccionSatisfactoria){
+        if (transaccionSatisfactoria) {
             try {
                 c.commit();
             } catch (SQLException ex) {
@@ -164,15 +162,15 @@ public class DesktopDatabaseBridge {
                 //Luis acá iria un Excepcion si la base no fue creada
             }
             close();
-            }
-        
+        }
+
     }
-    
+
     /**
      * Create a new SQLiteDatabase class and open de connection
      * Is an implementation of the openDatabase in Android SQLite
      * We only use the databasePath param
-     * 
+     *
      * @param databasePath
      * @param object
      * @param flag
@@ -185,11 +183,11 @@ public class DesktopDatabaseBridge {
         return sqliteDB;
     }
 
-    
+
     /**
      * Deletes a database file
-     * 
-     * @param databaseFile 
+     *
+     * @param databaseFile
      */
     public static void deleteDatabase(File databaseFile) {
         databaseFile.delete();
@@ -197,7 +195,7 @@ public class DesktopDatabaseBridge {
 
     /**
      * Equivalent to openDatabase
-     * 
+     *
      * @param databaseFile
      * @param object
      * @return SQLiteDatase  //return an open database 
@@ -210,33 +208,33 @@ public class DesktopDatabaseBridge {
 
     /**
      * Method for updating rows in the database.
-     * 
+     *
      * @param tableName
      * @param recordUpdateList
      * @param whereClause
-     * @param whereArg 
+     * @param whereArg
      * @exception SQLException if the database is close or the driver is not more available
      */
-    public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) {
-    
+    public void update(String tableName, Map<String, Object> recordUpdateList, String whereClause, String[] whereArg) {
+
         // create our java preparedstatement using a sql update query
-        String setVariables ="";
-        for(Map.Entry<String, Object> entry : recordUpdateList.entrySet()) {
+        String setVariables = "";
+        for (Map.Entry<String, Object> entry : recordUpdateList.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            setVariables+=entry.getKey()+"="+entry.getValue()+" ";
+            setVariables += entry.getKey() + "=" + entry.getValue() + " ";
         }
 
         PreparedStatement ps;
         try {
-            ps = c.prepareStatement("UPDATE "+tableName+" SET "+setVariables+whereClause);
+            ps = c.prepareStatement("UPDATE " + tableName + " SET " + setVariables + whereClause);
             // call executeUpdate to execute our sql update statement
             ps.executeUpdate();
             ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
     }
 }
 

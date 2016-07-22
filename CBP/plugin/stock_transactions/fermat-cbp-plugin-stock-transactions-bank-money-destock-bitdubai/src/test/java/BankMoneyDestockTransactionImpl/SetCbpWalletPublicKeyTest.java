@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetCbpWalletPublicKeyTest {
 
     @Test
-    public void setCbpWalletPublicKey(){
+    public void setCbpWalletPublicKey() {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(bankMoneyDestockTransaction).setCbpWalletPublicKey(Mockito.any(String.class));
     }

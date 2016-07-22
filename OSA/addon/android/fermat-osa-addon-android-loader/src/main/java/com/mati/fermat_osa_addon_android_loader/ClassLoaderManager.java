@@ -26,7 +26,7 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
     private static final String TAG = "ClassLoaderManager";
     O context;
 
-    Map<String,FermatClassLoader> externalLoaders;
+    Map<String, FermatClassLoader> externalLoaders;
 
     public ClassLoaderManager(O context) {
         this.context = context;
@@ -34,25 +34,25 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
     }
 
 
-    public Object load(String pluginName, Object[] args){
+    public Object load(String pluginName, Object[] args) {
         ClassLoader classLoader = loadAllPlugin();
 
-        FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(),classLoader,customClassLoader());
-        if (!externalLoaders.containsKey("bch")){
-            externalLoaders.put("bch",classLoaderManger);
+        FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(), classLoader, customClassLoader());
+        if (!externalLoaders.containsKey("bch")) {
+            externalLoaders.put("bch", classLoaderManger);
 
         }
         try {
             Class klass1 = classLoaderManger.loadClass(pluginName);
             Constructor<?> constructor = null;
-            if(args!=null){
-                if (args.length>0){
-                    Class<?>[] paramTypes = MfClassUtils.getTypes(args,classLoaderManger);
+            if (args != null) {
+                if (args.length > 0) {
+                    Class<?>[] paramTypes = MfClassUtils.getTypes(args, classLoaderManger);
                     constructor = klass1.getDeclaredConstructor(paramTypes);
-                }else{
+                } else {
                     constructor = klass1.getDeclaredConstructor();
                 }
-            }else{
+            } else {
                 constructor = klass1.getDeclaredConstructor();
             }
             Object myClass = constructor.newInstance();
@@ -75,23 +75,23 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
         return null;
     }
 
-    public Class<?> load(String className){
+    public Class<?> load(String className) {
         ClassLoader classLoader = loadAllPlugin();
 
-        FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(),classLoader,customClassLoader());
+        FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(), classLoader, customClassLoader());
 
         try {
             return classLoaderManger.loadClass(className);
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public ClassLoader getExternalLoader(String name){
+    public ClassLoader getExternalLoader(String name) {
         return externalLoaders.get("bch");
     }
 
@@ -101,7 +101,7 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
             Log.d(TAG, "Loading plugins");
             AssetManager asset = context.getApplicationContext().getAssets();
             for (String title : asset.list("plugins")) {
-                String path = "plugins/" + title;
+                String path = new StringBuilder().append("plugins/").append(title).toString();
                 File dexInternalStoragePath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE);
                 dexInternalStoragePath.mkdirs();
                 File f = new File(dexInternalStoragePath, title);
@@ -134,7 +134,7 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
             Log.d(TAG, "Loading plugins");
             AssetManager asset = context.getApplicationContext().getAssets();
             for (String title : asset.list("plugins")) {
-                String path = "plugins/" + title;
+                String path = new StringBuilder().append("plugins/").append(title).toString();
                 File dexInternalStoragePath = context.getApplicationContext().getDir("dex", Context.MODE_PRIVATE);
                 dexInternalStoragePath.mkdirs();
                 File f = new File(dexInternalStoragePath, title);
@@ -154,7 +154,7 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
                         optimizedDexPath.getAbsolutePath(), null,
                         context.getApplicationContext().getClassLoader().getParent());
 
-                FermatClassLoader classLoaderManger = new FermatClassLoader(dcl,context.getBaseClassLoader(),context.getApplicationContext().getClassLoader().getParent());
+                FermatClassLoader classLoaderManger = new FermatClassLoader(dcl, context.getBaseClassLoader(), context.getApplicationContext().getClassLoader().getParent());
 
 //                dcl.addClassLoader(mBaseClassLoader);
 

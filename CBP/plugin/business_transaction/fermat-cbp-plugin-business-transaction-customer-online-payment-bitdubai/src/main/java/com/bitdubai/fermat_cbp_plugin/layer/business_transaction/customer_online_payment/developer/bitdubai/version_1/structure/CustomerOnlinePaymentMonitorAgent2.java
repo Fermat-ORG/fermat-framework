@@ -130,12 +130,12 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<String> pendingToSubmitCrypto = dao.getPendingToSubmitCryptoList();
             for (String pendingContractHash : pendingToSubmitCrypto) {
-                try{
+                try {
                     BusinessTransactionRecord businessTransactionRecord = dao.getCustomerOnlinePaymentRecord(pendingContractHash);
 
                     //I'll check if the payment was sent in a previous loop
                     contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
-                    if(contractTransactionStatus!=ContractTransactionStatus.PENDING_PAYMENT){
+                    if (contractTransactionStatus != ContractTransactionStatus.PENDING_PAYMENT) {
                         /**
                          * If the contractTransactionStatus is different to PENDING_PAYMENT means
                          * that tha payment through the Crypto* Wallet was done.
@@ -168,7 +168,7 @@ public class CustomerOnlinePaymentMonitorAgent2
 
                     dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
                     dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -178,7 +178,7 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
                     transactionTransmissionManager.sendContractStatusNotification(
@@ -192,7 +192,7 @@ public class CustomerOnlinePaymentMonitorAgent2
                             PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
                     dao.updateContractTransactionStatus(contractHash, CRYPTO_PAYMENT_SUBMITTED);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -202,7 +202,7 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
                     transactionTransmissionManager.confirmNotificationReception(
@@ -217,7 +217,7 @@ public class CustomerOnlinePaymentMonitorAgent2
                     dao.updateContractTransactionStatus(contractHash, CONFIRM_ONLINE_PAYMENT);
 
                     raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -229,9 +229,9 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingTransactions = dao.getPendingCryptoTransactionList();
             for (BusinessTransactionRecord onlinePaymentRecord : pendingTransactions) {
-                try{
+                try {
                     checkPendingTransaction(onlinePaymentRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -241,14 +241,14 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingSubmitContractCryptoStatusList = dao.getPendingToSubmitCryptoStatusList();
             for (BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractCryptoStatusList) {
-                try{
+                try {
                     final String transactionId = pendingSubmitContractRecord.getTransactionId();
                     final String cryptoTransactionHash = intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(transactionId));
 
                     final CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
                     pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
                     dao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -258,14 +258,14 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList = dao.getOnCryptoNetworkCryptoStatusList();
             for (BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList) {
-                try{
+                try {
                     final String transactionId = onCryptoNetworkContractRecord.getTransactionId();
                     final String cryptoTransactionHash = intraActorCryptoTransactionManager.getSendCryptoTransactionHash(UUID.fromString(transactionId));
 
                     final CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(cryptoTransactionHash);
                     onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
                     dao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -275,11 +275,11 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingOnBlockchainContractList = dao.getOnBlockchainCryptoStatusList();
             for (BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList) {
-                try{
+                try {
                     onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
                     onBlockchainContractRecord.setContractTransactionStatus(PENDING_ONLINE_PAYMENT_NOTIFICATION);
                     dao.updateBusinessTransactionRecord(onBlockchainContractRecord);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -292,9 +292,9 @@ public class CustomerOnlinePaymentMonitorAgent2
              */
             List<String> pendingEventsIdList = dao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                try{
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -308,7 +308,6 @@ public class CustomerOnlinePaymentMonitorAgent2
      * check the status of the crypto transaction and update the Business Transaction accordingly
      *
      * @param businessTransactionRecord the business transaction record associated with the crypto transaction
-     *
      * @throws CantUpdateRecordException
      */
     private void checkPendingTransaction(BusinessTransactionRecord businessTransactionRecord) throws CantUpdateRecordException {
@@ -448,8 +447,8 @@ public class CustomerOnlinePaymentMonitorAgent2
      * @param record the Business Transaction record associated with the crypto transaction
      */
     private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record) {
-        System.out.println("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = " + record.getCryptoCurrency());
-        System.out.println("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = " + record.getCryptoAmount());
+        System.out.println(new StringBuilder().append("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = ").append(record.getCryptoCurrency()).toString());
+        System.out.println(new StringBuilder().append("SUBMIT_ONLINE_PAYMENT - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = ").append(record.getCryptoAmount()).toString());
 
         FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
         IncomingMoneyNotificationEvent event = (IncomingMoneyNotificationEvent) fermatEvent;

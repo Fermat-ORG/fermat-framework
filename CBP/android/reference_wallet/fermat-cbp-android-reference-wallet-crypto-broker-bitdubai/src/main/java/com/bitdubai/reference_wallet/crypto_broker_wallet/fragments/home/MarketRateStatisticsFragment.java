@@ -17,7 +17,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
@@ -50,7 +49,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
     private IndexInfoSummary indexInfo;
     private ReferenceAppFermatSession session;
     private Activity activity;
-    private NumberFormat numberFormat= DecimalFormat.getInstance();
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     public static MarketRateStatisticsFragment newInstance() {
         return new MarketRateStatisticsFragment();
@@ -67,20 +66,18 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
         final FermatTextView providerName = (FermatTextView) rootView.findViewById(R.id.cbw_provider_name);
 
 
+        String buyAmount = buy.split(" ")[1];
+        String buyCurrency = buy.split(" ")[0];
+        String sellAmount = sell.split(" ")[1];
+        String sellCurrency = sell.split(" ")[0];
+        String buyWithFormat = fixFormat(buyAmount);
+        String sellWithFormat = fixFormat(sellAmount);
+        providerName.setText(this.providerName);
+        currencies.setText(currencyPair);
+        buyPrice.setText(new StringBuilder().append(buyCurrency).append(" ").append(buyWithFormat).toString());
+        sellPrice.setText(new StringBuilder().append(sellCurrency).append(" ").append(sellWithFormat).toString());
 
-            String buyAmount=buy.split(" ")[1];
-            String buyCurrency=buy.split(" ")[0];
-            String sellAmount=sell.split(" ")[1];
-            String sellCurrency=sell.split(" ")[0];
-            String buyWithFormat= fixFormat(buyAmount);
-            String sellWithFormat= fixFormat(sellAmount);
-            providerName.setText(this.providerName);
-            currencies.setText(currencyPair);
-            buyPrice.setText(buyCurrency+" "+buyWithFormat);
-            sellPrice.setText(sellCurrency+" "+sellWithFormat);
-
-            configChart(rootView);
-
+        configChart(rootView);
 
 
         return rootView;
@@ -186,7 +183,6 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
      * Get the LineData for the chart based on the ExchangeRate list
      *
      * @param exchangeRates the exchange rate list
-     *
      * @return the ListData object
      */
     private LineData getData(List<ExchangeRate> exchangeRates) {
@@ -209,12 +205,12 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
         return new LineData(xValues, dataSet);
     }
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -225,14 +221,14 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

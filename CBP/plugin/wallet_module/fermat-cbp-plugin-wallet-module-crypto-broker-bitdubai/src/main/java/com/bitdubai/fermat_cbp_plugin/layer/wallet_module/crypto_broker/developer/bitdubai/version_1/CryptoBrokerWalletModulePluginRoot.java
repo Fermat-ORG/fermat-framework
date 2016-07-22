@@ -185,7 +185,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
         super(new PluginVersionReference(new Version()));
     }
 
-    /** Logging level for this plugin */
+    /**
+     * Logging level for this plugin
+     */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
@@ -219,7 +221,6 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
      * Static method to get the logging level from any class under root.
      *
      * @param className the class name
-     *
      * @return the log level for this class
      */
     public static LogLevel getLogLevelByClass(String className) {

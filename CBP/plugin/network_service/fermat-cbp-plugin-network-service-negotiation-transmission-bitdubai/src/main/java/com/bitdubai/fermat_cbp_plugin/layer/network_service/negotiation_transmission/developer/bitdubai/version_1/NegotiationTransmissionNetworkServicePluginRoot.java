@@ -60,7 +60,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -125,7 +124,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
             outgoingNotificationDao = new OutgoingNotificationDao(dataBase, pluginFileSystem, pluginId);
 
             //Initialize Manager
-            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao,incomingNotificationDao, this);
+            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao, incomingNotificationDao, this);
 
             // change message state to process again first time
             //reprocessPendingMessage();
@@ -134,12 +133,12 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
             this.startTimer();
         } catch (CantInitializeNetworkServiceDatabaseException e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            StringBuilder contextBuilder = new StringBuilder();
+            contextBuilder.append("Plugin ID: ").append(pluginId);
+            contextBuilder.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuilder.append("Database Name: ").append(NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
-            String context = contextBuffer.toString();
+            String context = contextBuilder.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
 
@@ -167,7 +166,7 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
             NegotiationTransmission negotiationTransmission = NegotiationTransmissionImpl.fronJson(fermatMessage.getContent());
             receiveNegotiation(negotiationTransmission);
 
-            if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM))
+            if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM))
                 receiveConfirm(negotiationTransmission);
 
         } catch (CantConfirmNotificationException exception) {
@@ -186,13 +185,13 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage messageSent) {
-        System.out.println("Negotiation Transmission just sent :" + messageSent.getId());
-        try{
+        System.out.println(new StringBuilder().append("Negotiation Transmission just sent :").append(messageSent.getId()).toString());
+        try {
             NegotiationTransmissionImpl negotiationTransmission =
                     NegotiationTransmissionImpl.fronJson(messageSent.getContent());
             NegotiationTransmissionState negotiationTransmissionState =
                     negotiationTransmission.getTransmissionState();
-            if(negotiationTransmissionState!=NegotiationTransmissionState.SENT){
+            if (negotiationTransmissionState != NegotiationTransmissionState.SENT) {
                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.SENT);
                 outgoingNotificationDao.update(negotiationTransmission);
             }
@@ -217,11 +216,11 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
             //Map<String, Object> filters = new HashMap<>();
             //filters.put(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, NegotiationTransmissionState.PROCESSING_SEND.getCode());
-            if(outgoingNotificationDao != null) {
+            if (outgoingNotificationDao != null) {
                 List<NegotiationTransmission> lstActorRecord = outgoingNotificationDao.findAllByTransmissionState(
                         NegotiationTransmissionState.PROCESSING_SEND
                 );
-                System.out.println("NEGOTIATION TRANSMISSION - I found " + lstActorRecord.size() + " for sending");
+                System.out.println(new StringBuilder().append("NEGOTIATION TRANSMISSION - I found ").append(lstActorRecord.size()).append(" for sending").toString());
                 NegotiationType negotiationType;
                 for (NegotiationTransmission nt : lstActorRecord) {
                     negotiationType = nt.getNegotiationType();
@@ -254,14 +253,14 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
         }
     }
 
-    private void startTimer(){
+    private void startTimer() {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // change message state to process retry later
                 reprocessPendingMessage();
             }
-        }, 0,reprocessTimer);
+        }, 0, reprocessTimer);
     }
 
     public void testManager() {
@@ -318,14 +317,15 @@ public class NegotiationTransmissionNetworkServicePluginRoot extends AbstractNet
 
             System.out.print("\n**** 12) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION ****\n");
 
-            System.out.print("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n" +
-                            "- ActorReceive = " + negotiationTransmission.getPublicKeyActorReceive() +
-                            "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
+            System.out.print(new StringBuilder()
+                            .append("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n")
+                            .append("- ActorReceive = ").append(negotiationTransmission.getPublicKeyActorReceive())
+                            .append("- ActorSend = ").append(negotiationTransmission.getPublicKeyActorSend()).toString()
             );
 
             if (negotiationTransmission.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {
                 negotiationTransmission.setNegotiationType(NegotiationType.SALE);
-            }else {
+            } else {
                 negotiationTransmission.setNegotiationType(NegotiationType.PURCHASE);
             }
 

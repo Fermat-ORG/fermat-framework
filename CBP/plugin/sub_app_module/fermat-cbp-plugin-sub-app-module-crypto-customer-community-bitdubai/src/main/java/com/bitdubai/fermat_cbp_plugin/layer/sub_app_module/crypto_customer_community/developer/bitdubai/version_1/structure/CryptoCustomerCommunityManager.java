@@ -149,7 +149,7 @@ public class CryptoCustomerCommunityManager
             customer.setCountry(country);
             customer.setPlace(place);
 
-            System.out.println("************** Actor Customer Register: " + customer.getAlias() + " - " + customer.getProfileStatus() + " - " + customer.getConnectionState());
+            System.out.println(new StringBuilder().append("************** Actor Customer Register: ").append(customer.getAlias()).append(" - ").append(customer.getProfileStatus()).append(" - ").append(customer.getConnectionState()).toString());
         }
 
         return worldCustomerList;
@@ -220,7 +220,7 @@ public class CryptoCustomerCommunityManager
     @Override
     public void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException {
         try {
-            System.out.println("************* im accepting in module the request: " + connectionId);
+            System.out.println(new StringBuilder().append("************* im accepting in module the request: ").append(connectionId).toString());
             this.cryptoCustomerActorConnectionManager.acceptConnection(connectionId);
         } catch (CantAcceptActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e) {
             throw new CantAcceptRequestException("", e, "", "");
@@ -337,21 +337,21 @@ public class CryptoCustomerCommunityManager
             CryptoCustomerExposingData cryptoBrokerExposingData;
             CryptoCustomerCommunitySubAppModuleInformation cryptoCustomerCommunitySubAppModuleInformation;
 
-            for (CryptoCustomerActorConnection connectedActor : connectedActors){
+            for (CryptoCustomerActorConnection connectedActor : connectedActors) {
                 cryptoBrokerExposingData = getCryptoCustomerSearch().getResult(connectedActor.getPublicKey());
-                if (cryptoBrokerExposingData != null){
+                if (cryptoBrokerExposingData != null) {
                     cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
-                } else{
+                } else {
                     cryptoCustomerCommunitySubAppModuleInformation = new CryptoCustomerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
                 }
 
                 Location actorLocation = cryptoCustomerCommunitySubAppModuleInformation.getLocation();
                 Address address;
-                try{
+                try {
                     address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
                     cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
                     cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
-                } catch (CantCreateAddressException ex){
+                } catch (CantCreateAddressException ex) {
 //                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
 //                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
                     cryptoCustomerCommunitySubAppModuleInformation.setCountry("");

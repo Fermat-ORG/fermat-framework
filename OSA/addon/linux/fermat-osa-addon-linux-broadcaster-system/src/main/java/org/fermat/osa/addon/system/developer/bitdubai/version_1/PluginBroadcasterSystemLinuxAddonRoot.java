@@ -10,12 +10,12 @@ import org.fermat.osa.addon.system.developer.bitdubai.version_1.structure.LinuxP
 
 /**
  * This addon handles a TODO description
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class PluginBroadcasterSystemLinuxAddonRoot extends AbstractAddon {
 

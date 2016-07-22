@@ -49,7 +49,7 @@ public class SystemLayer extends AbstractLayer {
             registerAddon(new PluginHardwareAddonSubsystem());
             registerAddon(new DeviceConectivityAddonSubsystem());
 
-        } catch(CantRegisterAddonException e) {
+        } catch (CantRegisterAddonException e) {
 
             throw new CantStartLayerException(
                     e,

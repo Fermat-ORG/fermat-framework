@@ -40,8 +40,8 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.ConnectionsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AvailableActorsListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.ConnectionsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.DisconnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
@@ -308,7 +308,7 @@ public class ConnectionsTabFragment
     @Override
     public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-        if(isVisible) {
+        if (isVisible) {
             try {
                 offset = pos;
                 if (moduleManager.getSelectedActorIdentity() != null) {

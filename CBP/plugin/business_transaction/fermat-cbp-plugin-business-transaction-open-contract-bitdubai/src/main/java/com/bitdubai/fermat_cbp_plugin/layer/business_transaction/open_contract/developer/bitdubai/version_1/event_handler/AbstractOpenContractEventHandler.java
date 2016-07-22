@@ -11,9 +11,9 @@ public abstract class AbstractOpenContractEventHandler implements FermatEventHan
     public OpenContractRecorderService openContractRecorderService;
 
     public void setOpenContractRecorderService(OpenContractRecorderService openContractRecorderService) throws CantSetObjectException {
-        if(openContractRecorderService==null){
+        if (openContractRecorderService == null) {
             throw new CantSetObjectException("openContractRecorderService is null");
         }
-        this.openContractRecorderService=openContractRecorderService;
+        this.openContractRecorderService = openContractRecorderService;
     }
 }

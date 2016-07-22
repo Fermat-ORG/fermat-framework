@@ -31,10 +31,10 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
 
     private DatabaseFilterOperator operator;
 
-    public DesktopDatabaseTableFilterGroup(List<DatabaseTableFilter> filters,List<DatabaseTableFilterGroup> subGroups,DatabaseFilterOperator operator){
-        this.filters=filters;
-        this.subGroups=subGroups;
-        this.operator=operator;
+    public DesktopDatabaseTableFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
+        this.filters = filters;
+        this.subGroups = subGroups;
+        this.operator = operator;
     }
 
     /**

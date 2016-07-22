@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -25,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Manuel Perez - (darkpriestrelative@gmail.com) on 08/12/15.
  *
  * @version 1.0
@@ -41,6 +39,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
      */
     UUID pluginId;
     Database database;
+
     /**
      * Constructor
      *
@@ -51,6 +50,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
+
     /**
      * This method open or creates the database i'll be working with
      *
@@ -86,6 +86,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
             }
         }
     }
+
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
          * I only have one database on my plugin. I will return its name.
@@ -94,6 +95,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
         databases.add(developerObjectFactory.getNewDeveloperDatabase(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
+
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
         /**
@@ -137,6 +139,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
 
         return tables;
     }
+
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
@@ -149,12 +152,12 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -174,7 +177,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }
