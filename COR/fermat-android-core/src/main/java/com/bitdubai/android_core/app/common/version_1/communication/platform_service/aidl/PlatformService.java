@@ -610,6 +610,12 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             }
         }
 
+        try{
+            fermatSystem.onDestroy();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         try {
             serverThread.interrupt();
         }catch (Exception e){
@@ -622,11 +628,6 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
             e.printStackTrace();
         }
 
-        try{
-            fermatSystem.onDestroy();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -749,6 +750,8 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         }
         return s;
     }
+
+
 
     private Object runtimeDataRequest(final PluginVersionReference pluginVersionReference, final String method, final ModuleObjectParameterWrapper[] parameters) {
         Callable<Object> callable = new Callable<Object>() {
