@@ -14,6 +14,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantUnHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CryptoBrokerNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,6 +28,14 @@ import java.util.List;
 public interface CryptoBrokerIdentityModuleManager extends ModuleManager<IdentityBrokerPreferenceSettings, ActiveActorIdentityInformation>,
         ModuleSettingsImpl<IdentityBrokerPreferenceSettings>, Serializable {
 
+
+    /**
+     * The method <code>getAllCryptoCustomerIdentities</code> returns the list of all crypto Customer
+     *
+     * @return the list of crypto Customer
+     * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException
+     */
+    List<CryptoCustomerIdentityInformation> getAllCryptoCustomersIdentities(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException;
     /**
      * The method <code>createCryptoBrokerIdentity</code> is used to create a new crypto Broker identity
      *
