@@ -87,7 +87,7 @@ public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implemen
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK)
     private TransactionSender<CryptoTransaction> bitcoinNetworkManager;
 
-//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK)
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK)
     private TransactionSender<CryptoTransaction> fermatNetworkManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();

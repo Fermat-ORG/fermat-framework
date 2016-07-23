@@ -2,6 +2,7 @@ package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classe
 
 import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.DeveloperPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.PluginDeveloperReferenceInterface;
@@ -101,7 +102,7 @@ public abstract class AbstractPluginSubsystem {
     }
 
     protected void registerDeveloperMati(String pluginName) throws CantRegisterDeveloperException {
-        DeveloperPluginInterface developerPluginInterface = (DeveloperPluginInterface) getFermatContext().loadObject(pluginName);
+        DeveloperPluginInterface developerPluginInterface = (DeveloperPluginInterface) getFermatContext().loadObject(pluginName, AbstractPluginDeveloper.class.getClassLoader());
         developerPluginInterface.setFermatContext(getFermatContext());
         registerDeveloperMati(developerPluginInterface);
     }
