@@ -204,21 +204,6 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             }
         }
 
-    public boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerSaleException {
-        try {
-            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
-                    "\n - NEGOTIATION SALE DAO closeNegotiation("+negotiationId+")\n");
-            DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate = SaleNegotiationTable.getEmptyRecord();
-            SaleNegotiationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
-            recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.CLOSED.getCode());
-            SaleNegotiationTable.updateRecord(recordToUpdate);
-            return true;
-        } catch (CantUpdateRecordException e) {
-            throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
-        }
-    }
-
         public void sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);

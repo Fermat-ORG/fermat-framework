@@ -55,11 +55,6 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
-    public boolean closeNegotiation(UUID negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
-        return false;
-    }
-
-    @Override
     public void sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         //Not implemented in this mock
     }
