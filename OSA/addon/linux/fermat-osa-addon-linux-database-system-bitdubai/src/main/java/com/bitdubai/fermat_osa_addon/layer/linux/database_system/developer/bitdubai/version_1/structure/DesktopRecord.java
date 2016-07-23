@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DesktopRecord  implements DatabaseRecord {
+public class DesktopRecord implements DatabaseRecord {
 
     /**
      * DatabaseRecord Interface member variables.
@@ -29,12 +29,12 @@ public class DesktopRecord  implements DatabaseRecord {
     public DesktopRecord() {
     }
 
-    public DesktopRecord(final String  recordName  ,
-                         final String  recordValue ,
+    public DesktopRecord(final String recordName,
+                         final String recordValue,
                          final boolean recordChange) {
 
-        this.recordName   = recordName  ;
-        this.recordValue  = recordValue ;
+        this.recordName = recordName;
+        this.recordValue = recordValue;
         this.recordChange = recordChange;
     }
 
@@ -48,17 +48,17 @@ public class DesktopRecord  implements DatabaseRecord {
      * @return String record name
      */
     @Override
-    public String getName(){
+    public String getName() {
         return this.recordName;
     }
 
     /**
-     *<p>Returns record field value
+     * <p>Returns record field value
      *
      * @return String record value
      */
     @Override
-    public String getValue(){
+    public String getValue() {
         return this.recordValue;
     }
 
@@ -74,26 +74,29 @@ public class DesktopRecord  implements DatabaseRecord {
 
     /**
      * Set the field record name
+     *
      * @param name field name
      */
-    public void setName (String name){
+    public void setName(String name) {
         this.recordName = name;
     }
 
     /**
      * Set the field record value
+     *
      * @param value field value
      */
-    public void setValue (String value){
+    public void setValue(String value) {
         this.recordValue = value;
     }
 
 
     /**
      * Set if the record was changed
+     *
      * @param change boolean if change
      */
-    public void setChange (boolean change){
+    public void setChange(boolean change) {
         this.recordChange = change;
     }
 
@@ -103,6 +106,6 @@ public class DesktopRecord  implements DatabaseRecord {
 
     @Override
     public String toString() {
-        return recordName+"="+recordValue;
+        return recordName + "=" + recordValue;
     }
 }

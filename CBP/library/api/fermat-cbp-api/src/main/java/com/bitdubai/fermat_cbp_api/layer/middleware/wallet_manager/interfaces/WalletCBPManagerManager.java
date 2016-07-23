@@ -6,8 +6,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 /**
  * Created by angel on 16/9/15.
  */
-public interface WalletCBPManagerManager extends WalletManagerManager{
-
+public interface WalletCBPManagerManager extends WalletManagerManager {
 
 
 }

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class FragmentNotFoundException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "FRAGMENT NOT FOUND EXCEPTION";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

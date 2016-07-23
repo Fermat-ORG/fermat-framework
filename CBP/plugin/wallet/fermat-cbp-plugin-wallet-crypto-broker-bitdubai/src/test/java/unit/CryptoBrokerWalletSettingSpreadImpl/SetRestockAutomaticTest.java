@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetRestockAutomaticTest {
 
     @Test
-    public void setRestockAutomatic(){
+    public void setRestockAutomatic() {
         CryptoBrokerWalletSettingSpreadImpl cryptoBrokerWalletSettingSpread = mock(CryptoBrokerWalletSettingSpreadImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletSettingSpread).setRestockAutomatic(Mockito.any(boolean.class));
     }

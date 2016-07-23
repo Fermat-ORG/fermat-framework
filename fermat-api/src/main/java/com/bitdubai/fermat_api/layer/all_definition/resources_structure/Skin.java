@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.UUID;
 
 
-
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin</code>
  * implements the functionality of a Fermat Skin.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta and Matias Furszyfer
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -31,11 +31,11 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private VersionCompatibility navigationStructureCompatibility;
 
-    private Map<String,Resource> resources;
+    private Map<String, Resource> resources;
 
-    private Map<String,Layout> portraitLayouts;
+    private Map<String, Layout> portraitLayouts;
 
-    private Map<String,Layout> landscapeLayouts;
+    private Map<String, Layout> landscapeLayouts;
 
     private ScreenSize screenSize;
 
@@ -53,7 +53,8 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.setLandscapeLayouts(landscapeLayouts);
     }
 
-    public Skin(){}
+    public Skin() {
+    }
 
     public UUID getId() {
         return id;
@@ -139,14 +140,16 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     @Override
     public String toString() {
-        return "Skin{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", version=" + version +
-                ", navigationStructureCompatibility=" + navigationStructureCompatibility +
-                ", resources=" + resources +
-                ", portraitLayouts=" + portraitLayouts +
-                ", landscapeLayouts=" + landscapeLayouts +
-                '}';
+        return new StringBuilder()
+                .append("Skin{")
+                .append("id=").append(id)
+                .append(", name='").append(name)
+                .append('\'')
+                .append(", version=").append(version)
+                .append(", navigationStructureCompatibility=").append(navigationStructureCompatibility)
+                .append(", resources=").append(resources)
+                .append(", portraitLayouts=").append(portraitLayouts)
+                .append(", landscapeLayouts=").append(landscapeLayouts)
+                .append('}').toString();
     }
 }

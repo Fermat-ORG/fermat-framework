@@ -25,7 +25,6 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
      * linked to the current logged device user.
      *
      * @return a list of instance of the crypto broker identities linked to the current logged device user.
-     *
      * @throws CantListCryptoBrokerIdentitiesException if something goes wrong.
      */
     List<CryptoBrokerIdentity> listIdentitiesFromCurrentDeviceUser() throws CantListCryptoBrokerIdentitiesException;
@@ -33,20 +32,18 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
     /**
      * Through the method <code>createCryptoBrokerIdentity</code> you can create a new crypto broker identity.
      *
-     * @param alias  the alias of the crypto broker that we want to create.
-     * @param image  an image that represents the crypto broker. it will be shown to other actors when they try to connect.
-     *
+     * @param alias the alias of the crypto broker that we want to create.
+     * @param image an image that represents the crypto broker. it will be shown to other actors when they try to connect.
      * @return an instance of the recent created crypto broker identity.
-     *
      * @throws CantCreateCryptoBrokerIdentityException if something goes wrong.
      */
     CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias,
                                                     final byte[] image,
                                                     long accuracy,
-                                                    GeoFrequency frequency) throws CantCreateCryptoBrokerIdentityException   ,
-                                                                               CryptoBrokerIdentityAlreadyExistsException;
+                                                    GeoFrequency frequency) throws CantCreateCryptoBrokerIdentityException,
+            CryptoBrokerIdentityAlreadyExistsException;
+
     /**
-     *
      * @param alias
      * @param publicKey
      * @param imageProfile
@@ -57,6 +54,7 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
 
     /**
      * This method updates the crypto broker identity stored in database plugin.
+     *
      * @param cryptoBrokerIdentity
      * @throws CantUpdateBrokerIdentityException
      */
@@ -69,7 +67,6 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
      * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param publicKey the public key of the crypto Broker to publish
-     *
      * @throws CantPublishIdentityException if something goes wrong.
      * @throws IdentityNotFoundException    if we can't find an identity with the given public key.
      */
@@ -80,19 +77,17 @@ public interface CryptoBrokerIdentityManager extends FermatManager {
      * The method <code>UnHideIdentity</code> is used to publish a Broker identity
      *
      * @param publicKey the public key of the crypto Broker to publish
-     *
      * @throws CantUnHideIdentityException if something goes wrong.
-     * @throws IdentityNotFoundException    if we can't find an identity with the given public key.
+     * @throws IdentityNotFoundException   if we can't find an identity with the given public key.
      */
-    void unHideIdentity(String publicKey) throws  CantUnHideIdentityException, IdentityNotFoundException ;
+    void unHideIdentity(String publicKey) throws CantUnHideIdentityException, IdentityNotFoundException;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity
      *
      * @param publicKey the public key of the crypto Broker to publish
-     *
      * @throws CantHideIdentityException if something goes wrong.
-     * @throws IdentityNotFoundException    if we can't find an identity with the given public key.
+     * @throws IdentityNotFoundException if we can't find an identity with the given public key.
      */
     void hideIdentity(String publicKey) throws CantHideIdentityException, IdentityNotFoundException;
 

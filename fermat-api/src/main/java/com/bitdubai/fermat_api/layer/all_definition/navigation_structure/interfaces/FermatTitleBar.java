@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface FermatTitleBar  extends Serializable {
+public interface FermatTitleBar extends Serializable {
 
     String getLabel();
 

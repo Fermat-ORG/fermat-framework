@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.06.08..
  */
-public class FermatRuntimeFragment extends Artifact implements FermatFragment,Serializable {
+public class FermatRuntimeFragment extends Artifact implements FermatFragment, Serializable {
 
     private String fragmentCode;
     private String backCode;
@@ -32,7 +32,7 @@ public class FermatRuntimeFragment extends Artifact implements FermatFragment,Se
 
     @Override
     public boolean hasOptionMenu() {
-        return optionsMenu!=null;
+        return optionsMenu != null;
     }
 
     public void setOptionsMenu(OptionsMenu optionsMenu) {

@@ -1,7 +1,6 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginBinaryFile;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -41,7 +40,7 @@ public class LoadFromMediaTest {
     private FileLifeSpan testLifeSpan;
 
     @Before
-    public void setUpValues() throws Exception{
+    public void setUpValues() throws Exception {
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
         testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
@@ -56,14 +55,14 @@ public class LoadFromMediaTest {
     }
 
     @Test
-    public void LoadFromMedia_ValidValues_SameContent() throws Exception{
+    public void LoadFromMedia_ValidValues_SameContent() throws Exception {
         testTextFile2 = new AndroidPluginTextFile(testId, testContext, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         testTextFile2.loadFromMedia();
         assertThat(testTextFile2.getContent()).isEqualTo(testTextFile1.getContent());
     }
 
     @Test
-    public void LoadFromMedia_FileDoesnExist_ThrowsCantLoadFileException() throws Exception{
+    public void LoadFromMedia_FileDoesnExist_ThrowsCantLoadFileException() throws Exception {
         testTextFile2 = new AndroidPluginTextFile(testId, testContext, testDirectory, "ANOTHER" + testFileName, testPrivacyLevel, testLifeSpan);
         catchException(testTextFile2).loadFromMedia();
         assertThat(caughtException()).isInstanceOf(CantLoadFileException.class);
@@ -71,7 +70,7 @@ public class LoadFromMediaTest {
     }
 
     @Test
-    public void LoadFromMediaDifferentOwnerId_ThrowsCantLoadFileException() throws Exception{
+    public void LoadFromMediaDifferentOwnerId_ThrowsCantLoadFileException() throws Exception {
         testTextFile2 = new AndroidPluginTextFile(UUID.randomUUID(), testContext, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         catchException(testTextFile2).loadFromMedia();
         assertThat(caughtException()).isInstanceOf(CantLoadFileException.class);

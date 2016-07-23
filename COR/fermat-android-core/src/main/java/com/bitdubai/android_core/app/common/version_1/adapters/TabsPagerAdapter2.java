@@ -18,18 +18,18 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2016.06.08..
  */
-public class TabsPagerAdapter2<F extends Fragment & AbstractFermatFragmentInterface> extends FermatScreenAdapter<F> implements FermatUIAdapter<F>{
+public class TabsPagerAdapter2<F extends Fragment & AbstractFermatFragmentInterface> extends FermatScreenAdapter<F> implements FermatUIAdapter<F> {
 
     private FermatDrawable[] drawables;
     private WeakReference<Context> contextWeakReference;
 
-    public TabsPagerAdapter2(FragmentManager fragmentManager,String[] tabsTitles,F[] fragments){
-        super(fragmentManager,fragments);
+    public TabsPagerAdapter2(FragmentManager fragmentManager, String[] tabsTitles, F[] fragments) {
+        super(fragmentManager, fragments);
         titles = tabsTitles;
     }
 
-    public TabsPagerAdapter2(Context context,FragmentManager fragmentManager,String[] tabsTitles,F[] fragments,FermatDrawable[] fermatDrawable){
-        super(fragmentManager,fragments);
+    public TabsPagerAdapter2(Context context, FragmentManager fragmentManager, String[] tabsTitles, F[] fragments, FermatDrawable[] fermatDrawable) {
+        super(fragmentManager, fragments);
         titles = tabsTitles;
         this.drawables = fermatDrawable;
         this.contextWeakReference = new WeakReference<Context>(context);
@@ -42,20 +42,20 @@ public class TabsPagerAdapter2<F extends Fragment & AbstractFermatFragmentInterf
     @Override
     public CharSequence getPageTitle(int position) {
         String title = "";
-        if(titles.length>0) {
+        if (titles.length > 0) {
             title = titles[position];
         }
-        if(drawables!=null) {
+        if (drawables != null) {
             FermatDrawable fermatDrawable = drawables[position];
-            if(fermatDrawable!=null) {
-                Drawable drawable = ResourceLocationSearcherHelper.obtainDrawable(contextWeakReference.get(),fermatDrawable);
+            if (fermatDrawable != null) {
+                Drawable drawable = ResourceLocationSearcherHelper.obtainDrawable(contextWeakReference.get(), fermatDrawable);
                 // Generate title based on item position
 //        Drawable image = context.getResources().getDrawable(imageResId[position]);
                 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
                 // Replace blank spaces with image icon
                 SpannableString sb = null;
                 if (title != null) {
-                    sb = new SpannableString("   " + title);
+                    sb = new SpannableString(new StringBuilder().append("   ").append(title).toString());
                 } else sb = new SpannableString("   ");
                 ImageSpan imageSpan = new ImageSpan(drawable);
                 sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -64,8 +64,6 @@ public class TabsPagerAdapter2<F extends Fragment & AbstractFermatFragmentInterf
         }
         return title;
     }
-
-
 
 
     @Override

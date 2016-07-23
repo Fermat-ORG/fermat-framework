@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters;
 import android.content.Context;
 import android.view.View;
 
-
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.LocationViewHolder;
 

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 
-public class CurrencyPairAndProvider implements Serializable{
+public class CurrencyPairAndProvider implements Serializable {
 
 
     private Currency currencyFrom;
@@ -36,7 +36,7 @@ public class CurrencyPairAndProvider implements Serializable{
 
     @Override
     public String toString() {
-        return currencyFrom.getCode() + "/" + currencyTo.getCode() + " - " + providerName;
+        return new StringBuilder().append(currencyFrom.getCode()).append("/").append(currencyTo.getCode()).append(" - ").append(providerName).toString();
     }
 
     public UUID getProviderId() {

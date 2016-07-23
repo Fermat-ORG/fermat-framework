@@ -31,7 +31,7 @@ public class CantSubmitMerchandiseException extends CBPException {
      * @param possibleReason
      */
     public CantSubmitMerchandiseException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

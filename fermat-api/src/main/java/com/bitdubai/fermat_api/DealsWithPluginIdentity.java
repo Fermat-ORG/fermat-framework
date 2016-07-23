@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface DealsWithPluginIdentity {
 
     void setPluginId(UUID pluginId);
-    
+
 }

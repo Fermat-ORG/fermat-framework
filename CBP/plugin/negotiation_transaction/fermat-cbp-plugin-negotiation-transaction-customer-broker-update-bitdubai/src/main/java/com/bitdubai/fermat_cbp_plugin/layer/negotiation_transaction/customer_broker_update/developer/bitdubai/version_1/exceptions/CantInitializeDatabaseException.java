@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * The Class <code>package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Yordin Alayn - (laion.cj91@gmail.com) on 16/12/15.
  *
  * @version 1.0

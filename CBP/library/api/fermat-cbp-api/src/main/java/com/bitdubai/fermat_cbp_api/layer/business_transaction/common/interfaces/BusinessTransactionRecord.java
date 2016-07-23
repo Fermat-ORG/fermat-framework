@@ -54,7 +54,7 @@ public class BusinessTransactionRecord {
 
     private String customerAlias;
 
-    private long fee ;
+    private long fee;
 
     private FeeOrigin feeOrigin;
 
@@ -393,18 +393,20 @@ public class BusinessTransactionRecord {
 
     /**
      * This method returns the transaction fee
+     *
      * @return
      */
     public long getFee() {
         long minimalFee = BitcoinFee.SLOW.getFee();
-        if(this.fee<minimalFee){
+        if (this.fee < minimalFee) {
             return minimalFee;
         }
-        return  fee;
+        return fee;
     }
 
     /**
      * This method sets the transaction fee
+     *
      * @param fee
      */
     public void setFee(long fee) {
@@ -413,10 +415,11 @@ public class BusinessTransactionRecord {
 
     /**
      * This method returns the transaction origin fee
+     *
      * @return
      */
     public FeeOrigin getFeeOrigin() {
-        if(this.feeOrigin==null){
+        if (this.feeOrigin == null) {
             return FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
         }
         return this.feeOrigin;
@@ -424,6 +427,7 @@ public class BusinessTransactionRecord {
 
     /**
      * This method sets the transaction
+     *
      * @param feeOrigin
      */
     public void setFeeOrigin(FeeOrigin feeOrigin) {
@@ -432,31 +436,41 @@ public class BusinessTransactionRecord {
 
     @Override
     public String toString() {
-        return "BusinessTransactionRecord{" +
-                "brokerPublicKey='" + brokerPublicKey + '\'' +
-                ", cbpWalletPublicKey='" + cbpWalletPublicKey + '\'' +
-                ", contractHash='" + contractHash + '\'' +
-                ", contractTransactionStatus=" + contractTransactionStatus +
-                ", cryptoAddress=" + cryptoAddress +
-                ", cryptoAmount=" + cryptoAmount +
-                ", cryptoStatus=" + cryptoStatus +
-                ", cryptoCurrency=" + cryptoCurrency +
-                ", customerPublicKey='" + customerPublicKey + '\'' +
-                ", timestamp=" + timestamp +
-                ", transactionHash='" + transactionHash + '\'' +
-                ", transactionId='" + transactionId + '\'' +
-                ", externalWalletPublicKey='" + externalWalletPublicKey + '\'' +
-                ", priceReference=" + priceReference +
-                ", blockchainNetworkType=" + blockchainNetworkType +
-                ", externalTransactionId=" + externalTransactionId +
-                ", customerAlias='" + customerAlias + '\'' +
-                ", fee=" + fee +
-                ", feeOrigin=" + feeOrigin +
-                ", fiatCurrency=" + fiatCurrency +
-                ", paymentAmount=" + paymentAmount +
-                ", paymentType=" + paymentType +
-                ", actorPublicKey='" + actorPublicKey + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("BusinessTransactionRecord{")
+                .append("brokerPublicKey='").append(brokerPublicKey)
+                .append('\'')
+                .append(", cbpWalletPublicKey='").append(cbpWalletPublicKey)
+                .append('\'')
+                .append(", contractHash='").append(contractHash)
+                .append('\'')
+                .append(", contractTransactionStatus=").append(contractTransactionStatus)
+                .append(", cryptoAddress=").append(cryptoAddress)
+                .append(", cryptoAmount=").append(cryptoAmount)
+                .append(", cryptoStatus=").append(cryptoStatus)
+                .append(", cryptoCurrency=").append(cryptoCurrency)
+                .append(", customerPublicKey='").append(customerPublicKey)
+                .append('\'')
+                .append(", timestamp=").append(timestamp)
+                .append(", transactionHash='").append(transactionHash)
+                .append('\'')
+                .append(", transactionId='").append(transactionId)
+                .append('\'')
+                .append(", externalWalletPublicKey='").append(externalWalletPublicKey)
+                .append('\'')
+                .append(", priceReference=").append(priceReference)
+                .append(", blockchainNetworkType=").append(blockchainNetworkType)
+                .append(", externalTransactionId=").append(externalTransactionId)
+                .append(", customerAlias='").append(customerAlias)
+                .append('\'')
+                .append(", fee=").append(fee)
+                .append(", feeOrigin=").append(feeOrigin)
+                .append(", fiatCurrency=").append(fiatCurrency)
+                .append(", paymentAmount=").append(paymentAmount)
+                .append(", paymentType=").append(paymentType)
+                .append(", actorPublicKey='").append(actorPublicKey)
+                .append('\'')
+                .append('}').toString();
     }
 
     public CryptoCurrency getCryptoCurrency() {

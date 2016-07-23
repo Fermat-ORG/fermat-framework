@@ -8,8 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum NegotiationTransmissionType implements FermatEnum {
     TRANSMISSION_NEGOTIATION("TRN"),
-    TRANSMISSION_CONFIRM("TRC")
-    ;
+    TRANSMISSION_CONFIRM("TRC");
 
     private String code;
 
@@ -24,9 +23,12 @@ public enum NegotiationTransmissionType implements FermatEnum {
 
     public static NegotiationTransmissionType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "TRN": return NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
-            case "TRC": return NegotiationTransmissionType.TRANSMISSION_CONFIRM;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NegotiationTransmissionType enum");
+            case "TRN":
+                return NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
+            case "TRC":
+                return NegotiationTransmissionType.TRANSMISSION_CONFIRM;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the NegotiationTransmissionType enum");
         }
     }
 }

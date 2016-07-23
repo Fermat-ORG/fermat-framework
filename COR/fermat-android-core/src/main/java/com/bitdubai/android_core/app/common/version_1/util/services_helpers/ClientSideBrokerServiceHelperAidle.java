@@ -29,7 +29,9 @@ public class ClientSideBrokerServiceHelperAidle {
     private boolean clientSideBrokerBoundService;
     private ClientSystemBrokerServiceAIDL clientSystemBrokerService;
 
-    /** Defines callbacks for service binding, passed to bindService() */
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
     private ServiceConnection clientBrokerServiceConnection = new ServiceConnection() {
 
         @Override
@@ -54,8 +56,8 @@ public class ClientSideBrokerServiceHelperAidle {
 
     }
 
-    public void unbindClientSideBrokerService(){
-        if(clientSideBrokerBoundService) {
+    public void unbindClientSideBrokerService() {
+        if (clientSideBrokerBoundService) {
             // Detach our existing connection.
             contextWeakReference.get().unbindService(clientBrokerServiceConnection);
             clientSideBrokerBoundService = false;
@@ -68,7 +70,7 @@ public class ClientSideBrokerServiceHelperAidle {
     }
 
     public void clear() {
-        if(clientSideBrokerBoundService){
+        if (clientSideBrokerBoundService) {
             unbindClientSideBrokerService();
         }
         contextWeakReference.clear();

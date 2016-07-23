@@ -5,15 +5,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 /**
  * Created by Matias Furszyfer on 2016.02.10..
  */
-public enum AppsStatus implements FermatEnum{
+public enum AppsStatus implements FermatEnum {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    RELEASE  ("Release",1),
-    BETA    ("Beta",2),
-    ALPHA    ("Alpha",3),
-    DEV ("Develop",4);
+    RELEASE("Release", 1),
+    BETA("Beta", 2),
+    ALPHA("Alpha", 3),
+    DEV("Develop", 4);
 
     /**
      * sets the default network that will be used at start up.
@@ -23,7 +23,7 @@ public enum AppsStatus implements FermatEnum{
     private final String code;
     private final int number;
 
-    AppsStatus(final String code,final int number) {
+    AppsStatus(final String code, final int number) {
         this.code = code;
         this.number = number;
     }
@@ -31,11 +31,16 @@ public enum AppsStatus implements FermatEnum{
     public static AppsStatus getByCode(String code) {
 
         switch (code) {
-            case "Release":  return RELEASE;
-            case "Beta": return BETA;
-            case "Alpha": return ALPHA;
-            case "Develop": return DEV;
-            default:      return DEFAULT_STATUS;
+            case "Release":
+                return RELEASE;
+            case "Beta":
+                return BETA;
+            case "Alpha":
+                return ALPHA;
+            case "Develop":
+                return DEV;
+            default:
+                return DEFAULT_STATUS;
         }
     }
 
@@ -43,7 +48,7 @@ public enum AppsStatus implements FermatEnum{
         return number;
     }
 
-    public boolean isAppStatusAvailable(AppsStatus appsStatus){
+    public boolean isAppStatusAvailable(AppsStatus appsStatus) {
         return (appsStatus != null) && appsStatus.getNumber() == this.number;
     }
 
@@ -54,9 +59,10 @@ public enum AppsStatus implements FermatEnum{
 
     /**
      * Gets the default network type selected for this platform.
+     *
      * @return the default BlockchainNetworkType
      */
-    public static AppsStatus getDefaultStatus(){
+    public static AppsStatus getDefaultStatus() {
         return DEFAULT_STATUS;
     }
 }

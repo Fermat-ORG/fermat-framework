@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class RequestPurchaseRejectFailedException extends FermatException {
 
     public static String DEFAULT_MESSAGE = "FAILED TO REJECT THE PURCHASE REQUEST";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

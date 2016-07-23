@@ -1,12 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.AbstractAgent;
-import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.CantStopAgentException;
-import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -120,7 +116,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent2 extends AbstractAg
                     case IN_WALLET:
 
                         //Try to unhold the funds in the crypto wallet
-                        CryptoUnholdTransactionParametersWrapper cryptoTransactionParametersWrapper = new CryptoUnholdTransactionParametersWrapper(cryptoMoneyTransaction.getTransactionId(), cryptoMoneyTransaction.getCryptoCurrency(), cryptoMoneyTransaction.getCryWalletPublicKey(), cryptoMoneyTransaction.getActorPublicKey(), cryptoMoneyTransaction.getAmount(), cryptoMoneyTransaction.getMemo(), pluginId.toString(), cryptoMoneyTransaction.getBlockchainNetworkType(), cryptoMoneyTransaction.getFee(),cryptoMoneyTransaction.getFeeOrigin());
+                        CryptoUnholdTransactionParametersWrapper cryptoTransactionParametersWrapper = new CryptoUnholdTransactionParametersWrapper(cryptoMoneyTransaction.getTransactionId(), cryptoMoneyTransaction.getCryptoCurrency(), cryptoMoneyTransaction.getCryWalletPublicKey(), cryptoMoneyTransaction.getActorPublicKey(), cryptoMoneyTransaction.getAmount(), cryptoMoneyTransaction.getMemo(), pluginId.toString(), cryptoMoneyTransaction.getBlockchainNetworkType(), cryptoMoneyTransaction.getFee(), cryptoMoneyTransaction.getFeeOrigin());
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
                         //Set status to IN_UNHOLD

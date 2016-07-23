@@ -195,7 +195,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<ReferenceAp
                 final List<EarningTransaction> earningTransactions = moduleManager.searchEarnings(selectedEarningsPair);
                 boolean earningsExtracted = moduleManager.extractEarnings(selectedEarningsPair, earningTransactions);
 
-                if(earningsExtracted)
+                if (earningsExtracted)
                     Toast.makeText(getActivity(), "Earnings Extracted!", Toast.LENGTH_SHORT).show();
 
                 showOrHideExtractEarningsButton(selectedEarningsPair);

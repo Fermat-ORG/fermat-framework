@@ -238,7 +238,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             final PresentationDialog presentationDialog;
 
             List<CryptoCustomerIdentity> listOfIdentities = moduleManager.getListOfIdentities();
-            if(listOfIdentities != null){
+            if (listOfIdentities != null) {
                 if (listOfIdentities.isEmpty()) {
                     presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                             .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
@@ -271,7 +271,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
                     final CryptoCustomerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                     final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
-                    if (showDialog){
+                    if (showDialog) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -336,7 +336,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             Toast.makeText(getActivity(), R.string.ccw_same_currencies_providers_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         try {
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
 
@@ -350,7 +350,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
             }
 
-            if(providers.size() == 0){
+            if (providers.size() == 0) {
                 Toast.makeText(getActivity(), R.string.ccw_no_providers_for_chosen_currencies_msg, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -363,7 +363,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
-                        Log.i("DATA PROVIDERS:", "" + selectedProviders + " Item seleccionado: " + selectedItem);
+                        Log.i("DATA PROVIDERS:", new StringBuilder().append("").append(selectedProviders).append(" Item seleccionado: ").append(selectedItem).toString());
                         showOrHideNoProvidersView();
                     }
                 }
@@ -399,7 +399,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
             moduleManager.saveWalletSettingAssociated(associatedWallet, appSession.getAppPublicKey());
 
-            if(selectedFermatWallet != null) {
+            if (selectedFermatWallet != null) {
 
                 final CryptoCustomerWalletAssociatedSetting associatedFermatWallet = moduleManager.newEmptyCryptoBrokerWalletAssociatedSetting();
                 associatedFermatWallet.setId(UUID.randomUUID());
@@ -428,7 +428,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                 moduleManager.saveCryptoCustomerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
@@ -505,7 +505,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private List<String> getFormattedCurrencies(List<Currency> currencies) {
         ArrayList<String> data = new ArrayList<>();
         for (Currency currency : currencies) {
-            data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
+            data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
         }
 
         return data;

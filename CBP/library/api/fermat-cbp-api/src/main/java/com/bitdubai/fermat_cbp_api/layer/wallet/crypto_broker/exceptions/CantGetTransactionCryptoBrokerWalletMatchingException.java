@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 
 public class CantGetTransactionCryptoBrokerWalletMatchingException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Falled To Get Transaction in the Crypto Broker Wallet.";
+
     public CantGetTransactionCryptoBrokerWalletMatchingException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

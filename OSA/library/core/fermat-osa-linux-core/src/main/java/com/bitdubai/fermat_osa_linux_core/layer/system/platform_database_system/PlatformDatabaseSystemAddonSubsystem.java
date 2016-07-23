@@ -21,7 +21,7 @@ public class PlatformDatabaseSystemAddonSubsystem extends AbstractAddonSubsystem
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-           registerDeveloper(new PlatformDatabaseSystemDeveloperBitDubai());
+            registerDeveloper(new PlatformDatabaseSystemDeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

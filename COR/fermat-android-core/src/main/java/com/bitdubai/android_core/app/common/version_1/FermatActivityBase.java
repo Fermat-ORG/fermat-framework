@@ -82,6 +82,4 @@ public abstract class FermatActivityBase extends AppCompatActivity {
     private Activity activeActivity;
 
 
-
-
 }

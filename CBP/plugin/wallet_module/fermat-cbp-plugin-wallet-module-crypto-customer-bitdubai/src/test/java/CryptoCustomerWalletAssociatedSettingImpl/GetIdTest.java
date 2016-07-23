@@ -19,8 +19,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetIdTest {
     @Test
-    public void getId (){
-        CryptoCustomerWalletAssociatedSettingImpl  cryptoCustomerWalletAssociatedSetting = mock(CryptoCustomerWalletAssociatedSettingImpl.class);
+    public void getId() {
+        CryptoCustomerWalletAssociatedSettingImpl cryptoCustomerWalletAssociatedSetting = mock(CryptoCustomerWalletAssociatedSettingImpl.class);
         when(cryptoCustomerWalletAssociatedSetting.getId()).thenReturn(UUID.randomUUID());
         assertThat(cryptoCustomerWalletAssociatedSetting.getId()).isNotNull();
     }

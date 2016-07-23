@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class getTransactionIdTest {
     @Test
-    public void getTransactionId() throws Exception{
+    public void getTransactionId() throws Exception {
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class);
         when(cryptoMoneyRestockTransaction.getTransactionId()).thenReturn(UUID.randomUUID());
         assertThat(cryptoMoneyRestockTransaction.getTransactionId()).isNotNull();

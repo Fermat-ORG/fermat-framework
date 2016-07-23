@@ -11,14 +11,15 @@ import java.util.UUID;
  */
 public class CryptoCustomerWalletProviderSettingImpl implements CryptoCustomerWalletProviderSetting {
 
-    UUID   id;
+    UUID id;
     String customerPublicKey;
-    UUID   plugin;
+    UUID plugin;
     String description;
     private Currency currencyFrom;
     private Currency currencyTo;
 
-    public CryptoCustomerWalletProviderSettingImpl(){}
+    public CryptoCustomerWalletProviderSettingImpl() {
+    }
 
     @Override
     public UUID getId() {

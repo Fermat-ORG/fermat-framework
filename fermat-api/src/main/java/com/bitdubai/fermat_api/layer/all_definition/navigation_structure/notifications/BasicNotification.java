@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.06.20..
  */
-public class BasicNotification implements FermatNotification,Serializable{
+public class BasicNotification implements FermatNotification, Serializable {
 
     private int id;
     private int priority;

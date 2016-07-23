@@ -63,7 +63,7 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         customerName.setText(itemInfo.getCryptoCustomerAlias());
         try {
             typeOfPayment.setText(MoneyType.getByCode(itemInfo.getTypeOfPayment()).getFriendlyName());
-        }catch (FermatException e){
+        } catch (FermatException e) {
             typeOfPayment.setText(itemInfo.getTypeOfPayment());
         }
 
@@ -75,8 +75,14 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
 
     @NonNull
     private String getContractActionDescription(ContractBasicInformation itemInfo, ContractStatus contractStatus) {
+        StringBuilder stringBuilder = new StringBuilder();
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-        return getReceivingOrSendingText(contractStatus) + " " + decimalFormat.format(itemInfo.getAmount()) + " " + itemInfo.getMerchandise();
+        stringBuilder.append(getReceivingOrSendingText(contractStatus))
+                .append(" ")
+                .append(decimalFormat.format(itemInfo.getAmount()))
+                .append(" ")
+                .append(itemInfo.getMerchandise());
+        return stringBuilder.toString();
     }
 
     private int getStatusBackgroundColor(ContractStatus status) {
@@ -109,8 +115,8 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
             return R.string.about_to_expire;*/
 
         //UPDATE YORDIN ALAYN 07.04.16
-        if (status == ContractStatus.PENDING_PAYMENT){
-            if(nearExpirationDatetime)
+        if (status == ContractStatus.PENDING_PAYMENT) {
+            if (nearExpirationDatetime)
                 return R.string.about_to_expire;
             else
                 return R.string.waiting_for_the_customer;

@@ -38,16 +38,16 @@ public class NotificationServiceHelper {
             try {
                 notificationService = ((NotificationService.LocalBinder) service).getService();
                 mNotificationServiceConnected = true;
-            }catch (Exception e){
+            } catch (Exception e) {
 //                e.printStackTrace();
-                Log.e(TAG,"Exception in onServiceConnected from NotificationServiceHelper");
+                Log.e(TAG, "Exception in onServiceConnected from NotificationServiceHelper");
             }
         }
     };
 
     public void bindNotificationService() {
-        if(!mNotificationServiceConnected) {
-            Log.i(TAG,"binding service");
+        if (!mNotificationServiceConnected) {
+            Log.i(TAG, "binding service");
             Intent intent = new Intent(contextWeakReference.get(), NotificationService.class);
 //            contextWeakReference.get().startService(intent);
             contextWeakReference.get().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
@@ -55,9 +55,9 @@ public class NotificationServiceHelper {
 
     }
 
-    public void unbindNotificationService(){
-        if(mNotificationServiceConnected) {
-            Log.d(TAG ,"Unbinding AppManagerService");
+    public void unbindNotificationService() {
+        if (mNotificationServiceConnected) {
+            Log.d(TAG, "Unbinding AppManagerService");
             // Detach our existing connection.
             contextWeakReference.get().unbindService(mServiceConnection);
             mNotificationServiceConnected = false;
@@ -71,7 +71,7 @@ public class NotificationServiceHelper {
 
 
     public void clear() {
-        if(mNotificationServiceConnected){
+        if (mNotificationServiceConnected) {
             unbindNotificationService();
         }
         contextWeakReference.clear();

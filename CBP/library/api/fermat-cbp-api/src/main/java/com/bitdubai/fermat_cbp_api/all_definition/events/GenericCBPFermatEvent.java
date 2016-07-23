@@ -14,8 +14,8 @@ public class GenericCBPFermatEvent implements FermatEvent {
 
     private EventSource eventSource;
 
-    public GenericCBPFermatEvent(EventType eventType){
-        this.eventType=eventType;
+    public GenericCBPFermatEvent(EventType eventType) {
+        this.eventType = eventType;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class GenericCBPFermatEvent implements FermatEvent {
 
     @Override
     public void setSource(EventSource eventSource) {
-        this.eventSource=eventSource;
+        this.eventSource = eventSource;
     }
 
     @Override
@@ -35,9 +35,10 @@ public class GenericCBPFermatEvent implements FermatEvent {
 
     @Override
     public String toString() {
-        return "GenericCBPFermatEvent{" +
-                "eventType=" + eventType +
-                ", eventSource=" + eventSource +
-                '}';
+        return new StringBuilder()
+                .append("GenericCBPFermatEvent{")
+                .append("eventType=").append(eventType)
+                .append(", eventSource=").append(eventSource)
+                .append('}').toString();
     }
 }

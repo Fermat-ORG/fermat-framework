@@ -6,10 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by jose Vilchez on 18/01/16.
@@ -18,7 +17,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class GetCbpWalletPublicKeyTest {
 
     @Test
-    public void getCbpWalletPublicKey(){
+    public void getCbpWalletPublicKey() {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class);
         when(cashMoneyDestockTransaction.getCbpWalletPublicKey()).thenReturn(new String());
         assertThat(cashMoneyDestockTransaction.getCbpWalletPublicKey()).isNotNull();

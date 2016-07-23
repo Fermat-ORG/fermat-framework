@@ -25,7 +25,7 @@ public class MiddlewareLayer extends AbstractLayer {
 
             registerPlugin(new MatchingEnginePluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

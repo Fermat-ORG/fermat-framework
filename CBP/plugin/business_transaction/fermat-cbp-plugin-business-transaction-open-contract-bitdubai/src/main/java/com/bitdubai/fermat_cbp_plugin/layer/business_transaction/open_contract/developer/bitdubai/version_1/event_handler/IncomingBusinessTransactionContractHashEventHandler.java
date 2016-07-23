@@ -14,22 +14,22 @@ public class IncomingBusinessTransactionContractHashEventHandler extends Abstrac
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.openContractRecorderService.getStatus()== ServiceStatus.STARTED) {
+        if (this.openContractRecorderService.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.openContractRecorderService.incomingBusinessTransactionContractHashEventHandler((IncomingBusinessTransactionContractHash) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingBusinessTransactionContractHashEventHandler", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingBusinessTransactionContractHashEventHandler", "Check the cause");
+            } catch (ClassCastException exception) {
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingBusinessTransactionContractHashEventHandler", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingBusinessTransactionContractHashEventHandler", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingBusinessTransactionContractHashEventHandler", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
     }

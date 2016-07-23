@@ -37,18 +37,18 @@ import java.util.UUID;
 public class CloseContractBusinessTransactionDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID pluginId            ;
+    private final UUID pluginId;
     private final CloseContractPluginRoot pluginRoot;
 
     private Database database;
 
     public CloseContractBusinessTransactionDao(final PluginDatabaseSystem pluginDatabaseSystem,
-                                              final UUID                 pluginId           ,
-                                              final Database database,
+                                               final UUID pluginId,
+                                               final Database database,
                                                final CloseContractPluginRoot pluginRoot) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
         this.database = database;
         this.pluginRoot = pluginRoot;
     }
@@ -132,7 +132,7 @@ public class CloseContractBusinessTransactionDao {
     public ContractType getContractType(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
 
         try {
-            String contractTypeCode=getValue(
+            String contractTypeCode = getValue(
                     contractHash,
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_TYPE_COLUMN_NAME);
@@ -156,8 +156,8 @@ public class CloseContractBusinessTransactionDao {
 
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            String stringContractTransactionStatus=getValue(
+        try {
+            String stringContractTransactionStatus = getValue(
                     contractHash,
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
@@ -173,8 +173,8 @@ public class CloseContractBusinessTransactionDao {
     public String getEventType(String eventId)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
@@ -182,7 +182,7 @@ public class CloseContractBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            String value=records
+            String value = records
                     .get(0)
                     .getStringValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
@@ -196,7 +196,7 @@ public class CloseContractBusinessTransactionDao {
 
 
     public String getTransactionId(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        String transactionId= getValue(
+        String transactionId = getValue(
                 contractHash,
                 CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                 CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
@@ -207,6 +207,7 @@ public class CloseContractBusinessTransactionDao {
 
     /**
      * This method returns a String value from database.
+     *
      * @param key
      * @param keyColumn
      * @param valueColumn
@@ -218,19 +219,19 @@ public class CloseContractBusinessTransactionDao {
                             String valueColumn)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return null;
             }
             checkDatabaseRecords(records);
-            String value=records
+            String value = records
                     .get(0)
                     .getStringValue(valueColumn);
             return value;
@@ -244,6 +245,7 @@ public class CloseContractBusinessTransactionDao {
 
     /**
      * This method returns a List with the parameter in the arguments.
+     *
      * @param key
      * @param keyColumn
      * @param valueColumn
@@ -253,9 +255,9 @@ public class CloseContractBusinessTransactionDao {
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            List<String> contractHashList=new ArrayList<>();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            List<String> contractHashList = new ArrayList<>();
             String contractHash;
             databaseTable.addStringFilter(
                     keyColumn,
@@ -263,29 +265,29 @@ public class CloseContractBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return contractHashList;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                contractHash=databaseTableRecord.getStringValue(valueColumn);
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                contractHash = databaseTableRecord.getStringValue(valueColumn);
                 contractHashList.add(contractHash);
             }
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    "Getting "+valueColumn+" based on "+key,
+                    new StringBuilder().append("Getting ").append(valueColumn).append(" based on ").append(key).toString(),
                     "Cannot load the table into memory");
         }
     }
 
     public void persistContractRecord(Contract contractRecord, ContractType contractType) throws CantInsertRecordException {
 
-        ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CLOSING_CONTRACT;
-        TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.NOT_READY_TO_SEND;
-        DatabaseTable databaseTable=getDatabaseContractTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord=buildDatabaseRecord(databaseTableRecord,
+        ContractTransactionStatus contractTransactionStatus = ContractTransactionStatus.CLOSING_CONTRACT;
+        TransactionTransmissionStates transactionTransmissionStates = TransactionTransmissionStates.NOT_READY_TO_SEND;
+        DatabaseTable databaseTable = getDatabaseContractTable();
+        DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+        databaseTableRecord = buildDatabaseRecord(databaseTableRecord,
                 contractRecord,
                 contractTransactionStatus,
                 transactionTransmissionStates,
@@ -296,6 +298,7 @@ public class CloseContractBusinessTransactionDao {
 
     /**
      * Returns a DatabaseTableRecord from a contract
+     *
      * @param record
      * @param contractRecord
      * @param contractTransactionStatus
@@ -309,8 +312,8 @@ public class CloseContractBusinessTransactionDao {
                                                     TransactionTransmissionStates transactionTransmissionStates,
                                                     ContractType contractType) {
 
-        UUID transactionId=UUID.randomUUID();
-        String contractXML= XMLParser.parseObject(contractRecord);
+        UUID transactionId = UUID.randomUUID();
+        String contractXML = XMLParser.parseObject(contractRecord);
         record.setUUIDValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_ID_COLUMN_NAME, transactionId);
         record.setStringValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_NEGOTIATION_ID_COLUMN_NAME, contractRecord.getNegotiatiotId());
         record.setStringValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME, contractRecord.getContractId());
@@ -324,9 +327,9 @@ public class CloseContractBusinessTransactionDao {
     }
 
     public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
-            List<String> eventTypeList=new ArrayList<>();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
+            List<String> eventTypeList = new ArrayList<>();
             String eventId;
             databaseTable.addStringFilter(
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
@@ -334,12 +337,12 @@ public class CloseContractBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return eventTypeList;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getStringValue(
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                eventId = databaseTableRecord.getStringValue(
                         CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
@@ -353,6 +356,7 @@ public class CloseContractBusinessTransactionDao {
 
     /**
      * This method updates the ContractTransactionStatus by a contractHash
+     *
      * @param contractHash
      * @param contractTransactionStatus
      * @throws UnexpectedResultReturnedFromDatabaseException
@@ -360,13 +364,13 @@ public class CloseContractBusinessTransactionDao {
      */
     public void updateContractTransactionStatus(String contractHash, ContractTransactionStatus contractTransactionStatus)
             throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
-        try{
+        try {
 
             System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - DAO - updateContractTransactionStatus() \n");
 
             ObjectChecker.checkArgument(contractHash);
 
-            DatabaseTable databaseTable=getDatabaseContractTable();
+            DatabaseTable databaseTable = getDatabaseContractTable();
 
             databaseTable.addStringFilter(
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
@@ -377,7 +381,7 @@ public class CloseContractBusinessTransactionDao {
 
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
 
             record.setStringValue(
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
@@ -385,13 +389,13 @@ public class CloseContractBusinessTransactionDao {
 
             databaseTable.updateRecord(record);
 
-        }  catch (CantLoadTableToMemoryException exception) {
+        } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
@@ -442,19 +446,20 @@ public class CloseContractBusinessTransactionDao {
          * I'm gonna set this number in 1 for now, because I want to check the records object has
          * one only result.
          */
-        int VALID_RESULTS_NUMBER=1;
+        int VALID_RESULTS_NUMBER = 1;
         int recordsSize;
-        if(records.isEmpty()){
+        if (records.isEmpty()) {
             return;
         }
-        recordsSize=records.size();
-        if(recordsSize>VALID_RESULTS_NUMBER){
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
+        recordsSize = records.size();
+        if (recordsSize > VALID_RESULTS_NUMBER) {
+            throw new UnexpectedResultReturnedFromDatabaseException(new StringBuilder().append("I excepted ").append(VALID_RESULTS_NUMBER).append(", but I got ").append(recordsSize).toString());
         }
     }
 
     /**
      * This method save an incoming new event in database.
+     *
      * @param eventType
      * @param eventSource
      * @throws CantSaveEventException
@@ -478,7 +483,7 @@ public class CloseContractBusinessTransactionDao {
                     exception,
                     "Saving new event.",
                     "Cannot insert a record in Close Contract database");
-        } catch(Exception exception){
+        } catch (Exception exception) {
             throw new CantSaveEventException(
                     FermatException.wrapException(exception),
                     "Saving new event.",
@@ -487,8 +492,8 @@ public class CloseContractBusinessTransactionDao {
     }
 
     public void updateEventStatus(String eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
@@ -496,30 +501,30 @@ public class CloseContractBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(
                     CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
+        } catch (CantLoadTableToMemoryException exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter "+CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
-        }catch (Exception e){
+                    new StringBuilder().append("Updating parameter ").append(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME).toString(), "");
+        } catch (Exception e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Unexpected Result", "Check the cause");
         }
     }
 
     public long getCompletionDateByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return 0;
             }
             checkDatabaseRecords(records);
@@ -535,24 +540,25 @@ public class CloseContractBusinessTransactionDao {
 
     /**
      * This method sets the completion date in the database.
+     *
      * @param contractHash
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(String contractHash, long completionDate)
             throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash, DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty())
-                return ;
+            if (records.isEmpty())
+                return;
 
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setLongValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME, completionDate);
             databaseTable.updateRecord(record);
 

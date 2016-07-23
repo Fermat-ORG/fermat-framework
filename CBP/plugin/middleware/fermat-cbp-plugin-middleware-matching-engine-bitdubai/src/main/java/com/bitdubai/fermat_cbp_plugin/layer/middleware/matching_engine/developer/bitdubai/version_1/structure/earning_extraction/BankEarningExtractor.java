@@ -53,7 +53,7 @@ public class BankEarningExtractor implements EarningExtractor {
                     "Verify the currency code or the currency type is correct");
 
         } catch (CantCreateBankMoneyDestockException e) {
-            throw new CantExtractEarningsException( e,"Trying to make the Bank Destock of the merchandise",
+            throw new CantExtractEarningsException(e, "Trying to make the Bank Destock of the merchandise",
                     "Verify the params are correct");
         }
     }

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitduba
  * This addon handles a layer of file representation.
  * Encapsulates all the necessary functions to manage files.
  * For interfaces PluginFile the modules need to authenticate with their plugin ids (ownerId).
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  */
 

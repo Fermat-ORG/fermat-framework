@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.06.29..
  */
-public class SearchViewOnPressEvent implements OptionMenuPressEvent<SearchViewOnPressEvent>,Serializable {
+public class SearchViewOnPressEvent implements OptionMenuPressEvent<SearchViewOnPressEvent>, Serializable {
 
     /**
      * Title when search is focus

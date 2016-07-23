@@ -7,9 +7,9 @@ import java.io.Serializable;
 /**
  * The class <code>com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation</code>
  * represents an actor identity with all the basic information.
- *
+ * <p/>
  * An Actor Identity Information contains all the basic information of an actor identity.
- *
+ * <p/>
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/12/2015.
  *

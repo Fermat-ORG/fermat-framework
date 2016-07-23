@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetPriceReferenceTest {
 
     @Test
-    public void getPriceReference() throws Exception{
+    public void getPriceReference() throws Exception {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class);
         when(cashMoneyDestockTransaction.getPriceReference()).thenReturn(BigDecimal.ONE);
         assertThat(cashMoneyDestockTransaction.getPriceReference()).isNotNull();

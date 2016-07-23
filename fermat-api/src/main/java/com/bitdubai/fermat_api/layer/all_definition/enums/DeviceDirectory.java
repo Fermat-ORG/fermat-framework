@@ -15,11 +15,9 @@ public enum DeviceDirectory implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    LOCAL_USERS   ("LUS", "localusers"             ),
-    LOCAL_WALLETS ("LWA", "localwallets"           ),
-    SYSTEM        ("SYS", "com/bitdubai/fermat_api"),
-
-    ;
+    LOCAL_USERS("LUS", "localusers"),
+    LOCAL_WALLETS("LWA", "localwallets"),
+    SYSTEM("SYS", "com/bitdubai/fermat_api"),;
 
     private final String code;
     private final String name;
@@ -30,32 +28,38 @@ public enum DeviceDirectory implements FermatEnum {
         this.name = name;
     }
 
-    public static DeviceDirectory getByName(String name) throws InvalidParameterException{
+    public static DeviceDirectory getByName(String name) throws InvalidParameterException {
 
-        switch (name){
-            case "com/bitdubai/fermat_api": return SYSTEM       ;
-            case "localusers"             : return LOCAL_USERS  ;
-            case "localwallets"           : return LOCAL_WALLETS;
+        switch (name) {
+            case "com/bitdubai/fermat_api":
+                return SYSTEM;
+            case "localusers":
+                return LOCAL_USERS;
+            case "localwallets":
+                return LOCAL_WALLETS;
 
             default:
                 throw new InvalidParameterException(
-                    "Name received: " + name,
-                    "The name received is not valid for the DeviceDirectory enum"
-            );
+                        new StringBuilder().append("Name received: ").append(name).toString(),
+                        "The name received is not valid for the DeviceDirectory enum"
+                );
         }
     }
 
-    public static DeviceDirectory getByCode(String code) throws InvalidParameterException{
+    public static DeviceDirectory getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
-            case "LUS": return LOCAL_USERS  ;
-            case "LWA": return LOCAL_WALLETS;
-            case "SYS": return SYSTEM       ;
+        switch (code) {
+            case "LUS":
+                return LOCAL_USERS;
+            case "LWA":
+                return LOCAL_WALLETS;
+            case "SYS":
+                return SYSTEM;
             default:
                 throw new InvalidParameterException(
-                    "Code received: " + code,
-                    "The code received is not valid for the DeviceDirectory enum"
-            );
+                        new StringBuilder().append("Code received: ").append(code).toString(),
+                        "The code received is not valid for the DeviceDirectory enum"
+                );
         }
     }
 

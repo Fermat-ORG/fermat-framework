@@ -27,7 +27,7 @@ public class ReceiveSaleConfirmTest {
     private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
 
     @Test
-    public void receiveSaleConfirm() throws Exception{
+    public void receiveSaleConfirm() throws Exception {
 
         CustomerBrokerCloseSaleNegotiationTransaction customerBrokerCloseSaleNegotiationTransaction = mock(CustomerBrokerCloseSaleNegotiationTransaction.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(customerBrokerCloseSaleNegotiationTransaction).receiveSaleConfirm(customerBrokerSaleNegotiation);

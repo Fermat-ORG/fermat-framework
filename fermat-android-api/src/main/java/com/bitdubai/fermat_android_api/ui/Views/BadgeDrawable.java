@@ -15,7 +15,7 @@ import android.graphics.drawable.LayerDrawable;
 public class BadgeDrawable extends Drawable {
 
     public enum Position {
-        TOP_RIGHT,CENTER,TOP_LEFT
+        TOP_RIGHT, CENTER, TOP_LEFT
     }
 
     private float mTextSize;
@@ -25,7 +25,7 @@ public class BadgeDrawable extends Drawable {
 
     private String mCount = "";
     private boolean mWillDraw = false;
-    private int color=0;
+    private int color = 0;
     private Position position = Position.CENTER;
 
     public BadgeDrawable(Context context) {
@@ -49,10 +49,10 @@ public class BadgeDrawable extends Drawable {
         if (!mWillDraw) {
             return;
         }
-        if(color!=0){
+        if (color != 0) {
             mBadgePaint.setColor(color);
         }
-        if(mTextSize!=0){
+        if (mTextSize != 0) {
             mTextPaint.setTextSize(mTextSize);
         }
 
@@ -72,8 +72,8 @@ public class BadgeDrawable extends Drawable {
                 break;
             case CENTER:
                 radius = ((Math.min(width, height) / 2) - 1) / 2;
-                centerX = width/2-1;
-                centerY = height/2;
+                centerX = width / 2 - 1;
+                centerY = height / 2;
                 break;
         }
         // Draw badge circle.
@@ -97,7 +97,7 @@ public class BadgeDrawable extends Drawable {
         invalidateSelf();
     }
 
-    public void setPosition(Position position){
+    public void setPosition(Position position) {
         this.position = position;
     }
 
@@ -125,7 +125,7 @@ public class BadgeDrawable extends Drawable {
     }
 
 
-    public static class BadgeDrawableBuilder{
+    public static class BadgeDrawableBuilder {
 
         private final Context context;
         private int count = 0;
@@ -138,7 +138,7 @@ public class BadgeDrawable extends Drawable {
             this.context = context;
         }
 
-        public BadgeDrawableBuilder setCount(int count){
+        public BadgeDrawableBuilder setCount(int count) {
             this.count = count;
             return this;
         }
@@ -181,7 +181,7 @@ public class BadgeDrawable extends Drawable {
 
     public static class Utils {
 
-        public static void setBadgeCount(Context context, LayerDrawable icon, int count,int resId) {
+        public static void setBadgeCount(Context context, LayerDrawable icon, int count, int resId) {
 
             BadgeDrawable badge;
 

@@ -10,12 +10,10 @@ public enum GeoFrequency implements FermatEnum {
     /**
      * Definition types frequency
      */
-    LOW("LO",       15000),
-    NORMAL("NL",    10000),
-    HIGH("HI",       5000),
-    NONE("NN",          0),
-
-    ;
+    LOW("LO", 15000),
+    NORMAL("NL", 10000),
+    HIGH("HI", 5000),
+    NONE("NN", 0),;
 
     /**
      * Represent the code of the message status

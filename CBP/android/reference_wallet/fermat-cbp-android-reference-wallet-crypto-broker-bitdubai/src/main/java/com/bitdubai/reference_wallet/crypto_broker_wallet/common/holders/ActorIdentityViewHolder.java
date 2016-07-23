@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
