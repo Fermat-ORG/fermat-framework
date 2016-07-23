@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetActorPublicKeyTest {
 
     @Test
-    public void testGetActorPublicKey() throws Exception{
+    public void testGetActorPublicKey() throws Exception {
         TransactionTransmissionConnectionRecord transactionTransmissionConnectionRecord = mock(TransactionTransmissionConnectionRecord.class);
         when(transactionTransmissionConnectionRecord.getActorPublicKey()).thenReturn(new String());
         assertThat(transactionTransmissionConnectionRecord.getActorPublicKey()).isNotNull();

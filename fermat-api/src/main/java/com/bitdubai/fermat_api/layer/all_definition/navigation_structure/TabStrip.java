@@ -15,11 +15,11 @@ import java.util.Map;
  * Update by Miguel Payarez on 2016.04.08
  */
 
-public class TabStrip implements FermatTabStrip,Serializable {
+public class TabStrip implements FermatTabStrip, Serializable {
 
     /**
      * WIZARD
-     *
+     * <p/>
      * Wizard type enum
      */
     Map<String, Wizard> wizards;
@@ -31,7 +31,7 @@ public class TabStrip implements FermatTabStrip,Serializable {
 
     int indicatorColor;
 
-    int indicatorHeight=-1;
+    int indicatorHeight = -1;
 
     int backgroundColor;
 
@@ -47,7 +47,7 @@ public class TabStrip implements FermatTabStrip,Serializable {
 
     String tabsIndicateColor;
 
-    boolean hasIcon=false;
+    boolean hasIcon = false;
 
     boolean hasText;
 
@@ -78,7 +78,7 @@ public class TabStrip implements FermatTabStrip,Serializable {
     public TabStrip() {
     }
 
-    public TabStrip(int dividerColor, int indicatorColor, int indicatorHeight, int backgroundColor, int textColor, int backgroundResource, String tabsColor, String tabsTextColor, String tabsIndicateColor, List<Tab> tabs,String selectedTabTextColor) {
+    public TabStrip(int dividerColor, int indicatorColor, int indicatorHeight, int backgroundColor, int textColor, int backgroundResource, String tabsColor, String tabsTextColor, String tabsIndicateColor, List<Tab> tabs, String selectedTabTextColor) {
         this.dividerColor = dividerColor;
         this.indicatorColor = indicatorColor;
         this.indicatorHeight = indicatorHeight;
@@ -89,7 +89,7 @@ public class TabStrip implements FermatTabStrip,Serializable {
         this.tabsTextColor = tabsTextColor;
         this.tabsIndicateColor = tabsIndicateColor;
         this.tabs = tabs;
-        this.selectedTabTextColor=selectedTabTextColor;
+        this.selectedTabTextColor = selectedTabTextColor;
     }
 
     /**
@@ -120,7 +120,9 @@ public class TabStrip implements FermatTabStrip,Serializable {
 
 
     @Override
-    public int getTextColor() {return textColor;    }
+    public int getTextColor() {
+        return textColor;
+    }
 
 
     @Override
@@ -146,14 +148,18 @@ public class TabStrip implements FermatTabStrip,Serializable {
         return tabsIndicateColor;
     }
 
-    public String getSelectedTabTextColor() {return selectedTabTextColor;}
+    public String getSelectedTabTextColor() {
+        return selectedTabTextColor;
+    }
 
     @Override
     public List<Tab> getTabs() {
         return tabs;
     }
 
-    public boolean isReduceTabHeight(){return reduceTabHeight;}
+    public boolean isReduceTabHeight() {
+        return reduceTabHeight;
+    }
 
     /**
      * TabStrip class setters
@@ -184,7 +190,9 @@ public class TabStrip implements FermatTabStrip,Serializable {
     }
 
     @Override
-    public void setSelectTabTextColor(String selectTabTextColor) {this.selectedTabTextColor = selectTabTextColor;}
+    public void setSelectTabTextColor(String selectTabTextColor) {
+        this.selectedTabTextColor = selectTabTextColor;
+    }
 
     @Override
     public void setBackgroundResource(int backgroundResource) {
@@ -234,7 +242,9 @@ public class TabStrip implements FermatTabStrip,Serializable {
         this.hasText = hasText;
     }
 
-    public void setReduceTabHeight(boolean reduceTabHeight){this.reduceTabHeight=reduceTabHeight;}
+    public void setReduceTabHeight(boolean reduceTabHeight) {
+        this.reduceTabHeight = reduceTabHeight;
+    }
 
     /**
      * Add wizard to attach to this Tab
@@ -256,7 +266,7 @@ public class TabStrip implements FermatTabStrip,Serializable {
 
 
     /**
-     *  Custom View for the tab
+     * Custom View for the tab
      *
      * @return
      */

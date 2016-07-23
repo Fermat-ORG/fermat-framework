@@ -19,23 +19,23 @@ import java.util.UUID;
  */
 public final class MatchingEngineMiddlewareInputTransaction implements InputTransaction {
 
-    private final UUID                  id                 ;
-    private final String                originTransactionId;
-    private final Currency              currencyGiving     ;
-    private final float                 amountGiving       ;
-    private final Currency              currencyReceiving  ;
-    private final float                 amountReceiving    ;
-    private final InputTransactionType  type               ;
-    private final InputTransactionState state              ;
+    private final UUID id;
+    private final String originTransactionId;
+    private final Currency currencyGiving;
+    private final float amountGiving;
+    private final Currency currencyReceiving;
+    private final float amountReceiving;
+    private final InputTransactionType type;
+    private final InputTransactionState state;
 
-    public MatchingEngineMiddlewareInputTransaction(final UUID                   id                 ,
-                                                    final String                 originTransactionId,
-                                                    final Currency               currencyGiving     ,
-                                                    final float                  amountGiving       ,
-                                                    final Currency               currencyReceiving  ,
-                                                    final float                  amountReceiving    ,
-                                                    final InputTransactionType   type               ,
-                                                    final InputTransactionState  state              ) {
+    public MatchingEngineMiddlewareInputTransaction(final UUID id,
+                                                    final String originTransactionId,
+                                                    final Currency currencyGiving,
+                                                    final float amountGiving,
+                                                    final Currency currencyReceiving,
+                                                    final float amountReceiving,
+                                                    final InputTransactionType type,
+                                                    final InputTransactionState state) {
 
         if (id == null)
             throw new InvalidParameterException("id is null.");
@@ -55,20 +55,20 @@ public final class MatchingEngineMiddlewareInputTransaction implements InputTran
         if (state == null)
             throw new InvalidParameterException("state is null.");
 
-        if(amountReceiving < 0)
+        if (amountReceiving < 0)
             throw new InvalidParameterException("receiving amount can't be lower than 0");
 
-        if(amountGiving < 0)
+        if (amountGiving < 0)
             throw new InvalidParameterException("giving amount can't be lower than 0");
 
-        this.id                  = id                 ;
+        this.id = id;
         this.originTransactionId = originTransactionId;
-        this.currencyGiving      = currencyGiving     ;
-        this.amountGiving        = amountGiving       ;
-        this.currencyReceiving   = currencyReceiving  ;
-        this.amountReceiving     = amountReceiving    ;
-        this.type                = type               ;
-        this.state               = state              ;
+        this.currencyGiving = currencyGiving;
+        this.amountGiving = amountGiving;
+        this.currencyReceiving = currencyReceiving;
+        this.amountReceiving = amountReceiving;
+        this.type = type;
+        this.state = state;
     }
 
     public UUID getId() {
@@ -105,15 +105,17 @@ public final class MatchingEngineMiddlewareInputTransaction implements InputTran
 
     @Override
     public String toString() {
-        return "MatchingEngineMiddlewareInputTransaction{" +
-                "id=" + id +
-                ", originTransactionId='" + originTransactionId + '\'' +
-                ", currencyGiving=" + currencyGiving +
-                ", amountGiving=" + amountGiving +
-                ", currencyReceiving=" + currencyReceiving +
-                ", amountReceiving=" + amountReceiving +
-                ", type=" + type +
-                ", state=" + state +
-                '}';
+        return new StringBuilder()
+                .append("MatchingEngineMiddlewareInputTransaction{")
+                .append("id=").append(id)
+                .append(", originTransactionId='").append(originTransactionId)
+                .append('\'')
+                .append(", currencyGiving=").append(currencyGiving)
+                .append(", amountGiving=").append(amountGiving)
+                .append(", currencyReceiving=").append(currencyReceiving)
+                .append(", amountReceiving=").append(amountReceiving)
+                .append(", type=").append(type)
+                .append(", state=").append(state)
+                .append('}').toString();
     }
 }

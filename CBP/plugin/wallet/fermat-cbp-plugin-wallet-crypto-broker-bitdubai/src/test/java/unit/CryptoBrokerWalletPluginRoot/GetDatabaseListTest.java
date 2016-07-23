@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class GetDatabaseListTest {
 
     @Test
-    public void getDatabaseList() throws Exception{
+    public void getDatabaseList() throws Exception {
         CryptoBrokerWalletPluginRoot cryptoBrokerWalletPluginRoot = mock(CryptoBrokerWalletPluginRoot.class);
         when(cryptoBrokerWalletPluginRoot.getDatabaseList(Mockito.any(DeveloperObjectFactory.class))).thenReturn(new ArrayList<DeveloperDatabase>());
         assertThat(cryptoBrokerWalletPluginRoot.getDatabaseList(Mockito.any(DeveloperObjectFactory.class))).isNotNull();

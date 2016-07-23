@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -28,22 +27,22 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     private final KeyPair keyPair;
     private byte[] profileImage;
     private ExposureLevel exposureLevel;
-    private long   accuracy;
+    private long accuracy;
     private GeoFrequency frequency;
     private CryptoBrokerIdentityExtraData cryptoBrokerIdentityExtraData;
 
-    public CryptoBrokerIdentityImpl(final String        alias        ,
-                                    final KeyPair       keyPair      ,
-                                    final byte[]        profileImage ,
+    public CryptoBrokerIdentityImpl(final String alias,
+                                    final KeyPair keyPair,
+                                    final byte[] profileImage,
                                     final ExposureLevel exposureLevel,
                                     final long accuracy,
-                                    final GeoFrequency frequency){
+                                    final GeoFrequency frequency) {
 
-        this.alias         = alias        ;
-        this.keyPair       = keyPair      ;
-        this.profileImage  = profileImage ;
+        this.alias = alias;
+        this.keyPair = keyPair;
+        this.profileImage = profileImage;
         this.exposureLevel = exposureLevel;
-        this.accuracy      = accuracy     ;
+        this.accuracy = accuracy;
         this.frequency = frequency;
         //Default CryptoBrokerIdentityExtraData
         this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
@@ -90,7 +89,9 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     }
 
     @Override
-    public boolean isPublished(){ return this.exposureLevel.equals(ExposureLevel.PUBLISH); }
+    public boolean isPublished() {
+        return this.exposureLevel.equals(ExposureLevel.PUBLISH);
+    }
 
     @Override
     public ExposureLevel getExposureLevel() {
@@ -98,11 +99,11 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     }
 
     @Override
-    public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
-        try{
+    public String createMessageSignature(String message) throws CantCreateMessageSignatureException {
+        try {
             return AsymmetricCryptography.createMessageSignature(message, this.keyPair.getPrivateKey());
-        } catch(Exception ex){
-            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
+        } catch (Exception ex) {
+            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, new StringBuilder().append("Message: ").append(message).toString(), "The message could be invalid");
         }
     }
 
@@ -116,22 +117,22 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
         return this.frequency;
     }
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerIdentity))
+    public boolean equals(Object o) {
+        if (!(o instanceof CryptoBrokerIdentity))
             return false;
         CryptoBrokerIdentity compare = (CryptoBrokerIdentity) o;
         return alias.equals(compare.getAlias()) && keyPair.getPublicKey().equals(compare.getPublicKey());
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += alias.hashCode();
         c += keyPair.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
-    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData(){
+    public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData() {
         return cryptoBrokerIdentityExtraData;
     }
 

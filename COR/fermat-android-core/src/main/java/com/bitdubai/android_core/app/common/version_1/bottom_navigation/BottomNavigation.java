@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2015.11.25..
  */
-public class BottomNavigation implements  OnStartDragListener {
+public class BottomNavigation implements OnStartDragListener {
 
 
     private DesktopHolderClickCallback<Item> desktopHolderClickCallback;
@@ -27,7 +27,7 @@ public class BottomNavigation implements  OnStartDragListener {
     private List<Item> lstItems;
     BottomNavigationAdapter adapter;
 
-    public BottomNavigation(Activity activity,List<Item> lstItems,DesktopHolderClickCallback<Item> desktopHolderClickCallback) {
+    public BottomNavigation(Activity activity, List<Item> lstItems, DesktopHolderClickCallback<Item> desktopHolderClickCallback) {
         this.activity = activity;
         this.lstItems = lstItems;
         this.desktopHolderClickCallback = desktopHolderClickCallback;
@@ -36,7 +36,7 @@ public class BottomNavigation implements  OnStartDragListener {
 
     private void setUp() {
         recyclerView = (RecyclerView) activity.findViewById(com.bitdubai.fermat.R.id.bottom_navigation_recycler);
-        if(recyclerView!=null) {
+        if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutFrozen(true);
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -70,10 +70,10 @@ public class BottomNavigation implements  OnStartDragListener {
         mItemTouchHelper.startDrag(viewHolder);
     }
 
-    public void reset(){
+    public void reset() {
         recyclerView.clearOnChildAttachStateChangeListeners();
         recyclerView.clearOnScrollListeners();
-        adapter =null;
+        adapter = null;
         desktopHolderClickCallback = null;
         activity = null;
         mItemTouchHelper = null;

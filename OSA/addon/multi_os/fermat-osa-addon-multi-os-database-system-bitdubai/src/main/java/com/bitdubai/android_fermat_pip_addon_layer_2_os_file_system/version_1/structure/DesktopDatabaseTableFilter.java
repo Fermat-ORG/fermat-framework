@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 
 /**
  * This class define methods to sets the columns that were used to make the filter on a table.
- *
+ * <p/>
  * *
  */
 public class DesktopDatabaseTableFilter implements DatabaseTableFilter {
@@ -32,8 +32,7 @@ public class DesktopDatabaseTableFilter implements DatabaseTableFilter {
      * @param column colum name to apply filter
      */
     @Override
-    public void setColumn (String column)
-    {
+    public void setColumn(String column) {
         this.column = column;
     }
 
@@ -43,8 +42,7 @@ public class DesktopDatabaseTableFilter implements DatabaseTableFilter {
      * @param type enum DatabaseFilterType , type of operator for the filter
      */
     @Override
-    public void setType (DatabaseFilterType type)
-    {
+    public void setType(DatabaseFilterType type) {
         this.type = type;
     }
 
@@ -54,19 +52,17 @@ public class DesktopDatabaseTableFilter implements DatabaseTableFilter {
      * @return DatabaseFilterType enum
      */
     @Override
-    public DatabaseFilterType getType()
-    {
+    public DatabaseFilterType getType() {
         return this.type;
     }
 
     /**
-     *<p>Sets value which is to filter the query.
+     * <p>Sets value which is to filter the query.
      *
      * @param value value which is to filter the query
      */
     @Override
-    public void setValue (String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -76,19 +72,17 @@ public class DesktopDatabaseTableFilter implements DatabaseTableFilter {
      * @return String filter value
      */
     @Override
-    public String getValue ()
-    {
+    public String getValue() {
         return this.value;
     }
 
     /**
-     *<p>Gets column the column to apply the filter.
+     * <p>Gets column the column to apply the filter.
      *
      * @return String filter column name
      */
     @Override
-    public String  getColumn ()
-    {
+    public String getColumn() {
         return this.column;
     }
 }

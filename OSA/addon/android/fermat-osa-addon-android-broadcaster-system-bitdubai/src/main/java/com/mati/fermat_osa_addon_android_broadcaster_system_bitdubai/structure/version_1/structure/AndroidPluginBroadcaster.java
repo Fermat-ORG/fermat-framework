@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 /**
  * Created by mati on 2016.02.02..
  */
-public class AndroidPluginBroadcaster implements Broadcaster{
+public class AndroidPluginBroadcaster implements Broadcaster {
 
     AndroidCoreUtils androidCoreBroadcasterUtil;
 
@@ -18,29 +18,29 @@ public class AndroidPluginBroadcaster implements Broadcaster{
 
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
-        androidCoreBroadcasterUtil.publish(broadcasterType,code);
+        androidCoreBroadcasterUtil.publish(broadcasterType, code);
     }
 
     @Override
     @Deprecated
     public void publish(BroadcasterType broadcasterType, String appPublicKeyToOpen, String code) {
-        androidCoreBroadcasterUtil.publish(broadcasterType, appPublicKeyToOpen,code);
+        androidCoreBroadcasterUtil.publish(broadcasterType, appPublicKeyToOpen, code);
     }
 
     @Override
     public void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle) {
-        androidCoreBroadcasterUtil.publish(broadcasterType,appCode,bundle);
+        androidCoreBroadcasterUtil.publish(broadcasterType, appCode, bundle);
     }
 
     @Override
     public void publish(BroadcasterType broadcasterType, FermatBundle bundle) {
-        androidCoreBroadcasterUtil.publish(broadcasterType,null,bundle);
+        androidCoreBroadcasterUtil.publish(broadcasterType, null, bundle);
     }
 
     @Override
-    public int publish(BroadcasterType broadcasterType, FermatBundle bundle,String channelReceiversCode) {
+    public int publish(BroadcasterType broadcasterType, FermatBundle bundle, String channelReceiversCode) {
         //todo: tema channel receivers code, armar channels que escuchen eventos
-        return androidCoreBroadcasterUtil.publish(broadcasterType,bundle);
+        return androidCoreBroadcasterUtil.publish(broadcasterType, bundle);
 
     }
 

@@ -15,22 +15,27 @@ public enum ContractClauseType implements FermatEnum {
 
     private final String code;
 
-    ContractClauseType(final String code){
+    ContractClauseType(final String code) {
         this.code = code;
     }
 
     @Override
-    public String getCode(){
+    public String getCode() {
         return code;
     }
 
-    public static ContractClauseType getByCode(final String code) throws InvalidParameterException{
-        switch (code){
-            case "CRT": return CRYPTO_TRANSFER;
-            case "BAT": return BANK_TRANSFER;
-            case "CAD": return CASH_DELIVERY;
-            case "COH": return CASH_ON_HAND;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseType enum");
+    public static ContractClauseType getByCode(final String code) throws InvalidParameterException {
+        switch (code) {
+            case "CRT":
+                return CRYPTO_TRANSFER;
+            case "BAT":
+                return BANK_TRANSFER;
+            case "CAD":
+                return CASH_DELIVERY;
+            case "COH":
+                return CASH_ON_HAND;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ClauseType enum");
         }
     }
 }

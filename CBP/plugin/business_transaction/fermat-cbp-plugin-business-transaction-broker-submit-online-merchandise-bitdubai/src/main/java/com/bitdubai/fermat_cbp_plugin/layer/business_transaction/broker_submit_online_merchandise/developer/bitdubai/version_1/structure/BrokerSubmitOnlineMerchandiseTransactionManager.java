@@ -89,9 +89,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
      * This method returns the crypto address from a CustomerBrokerPurchaseNegotiation
      *
      * @param customerBrokerSaleNegotiation
-     *
      * @return
-     *
      * @throws CantGetCryptoAddressException
      */
     private String getBrokerCryptoAddressString(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetCryptoAddressException {
@@ -144,7 +142,6 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
      * This method returns a CustomerBrokerPurchaseNegotiation by negotiationId.
      *
      * @param negotiationId
-     *
      * @return
      */
     private CustomerBrokerSaleNegotiation getCustomerBrokerSaleNegotiation(String negotiationId) throws CantGetListSaleNegotiationsException {
@@ -189,7 +186,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             CustomerBrokerContractSale saleContract = this.contractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
             if (saleContract == null) {
-                throw new CantSubmitMerchandiseException("The CustomerBrokerContractSale with the contractHash\n" + contractHash + "\nis null");
+                throw new CantSubmitMerchandiseException(new StringBuilder().append("The CustomerBrokerContractSale with the contractHash\n").append(contractHash).append("\nis null").toString());
             }
 
             final CustomerBrokerSaleNegotiation saleNegotiation = getCustomerBrokerSaleNegotiation(saleContract.getNegotiatiotId());

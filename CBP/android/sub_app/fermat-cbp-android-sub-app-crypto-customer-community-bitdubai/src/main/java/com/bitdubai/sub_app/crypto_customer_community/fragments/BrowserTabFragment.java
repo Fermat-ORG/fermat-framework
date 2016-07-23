@@ -366,7 +366,7 @@ public class BrowserTabFragment
             try {
                 offset = pos;
                 List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), location, distance, alias, MAX, offset);
-                if(result != null)
+                if (result != null)
                     dataSet.addAll(result);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -15,7 +15,7 @@ public class ListsForStatusPurchaseInformation implements ListsForStatusPurchase
     private Collection<CustomerBrokerContractPurchase> contractsWaitingForCustomer;
     private Collection<CustomerBrokerContractPurchase> historyContracts;
 
-    public ListsForStatusPurchaseInformation(){
+    public ListsForStatusPurchaseInformation() {
 
     }
 

@@ -10,9 +10,9 @@ import java.io.Serializable;
 
 public enum ResourceDensity implements Serializable {
 
-    LDPI ("ldpi"),
-    MDPI ("mdpi"),
-    HDPI ("hdpi");
+    LDPI("ldpi"),
+    MDPI("mdpi"),
+    HDPI("hdpi");
 
     private final String code;
 
@@ -20,16 +20,22 @@ public enum ResourceDensity implements Serializable {
         this.code = code;
     }
 
-    public String getCode() { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
-    public static ResourceDensity getByCode(String code)throws InvalidParameterException {
+    public static ResourceDensity getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "ldpi": return ResourceDensity.LDPI;
-            case "mdpi": return ResourceDensity.MDPI;
-            case "hdpi": return ResourceDensity.HDPI;
+            case "ldpi":
+                return ResourceDensity.LDPI;
+            case "mdpi":
+                return ResourceDensity.MDPI;
+            case "hdpi":
+                return ResourceDensity.HDPI;
             //Modified by Manuel Perez on 04/08/2015
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ResourceDensity enum");
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ResourceDensity enum");
 
         }
 

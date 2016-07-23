@@ -9,20 +9,20 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 24.12.15.
  */
-public class CustomerBrokerNegotiationClauseImpl implements Clause{
+public class CustomerBrokerNegotiationClauseImpl implements Clause {
 
-    private final   UUID            clauseId;
-    private final   ClauseType      type;
-    private final   String          value;
-    private         ClauseStatus    status;
-    private final   String          proposedBy;
+    private final UUID clauseId;
+    private final ClauseType type;
+    private final String value;
+    private ClauseStatus status;
+    private final String proposedBy;
     private short indexOrder;
 
-    public CustomerBrokerNegotiationClauseImpl(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
-        this.clauseId   = clauseId;
-        this.type       = type;
-        this.value      = value;
-        this.status     = status;
+    public CustomerBrokerNegotiationClauseImpl(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder) {
+        this.clauseId = clauseId;
+        this.type = type;
+        this.value = value;
+        this.status = status;
         this.proposedBy = proposedBy;
         this.indexOrder = indexOrder;
     }

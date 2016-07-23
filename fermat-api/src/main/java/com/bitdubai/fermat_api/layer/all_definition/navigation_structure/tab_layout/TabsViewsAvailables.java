@@ -11,5 +11,4 @@ public class TabsViewsAvailables {
     public static final int TAB_NOTIFICATION_VIEW = 200;
 
 
-
 }

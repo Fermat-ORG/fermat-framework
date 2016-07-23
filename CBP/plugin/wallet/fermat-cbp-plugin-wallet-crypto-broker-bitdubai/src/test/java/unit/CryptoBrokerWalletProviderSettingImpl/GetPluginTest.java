@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetPluginTest {
 
     @Test
-    public void getPlugin(){
+    public void getPlugin() {
         CryptoBrokerWalletProviderSettingImpl cryptoBrokerWalletProviderSetting = mock(CryptoBrokerWalletProviderSettingImpl.class);
         when(cryptoBrokerWalletProviderSetting.getPlugin()).thenReturn(UUID.randomUUID());
         assertThat(cryptoBrokerWalletProviderSetting.getPlugin()).isNotNull();

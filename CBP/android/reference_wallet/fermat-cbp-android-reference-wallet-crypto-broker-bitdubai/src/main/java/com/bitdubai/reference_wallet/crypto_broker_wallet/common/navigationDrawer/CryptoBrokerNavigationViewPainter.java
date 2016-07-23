@@ -157,7 +157,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
             for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
 
-                if(!merchandises.contains(associatedWallet.getMerchandise()))
+                if (!merchandises.contains(associatedWallet.getMerchandise()))
                     merchandises.add(associatedWallet.getMerchandise());
             }
 
@@ -167,7 +167,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 double balance = moduleManager.getAvailableBalance(merchandise, session.getAppPublicKey());
 
                 //If Bitcoin, convert to satoshi
-                if(CurrencyTypes.CRYPTO.equals(merchandise.getType()) && CryptoCurrency.BITCOIN.equals(merchandise))
+                if (CurrencyTypes.CRYPTO.equals(merchandise.getType()) && CryptoCurrency.BITCOIN.equals(merchandise))
                     balance = BitcoinConverter.convert(balance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
                 stockItems.add(new NavViewFooterItem(merchandise.getFriendlyName(), numberFormat.format(balance)));
@@ -195,7 +195,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 final Currency earningCurrency = earningsPair.getEarningCurrency();
                 final String earningCurrencyCode = earningCurrency.getCode();
 
-                String currencies = linkedCurrencyCode + " / " + earningCurrencyCode;
+                String currencies = new StringBuilder().append(linkedCurrencyCode).append(" / ").append(earningCurrencyCode).toString();
                 String value = "0.0";
 
                 final List<EarningTransaction> earnings = moduleManager.searchEarnings(earningsPair);
@@ -203,7 +203,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
                 if (!earningsDetails.isEmpty()) {
                     double amount = earningsDetails.get(0).getAmount();
 
-                    if(earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
+                    if (earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
                         amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
                     value = numberFormat.format(amount);

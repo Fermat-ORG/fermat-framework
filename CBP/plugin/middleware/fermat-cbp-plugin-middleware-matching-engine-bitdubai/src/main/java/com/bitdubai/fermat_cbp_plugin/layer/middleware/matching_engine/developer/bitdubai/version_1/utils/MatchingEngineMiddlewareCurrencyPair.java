@@ -17,10 +17,10 @@ public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private final Currency from;
-    private final Currency to  ;
+    private final Currency to;
 
     public MatchingEngineMiddlewareCurrencyPair(final Currency from,
-                                                final Currency to  ) {
+                                                final Currency to) {
 
 
         if (from == null)
@@ -30,7 +30,7 @@ public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
             throw new InvalidParameterException("To is null.");
 
         this.from = from;
-        this.to   = to  ;
+        this.to = to;
     }
 
     @Override
@@ -66,9 +66,10 @@ public class MatchingEngineMiddlewareCurrencyPair implements CurrencyPair {
 
     @Override
     public String toString() {
-        return "MatchingEngineMiddlewareCurrencyPair{" +
-                "from=" + from +
-                ", to=" + to +
-                '}';
+        return new StringBuilder()
+                .append("MatchingEngineMiddlewareCurrencyPair{")
+                .append("from=").append(from)
+                .append(", to=").append(to)
+                .append('}').toString();
     }
 }

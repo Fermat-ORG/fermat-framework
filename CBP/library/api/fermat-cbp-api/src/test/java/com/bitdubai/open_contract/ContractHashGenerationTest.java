@@ -15,8 +15,8 @@ import org.junit.Test;
  */
 public class ContractHashGenerationTest {
 
-    private ContractSaleRecord generateMockedContractRecord(){
-        ContractSaleRecord contractRecord=new ContractSaleRecord();
+    private ContractSaleRecord generateMockedContractRecord() {
+        ContractSaleRecord contractRecord = new ContractSaleRecord();
         contractRecord.setMerchandiseAmount(10);
         contractRecord.setMerchandiseCurrency(CryptoCurrency.BITCOIN);
         contractRecord.setMerchandiseDeliveryExpirationDate(616);
@@ -32,8 +32,8 @@ public class ContractHashGenerationTest {
         return contractRecord;
     }
 
-    private ContractPurchaseRecord generateMockedContractPurchaseRecord(){
-        ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
+    private ContractPurchaseRecord generateMockedContractPurchaseRecord() {
+        ContractPurchaseRecord contractRecord = new ContractPurchaseRecord();
         contractRecord.setMerchandiseAmount(10);
         contractRecord.setMerchandiseCurrency(CryptoCurrency.BITCOIN);
         contractRecord.setMerchandiseDeliveryExpirationDate(616);
@@ -50,52 +50,52 @@ public class ContractHashGenerationTest {
     }
 
     @Test
-    public void generationDifferentObjectTest(){
-        ContractSaleRecord saleRecord=generateMockedContractRecord();
+    public void generationDifferentObjectTest() {
+        ContractSaleRecord saleRecord = generateMockedContractRecord();
         saleRecord.generateContractHash();
         System.out.println(saleRecord);
-        ContractPurchaseRecord purchaseRecord=generateMockedContractPurchaseRecord();
+        ContractPurchaseRecord purchaseRecord = generateMockedContractPurchaseRecord();
         purchaseRecord.generateContractHash();
         System.out.println(purchaseRecord);
         Assert.assertEquals(purchaseRecord.getContractId(), saleRecord.getContractId());
     }
 
     @Test
-    public void generationHashTest() throws Exception{
-        ContractSaleRecord contractRecord=generateMockedContractRecord();
-        System.out.println("Contract XML\n" + contractRecord);
-        String generatedHash=contractRecord.generateContractHash();
-        System.out.println("Generated Hash:\n" + generatedHash);
-        String innerHash=contractRecord.getContractId();
-        System.out.println("Inner Hash:\n" + innerHash);
-        System.out.println("Contract XML with contract hash\n" + contractRecord);
+    public void generationHashTest() throws Exception {
+        ContractSaleRecord contractRecord = generateMockedContractRecord();
+        System.out.println(new StringBuilder().append("Contract XML\n").append(contractRecord).toString());
+        String generatedHash = contractRecord.generateContractHash();
+        System.out.println(new StringBuilder().append("Generated Hash:\n").append(generatedHash).toString());
+        String innerHash = contractRecord.getContractId();
+        System.out.println(new StringBuilder().append("Inner Hash:\n").append(innerHash).toString());
+        System.out.println(new StringBuilder().append("Contract XML with contract hash\n").append(contractRecord).toString());
         Assert.assertEquals(innerHash, generatedHash);
     }
 
     @Test
-    public void changeHashTest() throws Exception{
-        ContractSaleRecord contractRecord=generateMockedContractRecord();
-        System.out.println("Contract XML\n" + contractRecord);
-        String generatedHash=contractRecord.generateContractHash();
-        System.out.println("Generated Hash:\n" + generatedHash);
+    public void changeHashTest() throws Exception {
+        ContractSaleRecord contractRecord = generateMockedContractRecord();
+        System.out.println(new StringBuilder().append("Contract XML\n").append(contractRecord).toString());
+        String generatedHash = contractRecord.generateContractHash();
+        System.out.println(new StringBuilder().append("Generated Hash:\n").append(generatedHash).toString());
         contractRecord.setReferenceCurrency(ReferenceCurrency.EURO);
-        String newContractHash=contractRecord.generateContractHash();
-        System.out.println("New XML\n" + contractRecord);
-        System.out.println("New Hash\n" + newContractHash);
+        String newContractHash = contractRecord.generateContractHash();
+        System.out.println(new StringBuilder().append("New XML\n").append(contractRecord).toString());
+        System.out.println(new StringBuilder().append("New Hash\n").append(newContractHash).toString());
         Assert.assertNotEquals(generatedHash, newContractHash);
     }
 
     @Test
-    public void changeNegotiationIdTest() throws Exception{
+    public void changeNegotiationIdTest() throws Exception {
         System.out.println("changeNegotiationIdTest");
-        ContractSaleRecord contractRecord=generateMockedContractRecord();
-        System.out.println("Contract XML\n" + contractRecord);
-        String generatedHash=contractRecord.generateContractHash();
-        System.out.println("Generated Hash:\n" + generatedHash);
+        ContractSaleRecord contractRecord = generateMockedContractRecord();
+        System.out.println(new StringBuilder().append("Contract XML\n").append(contractRecord).toString());
+        String generatedHash = contractRecord.generateContractHash();
+        System.out.println(new StringBuilder().append("Generated Hash:\n").append(generatedHash).toString());
         contractRecord.setNegotiationId("negotiationid");
-        String newGeneratedHash=contractRecord.generateContractHash();
-        System.out.println("Contract XML\n" + contractRecord);
-        System.out.println("Generated Hash:\n" + newGeneratedHash);
+        String newGeneratedHash = contractRecord.generateContractHash();
+        System.out.println(new StringBuilder().append("Contract XML\n").append(contractRecord).toString());
+        System.out.println(new StringBuilder().append("Generated Hash:\n").append(newGeneratedHash).toString());
         Assert.assertNotEquals(generatedHash, newGeneratedHash);
     }
 

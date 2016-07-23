@@ -43,10 +43,11 @@ public class TransactionTransmissionResponseMessage {
 
     @Override
     public String toString() {
-        return "TransactionTransmissionResponseMessage{" +
-                "transactionId=" + transactionId +
-                ", transactionTransmissionStates=" + transactionTransmissionStates +
-                '}';
+        return new StringBuilder()
+                .append("TransactionTransmissionResponseMessage{")
+                .append("transactionId=").append(transactionId)
+                .append(", transactionTransmissionStates=").append(transactionTransmissionStates)
+                .append('}').toString();
     }
 
 }

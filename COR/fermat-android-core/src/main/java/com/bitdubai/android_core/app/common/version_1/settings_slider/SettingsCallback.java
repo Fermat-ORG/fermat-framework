@@ -7,5 +7,5 @@ import android.view.View;
  */
 public interface SettingsCallback<I> {
 
-    void onItemClickListener(View view,I item, int position,View... views);
+    void onItemClickListener(View view, I item, int position, View... views);
 }

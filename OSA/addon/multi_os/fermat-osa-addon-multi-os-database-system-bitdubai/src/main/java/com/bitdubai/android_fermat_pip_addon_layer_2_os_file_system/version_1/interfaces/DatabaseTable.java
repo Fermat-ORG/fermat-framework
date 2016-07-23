@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by ciencias on 01.02.15.
  */
 public interface DatabaseTable {
-    
+
 
     public DatabaseTableColumn newColumn(String name);
 
@@ -25,9 +25,9 @@ public interface DatabaseTable {
 
     public List<DatabaseTableFilter> getFilters();
 
-    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecord;
+    public void updateRecord(DatabaseTableRecord record) throws CantUpdateRecord;
 
-    public void insertRecord (DatabaseTableRecord record) throws CantInsertRecord;
+    public void insertRecord(DatabaseTableRecord record) throws CantInsertRecord;
 
     public void loadToMemory() throws CantLoadTableToMemory;
 
@@ -40,7 +40,6 @@ public interface DatabaseTable {
     public void setFilterOrder(String columnName, DatabaseFilterOrder direction);
 
     public void setFilterTop(String top);
-
 
 
 }

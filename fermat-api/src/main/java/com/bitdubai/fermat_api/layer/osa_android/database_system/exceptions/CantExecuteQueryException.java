@@ -6,32 +6,32 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions;
  */
 public class CantExecuteQueryException extends DatabaseSystemException {
 
-	private static final long serialVersionUID = 4831581407768860533L;
+    private static final long serialVersionUID = 4831581407768860533L;
 
-	public static final String DEFAULT_MESSAGE = "CAN'T EXECUTE QUERY";
+    public static final String DEFAULT_MESSAGE = "CAN'T EXECUTE QUERY";
 
-	public CantExecuteQueryException(final String message, final Exception cause, final String context, final String possibleReason) {
-		super(message, cause, context, possibleReason);
-	}
+    public CantExecuteQueryException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
+    }
 
-	public CantExecuteQueryException(final Exception cause, final String context, final String possibleReason) {
-		super(DEFAULT_MESSAGE, cause, context, possibleReason);
-	}
+    public CantExecuteQueryException(final Exception cause, final String context, final String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
 
-	public CantExecuteQueryException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
+    public CantExecuteQueryException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
 
-	public CantExecuteQueryException(final String message) {
-		this(message, null);
-	}
+    public CantExecuteQueryException(final String message) {
+        this(message, null);
+    }
 
-	public CantExecuteQueryException(final Exception exception) {
-		this(DEFAULT_MESSAGE, exception);
-		setStackTrace(exception.getStackTrace());
-	}
+    public CantExecuteQueryException(final Exception exception) {
+        this(DEFAULT_MESSAGE, exception);
+        setStackTrace(exception.getStackTrace());
+    }
 
-	public CantExecuteQueryException() {
-		this(DEFAULT_MESSAGE);
-	}
+    public CantExecuteQueryException() {
+        this(DEFAULT_MESSAGE);
+    }
 }

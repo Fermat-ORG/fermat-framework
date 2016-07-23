@@ -14,7 +14,7 @@ public class Owner implements Serializable {
     }
 
     public Owner(String ownerAppPublicKey) {
-        this.ownerAppPublicKey= ownerAppPublicKey;
+        this.ownerAppPublicKey = ownerAppPublicKey;
     }
 
     public String getOwnerAppPublicKey() {
@@ -27,6 +27,6 @@ public class Owner implements Serializable {
 
     @Override
     public String toString() {
-        return "ownerAppPublicKey='" + ownerAppPublicKey;
+        return new StringBuilder().append("ownerAppPublicKey='").append(ownerAppPublicKey).toString();
     }
 }

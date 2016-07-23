@@ -29,7 +29,9 @@ public class AppManagerServiceHelper {
     private boolean appsManagerBoundService;
     private FermatAppsManagerService fermatAppsManagerService;
 
-    /** Defines callbacks for service binding, passed to bindService() */
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
     private ServiceConnection appsManagerServiceConnection = new ServiceConnection() {
 
         @Override
@@ -40,9 +42,9 @@ public class AppManagerServiceHelper {
                 FermatAppsManagerService.AppManagerLocalBinder binder = (FermatAppsManagerService.AppManagerLocalBinder) service;
                 fermatAppsManagerService = binder.getService();
                 appsManagerBoundService = true;
-            }catch (Exception e){
+            } catch (Exception e) {
 //                e.printStackTrace();
-                Log.e(TAG,"Exception in onServiceConnected");
+                Log.e(TAG, "Exception in onServiceConnected");
             }
         }
 
@@ -61,8 +63,8 @@ public class AppManagerServiceHelper {
 
     }
 
-    public void unbindAppManagerService(){
-        if(appsManagerBoundService) {
+    public void unbindAppManagerService() {
+        if (appsManagerBoundService) {
             // Detach our existing connection.
             contextWeakReference.get().unbindService(appsManagerServiceConnection);
             appsManagerBoundService = false;
@@ -75,7 +77,7 @@ public class AppManagerServiceHelper {
     }
 
     public void clear() {
-        if(appsManagerBoundService){
+        if (appsManagerBoundService) {
             unbindAppManagerService();
         }
         contextWeakReference.clear();

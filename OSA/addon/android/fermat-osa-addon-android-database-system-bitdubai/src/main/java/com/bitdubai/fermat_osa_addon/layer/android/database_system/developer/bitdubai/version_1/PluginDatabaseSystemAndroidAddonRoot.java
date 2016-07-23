@@ -14,7 +14,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bit
  * This addon handles a layer of database representation.
  * Encapsulates all the necessary functions to manage the database , its tables and records.
  * For interfaces PluginDatabase the modules need to authenticate with their plugin ids
- *
+ * <p/>
  * Created by nattyco
  * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */

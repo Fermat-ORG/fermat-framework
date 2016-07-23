@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetMerchandiseTest {
 
     @Test
-    public void getMerchandise(){
+    public void getMerchandise() {
         FiatIndexImpl fiatIndex = mock(FiatIndexImpl.class);
         when(fiatIndex.getMerchandise()).thenReturn(MoneyType.CRYPTO);
         assertThat(fiatIndex.getMerchandise()).isNotNull();

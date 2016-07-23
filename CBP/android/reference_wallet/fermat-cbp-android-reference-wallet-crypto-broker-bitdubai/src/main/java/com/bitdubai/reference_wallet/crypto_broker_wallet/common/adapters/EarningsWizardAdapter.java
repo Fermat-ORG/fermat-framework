@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.EarningsWizardViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsWizardData;
@@ -26,7 +25,9 @@ public class EarningsWizardAdapter extends FermatAdapter<EarningsWizardData, Ear
     }
 
     @Override
-    protected int getCardViewResource() { return R.layout.cbw_wizard_earnings_item; }
+    protected int getCardViewResource() {
+        return R.layout.cbw_wizard_earnings_item;
+    }
 
     @Override
     protected void bindHolder(EarningsWizardViewHolder holder, EarningsWizardData data, int position) {

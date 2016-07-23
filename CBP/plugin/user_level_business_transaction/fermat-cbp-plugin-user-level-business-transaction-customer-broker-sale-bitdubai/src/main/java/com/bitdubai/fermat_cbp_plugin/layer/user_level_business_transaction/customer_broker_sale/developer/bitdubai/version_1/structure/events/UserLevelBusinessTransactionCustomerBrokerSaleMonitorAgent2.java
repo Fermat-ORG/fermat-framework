@@ -117,7 +117,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2(long sleepTime,
                                                                        TimeUnit timeUnit,
-                                                                       long initDelayTime,AbstractPlugin pluginRoot,
+                                                                       long initDelayTime, AbstractPlugin pluginRoot,
                                                                        CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
                                                                        PluginDatabaseSystem pluginDatabaseSystem,
                                                                        UUID pluginId,
@@ -280,7 +280,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
             }
 
             boolean isContract = openContractManager.isOpenContract(transactionInfo.getNegotiationId().toString());
-            if(transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)){
+            if (transactionInfo.getStatus().equals(NegotiationStatus.WAITING_FOR_CLOSING) && (!isContract)) {
 
                 openContractManager.openSaleContract(transactionInfo, marketExchangeRate);
 
@@ -322,16 +322,16 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(), timeToDelivery, "MM/dd/yyyy hh:mm a");
                     String dateDelivery = dateTimeZoneDelivery.getDate();
 
-                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(), getDateTimeUTC(), "MM/dd/yyyy hh:mm a");
                     String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
 
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
 //                            "\n - " + dateDelivery + " compareTo " + dateToday);
 
-                    if(dateDelivery.compareTo(dateToday) == 0){
+                    if (dateDelivery.compareTo(dateToday) == 0) {
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
 //                    if (getDateTimeUTC() >= timeToDelivery) {
 
@@ -552,16 +552,16 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(),timeToDelivery,"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneDelivery = new DateTimeZone(TimeZone.getDefault().getID(), timeToDelivery, "MM/dd/yyyy hh:mm a");
                     String dateDelivery = dateTimeZoneDelivery.getDate();
 
-                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(),getDateTimeUTC(),"MM/dd/yyyy hh:mm a");
+                    DateTimeZone dateTimeZoneToday = new DateTimeZone(TimeZone.getDefault().getID(), getDateTimeUTC(), "MM/dd/yyyy hh:mm a");
                     String dateToday = dateTimeZoneToday.getDate(TimeZone.getTimeZone("UTC"));
 
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +
 //                            "\n - " + dateDelivery + " compareTo " + dateToday);
 
-                    if(dateDelivery.compareTo(dateToday) == 0){
+                    if (dateDelivery.compareTo(dateToday) == 0) {
 //                    System.out.print("\n *** TIME ZONE NEGOTIATION: " + negotiationId + " ***" +getDateTimeUTC()+" >= "+timeToDelivery);
 //                    if (getDateTimeUTC() >= timeToDelivery) {
 
@@ -689,7 +689,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      * Se debe enviar un Broadcast para actualizar la UI
      *
      * @param brokerWalletPublicKey the broker wallet public key
-     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -738,7 +737,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      * @param brokerWalletPublicKey the broker wallet public key
      * @param contractSale          the sale contract information
      * @param negotiationId         the negotiation ID associated with the contract
-     *
      * @throws FermatException
      * @throws ParseException
      */
@@ -785,8 +783,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                         cryptoWalletPublicKey = WalletsPublicKeys.CCP_FERMAT_WALLET.getCode();
                         break;
                     default:
-                        throw new UnsupportedOperationException("The Crypto Restock operation is not supported for the currency " +
-                                cryptoCurrency.getFriendlyName());
+                        throw new UnsupportedOperationException(new StringBuilder().append("The Crypto Restock operation is not supported for the currency ").append(cryptoCurrency.getFriendlyName()).toString());
                 }
 
                 cryptoMoneyRestockManager.createTransactionRestock(
@@ -850,7 +847,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      *
      * @param valueFilter the value of the filter
      * @param columnValue the column name which is going to be queried
-     *
      * @return the filter object
      */
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
@@ -889,9 +885,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
      * Return the market exchange rate for the currency to sell vs USD
      *
      * @param customerCurrency the code of the currency to sell
-     *
      * @return the market exchange rate fot this currency vs USD
-     *
      * @throws CantGetExchangeRateException
      */
     private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {
@@ -949,13 +943,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
         throw new CantGetExchangeRateException();
     }
 
-    private long getDateTimeUTC(){
+    private long getDateTimeUTC() {
 
-        try{
+        try {
 
             return UniversalTime.getUTC().getTime();
 
-        } catch (CantGetUTCException e){
+        } catch (CantGetUTCException e) {
             System.out.print("Cant get Date UTC in User Level Business Transaction Customer Broker Purchase");
         }
 

@@ -43,7 +43,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-
 import com.bitdubai.fermat_bch_api.layer.crypto_network.manager.BlockchainManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
@@ -51,8 +50,6 @@ import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.Notifica
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-
-
 
 import java.util.UUID;
 
@@ -72,13 +69,13 @@ public class FermatSystemUtils {
 //    }
 
 
-
     /**
-     *  Return an instance of module manager
+     * Return an instance of module manager
+     *
      * @param pluginVersionReference
      * @return
      */
-    public static ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
+    public static ModuleManager getModuleManager(PluginVersionReference pluginVersionReference) {
         try {
             return FermatApplication.getInstance().getFermatSystem().getModuleManager(pluginVersionReference);
         } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
@@ -331,7 +328,8 @@ public class FermatSystemUtils {
     }
 
     /**
-     *  return Instance of cloud client
+     * return Instance of cloud client
+     *
      * @return
      */
 
@@ -382,9 +380,10 @@ public class FermatSystemUtils {
      */
 
     private static AndroidCoreModule androidCoreModule;
+
     public static AndroidCoreModule getAndroidCoreModule() throws CantCreateProxyException {
-        try{
-            if(androidCoreModule==null) {
+        try {
+            if (androidCoreModule == null) {
                 androidCoreModule = (AndroidCoreModule) FermatApplication.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(
                         new PluginVersionReference(
                                 Platforms.PLUG_INS_PLATFORM,
@@ -396,7 +395,7 @@ public class FermatSystemUtils {
                 );
             }
             return androidCoreModule;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
 //

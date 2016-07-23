@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetSpreadTest {
 
     @Test
-    public void setSpread(){
+    public void setSpread() {
         CryptoBrokerWalletSettingSpreadImpl cryptoBrokerWalletSettingSpread = mock(CryptoBrokerWalletSettingSpreadImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletSettingSpread).setSpread(Mockito.any(float.class));
     }

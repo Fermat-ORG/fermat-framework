@@ -147,7 +147,6 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     /**
      * @return the clauses that conform this negotiation
-     *
      * @throws CantGetListClauseException
      */
     @Override

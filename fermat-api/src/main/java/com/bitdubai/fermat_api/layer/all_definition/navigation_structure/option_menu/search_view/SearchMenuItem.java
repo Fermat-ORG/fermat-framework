@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.06.29..
  */
-public class SearchMenuItem extends OptionMenuItem implements  Serializable {
+public class SearchMenuItem extends OptionMenuItem implements Serializable {
 
     private String hint;
 

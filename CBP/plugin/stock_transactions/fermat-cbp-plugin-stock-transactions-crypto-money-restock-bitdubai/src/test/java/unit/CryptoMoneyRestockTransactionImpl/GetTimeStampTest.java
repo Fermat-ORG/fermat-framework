@@ -8,10 +8,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.sql.Timestamp;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by Jose Vilchez on 18/01/16.
@@ -20,7 +19,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class GetTimeStampTest {
 
     @Test
-    public void getTimeStamp(){
+    public void getTimeStamp() {
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = mock(CryptoMoneyRestockTransactionImpl.class);
         when(cryptoMoneyRestockTransaction.getTimeStamp()).thenReturn(new Timestamp(1));
         assertThat(cryptoMoneyRestockTransaction.getTimeStamp()).isNotNull();

@@ -81,8 +81,6 @@ public class CreateCryptoBrokerIdentityFragment
     boolean isGpsDialogEnable;
 
 
-
-
     private final TextWatcher textWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));
@@ -125,13 +123,13 @@ public class CreateCryptoBrokerIdentityFragment
         }
 
         try {
-            isGpsDialogEnable=true;
+            isGpsDialogEnable = true;
             settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             isGpsDialogEnable = settings.isGpsDialogEnabled();
         } catch (Exception e) {
             settings = new IdentityBrokerPreferenceSettings();
             settings.setGpsDialogEnabled(true);
-            isGpsDialogEnable=true;
+            isGpsDialogEnable = true;
         }
 
         turnGPSOn();
@@ -410,7 +408,7 @@ public class CreateCryptoBrokerIdentityFragment
                     IMAGE_MAX_SIZE) {
                 scale++;
             }
-            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+            Log.d("", new StringBuilder().append("scale = ").append(scale).append(", orig-width: ").append(o.outWidth).append(", orig-height: ").append(o.outHeight).toString());
 
             Bitmap b = null;
             in = getActivity().getContentResolver().openInputStream(uri);
@@ -425,7 +423,7 @@ public class CreateCryptoBrokerIdentityFragment
                 // resize to desired dimensions
                 int height = b.getHeight();
                 int width = b.getWidth();
-                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
+                Log.d("", new StringBuilder().append("1th scale operation dimenions - width: ").append(width).append(", height: ").append(height).toString());
 
                 double y = Math.sqrt(IMAGE_MAX_SIZE
                         / (((double) width) / height));
@@ -442,8 +440,7 @@ public class CreateCryptoBrokerIdentityFragment
             }
             in.close();
 
-            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
-                    b.getHeight());
+            Log.d("", new StringBuilder().append("bitmap size - width: ").append(b.getWidth()).append(", height: ").append(b.getHeight()).toString());
             return b;
         } catch (IOException e) {
             Log.e("", e.getMessage(), e);
@@ -527,6 +524,7 @@ public class CreateCryptoBrokerIdentityFragment
         }
 
     }
+
     public void turnOnGPSDialog() {
         try {
             PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)

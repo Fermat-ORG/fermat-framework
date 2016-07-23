@@ -303,7 +303,7 @@ public class ConnectionsTabFragment
     @Override
     public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-        if(isVisible) {
+        if (isVisible) {
             try {
                 offset = pos;
                 if (moduleManager.getSelectedActorIdentity() != null) {

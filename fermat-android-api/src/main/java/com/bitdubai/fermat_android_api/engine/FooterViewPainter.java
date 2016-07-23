@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 public interface FooterViewPainter {
 
 
-    ViewGroup addFooterViewContainer(LayoutInflater layoutInflater,ViewGroup footer_container);
+    ViewGroup addFooterViewContainer(LayoutInflater layoutInflater, ViewGroup footer_container);
 
     View addNavigationViewFooterElementVisible(LayoutInflater layoutInflater, FrameLayout slide_container);
 

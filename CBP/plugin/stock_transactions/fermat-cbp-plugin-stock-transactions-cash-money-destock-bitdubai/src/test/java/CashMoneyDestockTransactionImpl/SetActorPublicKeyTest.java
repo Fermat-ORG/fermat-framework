@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class SetActorPublicKeyTest {
     @Test
-    public void setActorPublicKey(){
+    public void setActorPublicKey() {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cashMoneyDestockTransaction).setActorPublicKey(Mockito.any(String.class));
     }

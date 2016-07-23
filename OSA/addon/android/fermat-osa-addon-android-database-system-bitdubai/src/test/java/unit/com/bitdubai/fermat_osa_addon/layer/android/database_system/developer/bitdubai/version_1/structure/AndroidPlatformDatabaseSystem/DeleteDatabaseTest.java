@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPlatformDatabaseSystem;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPluginDatabaseSystem;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +12,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.util.UUID;
 
 import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
@@ -37,31 +34,29 @@ public class DeleteDatabaseTest {
 
 
     @Before
-    public void setUpContext(){
+    public void setUpContext() {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
 
     }
 
     @Test
-    public void deleteDatabaseTest_ThrowCantOpenDatabaseException() throws Exception{
-        testDatabase.createDatabase( testDatabaseName);
+    public void deleteDatabaseTest_ThrowCantOpenDatabaseException() throws Exception {
+        testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).deleteDatabase("db");
 
         assertThat(caughtException()).isInstanceOf(CantOpenDatabaseException.class);
     }
 
 
-
     @Test
-    public void deleteDatabaseTest_deleteOk() throws Exception{
-        testDatabase.createDatabase( testDatabaseName);
+    public void deleteDatabaseTest_deleteOk() throws Exception {
+        testDatabase.createDatabase(testDatabaseName);
 
         catchException(testDatabase).deleteDatabase(testDatabaseName);
         assertThat(caughtException()).isNull();
 
     }
-
 
 
 }

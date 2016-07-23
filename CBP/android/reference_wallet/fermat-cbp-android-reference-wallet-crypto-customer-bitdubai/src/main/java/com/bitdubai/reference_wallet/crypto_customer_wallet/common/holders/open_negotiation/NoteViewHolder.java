@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
- *Created by Yordin Alayn on 23.01.16.
+ * Created by Yordin Alayn on 23.01.16.
  * Based in NoteViewHolder of negotiation_details by nelson
  */
 public class NoteViewHolder extends FermatViewHolder {

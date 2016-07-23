@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class getTransactionId {
 
     @Test
-    public void getTransactionId(){
+    public void getTransactionId() {
         CustomerBrokerPurchaseImpl customerBrokerPurchaseImpl = mock(CustomerBrokerPurchaseImpl.class);
         when(customerBrokerPurchaseImpl.getTransactionId()).thenReturn(new String());
         assertThat(customerBrokerPurchaseImpl.getTransactionId()).isNotNull();

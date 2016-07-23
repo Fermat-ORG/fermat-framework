@@ -13,8 +13,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 public class CryptoBrokerWalletResourceSearcher extends ResourceSearcher {
 
 
-
-    public int obtainResDrawable(Context context,int id){
+    public int obtainResDrawable(Context context, int id) {
         int res = 0;
         switch (id) {
             case FragmentsCommons.CONTRACT_HISTORY_FILTER_OPTION_MENU_ID:

@@ -26,7 +26,7 @@ public class GetPendingTransactionsTest {
     private final Specialist specialist = Specialist.UNKNOWN_SPECIALIST;
 
     @Test
-    public void getPendingTransactions() throws Exception{
+    public void getPendingTransactions() throws Exception {
 
         List<Transaction<NegotiationTransmission>> pendingTransaction = new ArrayList<>();
 

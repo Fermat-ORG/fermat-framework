@@ -18,9 +18,10 @@ public class ResourceLocationSearcherHelper {
 
     private static final String TAG = "ResourceLocationHelper";
 
-    public static int obtainRes(int resType,Context context,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+    public static int obtainRes(int resType, Context context, int resourceId, SourceLocation sourceLocation, String publickKeyOwnerOfSource) {
         ResourceSearcher resourceSearcher = switchType(context, sourceLocation, publickKeyOwnerOfSource);
-        if(resourceSearcher==null) throw new IllegalArgumentException("ResourceSearcher not found, App owner: "+publickKeyOwnerOfSource+", SourceLocation: "+sourceLocation+", resType: "+resType+", resourceId: "+resourceId+",\n Add in the appConnection this functionality");
+        if (resourceSearcher == null)
+            throw new IllegalArgumentException(new StringBuilder().append("ResourceSearcher not found, App owner: ").append(publickKeyOwnerOfSource).append(", SourceLocation: ").append(sourceLocation).append(", resType: ").append(resType).append(", resourceId: ").append(resourceId).append(",\n Add in the appConnection this functionality").toString());
         return resourceSearcher.obtainRes(resType, context, resourceId);
     }
 
@@ -28,18 +29,18 @@ public class ResourceLocationSearcherHelper {
 //        return switchType(context, sourceLocation, publickKeyOwnerOfSource).obtainRes(ResourceSearcher.UNKNOWN_TYPE, context, resourceId);
 //    }
 
-    public static View obtainView(Context context,FermatView fermatView){
+    public static View obtainView(Context context, FermatView fermatView) {
         return switchType(context, fermatView.getSourceLocation(), (fermatView.getOwner() != null) ? fermatView.getOwner().getOwnerAppPublicKey() : null).obtainView(context, fermatView);
     }
 
-    public static Drawable obtainDrawable(Context context,FermatDrawable fermatDrawable){
-        return switchType(context,fermatDrawable.getSourceLocation(),(fermatDrawable.getOwner()!=null)?fermatDrawable.getOwner().getOwnerAppPublicKey():null).obtainDrawable(context, fermatDrawable);
+    public static Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
+        return switchType(context, fermatDrawable.getSourceLocation(), (fermatDrawable.getOwner() != null) ? fermatDrawable.getOwner().getOwnerAppPublicKey() : null).obtainDrawable(context, fermatDrawable);
     }
 
 
-    private static ResourceSearcher switchType(Context context,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+    private static ResourceSearcher switchType(Context context, SourceLocation sourceLocation, String publickKeyOwnerOfSource) {
         ResourceSearcher resourceSearcher = null;
-        switch (sourceLocation){
+        switch (sourceLocation) {
             case FERMAT_FRAMEWORK:
                 resourceSearcher = ResManager.getInstance();
                 break;

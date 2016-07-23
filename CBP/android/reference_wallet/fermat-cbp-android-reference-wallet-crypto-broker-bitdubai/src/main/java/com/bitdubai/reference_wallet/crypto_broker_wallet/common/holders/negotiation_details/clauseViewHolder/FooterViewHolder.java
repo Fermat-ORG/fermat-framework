@@ -9,7 +9,8 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
- *Created by Nelson Ramirez
+ * Created by Nelson Ramirez
+ *
  * @since 17-02-2016.
  */
 
@@ -40,7 +41,12 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
             listener.onSendButtonClicked();
         }
     }
-    public void HideButtons(){ addNoteButton.setVisibility(View.GONE); sendButton.setVisibility(View.GONE); }
+
+    public void HideButtons() {
+        addNoteButton.setVisibility(View.GONE);
+        sendButton.setVisibility(View.GONE);
+    }
+
     public void setListener(OnFooterButtonsClickListener listener) {
         this.listener = listener;
     }
@@ -51,7 +57,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         void onSendButtonClicked();
     }
 
-    public void HideButtonsWalletUser(){
+    public void HideButtonsWalletUser() {
         addNoteButton.setVisibility(View.GONE);
         sendButton.setVisibility(View.GONE);
         addWarningWalletUser.setVisibility(View.VISIBLE);

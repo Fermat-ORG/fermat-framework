@@ -15,7 +15,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 public class WalletViewHolder extends SingleDeletableItemViewHolder<CBPInstalledWallet> {
     private FermatTextView title;
     private FermatTextView subTitle;
-
+    StringBuilder stringBuilder;
 
     public WalletViewHolder(View itemView) {
         super(itemView);
@@ -27,7 +27,12 @@ public class WalletViewHolder extends SingleDeletableItemViewHolder<CBPInstalled
     @Override
 //    public void bind(InstalledWallet data) {
     public void bind(CBPInstalledWallet data) {
-        subTitle.setText(data.getWalletName()+" ( "+data.getCurrency().getCode()+" )");
+        stringBuilder = new StringBuilder();
+        stringBuilder.append(data.getWalletName())
+                .append(" ( ")
+                .append(data.getCurrency().getCode())
+                .append(" )");
+        subTitle.setText(stringBuilder.toString());
         title.setText(getPlatformTitle(data.getPlatform()).toUpperCase());
     }
 
