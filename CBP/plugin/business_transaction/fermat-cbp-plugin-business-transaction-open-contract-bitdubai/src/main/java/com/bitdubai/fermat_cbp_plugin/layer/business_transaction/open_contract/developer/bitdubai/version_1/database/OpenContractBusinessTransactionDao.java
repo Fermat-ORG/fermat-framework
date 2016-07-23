@@ -180,6 +180,22 @@ public class OpenContractBusinessTransactionDao {
 
     }
 
+    public String getContractHast(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            return getValue(
+                    contractHash,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+        }catch (Exception e){
+            pluginRoot.reportError(
+
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
+
+    }
+
     public String getNegotiationId(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         try{
             return getValue(
@@ -195,15 +211,33 @@ public class OpenContractBusinessTransactionDao {
         }
     }
 
+//    public boolean isContractHashExists(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+//        try{
+////            String stringFromDatabase=getContractXML(contractHash);
+//            String stringFromDatabase=getContractHast(contractHash);
+//            return stringFromDatabase!=null;
+//        }catch (Exception e){
+//            pluginRoot.reportError(
+//
+//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                    e);
+//            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+//        }
+//    }
     public boolean isContractHashExists(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            String stringFromDatabase=getContractXML(contractHash);
-            return stringFromDatabase!=null;
-        }catch (Exception e){
-            pluginRoot.reportError(
-                    
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    e);
+        try {
+            DatabaseTable table = getDatabaseContractTable();
+            if (table == null) {
+                throw new UnexpectedResultReturnedFromDatabaseException("Cant check if Open contract tablet exists");
+            }
+            table.addStringFilter(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME, contractHash, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+        } catch (CantLoadTableToMemoryException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        } catch (Exception e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }
@@ -529,7 +563,7 @@ public class OpenContractBusinessTransactionDao {
 //
 //        }catch (Exception e){
 //            pluginRoot.reportError(
-//                    
+//
 //                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
 //                    e);
 //            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");

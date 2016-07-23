@@ -2,13 +2,14 @@ package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,10 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
@@ -40,7 +37,6 @@ import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.makeText;
 
@@ -62,7 +58,6 @@ public class CryptoCustomerIdentityListFragment
     private CryptoCustomerIdentityListFilter filter;
     private PresentationDialog presentationDialog;
 
-    private ExecutorService executor;
     private View layout;
 
     public static CryptoCustomerIdentityListFragment newInstance() {
@@ -72,8 +67,9 @@ public class CryptoCustomerIdentityListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onRefreshBroker();
+
         cleanSessionData();
+
         onRefresh();
     }
 
@@ -294,83 +290,5 @@ public class CryptoCustomerIdentityListFragment
 
         if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null)
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
-    }
-
-    /**
-     * Checking if a broker profile is already created before a customer is created
-     */
-    public void onRefreshBroker() {
-        try{
-            final FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreDataAsyncBroker();
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    if (isAttached) {
-                        if (result != null &&
-                                result.length > 0) {
-                            if (getActivity() != null) {
-                                existentBrokerIdentityDialog();
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    try{
-                        worker.shutdownNow();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            worker.execute();
-        }catch (Exception ignore){
-            if (executor != null) {
-                executor.shutdown();
-                executor = null;
-            }
-        }
-    }
-
-    public void existentBrokerIdentityDialog() {
-        try {
-            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
-                    .setBody(R.string.cbp_customer_identity_existent_broker)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setCheckButtonAndTextVisible(0)
-                    .setIsCheckEnabled(false)
-                    .setBannerRes(R.drawable.banner_identity_customer)
-                    .setVIewColor(R.color.ccc_color_dialog_identity)
-                    .build();
-            pd.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    getActivity().onBackPressed();
-                }
-            });
-            pd.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<CryptoBrokerIdentityInformation> getMoreDataAsyncBroker() {
-        List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
-        try {
-            data = appSession.getModuleManager().listIdentities(0, 0);
-        } catch (CantListCryptoBrokersException ex) {
-            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        }
-        return data;
     }
 }

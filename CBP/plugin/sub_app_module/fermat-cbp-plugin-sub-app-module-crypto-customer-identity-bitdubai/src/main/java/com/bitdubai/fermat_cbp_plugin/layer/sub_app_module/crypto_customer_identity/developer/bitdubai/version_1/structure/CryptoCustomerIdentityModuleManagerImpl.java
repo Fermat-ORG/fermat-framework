@@ -10,19 +10,13 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
@@ -46,21 +40,18 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
     private CryptoCustomerIdentityManager identityManager;
     private CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot;
     private final LocationManager locationManager;
-    private CryptoBrokerIdentityManager brokerIdentityManager;
 
 
     public CryptoCustomerIdentityModuleManagerImpl(CryptoCustomerIdentityManager identityManager,
                                                    PluginFileSystem pluginFileSystem,
                                                    UUID pluginId,
                                                    CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot,
-                                                   LocationManager locationManager,
-                                                   CryptoBrokerIdentityManager brokerIdentityManager) {
+                                                   LocationManager locationManager) {
         super(pluginFileSystem, pluginId);
 
         this.identityManager = identityManager;
         this.pluginRoot = pluginRoot;
         this.locationManager = locationManager;
-        this.brokerIdentityManager = brokerIdentityManager;
     }
 
     @Override
@@ -143,22 +134,4 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
     public Location getLocation() throws CantGetDeviceLocationException {
         return locationManager.getLocation();
     }
-
-    @Override
-    public List<CryptoBrokerIdentityInformation> listIdentities(int max, int offset) throws CantListCryptoBrokersException {
-        try {
-            List<CryptoBrokerIdentityInformation> cryptoBrokers = new ArrayList<>();
-            for(CryptoBrokerIdentity identity : this.brokerIdentityManager.listIdentitiesFromCurrentDeviceUser()){
-                cryptoBrokers.add(converIdentityToInformation(identity));
-            }
-            return cryptoBrokers;
-        } catch (CantListCryptoBrokerIdentitiesException e) {
-            throw new CantListCryptoBrokersException(CantListCryptoBrokersException.DEFAULT_MESSAGE, e, "","");
-        }
-    }
-
-    private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity){
-        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel(), identity.getAccuracy(), identity.getFrequency());
-    }
-
 }
