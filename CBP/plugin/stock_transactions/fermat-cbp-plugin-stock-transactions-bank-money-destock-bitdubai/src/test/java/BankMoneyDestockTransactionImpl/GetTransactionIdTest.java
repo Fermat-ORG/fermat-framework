@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetTransactionIdTest {
     @Test
-    public void getTransactionId() throws Exception{
+    public void getTransactionId() throws Exception {
         BankMoneyDestockTransactionImpl bankMoneyDestockTransaction = mock(BankMoneyDestockTransactionImpl.class);
         when(bankMoneyDestockTransaction.getTransactionId()).thenReturn(UUID.randomUUID());
         assertThat(bankMoneyDestockTransaction.getTransactionId()).isNotNull();

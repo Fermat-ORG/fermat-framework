@@ -120,7 +120,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.connectionId = null;
         this.location = exposingData.getLocation();
         this.cryptoBrokerIdentityExtraData = exposingData.getCryptoBrokerIdentityExtraData();
-        if(exposingData.getProfileStatus() != null)
+        if (exposingData.getProfileStatus() != null)
             this.profileStatus = exposingData.getProfileStatus();
     }
 
@@ -181,13 +181,18 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     @Override
     public String toString() {
-        return "CryptoBrokerCommunitySubAppModuleInformation{" +
-                "publicKey='" + publicKey + '\'' +
-                ", alias='" + alias + '\'' +
-                ", connectionState='" + connectionState + '\'' +
-                ", connectionId='" + connectionId + '\'' +
-                ", image=" + (image != null) +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerCommunitySubAppModuleInformation{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", alias='").append(alias)
+                .append('\'')
+                .append(", connectionState='").append(connectionState)
+                .append('\'')
+                .append(", connectionId='").append(connectionId)
+                .append('\'')
+                .append(", image=").append(image != null)
+                .append('}').toString();
     }
 
     @Override
@@ -207,7 +212,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     @Override
     public CryptoBrokerIdentityExtraData getCryptoBrokerIdentityExtraData() {
-        if(cryptoBrokerIdentityExtraData==null){
+        if (cryptoBrokerIdentityExtraData == null) {
             //Default CryptoBrokerIdentityExtraData
             this.cryptoBrokerIdentityExtraData = new CryptoBrokerIdentityExtraData(
                     CryptoCurrency.BITCOIN,

@@ -25,22 +25,40 @@ public class ContractSaleRecord implements CustomerBrokerContractSale, Serializa
     private Boolean nearExpirationDatetime;
     private String cancelReason;
 
-    public String getContractId() { return this.contractID; }
+    public String getContractId() {
+        return this.contractID;
+    }
 
-    public String getNegotiatiotId() { return this.negotiationID; }
+    public String getNegotiatiotId() {
+        return this.negotiationID;
+    }
 
-    public String getPublicKeyCustomer() { return this.publicKeyCustomer; }
+    public String getPublicKeyCustomer() {
+        return this.publicKeyCustomer;
+    }
 
-    public String getPublicKeyBroker() { return this.publicKeyBroker; }
+    public String getPublicKeyBroker() {
+        return this.publicKeyBroker;
+    }
 
-    public Long getDateTime() { return this.dateTime; }
+    public Long getDateTime() {
+        return this.dateTime;
+    }
 
-    public ContractStatus getStatus() { return this.status; }
+    public ContractStatus getStatus() {
+        return this.status;
+    }
 
-    public Collection<ContractClause> getContractClause() { return clause; }
+    public Collection<ContractClause> getContractClause() {
+        return clause;
+    }
 
-    public Boolean getNearExpirationDatetime() { return this.nearExpirationDatetime; }
+    public Boolean getNearExpirationDatetime() {
+        return this.nearExpirationDatetime;
+    }
 
-    public String getCancelReason() { return this.cancelReason; }
+    public String getCancelReason() {
+        return this.cancelReason;
+    }
 
 }

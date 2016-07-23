@@ -5,7 +5,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -21,7 +20,7 @@ public class GetSenderTypeTest {
     private PlatformComponentType platformComponentType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
 
     @Test
-    public void getSenderType() throws Exception{
+    public void getSenderType() throws Exception {
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getSenderType()).thenReturn(platformComponentType);
         assertThat(businessTransactionMetadataRecord.getSenderType()).isNotNull();

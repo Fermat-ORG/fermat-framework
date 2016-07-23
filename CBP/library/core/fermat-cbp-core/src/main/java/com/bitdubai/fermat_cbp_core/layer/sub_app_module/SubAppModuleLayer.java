@@ -30,7 +30,7 @@ public class SubAppModuleLayer extends AbstractLayer {
             registerPlugin(new CryptoCustomerCommunityPluginSubsystem());
             registerPlugin(new CryptoCustomerIdentityPluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

@@ -71,7 +71,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private List<ContractDetail> contractInformation;
     private ContractBasicInformation data;
 
-    private NumberFormat numberFormat= DecimalFormat.getInstance();
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
     // UI
@@ -161,7 +161,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
         final String paymentCurrency = data.getPaymentCurrency();
 
 
-
         final String merchandise = data.getMerchandise();
         final String exchangeRateAmount = fixFormat(String.valueOf(data.getExchangeRateAmount()));
         final Date lastUpdate = new Date(data.getLastUpdate());
@@ -193,51 +192,52 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                 String merchandisePaymentMethod = "MK";
                 MoneyType customerPaymentMethodType = MoneyType.BANK;
                 MoneyType brokerPaymentMethodType = MoneyType.BANK;
-                try{
+                try {
                     Collection<Clause> clauses = moduleManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
 
                     //Extract info from clauses
-                    for(Clause clause : clauses)
-                    {
-                        if(clause.getType() == ClauseType.EXCHANGE_RATE)
+                    for (Clause clause : clauses) {
+                        if (clause.getType() == ClauseType.EXCHANGE_RATE)
                             exchangeRate = clause.getValue();
 
-                        if(clause.getType() == ClauseType.BROKER_CURRENCY){
+                        if (clause.getType() == ClauseType.BROKER_CURRENCY) {
                             try {
-                                if(FiatCurrency.codeExists(clause.getValue()))
+                                if (FiatCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
-                                else if(CryptoCurrency.codeExists(clause.getValue()))
+                                else if (CryptoCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
-                            }catch(Exception e) {
+                            } catch (Exception e) {
                                 paymentCurrency = clause.getValue();
                             }
                         }
-                        if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
+                        if (clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
                             paymentAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD){
-                            merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                        if (clause.getType() == ClauseType.BROKER_PAYMENT_METHOD) {
+                            merchandisePaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                             brokerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
-                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
+                        if (clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
                             try {
                                 if (FiatCurrency.codeExists(clause.getValue()))
                                     merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
                                 else if (CryptoCurrency.codeExists(clause.getValue()))
                                     merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
-                            }catch(Exception e) {
+                            } catch (Exception e) {
                                 merchandiseCurrency = clause.getValue();
                             }
                         }
-                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
+                        if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
                             merchandiseAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD){
+                        if (clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD) {
                             paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                             customerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
 
                     }
 
-                }catch(Exception e) {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
 
                 long paymentSubmitDate = moduleManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
@@ -265,7 +265,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentSubmitDate,customerPaymentMethodType);
+                        paymentSubmitDate, customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
@@ -277,7 +277,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentAckDate,customerPaymentMethodType);
+                        paymentAckDate, customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
@@ -289,7 +289,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseSubmitDate,brokerPaymentMethodType);
+                        merchandiseSubmitDate, brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
@@ -301,7 +301,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseAckDate,brokerPaymentMethodType);
+                        merchandiseAckDate, brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -354,12 +354,12 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     }
 
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -370,14 +370,14 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

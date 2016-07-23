@@ -12,14 +12,14 @@ public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
     private final int mVerticalSpaceHeight;
     private final int sidesSpace;
 
-    public VerticalSpaceItemDecoration(int mVerticalSpaceHeight,int sidesSpace) {
+    public VerticalSpaceItemDecoration(int mVerticalSpaceHeight, int sidesSpace) {
         this.mVerticalSpaceHeight = mVerticalSpaceHeight;
         this.sidesSpace = sidesSpace;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-            RecyclerView.State state) {
+                               RecyclerView.State state) {
         outRect.bottom = mVerticalSpaceHeight;
         outRect.right = sidesSpace;
         outRect.left = sidesSpace;

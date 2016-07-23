@@ -1,12 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.support.v4.graphics.ColorUtils;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;

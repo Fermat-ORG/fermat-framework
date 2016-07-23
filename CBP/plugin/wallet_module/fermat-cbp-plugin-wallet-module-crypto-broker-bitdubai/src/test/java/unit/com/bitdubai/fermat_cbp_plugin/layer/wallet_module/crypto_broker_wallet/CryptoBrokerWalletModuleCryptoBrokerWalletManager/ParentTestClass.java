@@ -43,7 +43,7 @@ import static org.mockito.Mockito.spy;
 public class ParentTestClass {
     protected CryptoBrokerWalletModuleManager moduleManagerSpy;
 
-    protected void setUp() throws Exception{
+    protected void setUp() throws Exception {
         moduleManagerSpy = spy(new CryptoBrokerWalletModuleCryptoBrokerWalletManager(
                 walletManagerManager,
                 cryptoBrokerWalletManager,

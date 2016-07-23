@@ -50,7 +50,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetEarningsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>,ResourceProviderManager>
+public class WizardPageSetEarningsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<EarningsWizardData> {
 
     // Constants
@@ -104,7 +104,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
             currencyEarningWallet = new HashMap<>();
 
             for (EarningsWizardData EP : _earningDataList) {
-                tempS = EP.getEarningCurrency().getCode() + " - " + EP.getLinkedCurrency().getCode();
+                tempS = new StringBuilder().append(EP.getEarningCurrency().getCode()).append(" - ").append(EP.getLinkedCurrency().getCode()).toString();
                 if (!temp.contains(tempS)) {
                     temp.add(tempS);
                     earningDataList.add(EP);
@@ -193,7 +193,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
 
     @Override
     public void onItemClickListener(EarningsWizardData data, int position) {
-        earningsWalletClicked(data,position);
+        earningsWalletClicked(data, position);
     }
 
     @Override
@@ -207,7 +207,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
         if (data.isChecked())
             data.clearWalletInfo();
 
-        //Otherwise show dialog and assign a wallet
+            //Otherwise show dialog and assign a wallet
         else
             showWalletsDialog(data, position);
 
@@ -339,8 +339,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
                         Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
-            }
-            else
+            } else
                 Log.e(TAG, ex.getMessage(), ex);
         }
 

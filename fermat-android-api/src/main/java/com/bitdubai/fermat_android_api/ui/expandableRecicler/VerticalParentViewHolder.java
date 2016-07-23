@@ -8,11 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-
 /**
  * Custom parent ViewHolder. Any views should be found and set to public variables here to be
  * referenced in your custom ExpandableRecyclerAdapter later.
- *
+ * <p/>
  * Must extend ParentViewHolder
  *
  * @author Ryan Brooks

@@ -20,22 +20,22 @@ public class SettingsAdapter extends FermatAdapterImproved<SettingsItem, Setting
     private SettingsCallback settingsCallback;
 
     public SettingsAdapter(Context context) {
-            super(context);
-            tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
-        }
+        super(context);
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+    }
 
-        public SettingsAdapter(Context context, List<SettingsItem> dataSet, SettingsCallback settingsCallback) {
-            super(context, dataSet);
-            this.settingsCallback = settingsCallback;
-            tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
-        }
+    public SettingsAdapter(Context context, List<SettingsItem> dataSet, SettingsCallback settingsCallback) {
+        super(context, dataSet);
+        this.settingsCallback = settingsCallback;
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+    }
 
 
-        @Override
-        protected SettingsHolder createHolder(View itemView, int type) {
-            SettingsHolder fermatAppHolder = new SettingsHolder(itemView,type);
-            return fermatAppHolder;
-        }
+    @Override
+    protected SettingsHolder createHolder(View itemView, int type) {
+        SettingsHolder fermatAppHolder = new SettingsHolder(itemView, type);
+        return fermatAppHolder;
+    }
 
     @Override
     protected int getCardViewResource(int type) {
@@ -43,22 +43,22 @@ public class SettingsAdapter extends FermatAdapterImproved<SettingsItem, Setting
     }
 
 
-        @Override
-        protected void bindHolder(final SettingsHolder holder, final SettingsItem data, final int position) {
+    @Override
+    protected void bindHolder(final SettingsHolder holder, final SettingsItem data, final int position) {
 
-            holder.getText().setText(data.getText());
-            holder.getText().setFont(FontType.CAVIAR_DREAMS);
-            holder.getSubText().setText(data.getSubText());
-            holder.getImg().setBackgroundResource(data.getImgRes());
+        holder.getText().setText(data.getText());
+        holder.getText().setFont(FontType.CAVIAR_DREAMS);
+        holder.getSubText().setText(data.getSubText());
+        holder.getImg().setBackgroundResource(data.getImgRes());
 
-            holder.getImg().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    settingsCallback.onItemClickListener(view,data, position,holder.getSubText());
-                }
-            });
+        holder.getImg().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingsCallback.onItemClickListener(view, data, position, holder.getSubText());
+            }
+        });
 
-        }
+    }
 
 
     public void setClickCallback(SettingsCallback settingsCallback) {

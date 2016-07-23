@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_osa_android_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.AndroidCoreUtils;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_osa_android_core.layer.system.SystemLayer;
 
 /**

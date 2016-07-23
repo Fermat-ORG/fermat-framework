@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException</code>
  * is thrown when there is an error trying to list crypto brokers.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  */
 public class CantListCryptoBrokersException extends FermatException {

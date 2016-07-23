@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.dev
 public class ActorConnectionSearch extends CryptoCustomerActorConnectionSearch {
 
     public ActorConnectionSearch(final CryptoCustomerLinkedActorIdentity actorIdentity,
-                                 final CryptoCustomerActorConnectionDao dao          ) {
+                                 final CryptoCustomerActorConnectionDao dao) {
 
         super(actorIdentity, dao);
     }

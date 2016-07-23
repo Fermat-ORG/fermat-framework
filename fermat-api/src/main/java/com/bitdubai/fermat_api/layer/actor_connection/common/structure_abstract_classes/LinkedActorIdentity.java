@@ -10,9 +10,9 @@ import java.io.Serializable;
 /**
  * The abstract class <code>LinkedActorIdentity</code>
  * represents an actor identity.
- *
+ * <p/>
  * An Actor Identity contains all the information related with the identity which is connected with other actors.
- *
+ * <p/>
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/11/2015.
  *
@@ -20,7 +20,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class LinkedActorIdentity implements Serializable{
+public abstract class LinkedActorIdentity implements Serializable {
 
     private final String publicKey;
     private final Actors actorType;
@@ -51,10 +51,12 @@ public abstract class LinkedActorIdentity implements Serializable{
 
     @Override
     public String toString() {
-        return "LinkedActorIdentity{" +
-                "publicKey='" + publicKey + '\'' +
-                ", actorType=" + actorType +
-                '}';
+        return new StringBuilder()
+                .append("LinkedActorIdentity{")
+                .append("publicKey='").append(publicKey)
+                .append('\'')
+                .append(", actorType=").append(actorType)
+                .append('}').toString();
     }
 
 }

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetPriceReferenceTest {
 
     @Test
-    public void getPriceReference(){
+    public void getPriceReference() {
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
         when(cryptoBrokerStockTransaction.getPriceReference()).thenReturn(BigDecimal.ONE);
         assertThat(cryptoBrokerStockTransaction.getPriceReference()).isNotNull();

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetRunningBookBalanceTest {
 
     @Test
-    public void getRunningBookBalance(){
+    public void getRunningBookBalance() {
         CryptoBrokerStockTransactionRecordImpl cryptoBrokerStockTransactionRecord = mock(CryptoBrokerStockTransactionRecordImpl.class);
         when(cryptoBrokerStockTransactionRecord.getRunningBookBalance()).thenReturn(BigDecimal.ONE);
         assertThat(cryptoBrokerStockTransactionRecord.getRunningBookBalance()).isNotNull();

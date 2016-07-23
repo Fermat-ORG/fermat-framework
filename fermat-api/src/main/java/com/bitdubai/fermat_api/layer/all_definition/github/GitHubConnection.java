@@ -25,7 +25,7 @@ import java.io.StringWriter;
 import java.util.Properties;
 
 /**
- *  Class used for Fermat connection with Github
+ * Class used for Fermat connection with Github
  */
 
 public class GitHubConnection {
@@ -39,7 +39,7 @@ public class GitHubConnection {
     GHRepository ghRepository;
 
     public GitHubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        mainRepository="furszy/fermat";
+        mainRepository = "furszy/fermat";
         setUpConnection();
     }
 
@@ -53,11 +53,11 @@ public class GitHubConnection {
         properties = new Properties();
         properties.setProperty("login", "MALOTeam");
         properties.setProperty("password", "fermat123456");
-        try{
+        try {
             String user = "MALOTeam";
             String password = "fermat123456";
             String vec[] = mainRepository.split("/");
-            repo = new RepositoryId(vec[0],vec[1]);
+            repo = new RepositoryId(vec[0], vec[1]);
             client = new GitHubClient();
             client.setCredentials(user, password);
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
@@ -68,14 +68,14 @@ public class GitHubConnection {
         }
     }
 
-    private void setUpConnection(String user,String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+    private void setUpConnection(String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         properties = new Properties();
         properties.setProperty("login", user);
         properties.setProperty("password", password);
-        try{
+        try {
 
             String vec[] = mainRepository.split("/");
-            repo = new RepositoryId(vec[0],vec[1]);
+            repo = new RepositoryId(vec[0], vec[1]);
             client = new GitHubClient();
             client.setCredentials(user, password);
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
@@ -88,8 +88,7 @@ public class GitHubConnection {
     }
 
     /**
-     *
-     *  Get file from main repository
+     * Get file from main repository
      *
      * @param path
      * @return
@@ -98,7 +97,7 @@ public class GitHubConnection {
 
     public String getFile(String path) throws IOException {
 
-        GHContent ghContent= ghRepository.getFileContent(path);
+        GHContent ghContent = ghRepository.getFileContent(path);
 
         InputStream inputStream = ghContent.read();
 
@@ -110,8 +109,7 @@ public class GitHubConnection {
     }
 
     /**
-     *
-     *  Get image from main repository
+     * Get image from main repository
      *
      * @param path
      * @return
@@ -119,7 +117,7 @@ public class GitHubConnection {
      */
     public byte[] getImage(String path) throws IOException {
 
-        GHContent ghContent= ghRepository.getFileContent(path);
+        GHContent ghContent = ghRepository.getFileContent(path);
         InputStream inputStream = ghContent.read();
         BufferedInputStream in = new BufferedInputStream(inputStream);
         ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
@@ -135,8 +133,7 @@ public class GitHubConnection {
 
 
     /**
-     *
-     *  Push image file to github repository
+     * Push image file to github repository
      *
      * @param path
      * @param commitContent
@@ -151,8 +148,8 @@ public class GitHubConnection {
             contents.setName(commitMessage);
             contents.setMessage(commitMessage);
             contents.setPath(path);
-            client.put("/repos/" + repo.generateId() + "/contents/" + path, contents, Contents.class);
-        }catch (JsonParseException e){
+            client.put(new StringBuilder().append("/repos/").append(repo.generateId()).append("/contents/").append(path).toString(), contents, Contents.class);
+        } catch (JsonParseException e) {
             System.out.println("creado");
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -160,9 +157,7 @@ public class GitHubConnection {
     }
 
     /**
-     *
-     *  Push text file to github repository
-     *
+     * Push text file to github repository
      *
      * @param path
      * @param commitContent
@@ -178,8 +173,8 @@ public class GitHubConnection {
             contents.setName(commitMessage);
             contents.setMessage(commitMessage);
             contents.setPath(path);
-            client.put("/repos/" + repo.generateId() + "/contents/" + path, contents, Contents.class);
-        }catch (JsonParseException e){
+            client.put(new StringBuilder().append("/repos/").append(repo.generateId()).append("/contents/").append(path).toString(), contents, Contents.class);
+        } catch (JsonParseException e) {
             System.out.println("creado");
         } catch (IOException e) {
             System.out.println(e.getMessage());

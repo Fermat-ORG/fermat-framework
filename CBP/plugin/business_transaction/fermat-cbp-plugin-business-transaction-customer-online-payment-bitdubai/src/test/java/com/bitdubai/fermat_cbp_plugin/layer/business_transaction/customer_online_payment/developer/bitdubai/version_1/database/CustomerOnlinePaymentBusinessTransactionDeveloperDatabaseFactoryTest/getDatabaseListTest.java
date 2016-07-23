@@ -30,21 +30,25 @@ public class getDatabaseListTest {
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory
             customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
-    public void setUpTestValues(){
+
+    public void setUpTestValues() {
         testId = UUID.randomUUID();
     }
-    public void setUpGeneralMockitoRules() throws Exception{
-        when(developerObjectFactory.getNewDeveloperDatabase("Customer Online Payment",testId.toString())).thenReturn(developerDatabase);
+
+    public void setUpGeneralMockitoRules() throws Exception {
+        when(developerObjectFactory.getNewDeveloperDatabase("Customer Online Payment", testId.toString())).thenReturn(developerDatabase);
     }
+
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpTestValues();
         setUpGeneralMockitoRules();
     }
+
     @Test
-    public void getDatabaseListTest_Should_Return_ArrayList() throws Exception{
+    public void getDatabaseListTest_Should_Return_ArrayList() throws Exception {
         customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory =
-                new CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
+                new CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem, testId);
         assertEquals(java.util.ArrayList.class, customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.
                 getDatabaseList(developerObjectFactory).getClass());
     }

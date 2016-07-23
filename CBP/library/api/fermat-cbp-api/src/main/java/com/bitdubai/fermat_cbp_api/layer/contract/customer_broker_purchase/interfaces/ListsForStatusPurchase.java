@@ -9,25 +9,21 @@ import java.util.Collection;
 public interface ListsForStatusPurchase {
 
     /**
-     *
      * @return a list of contracts on waiting for Broker
      */
     Collection<CustomerBrokerContractPurchase> getContractsWaitingForBroker();
 
     /**
-     *
      * @return a list of contracts on waiting for Customer
      */
     Collection<CustomerBrokerContractPurchase> getContractsWaitingForCustomer();
 
     /**
-     *
      * @return a list of all contracts cancelled and closed
      */
     Collection<CustomerBrokerContractPurchase> getHistoryContracts();
 
     /**
-     *
      * Set the list of contract that waiting for Broker
      *
      * @param contractsWaitingForBroker
@@ -35,7 +31,6 @@ public interface ListsForStatusPurchase {
     void setContractsWaitingForBroker(Collection<CustomerBrokerContractPurchase> contractsWaitingForBroker);
 
     /**
-     *
      * Set the list of contract that waiting for Customer
      *
      * @param contractsWaitingForCustomer
@@ -43,7 +38,6 @@ public interface ListsForStatusPurchase {
     void setContractsWaitingForCustomer(Collection<CustomerBrokerContractPurchase> contractsWaitingForCustomer);
 
     /**
-     *
      * Set the list with history of contracts
      *
      * @param historyContracts

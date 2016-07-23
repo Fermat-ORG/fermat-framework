@@ -9,48 +9,48 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/06/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class AndroidDatabaseTableNearbyLocationOrder {
 
     /**
      * Field representing the latitude in the table
      */
-    private final String              latitudeField ;
+    private final String latitudeField;
 
     /**
      * field representing the longitude in the table
      */
-    private final String              longitudeField;
+    private final String longitudeField;
 
     /**
      * Point to get the near locations
      */
-    private final Location            point         ;
+    private final Location point;
 
     /**
      * Direction of the order (DESC/ASC) by default is ASC
      */
-    private final DatabaseFilterOrder direction     ;
+    private final DatabaseFilterOrder direction;
 
     /**
      * Label for the field of the returning distance between the point and the record
      */
-    private final String              distanceField ;
+    private final String distanceField;
 
-    public AndroidDatabaseTableNearbyLocationOrder(final String              latitudeField ,
-                                                   final String              longitudeField,
-                                                   final Location            point         ,
-                                                   final DatabaseFilterOrder direction     ,
-                                                   final String              distanceField ) {
+    public AndroidDatabaseTableNearbyLocationOrder(final String latitudeField,
+                                                   final String longitudeField,
+                                                   final Location point,
+                                                   final DatabaseFilterOrder direction,
+                                                   final String distanceField) {
 
-        this.latitudeField  = latitudeField ;
+        this.latitudeField = latitudeField;
         this.longitudeField = longitudeField;
-        this.point          = point         ;
-        this.direction      = direction     ;
-        this.distanceField  = distanceField ;
+        this.point = point;
+        this.direction = direction;
+        this.distanceField = distanceField;
     }
 
     public String getLatitudeField() {
@@ -75,12 +75,16 @@ public class AndroidDatabaseTableNearbyLocationOrder {
 
     @Override
     public String toString() {
-        return "AndroidDatabaseTableNearbyLocationOrder{" +
-                "latitudeField='" + latitudeField + '\'' +
-                ", longitudeField='" + longitudeField + '\'' +
-                ", point=" + point +
-                ", direction=" + direction +
-                ", distanceField='" + distanceField + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("AndroidDatabaseTableNearbyLocationOrder{")
+                .append("latitudeField='").append(latitudeField)
+                .append('\'')
+                .append(", longitudeField='").append(longitudeField)
+                .append('\'')
+                .append(", point=").append(point)
+                .append(", direction=").append(direction)
+                .append(", distanceField='").append(distanceField)
+                .append('\'')
+                .append('}').toString();
     }
 }

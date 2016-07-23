@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantOpenSessionException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "CAN'T OPEN SESSION EXCEPTION";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

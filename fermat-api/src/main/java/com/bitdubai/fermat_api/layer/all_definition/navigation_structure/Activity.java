@@ -18,22 +18,22 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.17.
  */
 
-public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity,Serializable {
+public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity, Serializable {
     /**
      * Activity class member variables
-     *
+     * <p/>
      * TODO:  se debe cambiar y empezar a usar el String de activity type de abajo cuando esté hecho el activity factory
      */
     @Deprecated
     Activities type;
 
     /**
-     *  Activity type in String format
+     * Activity type in String format
      */
     String activityType;
 
     /**
-     *  the String is the fragments enum value corresponding to each plugin
+     * the String is the fragments enum value corresponding to each plugin
      */
 
     Map<String, FermatFragment> fragments = new HashMap<String, FermatFragment>();
@@ -119,8 +119,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.startFragment = startFragment;
     }
 
-    public void setBackActivity(Activities activity){
-        this.backActivity=activity;
+    public void setBackActivity(Activities activity) {
+        this.backActivity = activity;
     }
 
     public void setBackPublicKey(String backPublicKey) {
@@ -194,7 +194,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public void changeBackActivity(String appPublicKeyback,String activityCode) throws InvalidParameterException {
+    public void changeBackActivity(String appPublicKeyback, String activityCode) throws InvalidParameterException {
         this.backPublicKey = appPublicKeyback;
         this.backActivity = Activities.getValueFromString(activityCode);
     }
@@ -212,7 +212,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     @Override
     public FermatFragment getLastFragment() {
-        if(lastFragment==null){
+        if (lastFragment == null) {
             lastFragment = startFragment;
         }
         return fragments.get(lastFragment);
@@ -237,7 +237,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      * Add runtime Wizard to this Activity
      *
      * @param wizardTypeCode WizardType enumerable
-     * @param wizard     runtime wizard object to attach to this activity
+     * @param wizard         runtime wizard object to attach to this activity
      */
     public void addWizard(String wizardTypeCode, Wizard wizard) {
         if (wizards == null)
@@ -288,14 +288,19 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     @Override
     public String toString() {
-        return "Activity{" +
-                "activityType='" + activityType + '\'' +
-                ", fragments=" + fragments +
-                ", lastFragment='" + lastFragment + '\'' +
-                ", startFragment='" + startFragment + '\'' +
-                ", backPublicKey='" + backPublicKey + '\'' +
-                ", backActivity=" + backActivity +
-                '}';
+        return new StringBuilder()
+                .append("Activity{")
+                .append("activityType='").append(activityType)
+                .append('\'')
+                .append(", fragments=").append(fragments)
+                .append(", lastFragment='").append(lastFragment)
+                .append('\'')
+                .append(", startFragment='").append(startFragment)
+                .append('\'')
+                .append(", backPublicKey='").append(backPublicKey)
+                .append('\'')
+                .append(", backActivity=").append(backActivity)
+                .append('}').toString();
     }
 }
 

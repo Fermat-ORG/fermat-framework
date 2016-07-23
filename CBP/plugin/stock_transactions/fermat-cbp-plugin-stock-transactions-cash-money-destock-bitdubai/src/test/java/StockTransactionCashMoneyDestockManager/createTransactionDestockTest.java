@@ -26,8 +26,8 @@ public class createTransactionDestockTest {
     public void createTransactionDestock() throws CantCreateCryptoMoneyDestockException, CantCreateCashMoneyDestockException {
         StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager = mock(StockTransactionCashMoneyDestockManager.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(stockTransactionCashMoneyDestockManager).createTransactionDestock(Mockito.any(String.class),
-                Mockito.any(FiatCurrency.class),Mockito.any(String.class),Mockito.any(String.class),Mockito.any(String.class),
-                Mockito.any(BigDecimal.class),Mockito.any(String.class),Mockito.any(BigDecimal.class),Mockito.any(OriginTransaction.class),Mockito.anyString());
+                Mockito.any(FiatCurrency.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class),
+                Mockito.any(BigDecimal.class), Mockito.any(String.class), Mockito.any(BigDecimal.class), Mockito.any(OriginTransaction.class), Mockito.anyString());
     }
 
 }

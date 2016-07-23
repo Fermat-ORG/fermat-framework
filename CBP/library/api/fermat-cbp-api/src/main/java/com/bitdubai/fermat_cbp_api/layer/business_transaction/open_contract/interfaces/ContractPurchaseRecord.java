@@ -35,9 +35,10 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase, S
 
     /**
      * Represents the contract id/hash
+     *
      * @return
      */
-    
+
     public String getContractId() {
         return contractHash;
     }
@@ -50,13 +51,14 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase, S
     /**
      * This method generate a hash that contains the all the encrypted contract in XML.
      * This hash is used as the contract Id
+     *
      * @return
      */
-    public String generateContractHash(){
-        this.contractHash=CryptoHasher.performSha256(this.toString());
+    public String generateContractHash() {
+        this.contractHash = CryptoHasher.performSha256(this.toString());
         return this.contractHash;
     }
-    
+
     public float getMerchandiseAmount() {
         return this.merchandiseAmount;
     }
@@ -69,7 +71,7 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase, S
         return this.merchandiseDeliveryExpirationDate;
     }
 
-    public String getNegotiationId(){
+    public String getNegotiationId() {
         return this.negotiationId;
     }
 
@@ -121,99 +123,109 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase, S
     }
 
     @Override
-    public String getCancelReason() { return cancelReason;}
+    public String getCancelReason() {
+        return cancelReason;
+    }
 
     public void setNearExpirationDatetime(Boolean nearExpirationDatetime) {
         this.nearExpirationDatetime = nearExpirationDatetime;
     }
 
-    public void setContractClauses(Collection<ContractClause> contractClauses){
-        this.contractClauses=contractClauses;
+    public void setContractClauses(Collection<ContractClause> contractClauses) {
+        this.contractClauses = contractClauses;
     }
 
-    public void setDayTime(long dayTime){
-        this.dayTime=dayTime;
+    public void setDayTime(long dayTime) {
+        this.dayTime = dayTime;
     }
 
     public void setMerchandiseAmount(float merchandiseAmount) {
-        this.merchandiseAmount=merchandiseAmount;
+        this.merchandiseAmount = merchandiseAmount;
     }
 
     public void setMerchandiseCurrency(Currency merchandiseCurrency) {
-        this.merchandiseCurrency=merchandiseCurrency;
+        this.merchandiseCurrency = merchandiseCurrency;
     }
 
     public void setMerchandiseDeliveryExpirationDate(long merchandiseDeliveryExpirationDate) {
-        this.merchandiseDeliveryExpirationDate=merchandiseDeliveryExpirationDate;
+        this.merchandiseDeliveryExpirationDate = merchandiseDeliveryExpirationDate;
     }
 
     /**
      * The negotiationId is used to link this contract with the genesis negotiation.
      * Also, this negotiation id helps to create an unique contract hash (id) for this contract record.
+     *
      * @param negotiationId
      */
-    public void setNegotiationId(String negotiationId){
-        this.negotiationId=negotiationId;
+    public void setNegotiationId(String negotiationId) {
+        this.negotiationId = negotiationId;
     }
 
     public void setPaymentAmount(float paymentAmount) {
-        this.paymentAmount=paymentAmount;
+        this.paymentAmount = paymentAmount;
     }
 
     public void setPaymentCurrency(Currency paymentCurrency) {
-        this.paymentCurrency=paymentCurrency;
+        this.paymentCurrency = paymentCurrency;
     }
 
     public void setPaymentExpirationDate(long paymentExpirationDate) {
-        this.paymentExpirationDate=paymentExpirationDate;
+        this.paymentExpirationDate = paymentExpirationDate;
     }
 
     public void setPublicKeyBroker(String publicKeyBroker) {
-        this.publicKeyBroker=publicKeyBroker;
+        this.publicKeyBroker = publicKeyBroker;
     }
 
     public void setPublicKeyCustomer(String publicKeyCustomer) {
-        this.publicKeyCustomer=publicKeyCustomer;
+        this.publicKeyCustomer = publicKeyCustomer;
     }
 
     public void setReferencePrice(float referencePrice) {
-        this.referencePrice=referencePrice;
+        this.referencePrice = referencePrice;
     }
 
     public void setReferenceCurrency(ReferenceCurrency referenceCurrency) {
-        this.referenceCurrency=referenceCurrency;
+        this.referenceCurrency = referenceCurrency;
     }
 
-    public void setStatus(ContractStatus status){
-        this.status=status;
+    public void setStatus(ContractStatus status) {
+        this.status = status;
     }
 
-    public void setCancelReason(String reason){
+    public void setCancelReason(String reason) {
         this.cancelReason = reason;
     }
+
     /**
      * The string of the ContractSaleRecord will be used to generate a unique Hash.
      * This hash will be used as Id.
      * I generate an XML with the class structure.
+     *
      * @return
      */
     @Override
     public String toString() {
-        return "ContractRecord{" +
-                ", dayTime=" + dayTime +
-                ", merchandiseCurrency=" + merchandiseCurrency +
-                ", merchandiseAmount=" + merchandiseAmount +
-                ", merchandiseDeliveryExpirationDate=" + merchandiseDeliveryExpirationDate +
-                ", negotiationId='" + negotiationId + '\'' +
-                ", paymentAmount=" + paymentAmount +
-                ", paymentCurrency=" + paymentCurrency +
-                ", paymentExpirationDate=" + paymentExpirationDate +
-                ", publicKeyBroker='" + publicKeyBroker + '\'' +
-                ", publicKeyCustomer='" + publicKeyCustomer + '\'' +
-                ", referenceCurrency=" + referenceCurrency +
-                ", status=" + status +
-                ", contractHash='" + contractHash + '\'' +
-                ", nearExpirationDatetime=" + nearExpirationDatetime +
-                '}';
+        return new StringBuilder()
+                .append("ContractRecord{")
+                .append(", dayTime=").append(dayTime)
+                .append(", merchandiseCurrency=").append(merchandiseCurrency)
+                .append(", merchandiseAmount=").append(merchandiseAmount)
+                .append(", merchandiseDeliveryExpirationDate=").append(merchandiseDeliveryExpirationDate)
+                .append(", negotiationId='").append(negotiationId)
+                .append('\'')
+                .append(", paymentAmount=").append(paymentAmount)
+                .append(", paymentCurrency=").append(paymentCurrency)
+                .append(", paymentExpirationDate=").append(paymentExpirationDate)
+                .append(", publicKeyBroker='").append(publicKeyBroker)
+                .append('\'')
+                .append(", publicKeyCustomer='").append(publicKeyCustomer)
+                .append('\'')
+                .append(", referenceCurrency=").append(referenceCurrency)
+                .append(", status=").append(status)
+                .append(", contractHash='").append(contractHash)
+                .append('\'')
+                .append(", nearExpirationDatetime=").append(nearExpirationDatetime)
+                .append('}').toString();
     }
 }

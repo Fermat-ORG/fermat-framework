@@ -12,7 +12,10 @@ import java.util.UUID;
 
 public interface ContractClause extends Serializable {
     UUID getClauseId();
+
     ContractClauseType getType();
+
     Integer getExecutionOrder();
+
     ContractClauseStatus getStatus();
 }

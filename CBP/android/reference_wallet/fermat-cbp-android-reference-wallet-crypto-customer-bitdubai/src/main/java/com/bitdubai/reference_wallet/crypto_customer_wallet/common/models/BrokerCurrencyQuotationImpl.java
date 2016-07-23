@@ -15,18 +15,26 @@ public class BrokerCurrencyQuotationImpl {
             String currencyOver,
             String currencyUnder,
             String exchangeRate
-    ){
+    ) {
         this.currencyOver = currencyOver;
         this.currencyUnder = currencyUnder;
         this.exchangeRate = exchangeRate;
     }
 
-    public String getCurrencyOver(){ return this.currencyOver; }
+    public String getCurrencyOver() {
+        return this.currencyOver;
+    }
 
-    public String getCurrencyUnder(){ return this.currencyUnder; }
+    public String getCurrencyUnder() {
+        return this.currencyUnder;
+    }
 
-    public String getExchangeRate(){ return  this.exchangeRate; }
+    public String getExchangeRate() {
+        return this.exchangeRate;
+    }
 
-    public void setExchangeRate(String exchangeRate){ this.exchangeRate = exchangeRate; }
+    public void setExchangeRate(String exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
 
 }

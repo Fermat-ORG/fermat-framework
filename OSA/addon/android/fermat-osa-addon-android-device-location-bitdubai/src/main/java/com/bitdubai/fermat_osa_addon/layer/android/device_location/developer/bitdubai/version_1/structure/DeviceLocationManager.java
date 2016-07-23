@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 
-
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
@@ -17,10 +16,10 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 
 /**
  * Created by Natalia on 21/05/2015.
- *
+ * <p/>
  * This addon handles a layer of Device Location representation.
  * Encapsulates all the necessary functions to retrieve the geolocation of the device.
- *
+ * <p/>
  * * * *
  */
 
@@ -64,7 +63,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
      */
 
     /**
-     *<p>This method gets the actual device location data.
+     * <p>This method gets the actual device location data.
      *
      * @return Location interface object
      * @throws CantGetDeviceLocationException
@@ -161,7 +160,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
                 location = new DeviceLocation(0.0, 0.0, System.currentTimeMillis(), 0.0, LocationSource.UNKNOWN);
         }
         lastKnownLocation = location;
-        if(location==null){
+        if (location == null) {
             location = new DeviceLocation(0.0, 0.0, System.currentTimeMillis(), 0.0, LocationSource.UNKNOWN);
         }
         return location;
@@ -172,7 +171,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
      */
 
     @Override
-    public void onLocationChanged( android.location.Location location) {
+    public void onLocationChanged(android.location.Location location) {
 
         if (location != null) {
 

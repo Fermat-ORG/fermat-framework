@@ -58,7 +58,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     int textNameLeft = -1;
     int textNameRight = -1;
     private String textColor;
-//    private int titleTextColor = -1;
+    //    private int titleTextColor = -1;
     private int viewColor = -1;
     private int resBannerImage = -1;
     private int iconRes = -1;
@@ -181,9 +181,9 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             view_color1.setBackgroundResource(viewColor);
             view_color2.setBackgroundResource(viewColor);
             view_color3.setBackgroundResource(viewColor);
-            if(view_color4 != null)
+            if (view_color4 != null)
                 view_color4.setBackgroundResource(viewColor);
-            if(btn_dismiss != null)
+            if (btn_dismiss != null)
                 btn_dismiss.setBackgroundResource(viewColor);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 txt_title.setTextColor(getContext().getResources().getColorStateList(viewColor, getContext().getTheme()));
@@ -198,10 +198,10 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             txt_body.setTextColor(color);
             footer_title.setTextColor(color);
         }
-        if(checkButtonAndTextVisible==0 && checkButton==false){
+        if (checkButtonAndTextVisible == 0 && checkButton == false) {
             checkbox_not_show.setVisibility(View.GONE);
             checkbox_not_show_text.setVisibility(View.GONE);
-        }else {
+        } else {
             checkbox_not_show.setVisibility(View.VISIBLE);
             checkbox_not_show_text.setVisibility(View.VISIBLE);
         }
@@ -375,7 +375,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private final WeakReference<ReferenceAppFermatSession> fermatSession;
         private TemplateType templateType = TemplateType.TYPE_PRESENTATION;
         private boolean isCheckEnabled;
-        private int checkButtonAndTextVisible=-1;
+        private int checkButtonAndTextVisible = -1;
         private PresentationCallback callback;
         private String title;
         private int subTitle = -1;
@@ -389,7 +389,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private int imageRight = -1;
         private int bannerRes = -1;
         private int iconRes = -1;
-//        private int titleTextColor = -1;
+        //        private int titleTextColor = -1;
         private int viewColor = -1;
 
         public PresentationDialog build() {

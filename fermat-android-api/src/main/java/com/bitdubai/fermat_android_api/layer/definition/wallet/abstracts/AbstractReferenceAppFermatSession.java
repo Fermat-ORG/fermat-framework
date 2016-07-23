@@ -9,12 +9,12 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.10.18..
  */
-public class AbstractReferenceAppFermatSession<A extends FermatApp,M extends ModuleManager,R extends ResourceProviderManager> extends BaseFermatSession<A,R> implements ReferenceAppFermatSession<M> {
+public class AbstractReferenceAppFermatSession<A extends FermatApp, M extends ModuleManager, R extends ResourceProviderManager> extends BaseFermatSession<A, R> implements ReferenceAppFermatSession<M> {
 
     private M moduleManager;
 
     public AbstractReferenceAppFermatSession(String publicKey, A fermatApp, ErrorManager errorManager, M moduleManager, R resourceProviderManager) {
-        super(publicKey,fermatApp,resourceProviderManager,errorManager);
+        super(publicKey, fermatApp, resourceProviderManager, errorManager);
         this.moduleManager = moduleManager;
     }
 

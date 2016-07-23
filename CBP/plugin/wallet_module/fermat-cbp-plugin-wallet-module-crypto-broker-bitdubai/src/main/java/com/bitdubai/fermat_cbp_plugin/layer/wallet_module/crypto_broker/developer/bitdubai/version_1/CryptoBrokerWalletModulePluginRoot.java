@@ -169,7 +169,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
-    /** Logging level for this plugin */
+    /**
+     * Logging level for this plugin
+     */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     private CryptoBrokerWalletModuleManager moduleManager;

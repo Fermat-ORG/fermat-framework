@@ -40,7 +40,7 @@ public class ConstructionTest {
     private final UUID pluginId = UUID.randomUUID();
 
     @Test
-    public void Construction_ValidParameters_NewObjectCreated(){
+    public void Construction_ValidParameters_NewObjectCreated() {
 
         StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory = new StockTransactionCryptoMoneyRestockFactory(
                 this.pluginDatabaseSystem,

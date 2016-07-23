@@ -17,7 +17,7 @@ public class GetTransactionStatusTest {
     private TransactionStatusRestockDestock transactionStatusRestockDestock = TransactionStatusRestockDestock.INIT_TRANSACTION;
 
     @Test
-    public void getTransactionStatus(){
+    public void getTransactionStatus() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getTransactionStatus()).thenReturn(transactionStatusRestockDestock);
         assertThat(cryptoMoneyDestockTransaction.getTransactionStatus()).isNotNull();

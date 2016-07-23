@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetCashReferenceTest {
 
     @Test
-    public void GetCashReference() throws Exception{
+    public void GetCashReference() throws Exception {
         CashMoneyRestockTransactionImpl cashMoneyRestockTransaction = mock(CashMoneyRestockTransactionImpl.class);
         when(cashMoneyRestockTransaction.getCashReference()).thenReturn(new String());
         assertThat(cashMoneyRestockTransaction.getCashReference()).isNotNull();

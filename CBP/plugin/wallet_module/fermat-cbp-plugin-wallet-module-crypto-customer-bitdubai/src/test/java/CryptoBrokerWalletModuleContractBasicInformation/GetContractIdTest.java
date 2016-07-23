@@ -1,11 +1,5 @@
 package CryptoBrokerWalletModuleContractBasicInformation;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
 
 import org.junit.Test;
@@ -25,7 +19,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetContractIdTest {
     @Test
-        public void getContractIdTest() {
+    public void getContractIdTest() {
         CryptoBrokerWalletModuleContractBasicInformation cryptoBrokerWalletModuleContractBasicInformation = mock(CryptoBrokerWalletModuleContractBasicInformation.class);
         when(cryptoBrokerWalletModuleContractBasicInformation.getContractId()).thenReturn(UUID.randomUUID());
         assertThat(cryptoBrokerWalletModuleContractBasicInformation.getContractId()).isNotNull();

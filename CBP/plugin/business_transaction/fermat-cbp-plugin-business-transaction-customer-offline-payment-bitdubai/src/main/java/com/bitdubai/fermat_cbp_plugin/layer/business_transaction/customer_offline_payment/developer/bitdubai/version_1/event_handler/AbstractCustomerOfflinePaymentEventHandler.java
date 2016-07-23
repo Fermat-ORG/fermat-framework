@@ -13,7 +13,7 @@ public abstract class AbstractCustomerOfflinePaymentEventHandler implements Ferm
     public void setCustomerOfflinePaymentRecorderService(
             CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService) throws
             CantSetObjectException {
-        if(customerOfflinePaymentRecorderService ==null){
+        if (customerOfflinePaymentRecorderService == null) {
             throw new CantSetObjectException("customerOfflinePaymentRecorderService is null");
         }
         this.customerOfflinePaymentRecorderService = customerOfflinePaymentRecorderService;

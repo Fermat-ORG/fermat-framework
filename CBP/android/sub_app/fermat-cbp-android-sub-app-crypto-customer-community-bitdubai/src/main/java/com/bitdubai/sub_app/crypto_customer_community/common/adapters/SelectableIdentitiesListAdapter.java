@@ -49,7 +49,7 @@ public class SelectableIdentitiesListAdapter
                 }
                 bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);
                 holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-            }else{
+            } else {
                 Bitmap bitmap;
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 40, 40, true);

@@ -26,27 +26,27 @@ public class EqualsAndHashTest {
     private CryptoCustomerIdentity testIdentity1, testIdentity2;
 
     @Before
-    public void setUpIdentity(){
+    public void setUpIdentity() {
         testKeyPair = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
         testIdentity1 = new CryptoCustomerIdentityImpl(testAlias, testKeyPair, testProfileImage, testPublished);
     }
 
     @Test
-    public void Equals_SameValues_True(){
+    public void Equals_SameValues_True() {
         testIdentity2 = new CryptoCustomerIdentityImpl(testAlias, testKeyPair, testProfileImage, testPublished);
         assertThat(testIdentity1).isEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isEqualTo(testIdentity2.hashCode());
     }
 
     @Test
-    public void Equals_DifferentAlias_False(){
+    public void Equals_DifferentAlias_False() {
         testIdentity2 = new CryptoCustomerIdentityImpl("OTHER_TEST", testKeyPair, testProfileImage, testPublished);
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());
     }
 
     @Test
-    public void Equals_DifferentKeyPair_False(){
+    public void Equals_DifferentKeyPair_False() {
         testIdentity2 = new CryptoCustomerIdentityImpl(testAlias, AsymmetricCryptography.generateECCKeyPair(), testProfileImage, testPublished);
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());

@@ -1,16 +1,6 @@
 package CryptoBrokerWalletModuleContractBasicInformation;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
-
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Random;
-import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +17,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetExchangeRateAmountTest {
     @Test
-    public void getExchangeRateAmount(){
+    public void getExchangeRateAmount() {
         CryptoBrokerWalletModuleContractBasicInformation cryptoBrokerWalletModuleContractBasicInformation = mock(CryptoBrokerWalletModuleContractBasicInformation.class);
         when(cryptoBrokerWalletModuleContractBasicInformation.getExchangeRateAmount()).thenReturn(10.0f);
         assertThat(cryptoBrokerWalletModuleContractBasicInformation.getExchangeRateAmount()).isNotNull();

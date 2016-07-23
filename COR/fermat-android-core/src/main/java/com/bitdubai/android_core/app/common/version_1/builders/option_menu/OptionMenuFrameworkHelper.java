@@ -13,17 +13,17 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_
  */
 public class OptionMenuFrameworkHelper {
 
-    public static View obtainFrameworkAvailableOptionMenuItems(Context context,int id){
-        return obtainFrameworkAvailableOptionMenuItems(context,id,null);
+    public static View obtainFrameworkAvailableOptionMenuItems(Context context, int id) {
+        return obtainFrameworkAvailableOptionMenuItems(context, id, null);
     }
 
 
     public static View obtainFrameworkAvailableOptionMenuItems(Context context, int id, Object[] listeners) {
         View view = null;
-        switch (id){
+        switch (id) {
             case OptionMenuViewsAvailables.SEARCH_VIEW:
                 android.widget.SearchView searchView = new android.widget.SearchView(context);
-                if(listeners!=null) {
+                if (listeners != null) {
                     for (Object listener : listeners) {
                         if (listener instanceof android.widget.SearchView.OnQueryTextListener) {
                             searchView.setOnQueryTextListener((android.widget.SearchView.OnQueryTextListener) listener);

@@ -60,7 +60,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
         this.fermatActivity = new WeakReference<FermatActivity>(activity);
     }
 
-    public void buildMenuSettings(){
+    public void buildMenuSettings() {
         final View backgroundShadow = fermatActivity.get().findViewById(R.id.background_shadow_container);
         onClickListener = new View.OnClickListener() {
             @Override
@@ -87,7 +87,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                         mRevealView.setVisibility(View.VISIBLE);
                         animator.start();
                         hidden = false;
-                        if (!isStart){
+                        if (!isStart) {
                             onClickListener.onClick(null);
                             isStart = true;
                             onClickListener.onClick(null);
@@ -151,7 +151,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
         initRecyclerview();
     }
 
-    private void initRecyclerview(){
+    private void initRecyclerview() {
         settingsSlider = new SettingsSlider(fermatActivity.get(), SettingsSliderProvisoryData.getSettings());
         settingsSlider.setClickCallback(this);
     }
@@ -160,21 +160,21 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
         return onClickListener;
     }
 
-    public void clear(){
-        if(appStatusListener != null)
+    public void clear() {
+        if (appStatusListener != null)
             appStatusListener.clear();
-        if(mRevealView!=null)mRevealView.removeAllViews();
+        if (mRevealView != null) mRevealView.removeAllViews();
         fermatActivity.clear();
         onClickListener = null;
     }
 
 
     @Override
-    public void onItemClickListener(View view,SettingsItem item, int position,View... views) {
-        switch (item.getSettingsType()){
+    public void onItemClickListener(View view, SettingsItem item, int position, View... views) {
+        switch (item.getSettingsType()) {
             case APP_STATUS:
-                if(appStatusListener==null){
-                    appStatusListener = new AppStatusListener(fermatActivity.get(),(ImageButton)view,(FermatTextView)views[0]);
+                if (appStatusListener == null) {
+                    appStatusListener = new AppStatusListener(fermatActivity.get(), (ImageButton) view, (FermatTextView) views[0]);
                 }
                 try {
                     new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), appStatusListener).show();
@@ -212,7 +212,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
 //                }
 //
 //                androidCoreSettings.setIsErrorReportEnabled(!androidCoreSettings.isErrorReportEnabled());
-                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode(),null,null);
+                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode(), null, null);
                 break;
         }
     }

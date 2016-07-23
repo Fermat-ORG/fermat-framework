@@ -1,8 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
@@ -64,7 +64,7 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
     }
 
     @Override
-    public List<MerchandiseExchangeRate>  getQuotes() {
+    public List<MerchandiseExchangeRate> getQuotes() {
         return quotes;
     }
 

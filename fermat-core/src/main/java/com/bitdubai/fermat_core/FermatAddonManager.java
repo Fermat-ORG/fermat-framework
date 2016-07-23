@@ -4,16 +4,16 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignOsContextException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleOsContextException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantPauseAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantResumeAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStopAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleOsContextException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.UnexpectedServiceStatusException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 
 import java.util.List;
 
@@ -25,15 +25,15 @@ import java.util.List;
  */
 public final class FermatAddonManager {
 
-    private final FermatSystemContext systemContext  ;
+    private final FermatSystemContext systemContext;
 
-    public FermatAddonManager(final FermatSystemContext systemContext  ) {
+    public FermatAddonManager(final FermatSystemContext systemContext) {
 
-        this.systemContext   = systemContext  ;
+        this.systemContext = systemContext;
     }
 
-    public final FermatManager startAddonAndReferences(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,
-                                                                                                                 VersionNotFoundException {
+    public final FermatManager startAddonAndReferences(final AddonVersionReference addonVersionReference) throws CantStartAddonException,
+            VersionNotFoundException {
 
         try {
 
@@ -56,7 +56,7 @@ public final class FermatAddonManager {
         } catch (CantListNeededReferencesException e) {
 
             throw new CantStartAddonException(e, addonVersionReference.toString3(), "Error listing references for the addon.");
-        } catch(CantAssignReferenceException   |
+        } catch (CantAssignReferenceException |
                 IncompatibleReferenceException e) {
 
             throw new CantStartAddonException(e, addonVersionReference.toString3(), "Error assigning references for the addon.");
@@ -83,18 +83,18 @@ public final class FermatAddonManager {
         } catch (CantListNeededReferencesException e) {
 
             throw new CantStartAddonException(e, abstractAddon.getAddonVersionReference().toString3(), "Error listing references for the addon.");
-        } catch(VersionNotFoundException e) {
+        } catch (VersionNotFoundException e) {
 
             throw new CantStartAddonException(e, abstractAddon.getAddonVersionReference().toString3(), "Error trying to find a reference for the addon.");
-        } catch(CantAssignReferenceException   |
+        } catch (CantAssignReferenceException |
                 IncompatibleReferenceException e) {
 
             throw new CantStartAddonException(e, abstractAddon.getAddonVersionReference().toString3(), "Error assigning references for the addon.");
         }
     }
 
-    public final void startAddon(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,
-                                                                                           VersionNotFoundException {
+    public final void startAddon(final AddonVersionReference addonVersionReference) throws CantStartAddonException,
+            VersionNotFoundException {
 
         AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
@@ -108,7 +108,7 @@ public final class FermatAddonManager {
             return;
 
         try {
-            if(abstractAddon.isDealsWithOsContext())
+            if (abstractAddon.isDealsWithOsContext())
                 abstractAddon.assignOsContext(systemContext.getOsContext());
 
             abstractAddon.start();
@@ -119,7 +119,7 @@ public final class FermatAddonManager {
                     abstractAddon.getAddonVersionReference().toString3(),
                     "There was a captured problem during the addon start."
             );
-        } catch(CantAssignOsContextException |
+        } catch (CantAssignOsContextException |
                 IncompatibleOsContextException e) {
 
             throw new CantStartAddonException(
@@ -138,9 +138,9 @@ public final class FermatAddonManager {
 
     }
 
-    public final void stopAddon(final AddonVersionReference addonVersionReference) throws CantStopAddonException           ,
-                                                                                          VersionNotFoundException         ,
-                                                                                          UnexpectedServiceStatusException {
+    public final void stopAddon(final AddonVersionReference addonVersionReference) throws CantStopAddonException,
+            VersionNotFoundException,
+            UnexpectedServiceStatusException {
 
         AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
@@ -148,12 +148,12 @@ public final class FermatAddonManager {
 
     }
 
-    public final void stopAddon(final AbstractAddon abstractAddon) throws CantStopAddonException           ,
-                                                                          UnexpectedServiceStatusException {
+    public final void stopAddon(final AbstractAddon abstractAddon) throws CantStopAddonException,
+            UnexpectedServiceStatusException {
 
         if (!abstractAddon.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    "Service Status: "+abstractAddon.getStatus()+" || "+abstractAddon.getAddonVersionReference().toString(),
+                    new StringBuilder().append("Service Status: ").append(abstractAddon.getStatus()).append(" || ").append(abstractAddon.getAddonVersionReference().toString()).toString(),
                     "The addon cannot be stopped because is not started."
             );
         }
@@ -167,9 +167,9 @@ public final class FermatAddonManager {
         }
     }
 
-    public final void pauseAddon(final AddonVersionReference addonVersionReference) throws CantPauseAddonException          ,
-                                                                                           VersionNotFoundException         ,
-                                                                                           UnexpectedServiceStatusException {
+    public final void pauseAddon(final AddonVersionReference addonVersionReference) throws CantPauseAddonException,
+            VersionNotFoundException,
+            UnexpectedServiceStatusException {
 
         AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
@@ -177,12 +177,12 @@ public final class FermatAddonManager {
 
     }
 
-    public final void pauseAddon(final AbstractAddon abstractAddon) throws CantPauseAddonException          ,
-                                                                           UnexpectedServiceStatusException {
+    public final void pauseAddon(final AbstractAddon abstractAddon) throws CantPauseAddonException,
+            UnexpectedServiceStatusException {
 
         if (!abstractAddon.isStarted()) {
             throw new UnexpectedServiceStatusException(
-                    "Service Status: "+abstractAddon.getStatus()+" || "+abstractAddon.getAddonVersionReference().toString(),
+                    new StringBuilder().append("Service Status: ").append(abstractAddon.getStatus()).append(" || ").append(abstractAddon.getAddonVersionReference().toString()).toString(),
                     "The addon cannot be paused because is not started."
             );
         }
@@ -196,9 +196,9 @@ public final class FermatAddonManager {
         }
     }
 
-    public final void resumeAddon(final AddonVersionReference addonVersionReference) throws CantResumeAddonException         ,
-                                                                                            VersionNotFoundException         ,
-                                                                                            UnexpectedServiceStatusException {
+    public final void resumeAddon(final AddonVersionReference addonVersionReference) throws CantResumeAddonException,
+            VersionNotFoundException,
+            UnexpectedServiceStatusException {
 
         AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
 
@@ -206,12 +206,12 @@ public final class FermatAddonManager {
 
     }
 
-    public final void resumeAddon(final AbstractAddon abstractAddon) throws CantResumeAddonException         ,
+    public final void resumeAddon(final AbstractAddon abstractAddon) throws CantResumeAddonException,
             UnexpectedServiceStatusException {
 
         if (!abstractAddon.isPaused()) {
             throw new UnexpectedServiceStatusException(
-                    "Service Status: "+abstractAddon.getStatus()+" || "+abstractAddon.getAddonVersionReference().toString(),
+                    new StringBuilder().append("Service Status: ").append(abstractAddon.getStatus()).append(" || ").append(abstractAddon.getAddonVersionReference().toString()).toString(),
                     "The addon cannot be resumed because is not paused."
             );
         }

@@ -68,7 +68,7 @@ public class SettingsBankAccountsFragment
 
             //Try to load appSession data
             Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
-            if(data == null) {
+            if (data == null) {
 
                 //Get saved locations from settings
                 bankAccountList = moduleManager.getListOfBankAccounts();
@@ -102,7 +102,7 @@ public class SettingsBankAccountsFragment
 
         presentationDialog.show();*/
 
-        View layout=inflater.inflate(R.layout.ccw_settings_bank_accounts,container,false);
+        View layout = inflater.inflate(R.layout.ccw_settings_bank_accounts, container, false);
         configureToolbar();
         adapter = new BankAccountsAdapter(getActivity(), bankAccountList);
         adapter.setDeleteButtonListener(this);
