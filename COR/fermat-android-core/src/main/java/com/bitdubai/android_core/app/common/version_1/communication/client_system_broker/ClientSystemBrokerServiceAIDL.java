@@ -173,7 +173,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             // Check if the data is on main thread or in background.
             if(Looper.myLooper() == Looper.getMainLooper()) return new LargeWorkOnMainThreadException(proxy,method);
             //test reason
-            mReceiverSocketSession.addWaitingMessage(dataId);
+//            mReceiverSocketSession.addWaitingMessage(dataId);
 
             o = bufferChannelAIDL.getBufferObject(dataId);
             return (o instanceof EmptyObject)?null:o;
@@ -293,14 +293,14 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             if (mPlatformServiceIsBound) {
                 doUnbindService();
             }
-            if (mReceiverSocketSession.isConnected()) {
-                mReceiverSocketSession.stop();
+//            if (mReceiverSocketSession.isConnected()) {
+//                mReceiverSocketSession.stopReceiver();
                 try {
                     mReceiverSocketSession.destroy();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }

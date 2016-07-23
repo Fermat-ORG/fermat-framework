@@ -107,6 +107,13 @@
     <string name="btc_text">[btc]</string>
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
+    <string name="fee_amount_text">Fee</string>
+    <string name="fee_option_text">Substract Fee from Amount</string>
+    <string name="fee_advances_text">Advanced configuration</string>
+    <string name="title_Fee">Fee Level Settings</string>
+    <string name="fee_low">Slow</string>
+    <string name="fee_Medium">Normal</string>
+    <string name="fee_High">Fast</string>
     <!-- setting_base.xml -->
     <string name="empty_transactions_text">Empty transactions</string>
     <!-- wallet_manager_transaction_view.xml -->
