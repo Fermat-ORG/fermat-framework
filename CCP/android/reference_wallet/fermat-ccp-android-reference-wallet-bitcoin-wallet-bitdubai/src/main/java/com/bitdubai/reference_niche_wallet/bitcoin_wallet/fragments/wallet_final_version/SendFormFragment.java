@@ -126,7 +126,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private String feeLevel = "";
     private String feeOrigin = "";
     private LinearLayout feed_advances;
-    private TextView advances_btn;
+    private LinearLayout advances_btn;
+
+    private FermatWorker fermatWorker;
 
     private List<WalletContact> walletContactList = new ArrayList<>();
     /**
@@ -168,27 +170,32 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         setHasOptionsMenu(true);
         try {
 
-            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+            cryptoWallet = appSession.getModuleManager();
+
+            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
 
             if(bitcoinWalletSettings != null) {
 
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 }
+                else
+                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
                 if (bitcoinWalletSettings.getFeedLevel() == null)
-                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                    bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
                 else
                     feeLevel = bitcoinWalletSettings.getFeedLevel();
 
-                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                cryptoWallet.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
             }
 
 
-            blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
 
-            cryptoWallet = appSession.getModuleManager();
+
+
             availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
 
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -290,7 +297,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         feed_Substract= (CheckBox) rootView.findViewById(R.id.checkBoxSubstract);
 
 
-        advances_btn = (TextView) rootView.findViewById(R.id.advances_btn);
+        advances_btn = (LinearLayout) rootView.findViewById(R.id.advances_btn);
         layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
         feeGroup = (RadioGroup) rootView.findViewById(R.id.feeGroup);
         fee_low_btn = (RadioButton) rootView.findViewById(R.id.fee_low);
@@ -580,7 +587,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void setUpContactAddapter() {
 
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+        fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
                 try{
@@ -748,6 +755,15 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
 
 
+    }
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+        super.onStop();
     }
 
 

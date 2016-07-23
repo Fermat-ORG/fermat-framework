@@ -151,6 +151,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private boolean isScrolled = false;
     private Toolbar toolbar;
 
+    FermatWorker fermatWorker;
+
     private ExecutorService _executor;
 
     public static ContactsFragment newInstance() {
@@ -315,7 +317,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 String str = s.toString();
 
                 //final int visibility = str.isEmpty() ? View.GONE : View.VISIBLE;
-               // mClearSearchImageButton.setVisibility(visibility);
+                // mClearSearchImageButton.setVisibility(visibility);
 
                 if (mPinnedHeaderAdapter != null) {
                     mPinnedHeaderAdapter.getFilter().filter(str);
@@ -365,7 +367,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     private void onRefresh() {
 
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+      fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
 
@@ -614,6 +616,17 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
         this.walletResourcesProviderManager = walletResourcesProviderManager;
+    }
+
+
+    @Override
+    public void onStop() {
+
+        if(fermatWorker != null)
+            fermatWorker.shutdownNow();
+
+
+        super.onStop();
     }
 
     @Override

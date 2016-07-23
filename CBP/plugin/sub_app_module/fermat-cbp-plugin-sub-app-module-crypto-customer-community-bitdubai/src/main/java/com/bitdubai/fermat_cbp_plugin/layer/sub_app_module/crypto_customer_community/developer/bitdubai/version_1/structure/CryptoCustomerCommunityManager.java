@@ -349,12 +349,14 @@ public class CryptoCustomerCommunityManager
                 Address address;
                 try{
                     address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                    cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
+                    cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
                 } catch (CantCreateAddressException ex){
-                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
-                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
+//                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
+//                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
+                    cryptoCustomerCommunitySubAppModuleInformation.setCountry("");
+                    cryptoCustomerCommunitySubAppModuleInformation.setPlace("");
                 }
-                cryptoCustomerCommunitySubAppModuleInformation.setCountry(address.getCountry());
-                cryptoCustomerCommunitySubAppModuleInformation.setPlace(address.getCity());
                 filteredConnectedActors.add(cryptoCustomerCommunitySubAppModuleInformation);
 
             }

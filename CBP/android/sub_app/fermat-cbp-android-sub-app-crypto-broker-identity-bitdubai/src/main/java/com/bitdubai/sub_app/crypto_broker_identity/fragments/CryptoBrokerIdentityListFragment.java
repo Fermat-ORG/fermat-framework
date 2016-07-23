@@ -59,6 +59,8 @@ public class CryptoBrokerIdentityListFragment
     private PresentationDialog presentationDialog;
 
     private View layout;
+    private BrokerIdentityBroadcastReceiver broadcastReceiver;
+
 
     public static CryptoBrokerIdentityListFragment newInstance() {
         return new CryptoBrokerIdentityListFragment();
@@ -69,11 +71,23 @@ public class CryptoBrokerIdentityListFragment
         super.onCreate(savedInstanceState);
 
         FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
-        registerReceiver(fermatIntentFilter, new BrokerIdentityBroadcastReceiver());
+        broadcastReceiver = new BrokerIdentityBroadcastReceiver();
+        registerReceiver(fermatIntentFilter, broadcastReceiver);
 
         cleanSessionData();
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -104,7 +118,7 @@ public class CryptoBrokerIdentityListFragment
             subappSettings.setIsPresentationHelpEnabled(true);
             try {
                 appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), subappSettings);
-            }catch (Exception ignore){
+            } catch (Exception ignore) {
 
             }
         }
@@ -263,25 +277,27 @@ public class CryptoBrokerIdentityListFragment
     /**
      * Receiver class implemented
      */
-    private class BrokerIdentityBroadcastReceiver extends FermatBroadcastReceiver{
+    private class BrokerIdentityBroadcastReceiver extends FermatBroadcastReceiver {
 
         @Override
         public void onReceive(FermatBundle fermatBundle) {
             try {
-                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+                if(isAttached) {
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
-                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
-                    onRefresh();
-                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
+                    if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_CREATED)) {
+                        onRefresh();
+                        View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                        emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
 
-                if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
-                    onRefresh();
-                    View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-                    emptyListViewsContainer.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
+                    if (code.equals(CBPBroadcasterConstants.CBI_BROKER_IDENTITY_EDITED)) {
+                        onRefresh();
+                        View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+                        emptyListViewsContainer.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
                 }
 
             } catch (ClassCastException e) {

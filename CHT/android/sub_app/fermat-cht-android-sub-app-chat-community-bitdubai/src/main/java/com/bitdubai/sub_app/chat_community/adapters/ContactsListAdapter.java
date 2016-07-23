@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -17,10 +19,12 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.en
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
 import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.filters.ContactsFilter;
 import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -79,14 +83,41 @@ public class ContactsListAdapter
                 if (data.getCountry().equals("null")  || data.getState().equals("") || data.getCountry().equals("country")) countryAddress = "";
                 else countryAddress = data.getCountry();
                 if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
-                    holder.location.setText("Searching...");
+                    holder.location.setText("Not Found");
                 }else
                     holder.location.setText(cityAddress + stateAddress + countryAddress);
             } else
-                holder.location.setText("Searching...");
+                holder.location.setText("Not Found");
 
             if(data.getProfileStatus()!= ProfileStatus.ONLINE)
                 holder.location.setTextColor(Color.RED);
+
+            final ChatActorCommunityInformation dat=data;
+            holder.friendAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ContactDialog contact = new ContactDialog(context, appSession, null);
+                    contact.setProfileName(dat.getAlias());
+                    if(dat.getLocation() != null){
+                        if (dat.getState().equals("null") || dat.getState().equals("")) stateAddress = "";
+                        else stateAddress = dat.getState() + " ";
+                        if (dat.getCity().equals("null") || dat.getCity().equals("")) cityAddress = "";
+                        else cityAddress = dat.getCity() + " ";
+                        if (dat.getCountry().equals("null") || dat.getCountry().equals("")) countryAddress = "";
+                        else countryAddress = dat.getCountry();
+                        if(stateAddress == "" && cityAddress == "" && countryAddress == ""){
+                            contact.setCountryText("Not Found");
+                        }else
+                            contact.setCountryText(cityAddress + stateAddress + countryAddress);
+                    } else
+                        contact.setCountryText("Not Found");
+
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(dat.getImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contact.setProfilePhoto(bmd.getBitmap());
+                    contact.show();
+                }
+            });
         }
     }
 

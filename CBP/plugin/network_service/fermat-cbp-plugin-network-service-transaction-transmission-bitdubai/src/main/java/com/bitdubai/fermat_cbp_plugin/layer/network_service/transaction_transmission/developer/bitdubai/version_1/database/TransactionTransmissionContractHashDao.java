@@ -205,7 +205,15 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
-            BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transaction_id);
+            BusinessTransactionMetadata businessTransactionMetadata;
+
+            try{
+                businessTransactionMetadata = getMetadata(transaction_id);
+            } catch (Exception e){
+                System.out.println("Cannot find "+transaction_id);
+                return;
+            }
+
             businessTransactionMetadata.setState(transactionTransmissionStates);
 
 
@@ -233,11 +241,11 @@ public class TransactionTransmissionContractHashDao {
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
-        } catch (PendingRequestNotFoundException e) {
+        } /*catch (PendingRequestNotFoundException e) {
             e.printStackTrace();
         } catch (CantGetTransactionTransmissionException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        }*/ catch (Exception e){
             e.printStackTrace();
             throw new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot update the record.","");
         }

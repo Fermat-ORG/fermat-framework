@@ -43,6 +43,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,6 +70,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     //Data
     private List<ContractDetail> contractInformation;
     private ContractBasicInformation data;
+
+    private NumberFormat numberFormat= DecimalFormat.getInstance();
 
 
     // UI
@@ -154,8 +159,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private void bindData() {
         final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
         final String paymentCurrency = data.getPaymentCurrency();
+
+
+
         final String merchandise = data.getMerchandise();
-        final double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
+        final String exchangeRateAmount = fixFormat(String.valueOf(data.getExchangeRateAmount()));
         final Date lastUpdate = new Date(data.getLastUpdate());
 
         brokerImage.setImageDrawable(getImgDrawable(data.getCryptoBrokerImage()));
@@ -343,5 +351,37 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
     public void goToWalletHome() {
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+    }
+
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
     }
 }

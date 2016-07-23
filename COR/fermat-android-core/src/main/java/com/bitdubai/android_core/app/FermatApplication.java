@@ -163,6 +163,11 @@ public class FermatApplication extends MultiDexApplication implements FermatAppl
     }
 
     @Override
+    public Object loadObject(String pluginName,ClassLoader classLoader){
+        return fermatFramework.loadObject(pluginName,classLoader);
+    }
+
+    @Override
     public Object objectToProxyfactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
         return fermatFramework.getLoaderManager().objectToProxyFactory(base, interfaceLoader, interfaces, returnInterface);
     }

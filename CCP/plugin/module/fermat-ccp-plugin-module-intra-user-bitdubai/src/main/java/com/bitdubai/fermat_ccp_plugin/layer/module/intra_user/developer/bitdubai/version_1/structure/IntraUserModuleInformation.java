@@ -21,10 +21,11 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
     private byte[] profileImage;
     private ConnectionState connectionState;
     private ProfileStatus state;
+    private long registrationDate;
 
 
 
-    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState,ProfileStatus state)
+    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState,ProfileStatus state,long registrationDate)
     {
         this.name = name;
         this.publicKey = publicKey;
@@ -32,6 +33,7 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
         this.connectionState = connectionState;
         this.phrase = phrase;
         this.state = state;
+        this.registrationDate = registrationDate;
 
     }
     /**
@@ -90,5 +92,11 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
     @Override
     public void setProfileImageNull() {
         profileImage = new byte[0];
+    }
+
+    @Override
+    public long getContactRegistrationDate(){
+
+        return this.registrationDate;
     }
 }

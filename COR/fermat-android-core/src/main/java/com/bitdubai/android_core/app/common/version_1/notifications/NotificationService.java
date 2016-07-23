@@ -158,12 +158,19 @@ public class NotificationService extends Service {
             }
                         // notificationIdCount++;
                         // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
-            NotificationPainter notificationPainter = null;
+            AppConnections fermatAppConnection = null;
             try {
-                notificationPainter = fermatAppConnection.getNotificationPainter(code);
+                fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, FermatApplication.getInstance().getAppManager().getAppsSession(publicKey));
             }catch (Exception e){
+                Log.e(LOG_TAG,"Exception params: "+publicKey);
+                e.printStackTrace();
+            }
+            NotificationPainter notificationPainter = null;
+            if(fermatAppConnection!=null) {
+                try {
+                    notificationPainter = fermatAppConnection.getNotificationPainter(code);
+                } catch (Exception e) {
+                }
             }
 
             if (notificationPainter != null) {

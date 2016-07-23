@@ -58,13 +58,13 @@ public class CustomerBrokerContractPurchaseDao {
 
         public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseContractDatabaseException {
             try {
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseContractDatabaseConstants.DATABASE_NAME);
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
                 throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(cantOpenDatabaseException.getMessage());
             } catch (DatabaseNotFoundException e) {
                 CustomerBrokerPurchaseContractDatabaseFactory CustomerBrokerPurchaseContractDatabaseFactory = new CustomerBrokerPurchaseContractDatabaseFactory(pluginDatabaseSystem);
                 try {
-                    database = CustomerBrokerPurchaseContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                    database = CustomerBrokerPurchaseContractDatabaseFactory.createDatabase(pluginId, CustomerBrokerPurchaseContractDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(cantCreateDatabaseException.getMessage());
                 }

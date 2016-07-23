@@ -97,7 +97,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     //Confirm the payment from the customer
                     walletManager.ackPayment(contractDetail.getContractId());
 
-                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
 
                     //Set internal status of this contract to PAYMENT_RECEPTION_IN_PROCESS
                     walletSession.setData(contractDetail.getContractId(), PAYMENT_RECEPTION_IN_PROCESS);
@@ -334,7 +334,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
             Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
             if (errorManager != null) {
                 errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
             }

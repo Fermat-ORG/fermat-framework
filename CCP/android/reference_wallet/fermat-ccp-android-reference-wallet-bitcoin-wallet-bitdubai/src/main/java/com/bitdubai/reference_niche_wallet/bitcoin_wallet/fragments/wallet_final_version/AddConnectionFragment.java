@@ -42,8 +42,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddCon
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
 
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -384,12 +382,16 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
     @Override
     public void addMenuEnabled() {
-        connectionPickCounter++;
-        if(!isMenuVisible){
-            isMenuVisible = true;
-            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
-                    .setIcon(R.drawable.button_add_connection)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        try {
+            connectionPickCounter++;
+         /*   if (!isMenuVisible) {
+                isMenuVisible = true;
+                menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+                        .setIcon(R.drawable.button_add_connection)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            }*/
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

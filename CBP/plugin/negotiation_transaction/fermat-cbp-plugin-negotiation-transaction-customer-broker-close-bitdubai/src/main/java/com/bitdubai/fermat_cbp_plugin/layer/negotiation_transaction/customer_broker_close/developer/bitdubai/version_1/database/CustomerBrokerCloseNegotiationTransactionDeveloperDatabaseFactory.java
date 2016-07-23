@@ -44,7 +44,6 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
      */
     UUID pluginId;
 
-
     Database database;
 
     /**
@@ -69,7 +68,7 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+               database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -90,7 +89,7 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
                   /*
                    * We create the new database
                    */
-                database = customerBrokerCloseNegotiationTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = customerBrokerCloseNegotiationTransactionDatabaseFactory.createDatabase(pluginId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -100,16 +99,14 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
         }
     }
 
-
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Customer Broker Close", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
-
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
@@ -152,8 +149,6 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
          */
         DeveloperDatabaseTable customerBrokerCloseEventTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME, customerBrokerCloseEventColumns);
         tables.add(customerBrokerCloseEventTable);
-
-
 
         return tables;
     }
@@ -203,14 +198,4 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory {
          */
         return returnedRecords;
     }
-
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
 }

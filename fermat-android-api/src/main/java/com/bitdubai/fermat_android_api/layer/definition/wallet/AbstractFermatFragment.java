@@ -65,7 +65,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     /**
      * If the fragment is visible for the user
      */
-    private boolean isVisible;
+    protected boolean isVisible;
 
     /**
      * Platform

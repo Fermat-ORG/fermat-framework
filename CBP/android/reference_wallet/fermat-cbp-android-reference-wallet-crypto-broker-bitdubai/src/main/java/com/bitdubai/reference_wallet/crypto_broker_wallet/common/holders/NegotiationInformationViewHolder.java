@@ -10,12 +10,17 @@ import android.widget.ProgressBar;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Map;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.*;
@@ -34,7 +39,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
     public final ProgressBar sendingProgressBar;
     private Resources res;
     private View itemView;
-
+    NumberFormat numberFormat= DecimalFormat.getInstance();
 
     /**
      * Public constructor for the custom child ViewHolder
@@ -73,10 +78,16 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         sendingProgressBar.setVisibility(visibility);
 
         Map<ClauseType, String> negotiationSummary = itemInfo.getNegotiationSummary();
-        String exchangeRate = negotiationSummary.get(ClauseType.EXCHANGE_RATE);
+
         String merchandise = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY);
+
+
+        String exchangeRate = fixFormat(negotiationSummary.get(ClauseType.EXCHANGE_RATE));
+
         String paymentCurrency = negotiationSummary.get(ClauseType.BROKER_CURRENCY);
-        String merchandiseAmount = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+
+        String merchandiseAmount = fixFormat(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
+
 
         exchangeRateUnit.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRate, paymentCurrency));
         buyingText.setText(String.format("Buying %1$s %2$s", merchandiseAmount, merchandise));
@@ -117,4 +128,37 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
+    }
+
+
 }

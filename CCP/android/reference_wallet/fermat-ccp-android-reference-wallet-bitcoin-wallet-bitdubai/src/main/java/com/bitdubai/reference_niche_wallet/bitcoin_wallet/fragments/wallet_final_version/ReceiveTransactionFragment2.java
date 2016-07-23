@@ -1,11 +1,13 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +37,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -42,12 +46,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWall
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
-
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
@@ -84,6 +86,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private Handler mHandler;
     private int offset = 0;
+
+    ActiveActorIdentityInformation intraUserLoginIdentity;
 
 
     public static ReceiveTransactionFragment2 newInstance() {
@@ -137,6 +141,16 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        }
+
+        onRefresh();
 
     }
 
@@ -266,7 +280,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         //noinspection TryWithIdenticalCatches
         try {
-            ActiveActorIdentityInformation intraUserLoginIdentity = appSession.getModuleManager().getSelectedActorIdentity();
+
             if(intraUserLoginIdentity!=null) {
 
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
@@ -321,13 +335,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     public void onLongItemClickListener(CryptoWalletTransaction data, int position) {
-    }
-
-    @Override
-    public void onFragmentFocus() {
-        super.onFragmentFocus();
-
-        onRefresh();
     }
 
     @Override
@@ -399,5 +406,28 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try {
+            if(code.equals("BlockchainDownloadComplete")) {
+                //update toolbar color
+                final Toolbar toolBar = getToolbar();
+
+                toolBar.setBackgroundColor(Color.parseColor("#05CFC2"));
+            } else {
+                if(code.equals("Btc_arrive"))
+                { //update transactions
+                    onRefresh();
+                }
+
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
