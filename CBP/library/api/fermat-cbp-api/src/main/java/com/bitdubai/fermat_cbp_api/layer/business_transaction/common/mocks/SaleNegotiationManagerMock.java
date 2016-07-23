@@ -61,6 +61,11 @@ public class SaleNegotiationManagerMock implements CustomerBrokerSaleNegotiation
     }
 
     @Override
+    public boolean closeNegotiation(UUID negotiation) throws CantUpdateCustomerBrokerSaleException {
+        return false;
+    }
+
+    @Override
     public void sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
 
     }

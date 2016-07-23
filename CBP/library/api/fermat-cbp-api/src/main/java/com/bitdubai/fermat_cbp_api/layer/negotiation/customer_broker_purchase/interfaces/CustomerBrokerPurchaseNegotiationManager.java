@@ -69,6 +69,14 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
 
     /**
      *
+     * @param negotiationId
+     * @return
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
+    boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
+
+    /**
+     *
      * @param negotiation
      * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
      */
