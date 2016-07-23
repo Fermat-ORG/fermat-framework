@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
@@ -260,7 +261,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
 
             //Find the negotiation's customerCurrency, to find the marketExchangeRate of that currency vs. USD
 
-            final Collection<Clause> clauses = transactionInfo.getClauses();
+            Collection<Clause> clauses = null;
+            try {
+                clauses = transactionInfo.getClauses();
+            } catch (CantGetListClauseException e) {
+                e.printStackTrace();
+            }
+//            final Collection<Clause> clauses = transactionInfo.getClauses();
             final String customerCurrency = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
 
             float marketExchangeRate = 1;
@@ -280,23 +287,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent2 extends
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
                 customerBrokerSale.setTransactionStatus(IN_OPEN_CONTRACT);
                 dao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-
-                /*FermatBundle fermatBundle = new FermatBundle();
-                fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
-                fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
-                fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
-                fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
-                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
-
-<<<<<<< HEAD
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);*/
-/*=======
-                fermatBundle = new FermatBundle();
-                fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
-                fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
->>>>>>> 0b77e4ac982dacacaff5541307b362f1affcafad*/
             }
         }
     }

@@ -273,13 +273,13 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
             //EVENT - RECEIVE NEGOTIATION
             if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE.getCode())) {
-
                 List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                 for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                     negotiationTransmission = record.getInformation();
 
-                    if (negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_UPDATE.getCode())) {
+                    final NegotiationTransactionType negotiationTransactionType = negotiationTransmission.getNegotiationTransactionType();
+                    if (negotiationTransactionType == NegotiationTransactionType.CUSTOMER_BROKER_UPDATE) {
 
                         negotiationXML = negotiationTransmission.getNegotiationXML();
                         transmissionId = negotiationTransmission.getTransmissionId();

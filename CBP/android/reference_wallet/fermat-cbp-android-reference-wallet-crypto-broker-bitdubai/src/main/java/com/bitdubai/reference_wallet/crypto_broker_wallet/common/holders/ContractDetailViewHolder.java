@@ -182,7 +182,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
                         .append(", using ")
                         .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
-                        textAmountAndMethod.setText(stringBuilder.toString());
+                textAmountAndMethod.setText(stringBuilder.toString());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                         textAction.setText("You receive:");
@@ -227,7 +227,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
                         .append(", using ")
                         .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
-                        textAmountAndMethod.setText(stringBuilder.toString());
+                textAmountAndMethod.setText(stringBuilder.toString());
                 if (stockInWallet(contractDetail.getContractId())) {
                     switch (itemInfo.getContractStatus()) {
                         case PENDING_PAYMENT:
@@ -277,7 +277,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                 stringBuilder.append(getFormattedAmount(itemInfo.getPaymentOrMerchandiseAmount(), itemInfo.getPaymentOrMerchandiseCurrencyCode()))
                         .append(", using ")
                         .append(itemInfo.getPaymentOrMerchandiseTypeOfPayment());
-                        textAmountAndMethod.setText(stringBuilder.toString());
+                textAmountAndMethod.setText(stringBuilder.toString());
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:

@@ -71,22 +71,23 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
     public void sendSaleNegotiationTranasction(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantCloseSaleNegotiationTransactionException {
 
         try {
-
             UUID transactionId = UUID.randomUUID();
 
-            System.out.print(new StringBuilder().append("\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. transactionId: ").append(transactionId).append(" ****\n").toString());
+            System.out.println(new StringBuilder().append("**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. transactionId: ").append(transactionId).append(" ****").toString());
 
-            System.out.print(new StringBuilder()
-                            .append("\n --- Negotiation Mock XML Date")
+            System.out.println(new StringBuilder()
+                            .append("--- Negotiation Mock XML Date")
                             .append("\n- NegotiationId = ").append(customerBrokerSaleNegotiation.getNegotiationId())
                             .append("\n- CustomerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
                             .append("\n- BrokerPublicKey = ").append(customerBrokerSaleNegotiation.getCustomerPublicKey())
                             .append("\n- Status ").append(customerBrokerSaleNegotiation.getStatus()).toString()
             );
+
             String changeClause = "";
             for (final Clause value : customerBrokerSaleNegotiation.getClauses()) {
                 changeClause = new StringBuilder().append(changeClause).append("\n  - Type = ").append(value.getType()).append(". Value = ").append(value.getValue()).append(". Status = ").append(value.getStatus()).toString();
             }
+
             System.out.println(new StringBuilder().append(" - Clauses = \n").append(changeClause).toString());
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
@@ -99,18 +100,20 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {
 
-                System.out.print("\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
+                System.out.println("**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****");
                 customerBrokerSaleNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerSaleNegotiation);
 
-                //SAVE CRYPTO ADREESS OF THE CUSTOMER
-                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
-
             } else {
-                System.out.print("\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****\n");
+                System.out.print("**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****");
             }
 
+            //UPDATE NEGOTIATION
+            System.out.println("**** 3.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. UPDATE NEGOTIATION ****");
+            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+
             //CREATE NEGOTIATION TRANSATION
+            System.out.println("**** 3.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****");
             customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
                     transactionId,
                     customerBrokerSaleNegotiation,

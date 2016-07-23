@@ -179,6 +179,13 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
@@ -220,6 +227,13 @@ public class CustomerAckOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("CUSTOMER_ACK_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 

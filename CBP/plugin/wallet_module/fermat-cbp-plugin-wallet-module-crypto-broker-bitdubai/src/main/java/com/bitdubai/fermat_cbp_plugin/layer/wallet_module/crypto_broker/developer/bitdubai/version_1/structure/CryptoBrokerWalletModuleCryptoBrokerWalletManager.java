@@ -1629,7 +1629,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
             List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
 
-            if(associatedWallets.isEmpty())
+            if (associatedWallets.isEmpty())
                 return associatedIdentity;
 
             final HashSet<Currency> associatedMerchandises = new HashSet<>();

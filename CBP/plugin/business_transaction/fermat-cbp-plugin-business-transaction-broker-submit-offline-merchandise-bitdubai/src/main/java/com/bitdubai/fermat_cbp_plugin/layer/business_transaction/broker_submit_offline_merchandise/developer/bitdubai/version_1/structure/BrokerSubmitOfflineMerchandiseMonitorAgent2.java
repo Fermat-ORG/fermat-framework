@@ -255,9 +255,15 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-
                         contractTransactionStatus = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
                         //TODO: analyze what we need to do here.
 
@@ -302,6 +308,13 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent2
 
                     businessTransactionMetadata = record.getInformation();
                     contractHash = businessTransactionMetadata.getContractHash();
+                    Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                    if (remoteBusinessTransaction != Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE)
+                        continue;
+
+                    System.out.println("BROKER_SUBMIT_OFFLINE_MERCHANDISE - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
 
                     if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 

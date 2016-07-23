@@ -204,6 +204,20 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
         }
     }
 
+    public boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerSaleException {
+        try {
+            System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL").append("\n - NEGOTIATION SALE DAO closeNegotiation(").append(negotiationId).append(")\n").toString());
+            DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
+            DatabaseTableRecord recordToUpdate = SaleNegotiationTable.getEmptyRecord();
+            SaleNegotiationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+            recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.CLOSED.getCode());
+            SaleNegotiationTable.updateRecord(recordToUpdate);
+            return true;
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
     public void sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
         try {
             DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
@@ -356,41 +370,39 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             String Query = null;
 
             if (actorType == ActorType.BROKER) {
-                Query = new StringBuilder()
-                        .append("SELECT * FROM ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME)
-                        .append(" WHERE ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME)
-                        .append(" = '")
-                        .append(NegotiationStatus.SENT_TO_BROKER.getCode())
-                        .append("' OR ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME)
-                        .append(" = '")
-                        .append(NegotiationStatus.WAITING_FOR_BROKER.getCode())
-                        .append("' ORDER BY ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME)
-                        .append(" DESC").toString();
+                Query = "SELECT * FROM " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.SENT_TO_BROKER.getCode() +
+                        "' OR " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.WAITING_FOR_BROKER.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
+                        " DESC";
             }
 
             if (actorType == ActorType.CUSTOMER) {
-                Query = new StringBuilder()
-                        .append("SELECT * FROM ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME)
-                        .append(" WHERE ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME)
-                        .append(" = '")
-                        .append(NegotiationStatus.SENT_TO_CUSTOMER.getCode())
-                        .append("' OR ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME)
-                        .append(" = '")
-                        .append(NegotiationStatus.WAITING_FOR_CUSTOMER.getCode())
-                        .append("' OR ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME)
-                        .append(" = '")
-                        .append(NegotiationStatus.WAITING_FOR_CLOSING.getCode())
-                        .append("' ORDER BY ")
-                        .append(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME)
-                        .append(" DESC").toString();
+                Query = "SELECT * FROM " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.SENT_TO_CUSTOMER.getCode() +
+                        "' OR " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.WAITING_FOR_CUSTOMER.getCode() +
+                        "' OR " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.WAITING_FOR_CLOSING.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
+                        " DESC";
             }
 
             if (Query != null) {

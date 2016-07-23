@@ -108,6 +108,17 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
     }
 
     @Override
+    public boolean closeNegotiation(UUID negotiationId) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        try {
+            System.out.print(new StringBuilder().append("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL").append("\n - NEGOTIATION PURCHASE MANAGER closeNegotiation(").append(negotiationId).append(")\n").toString());
+            return this.customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiationId);
+        } catch (Exception e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(CantUpdateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
+    @Override
     public void sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         try {
             this.customerBrokerPurchaseNegotiationDao.sendToBroker(negotiation);

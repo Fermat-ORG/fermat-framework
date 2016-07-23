@@ -40,7 +40,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.ConnectionsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.DisconnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;

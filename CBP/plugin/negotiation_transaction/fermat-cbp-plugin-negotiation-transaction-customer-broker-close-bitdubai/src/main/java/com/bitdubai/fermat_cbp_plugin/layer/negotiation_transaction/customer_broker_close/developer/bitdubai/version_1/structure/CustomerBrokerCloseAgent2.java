@@ -2,17 +2,18 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 
 import com.bitdubai.fermat_api.AbstractAgent;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
@@ -42,70 +43,46 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by Yordin Alayn on 05.07.16.
  */
 public class CustomerBrokerCloseAgent2 extends AbstractAgent {
 
-    private Database database;
-    private Thread agentThread;
-    private LogManager logManager;
-    private EventManager eventManager;
     private NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot;
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private UUID pluginId;
     private CustomerBrokerCloseNegotiationTransactionDatabaseDao dao;
     private NegotiationTransmissionManager negotiationTransmissionManager;
-    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
-    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private CryptoVaultManager cryptoVaultManager;
     private WalletManagerManager walletManagerManager;
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+    private Broadcaster broadcaster;
 
-    private int iterationConfirmSend = 0;
-    private Map<UUID, Integer> transactionSend = new HashMap<>();
-
-    public CustomerBrokerCloseAgent2(
-            long sleepTime,
-            TimeUnit timeUnit,
-            long initDelayTime,
-            PluginDatabaseSystem pluginDatabaseSystem,
-            LogManager logManager,
-            NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot,
-            EventManager eventManager,
-            UUID pluginId,
-            CustomerBrokerCloseNegotiationTransactionDatabaseDao dao,
-            NegotiationTransmissionManager negotiationTransmissionManager,
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
-            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
-            CryptoAddressBookManager cryptoAddressBookManager,
-            CryptoVaultManager cryptoVaultManager,
-            WalletManagerManager walletManagerManager,
-            IntraWalletUserIdentityManager intraWalletUserIdentityManager
-    ) {
+    public CustomerBrokerCloseAgent2(long sleepTime,
+                                     TimeUnit timeUnit,
+                                     long initDelayTime,
+                                     NegotiationTransactionCustomerBrokerClosePluginRoot pluginRoot,
+                                     CustomerBrokerCloseNegotiationTransactionDatabaseDao dao,
+                                     NegotiationTransmissionManager negotiationTransmissionManager,
+                                     CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+                                     CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+                                     CryptoAddressBookManager cryptoAddressBookManager,
+                                     CryptoVaultManager cryptoVaultManager,
+                                     WalletManagerManager walletManagerManager,
+                                     IntraWalletUserIdentityManager intraWalletUserIdentityManager,
+                                     Broadcaster broadcaster) {
 
         super(sleepTime, timeUnit, initDelayTime);
 
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.logManager = logManager;
         this.pluginRoot = pluginRoot;
-        this.eventManager = eventManager;
-        this.pluginId = pluginId;
         this.dao = dao;
         this.negotiationTransmissionManager = negotiationTransmissionManager;
-        this.customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation = customerBrokerSaleNegotiation;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
@@ -113,11 +90,12 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
         this.walletManagerManager = walletManagerManager;
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
 
+        this.broadcaster = broadcaster;
     }
 
     @Override
     protected Runnable agentJob() {
-        Runnable runnable = new Runnable() {
+        return new Runnable() {
             @Override
             public void run() {
 
@@ -133,7 +111,6 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                 }
             }
         };
-        return runnable;
     }
 
     @Override
@@ -156,7 +133,6 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
             List<CustomerBrokerClose> negotiationPendingToSubmitList;
             CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
             CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
-            int timeConfirmSend = 20;
 
             //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
             negotiationPendingToSubmitList = dao.getPendingToSubmitNegotiation();
@@ -297,6 +273,11 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                 for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                     negotiationTransmission = record.getInformation();
+
+                    final NegotiationTransactionType negotiationTransactionType = negotiationTransmission.getNegotiationTransactionType();
+                    if (negotiationTransactionType != NegotiationTransactionType.CUSTOMER_BROKER_CLOSE)
+                        continue;
+
                     negotiationXML = negotiationTransmission.getNegotiationXML();
                     transmissionId = negotiationTransmission.getTransmissionId();
                     transactionId = negotiationTransmission.getTransactionId();
@@ -310,6 +291,8 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                         if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
 
                             if (negotiationTransaction == null) {
+                                FermatBundle fermatBundle;
+
                                 switch (negotiationType) {
                                     case PURCHASE:
                                         System.out.print("\n\n**** 20.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION PURCHASE ****\n");
@@ -325,6 +308,12 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                                                 intraWalletUserIdentityManager
                                         );
                                         customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
+
+                                        fermatBundle = new FermatBundle();
+                                        fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+
                                         break;
                                     case SALE:
                                         System.out.print("\n\n**** 20.2) NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE TRANSACTION SALE ****\n");
@@ -340,6 +329,11 @@ public class CustomerBrokerCloseAgent2 extends AbstractAgent {
                                                 intraWalletUserIdentityManager
                                         );
                                         customerBrokerCloseSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
+
+                                        fermatBundle = new FermatBundle();
+                                        fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+                                        fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_NEGOTIATION_UPDATE_VIEW);
+                                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                                         break;
                                 }
                             } else {

@@ -282,7 +282,8 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
 
                     negotiationTransmission = record.getInformation();
 
-                    if (negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode())) {
+                    final NegotiationTransactionType negotiationTransactionType = negotiationTransmission.getNegotiationTransactionType();
+                    if (negotiationTransactionType == NegotiationTransactionType.CUSTOMER_BROKER_NEW) {
 
                         negotiationXML = negotiationTransmission.getNegotiationXML();
                         transmissionId = negotiationTransmission.getTransmissionId();
@@ -401,5 +402,4 @@ public class CustomerBrokerNewAgent2 extends AbstractAgent {
             e.printStackTrace();
         }
     }
-
 }

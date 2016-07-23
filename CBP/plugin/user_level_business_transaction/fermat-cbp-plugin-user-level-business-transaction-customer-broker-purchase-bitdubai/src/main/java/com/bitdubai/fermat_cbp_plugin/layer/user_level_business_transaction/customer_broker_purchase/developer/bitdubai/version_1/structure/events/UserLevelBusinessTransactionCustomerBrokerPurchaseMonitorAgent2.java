@@ -651,6 +651,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent2 ext
             } catch (CantGetListClauseException e) {
                 e.printStackTrace();
             }
+//            final Collection<Clause> clauses = transactionInfo.getClauses();
             final String customerCurrency = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
 
             float marketExchangeRate = 1;

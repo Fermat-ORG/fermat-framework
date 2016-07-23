@@ -22,19 +22,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseConstants;
@@ -55,6 +53,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+
 /**
  * Created by Yordin Alayn on 16.09.15.
  */
@@ -64,64 +63,46 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
+    EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.NEGOTIATION_TRANSMISSION)
-    private NegotiationTransmissionManager negotiationTransmissionManager;
+    NegotiationTransmissionManager negotiationTransmissionManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
-    private CryptoAddressBookManager cryptoAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
-    private CryptoVaultManager cryptoVaultManager;
+    CryptoVaultManager cryptoVaultManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
-    private WalletManagerManager walletManagerManager;
+    WalletManagerManager walletManagerManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
-    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
     /*Represent the dataBase*/
     private Database dataBase;
 
     /*Represent DeveloperDatabaseFactory*/
-    CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
-
-    /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
-    private CustomerBrokerCloseNegotiationTransactionDatabaseDao customerBrokerCloseNegotiationTransactionDatabaseDao;
+    private CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent Customer Broker New Manager*/
     private CustomerBrokerCloseManagerImpl customerBrokerCloseManagerImpl;
 
-    /*Represent Agent*/
-    private CustomerBrokerCloseAgent2 customerBrokerCloseAgent;
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
-
-    /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
-
-    /*Represent Service Event Handler*/
-    private CustomerBrokerCloseServiceEventHandler customerBrokerCloseServiceEventHandler;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    //Agent configuration
-    private final long SLEEP_TIME = 5000;
-    private final long DELAY_TIME = 500;
     private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
     public NegotiationTransactionCustomerBrokerClosePluginRoot() {
@@ -146,7 +127,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
             customerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             //Initialize Dao
-            customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
+            CustomerBrokerCloseNegotiationTransactionDatabaseDao customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, dataBase);
             customerBrokerCloseNegotiationTransactionDatabaseDao.initialize();
             //Initialize manager
             customerBrokerCloseManagerImpl = new CustomerBrokerCloseManagerImpl(
@@ -161,7 +142,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
             );
 
             //Init event recorder service.
-            customerBrokerCloseServiceEventHandler = new CustomerBrokerCloseServiceEventHandler(
+            CustomerBrokerCloseServiceEventHandler customerBrokerCloseServiceEventHandler = new CustomerBrokerCloseServiceEventHandler(
                     customerBrokerCloseNegotiationTransactionDatabaseDao,
                     eventManager,
                     this
@@ -169,26 +150,22 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
             customerBrokerCloseServiceEventHandler.start();
 
             //Init monitor Agent
-            customerBrokerCloseAgent = new CustomerBrokerCloseAgent2(
+            long SLEEP_TIME = 5000;
+            long DELAY_TIME = 500;
+            CustomerBrokerCloseAgent2 customerBrokerCloseAgent = new CustomerBrokerCloseAgent2(
                     SLEEP_TIME,
                     TIME_UNIT,
                     DELAY_TIME,
-                    pluginDatabaseSystem,
-                    logManager,
                     this,
-                    eventManager,
-                    pluginId,
                     customerBrokerCloseNegotiationTransactionDatabaseDao,
                     negotiationTransmissionManager,
-                    customerBrokerPurchaseNegotiation,
-                    customerBrokerSaleNegotiation,
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerSaleNegotiationManager,
                     cryptoAddressBookManager,
                     cryptoVaultManager,
                     walletManagerManager,
-                    intraWalletUserIdentityManager
-            );
+                    intraWalletUserIdentityManager,
+                    broadcaster);
             customerBrokerCloseAgent.start();
 
             //Startes Service
@@ -248,7 +225,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     /*IMPLEMENTATION LogManagerForDevelopers*/
     @Override
     public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
+        List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("NegotiationTransactionCustomerBrokerClosePluginRoot");
 
         return returnedClasses;

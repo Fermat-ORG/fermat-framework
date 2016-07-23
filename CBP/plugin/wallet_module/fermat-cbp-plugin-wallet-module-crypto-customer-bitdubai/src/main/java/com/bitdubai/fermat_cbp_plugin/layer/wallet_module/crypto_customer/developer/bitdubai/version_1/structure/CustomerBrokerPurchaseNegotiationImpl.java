@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+
 /**
  * Created by franklin on 13/01/16.
  */
@@ -226,7 +227,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
             clauses.add(new CryptoCustomerWalletModuleClausesImpl(value, customerPublicKey));
         }
 
-        this.status = NegotiationStatus.SENT_TO_BROKER;
+        this.status = dataHasChanged ? NegotiationStatus.SENT_TO_BROKER : NegotiationStatus.WAITING_FOR_CLOSING;
     }
 
     @Override

@@ -268,7 +268,7 @@ public class CustomerBrokerContractSaleDao {
                     .append("' ORDER BY ")
                     .append(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATE_TIME_COLUMN_NAME)
                     .append(" DESC").toString();
-            
+
             Collection<DatabaseTableRecord> res_3 = ContractSaleTable.customQuery(Query, true);
             Collection<CustomerBrokerContractSale> waitingForCustomer = new ArrayList<>();
             for (DatabaseTableRecord record : res_3) {
