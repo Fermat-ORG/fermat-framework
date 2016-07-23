@@ -46,6 +46,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.ui.util.SearchViewStyleHelper;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -62,6 +63,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetInt
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AvailableActorsListAdapter;
@@ -439,27 +442,32 @@ public class BrowserTabFragment
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
-            if (moduleManager.getActiveIntraUserIdentity() != null) {
-                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
-                    appSession.setData(INTRA_USER_SELECTED, data);
-                ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(),
-                        (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
-                connectDialog.setTitle("CONFIRM CONNECTION");
-                connectDialog.setDescription("Are you sure you want to connect with "+data.getName()+"?");
-                connectDialog.setUsername(data.getName());
-                connectDialog.setSecondDescription("");
-                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        onRefresh();
-                    }
-                });
-                connectDialog.show();
+
+            if (data.getState().equals(ProfileStatus.ONLINE)) {
+                if (moduleManager.getActiveIntraUserIdentity() != null) {
+                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
+                        appSession.setData(INTRA_USER_SELECTED, data);
+                    ConnectDialog connectDialog;
+                    connectDialog = new ConnectDialog(getActivity(),
+                            (ReferenceAppFermatSession) appSession, null, data, moduleManager.getActiveIntraUserIdentity());
+                    connectDialog.setTitle("CONFIRM CONNECTION");
+                    connectDialog.setDescription("Are you sure you want to connect with " + data.getName() + "?");
+                    connectDialog.setUsername(data.getName());
+                    connectDialog.setSecondDescription("");
+                    connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            onRefresh();
+                        }
+                    });
+                    connectDialog.show();
+                }
+            }else
+                Toast.makeText(getActivity(),"USER OFFLINE",Toast.LENGTH_SHORT).show();
+
+            } catch (CantGetActiveLoginIdentityException e) {
+                e.printStackTrace();
             }
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

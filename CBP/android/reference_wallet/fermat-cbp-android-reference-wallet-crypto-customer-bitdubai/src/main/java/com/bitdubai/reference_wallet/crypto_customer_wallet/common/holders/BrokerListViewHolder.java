@@ -31,7 +31,6 @@ public class BrokerListViewHolder extends FermatViewHolder {
     public FermatTextView merchandiseToSell;
     public RecyclerView exchangeRates;
 
-
     /**
      * Create a view holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter}
      *
@@ -45,6 +44,7 @@ public class BrokerListViewHolder extends FermatViewHolder {
         brokerName = (FermatTextView) itemView.findViewById(R.id.ccw_broker_name);
         merchandiseToSell = (FermatTextView) itemView.findViewById(R.id.ccw_merchandise_to_sell);
         exchangeRates = (RecyclerView) itemView.findViewById(R.id.ccw_broker_exchange_rates);
+
 
         final Context context = itemView.getContext();
         quotesAdapter = new BrokerExchangeRatesAdapter(context);

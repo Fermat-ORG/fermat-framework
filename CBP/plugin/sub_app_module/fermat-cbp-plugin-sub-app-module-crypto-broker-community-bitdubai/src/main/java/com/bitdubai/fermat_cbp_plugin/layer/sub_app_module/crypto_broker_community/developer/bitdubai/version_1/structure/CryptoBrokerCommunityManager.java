@@ -161,7 +161,8 @@ public class CryptoBrokerCommunityManager
                             connectedBroker.getConnectionState(),
                             connectedBroker.getConnectionId(),
                             worldBroker.getLocation(),
-                            worldBroker.getProfileStatus()));
+                            worldBroker.getProfileStatus(),
+                            worldBroker.getCryptoBrokerIdentityExtraData()));
             }
         }
 
@@ -423,28 +424,26 @@ public class CryptoBrokerCommunityManager
             for (CryptoBrokerActorConnection connectedActor : connectedActors) {
                 cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
                 if (cryptoBrokerExposingData != null) {
-                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData.getLocation());
+
+                    cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData);
                 } else {
                     cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
                 }
 
                 Location actorLocation = cryptoBrokerCommunitySubAppModuleInformation.getLocation();
-                Address address;
+
                 try {
-                    address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
+                    final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
                     cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
-                    cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity());
+                    cryptoBrokerCommunitySubAppModuleInformation.setPlace(address.getCity().equals("null") ? address.getCounty() : address.getCity());
+
                 } catch (CantCreateAddressException ex) {
-//                    GeoRectangle geoRectangle = geolocationManager.getRandomGeoLocation();
-//                    address = geolocationManager.getAddressByCoordinate(geoRectangle.getLatitude(), geoRectangle.getLongitude());
                     cryptoBrokerCommunitySubAppModuleInformation.setCountry("");
                     cryptoBrokerCommunitySubAppModuleInformation.setPlace("");
                 }
 
                 filteredConnectedActors.add(cryptoBrokerCommunitySubAppModuleInformation);
-
             }
-
 
             return new ArrayList<>(filteredConnectedActors);
 
@@ -480,7 +479,7 @@ public class CryptoBrokerCommunityManager
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
             for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac));
 
             return cryptoBrokerCommunityInformationList;
 
@@ -514,8 +513,8 @@ public class CryptoBrokerCommunityManager
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
-            for (CryptoBrokerActorConnection cbac : actorConnections)
-                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbac, null));
+            for (CryptoBrokerActorConnection actorConnection : actorConnections)
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(actorConnection));
 
             return cryptoBrokerCommunityInformationList;
 

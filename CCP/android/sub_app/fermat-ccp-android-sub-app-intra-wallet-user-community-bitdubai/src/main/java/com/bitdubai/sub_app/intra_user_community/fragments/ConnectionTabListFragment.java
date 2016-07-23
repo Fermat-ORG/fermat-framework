@@ -214,7 +214,7 @@ public class ConnectionTabListFragment extends FermatListFragment<IntraUserInfor
                 } catch (CantGetActiveLoginIdentityException e) {
                     e.printStackTrace();
                 }
-
+                break;
             case 4:
                 try{
                     fermatApplicationCaller.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());

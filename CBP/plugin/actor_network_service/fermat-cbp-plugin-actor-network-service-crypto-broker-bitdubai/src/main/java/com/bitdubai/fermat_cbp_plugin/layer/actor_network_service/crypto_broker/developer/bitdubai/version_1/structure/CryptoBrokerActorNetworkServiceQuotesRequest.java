@@ -2,11 +2,11 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.adapters.CurrencyTypeHierarchyAdapter;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.adapters.CurrencyTypeAdapter;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.google.gson.Gson;
@@ -57,7 +57,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
     public String toJson() {
 
         Gson gson = new GsonBuilder()
-                .registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeAdapter())
+                .registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeHierarchyAdapter())
                 .create();
         return gson.toJson(this);
     }
@@ -65,7 +65,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
     public static CryptoBrokerActorNetworkServiceQuotesRequest fromJson(String jsonMessage) {
 
         Gson gson = new GsonBuilder()
-                .registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeAdapter())
+                .registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeHierarchyAdapter())
                 .create();
 
         return gson.fromJson(jsonMessage, CryptoBrokerActorNetworkServiceQuotesRequest.class);

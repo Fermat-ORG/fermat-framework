@@ -258,6 +258,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 Log.e(TAG, new StringBuilder().append("Method request too much data on the main thread, method=").append(method.getName()).append(" at pluginVersionReference=").append(pluginVersionReference.toString3()).toString());
                 fermatModuleObjectWrapper = new FermatModuleObjectWrapper(new LargeWorkOnMainThreadException(proxy, method, t1));
             } catch (RemoteException e) {
+                Log.e(TAG,"Explota acá");
                 e.printStackTrace();
             } catch (RuntimeException e) {
                 Log.e(TAG, new StringBuilder().append("ERROR: Some of the parameters not implement Serializable interface in interface ").append(proxy.getClass().getInterfaces()[0]).append(" in method:").append(method.getName()).toString());

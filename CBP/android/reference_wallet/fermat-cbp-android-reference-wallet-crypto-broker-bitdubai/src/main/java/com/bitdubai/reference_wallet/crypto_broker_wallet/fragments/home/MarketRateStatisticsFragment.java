@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,20 +66,23 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment<Referen
         final FermatTextView currencies = (FermatTextView) rootView.findViewById(R.id.cbw_currencies);
         final FermatTextView providerName = (FermatTextView) rootView.findViewById(R.id.cbw_provider_name);
 
-
         String buyAmount = buy.split(" ")[1];
         String buyCurrency = buy.split(" ")[0];
         String sellAmount = sell.split(" ")[1];
         String sellCurrency = sell.split(" ")[0];
         String buyWithFormat = fixFormat(buyAmount);
         String sellWithFormat = fixFormat(sellAmount);
-        providerName.setText(this.providerName);
+        if (buyAmount.equals("0") && sellAmount.equals("0")) {
+            providerName.setText(new StringBuilder().append(this.providerName).append(" is down").toString());
+            providerName.setTextColor(ContextCompat.getColor(getActivity(), R.color.cbw_provider_is_down));
+        } else {
+            providerName.setText(this.providerName);
+        }
         currencies.setText(currencyPair);
         buyPrice.setText(new StringBuilder().append(buyCurrency).append(" ").append(buyWithFormat).toString());
         sellPrice.setText(new StringBuilder().append(sellCurrency).append(" ").append(sellWithFormat).toString());
 
         configChart(rootView);
-
 
         return rootView;
     }

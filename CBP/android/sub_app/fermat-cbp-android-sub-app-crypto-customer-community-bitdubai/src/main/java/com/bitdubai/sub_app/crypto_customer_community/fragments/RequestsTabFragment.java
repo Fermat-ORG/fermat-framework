@@ -235,16 +235,15 @@ public class RequestsTabFragment
     @Override
     public List<LinkedCryptoCustomerIdentity> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LinkedCryptoCustomerIdentity> dataSet = new ArrayList<>();
-        if (isVisible) {
-            try {
-                offset = pos;
-                final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-                List<LinkedCryptoCustomerIdentity> result = moduleManager.listCryptoCustomersPendingLocalAction(selectedActorIdentity, MAX, offset);
-                dataSet.addAll(result);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            offset = pos;
+            final CryptoCustomerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+            List<LinkedCryptoCustomerIdentity> result = moduleManager.listCryptoCustomersPendingLocalAction(selectedActorIdentity, MAX, offset);
+            dataSet.addAll(result);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return dataSet;
     }
 
@@ -329,7 +328,6 @@ public class RequestsTabFragment
     @Override
     public void onFragmentFocus() {
         super.onFragmentFocus();
-
-        onRefresh();
+        if (isAttached) onRefresh();
     }
 }

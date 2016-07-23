@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,11 +47,16 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         String sellCurrency = sell.split(" ")[0];
         String buyWithFormat = fixFormat(buyAmount);
         String sellWithFormat = fixFormat(sellAmount);
-        providerName.setText(this.providerName);
+        if (buyAmount.equals("0") && sellAmount.equals("0")) {
+            providerName.setText(new StringBuilder().append(this.providerName).append(" is down").toString());
+            providerName.setTextColor(ContextCompat.getColor(getActivity(), R.color.ccw_provider_is_down));
+        } else {
+            providerName.setText(this.providerName);
+        }
+
         currencies.setText(currencyPair);
         buyPrice.setText(new StringBuilder().append(buyCurrency).append(" ").append(buyWithFormat).toString());
         sellPrice.setText(new StringBuilder().append(sellCurrency).append(" ").append(sellWithFormat).toString());
-
 
         return rootView;
     }
