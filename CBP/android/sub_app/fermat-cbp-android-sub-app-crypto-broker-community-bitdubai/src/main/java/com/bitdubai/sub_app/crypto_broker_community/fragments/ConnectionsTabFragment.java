@@ -308,18 +308,18 @@ public class ConnectionsTabFragment
     @Override
     public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-
-        try {
-            offset = pos;
-            if(moduleManager.getSelectedActorIdentity() != null) {
-                final CryptoBrokerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
-                List<CryptoBrokerCommunityInformation> result = moduleManager.listAllConnectedCryptoBrokers(selectedActorIdentity, MAX, offset);
-                dataSet.addAll(result);
+        if(isVisible) {
+            try {
+                offset = pos;
+                if (moduleManager.getSelectedActorIdentity() != null) {
+                    final CryptoBrokerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+                    List<CryptoBrokerCommunityInformation> result = moduleManager.listAllConnectedCryptoBrokers(selectedActorIdentity, MAX, offset);
+                    dataSet.addAll(result);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
         return dataSet;
     }
 

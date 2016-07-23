@@ -343,22 +343,22 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             }
         } else { // if it is an external node, i will raise the event for all the calls done to this connection.
 
-//            for (NetworkClientCall networkClientCall : activeCalls) {
-//
-//                /*
-//                 * Create a raise a new event whit the NETWORK_CLIENT_CALL_CONNECTED
-//                 */
-//                FermatEvent actorCallConnected = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CALL_CONNECTED);
-//                actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
-//
-//                ((NetworkClientCallConnectedEvent) actorCallConnected).setNetworkClientCall(networkClientCall);
-//
-//                /*
-//                 * Raise the event
-//                 */
-//                System.out.println("NetworkClientCommunicationConnection - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
-//                eventManager.raiseEvent(actorCallConnected);
-//            }
+            for (NetworkClientCall networkClientCall : activeCalls) {
+
+                /*
+                 * Create a raise a new event whit the NETWORK_CLIENT_CALL_CONNECTED
+                 */
+                FermatEvent actorCallConnected = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CALL_CONNECTED);
+                actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
+
+                ((NetworkClientCallConnectedEvent) actorCallConnected).setNetworkClientCall(networkClientCall);
+
+                /*
+                 * Raise the event
+                 */
+                System.out.println("NetworkClientCommunicationConnection - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
+                eventManager.raiseEvent(actorCallConnected);
+            }
         }
     }
 
@@ -773,6 +773,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         HttpURLConnection conn = null;
 
+        OutputStream os = null;
+        BufferedReader reader = null;
         try {
 
             URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/profiles/actors");
@@ -787,11 +789,11 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Encoding", "gzip");
 
-            OutputStream os = conn.getOutputStream();
+            os = conn.getOutputStream();
             os.write(formParameters.getBytes());
             os.flush();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
 
             /*
@@ -825,6 +827,20 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }finally {
             if (conn != null)
                 conn.disconnect();
+            if(reader!=null){
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(os!=null){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
 

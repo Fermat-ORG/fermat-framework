@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.AbstractBusinessTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
@@ -36,9 +38,18 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
@@ -52,6 +63,10 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
      * Represent the database
      */
     private Database database;
+
+    Timer timer = new Timer();
+
+    private long reprocessTimer = 600000; //Ten minutes
 
     public TransactionTransmissionNetworkServicePluginRoot() {
         super(
@@ -76,23 +91,14 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
-
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseList(
-                developerObjectFactory
-        );
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory,
                                                              DeveloperDatabase developerDatabase) {
 
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseTableList(
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(
                 developerObjectFactory,
                 developerDatabase
         );
@@ -103,10 +109,7 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                                                                       DeveloperDatabase developerDatabase,
                                                                       DeveloperDatabaseTable developerDatabaseTable) {
 
-        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(
-                pluginDatabaseSystem,
-                pluginId
-        ).getDatabaseTableContent(
+        return new TransactionTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(
                 developerObjectFactory,
                 developerDatabase,
                 developerDatabaseTable
@@ -120,7 +123,52 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     protected void onNetworkServiceRegistered() {
+        reprocessPendingMessage();
+    }
 
+    private void reprocessPendingMessage(){
+        try{
+            //Check if nay message not sent
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(
+                    CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME,
+                    MessagesStatus.PENDING_TO_SEND.getCode());
+            List<NetworkServiceMessage> networkServiceMessages = getNetworkServiceConnectionManager()
+                    .getOutgoingMessagesDao()
+                    .findAll(filters);
+            System.out.println("Transaction Transmission found " + networkServiceMessages.size()+" for sending");
+            for(NetworkServiceMessage networkServiceMessage : networkServiceMessages){
+                try{
+                    System.out.println("Trying to send pending message to " + networkServiceMessage.getReceiverPublicKey());
+                    networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
+                    getNetworkServiceConnectionManager()
+                            .getOutgoingMessagesDao().update(networkServiceMessage);
+                    final ActorProfile sender = new ActorProfile();
+                    sender.setIdentityPublicKey(networkServiceMessage.getSenderPublicKey());
+                    final ActorProfile receiver = new ActorProfile();
+                    receiver.setIdentityPublicKey(networkServiceMessage.getReceiverPublicKey());
+                    sendNewMessage(sender, receiver, networkServiceMessage.toJson());
+                } catch (Exception e){
+                    System.out.println("Transaction Transmission found an exception sending pending messages");
+                    e.printStackTrace();
+                }
+
+            }
+        } catch (Exception e){
+            System.out.println("Transaction Transmission cannot check if there's sending pending messages");
+            e.printStackTrace();
+        }
+
+    }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        }, 0,reprocessTimer);
     }
 
     @Override
@@ -151,6 +199,9 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
                     this,
                     transactionTransmissionContractHashDao
             );
+
+            //declare a schedule to process waiting request message
+            this.startTimer();
 
         } catch (Exception exception) {
             StringBuffer contextBuffer = new StringBuffer();
@@ -294,5 +345,16 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
 
     @Override
     public void onSentMessage(NetworkServiceMessage fermatMessage) {
+        System.out.println("Transaction Transmission just sent :"+fermatMessage.getId());
+        try{
+            getNetworkServiceConnectionManager()
+                    .getOutgoingMessagesDao().markAsDelivered(fermatMessage);
+
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity
+                    .DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+        }
+
     }
 }

@@ -9,6 +9,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
@@ -40,7 +41,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     ReferenceAppFermatSession referenceWalletSession;
     Typeface tf;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
-    private String feeLevel = "SLOW";
+    private String feeLevel = "NORMAL";
+    BlockchainNetworkType blockchainNetworkType;
 
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
@@ -59,9 +61,16 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(this.referenceWalletSession.getAppPublicKey());
 
             if (bitcoinWalletSettings.getFeedLevel() == null)
-                bitcoinWalletSettings.setFeedLevel(BitcoinFee.SLOW.toString());
+                bitcoinWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
             else
                 feeLevel = bitcoinWalletSettings.getFeedLevel();
+
+            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            }
+            else
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
             this.cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
 
@@ -217,11 +226,19 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 public void onClick(View view) {
                     try {
 
-                        cryptoWallet.approveRequest(data.getRequestId()
-                                , cryptoWallet.getSelectedActorIdentity().getPublicKey(),
-                                BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
-                        Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
-                        notifyDataSetChanged();
+                        //check amount + fee less than balance
+                        long availableBalance = cryptoWallet.getBalance(com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
+                        if(data.getAmount() < availableBalance)
+                        {
+                            cryptoWallet.approveRequest(data.getRequestId()
+                                    , cryptoWallet.getSelectedActorIdentity().getPublicKey(),
+                                    BitcoinFee.valueOf(feeLevel).getFee(), FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS);
+                            Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }
+                        else
+                            showMessage(context, "Insufficient funds - Can't Accept Receive Payment" );
+
 //                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
 //                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                         onRefreshList.onRefresh();

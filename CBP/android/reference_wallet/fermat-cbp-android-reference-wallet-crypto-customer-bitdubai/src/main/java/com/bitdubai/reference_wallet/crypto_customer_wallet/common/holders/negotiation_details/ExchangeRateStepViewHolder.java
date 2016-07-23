@@ -13,12 +13,14 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 
 
 public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWatcher {
-    private final DecimalFormat decimalFormat;
+    private NumberFormat numberFormat;
     private final CryptoCustomerWalletModuleManager walletManager;
     private RecyclerView.Adapter adapter;
 
@@ -41,7 +43,6 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         this.adapter = adapter;
         this.walletManager = walletManager;
 
-        decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
         markerRateReferenceText = (TextView) itemView.findViewById(R.id.ccw_market_rate_text);
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
@@ -110,9 +111,8 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
 
         double marketRate = 212.48;
 
-        decimalFormat.setMaximumFractionDigits(8);
 
-        String formattedMarketRate = decimalFormat.format(marketRate);
+        String formattedMarketRate = fixFormat(String.valueOf(marketRate));
 
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToSell, formattedMarketRate, currencyToReceive));
@@ -140,4 +140,39 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
     public interface OnExchangeValueChangeListener {
         void exchangeValueChanged(String newValue);
     }
+
+
+
+    private String fixFormat(String value){
+
+        try {
+            if(compareLessThan1(value)){
+                numberFormat.setMaximumFractionDigits(8);
+            }else{
+                numberFormat.setMaximumFractionDigits(2);
+            }
+            return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    private Boolean compareLessThan1(String value){
+        Boolean lessThan1=true;
+        try {
+            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE)==-1){
+                lessThan1=true;
+            }else{
+                lessThan1=false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return lessThan1;
+    }
+
+
 }

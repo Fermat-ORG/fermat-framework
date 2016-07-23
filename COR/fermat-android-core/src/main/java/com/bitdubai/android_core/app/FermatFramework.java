@@ -1,10 +1,8 @@
 package com.bitdubai.android_core.app;
 
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
@@ -232,33 +230,36 @@ public class FermatFramework implements FermatApplicationSession<FermatSystem>,F
         anrWatchDog.setANRListener(new ANRWatchDog.ANRListener() {
             @Override
             public void onAppNotResponding(final ANRError error) {
-                new AlertDialog.Builder(application.getApplicationContext())
-                        .setTitle("ANR")
-                        .setMessage("ANR")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // continue with delete
-                                Log.e(TAG, "ANR:");
-                                error.printStackTrace();
-                                Log.e(TAG, "FIN ANR");
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                Log.e(TAG,"Imprimiendo errod:");
+                error.printStackTrace();
+
+//                new AlertDialog.Builder(application.getApplicationContext())
+//                        .setTitle("ANR")
+//                        .setMessage("ANR")
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // continue with delete
+//                                Log.e(TAG, "ANR:");
+//                                error.printStackTrace();
+//                                Log.e(TAG, "FIN ANR");
+//                            }
+//                        })
+//                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // do nothing
+//                            }
+//                        })
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
             }
         });
-        anrWatchDog.setIgnoreDebugger(true);
-        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
-            @Override
-            public void onInterrupted(InterruptedException exception) {
-                exception.printStackTrace();
-            }
-        });
+        anrWatchDog.setIgnoreDebugger(false);
+//        anrWatchDog.setInterruptionListener(new ANRWatchDog.InterruptionListener() {
+//            @Override
+//            public void onInterrupted(InterruptedException exception) {
+//                exception.printStackTrace();
+//            }
+//        });
         anrWatchDog.start();
 
 

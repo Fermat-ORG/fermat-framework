@@ -26,7 +26,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,8 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
     private static int MAX_LENGHT_STATE = 30;
     private static int MAX_LENGHT_CITY = 30;
     private static int MAX_LENGHT_ADDRESS = 100;
+    private String lastActivity = "";
+    private boolean isFromNegDetail=false;
 
     // UI
     private FermatEditText cityTextView;
@@ -128,6 +132,13 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
         try {
             walletManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            lastActivity = (String) appSession.getData(FragmentsCommons.LAST_ACTIVITY);
+            setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS);
+            if(lastActivity.equals(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode())){
+                setChangeBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
+                isFromNegDetail=true;
+            }
+            appSession.setData(FragmentsCommons.LAST_ACTIVITY, "");
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
@@ -159,6 +170,10 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     public void onClick(View view) {
@@ -186,7 +201,10 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
         if (location.length() > 0) {
             try {
                 walletManager.createNewLocation(location.toString(), "");
-                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+                if(isFromNegDetail)
+                    getActivity().onBackPressed();
+                else
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
             } catch (CantCreateLocationSaleException e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);

@@ -105,9 +105,9 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
 
             NetworkClientConnection networkClientConnection = networkServiceRoot.getConnection();
 
-            System.out.println("12345** pending messages "+ messages.size());
+//            System.out.println("12345P2 pending messages "+ messages.size());
 
-            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
+            System.out.println("CommunicationSupervisorPendingMessagesAgent (" + networkServiceRoot.getProfile().getNetworkServiceType() + ") - processPendingOutgoingMessage messages.size() = " + (messages != null ? messages.size() : 0));
 
             if(messages != null) {
 
@@ -117,7 +117,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
                 for (NetworkServiceMessage fermatMessage: messages) {
 
                     if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiverPublicKey()) && networkClientConnection.isConnected()) {
-                        System.out.println("12345** YES, IT'S CONNECTED AND INSIDE THE AGENT");
+                        System.out.println("12345P2P PENDING TO SEND MESSAGE");
 
                         ActorProfile remoteParticipant = new ActorProfile();
                         remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
@@ -136,6 +136,27 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
             System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage detect a error: "+e.getMessage());
             e.printStackTrace();
         }
+
+    }
+
+    private void processSentMessages(){
+        try{
+        java.util.Date utilDate = new java.util.Date();
+        long comparingDate = utilDate.getTime();
+
+        List<NetworkServiceMessage> messages = networkServiceRoot.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findBySentMessages();
+//        System.out.println("12345P2 sent messages "+ messages.size());
+
+        for(NetworkServiceMessage message : messages){
+            if(message.getShippingTimestamp().getTime()+30000<=comparingDate){
+//                System.out.println("12345P2P LATE SENT MESSAGE");
+                networkServiceRoot.onNetworkServiceFailedMessage(message);
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage detect a error: "+e.getMessage());
+        e.printStackTrace();
+    }
 
     }
 
@@ -170,7 +191,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
             try {
 
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask(),        30, 30, TimeUnit.SECONDS));
-                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(),       30,  30, TimeUnit.SECONDS));
+                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(),       0,  30, TimeUnit.SECONDS));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(1, 4),     1,  1, TimeUnit.MINUTES));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5, 9),    10, 10, TimeUnit.MINUTES));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10, null), 1,  1, TimeUnit.HOURS));
@@ -290,6 +311,8 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
         @Override
         public void run() {
             processPendingOutgoingMessage(countFailMin, countFailMax);
+            if (countFailMax == null && countFailMin==null)
+                processSentMessages();
         }
     }
 

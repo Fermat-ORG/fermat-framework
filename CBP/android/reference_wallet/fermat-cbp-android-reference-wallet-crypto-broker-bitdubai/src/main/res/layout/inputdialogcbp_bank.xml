@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/txt_title"
-        android:text="CREATE A BANK ACCOUNT"
+        android:text="NEW BANK WALLET"
         android:textSize="16sp"
         android:textColor="#FFF"
         android:gravity="center"
@@ -43,18 +43,13 @@
             android:textColor="#7A7A7A"
             android:paddingTop="20dp"
             android:paddingBottom="1dp"/>
+
         <Spinner
+            android:id="@+id/cbp_bank_account_currency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/cbp_bank_account_currency"
-            android:text="Bank"
-            android:theme="@style/Base.TextAppearance.AppCompat.Button"
-            android:textColor="#000000"
-            android:backgroundTint="#a5a5a5"
-            android:backgroundTintMode="add"
-            android:background="#c2c2c2"
-            android:foregroundTint="#000000"
-            android:foregroundTintMode="add"
+            android:textAlignment="center"
+            android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             />
@@ -67,22 +62,17 @@
             android:paddingTop="20dp"
             android:paddingBottom="1dp"
             />
+
+
         <Spinner
+            android:id="@+id/cbp_bank_account_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/cbp_bank_account_type"
-            android:text="Account Type"
-            android:theme="@style/Base.TextAppearance.AppCompat.Button"
-            android:textColor="#000000"
-            android:backgroundTint="#a5a5a5"
-            android:backgroundTintMode="add"
-            android:background="#c2c2c2"
-            android:foregroundTint="#000000"
-            android:foregroundTintMode="add"
+            android:textAlignment="center"
+            android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             />
-
 
         <TextView
             android:layout_width="wrap_content"

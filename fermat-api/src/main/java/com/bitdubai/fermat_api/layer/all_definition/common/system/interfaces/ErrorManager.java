@@ -71,4 +71,6 @@ public interface ErrorManager extends FermatManager {
                                         final Exception   exception      );
 
     void enabledErrorReport(boolean isErrorReportEnabled);
+
+    void reportUnexpectedPluginException(Plugins plugin, Platforms platform, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception, String[] mailTo, String extraData);
 }

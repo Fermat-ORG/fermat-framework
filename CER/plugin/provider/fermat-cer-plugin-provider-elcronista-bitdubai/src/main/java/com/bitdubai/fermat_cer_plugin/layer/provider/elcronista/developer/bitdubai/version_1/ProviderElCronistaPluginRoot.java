@@ -131,7 +131,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         if (!isCurrencyPairSupported(currencyPair))
-            throw new UnsupportedCurrencyPairException();
+            throw new UnsupportedCurrencyPairException("Unsupported currencyPair=" + currencyPair.toString());
 
         String content, aux;
         JSONObject json;

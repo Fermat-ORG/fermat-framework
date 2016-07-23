@@ -13,6 +13,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
  */
 public class CryptoBrokerIdentityDatabaseConstants {
 
+    public static final String DATABASE_NAME = "identity_crypto_broker";
+
     /**
      * Crypto Broker database table definition.
      */

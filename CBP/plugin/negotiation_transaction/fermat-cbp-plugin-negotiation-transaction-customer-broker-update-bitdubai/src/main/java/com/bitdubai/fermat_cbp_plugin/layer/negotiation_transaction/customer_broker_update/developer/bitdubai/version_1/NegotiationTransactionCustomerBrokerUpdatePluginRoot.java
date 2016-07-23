@@ -84,7 +84,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     private Database                                                            dataBase;
 
     /*Represent DeveloperDatabaseFactory*/
-    private CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory  customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory;
+    CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory  customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory;
 
     /*Represent CustomerBrokerNewNegotiationTransactionDatabaseDao*/
     private CustomerBrokerUpdateNegotiationTransactionDatabaseDao               customerBrokerUpdateNegotiationTransactionDatabaseDao;
@@ -119,7 +119,6 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     /*IMPLEMENTATION Service.*/
     @Override
     public void start() throws CantStartPluginException {
-
         try {
 
             //Initialize database
@@ -130,9 +129,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory.initializeDatabase();
 
             //Initialize Dao
-//            customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem,pluginId);
             customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem,pluginId,dataBase);
-
+            customerBrokerUpdateNegotiationTransactionDatabaseDao.initialize();
             //Initialize manager
             customerBrokerUpdateManagerImpl = new CustomerBrokerUpdateManagerImpl(
                 customerBrokerUpdateNegotiationTransactionDatabaseDao,
@@ -154,15 +152,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                     SLEEP_TIME,
                     TIME_UNIT,
                     DELAY_TIME,
-                    pluginDatabaseSystem,
-                    logManager,
                     this,
-                    eventManager,
-                    pluginId,
                     customerBrokerUpdateNegotiationTransactionDatabaseDao,
                     negotiationTransmissionManager,
-                    customerBrokerPurchaseNegotiation,
-                    customerBrokerSaleNegotiation,
                     customerBrokerPurchaseNegotiationManager,
                     customerBrokerSaleNegotiationManager,
                     broadcaster
@@ -201,20 +193,21 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     @Override
     public FermatManager getManager() { return customerBrokerUpdateManagerImpl; }
     /*END IMPLEMENTATION Service.*/
+
     /*IMPLEMENTATION DatabaseManagerForDevelopers*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        return customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        return customerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
     /*END IMPLEMENTATION DatabaseManagerForDevelopers*/
     /*IMPLEMENTATION LogManagerForDevelopers*/
@@ -257,9 +250,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
     /*PRIVATE METHOD*/
     private void initializeDb() throws CantInitializeCustomerBrokerUpdateNegotiationTransactionDatabaseException {
         try {
-
             dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
-
         } catch (DatabaseNotFoundException e) {
             try {
                 CustomerBrokerUpdateNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerUpdateNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);

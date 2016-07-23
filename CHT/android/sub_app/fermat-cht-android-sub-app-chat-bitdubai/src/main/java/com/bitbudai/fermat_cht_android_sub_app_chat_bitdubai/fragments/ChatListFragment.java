@@ -56,6 +56,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
@@ -446,7 +447,10 @@ public class ChatListFragment
                     }
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
+                    Chat chat=new ChatImpl();
+                    chat.setChatId(adapter.getChatIdItem(position));
                     appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
+                    appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chat);
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch(Exception e)
                 {
@@ -713,17 +717,18 @@ public class ChatListFragment
         @Override
         public void onReceive(FermatBundle fermatBundle) {
             try {
-                String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
+                if(isAttached) {
+                    String code = fermatBundle.getString(Broadcaster.NOTIFICATION_TYPE);
 
-                if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
-//                    fermatBundle.remove(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
-                    onUpdateViewUIThread();
+                    if (code.equals(ChatBroadcasterConstants.CHAT_LIST_UPDATE_VIEW)) {
+                        onUpdateViewUIThread();
 //                    cancelNotification();
-                }
+                    }
 
-                if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
+                    if (code.equals(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE)) {
 //                    cancelNotification();
 //                    fermatBundle.remove(ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+                    }
                 }
             } catch (ClassCastException e) {
                 appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CHT_CHAT,

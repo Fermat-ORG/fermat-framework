@@ -129,6 +129,10 @@ public class OpenContractBusinessTransactionDao {
 
     public void persistContractRecord(Contract contractRecord, ContractType contractType) throws CantInsertRecordException {
         try{
+            if(isContractHashExists(contractRecord.getContractId())) {
+                System.out.println("The contract "+contractRecord+" exists in database");
+                return;
+            }
             ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CREATING_CONTRACT;
             TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.NOT_READY_TO_SEND;
             DatabaseTable databaseTable=getDatabaseContractTable();

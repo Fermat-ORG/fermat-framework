@@ -559,6 +559,10 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      */
     public void persistContractInDatabase(CustomerBrokerContractSale saleContract) throws CantInsertRecordException {
         try {
+            if(isContractHashInDatabase(saleContract.getContractId())){
+                System.out.println("The contract "+saleContract+" exists in database");
+                return;
+            }
             DatabaseTable databaseTable = getAckMerchandiseTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
             databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, saleContract);
@@ -659,6 +663,10 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
                                           String merchandiseCurrencyCode) throws CantInsertRecordException {
 
         try {
+            if(isContractHashInDatabase(contractPurchase.getContractId())){
+                System.out.println("The contract "+contractPurchase+" exists in database");
+                return;
+            }
             //Get information from negotiation clauses.
             DatabaseTable databaseTable = getAckMerchandiseTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();

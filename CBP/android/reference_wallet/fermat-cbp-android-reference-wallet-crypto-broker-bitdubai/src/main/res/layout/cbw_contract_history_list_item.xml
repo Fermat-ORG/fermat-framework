@@ -30,7 +30,7 @@
         android:layout_toEndOf="@+id/cbw_customer_image"
         android:layout_toRightOf="@+id/cbw_customer_image"
         android:singleLine="true"
-        android:textColor="@color/cbw_contract_history_customer_name_text"
+        android:textColor="@color/cbw_contract_history_broker_name_text"
         android:textSize="@dimen/cbw_subtitle_text"
         tools:text="Nelson Ramirez"/>
 
@@ -72,4 +72,19 @@
         android:textColor="@color/cbw_contract_history_exchange_rate_text"
         android:textSize="@dimen/cbw_regular_text_size"
         android:text="@string/cbw_exchange_rate_summary"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_broker_status_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/cbw_last_update_date"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:singleLine="true"
+        android:textColor="@color/cbw_contract_history_broker_name_text"
+        android:textSize="@dimen/cbw_subtitle_text"
+        tools:text="success"/>
 </RelativeLayout>
