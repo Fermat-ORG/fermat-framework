@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetAmountTest {
     @Test
-    public void getAmount(){
+    public void getAmount() {
         CryptoBrokerWalletModuleContractBasicInformation cryptoBrokerWalletModuleContractBasicInformation = mock(CryptoBrokerWalletModuleContractBasicInformation.class);
         when(cryptoBrokerWalletModuleContractBasicInformation.getAmount()).thenReturn(10.0f);
         assertThat(cryptoBrokerWalletModuleContractBasicInformation.getAmount()).isNotNull();

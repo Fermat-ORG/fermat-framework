@@ -27,7 +27,7 @@ public class createTransactionRestockTest {
     public void createTransactionRestock() throws CantCreateCryptoMoneyDestockException, CantCreateCryptoMoneyRestockException {
         StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager = mock(StockTransactionCryptoMoneyRestockManager.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(stockTransactionCryptoMoneyRestockManager).createTransactionRestock(Mockito.any(String.class), Mockito.any(CryptoCurrency.class), Mockito.any(String.class)
-                , Mockito.any(String.class), Mockito.any(BigDecimal.class), Mockito.any(String.class), Mockito.any(BigDecimal.class), Mockito.any(OriginTransaction.class),Mockito.anyString(),Mockito.any(BlockchainNetworkType.class));
+                , Mockito.any(String.class), Mockito.any(BigDecimal.class), Mockito.any(String.class), Mockito.any(BigDecimal.class), Mockito.any(OriginTransaction.class), Mockito.anyString(), Mockito.any(BlockchainNetworkType.class));
     }
 
 }

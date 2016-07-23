@@ -25,46 +25,46 @@ import static org.mockito.Mockito.when;
  * Created by Lozadaa on 02/02/16.
  */
 
-    @RunWith(MockitoJUnitRunner.class)
-    public class createDatabaseTest {
+@RunWith(MockitoJUnitRunner.class)
+public class createDatabaseTest {
 
-        @Mock
-        private PluginDatabaseSystem mockPluginDatabaseSystem;
-        @Mock
-        private DatabaseFactory mockDatabaseFactory;
-        @Mock
-        private DatabaseTableFactory mockTableFactory;
-        @Mock
-        private Database mockDatabase;
+    @Mock
+    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    @Mock
+    private DatabaseFactory mockDatabaseFactory;
+    @Mock
+    private DatabaseTableFactory mockTableFactory;
+    @Mock
+    private Database mockDatabase;
 
-        private UUID testId;
-        private String testDataBaseName;
-        private UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
+    private UUID testId;
+    private String testDataBaseName;
+    private UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 
-        public void setUpTestValues(){
-            testId = UUID.randomUUID();
-            testDataBaseName = UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME;
-        }
-
-        public void setUpGeneralMockitoRules() throws Exception{
-            when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
-            when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
-            when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
-        }
-
-        @Before
-        public void setUp() throws Exception{
-            setUpTestValues();
-            setUpGeneralMockitoRules();
-        }
-
-        @Test
-        public void CreateDatabase_SuccessfulInvocation_ReturnsDatabase() throws Exception{
-            UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory testUserLevelDataBaseFactory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory(mockPluginDatabaseSystem);
-            Database checkDatabase = testUserLevelDataBaseFactory.createDatabase(testId, testDataBaseName);
-            assertThat(checkDatabase).isNotNull();
-        }
-
-
+    public void setUpTestValues() {
+        testId = UUID.randomUUID();
+        testDataBaseName = UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_DATABASE_NAME;
     }
+
+    public void setUpGeneralMockitoRules() throws Exception {
+        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
+        when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
+        when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        setUpTestValues();
+        setUpGeneralMockitoRules();
+    }
+
+    @Test
+    public void CreateDatabase_SuccessfulInvocation_ReturnsDatabase() throws Exception {
+        UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory testUserLevelDataBaseFactory = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseFactory(mockPluginDatabaseSystem);
+        Database checkDatabase = testUserLevelDataBaseFactory.createDatabase(testId, testDataBaseName);
+        assertThat(checkDatabase).isNotNull();
+    }
+
+
+}
 

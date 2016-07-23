@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetBankAccountTest {
 
     @Test
-    public void setBankAccount(){
+    public void setBankAccount() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletAssociatedSetting).setBankAccount(Mockito.any(String.class));
     }

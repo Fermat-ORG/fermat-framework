@@ -14,11 +14,11 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1117;
     private static final int HASH_PRIME_NUMBER_ADD = 3001;
 
-    private final UUID      relationshipId;
-    private final String    identity;
-    private final String      wallet;
+    private final UUID relationshipId;
+    private final String identity;
+    private final String wallet;
 
-    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final String Wallet){
+    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final String Wallet) {
         this.identity = identity;
         this.wallet = Wallet;
         this.relationshipId = relationshipId;
@@ -40,25 +40,25 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
     }
 
     @Override
-    public boolean equals(final Object o){
-        if(!(o instanceof BrokerIdentityWalletRelationship))
+    public boolean equals(final Object o) {
+        if (!(o instanceof BrokerIdentityWalletRelationship))
             return false;
 
         BrokerIdentityWalletRelationship compare = (BrokerIdentityWalletRelationship) o;
 
-        if( !this.identity.equals(compare.getCryptoBroker()) )
+        if (!this.identity.equals(compare.getCryptoBroker()))
             return false;
-        if( !this.wallet.equals(compare.getWallet()) )
+        if (!this.wallet.equals(compare.getWallet()))
             return false;
         return this.relationshipId.equals(compare.getRelationshipId());
 
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += identity.hashCode();
         c += wallet.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

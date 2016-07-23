@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by mati on 2015.12.28..
  */
-public interface FermatFragmentBasics<S extends ReferenceAppFermatSession,R extends ResourceProviderManager>{
+public interface FermatFragmentBasics<S extends ReferenceAppFermatSession, R extends ResourceProviderManager> {
 
     S getAppSession();
 

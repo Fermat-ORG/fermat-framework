@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class getTransactionStatus {
 
     @Test
-    public void getPurchaseStatus(){
+    public void getPurchaseStatus() {
         CustomerBrokerPurchaseImpl customerBrokerPurchaseImpl = mock(CustomerBrokerPurchaseImpl.class);
         try {
             when(customerBrokerPurchaseImpl.getTransactionStatus()).thenReturn(TransactionStatus.getByCode(new String()));

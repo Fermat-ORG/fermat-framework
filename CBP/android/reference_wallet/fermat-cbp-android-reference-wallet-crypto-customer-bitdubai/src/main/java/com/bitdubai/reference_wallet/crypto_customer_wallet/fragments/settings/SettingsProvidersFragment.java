@@ -254,7 +254,7 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
-                        Log.i("DATA PROVIDERSS:", "" + selectedProviders + " Item seleccionado: " + selectedItem);
+                        Log.i("DATA PROVIDERSS:", new StringBuilder().append("").append(selectedProviders).append(" Item seleccionado: ").append(selectedItem).toString());
                         showOrHideNoProvidersView();
                     }
                 }
@@ -376,7 +376,7 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
     private List<String> getFormattedCurrencies(List<Currency> currencies) {
         ArrayList<String> data = new ArrayList<>();
         for (Currency currency : currencies) {
-            data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
+            data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
         }
 
         return data;

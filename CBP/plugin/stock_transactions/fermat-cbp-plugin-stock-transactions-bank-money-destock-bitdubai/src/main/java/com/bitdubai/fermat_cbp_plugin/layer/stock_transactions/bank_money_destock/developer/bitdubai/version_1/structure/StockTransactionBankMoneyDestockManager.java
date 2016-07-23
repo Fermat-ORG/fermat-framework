@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
@@ -11,8 +11,6 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.i
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.BusinessTransactionBankMoneyDestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.MissingBankMoneyDestockDataException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -21,7 +19,7 @@ import java.util.UUID;
 /**
  * The Class <code>StockTransactionBankMoneyRestockManager</code>
  * contains all the business logic of Bank Money Transaction
- *
+ * <p/>
  * Created by franklin on 17/11/15.
  */
 public class StockTransactionBankMoneyDestockManager implements BankMoneyDestockManager {
@@ -32,15 +30,15 @@ public class StockTransactionBankMoneyDestockManager implements BankMoneyDestock
     /**
      * Constructor with params.
      *
-     * @param pluginDatabaseSystem  database system reference.
-     * @param pluginId              of this module.
+     * @param pluginDatabaseSystem database system reference.
+     * @param pluginId             of this module.
      */
     public StockTransactionBankMoneyDestockManager(final PluginDatabaseSystem pluginDatabaseSystem,
                                                    final UUID pluginId,
                                                    final BusinessTransactionBankMoneyDestockPluginRoot pluginRoot) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-        this.pluginRoot           = pluginRoot;
+        this.pluginId = pluginId;
+        this.pluginRoot = pluginRoot;
     }
 
     /**
@@ -86,7 +84,7 @@ public class StockTransactionBankMoneyDestockManager implements BankMoneyDestock
         } catch (MissingBankMoneyDestockDataException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateBankMoneyDestockException("Missing Bank Money Destock Data.", FermatException.wrapException(e), null, null);
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantCreateBankMoneyDestockException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
         }

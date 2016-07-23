@@ -57,9 +57,9 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     public void onBindViewHolder(ContractDetailViewHolder holder, int position) {
         int holderType = getItemViewType(position);
 
-        switch (holderType){
+        switch (holderType) {
             case TYPE_BROKER:
-                ContractDetail brokerViewHolder= dataSet.get(position);
+                ContractDetail brokerViewHolder = dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setSession(this.walletSession);
                 holder.setParentFragment(
@@ -69,7 +69,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
                 holder.bind(brokerViewHolder);
                 break;
             case TYPE_CUSTOMER:
-                ContractDetail customerHolder= dataSet.get(position);
+                ContractDetail customerHolder = dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setSession(this.walletSession);
                 holder.setParentFragment(

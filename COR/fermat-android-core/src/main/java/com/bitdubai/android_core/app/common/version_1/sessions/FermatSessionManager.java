@@ -28,27 +28,27 @@ public class FermatSessionManager {
         return lstAppSession;
     }
 
-    public FermatSession openAppSession(FermatApp app, ErrorManager errorManager, ModuleManager moduleManager,boolean isForSubSession) {
-        FermatSession AppsSession  = buildReferenceSession(app, moduleManager, errorManager);
-        if(!isForSubSession) lstAppSession.put(app.getAppPublicKey(), AppsSession);
+    public FermatSession openAppSession(FermatApp app, ErrorManager errorManager, ModuleManager moduleManager, boolean isForSubSession) {
+        FermatSession AppsSession = buildReferenceSession(app, moduleManager, errorManager);
+        if (!isForSubSession) lstAppSession.put(app.getAppPublicKey(), AppsSession);
         return AppsSession;
     }
 
-    public FermatSession openAppSession(FermatApp app, ErrorManager errorManager, ModuleManager[] moduleManager,boolean isForSubSession) {
-        FermatSession AppsSession  = buildComboAppSession(app, errorManager, moduleManager);
-        if(!isForSubSession) lstAppSession.put(app.getAppPublicKey(), AppsSession);
+    public FermatSession openAppSession(FermatApp app, ErrorManager errorManager, ModuleManager[] moduleManager, boolean isForSubSession) {
+        FermatSession AppsSession = buildComboAppSession(app, errorManager, moduleManager);
+        if (!isForSubSession) lstAppSession.put(app.getAppPublicKey(), AppsSession);
         return AppsSession;
     }
 
-    public FermatSession openComboAppSession(FermatApp app, ErrorManager errorManager,boolean isForSubSession) {
-        FermatSession AppsSession  = buildComboAppSession(app, errorManager);
-        if(!isForSubSession)lstAppSession.put(app.getAppPublicKey(), AppsSession);
+    public FermatSession openComboAppSession(FermatApp app, ErrorManager errorManager, boolean isForSubSession) {
+        FermatSession AppsSession = buildComboAppSession(app, errorManager);
+        if (!isForSubSession) lstAppSession.put(app.getAppPublicKey(), AppsSession);
         return AppsSession;
     }
 
-    public ComboType2FermatSession openComboAppType2Session(FermatApp app,ErrorManager errorManager,boolean isForSubSession){
-        ComboType2FermatSession AppsSession  = buildComboAppType2Session(app, errorManager);
-        if(!isForSubSession)lstAppSession.put(app.getAppPublicKey(), AppsSession);
+    public ComboType2FermatSession openComboAppType2Session(FermatApp app, ErrorManager errorManager, boolean isForSubSession) {
+        ComboType2FermatSession AppsSession = buildComboAppType2Session(app, errorManager);
+        if (!isForSubSession) lstAppSession.put(app.getAppPublicKey(), AppsSession);
         return AppsSession;
     }
 
@@ -64,7 +64,8 @@ public class FermatSessionManager {
     }
 
     public FermatSession getAppsSession(String appPublicKey) {
-        if(appPublicKey == null) throw new NullPointerException("Publick key de la app se encuentra en null");
+        if (appPublicKey == null)
+            throw new NullPointerException("Publick key de la app se encuentra en null");
         return lstAppSession.get(appPublicKey);
     }
 
@@ -73,8 +74,8 @@ public class FermatSessionManager {
     }
 
 
-    public FermatSession buildReferenceSession(FermatApp fermatApp,ModuleManager manager,ErrorManager errorManager){
-        AbstractReferenceAppFermatSession session = new AbstractReferenceAppFermatSession(fermatApp.getAppPublicKey(),fermatApp,errorManager,manager,null);
+    public FermatSession buildReferenceSession(FermatApp fermatApp, ModuleManager manager, ErrorManager errorManager) {
+        AbstractReferenceAppFermatSession session = new AbstractReferenceAppFermatSession(fermatApp.getAppPublicKey(), fermatApp, errorManager, manager, null);
 //        session.setErrorManager(errorManager);
 //        session.setModuleManager(manager);
 //        session.setFermatApp(fermatApp);
@@ -82,12 +83,12 @@ public class FermatSessionManager {
         return session;
     }
 
-    public FermatSession buildComboAppSession(FermatApp fermatApp,ErrorManager errorManager,ModuleManager... manager){
-        AbstractComboFermatSession session = new AbstractComboFermatSession(fermatApp.getAppPublicKey(),fermatApp,null,errorManager,manager);
+    public FermatSession buildComboAppSession(FermatApp fermatApp, ErrorManager errorManager, ModuleManager... manager) {
+        AbstractComboFermatSession session = new AbstractComboFermatSession(fermatApp.getAppPublicKey(), fermatApp, null, errorManager, manager);
         return session;
     }
 
-    public ComboType2FermatSession buildComboAppType2Session(FermatApp app,ErrorManager errorManager){
-        return new ComboType2FermatSession(app.getAppPublicKey(),app,null,errorManager);
+    public ComboType2FermatSession buildComboAppType2Session(FermatApp app, ErrorManager errorManager) {
+        return new ComboType2FermatSession(app.getAppPublicKey(), app, null, errorManager);
     }
 }

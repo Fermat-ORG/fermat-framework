@@ -11,20 +11,20 @@ import org.junit.Test;
 public class IsBetweenTest {
 
     @Test
-    public void isBetweenTrue(){
-        Version version = new Version(1,4,2);
+    public void isBetweenTrue() {
+        Version version = new Version(1, 4, 2);
 
-        Version version1 = new Version(1,0,0);
+        Version version1 = new Version(1, 0, 0);
         Version version2 = new Version("2.0.0");
 
         Assert.assertTrue(version.isBetween(version1, version2));
     }
 
     @Test
-    public void isBetweenFalse(){
-        Version version = new Version(1,5,2);
+    public void isBetweenFalse() {
+        Version version = new Version(1, 5, 2);
 
-        Version version1 = new Version(1,0,0);
+        Version version1 = new Version(1, 0, 0);
         Version version2 = new Version("1.4.0");
 
         Assert.assertFalse(version.isBetween(version1, version2));

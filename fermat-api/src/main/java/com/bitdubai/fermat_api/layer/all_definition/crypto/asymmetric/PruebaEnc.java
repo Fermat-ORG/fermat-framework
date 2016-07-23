@@ -26,7 +26,7 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class PruebaEnc {
 
-    public static void main(String [] args){
+    public static void main(String[] args) {
 
         //AsymmetricCryptography.getFermatCipher();
 
@@ -37,10 +37,10 @@ public class PruebaEnc {
             //Stopwatch stopwatch = Stopwatch.createStarted();
 
             // Generate a 126-bit Digital Signature Algorithm (ECDH) key pair
-           // generateKeys("ECDH", 126);
+            // generateKeys("ECDH", 126);
 
             // Generate a 1024-bit Digital Signature Algorithm (DSA) key pair
-          //  generateKeys("DSA", 1024);
+            //  generateKeys("DSA", 1024);
 
             // Generate a 576-bit DH key pair
             //generateKeys("DH", 576);
@@ -65,9 +65,9 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
 
             final String ppK = "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEArnTl+ahNqXN5KeXKTe3zJ9EGMbNXq/K1KKHAUgmLZmQF3GKHX03btsbNrtCnHIf7/FhCTHAXvIohnfCBxqp9rwIDAQABAkBPNIa3Jxj/boxbn9cOM5LaiHWJ+hU7XYmvRWTWOjweg1mwVP8nj2iQBSAtpd7gbs2uPBYhTAnV9JWIGj8ylxmVAiEA4a7zNcMsl/3zmTsrqv+njQmhik64DrxRQ4RywR/Er4UCIQDF5E5FnaOst+Tp+s30o0l+IQrnNraBwSGwcBtjQEqMowIhALN4YjbN2Ceir1aaxHY+ymqRTyJiyWIGhgVQTcWg0tPVAiA6t9GZynqkZzRfUPIHouPNrxRDIvLocVwDtGAMBSmZrQIgMuQuP9SWinc4fg8pjyWlwvUmlvjOlYh/BS80prJVlYo=";
             ECCKeyPair eccKeyPair = new ECCKeyPair(ppK);
-           // PrivateKey privateKey = AsymmetricCryptography.getPrivateKeyFromString(ppK);
-         //   System.out.println("privateKey : " + privateKey);
-           // System.out.println("privateKey encode : " + AsymmetricCryptography.getFermatCipher().encode(privateKey.getEncoded()));
+            // PrivateKey privateKey = AsymmetricCryptography.getPrivateKeyFromString(ppK);
+            //   System.out.println("privateKey : " + privateKey);
+            // System.out.println("privateKey encode : " + AsymmetricCryptography.getFermatCipher().encode(privateKey.getEncoded()));
 
 
             //KeyPair eccKeyPair = AsymmetricCryptography.createNewKeyPair();
@@ -141,7 +141,7 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
             System.out.println("method 3 = "+stopwatch3.stop());*/
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -157,7 +157,7 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
             PrivateKey privateKey = keyPair.getPrivate();
             PublicKey publicKey = keyPair.getPublic();
 
-            System.out.println("\n" + "Generating key/value pair using " + privateKey.getAlgorithm() + " algorithm");
+            System.out.println(new StringBuilder().append("\n").append("Generating key/value pair using ").append(privateKey.getAlgorithm()).append(" algorithm").toString());
 
             // Get the bytes of the public and private keys
             byte[] privateKeyBytes = privateKey.getEncoded();
@@ -167,10 +167,10 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
             String formatPrivate = privateKey.getFormat(); // PKCS#8
             String formatPublic = publicKey.getFormat(); // X.509
 
-         //   System.out.println("Private Key : " + AsymmetricCryptography.getFermatCipher().encode((privateKeyBytes)));
-            System.out.println("formatPrivate : " + formatPrivate);
-           // System.out.println("Public Key : " + AsymmetricCryptography.getFermatCipher().encode((publicKeyBytes)));
-            System.out.println("formatPublic : " + formatPublic);
+            //   System.out.println("Private Key : " + AsymmetricCryptography.getFermatCipher().encode((privateKeyBytes)));
+            System.out.println(new StringBuilder().append("formatPrivate : ").append(formatPrivate).toString());
+            // System.out.println("Public Key : " + AsymmetricCryptography.getFermatCipher().encode((publicKeyBytes)));
+            System.out.println(new StringBuilder().append("formatPublic : ").append(formatPublic).toString());
 
             // The bytes can be converted back to public and private key objects
             KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm);
@@ -181,18 +181,17 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
             PublicKey publicKey2 = keyFactory.generatePublic(publicKeySpec);
 
             // The original and new keys are the same
-            System.out.println("  Are both private keys equal? " + privateKey.equals(privateKey2));
-            System.out.println("  Are both public keys equal? " + publicKey.equals(publicKey2));
+            System.out.println(new StringBuilder().append("  Are both private keys equal? ").append(privateKey.equals(privateKey2)).toString());
+            System.out.println(new StringBuilder().append("  Are both public keys equal? ").append(publicKey.equals(publicKey2)).toString());
         } catch (InvalidKeySpecException specException) {
             System.out.println("Exception");
             System.out.println("Invalid Key Spec Exception");
         } catch (NoSuchAlgorithmException e) {
             System.out.println("Exception");
-            System.out.println("No such algorithm: " + keyAlgorithm);
+            System.out.println(new StringBuilder().append("No such algorithm: ").append(keyAlgorithm).toString());
         }
 
     }
-
 
 
 }

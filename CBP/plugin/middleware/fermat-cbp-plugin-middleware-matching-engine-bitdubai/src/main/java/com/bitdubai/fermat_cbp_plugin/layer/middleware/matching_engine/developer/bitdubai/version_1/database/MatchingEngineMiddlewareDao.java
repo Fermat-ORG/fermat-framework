@@ -185,7 +185,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
 
                 return buildWalletReferenceRecord(records.get(0));
             } else
-                throw new EarningsSettingsNotRegisteredException("walletPublicKey: " + walletPublicKey, "A wallet with this public key cannot be found.");
+                throw new EarningsSettingsNotRegisteredException(new StringBuilder().append("walletPublicKey: ").append(walletPublicKey).toString(), "A wallet with this public key cannot be found.");
 
         } catch (final CantLoadTableToMemoryException e) {
 
@@ -236,10 +236,10 @@ public class MatchingEngineMiddlewareDao implements Serializable {
         try {
 
             if (existsEarningsPair(earningCurrency, linkedCurrency, walletReference.getPublicKey()))
-                throw new PairAlreadyAssociatedException("earningCurrency: " + earningCurrency + " - linkedCurrency: " + linkedCurrency + " - walletReference: " + walletReference, "The pair already exists in database.");
+                throw new PairAlreadyAssociatedException(new StringBuilder().append("earningCurrency: ").append(earningCurrency).append(" - linkedCurrency: ").append(linkedCurrency).append(" - walletReference: ").append(walletReference).toString(), "The pair already exists in database.");
 
             if (existsEarningsPair(linkedCurrency, earningCurrency, walletReference.getPublicKey()))
-                throw new PairAlreadyAssociatedException("earningCurrency: " + earningCurrency + " - linkedCurrency: " + linkedCurrency + " - walletReference: " + walletReference, "The pair already exists in database.");
+                throw new PairAlreadyAssociatedException(new StringBuilder().append("earningCurrency: ").append(earningCurrency).append(" - linkedCurrency: ").append(linkedCurrency).append(" - walletReference: ").append(walletReference).toString(), "The pair already exists in database.");
 
             final EarningPairState state = EarningPairState.ASSOCIATED;
 
@@ -296,7 +296,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 earningsPairTable.updateRecord(entityRecord);
 
             } else
-                throw new PairNotFoundException("id: " + id, "Pair not exists with the given id.");
+                throw new PairNotFoundException(new StringBuilder().append("id: ").append(id).toString(), "Pair not exists with the given id.");
 
 
         } catch (final CantLoadTableToMemoryException e) {
@@ -332,7 +332,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 earningsPairTable.updateRecord(entityRecord);
 
             } else
-                throw new PairNotFoundException("id: " + id, "Pair not exists with the given id.");
+                throw new PairNotFoundException(new StringBuilder().append("id: ").append(id).toString(), "Pair not exists with the given id.");
 
 
         } catch (final CantLoadTableToMemoryException e) {
@@ -368,7 +368,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 earningsPairTable.updateRecord(entityRecord);
 
             } else
-                throw new PairNotFoundException("id: " + id, "Pair not exists with the given id.");
+                throw new PairNotFoundException(new StringBuilder().append("id: ").append(id).toString(), "Pair not exists with the given id.");
 
 
         } catch (final CantLoadTableToMemoryException e) {
@@ -629,7 +629,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 databaseTransaction.addRecordToUpdate(inputTransactionsTable, record);
             } else {
 
-                throw new CantGetInputTransactionException("inputTransactionId: " + inputTransactionId, "A record with the given id cannot be found in database.");
+                throw new CantGetInputTransactionException(new StringBuilder().append("inputTransactionId: ").append(inputTransactionId).toString(), "A record with the given id cannot be found in database.");
             }
 
         } catch (final CantLoadTableToMemoryException e) {
@@ -663,7 +663,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 databaseTransaction.addRecordToUpdate(inputTransactionsTable, record);
             } else {
 
-                throw new CantGetInputTransactionException("inputTransactionId: " + inputTransactionId, "A record with the given id cannot be found in database.");
+                throw new CantGetInputTransactionException(new StringBuilder().append("inputTransactionId: ").append(inputTransactionId).toString(), "A record with the given id cannot be found in database.");
             }
 
         } catch (final CantLoadTableToMemoryException e) {
@@ -835,7 +835,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 earningsTransactionTable.setFilterTop(max.toString());
             if (offset != null)
                 earningsTransactionTable.setFilterOffSet(offset.toString());
-            if(state != null)
+            if (state != null)
                 earningsTransactionTable.addFermatEnumFilter(EARNING_TRANSACTION_STATE_COLUMN_NAME, state, DatabaseFilterType.EQUAL);
 
             earningsTransactionTable.addUUIDFilter(EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME, earningsPairId, DatabaseFilterType.EQUAL);
@@ -978,7 +978,7 @@ public class MatchingEngineMiddlewareDao implements Serializable {
             final List<DatabaseTableRecord> records = earningTransactionTable.getRecords();
 
             if (records.isEmpty()) {
-                throw new EarningTransactionNotFoundException("id: " + id, "Earning Transaction not exists with the given id.");
+                throw new EarningTransactionNotFoundException(new StringBuilder().append("id: ").append(id).toString(), "Earning Transaction not exists with the given id.");
 
             } else {
                 DatabaseTableRecord entityRecord = records.get(0);

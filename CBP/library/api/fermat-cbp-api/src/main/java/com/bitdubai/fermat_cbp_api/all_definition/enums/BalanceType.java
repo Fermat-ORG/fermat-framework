@@ -16,14 +16,19 @@ public enum BalanceType implements FermatEnum {
     }
 
     @Override
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     public static BalanceType getByCode(String code) {
 
         switch (code) {
-            case "BOOK":      return BOOK;
-            case "AVAILABLE": return AVAILABLE;
-            default:          return AVAILABLE;
+            case "BOOK":
+                return BOOK;
+            case "AVAILABLE":
+                return AVAILABLE;
+            default:
+                return AVAILABLE;
         }
     }
 }

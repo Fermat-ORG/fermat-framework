@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 27.12.15.
  */
-public class CantGetDefaultWalletException extends FermatException{
+public class CantGetDefaultWalletException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER CLOSE. CAN'T GET DEFAULT WALLET EXCEPTION";
 

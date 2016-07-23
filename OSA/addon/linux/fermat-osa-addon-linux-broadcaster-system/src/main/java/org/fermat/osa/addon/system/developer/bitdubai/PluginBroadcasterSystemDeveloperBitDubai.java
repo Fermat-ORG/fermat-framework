@@ -11,14 +11,14 @@ import org.fermat.osa.addon.system.developer.bitdubai.version_1.PluginBroadcaste
 /**
  * The class <code>org.fermat.osa.addon.system.developer.bitdubai.PluginBroadcasterSystemDeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Plugin Broadcaster System Android Addon.
- *
+ * <p/>
  * Here we can choose between the different versions of the Plugin Broadcaster System Addon.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
  *
- * @author  lnacosta
+ * @author lnacosta
  * @version 1.0
- * @since   Java JDK 1.7
+ * @since Java JDK 1.7
  */
 public class PluginBroadcasterSystemDeveloperBitDubai extends AbstractAddonDeveloper {
 

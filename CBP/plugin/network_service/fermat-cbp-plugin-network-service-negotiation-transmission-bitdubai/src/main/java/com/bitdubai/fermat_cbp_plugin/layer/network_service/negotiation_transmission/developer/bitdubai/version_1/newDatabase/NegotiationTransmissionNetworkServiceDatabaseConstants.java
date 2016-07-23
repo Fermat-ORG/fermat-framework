@@ -5,7 +5,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Yordin Alayn - (y.alayn@gmail.com) on 27/11/15.
  *
  * @version 1.0
@@ -13,10 +13,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
  */
 public final class NegotiationTransmissionNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "negotiation_transmission_data_base";
+    public static final String DATA_BASE_NAME = "negotiation_transmission_data_base";
 
     /**
-     *  incoming notification database table definition
+     * incoming notification database table definition
      */
 
     public static final String INCOMING_NOTIFICATION_TABLE_NAME = "incoming_notification";
@@ -43,10 +43,10 @@ public final class NegotiationTransmissionNetworkServiceDatabaseConstants {
     public static final String INCOMING_NOTIFICATION_FIRST_KEY_COLUMN = "id";
 
     /**
-     *  outgoing notification database table definition
+     * outgoing notification database table definition
      */
     public static final String OUTGOING_NOTIFICATION_TABLE_NAME = "outgoing_notification";
-//
+    //
     public static final String OUTGOING_NOTIFICATION_TRANSMISSION_ID_COLUMN_NAME = "transmission_id";
     public static final String OUTGOING_NOTIFICATION_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
     public static final String OUTGOING_NOTIFICATION_NEGOTIATION_ID_COLUMN_NAME = "negotiation_id";

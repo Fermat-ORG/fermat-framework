@@ -11,8 +11,8 @@ import org.junit.Test;
 public class HashTest {
 
     @Test
-    public void equalHashTest(){
-        Version version1 = new Version(1,2,3);
+    public void equalHashTest() {
+        Version version1 = new Version(1, 2, 3);
         Version version2 = new Version("1.2.3");
 
         Assert.assertEquals(version1.hashCode(), version2.hashCode());
@@ -22,8 +22,8 @@ public class HashTest {
     }
 
     @Test
-    public void differentHashTest(){
-        Version version1 = new Version(1,2,3);
+    public void differentHashTest() {
+        Version version1 = new Version(1, 2, 3);
         Version version2 = new Version("1.3.3");
 
         Assert.assertNotEquals(version1.hashCode(), version2.hashCode());

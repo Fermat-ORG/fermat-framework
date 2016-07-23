@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetContractHashTest {
 
     @Test
-    public void getContractHash() throws Exception{
+    public void getContractHash() throws Exception {
 
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class, Mockito.RETURNS_DEEP_STUBS);
         when(businessTransactionMetadataRecord.getContractHash()).thenReturn("1").thenCallRealMethod();

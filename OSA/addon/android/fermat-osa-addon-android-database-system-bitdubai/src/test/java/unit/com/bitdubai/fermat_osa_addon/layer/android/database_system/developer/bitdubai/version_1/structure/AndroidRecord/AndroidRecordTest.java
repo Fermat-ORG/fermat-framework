@@ -22,22 +22,22 @@ public class AndroidRecordTest {
     AndroidRecord record2;
 
     @Before
-    public void setUpAndroidRecord1(){
+    public void setUpAndroidRecord1() {
         record1 = constructAndroidRecord(
-            name1,
-            value1,
-            true,
-            true
+                name1,
+                value1,
+                true,
+                true
         );
     }
 
     @Test
-    public void Variables_AreEquals(){
+    public void Variables_AreEquals() {
         record2 = constructAndroidRecord(
-            name1,
-            value1,
-            true,
-            true
+                name1,
+                value1,
+                true,
+                true
         );
 
         assertThat(record1.isChange()).isEqualTo(record2.isChange());
@@ -49,7 +49,7 @@ public class AndroidRecordTest {
     }
 
     @Test
-    public void Variables_NotEquals(){
+    public void Variables_NotEquals() {
         record2 = constructAndroidRecord(
                 name2,
                 value2,
@@ -70,7 +70,7 @@ public class AndroidRecordTest {
             String value,
             boolean change,
             boolean ValueofVariable
-    ){
+    ) {
         AndroidRecord record = new AndroidRecord();
         record.setName(name);
         record.setChange(change);

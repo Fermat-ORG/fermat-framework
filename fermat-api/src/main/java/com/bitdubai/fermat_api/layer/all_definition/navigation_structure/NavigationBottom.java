@@ -7,5 +7,5 @@ import java.io.Serializable;
 /**
  * Created by mati on 2015.11.30..
  */
-public class NavigationBottom implements FermatNavigationBottom,Serializable {
+public class NavigationBottom implements FermatNavigationBottom, Serializable {
 }

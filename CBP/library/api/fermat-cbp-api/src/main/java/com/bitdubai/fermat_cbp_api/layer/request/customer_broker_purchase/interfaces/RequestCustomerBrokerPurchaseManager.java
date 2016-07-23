@@ -31,11 +31,11 @@ public interface RequestCustomerBrokerPurchaseManager {
     void rejectRequestPurchase(UUID requestId) throws RequestPurchaseRejectFailedException;
 
     RequestCustomerBrokerPurchase createRequestCustomerBrokerPurchase(
-        String requestSenderPublicKey,
-        String requestDestinationPublicKey,
-        MoneyType merchandiseCurrency,
-        float merchandiseAmount,
-        MoneyType paymentCurrency
+            String requestSenderPublicKey,
+            String requestDestinationPublicKey,
+            MoneyType merchandiseCurrency,
+            float merchandiseAmount,
+            MoneyType paymentCurrency
     ) throws com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
 }
 

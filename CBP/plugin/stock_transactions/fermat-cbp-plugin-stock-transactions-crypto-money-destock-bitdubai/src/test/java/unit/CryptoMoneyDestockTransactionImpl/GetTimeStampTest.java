@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetTimeStampTest {
 
     @Test
-    public void getTimeStamp(){
+    public void getTimeStamp() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getTimeStamp()).thenReturn(new Timestamp(1));
         assertThat(cryptoMoneyDestockTransaction.getTimeStamp()).isNotNull();

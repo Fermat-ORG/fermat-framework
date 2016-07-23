@@ -15,7 +15,7 @@ import java.util.List;
 //public class WalletsAdapter extends SingleDeletableItemAdapter<InstalledWallet, WalletViewHolder> {
 public class WalletsAdapter extends SingleDeletableItemAdapter<CBPInstalledWallet, WalletViewHolder> {
 
-//    public WalletsAdapter(Context context, List<InstalledWallet> dataSet) {
+    //    public WalletsAdapter(Context context, List<InstalledWallet> dataSet) {
     public WalletsAdapter(Context context, List<CBPInstalledWallet> dataSet) {
         super(context, dataSet);
     }

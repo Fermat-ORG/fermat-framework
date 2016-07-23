@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDaoTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -8,7 +9,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,23 +40,26 @@ public class getContractTransactionStatusTest {
     DatabaseTableRecord databaseTableRecord;
     private UUID testId;
     private CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
+
     @Before
-    public void setup() throws Exception{
+    public void setup() throws Exception {
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
-                mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+                mockPluginDatabaseSystem, testId, mockDatabase, errorManager);
         setupMockitoGeneralRules();
 
     }
-    public void setupMockitoGeneralRules()throws Exception{
+
+    public void setupMockitoGeneralRules() throws Exception {
         when(mockDatabase.getTable(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME)).
                 thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         doNothing().when(databaseTable).loadToMemory();
     }
+
     @Test
-    public void getContractTransactionStatusTest() throws Exception{
+    public void getContractTransactionStatusTest() throws Exception {
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
         when(databaseTableRecord.getStringValue(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).
@@ -66,9 +69,9 @@ public class getContractTransactionStatusTest {
     }
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getContractTransactionStatusTest_Should_Return_Exception() throws Exception{
+    public void getContractTransactionStatusTest_Should_Return_Exception() throws Exception {
         customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
-                null,null,null,errorManager);
+                null, null, null, errorManager);
         customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(null);
     }
 }

@@ -34,7 +34,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages
  * <p/>
  * Created by Nelson Ramirez on 2015-09-30
  */
-public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>,WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
+public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {

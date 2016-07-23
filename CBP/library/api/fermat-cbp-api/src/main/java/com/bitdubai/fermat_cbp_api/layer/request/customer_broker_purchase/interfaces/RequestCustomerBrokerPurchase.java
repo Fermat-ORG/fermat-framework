@@ -8,5 +8,4 @@ import com.bitdubai.fermat_cbp_api.all_definition.request.Request;
 public interface RequestCustomerBrokerPurchase extends Request {
 
 
-
 }

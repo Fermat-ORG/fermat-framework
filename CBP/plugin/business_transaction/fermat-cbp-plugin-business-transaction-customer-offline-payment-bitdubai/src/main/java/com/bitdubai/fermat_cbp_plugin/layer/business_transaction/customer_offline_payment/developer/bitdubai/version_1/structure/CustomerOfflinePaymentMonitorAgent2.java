@@ -59,6 +59,7 @@ public class CustomerOfflinePaymentMonitorAgent2
 
     /**
      * Default constructor with parameters
+     *
      * @param sleepTime
      * @param timeUnit
      * @param initDelayTime
@@ -97,7 +98,7 @@ public class CustomerOfflinePaymentMonitorAgent2
             // Check contract status to send.
             List<CustomerOfflinePaymentRecord> pendingToSubmitNotificationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
             for (CustomerOfflinePaymentRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
 
                     System.out.println("OFFLINE_PAYMENT - [Customer] Sending notification: OFFLINE_PAYMENT_SUBMITTED");
@@ -113,7 +114,7 @@ public class CustomerOfflinePaymentMonitorAgent2
 
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED);
                     System.out.println("OFFLINE_PAYMENT - [Customer] Update Business Transaction Status: OFFLINE_PAYMENT_SUBMITTED");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -122,7 +123,7 @@ public class CustomerOfflinePaymentMonitorAgent2
             // Check pending notifications - Broker side
             List<CustomerOfflinePaymentRecord> pendingToSubmitConfirmationList = customerOfflinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
             for (CustomerOfflinePaymentRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                try{
+                try {
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
                     System.out.println("OFFLINE_PAYMENT - [Broker] Sending Confirmation");
@@ -137,7 +138,7 @@ public class CustomerOfflinePaymentMonitorAgent2
 
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_PAYMENT);
                     System.out.println("OFFLINE_PAYMENT - [Broker] Update Business Transaction Status: CONFIRM_OFFLINE_PAYMENT");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -145,9 +146,9 @@ public class CustomerOfflinePaymentMonitorAgent2
             // Check if pending events
             List<String> pendingEventsIdList = customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
             for (String eventId : pendingEventsIdList) {
-                try{
+                try {
                     checkPendingEvent(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
             }
@@ -197,7 +198,7 @@ public class CustomerOfflinePaymentMonitorAgent2
                                 getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                         Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
                         String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
-                        if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                        if (!MoneyType.CRYPTO.getCode().equals(clauseValue)) {
                             customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(saleContract);
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
                             customerOfflinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());

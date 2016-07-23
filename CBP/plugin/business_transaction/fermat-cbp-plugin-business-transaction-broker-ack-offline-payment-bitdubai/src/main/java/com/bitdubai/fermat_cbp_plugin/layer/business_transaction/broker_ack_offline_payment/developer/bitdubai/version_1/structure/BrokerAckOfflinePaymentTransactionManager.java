@@ -87,7 +87,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                  */
                 customerBrokerContractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                 if (customerBrokerContractSale == null)
-                    throw new CantAckPaymentException("The CustomerBrokerContractSale with the hash: \n" + contractHash + "\nis null");
+                    throw new CantAckPaymentException(new StringBuilder().append("The CustomerBrokerContractSale with the hash: \n").append(contractHash).append("\nis null").toString());
 
                 final MoneyType paymentType = getMoneyTypeFromContract(customerBrokerContractSale);
                 final FiatCurrency fiatCurrency = getCurrencyToDeliverFromContract(customerBrokerContractSale);
@@ -107,7 +107,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
 
                     customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                     if (customerBrokerContractSale == null)
-                        throw new CantAckPaymentException("The CustomerBrokerContractSale with the hash \n" + contractHash + "\nis null");
+                        throw new CantAckPaymentException(new StringBuilder().append("The CustomerBrokerContractSale with the hash \n").append(contractHash).append("\nis null").toString());
 
                     final MoneyType paymentType = getMoneyTypeFromContract(customerBrokerContractSale);
                     switch (paymentType) {
@@ -121,7 +121,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                             contractTransactionStatus = ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET;
                             break;
                         default:
-                            throw new InvalidParameterException(paymentType + " value from MoneyType is not valid in this plugin");
+                            throw new InvalidParameterException(new StringBuilder().append(paymentType).append(" value from MoneyType is not valid in this plugin").toString());
                     }
 
                     final FiatCurrency currencyType = getCurrencyToDeliverFromContract(customerBrokerContractSale);
@@ -134,7 +134,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                     this.dao.updateContractTransactionStatus(contractHash, contractTransactionStatus);
 
                 } else {
-                    final CantAckPaymentException exception = new CantAckPaymentException("The Ack offline payment with the contract ID \n" + contractHash + "\n process has begun");
+                    final CantAckPaymentException exception = new CantAckPaymentException(new StringBuilder().append("The Ack offline payment with the contract ID \n").append(contractHash).append("\n process has begun").toString());
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
                 }
             }
@@ -199,9 +199,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      * This method returns the currency type from a contract
      *
      * @param customerBrokerContractSale
-     *
      * @return
-     *
      * @throws CantGetListSaleNegotiationsException
      */
     public MoneyType getMoneyTypeFromContract(
@@ -243,9 +241,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      * This method returns the currency type from a contract
      *
      * @param customerBrokerContractSale
-     *
      * @return
-     *
      * @throws CantGetListSaleNegotiationsException
      */
     public FiatCurrency getCurrencyToDeliverFromContract(CustomerBrokerContractSale customerBrokerContractSale)

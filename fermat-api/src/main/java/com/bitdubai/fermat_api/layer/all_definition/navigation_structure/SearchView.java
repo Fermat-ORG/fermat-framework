@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by rodrigo on 2015.07.17..
  */
 
-public class SearchView implements FermatSearchView,Serializable {
+public class SearchView implements FermatSearchView, Serializable {
 
     /**
      * Class private attributes

@@ -15,6 +15,7 @@ public class CantGetListPurchaseNegotiationsException extends FermatException {
 
     /**
      * Constructor with parameters
+     *
      * @param message
      * @param cause
      */
@@ -24,6 +25,7 @@ public class CantGetListPurchaseNegotiationsException extends FermatException {
 
     /**
      * Constructor with parameters
+     *
      * @param message
      */
     public CantGetListPurchaseNegotiationsException(final String message) {

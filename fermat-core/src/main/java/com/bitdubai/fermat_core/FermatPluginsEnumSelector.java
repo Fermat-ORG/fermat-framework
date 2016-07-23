@@ -18,11 +18,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public final class FermatPluginsEnumSelector {
 
     public static FermatPluginsEnum getByPlatformAndCode(final Platforms platforms,
-                                                         final String    code     ) throws InvalidParameterException {
+                                                         final String code) throws InvalidParameterException {
 
         switch (platforms) {
 
-            default: return Plugins.getByCode(code);
+            default:
+                return Plugins.getByCode(code);
         }
     }
 }

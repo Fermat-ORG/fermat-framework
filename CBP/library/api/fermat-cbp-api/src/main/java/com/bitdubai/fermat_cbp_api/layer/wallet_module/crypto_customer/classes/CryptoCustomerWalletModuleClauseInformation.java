@@ -36,20 +36,22 @@ public class CryptoCustomerWalletModuleClauseInformation implements ClauseInform
     public CryptoCustomerWalletModuleClauseInformation(Clause clause) {
         this.clauseType = clause.getType();
 
-        switch (clause.getType()){
+        switch (clause.getType()) {
             case CUSTOMER_PAYMENT_METHOD:
                 try {
                     this.value = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                } catch (InvalidParameterException ignored) {}
-            break;
+                } catch (InvalidParameterException ignored) {
+                }
+                break;
             case BROKER_PAYMENT_METHOD:
                 try {
                     this.value = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                } catch (InvalidParameterException ignored) {}
-            break;
+                } catch (InvalidParameterException ignored) {
+                }
+                break;
             default:
                 this.value = clause.getValue();
-            break;
+                break;
         }
 
         this.status = clause.getStatus();

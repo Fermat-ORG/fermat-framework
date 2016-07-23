@@ -15,10 +15,8 @@ public enum EarningPairState implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    ASSOCIATED     ("ASS"),
-    DISASSOCIATED  ("DIS"),
-
-    ;
+    ASSOCIATED("ASS"),
+    DISASSOCIATED("DIS"),;
 
     private final String code;
 
@@ -30,12 +28,14 @@ public enum EarningPairState implements FermatEnum {
 
         switch (code) {
 
-            case "ASS": return ASSOCIATED   ;
-            case "DIS": return DISASSOCIATED;
+            case "ASS":
+                return ASSOCIATED;
+            case "DIS":
+                return DISASSOCIATED;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "The code received is not valid for the EarningPairState enum."
                 );
         }

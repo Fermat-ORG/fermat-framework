@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetPreviousAvailableBalanceTest {
 
     @Test
-    public void getPreviousAvailableBalance(){
+    public void getPreviousAvailableBalance() {
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
         when(cryptoBrokerStockTransaction.getPreviousAvailableBalance()).thenReturn(BigDecimal.ONE);
         assertThat(cryptoBrokerStockTransaction.getPreviousAvailableBalance()).isNotNull();

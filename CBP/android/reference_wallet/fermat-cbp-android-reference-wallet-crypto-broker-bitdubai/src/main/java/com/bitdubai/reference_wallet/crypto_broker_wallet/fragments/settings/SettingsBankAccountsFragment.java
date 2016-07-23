@@ -76,12 +76,12 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            List<CryptoBrokerWalletAssociatedSetting> associatedSettings= moduleManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+            List<CryptoBrokerWalletAssociatedSetting> associatedSettings = moduleManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
             List<BankAccountNumber> bankAccountNumbers = moduleManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());//"banking_wallet");
-            for (final CryptoBrokerWalletAssociatedSetting aux: associatedSettings){
-                for (BankAccountNumber bankAccountNumber: bankAccountNumbers){
-                    if (aux.getPlatform()==Platforms.BANKING_PLATFORM){
-                        if (aux.getBankAccount().equals(bankAccountNumber.getAccount())){
+            for (final CryptoBrokerWalletAssociatedSetting aux : associatedSettings) {
+                for (BankAccountNumber bankAccountNumber : bankAccountNumbers) {
+                    if (aux.getPlatform() == Platforms.BANKING_PLATFORM) {
+                        if (aux.getBankAccount().equals(bankAccountNumber.getAccount())) {
                             accountsStrings.add(bankAccountNumber.getAccount());
                             accounts.add(bankAccountNumber);
                         }
@@ -261,7 +261,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
 
     private void showBankAccountsDialog(List<InstalledWallet> installedWallets) {
         try {
-            if (viewAccounts.size()>0){
+            if (viewAccounts.size() > 0) {
                 viewAccounts.clear();
             }
             for (InstalledWallet wallet : installedWallets) {
@@ -273,12 +273,12 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
             accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                 @Override
                 public void onItemSelected(BankAccountNumber selectedAccount) {
-                    if( !accountsStrings.contains(selectedAccount.getAccount()) ){
+                    if (!accountsStrings.contains(selectedAccount.getAccount())) {
                         accountsStrings.add(selectedAccount.getAccount());
                         accounts.add(selectedAccount);
                         adapter.changeDataSet(accounts);
                         showOrHideRecyclerView();
-                    }else{
+                    } else {
                         Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Account already exists", Toast.LENGTH_SHORT).show();
                     }
                 }

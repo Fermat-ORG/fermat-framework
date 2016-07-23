@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.network_service.exceptions.CantUpdateRecordDataBaseException</code>
  * is thrown when there is an error trying to update a record in database.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.
  */
 public class CantUpdateRecordDataBaseException extends FermatException {

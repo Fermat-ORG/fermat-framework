@@ -38,19 +38,19 @@ public class ContractClauseRecord implements ContractClause, Serializable {
     }
 
     public void setClauseId(UUID clauseId) {
-        this.clauseId=clauseId;
+        this.clauseId = clauseId;
     }
 
     public void setType(ContractClauseType type) {
-        this.type=type;
+        this.type = type;
     }
 
     public void setExecutionOrder(Integer executionOrder) {
-        this.executionOrder=executionOrder;
+        this.executionOrder = executionOrder;
     }
 
     public void setStatus(ContractClauseStatus status) {
-        this.status=status;
+        this.status = status;
     }
 
 }

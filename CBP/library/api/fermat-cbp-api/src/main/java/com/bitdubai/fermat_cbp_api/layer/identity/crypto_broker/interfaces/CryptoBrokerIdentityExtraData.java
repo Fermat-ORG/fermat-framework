@@ -74,7 +74,6 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
      * This method returns a CryptoBrokerIdentityExtraData from a json String or null if the jsonString is corrupted or bad formatted.
      *
      * @param jsonString the string with the json representation
-     *
      * @return the CryptoBrokerIdentityExtraData or null
      */
     public static CryptoBrokerIdentityExtraData fromJson(String jsonString) {
@@ -91,10 +90,12 @@ public class CryptoBrokerIdentityExtraData implements Serializable {
 
     @Override
     public String toString() {
-        return "CryptoBrokerIdentityExtraData{" +
-                "merchandise=" + merchandise +
-                ", paymentCurrency=" + paymentCurrency +
-                ", extraText='" + extraText + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerIdentityExtraData{")
+                .append("merchandise=").append(merchandise)
+                .append(", paymentCurrency=").append(paymentCurrency)
+                .append(", extraText='").append(extraText)
+                .append('\'')
+                .append('}').toString();
     }
 }
