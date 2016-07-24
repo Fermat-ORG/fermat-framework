@@ -1,10 +1,6 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginTextFile;
 
-import static org.fest.assertions.api.Assertions.*;
-import static org.robolectric.Shadows.shadowOf;
-
 import android.app.Activity;
-import android.content.Context;
 import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -19,6 +15,9 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.UUID;
+
+import static org.fest.assertions.api.Assertions.*;
+import static org.robolectric.Shadows.shadowOf;
 
 /**
  * Created by jorgegonzalez on 2015.06.29..
@@ -37,7 +36,7 @@ public class ConstructionTest {
     private FileLifeSpan testLifeSpan;
 
     @Before
-    public void setUpValues(){
+    public void setUpValues() {
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
         testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();

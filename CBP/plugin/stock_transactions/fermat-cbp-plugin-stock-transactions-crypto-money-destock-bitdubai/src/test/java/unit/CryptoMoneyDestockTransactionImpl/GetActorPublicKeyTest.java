@@ -17,10 +17,10 @@ import static org.mockito.Mockito.when;
 public class GetActorPublicKeyTest {
 
     @Test
-    public void getActorPublicKey(){
+    public void getActorPublicKey() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
-            when(cryptoMoneyDestockTransaction.getActorPublicKey()).thenReturn(new String());
-            assertThat(cryptoMoneyDestockTransaction.getActorPublicKey()).isNotNull();
+        when(cryptoMoneyDestockTransaction.getActorPublicKey()).thenReturn(new String());
+        assertThat(cryptoMoneyDestockTransaction.getActorPublicKey()).isNotNull();
     }
 
 }

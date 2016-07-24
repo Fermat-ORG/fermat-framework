@@ -9,19 +9,17 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum MoneyType implements FermatEnum {
 
-    BANK          ("BAT", "Bank"         ),
-    CASH_DELIVERY ("COH", "Cash Delivery"),
-    CASH_ON_HAND  ("CAD", "Cash on Hand" ),
-    CRYPTO        ("CRT", "Crypto"       ),
-
-    ;
+    BANK("BAT", "Bank"),
+    CASH_DELIVERY("COH", "Cash Delivery"),
+    CASH_ON_HAND("CAD", "Cash on Hand"),
+    CRYPTO("CRT", "Crypto"),;
 
     private final String code, friendlyName;
 
     MoneyType(final String code,
               final String friendlyName) {
 
-        this.code         = code        ;
+        this.code = code;
         this.friendlyName = friendlyName;
     }
 
@@ -38,14 +36,18 @@ public enum MoneyType implements FermatEnum {
 
         switch (code) {
 
-            case "BAT":return BANK         ;
-            case "COH":return CASH_DELIVERY;
-            case "CAD":return CASH_ON_HAND ;
-            case "CRT":return CRYPTO       ;
+            case "BAT":
+                return BANK;
+            case "COH":
+                return CASH_DELIVERY;
+            case "CAD":
+                return CASH_ON_HAND;
+            case "CRT":
+                return CRYPTO;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This code is not valid for the MoneyType enum."
                 );
         }

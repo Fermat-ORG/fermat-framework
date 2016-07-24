@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public interface LinkedCryptoCustomerIdentity extends Serializable{
+public interface LinkedCryptoCustomerIdentity extends Serializable {
 
     /**
      * The method <code>getPublicKey</code> returns the UUID of the connected actor to this identity
@@ -19,6 +19,7 @@ public interface LinkedCryptoCustomerIdentity extends Serializable{
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented crypto broker
+     *
      * @return the public key of the crypto broker
      */
     String getPublicKey();
@@ -39,6 +40,7 @@ public interface LinkedCryptoCustomerIdentity extends Serializable{
 
     /**
      * The method <code>listCryptoBrokerWallets</code> returns the list of the public crypto customer wallets
+     *
      * @return
      */
     List listCryptoCustomerWallets();

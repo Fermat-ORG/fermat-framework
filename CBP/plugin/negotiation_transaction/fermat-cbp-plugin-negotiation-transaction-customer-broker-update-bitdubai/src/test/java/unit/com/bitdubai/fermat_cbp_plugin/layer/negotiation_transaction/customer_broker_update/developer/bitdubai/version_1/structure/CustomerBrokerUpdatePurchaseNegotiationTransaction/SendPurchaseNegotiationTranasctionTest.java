@@ -27,7 +27,7 @@ public class SendPurchaseNegotiationTranasctionTest {
     private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
 
     @Test
-    public void sendPurchaseNegotiationTranasction() throws Exception{
+    public void sendPurchaseNegotiationTranasction() throws Exception {
 
         CustomerBrokerUpdatePurchaseNegotiationTransaction customerBrokerUpdatePurchaseNegotiationTransaction = mock(CustomerBrokerUpdatePurchaseNegotiationTransaction.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(customerBrokerUpdatePurchaseNegotiationTransaction).sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);

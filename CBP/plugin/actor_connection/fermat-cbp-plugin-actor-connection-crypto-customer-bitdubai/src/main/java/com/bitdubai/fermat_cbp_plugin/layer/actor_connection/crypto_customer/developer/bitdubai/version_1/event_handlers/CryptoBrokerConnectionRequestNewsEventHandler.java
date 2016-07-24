@@ -19,19 +19,19 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.dev
  */
 public class CryptoBrokerConnectionRequestNewsEventHandler implements FermatEventHandler {
 
-    private final ActorConnectionEventActions actorConnectionEventActions          ;
+    private final ActorConnectionEventActions actorConnectionEventActions;
     private final CryptoCustomerActorConnectionPluginRoot cryptoCustomerActorConnectionPluginRoot;
 
     public CryptoBrokerConnectionRequestNewsEventHandler(final ActorConnectionEventActions actorConnectionEventActions,
                                                          final CryptoCustomerActorConnectionPluginRoot cryptoCustomerActorConnectionPluginRoot) {
 
-        this.actorConnectionEventActions             = actorConnectionEventActions            ;
+        this.actorConnectionEventActions = actorConnectionEventActions;
         this.cryptoCustomerActorConnectionPluginRoot = cryptoCustomerActorConnectionPluginRoot;
     }
 
     /**
      * FermatEventHandler interface implementation
-     *
+     * <p/>
      * Plugin is started?
      * The event is the expected event?
      */
@@ -46,8 +46,7 @@ public class CryptoBrokerConnectionRequestNewsEventHandler implements FermatEven
 
             } else {
                 EventType eventExpected = EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS;
-                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
-                        "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
+                String context = new StringBuilder().append("Event received: ").append(fermatEvent.getEventType().toString()).append(" - ").append(fermatEvent.getEventType().getCode()).append("\n").append("Event expected: ").append(eventExpected.toString()).append(" - ").append(eventExpected.getCode()).toString();
                 throw new UnexpectedEventException(context);
             }
         } else {

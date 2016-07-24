@@ -8,25 +8,27 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum LogLevel {
 
-    NOT_LOGGING ("NOTLOG", "Logging not defined"),
-    MINIMAL_LOGGING   ("MINLOG", "Logging with minimum information"),
-    MODERATE_LOGGING   ("MODLOG","Logging with medium information"),
-    AGGRESSIVE_LOGGING ("AGGLOG","Logging with maximum information");
+    NOT_LOGGING("NOTLOG", "Logging not defined"),
+    MINIMAL_LOGGING("MINLOG", "Logging with minimum information"),
+    MODERATE_LOGGING("MODLOG", "Logging with medium information"),
+    AGGRESSIVE_LOGGING("AGGLOG", "Logging with maximum information");
 
 
     private String code;
     private final String mDisplayName;
 
-    LogLevel (String code, String DisplayName) {
+    LogLevel(String code, String DisplayName) {
         this.code = code;
         this.mDisplayName = DisplayName;
     }
 
-    public String getCode()   { return code; }
+    public String getCode() {
+        return code;
+    }
 
-    public static LogLevel getByCode(String code)throws InvalidParameterException{
+    public static LogLevel getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
             case "NOTLOG":
                 return LogLevel.NOT_LOGGING;
@@ -37,16 +39,16 @@ public enum LogLevel {
             case "AGGLOG":
                 return LogLevel.AGGRESSIVE_LOGGING;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the logLevel enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the logLevel enum");
 
 
         }
 
     }
 
-    public String getDisplayName() { return mDisplayName; }
-
-
+    public String getDisplayName() {
+        return mDisplayName;
+    }
 
 
 }

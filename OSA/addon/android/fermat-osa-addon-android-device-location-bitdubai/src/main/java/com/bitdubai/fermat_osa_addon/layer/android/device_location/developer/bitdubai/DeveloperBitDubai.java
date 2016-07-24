@@ -9,9 +9,9 @@ import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bit
 /**
  * The class <code>com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.DeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Device Location Android Addon.
- *
+ * <p/>
  * Here we can choose between the different versions of the Device Location Addon.
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  */
 public class DeveloperBitDubai extends AbstractAddonDeveloper {

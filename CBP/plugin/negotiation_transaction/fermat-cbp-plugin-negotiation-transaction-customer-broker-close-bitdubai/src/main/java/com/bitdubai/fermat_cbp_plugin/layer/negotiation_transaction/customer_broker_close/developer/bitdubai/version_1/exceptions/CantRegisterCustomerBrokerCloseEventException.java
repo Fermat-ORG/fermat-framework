@@ -19,6 +19,7 @@ public class CantRegisterCustomerBrokerCloseEventException extends FermatExcepti
     public CantRegisterCustomerBrokerCloseEventException(String message, String context, String possibleReason) {
         this(message, null, context, possibleReason);
     }
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

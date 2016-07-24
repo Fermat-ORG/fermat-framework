@@ -21,6 +21,6 @@ public class FlagNotification extends Observable {
         this.active = active;
         setChanged();
         notifyObservers();
-        this.active=false;
+        this.active = false;
     }
 }

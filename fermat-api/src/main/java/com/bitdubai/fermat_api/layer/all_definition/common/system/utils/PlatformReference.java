@@ -10,10 +10,10 @@ import java.io.Serializable;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/10/2015.
  */
-public class PlatformReference implements Serializable{
+public class PlatformReference implements Serializable {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private Platforms platform;
 
@@ -42,16 +42,17 @@ public class PlatformReference implements Serializable{
     @Override
     public final int hashCode() {
         int c = 0;
-        if(platform!=null)
+        if (platform != null)
             c += platform.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public String toString() {
-        return "PlatformReference{" +
-                " platform=" + platform +
-                '}';
+        return new StringBuilder()
+                .append("PlatformReference{")
+                .append(" platform=").append(platform)
+                .append('}').toString();
     }
 
 }

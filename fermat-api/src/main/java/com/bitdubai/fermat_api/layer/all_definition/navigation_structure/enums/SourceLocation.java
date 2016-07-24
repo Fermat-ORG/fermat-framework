@@ -6,6 +6,6 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
  */
 public enum SourceLocation {
 
-    FERMAT_FRAMEWORK,DEVELOPER_RESOURCES,INTERNET_URL
+    FERMAT_FRAMEWORK, DEVELOPER_RESOURCES, INTERNET_URL
 
 }

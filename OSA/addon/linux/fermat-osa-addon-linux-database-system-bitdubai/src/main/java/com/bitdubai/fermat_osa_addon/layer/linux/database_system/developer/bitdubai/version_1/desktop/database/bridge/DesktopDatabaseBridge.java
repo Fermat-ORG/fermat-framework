@@ -120,8 +120,8 @@ public class DesktopDatabaseBridge {
      * Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
      *
      * @param SQL_QUERY //the SQL query
-     *            Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
-     *            "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
+     *                  Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
+     *                  "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
      * @throws SQLException //if the SQL string is invalid
      */
     public void execSQL(final String SQL_QUERY) throws SQLException {

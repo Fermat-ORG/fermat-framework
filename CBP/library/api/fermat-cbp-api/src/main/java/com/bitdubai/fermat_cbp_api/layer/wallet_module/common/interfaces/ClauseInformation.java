@@ -11,7 +11,10 @@ import java.util.UUID;
  */
 public interface ClauseInformation extends Serializable {
     UUID getClauseID();
+
     ClauseType getType();
+
     String getValue();
+
     ClauseStatus getStatus();
 }

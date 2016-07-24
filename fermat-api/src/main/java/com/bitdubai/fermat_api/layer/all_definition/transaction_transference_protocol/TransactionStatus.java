@@ -6,10 +6,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by eze on 09/06/15.
  */
 public enum TransactionStatus {
-    ACKNOWLEDGED ("ACK"),
-    RESPONSIBLE ("RES"),
-    DELIVERED ("DLV"),
-    APPLIED ("APP");
+    ACKNOWLEDGED("ACK"),
+    RESPONSIBLE("RES"),
+    DELIVERED("DLV"),
+    APPLIED("APP");
 
     private final String code;
 
@@ -17,17 +17,24 @@ public enum TransactionStatus {
         this.code = Code;
     }
 
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     public static TransactionStatus getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "ACK": return TransactionStatus.ACKNOWLEDGED;
-            case "RES": return TransactionStatus.RESPONSIBLE;
-            case "DLV": return TransactionStatus.DELIVERED;
-            case "APP": return TransactionStatus.APPLIED;
+            case "ACK":
+                return TransactionStatus.ACKNOWLEDGED;
+            case "RES":
+                return TransactionStatus.RESPONSIBLE;
+            case "DLV":
+                return TransactionStatus.DELIVERED;
+            case "APP":
+                return TransactionStatus.APPLIED;
             //Modified by Manuel Perez on 04/08/2015
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatus enum");
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the TransactionStatus enum");
 
         }
 

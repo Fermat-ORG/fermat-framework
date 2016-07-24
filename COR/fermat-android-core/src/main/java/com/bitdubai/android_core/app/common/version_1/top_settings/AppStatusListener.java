@@ -21,7 +21,7 @@ public class AppStatusListener implements AppStatusCallbackChanges {
     private WeakReference<FermatActivity> activityWeakReference;
     private WeakReference<FermatTextView> fermatTextViewWeakReference;
 
-    public AppStatusListener(FermatActivity activityWeakReference, ImageButton btn_fermat_apps_status,FermatTextView subTextView) {
+    public AppStatusListener(FermatActivity activityWeakReference, ImageButton btn_fermat_apps_status, FermatTextView subTextView) {
         this.activityWeakReference = new WeakReference<FermatActivity>(activityWeakReference);
         this.btn_fermat_apps_status = new WeakReference<ImageButton>(btn_fermat_apps_status);
         fermatTextViewWeakReference = new WeakReference<FermatTextView>(subTextView);
@@ -34,11 +34,11 @@ public class AppStatusListener implements AppStatusCallbackChanges {
         for (AbstractFermatFragmentInterface fragment : list) {
             try {
                 fragment.onUpdateViewOnUIThread(appsStatus.getCode());
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
-        switch (appsStatus){
+        switch (appsStatus) {
             case RELEASE:
                 btn_fermat_apps_status.get().setBackgroundResource(R.drawable.app_filter_hdpi);
                 break;

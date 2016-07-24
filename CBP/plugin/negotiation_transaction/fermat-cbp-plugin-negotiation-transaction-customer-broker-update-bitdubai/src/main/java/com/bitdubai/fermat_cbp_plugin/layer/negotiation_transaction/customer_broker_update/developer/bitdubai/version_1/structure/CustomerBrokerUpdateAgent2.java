@@ -55,7 +55,6 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
 
 /**
  * Created by Yordin Alayn on 05.07.16.
- *
  */
 public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
@@ -133,10 +132,11 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
             if (!negotiationPendingToSubmitList.isEmpty()) {
                 for (CustomerBrokerUpdate negotiationTransaction : negotiationPendingToSubmitList) {
 
-                    System.out.print("\n\n**** 5) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND " +
-                            "\n - TransactionId: " + negotiationTransaction.getTransactionId() +
-                            "\n - Status: " + negotiationTransaction.getStatusTransaction() +
-                            " ****\n");
+                    System.out.print(new StringBuilder()
+                            .append("\n\n**** 5) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - NEGOTIATION FOR SEND ")
+                            .append("\n - TransactionId: ").append(negotiationTransaction.getTransactionId())
+                            .append("\n - Status: ").append(negotiationTransaction.getStatusTransaction())
+                            .append(" ****\n").toString());
 
                     negotiationXML = negotiationTransaction.getNegotiationXML();
                     negotiationType = negotiationTransaction.getNegotiationType();
@@ -145,8 +145,11 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                     switch (negotiationType) {
                         case PURCHASE:
                             purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" +
-                                    "\n - Status :" + purchaseNegotiation.getStatus().getCode());
+                            System.out.print(new StringBuilder()
+                                    .append("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ")
+                                    .append(purchaseNegotiation.getNegotiationId())
+                                    .append(" ****\n").append("\n - Status :")
+                                    .append(purchaseNegotiation.getStatus().getCode()).toString());
                             //SEND NEGOTIATION TO BROKER
                             negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
@@ -154,8 +157,11 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
                         case SALE:
                             saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                            System.out.print("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" +
-                                    "\n - Status :" + saleNegotiation.getStatus().getCode());
+                            System.out.print(new StringBuilder()
+                                    .append("\n\n**** 6) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): ")
+                                    .append(saleNegotiation.getNegotiationId())
+                                    .append(" ****\n")
+                                    .append("\n - Status :").append(saleNegotiation.getStatus().getCode()).toString());
                             //SEND NEGOTIATION TO CUSTOMER
                             negotiationTransmissionManager.sendNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
@@ -166,7 +172,7 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 //                        System.out.print("\n\n**** 7) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
                     dao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
                     CustomerBrokerUpdate transactionDao = dao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);
-                    System.out.print("\n\n**** 6.1) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: " + transactionDao.getStatusTransaction().getCode() + " ****\n");
+                    System.out.print(new StringBuilder().append("\n\n**** 6.1) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: ").append(transactionDao.getStatusTransaction().getCode()).append(" ****\n").toString());
 
                 }
             }
@@ -183,12 +189,12 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
                     switch (negotiationType) {
                         case PURCHASE:
-                            System.out.print("\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
+                            System.out.print(new StringBuilder().append("\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
                             //SEND CONFIRM NEGOTIATION TO BROKER
                             negotiationTransmissionManager.sendConfirmNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                             break;
                         case SALE:
-                            System.out.print("\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
+                            System.out.print(new StringBuilder().append("\n**** 23) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): ").append(negotiationTransaction.getTransactionId()).append(" ****\n").toString());
                             //SEND NEGOTIATION TO CUSTOMER
                             negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                             break;
@@ -267,13 +273,13 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
 
             //EVENT - RECEIVE NEGOTIATION
             if (eventTypeCode.equals(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE.getCode())) {
-
                 List<Transaction<NegotiationTransmission>> pendingTransactionList = negotiationTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                 for (Transaction<NegotiationTransmission> record : pendingTransactionList) {
 
                     negotiationTransmission = record.getInformation();
 
-                    if (negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_UPDATE.getCode())) {
+                    final NegotiationTransactionType negotiationTransactionType = negotiationTransmission.getNegotiationTransactionType();
+                    if (negotiationTransactionType == NegotiationTransactionType.CUSTOMER_BROKER_UPDATE) {
 
                         negotiationXML = negotiationTransmission.getNegotiationXML();
                         transmissionId = negotiationTransmission.getTransmissionId();
@@ -302,7 +308,7 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                                             );
 
                                             final String purchaseCancelReason = purchaseNegotiation.getCancelReason();
-                                            System.out.println("CancelReason: " + purchaseCancelReason);
+                                            System.out.println(new StringBuilder().append("CancelReason: ").append(purchaseCancelReason).toString());
 
                                             if (purchaseCancelReason != null && !purchaseCancelReason.isEmpty() && !purchaseCancelReason.equalsIgnoreCase("null")) {
                                                 System.out.print("\n**** 20) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL PURCHASE NEGOTIATION TRANSACTION  ****\n");
@@ -356,7 +362,7 @@ public class CustomerBrokerUpdateAgent2 extends AbstractAgent {
                                             );
 
                                             final String saleCancelReason = saleNegotiation.getCancelReason();
-                                            System.out.println("CancelReason: " + saleCancelReason);
+                                            System.out.println(new StringBuilder().append("CancelReason: ").append(saleCancelReason).toString());
 
                                             if (saleCancelReason != null && !saleCancelReason.isEmpty() && !saleCancelReason.equalsIgnoreCase("null")) {
                                                 System.out.print("\n**** 20) NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CANCEL SALE NEGOTIATION TRANSACTION  ****\n");

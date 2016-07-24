@@ -35,7 +35,7 @@ public class CantIdentifyVaultException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
-     * @param context        a String that provides the values of the variables that could have affected the exception
+     * @param context a String that provides the values of the variables that could have affected the exception
      */
     public CantIdentifyVaultException(String context) {
         this(DEFAULT_MESSAGE, null, context, null);

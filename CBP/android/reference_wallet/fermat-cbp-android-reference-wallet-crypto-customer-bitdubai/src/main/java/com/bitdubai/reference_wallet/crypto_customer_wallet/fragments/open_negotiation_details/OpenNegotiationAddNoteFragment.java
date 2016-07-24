@@ -24,15 +24,15 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
 /**
  * Created by Yordin Alayn on 29.01.16.
  */
-public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>{
+public class OpenNegotiationAddNoteFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
-    public OpenNegotiationAddNoteFragment(){
+    public OpenNegotiationAddNoteFragment() {
 
     }
 
-    public static OpenNegotiationAddNoteFragment newInstance(){
+    public static OpenNegotiationAddNoteFragment newInstance() {
         return new OpenNegotiationAddNoteFragment();
     }
 
@@ -69,10 +69,10 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Refe
 
     }
 
-    private void initViews(View layout){
+    private void initViews(View layout) {
 
         final EditText noteEditText = (EditText) layout.findViewById(R.id.ccw_open_negotiation_text_note);
-        if(negotiationInfo.getMemo() != null) noteEditText.setText(negotiationInfo.getMemo());
+        if (negotiationInfo.getMemo() != null) noteEditText.setText(negotiationInfo.getMemo());
 
         Button cancelNoteButton = (Button) layout.findViewById(R.id.ccw_open_negotiation_cancel_note);
         cancelNoteButton.setOnClickListener(new View.OnClickListener() {

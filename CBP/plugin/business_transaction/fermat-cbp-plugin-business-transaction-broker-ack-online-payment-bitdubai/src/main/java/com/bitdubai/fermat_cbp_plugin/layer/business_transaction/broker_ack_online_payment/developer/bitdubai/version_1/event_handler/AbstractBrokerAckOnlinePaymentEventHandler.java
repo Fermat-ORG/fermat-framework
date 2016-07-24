@@ -13,7 +13,7 @@ public abstract class AbstractBrokerAckOnlinePaymentEventHandler implements Ferm
     public void setBrokerAckOnlinePaymentRecorderService(
             BrokerAckOnlinePaymentRecorderService brokerAckOnlinePaymentRecorderService) throws
             CantSetObjectException {
-        if(brokerAckOnlinePaymentRecorderService ==null){
+        if (brokerAckOnlinePaymentRecorderService == null) {
             throw new CantSetObjectException("brokerAckOnlinePaymentRecorderService is null");
         }
         this.brokerAckOnlinePaymentRecorderService = brokerAckOnlinePaymentRecorderService;

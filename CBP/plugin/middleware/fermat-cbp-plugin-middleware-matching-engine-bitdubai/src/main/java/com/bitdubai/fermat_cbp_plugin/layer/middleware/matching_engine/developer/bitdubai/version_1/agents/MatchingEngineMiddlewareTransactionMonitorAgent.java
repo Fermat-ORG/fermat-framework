@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents;
 
 import com.bitdubai.fermat_api.FermatAgent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
@@ -18,8 +18,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetInputTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.utils.MatchingEngineMiddlewareCurrencyPair;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,17 +40,17 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
     private Thread agentThread;
 
-    private final CryptoBrokerWalletManager           cryptoBrokerWalletManager;
-    private final MatchingEngineMiddlewarePluginRoot  pluginRoot               ;
-    private final MatchingEngineMiddlewareDao         dao                      ;
+    private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private final MatchingEngineMiddlewarePluginRoot pluginRoot;
+    private final MatchingEngineMiddlewareDao dao;
 
-    public MatchingEngineMiddlewareTransactionMonitorAgent(final CryptoBrokerWalletManager          cryptoBrokerWalletManager,
-                                                           final MatchingEngineMiddlewarePluginRoot pluginRoot             ,
-                                                           final MatchingEngineMiddlewareDao        dao) {
+    public MatchingEngineMiddlewareTransactionMonitorAgent(final CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                                           final MatchingEngineMiddlewarePluginRoot pluginRoot,
+                                                           final MatchingEngineMiddlewareDao dao) {
 
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
-        this.pluginRoot                = pluginRoot               ;
-        this.dao                       = dao                      ;
+        this.pluginRoot = pluginRoot;
+        this.dao = dao;
 
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -72,7 +70,7 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
     @Override
     public void stop() {
 
-        if(isRunning())
+        if (isRunning())
             this.agentThread.interrupt();
 
         this.status = AgentStatus.STOPPED;
@@ -171,14 +169,14 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
         MatchingEngineMiddlewareCurrencyPair currencyPair;
 
-        List<String > transactionsToMarkAsSeen = new ArrayList<>();
+        List<String> transactionsToMarkAsSeen = new ArrayList<>();
 
         for (CurrencyMatching currencyMatching : currencyMatchingList) {
 
             try {
 
                 currencyPair = new MatchingEngineMiddlewareCurrencyPair(
-                        currencyMatching.getCurrencyGiving()   ,
+                        currencyMatching.getCurrencyGiving(),
                         currencyMatching.getCurrencyReceiving()
                 );
 
@@ -186,7 +184,7 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
                 if (earningPairId == null) {
 
-                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new CantCreateInputTransactionException("currencyMatching: " + currencyMatching, "There's no earnings pair set for this currency matching."));
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new CantCreateInputTransactionException(new StringBuilder().append("currencyMatching: ").append(currencyMatching).toString(), "There's no earnings pair set for this currency matching."));
 
                 } else {
 

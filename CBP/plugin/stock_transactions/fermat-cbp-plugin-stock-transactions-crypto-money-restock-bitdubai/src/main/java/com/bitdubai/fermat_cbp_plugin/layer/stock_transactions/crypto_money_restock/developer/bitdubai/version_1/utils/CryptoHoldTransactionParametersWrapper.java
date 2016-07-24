@@ -13,17 +13,17 @@ import java.util.UUID;
  * Created by franklin on 18/11/15.
  */
 public class CryptoHoldTransactionParametersWrapper implements CryptoHoldTransactionParameters {
-    private  UUID                 transactionId;
-    private  CryptoCurrency        cryptoCurrency;
-    private  String                walletPublicKey;
-    private  String                publicActorKey;
-    private  BigDecimal            amount;
-    private  String                memo;
-    private  String                publicKeyPlugin;
-    private  BlockchainNetworkType blockchainNetworkType;
+    private UUID transactionId;
+    private CryptoCurrency cryptoCurrency;
+    private String walletPublicKey;
+    private String publicActorKey;
+    private BigDecimal amount;
+    private String memo;
+    private String publicKeyPlugin;
+    private BlockchainNetworkType blockchainNetworkType;
     //fee values
-    private long                   fee;
-    private FeeOrigin              feeOrigin;
+    private long fee;
+    private FeeOrigin feeOrigin;
 
     public CryptoHoldTransactionParametersWrapper(UUID transactionId,
                                                   CryptoCurrency cryptoCurrency,
@@ -35,20 +35,21 @@ public class CryptoHoldTransactionParametersWrapper implements CryptoHoldTransac
                                                   BlockchainNetworkType blockchainNetworkType,
                                                   long fee,
                                                   FeeOrigin feeOrigin
-    ){
-        this.transactionId         = transactionId;
-        this.cryptoCurrency        = cryptoCurrency;
-        this.walletPublicKey       = walletPublicKey;
-        this.publicActorKey        = publicActorKey;
-        this.amount                = amount;
-        this.memo                  = memo;
-        this.publicKeyPlugin       = publicKeyPlugin;
+    ) {
+        this.transactionId = transactionId;
+        this.cryptoCurrency = cryptoCurrency;
+        this.walletPublicKey = walletPublicKey;
+        this.publicActorKey = publicActorKey;
+        this.amount = amount;
+        this.memo = memo;
+        this.publicKeyPlugin = publicKeyPlugin;
         this.blockchainNetworkType = blockchainNetworkType;
-        this.fee                   = fee;
-        this.feeOrigin             = feeOrigin;
+        this.fee = fee;
+        this.feeOrigin = feeOrigin;
     }
 
-    public CryptoHoldTransactionParametersWrapper(){}
+    public CryptoHoldTransactionParametersWrapper() {
+    }
 
     @Override
     public UUID getTransactionId() {
@@ -146,7 +147,7 @@ public class CryptoHoldTransactionParametersWrapper implements CryptoHoldTransac
     }
 
     @Override
-    public void setFee(BitcoinFee bitcoinFee){
+    public void setFee(BitcoinFee bitcoinFee) {
         this.fee = bitcoinFee.getFee();
     }
 

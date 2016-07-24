@@ -6,12 +6,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 /**
  * Created by Yordin Alayn on 22.12.15.
  */
-public abstract class AbstractCustomerBrokerCloseEventHandler implements FermatEventHandler{
+public abstract class AbstractCustomerBrokerCloseEventHandler implements FermatEventHandler {
 
     public CustomerBrokerCloseServiceEventHandler customerBrokerCloseServiceEventHandler;
 
     public void setCustomerBrokerNewService(CustomerBrokerCloseServiceEventHandler customerBrokerNewService) throws CantSetObjectException {
-        if(customerBrokerNewService==null){
+        if (customerBrokerNewService == null) {
             throw new CantSetObjectException("CustomerBrokerCloseServiceEventHandler is null");
         }
         this.customerBrokerCloseServiceEventHandler = customerBrokerNewService;

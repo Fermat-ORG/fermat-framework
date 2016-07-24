@@ -9,15 +9,15 @@ import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bit
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by angel on 28/7/15.
  */
-public class AndroidDatabaseTableFilterGroupTest{
+public class AndroidDatabaseTableFilterGroupTest {
 
     AndroidDatabaseTableFilterGroup FilterGroup_1;
     AndroidDatabaseTableFilterGroup FilterGroup_2;
@@ -29,24 +29,24 @@ public class AndroidDatabaseTableFilterGroupTest{
     List<DatabaseTableFilterGroup> subGroups_2;
 
     @Before
-    public void setUpVariable1(){
+    public void setUpVariable1() {
         FilterGroup_1 = new AndroidDatabaseTableFilterGroup();
 
         filters_1 = new ArrayList<DatabaseTableFilter>();
         subGroups_1 = new ArrayList<DatabaseTableFilterGroup>();
 
-            filters_1.add(new AndroidDatabaseTableFilter());
-            filters_1.add(new AndroidDatabaseTableFilter());
-            filters_1.add(new AndroidDatabaseTableFilter());
-            subGroups_1.add(new AndroidDatabaseTableFilterGroup());
-            subGroups_1.add(new AndroidDatabaseTableFilterGroup());
-            subGroups_1.add(new AndroidDatabaseTableFilterGroup());
+        filters_1.add(new AndroidDatabaseTableFilter());
+        filters_1.add(new AndroidDatabaseTableFilter());
+        filters_1.add(new AndroidDatabaseTableFilter());
+        subGroups_1.add(new AndroidDatabaseTableFilterGroup());
+        subGroups_1.add(new AndroidDatabaseTableFilterGroup());
+        subGroups_1.add(new AndroidDatabaseTableFilterGroup());
 
         filters_2 = new ArrayList<DatabaseTableFilter>();
         subGroups_2 = new ArrayList<DatabaseTableFilterGroup>();
 
-            filters_2.add(new AndroidDatabaseTableFilter());
-            subGroups_2.add(new AndroidDatabaseTableFilterGroup());
+        filters_2.add(new AndroidDatabaseTableFilter());
+        subGroups_2.add(new AndroidDatabaseTableFilterGroup());
 
 
         //FilterGroup_1.setFilters(filters_1);
@@ -55,14 +55,14 @@ public class AndroidDatabaseTableFilterGroupTest{
     }
 
     @Test
-    public void Variables_AreEquals(){
+    public void Variables_AreEquals() {
         assertThat(FilterGroup_1.getSubGroups()).isEqualTo(subGroups_1);
         assertThat(FilterGroup_1.getFilters()).isEqualTo(filters_1);
         assertThat(FilterGroup_1.getOperator()).isEqualTo(DatabaseFilterOperator.AND);
     }
 
     @Test
-    public void Variables_NotEquals(){
+    public void Variables_NotEquals() {
         assertThat(FilterGroup_1.getSubGroups()).isNotEqualTo(subGroups_2);
         assertThat(FilterGroup_1.getFilters()).isNotEqualTo(filters_2);
         assertThat(FilterGroup_1.getOperator()).isNotEqualTo(DatabaseFilterOperator.OR);

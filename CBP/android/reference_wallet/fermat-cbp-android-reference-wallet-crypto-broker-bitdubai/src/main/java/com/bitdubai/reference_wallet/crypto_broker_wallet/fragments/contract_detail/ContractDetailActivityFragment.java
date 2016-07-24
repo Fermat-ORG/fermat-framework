@@ -78,7 +78,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
     private View negotiationButton;
     private RecyclerView recyclerView;
     private ContractDetailAdapter adapter;
-    private NumberFormat numberFormat= DecimalFormat.getInstance();
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
     public static ContractDetailActivityFragment newInstance() {
         return new ContractDetailActivityFragment();
@@ -352,7 +352,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
      * This method is for testing
      *
      * @param image
-     *
      * @return
      */
     private byte[] getByteArrayFromImageView(ImageView image) {
@@ -366,12 +365,12 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
     }
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -382,14 +381,14 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Refer
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

@@ -27,7 +27,7 @@ public class CancelNegotiationSaleTest {
     private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
 
     @Test
-    public void createCustomerBrokerNewSaleNegotiationTranasction() throws Exception{
+    public void createCustomerBrokerNewSaleNegotiationTranasction() throws Exception {
 
         CustomerBrokerUpdateManagerImpl customerBrokerUpdateManagerImpl = mock(CustomerBrokerUpdateManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(customerBrokerUpdateManagerImpl).cancelNegotiation(customerBrokerSaleNegotiation);

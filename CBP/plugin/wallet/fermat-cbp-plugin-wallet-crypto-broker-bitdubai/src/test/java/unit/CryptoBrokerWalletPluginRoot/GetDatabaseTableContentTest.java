@@ -21,9 +21,9 @@ import static org.mockito.Mockito.when;
 public class GetDatabaseTableContentTest {
 
     @Test
-    public void getDatabaseTableContent() throws Exception{
+    public void getDatabaseTableContent() throws Exception {
         CryptoBrokerWalletPluginRoot cryptoBrokerWalletPluginRoot = mock(CryptoBrokerWalletPluginRoot.class);
         when(cryptoBrokerWalletPluginRoot.getDatabaseTableContent(Mockito.any(DeveloperObjectFactory.class), Mockito.any(DeveloperDatabase.class), Mockito.any(DeveloperDatabaseTable.class))).thenReturn(new ArrayList<DeveloperDatabaseTableRecord>());
-        assertThat(cryptoBrokerWalletPluginRoot.getDatabaseTableContent(Mockito.any(DeveloperObjectFactory.class), Mockito.any(DeveloperDatabase.class),Mockito.any(DeveloperDatabaseTable.class))).isNotNull();
+        assertThat(cryptoBrokerWalletPluginRoot.getDatabaseTableContent(Mockito.any(DeveloperObjectFactory.class), Mockito.any(DeveloperDatabase.class), Mockito.any(DeveloperDatabaseTable.class))).isNotNull();
     }
 }

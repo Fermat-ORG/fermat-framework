@@ -8,6 +8,7 @@ import java.io.Serializable;
 public interface FermatModuleObjectInterface extends Serializable {
     /**
      * En este metodo se les entrega el mismo serializable que armaron en el writeToSerializable para que puedan reconstruir su objeto
+     *
      * @param objectCreator
      */
 
@@ -17,6 +18,7 @@ public interface FermatModuleObjectInterface extends Serializable {
 
     /**
      * En este metodo tienen que serializar agrupar el objeto en un Serializable que luego será pasado al creator para que puedan volver a armar dicho objeto
+     *
      * @return
      */
     Serializable writeToSerializable();

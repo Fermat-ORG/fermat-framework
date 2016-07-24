@@ -26,11 +26,10 @@ public class UpdateViewReceiver extends BroadcastReceiver {
     private final WeakReference<FermatActivity> weakReference;
     private WeakReference<FermatFramework> fermatFrameworkWeakReference;
 
-    public UpdateViewReceiver(FermatActivity fermatActivity,FermatFramework fermatFramework) {
+    public UpdateViewReceiver(FermatActivity fermatActivity, FermatFramework fermatFramework) {
         this.weakReference = new WeakReference<FermatActivity>(fermatActivity);
         this.fermatFrameworkWeakReference = new WeakReference<FermatFramework>(fermatFramework);
     }
-
 
 
     @Override
@@ -41,15 +40,15 @@ public class UpdateViewReceiver extends BroadcastReceiver {
         FermatBundle bundle = (FermatBundle) intent.getSerializableExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE);
 //        Log.i(INTENT_NAME,"AppPublicKey: "+appPublicKey);
 //        Log.i(INTENT_NAME,"Code received:"+code);
-        updateView(appPublicKey,code);
-        if(bundle!=null){
+        updateView(appPublicKey, code);
+        if (bundle != null) {
             updateView(bundle);
         }
 
     }
 
     private void updateView(FermatBundle bundle) {
-        if(weakReference.get() instanceof FermatActivity) {
+        if (weakReference.get() instanceof FermatActivity) {
             FermatScreenAdapter adapter = weakReference.get().getAdapter();
             if (adapter != null) {
                 List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
@@ -59,15 +58,15 @@ public class UpdateViewReceiver extends BroadcastReceiver {
                 }
             }
         }
-        if (fermatFrameworkWeakReference!=null){
+        if (fermatFrameworkWeakReference != null) {
             FermatIntentFilter fermatIntentFilter = new FermatIntentFilter(BroadcasterType.UPDATE_VIEW);
             fermatIntentFilter.setFermatBundle(bundle);
             fermatFrameworkWeakReference.get().pushReceiverIntent(fermatIntentFilter);
         }
     }
 
-    private void updateView(String code){
-        if(weakReference.get() instanceof FermatActivity) {
+    private void updateView(String code) {
+        if (weakReference.get() instanceof FermatActivity) {
             FermatScreenAdapter adapter = weakReference.get().getAdapter();
             if (adapter != null) {
                 List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
@@ -79,8 +78,8 @@ public class UpdateViewReceiver extends BroadcastReceiver {
     }
 
     //TODO: esto va a ser del codigo de la app, el paquete del intent
-    private void updateView(String appCode,String code){
-        if(weakReference.get() instanceof FermatActivity) {
+    private void updateView(String appCode, String code) {
+        if (weakReference.get() instanceof FermatActivity) {
             FermatScreenAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
             if (adapter != null) {
                 List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();

@@ -16,7 +16,7 @@ public class FermatFolder implements FermatInterfaceObject {
     private int iconRes;
     private int position;
 
-    public FermatFolder(String name, List<Item> lstFolderItems,int position) {
+    public FermatFolder(String name, List<Item> lstFolderItems, int position) {
         this.name = name;
         this.lstFolderItems = lstFolderItems;
         this.position = position;

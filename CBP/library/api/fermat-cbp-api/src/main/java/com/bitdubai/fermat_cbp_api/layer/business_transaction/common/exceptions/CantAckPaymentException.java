@@ -31,7 +31,7 @@ public class CantAckPaymentException extends CBPException {
      * @param possibleReason
      */
     public CantAckPaymentException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

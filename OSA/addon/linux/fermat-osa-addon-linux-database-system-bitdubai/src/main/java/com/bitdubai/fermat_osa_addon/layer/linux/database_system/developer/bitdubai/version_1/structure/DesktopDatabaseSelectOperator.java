@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggrega
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DesktopDatabaseSelectOperator  implements DatabaseAggregateFunction {
+public class DesktopDatabaseSelectOperator implements DatabaseAggregateFunction {
 
     /**
      * DatabaseSelectOperator Member Variables.
@@ -27,13 +27,14 @@ public class DesktopDatabaseSelectOperator  implements DatabaseAggregateFunction
     private String alias;
 
 
-    public DesktopDatabaseSelectOperator(){}
+    public DesktopDatabaseSelectOperator() {
+    }
 
 
-    public DesktopDatabaseSelectOperator(String column, DataBaseAggregateFunctionType type, String alias){
-        this.column=column;
-        this.type=type;
-        this.alias=alias;
+    public DesktopDatabaseSelectOperator(String column, DataBaseAggregateFunctionType type, String alias) {
+        this.column = column;
+        this.type = type;
+        this.alias = alias;
     }
 
 
@@ -47,8 +48,7 @@ public class DesktopDatabaseSelectOperator  implements DatabaseAggregateFunction
      * @param column colum name to apply operation
      */
     @Override
-    public void setColumn (String column)
-    {
+    public void setColumn(String column) {
         this.column = column;
     }
 
@@ -58,8 +58,7 @@ public class DesktopDatabaseSelectOperator  implements DatabaseAggregateFunction
      * @param type enum DataBaseSelectOperatorType , type of operator for the select
      */
     @Override
-    public void setType (DataBaseAggregateFunctionType type)
-    {
+    public void setType(DataBaseAggregateFunctionType type) {
         this.type = type;
     }
 
@@ -69,37 +68,37 @@ public class DesktopDatabaseSelectOperator  implements DatabaseAggregateFunction
      * @return DataBaseSelectOperatorType enum
      */
     @Override
-    public DataBaseAggregateFunctionType getType()
-    {
+    public DataBaseAggregateFunctionType getType() {
         return this.type;
     }
 
     /**
      * <p>Sets the field alias to the result of the select
+     *
      * @param alias String alias result
      */
     @Override
-    public void setAliasColumn (String alias){
+    public void setAliasColumn(String alias) {
         this.alias = alias;
     }
 
     /**
      * <p>Gets the field alias to the result of the select
+     *
      * @return String alias
      */
     @Override
-    public String  getAliasColumn (){
+    public String getAliasColumn() {
         return this.alias;
     }
 
     /**
-     *<p>Gets column the column to apply the operator.
+     * <p>Gets column the column to apply the operator.
      *
      * @return String select column name
      */
     @Override
-    public String  getColumn ()
-    {
+    public String getColumn() {
         return this.column;
     }
 

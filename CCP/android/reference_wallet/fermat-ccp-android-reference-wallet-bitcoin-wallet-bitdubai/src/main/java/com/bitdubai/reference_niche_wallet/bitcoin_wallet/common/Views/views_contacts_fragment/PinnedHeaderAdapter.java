@@ -147,22 +147,31 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 holder = new ViewHolder();
                 switch (type) {
                     case TYPE_ITEM:
-                        convertView = mLayoutInflater.inflate(R.layout.row_view, null);
-                        holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
-                        walletContact = (CryptoWalletWalletContact) mListItems.get(position);
-                        //guardo el contacto
-                        contactPositionItem.put(position, walletContact);
                         try {
-                            if (walletContact.getProfilePicture() != null && walletContact.getProfilePicture().length > 0) {
-                                holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
-                            } else
-                                Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
+                            convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+                            holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
+                            walletContact = (CryptoWalletWalletContact) mListItems.get(position);
+                            //guardo el contacto
+                            if(walletContact != null)
+                            {
+                                contactPositionItem.put(position, walletContact);
+                                try {
+                                    if (walletContact.getProfilePicture() != null && walletContact.getProfilePicture().length > 0) {
+                                        holder.imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(mContext.getResources(), walletContact.getProfilePicture()));
+                                    } else
+                                        Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
+                                }catch (Exception e){
+                                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+                                    Toast.makeText(mContext,"Image database problem",Toast.LENGTH_SHORT).show();
+                                    Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
+                                }
+                                text = walletContact.getActorName();
+                            }
                         }catch (Exception e){
                             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
-                            Toast.makeText(mContext,"Image database problem",Toast.LENGTH_SHORT).show();
-                            Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
-                        }
-                        text = walletContact.getActorName();
+                            Toast.makeText(mContext,"Error show contact. " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                           }
+
                         //contact image
 //                        ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);
 //                        contact_image.setImageResource(R.drawable.caroline_profile_picture);

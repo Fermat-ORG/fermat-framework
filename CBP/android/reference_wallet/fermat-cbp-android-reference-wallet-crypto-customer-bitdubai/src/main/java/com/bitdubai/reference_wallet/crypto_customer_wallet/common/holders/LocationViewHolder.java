@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**

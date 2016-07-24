@@ -164,12 +164,12 @@ public class WizardActivity extends FermatActivity
                 FermatStructure wallet = FermatApplication.getInstance().getAppManager().getLastAppStructure();
                 FermatSession referenceAppFermatSession = FermatApplication.getInstance().getAppManager().getAppsSession(wallet.getPublicKey());
 
-                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this, referenceAppFermatSession);
+                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(), this, referenceAppFermatSession);
 
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
                     //todo: ver porqué null el ultimo parametro
-                    Fragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), referenceAppFermatSession, null,null);
+                    Fragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), referenceAppFermatSession, null, null);
                     fragments.add(abstractFermatFragment);
                 }
             } catch (FragmentNotFoundException e) {
@@ -354,7 +354,7 @@ public class WizardActivity extends FermatActivity
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //super.onBackPressed();
@@ -387,7 +387,7 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
-    public void setTabCustomImageView(int position,View view) {
+    public void setTabCustomImageView(int position, View view) {
 
     }
 

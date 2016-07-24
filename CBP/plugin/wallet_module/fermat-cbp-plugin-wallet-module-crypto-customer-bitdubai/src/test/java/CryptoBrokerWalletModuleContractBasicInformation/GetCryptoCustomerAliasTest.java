@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetCryptoCustomerAliasTest {
 
     @Test
-    public void getCryptoCustomerAlias(){
+    public void getCryptoCustomerAlias() {
         CryptoBrokerWalletModuleContractBasicInformation cryptoBrokerWalletModuleContractBasicInformation = mock(CryptoBrokerWalletModuleContractBasicInformation.class);
         when(cryptoBrokerWalletModuleContractBasicInformation.getCryptoCustomerAlias()).thenReturn(new String());
         assertThat(cryptoBrokerWalletModuleContractBasicInformation.getCryptoCustomerAlias()).isNotNull();

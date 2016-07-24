@@ -9,13 +9,13 @@ import java.util.HashMap;
 /**
  * Created by mati on 2016.06.03..
  */
-public class BaseFermatSession<A extends FermatApp,R extends ResourceProviderManager> {
+public class BaseFermatSession<A extends FermatApp, R extends ResourceProviderManager> {
 
     private String publicKey;
     private A fermatApp;
     private R resourceProviderManager;
     private ErrorManager errorManager;
-    private HashMap<String,Object> data;
+    private HashMap<String, Object> data;
 
 
     public BaseFermatSession(String publicKey, A fermatApp, R resourceProviderManager, ErrorManager errorManager) {
@@ -31,43 +31,39 @@ public class BaseFermatSession<A extends FermatApp,R extends ResourceProviderMan
     }
 
     /**
-     *
      * @param key
      * @param object
      */
-    public void setData(String key, Object object){
-        data.put(key,object);
+    public void setData(String key, Object object) {
+        data.put(key, object);
     }
 
     /**
-     *
      * @param key
      * @return
      */
-    public Object getData(String key){
+    public Object getData(String key) {
         return data.get(key);
     }
 
-    public Object getData(String key,Object defaultParamenter) throws IllegalAccessException {
-        if (data.containsKey(key)){
+    public Object getData(String key, Object defaultParamenter) throws IllegalAccessException {
+        if (data.containsKey(key)) {
             return data.get(key);
-        }else{
+        } else {
             return defaultParamenter;
         }
     }
 
 
-
     /**
-     *
      * @return
      */
-    public ErrorManager getErrorManager(){
+    public ErrorManager getErrorManager() {
         return errorManager;
     }
 
 
-    public String getAppPublicKey(){
+    public String getAppPublicKey() {
         return publicKey;
     }
 
@@ -96,11 +92,11 @@ public class BaseFermatSession<A extends FermatApp,R extends ResourceProviderMan
         this.errorManager = errorManager;
     }
 
-    public void removeData(String string){
+    public void removeData(String string) {
         data.remove(string);
     }
 
-    public void reportError(){
+    public void reportError() {
 //        errorManager.reportUnexpectedUIException();
     }
 }

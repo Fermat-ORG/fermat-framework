@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetMemoTest {
 
     @Test
-    public void getMemo() throws Exception{
+    public void getMemo() throws Exception {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getMemo()).thenReturn(new String());
         assertThat(cryptoMoneyDestockTransaction.getMemo()).isNotNull();

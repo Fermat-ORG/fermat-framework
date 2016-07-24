@@ -15,11 +15,9 @@ public enum CryptoTransactionType implements FermatEnum {
      * For best understanding, keep the elements of the enum ordered alphabetically.
      */
 
-    INCOMING ("INC"),
-    OUTGOING ("OUT"),
-    UNKNOWN("UKN")
-
-    ;
+    INCOMING("INC"),
+    OUTGOING("OUT"),
+    UNKNOWN("UKN");
 
     private final String code;
 
@@ -31,18 +29,24 @@ public enum CryptoTransactionType implements FermatEnum {
 
         switch (code) {
 
-            case "INC":return INCOMING;
-            case "OUT":return OUTGOING;
-            case "UKN":return UNKNOWN;
+            case "INC":
+                return INCOMING;
+            case "OUT":
+                return OUTGOING;
+            case "UKN":
+                return UNKNOWN;
 
-            default: throw new InvalidParameterException(
-                    "Code Received: " + code,
-                    "This code received is no valid for the CryptoTransactionType enum"
-            );
+            default:
+                throw new InvalidParameterException(
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
+                        "This code received is no valid for the CryptoTransactionType enum"
+                );
         }
     }
 
     @Override
-    public String getCode() { return this.code; }
+    public String getCode() {
+        return this.code;
+    }
 
 }

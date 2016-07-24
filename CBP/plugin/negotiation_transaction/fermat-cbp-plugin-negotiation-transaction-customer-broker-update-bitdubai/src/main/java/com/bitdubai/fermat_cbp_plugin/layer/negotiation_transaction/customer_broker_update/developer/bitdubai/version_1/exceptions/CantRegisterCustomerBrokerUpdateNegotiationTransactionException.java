@@ -19,6 +19,7 @@ public class CantRegisterCustomerBrokerUpdateNegotiationTransactionException ext
     public CantRegisterCustomerBrokerUpdateNegotiationTransactionException(String message, String context, String possibleReason) {
         this(message, null, context, possibleReason);
     }
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
