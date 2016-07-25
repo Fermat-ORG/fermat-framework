@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 /**
- *  <p>The enum <code>DatabaseAggregateFunction</code>
- *     defined operators that can be applied in a select statement
+ * <p>The enum <code>DatabaseAggregateFunction</code>
+ * defined operators that can be applied in a select statement
  *
- *
- *  @author  Natalia
- *  @version 1.0.0
- *  @since   08/07/2015
- * */
+ * @author Natalia
+ * @version 1.0.0
+ * @since 08/07/2015
+ */
 
 
 public interface DatabaseAggregateFunction {
@@ -19,9 +18,9 @@ public interface DatabaseAggregateFunction {
 
     void setAliasColumn(String alias);
 
-    String  getAliasColumn();
+    String getAliasColumn();
 
-    String  getColumn();
+    String getColumn();
 
     DataBaseAggregateFunctionType getType();
 

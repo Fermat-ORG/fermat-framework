@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantSetObjectException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Can't set object.";
 
-    public CantSetObjectException(String message){
+    public CantSetObjectException(String message) {
         super(DEFAULT_MESSAGE, null, message, "cast exception");
     }
 

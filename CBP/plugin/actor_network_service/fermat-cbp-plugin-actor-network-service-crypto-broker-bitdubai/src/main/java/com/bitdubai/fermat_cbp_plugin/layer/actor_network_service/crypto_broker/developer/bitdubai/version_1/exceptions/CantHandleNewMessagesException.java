@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException</code>
  * is thrown when there is an error trying to handle new messages.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/11/2015.
  */
 public class CantHandleNewMessagesException extends FermatException {

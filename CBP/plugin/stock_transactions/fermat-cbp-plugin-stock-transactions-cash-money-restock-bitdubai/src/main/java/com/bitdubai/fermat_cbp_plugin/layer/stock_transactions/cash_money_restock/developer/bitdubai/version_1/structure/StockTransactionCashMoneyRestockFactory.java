@@ -21,13 +21,13 @@ public class StockTransactionCashMoneyRestockFactory {
     /**
      * Constructor with params.
      *
-     * @param pluginDatabaseSystem  database system reference.
-     * @param pluginId              of this module.
+     * @param pluginDatabaseSystem database system reference.
+     * @param pluginId             of this module.
      */
     public StockTransactionCashMoneyRestockFactory(final PluginDatabaseSystem pluginDatabaseSystem,
                                                    final UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
 

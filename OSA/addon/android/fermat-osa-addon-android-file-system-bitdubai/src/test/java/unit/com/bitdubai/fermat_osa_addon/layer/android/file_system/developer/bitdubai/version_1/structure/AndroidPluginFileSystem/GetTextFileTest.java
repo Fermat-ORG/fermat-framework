@@ -1,7 +1,6 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginFileSystem;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -18,9 +17,10 @@ import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 
-import static org.robolectric.Shadows.shadowOf;
-import static org.fest.assertions.api.Assertions.*;
 import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
+import static org.robolectric.Shadows.shadowOf;
+
 /**
  * Created by jorgegonzalez on 2015.07.01..
  */
@@ -41,7 +41,7 @@ public class GetTextFileTest {
     private FileLifeSpan testLifeSpan;
 
     @Before
-    public void setUpValues(){
+    public void setUpValues() {
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
         testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
@@ -52,9 +52,9 @@ public class GetTextFileTest {
     }
 
     @Test
-    public void GetTextFile_FileExists_TheFileIsLoaded() throws Exception{
+    public void GetTextFile_FileExists_TheFileIsLoaded() throws Exception {
         testFileSystem = new AndroidPluginFileSystem(testContext);
-        testFile1 = testFileSystem.createTextFile(testId,testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
+        testFile1 = testFileSystem.createTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         testFile1.persistToMedia();
 
         testFile2 = testFileSystem.getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
@@ -63,7 +63,7 @@ public class GetTextFileTest {
     }
 
     @Test
-    public void GetTextFile_FileDoesntExists_ThrowsException() throws Exception{
+    public void GetTextFile_FileDoesntExists_ThrowsException() throws Exception {
         testFileSystem = new AndroidPluginFileSystem(testContext);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
@@ -71,7 +71,7 @@ public class GetTextFileTest {
     }
 
     @Test
-    public void GetTextFile_NoContext_ThrowsException() throws Exception{
+    public void GetTextFile_NoContext_ThrowsException() throws Exception {
         testFileSystem = new AndroidPluginFileSystem(null);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();

@@ -7,13 +7,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum BusinessTransactionTransactionType {
 
-     /**
-      * Definition types
-      */
-    ACK_CONFIRM_MESSAGE         ("ACMS"),
-    CONFIRM_MESSAGE             ("CMS"),
-    TRANSACTION_HASH            ("TXH"),
-    CONTRACT_STATUS_UPDATE      ("CSU");
+    /**
+     * Definition types
+     */
+    ACK_CONFIRM_MESSAGE("ACMS"),
+    CONFIRM_MESSAGE("CMS"),
+    TRANSACTION_HASH("TXH"),
+    CONTRACT_STATUS_UPDATE("CSU");
 
     /**
      * Represent the code of the message status
@@ -34,7 +34,9 @@ public enum BusinessTransactionTransactionType {
      *
      * @return String that represent of the message status
      */
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Return the enum by the code

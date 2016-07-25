@@ -10,9 +10,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.ClauseInformationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.ContractBasicInformationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.CryptoCustomerWalletModuleBrokerIdentityBusinessInfo;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.ClauseInformationImpl;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provisory_data.CustomerBrokerNegotiationInformationImpl;
 
 import java.text.DecimalFormat;
@@ -425,17 +425,17 @@ public class TestData {
     }
 
     //LIST OF BROKER CURRENCY QUOTATUION  TEST
-    public static List <BrokerCurrencyQuotationImpl> getMarketRateForCurrencyTest(){
+    public static List<BrokerCurrencyQuotationImpl> getMarketRateForCurrencyTest() {
 
-        List <BrokerCurrencyQuotationImpl> list = new ArrayList<>();
+        List<BrokerCurrencyQuotationImpl> list = new ArrayList<>();
 
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "100000"));
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "350000"));
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(),            "410"));
-        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(),           "130"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(), "100000"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), "350000"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), FiatCurrency.US_DOLLAR.getCode(), "410"));
+        list.add(new BrokerCurrencyQuotationImpl(CryptoCurrency.BITCOIN.getCode(), CryptoCurrency.LITECOIN.getCode(), "130"));
 
-        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(),   "950"));
-        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(),       "390"));
+        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), "950"));
+        list.add(new BrokerCurrencyQuotationImpl(FiatCurrency.US_DOLLAR.getCode(), FiatCurrency.ARGENTINE_PESO.getCode(), "390"));
 
         return list;
     }

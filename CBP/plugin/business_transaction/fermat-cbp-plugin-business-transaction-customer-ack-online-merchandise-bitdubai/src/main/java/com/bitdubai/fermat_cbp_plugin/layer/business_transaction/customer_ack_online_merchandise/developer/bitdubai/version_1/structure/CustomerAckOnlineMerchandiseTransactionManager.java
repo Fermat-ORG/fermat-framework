@@ -30,13 +30,13 @@ public class CustomerAckOnlineMerchandiseTransactionManager implements CustomerA
             CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao,
             CustomerAckOnlineMerchandisePluginRoot pluginRoot) {
         this.customerAckOnlineMerchandiseBusinessTransactionDao = customerAckOnlineMerchandiseBusinessTransactionDao;
-        this.pluginRoot =pluginRoot;
+        this.pluginRoot = pluginRoot;
     }
 
     @Override
     public ContractTransactionStatus getContractTransactionStatus(
             String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
             ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
             return this.customerAckOnlineMerchandiseBusinessTransactionDao.getContractTransactionStatus(
                     contractHash);
@@ -44,7 +44,7 @@ public class CustomerAckOnlineMerchandiseTransactionManager implements CustomerA
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
-        }catch (Exception exception){
+        } catch (Exception exception) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Unexpected Result",
@@ -52,16 +52,18 @@ public class CustomerAckOnlineMerchandiseTransactionManager implements CustomerA
         }
 
     }
+
     /**
      * This method returns the transaction completion date.
      * If returns 0 the transaction is processing.
+     *
      * @param contractHash
      * @return
      * @throws CantGetCompletionDateException
      */
     @Override
     public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
-        try{
+        try {
             ObjectChecker.checkArgument(contractHash, "The contract hash argument is null");
             return this.customerAckOnlineMerchandiseBusinessTransactionDao.getCompletionDateByContractHash(
                     contractHash);

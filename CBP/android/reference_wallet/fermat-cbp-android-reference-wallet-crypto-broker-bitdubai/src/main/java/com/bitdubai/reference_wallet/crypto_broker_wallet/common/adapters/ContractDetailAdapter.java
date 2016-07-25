@@ -31,18 +31,18 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     private ContractDetailActivityFragment fragment;
 
 
-
-        public ContractDetailAdapter(Context context,
-                                     List<ContractDetail> dataSet,
-                                     ReferenceAppFermatSession session,
-                                     CryptoBrokerWalletModuleManager walletManager,
-                                     ContractDetailActivityFragment fragment) {
-        this.context=context;
-        this.dataSet=dataSet;
+    public ContractDetailAdapter(Context context,
+                                 List<ContractDetail> dataSet,
+                                 ReferenceAppFermatSession session,
+                                 CryptoBrokerWalletModuleManager walletManager,
+                                 ContractDetailActivityFragment fragment) {
+        this.context = context;
+        this.dataSet = dataSet;
         this.walletSession = session;
-        this.walletManager=walletManager;
-        this.fragment=fragment;
+        this.walletManager = walletManager;
+        this.fragment = fragment;
     }
+
     protected ContractDetailViewHolder createHolder(View itemView, int type) {
         return new ContractDetailViewHolder(itemView, fragment);
     }
@@ -60,9 +60,9 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     public void onBindViewHolder(ContractDetailViewHolder holder, int position) {
         int holderType = getItemViewType(position);
 
-        switch (holderType){
+        switch (holderType) {
             case TYPE_BROKER:
-                ContractDetail brokerViewHolder= dataSet.get(position);
+                ContractDetail brokerViewHolder = dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setSession(this.walletSession);
                 holder.setParentFragment(
@@ -71,7 +71,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
                 holder.bind(brokerViewHolder);
                 break;
             case TYPE_CUSTOMER:
-                ContractDetail customerHolder= dataSet.get(position);
+                ContractDetail customerHolder = dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setSession(this.walletSession);
                 holder.setParentFragment(

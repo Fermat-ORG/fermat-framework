@@ -10,7 +10,8 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 
 import java.util.Collection;
 
-/** This mock is only for testing
+/**
+ * This mock is only for testing
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/01/16.
  */
 public class CustomerBrokerContractSaleManagerMock implements CustomerBrokerContractSaleManager {
@@ -51,7 +52,7 @@ public class CustomerBrokerContractSaleManagerMock implements CustomerBrokerCont
     }
 
     @Override
-    public void cancelContract(String contractId, String reason) throws CantUpdateCustomerBrokerContractSaleException{
+    public void cancelContract(String contractId, String reason) throws CantUpdateCustomerBrokerContractSaleException {
 
     }
 }

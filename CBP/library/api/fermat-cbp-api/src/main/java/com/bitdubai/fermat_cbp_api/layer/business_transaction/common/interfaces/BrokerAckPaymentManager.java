@@ -14,9 +14,7 @@ public interface BrokerAckPaymentManager extends BusinessTransactionManager {
      * This method returns the actual ContractTransactionStatus from a Broker Ack Online Payment Business Transaction by a contract hash/Id.
      *
      * @param contractHash the contract Hash/ID
-     *
      * @return the Contract Transaction Status
-     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     ContractTransactionStatus getContractTransactionStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException;

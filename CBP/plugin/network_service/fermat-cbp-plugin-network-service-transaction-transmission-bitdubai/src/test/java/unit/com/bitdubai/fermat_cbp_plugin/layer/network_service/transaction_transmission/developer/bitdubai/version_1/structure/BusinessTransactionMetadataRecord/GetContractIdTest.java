@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetContractIdTest {
 
     @Test
-    public void getContractId() throws Exception{
+    public void getContractId() throws Exception {
 
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getContractId()).thenReturn("1");

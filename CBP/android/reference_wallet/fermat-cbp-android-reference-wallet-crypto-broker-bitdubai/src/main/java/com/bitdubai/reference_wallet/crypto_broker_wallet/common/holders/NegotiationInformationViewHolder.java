@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
@@ -23,7 +22,12 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Map;
 
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.CLOSED;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.SENT_TO_BROKER;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.SENT_TO_CUSTOMER;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.WAITING_FOR_BROKER;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.WAITING_FOR_CLOSING;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.WAITING_FOR_CUSTOMER;
 
 
 /**
@@ -39,7 +43,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
     public final ProgressBar sendingProgressBar;
     private Resources res;
     private View itemView;
-    NumberFormat numberFormat= DecimalFormat.getInstance();
+    NumberFormat numberFormat = DecimalFormat.getInstance();
 
     /**
      * Public constructor for the custom child ViewHolder
@@ -129,12 +133,12 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -145,14 +149,14 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

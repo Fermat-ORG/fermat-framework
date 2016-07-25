@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetBalanceTypeTest {
 
     @Test
-    public void getBalanceType(){
+    public void getBalanceType() {
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
         when(cryptoBrokerStockTransaction.getBalanceType()).thenReturn(BalanceType.AVAILABLE);
         assertThat(cryptoBrokerStockTransaction.getBalanceType()).isNotNull();

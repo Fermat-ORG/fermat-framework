@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class SetBookBalanceTest {
 
     @Test
-    public void setBookBalance(){
+    public void setBookBalance() {
         CryptoBrokerWalletBalanceRecordImpl cryptoBrokerWalletBalanceRecord = mock(CryptoBrokerWalletBalanceRecordImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletBalanceRecord).setBookBalance(Mockito.any(BigDecimal.class));
     }

@@ -76,7 +76,7 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
 
         BarData BD = getChartData();
 
-        if( BD != null){
+        if (BD != null) {
             barChart.setData(BD);
         }
 
@@ -97,7 +97,7 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
 
         Calendar calendar = Calendar.getInstance();
 
-        if(lastItemPosition > 3) {
+        if (lastItemPosition > 3) {
             barChart.moveViewToX(lastItemPosition - 3);
             barChart.highlightValue(lastItemPosition, 0);
         }
@@ -121,7 +121,7 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
         TextView month = (TextView) layout.findViewById(R.id.month);
         TextView year = (TextView) layout.findViewById(R.id.year);
 
-        String idyear = ""+calendar.get(Calendar.YEAR);
+        String idyear = String.valueOf(calendar.get(Calendar.YEAR));
 
         month.setText(meses[calendar.get(Calendar.MONTH)]);
         year.setText(idyear);
@@ -139,7 +139,7 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
 
         if (stockTransactions != null) {
 
-            if ( !stockTransactions.isEmpty() ) {
+            if (!stockTransactions.isEmpty()) {
 
                 List<BarEntry> entries = new ArrayList<>();
                 List<String> xVals = new ArrayList<>();
@@ -225,7 +225,7 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
 
     private void putDataInIndicators(int xIndex) {
 
-        if( !map.isEmpty()) {
+        if (!map.isEmpty()) {
             CryptoBrokerStockTransaction transaction = map.get(xIndex);
 
             if (transaction != null) {
@@ -247,7 +247,7 @@ public class StockStatisticsFragment extends AbstractFermatFragment implements C
             } else {
                 startIndicator.setText(numberFormat.format(""));
             }
-        }else{
+        } else {
             startIndicator.setText(numberFormat.format(""));
             endIndicator.setText(numberFormat.format(""));
 

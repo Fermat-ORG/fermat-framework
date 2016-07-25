@@ -2,11 +2,8 @@ package unit.com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.widget.TextView;
-
 
 import com.bitdubai.sub_app.crypto_customer_identity.BuildConfig;
-import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerIdentityListFragment;
 
 import org.junit.Before;
@@ -15,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
 
 import unit.com.bitdubai.sub_app.crypto_customer_identity.TestActivity;
 

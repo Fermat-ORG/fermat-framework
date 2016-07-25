@@ -109,8 +109,8 @@ public interface FermatCipher {
     String createPublicKeyFromPrivateKey(PrivateKey privateKey) throws InvalidKeySpecException, NoSuchAlgorithmException;
 
     /**
-     *  Method that encrypt a plaint text and return a
-     *  encrypted string
+     * Method that encrypt a plaint text and return a
+     * encrypted string
      *
      * @param pubKey
      * @param plaintTex
@@ -119,8 +119,8 @@ public interface FermatCipher {
     String encrypt(String pubKey, String plaintTex) throws Exception;
 
     /**
-     *  Method that receive a encrypted hexadecimal format string to
-     *  decrypted
+     * Method that receive a encrypted hexadecimal format string to
+     * decrypted
      *
      * @param privateKey
      * @param encryptedTex

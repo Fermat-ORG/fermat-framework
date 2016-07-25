@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by nelson on 28/10/15.
  */
-public abstract class FermatWalletExpandableListFragment<M extends ParentListItem,S extends ReferenceAppFermatSession,RE extends ResourceProviderManager> extends AbstractFermatFragment<S,RE>
+public abstract class FermatWalletExpandableListFragment<M extends ParentListItem, S extends ReferenceAppFermatSession, RE extends ResourceProviderManager> extends AbstractFermatFragment<S, RE>
         implements RecyclerExpandableListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**

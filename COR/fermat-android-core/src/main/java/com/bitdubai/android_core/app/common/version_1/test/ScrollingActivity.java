@@ -20,7 +20,7 @@ import android.view.MenuItem;
 import com.bitdubai.fermat.R;
 
 public class ScrollingActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener{
+        NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private static final long DRAWER_CLOSE_DELAY_MS = 250;

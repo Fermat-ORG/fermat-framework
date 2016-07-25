@@ -14,15 +14,13 @@ public enum UnexpectedWalletExceptionSeverity implements FermatEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT  ("DSFWTF"),
-    DISABLES_THIS_FRAGMENT                            ("DTF"),
-    NOT_IMPORTANT                                     ("NI"),
-
-    ;
+    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT("DSFWTF"),
+    DISABLES_THIS_FRAGMENT("DTF"),
+    NOT_IMPORTANT("NI"),;
 
     private final String code;
 
-    UnexpectedWalletExceptionSeverity(final String code){
+    UnexpectedWalletExceptionSeverity(final String code) {
         this.code = code;
     }
 
@@ -31,19 +29,23 @@ public enum UnexpectedWalletExceptionSeverity implements FermatEnum {
 
         switch (code) {
 
-            case "DSFWTF": return DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
-            case "DTF":    return DISABLES_THIS_FRAGMENT                          ;
-            case "NI":     return NOT_IMPORTANT                                   ;
+            case "DSFWTF":
+                return DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
+            case "DTF":
+                return DISABLES_THIS_FRAGMENT;
+            case "NI":
+                return NOT_IMPORTANT;
 
-            default: throw new InvalidParameterException(
-                    "Code: " + code,
-                    "The received code is not valid for the UnexpectedWalletExceptionSeverity enum"
-            );
+            default:
+                throw new InvalidParameterException(
+                        new StringBuilder().append("Code: ").append(code).toString(),
+                        "The received code is not valid for the UnexpectedWalletExceptionSeverity enum"
+                );
         }
     }
 
     @Override
-    public String getCode(){
+    public String getCode() {
         return code;
     }
 

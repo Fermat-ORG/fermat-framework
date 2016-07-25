@@ -28,10 +28,10 @@ import java.util.NoSuchElementException;
  * Created by nelson on 16/02/16.
  */
 public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseInformation, FermatViewHolder> {
-    
+
     public static final int TYPE_AMOUNT_TO_BUY = 4;
     public static final int TYPE_AMOUNT_TO_PAY = 7;
-    
+
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_SINGLE_CHOICE = 1;
     private static final int TYPE_DATE_TIME = 2;
@@ -39,10 +39,10 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
     private static final int TYPE_FOOTER = 5;
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
-    
+
     private boolean haveNote;
-    
-    
+
+
     public ClosedNegotiationDetailsAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation) {
 
         super(context);
@@ -59,7 +59,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
     }
-    
+
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         switch (type) {
@@ -86,7 +86,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 throw new IllegalArgumentException("Cant recognise the given value");
         }
     }
-    
+
     @Override
     protected int getCardViewResource(int type) {
         switch (type) {
@@ -106,12 +106,12 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 throw new NoSuchElementException("Incorrect type value");
         }
     }
-    
+
     @Override
     public int getItemCount() {
         return haveNote ? super.getItemCount() + 1 : super.getItemCount();
     }
-    
+
     @Override
     public int getItemViewType(int position) {
         if (isHeaderPosition(position))
@@ -119,7 +119,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
 
         final int itemPosition = getItemPosition(position);
         final ClauseType type = dataSet.get(itemPosition).getType();
-        
+
         switch (type) {
             case EXCHANGE_RATE:
                 return TYPE_EXCHANGE_RATE;
@@ -135,7 +135,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 return TYPE_SINGLE_CHOICE;
         }
     }
-    
+
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
         if (holder instanceof NoteViewHolder) {
@@ -146,21 +146,21 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
             super.onBindViewHolder(holder, position);
         }
     }
-    
+
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
-        
+
         clauseViewHolder.bindData(negotiationInfo, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.GONE);
 
         setViewResources(clause.getType(), position, clauseViewHolder);
     }
-    
+
     private void setViewResources(ClauseType type, int position, ClauseViewHolder clauseViewHolder) {
         final int clauseNumber = position + 1;
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
-        
+
         switch (type) {
             case EXCHANGE_RATE:
                 clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
@@ -197,30 +197,36 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 break;
         }
     }
-    
+
     private List<ClauseInformation> buildListOfItems() {
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-        
+
         ClauseInformation receptionMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
         ClauseInformation brokerPaymentMethodDetail = getBrokerPaymentMethodDetail(clauses);
         ClauseInformation customerReceptionMethodDetail = getCustomerReceptionMethodDetail(clauses);
-        
+
         final List<ClauseInformation> data = new ArrayList<>();
 
-        if (clauses.get(ClauseType.EXCHANGE_RATE) != null) data.add(clauses.get(ClauseType.EXCHANGE_RATE));
-        if (clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY) != null) data.add(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
-        if (clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY) != null) data.add(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY));
-        if (clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) != null) data.add(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD));
+        if (clauses.get(ClauseType.EXCHANGE_RATE) != null)
+            data.add(clauses.get(ClauseType.EXCHANGE_RATE));
+        if (clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY) != null)
+            data.add(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
+        if (clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY) != null)
+            data.add(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY));
+        if (clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) != null)
+            data.add(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD));
         if (brokerPaymentMethodDetail != null) data.add(brokerPaymentMethodDetail);
         if (receptionMethod != null) data.add(receptionMethod);
         if (customerReceptionMethodDetail != null) data.add(customerReceptionMethodDetail);
-        if (clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) != null) data.add(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER));
-        if (clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) != null) data.add(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER));
-        
+        if (clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) != null)
+            data.add(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER));
+        if (clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) != null)
+            data.add(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER));
+
         return data;
     }
-    
+
     private ClauseInformation getBrokerPaymentMethodDetail(Map<ClauseType, ClauseInformation> clauses) {
         final ClauseInformation paymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
 
@@ -236,10 +242,10 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
         }
         return null;
     }
-    
+
     private ClauseInformation getCustomerReceptionMethodDetail(Map<ClauseType, ClauseInformation> clauses) {
         final ClauseInformation paymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
-        
+
         if (paymentMethod != null) {
             String currencyType = paymentMethod.getValue();
             if (currencyType != null) {
@@ -252,11 +258,11 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
         }
         return null;
     }
-    
+
     private int getItemPosition(int position) {
         return haveNote ? position - 1 : position;
     }
-    
+
     private boolean isHeaderPosition(int position) {
         return (position == 0) && (haveNote);
     }

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -34,7 +35,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
@@ -46,10 +46,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database.CloseContractBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.event_handler.CloseContractRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.exceptions.CantInitializeCloseContractBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.structure.CloseContractMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.structure.CloseContractMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.structure.CloseContractTransactionManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -298,7 +296,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
              */
 
             reportError(
-                    
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
@@ -355,7 +353,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
 
     @Override
     public void stop() {
-        try{
+        try {
             processorAgent.stop();
         } catch (CantStopAgentException e) {
             reportError(
@@ -405,7 +403,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
                     CloseContractPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
-        }catch (Exception exception){
+        } catch (Exception exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
     }
@@ -416,7 +414,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
     private void raiseNewContractClosedEvent() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_CLOSED);
         NewContractClosed newContractClosed = (NewContractClosed) fermatEvent;
-        System.out.println("Close contract test: " + fermatEvent);
+        System.out.println(new StringBuilder().append("Close contract test: ").append(fermatEvent).toString());
         newContractClosed.setSource(EventSource.BUSINESS_TRANSACTION_CLOSE_CONTRACT);
         eventManager.raiseEvent(newContractClosed);
     }

@@ -27,13 +27,18 @@ public enum InterfaceType {
     public static InterfaceType getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "SA": return SUB_APP;
-            case "W": return WALLET;
-            case "E": return EMPTY;
-            case "F": return FOLDER;
-            case "P2P": return P2P_APP;
+            case "SA":
+                return SUB_APP;
+            case "W":
+                return WALLET;
+            case "E":
+                return EMPTY;
+            case "F":
+                return FOLDER;
+            case "P2P":
+                return P2P_APP;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Developers enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the Developers enum");
         }
     }
 }

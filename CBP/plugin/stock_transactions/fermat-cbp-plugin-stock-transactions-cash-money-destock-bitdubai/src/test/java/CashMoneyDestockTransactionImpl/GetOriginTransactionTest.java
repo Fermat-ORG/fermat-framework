@@ -20,7 +20,7 @@ public class GetOriginTransactionTest {
     OriginTransaction originTransaction = OriginTransaction.STOCK_INITIAL;
 
     @Test
-    public void getOriginTransaction() throws Exception{
+    public void getOriginTransaction() throws Exception {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class);
         when(cashMoneyDestockTransaction.getOriginTransaction()).thenReturn(originTransaction);
         assertThat(cashMoneyDestockTransaction.getOriginTransaction()).isNotNull();

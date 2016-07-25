@@ -38,7 +38,7 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
             Collection<ContractClause> clause,
             Boolean nearExpirationDatetime,
             String cancelReason
-    ){
+    ) {
         this.contractID = contractID;
         this.negotiationID = negotiationID;
         this.publicKeyCustomer = publicKeyCustomer;
@@ -91,32 +91,34 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
     }
 
     @Override
-    public String getCancelReason() { return this.cancelReason; }
+    public String getCancelReason() {
+        return this.cancelReason;
+    }
 
     @Override
-    public boolean equals(final Object o){
-        if(!(o instanceof CustomerBrokerContractSale))
+    public boolean equals(final Object o) {
+        if (!(o instanceof CustomerBrokerContractSale))
             return false;
         CustomerBrokerContractSale compare = (CustomerBrokerContractSale) o;
 
-        if(!this.contractID.equals(compare.getContractId()))
+        if (!this.contractID.equals(compare.getContractId()))
             return false;
-        if(!this.negotiationID.equals(compare.getNegotiatiotId()))
+        if (!this.negotiationID.equals(compare.getNegotiatiotId()))
             return false;
-        if(!this.publicKeyCustomer.equals(compare.getPublicKeyCustomer()))
+        if (!this.publicKeyCustomer.equals(compare.getPublicKeyCustomer()))
             return false;
-        if(!this.publicKeyBroker.equals(compare.getPublicKeyBroker()))
+        if (!this.publicKeyBroker.equals(compare.getPublicKeyBroker()))
             return false;
-        if(this.dateTime != compare.getDateTime())
+        if (this.dateTime != compare.getDateTime())
             return false;
-        if(!this.status.equals(compare.getStatus()))
+        if (!this.status.equals(compare.getStatus()))
             return false;
         return this.clause.equals(compare.getContractClause());
 
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += contractID.hashCode();
         c += negotiationID.hashCode();
@@ -125,6 +127,6 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
         c += dateTime.hashCode();
         c += status.hashCode();
         c += clause.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

@@ -38,24 +38,22 @@ public interface FermatNotification {
 
     /**
      * Relative priority for this notification.
-     *
+     * <p/>
      * Priority is an indication of how much of the user's valuable attention should be consumed by
      * this notification. Low-priority notifications may be hidden from the user in certain
      * situations, while the user might be interrupted for a higher-priority notification. The
      * system will make a determination about how to interpret this priority when presenting
      * the notification.
-     *
+     * <p/>
      * <p>
      * A notification that is at least {@link #PRIORITY_HIGH} is more likely to be presented
      * as a heads-up notification.
      * </p>
-     *
      */
 
     int getId();
 
     int getPriority();
-
 
 
 }

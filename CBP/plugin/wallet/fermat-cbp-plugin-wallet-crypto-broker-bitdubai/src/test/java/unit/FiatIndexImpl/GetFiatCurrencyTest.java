@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetFiatCurrencyTest {
 
     @Test
-    public void getFiatCurrency(){
+    public void getFiatCurrency() {
         FiatIndexImpl fiatIndex = mock(FiatIndexImpl.class);
         when(fiatIndex.getFiatCurrency()).thenReturn(FiatCurrency.ARGENTINE_PESO);
         assertThat(fiatIndex.getFiatCurrency()).isNotNull();

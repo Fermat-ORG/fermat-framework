@@ -138,7 +138,6 @@ final public class NegotiationWrapper {
      * Verify if a clause is confirmed
      *
      * @param clause the clause to verify
-     *
      * @return <code>true</code> if the clause is confirmed, <code>false</code> otherwise
      */
     public boolean isClauseConfirmed(ClauseInformation clause) {
@@ -195,7 +194,7 @@ final public class NegotiationWrapper {
     public void changeClauseValue(final ClauseInformation clause, final String value) {
         final ClauseStatus clauseStatus;
 
-        if(!clause.getValue().equals(value)) {      //If the clause has been changed, set ClauseStatus to CHANGED
+        if (!clause.getValue().equals(value)) {      //If the clause has been changed, set ClauseStatus to CHANGED
             clauseStatus = ClauseStatus.CHANGED;
         } else {
             if (clause.getStatus().equals(ClauseStatus.DRAFT))      //If the clause hasn't been changed AND status is DRAFT, set status to ACCEPTED
@@ -211,21 +210,21 @@ final public class NegotiationWrapper {
         negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
     }
 
-    public boolean isWalletUser(){
+    public boolean isWalletUser() {
         return this.walletUser;
     }
 
-    public void setWalletUser(boolean walletUser){
+    public void setWalletUser(boolean walletUser) {
         this.walletUser = walletUser;
     }
 
     public boolean isAmountEmpty() {
         final Collection<ClauseInformation> clauseList = getClauses().values();
-        final List<ClauseType> amountList = Arrays.asList(EXCHANGE_RATE,CUSTOMER_CURRENCY_QUANTITY,BROKER_CURRENCY_QUANTITY);
+        final List<ClauseType> amountList = Arrays.asList(EXCHANGE_RATE, CUSTOMER_CURRENCY_QUANTITY, BROKER_CURRENCY_QUANTITY);
 
         for (ClauseInformation clause : clauseList) {
-            if (amountList.contains(clause.getType())){
-                if(clause.getValue().isEmpty())
+            if (amountList.contains(clause.getType())) {
+                if (clause.getValue().isEmpty())
                     return true;
             }
         }

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class SetCryptoCurrencyTest {
 
     @Test
-    public void setCryptoCurrency(){
+    public void setCryptoCurrency() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoMoneyDestockTransaction).setCryptoCurrency(Mockito.any(CryptoCurrency.class));
     }

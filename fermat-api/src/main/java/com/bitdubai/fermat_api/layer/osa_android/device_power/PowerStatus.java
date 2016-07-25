@@ -15,21 +15,21 @@ public enum PowerStatus {
 
     private String code;
 
-    PowerStatus(String code){
+    PowerStatus(String code) {
 
-        this.code=code;
+        this.code = code;
 
     }
 
-    public String getCode(){
+    public String getCode() {
 
         return this.code;
 
     }
 
-    public static PowerStatus getByCode(String code)throws InvalidParameterException{
+    public static PowerStatus getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
             case "CHAR":
                 return PowerStatus.CHARGING;
@@ -40,7 +40,7 @@ public enum PowerStatus {
             case "NCHAR":
                 return PowerStatus.NOT_CHARGING;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PowerStatus enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the PowerStatus enum");
 
         }
 

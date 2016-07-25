@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 /**
  * RecyclerView Fragment
  */
-public abstract class FermatListFragmentImproved<M,S extends ReferenceAppFermatSession,R extends ResourceProviderManager> extends AbstractFermatFragment<S,R>
+public abstract class FermatListFragmentImproved<M, S extends ReferenceAppFermatSession, R extends ResourceProviderManager> extends AbstractFermatFragment<S, R>
         implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 /**
  * Created by Matias Furszyfer on 2016.06.03..
  */
-public interface ComboAppFermatSession extends FermatSession{
+public interface ComboAppFermatSession extends FermatSession {
 
     /**
      * Devuelve el module manager

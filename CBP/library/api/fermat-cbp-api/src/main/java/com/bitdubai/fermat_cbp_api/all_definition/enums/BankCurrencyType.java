@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
- 
+
 public enum BankCurrencyType implements FermatEnum {
     DOLAR_USA("USD"),
     EURO("EUR"),
@@ -30,15 +30,24 @@ public enum BankCurrencyType implements FermatEnum {
 
     public static BankCurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "USD": return DOLAR_USA;
-            case "EUR": return EURO;
-            case "AUD": return DOLAR_AUSTRALIANO;
-            case "CAD": return DOLAR_CANADIENCE;
-            case "CHF": return FRANCO_SUIZO;
-            case "GBP": return LIBRA_ESTERLINA;
-            case "JPY": return YEN_JAPONES;
-            case "BS": return BOLIVARES;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankCurrencyType enum");
+            case "USD":
+                return DOLAR_USA;
+            case "EUR":
+                return EURO;
+            case "AUD":
+                return DOLAR_AUSTRALIANO;
+            case "CAD":
+                return DOLAR_CANADIENCE;
+            case "CHF":
+                return FRANCO_SUIZO;
+            case "GBP":
+                return LIBRA_ESTERLINA;
+            case "JPY":
+                return YEN_JAPONES;
+            case "BS":
+                return BOLIVARES;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the BankCurrencyType enum");
         }
     }
 }

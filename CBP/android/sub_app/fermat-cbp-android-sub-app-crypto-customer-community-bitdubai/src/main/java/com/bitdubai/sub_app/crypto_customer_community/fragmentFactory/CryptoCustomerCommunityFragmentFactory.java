@@ -6,16 +6,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.crypto_customer_community.fragments.RequestsTabFragment;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.BrowserTabFragment;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsTabFragment;
-import com.bitdubai.sub_app.crypto_customer_community.fragments.BrowserTabFragment;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.RequestsTabFragment;
 
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>,SubAppResourcesProviderManager, CryptoCustomerCommunityFragmentsEnumType> {
+public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager, CryptoCustomerCommunityFragmentsEnumType> {
 
 
     @Override

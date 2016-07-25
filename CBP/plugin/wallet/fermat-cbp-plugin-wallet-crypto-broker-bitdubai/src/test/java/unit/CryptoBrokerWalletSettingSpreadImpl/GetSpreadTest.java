@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetSpreadTest {
 
     @Test
-    public void getSpread(){
+    public void getSpread() {
         CryptoBrokerWalletSettingSpreadImpl cryptoBrokerWalletSettingSpread = mock(CryptoBrokerWalletSettingSpreadImpl.class);
         when(cryptoBrokerWalletSettingSpread.getSpread()).thenReturn(1f);
         assertThat(cryptoBrokerWalletSettingSpread.getSpread()).isNotNull();

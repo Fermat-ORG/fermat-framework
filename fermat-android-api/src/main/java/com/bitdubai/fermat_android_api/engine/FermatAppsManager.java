@@ -20,14 +20,14 @@ public interface FermatAppsManager {
     void init();
 
     /**
-     *  Get the last app structure
+     * Get the last app structure
      *
      * @return
      */
     FermatStructure lastAppStructure();
 
     /**
-     *  Get the last app session
+     * Get the last app session
      *
      * @return
      */
@@ -38,13 +38,13 @@ public interface FermatAppsManager {
 
     boolean isAppOpen(String appPublicKey);
 
-    FermatSession getAppsSession(String appPublicKey,boolean isForSubSession);
+    FermatSession getAppsSession(String appPublicKey, boolean isForSubSession);
 
     FermatSession getAppsSession(String appPublicKey);
 
-    FermatSession openApp(FermatApp fermatApp,AppConnections fermatAppConnection) throws Exception;
+    FermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection) throws Exception;
 
-    FermatApp getApp(String publicKey,FermatAppType fermatAppType) throws Exception;
+    FermatApp getApp(String publicKey, FermatAppType fermatAppType) throws Exception;
 
     FermatApp getApp(String appPublicKey) throws Exception;
 

@@ -25,12 +25,13 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.cash_money_restock.developer.bitdubai.version_1.database.BusinessTransactionBankMoneyRestockDeveloperFactory.java
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Franklin Marcano - (franklinmarcano970@gmail.com) on 16/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
- */public class BusinessTransactionBankMoneyRestockDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+ */
+public class BusinessTransactionBankMoneyRestockDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -65,8 +66,7 @@ import java.util.UUID;
         this.pluginId = pluginId;
     }
 
-    public void initializeDatabase() throws CantInitializeBankMoneyRestockDatabaseException
-    {
+    public void initializeDatabase() throws CantInitializeBankMoneyRestockDatabaseException {
         try {
 
              /*
@@ -75,14 +75,14 @@ import java.util.UUID;
             database = this.pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_DATABASE_NAME);
             database.closeDatabase();
 
-        }catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
             throw new CantInitializeBankMoneyRestockDatabaseException(cantOpenDatabaseException.getMessage());
 
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
              /*
               * The database no exist may be the first time the plugin is running on this device,
@@ -96,8 +96,7 @@ import java.util.UUID;
                    */
                 database = businessTransactionBankMoneyRestockDatabaseFactory.createDatabase(pluginId, BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_DATABASE_NAME);
                 database.closeDatabase();
-            }
-            catch(CantCreateDatabaseException cantCreateDatabaseException) {
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
@@ -160,12 +159,12 @@ import java.util.UUID;
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -185,7 +184,7 @@ import java.util.UUID;
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

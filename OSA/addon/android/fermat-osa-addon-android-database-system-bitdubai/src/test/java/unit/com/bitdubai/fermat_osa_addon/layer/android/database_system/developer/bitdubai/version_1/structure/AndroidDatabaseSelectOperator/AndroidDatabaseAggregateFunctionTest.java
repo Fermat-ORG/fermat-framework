@@ -14,17 +14,17 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 public class AndroidDatabaseAggregateFunctionTest {
 
-    String  columna1 = "Columna_1",
+    String columna1 = "Columna_1",
             columna2 = "Columna_2";
 
-    String  alias1 = "Alias_1",
+    String alias1 = "Alias_1",
             alias2 = "Alias_2";
 
     AndroidDatabaseAggregateFunction selector1;
     AndroidDatabaseAggregateFunction selector2;
 
     @Before
-    public void setUpSelectOperator1(){
+    public void setUpSelectOperator1() {
         selector1 = constructAndroidDatabaseSelectOperator(
                 columna1,
                 alias1,
@@ -33,7 +33,7 @@ public class AndroidDatabaseAggregateFunctionTest {
     }
 
     @Test
-    public void SameValues_AreEquals_SameHash(){
+    public void SameValues_AreEquals_SameHash() {
         selector2 = constructAndroidDatabaseSelectOperator(
                 columna1,
                 alias1,
@@ -46,7 +46,7 @@ public class AndroidDatabaseAggregateFunctionTest {
     }
 
     @Test
-    public void Variables_NotEquals(){
+    public void Variables_NotEquals() {
         selector2 = constructAndroidDatabaseSelectOperator(
                 columna2,
                 alias2,
@@ -63,8 +63,8 @@ public class AndroidDatabaseAggregateFunctionTest {
             String column,
             String alias,
             DataBaseAggregateFunctionType type
-    ){
-        AndroidDatabaseAggregateFunction selector = new AndroidDatabaseAggregateFunction( column, type, alias );
+    ) {
+        AndroidDatabaseAggregateFunction selector = new AndroidDatabaseAggregateFunction(column, type, alias);
 
         selector.setColumn(column);
         selector.setAliasColumn(alias);

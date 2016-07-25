@@ -19,9 +19,9 @@ import static org.mockito.Mockito.mock;
 public class SetStateTest {
 
     @Test
-    public void setState() throws Exception{
+    public void setState() throws Exception {
 
-        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class,Mockito.RETURNS_DEEP_STUBS);
+        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(businessTransactionMetadataRecord).setState(Mockito.any(TransactionTransmissionStates.class));
 
     }

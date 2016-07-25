@@ -174,13 +174,16 @@ public class ClassLoaderManager<O extends FermatApplicationSession & FermatConte
     }
 
     public Object load(String pluginName, ClassLoader baseClassLoader, Object[] args) {
-        ClassLoader classLoader = loadAllPlugin(baseClassLoader);
-
-        FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(),classLoader,customClassLoader());
+        FermatClassLoader classLoaderManger = null;
         if (!externalLoaders.containsKey("bch")){
+            ClassLoader classLoader = loadAllPlugin(baseClassLoader);
+            classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(),classLoader,customClassLoader());
             externalLoaders.put("bch",classLoaderManger);
-
+        }else{
+            classLoaderManger = externalLoaders.get("bch");
         }
+
+
         try {
             Class klass1 = classLoaderManger.loadClass(pluginName);
             Constructor<?> constructor = null;

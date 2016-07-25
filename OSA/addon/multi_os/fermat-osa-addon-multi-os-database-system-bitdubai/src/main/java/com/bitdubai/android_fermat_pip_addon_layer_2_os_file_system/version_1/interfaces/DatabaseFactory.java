@@ -21,7 +21,5 @@ public interface DatabaseFactory {
 
     public void createDatabase(String databaseName) throws CantCreateDatabaseException;
 
-    
-    
 
 }

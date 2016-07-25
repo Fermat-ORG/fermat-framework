@@ -5,13 +5,12 @@ package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.s
  */
 
 
-
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -45,11 +44,11 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
      * <p>Platform implementation constructor
      *
      * @param directoryName name of the directory where the files are saved
-     * @param fileName name of file
-     * @param privacyLevel level of privacy for the file, if it is public or private
-     * @param lifeSpan lifetime of the file, whether it is permanent or temporary
+     * @param fileName      name of file
+     * @param privacyLevel  level of privacy for the file, if it is public or private
+     * @param lifeSpan      lifetime of the file, whether it is permanent or temporary
      */
-    public DesktopPlatformTextFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public DesktopPlatformTextFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
@@ -63,21 +62,20 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
      */
 
     public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
+        return lifeSpan;
+    }
 
-	public void setLifeSpan(FileLifeSpan lifeSpan) {
-		this.lifeSpan = lifeSpan;
-	}
+    public void setLifeSpan(FileLifeSpan lifeSpan) {
+        this.lifeSpan = lifeSpan;
+    }
 
-	/**
+    /**
      * <p>This method returns the contents of a file in string.
      *
      * @return String file content
      */
     @Override
-    public String getContent()
-    {
+    public String getContent() {
         return this.content;
     }
 
@@ -87,8 +85,7 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
      * @param content string file content
      */
     @Override
-    public void setContent (String content)
-    {
+    public void setContent(String content) {
         this.content = content;
     }
 
@@ -107,16 +104,16 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
             String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
+            if (privacyLevel == FilePrivacy.PUBLIC)
                 path = EnviromentVariables.getExternalStorageDirectory().toString();
             else
                 path = EnviromentVariables.getInternalStorageDirectory().toString();
-                // acá iria el path de donde están los archivos
-                //path = this.context.getFilesDir().toString();
-                
+            // acá iria el path de donde están los archivos
+            //path = this.context.getFilesDir().toString();
 
-            if(!this.directoryName.isEmpty())
-                path +="/"+ this.directoryName;
+
+            if (!this.directoryName.isEmpty())
+                path += "/" + this.directoryName;
 
             /**
              * If the directory does not exist, we create it here.
@@ -124,7 +121,7 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
 
             File storagePath = new File(path);
             if (!storagePath.exists() && storagePath.mkdirs()) {
-            	storagePath=null;
+                storagePath = null;
             }
 
             File file = new File(storagePath, this.fileName);
@@ -150,30 +147,31 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
 
     /**
      * <p>This method reads file content from the media.
+     *
      * @throws CantLoadFileException
      */
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-    	BufferedReader bufferedReader = null;
+        BufferedReader bufferedReader = null;
         try {
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
             String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
+            if (privacyLevel == FilePrivacy.PUBLIC)
                 path = EnviromentVariables.getExternalStorageDirectory().toString();
             else
                 path = EnviromentVariables.getInternalStorageDirectory().toString();
-                // acá iria el path de donde están los archivos
-                //path = this.context.getFilesDir().toString();
+            // acá iria el path de donde están los archivos
+            //path = this.context.getFilesDir().toString();
             /**
              * Get the file handle.
              */
 
-            File file = new File(path +"/"+ this.directoryName,this.fileName);
-            InputStream inputStream ;
-            inputStream =  new BufferedInputStream(new FileInputStream(file));
+            File file = new File(path + "/" + this.directoryName, this.fileName);
+            InputStream inputStream;
+            inputStream = new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 
             /**
@@ -194,16 +192,14 @@ public class DesktopPlatformTextFile implements PlatformTextFile {
         } catch (Exception e) {
             throw new CantLoadFileException(e.getMessage());
         } finally {
-        	try {
-        		bufferedReader.close();
-        		bufferedReader=null;
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+            try {
+                bufferedReader.close();
+                bufferedReader = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-
-
 
 
 }

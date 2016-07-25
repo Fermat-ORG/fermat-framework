@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -34,9 +36,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.database.BussinessTransactionBankMoneyDestockDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyDestockDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockManager;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyDestockMonitorAgent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyDestockMonitorAgent2;
 
 import java.util.List;
@@ -89,7 +88,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
             startMonitorAgent();
             database.closeDatabase();
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException  e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
             try {
                 System.out.println("******* Init Bank Money Destock CATCH******");
                 startMonitorAgent();
@@ -164,9 +163,8 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
             );
 
             businessTransactionBankMoneyDestockMonitorAgent.start();
-        serviceStatus = ServiceStatus.STARTED;
-        }
-        else {
+            serviceStatus = ServiceStatus.STARTED;
+        } else {
             businessTransactionBankMoneyDestockMonitorAgent.start();
             serviceStatus = ServiceStatus.STARTED;
         }

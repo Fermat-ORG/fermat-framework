@@ -21,7 +21,7 @@ public class GetTransactionIdTest {
     private UUID transactionId = UUID.randomUUID();
 
     @Test
-    public void getTransactionId() throws Exception{
+    public void getTransactionId() throws Exception {
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getTransactionId()).thenReturn(transactionId);
         assertThat(businessTransactionMetadataRecord.getTransactionId()).isNotNull();

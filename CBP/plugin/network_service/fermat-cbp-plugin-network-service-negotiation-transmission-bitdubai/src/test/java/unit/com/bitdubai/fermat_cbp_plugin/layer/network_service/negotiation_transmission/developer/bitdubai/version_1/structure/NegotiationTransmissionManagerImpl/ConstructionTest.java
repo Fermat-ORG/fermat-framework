@@ -9,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
@@ -25,7 +23,7 @@ public class ConstructionTest {
     private NegotiationTransmissionManagerImpl testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new NegotiationTransmissionManagerImpl(negotiationTransmissionNetworkServiceDatabaseDao);
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- balance_header.xml -->
-    <string name="available_balance_text">Available balance</string>
+    <string name="available_balance_text">Current balance</string>
     <string name="touch_to_change_text">Tap to change</string>
     <!-- ccp_grouper_list_item.xml -->
     <string name="txt_total_balance_15_btc_text">15 BTC</string>

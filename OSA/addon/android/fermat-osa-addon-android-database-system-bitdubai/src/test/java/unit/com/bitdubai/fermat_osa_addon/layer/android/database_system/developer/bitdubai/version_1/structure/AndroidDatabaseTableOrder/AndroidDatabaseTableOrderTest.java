@@ -20,7 +20,7 @@ public class AndroidDatabaseTableOrderTest {
     AndroidDatabaseTableOrder order2;
 
     @Before
-    public void setUpTableFilter1(){
+    public void setUpTableFilter1() {
         order1 = constructDatabaseTableColumn(
                 columnName_1,
                 DatabaseFilterOrder.ASCENDING
@@ -28,7 +28,7 @@ public class AndroidDatabaseTableOrderTest {
     }
 
     @Test
-    public void Variables_AreEquals(){
+    public void Variables_AreEquals() {
         order2 = constructDatabaseTableColumn(
                 columnName_1,
                 DatabaseFilterOrder.ASCENDING
@@ -39,7 +39,7 @@ public class AndroidDatabaseTableOrderTest {
     }
 
     @Test
-    public void Variables_NotEquals(){
+    public void Variables_NotEquals() {
         order2 = constructDatabaseTableColumn(
                 columnName_2,
                 DatabaseFilterOrder.DESCENDING
@@ -52,7 +52,7 @@ public class AndroidDatabaseTableOrderTest {
     private AndroidDatabaseTableOrder constructDatabaseTableColumn(
             String columnName,
             DatabaseFilterOrder direction
-    ){
+    ) {
         AndroidDatabaseTableOrder tableOrder = new AndroidDatabaseTableOrder(columnName, direction);
         return tableOrder;
     }

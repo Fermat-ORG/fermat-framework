@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException</code>
  * is thrown when there is an error trying to confirm the connection request.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 07/12/2015.
  */
 public class CantConfirmConnectionRequestException extends FermatException {

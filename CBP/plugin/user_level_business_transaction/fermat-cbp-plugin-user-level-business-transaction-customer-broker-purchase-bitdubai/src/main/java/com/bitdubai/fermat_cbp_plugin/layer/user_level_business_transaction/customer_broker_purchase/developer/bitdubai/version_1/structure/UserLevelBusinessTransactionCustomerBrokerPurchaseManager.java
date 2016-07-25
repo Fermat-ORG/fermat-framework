@@ -28,7 +28,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseManager implement
         event.setNotificationType(NotificationType.REVIEW_NOTIFICATION.getCode());
         event.setSource(UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.EVENT_SOURCE);
         this.userLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.getEventManager().raiseEvent(event);
-        System.out.println("UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot - ReviewNegotiationNotificationEvent fired!: " + event.toString());
+        System.out.println(new StringBuilder().append("UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot - ReviewNegotiationNotificationEvent fired!: ").append(event.toString()).toString());
     }
 
     private String getSourceString(EventSource eventSource) {

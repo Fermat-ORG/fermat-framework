@@ -37,7 +37,7 @@ public class DeleteDatabaseTest {
     private UUID ownerId;
 
     @Before
-    public void setUpContext(){
+    public void setUpContext() {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
 
@@ -45,7 +45,7 @@ public class DeleteDatabaseTest {
     }
 
     @Test
-    public void deleteDatabaseTest_ThrowCantOpenDatabaseException() throws Exception{
+    public void deleteDatabaseTest_ThrowCantOpenDatabaseException() throws Exception {
         testDatabase.createDatabase(ownerId, testDatabaseName);
         catchException(testDatabase).deleteDatabase(ownerId, "db");
 
@@ -53,16 +53,14 @@ public class DeleteDatabaseTest {
     }
 
 
-
     @Test
-    public void deleteDatabaseTest_deleteOk() throws Exception{
+    public void deleteDatabaseTest_deleteOk() throws Exception {
         testDatabase.createDatabase(ownerId, testDatabaseName);
 
-        catchException(testDatabase).deleteDatabase(ownerId,testDatabaseName);
+        catchException(testDatabase).deleteDatabase(ownerId, testDatabaseName);
         assertThat(caughtException()).isNull();
 
     }
-
 
 
 }
