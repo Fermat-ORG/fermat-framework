@@ -51,7 +51,7 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
 
-//include ':ApplicationSessionTest'
+include ':ApplicationSessionTest'
 
 
-//include ':FermatApplicationTest'
+include ':FermatApplicationTest'
