@@ -332,6 +332,12 @@ public class OpenContractMonitorAgent2
                             transactionTransmissionManager.confirmReception(transmissionIdNew);
                             break;
 
+                        } else {
+
+                            throw new UnexpectedResultReturnedFromDatabaseException(
+                                    "Checking pending transactions.",
+                                    "Contract Hash Not exist, Cannot Send The Confirm Notification Reception.");
+
                         }
                     }
                 }
@@ -343,26 +349,36 @@ public class OpenContractMonitorAgent2
 
                     if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_CONFIRMED.getCode())) {
 
-                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION - VAL\n");
+                        if(openContractBusinessTransactionDao.isContractHashExists(contractHash)){
 
-                        //SEND CONFIRM RECEPTION HASH
-                        transactionTransmissionManager.ackConfirmNotificationReception(
-                                businessTransactionMetadata.getReceiverId(),
-                                businessTransactionMetadata.getSenderId(),
-                                contractHash,
-                                transmissionIdNew.toString(),
-                                transactionContractId,
-                                Plugins.OPEN_CONTRACT,
-                                businessTransactionMetadata.getReceiverType(),
-                                businessTransactionMetadata.getSenderType()
-                        );
+                            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION - VAL\n");
 
-                        //CHANGE STATUS TRANSACTION
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
+                            //SEND CONFIRM RECEPTION HASH
+                            transactionTransmissionManager.ackConfirmNotificationReception(
+                                    businessTransactionMetadata.getReceiverId(),
+                                    businessTransactionMetadata.getSenderId(),
+                                    contractHash,
+                                    transmissionIdNew.toString(),
+                                    transactionContractId,
+                                    Plugins.OPEN_CONTRACT,
+                                    businessTransactionMetadata.getReceiverType(),
+                                    businessTransactionMetadata.getSenderType()
+                            );
 
-                        //CONFIRM SEND OF TRANSMISSION
-                        transactionTransmissionManager.confirmReception(transmissionIdNew);
-                        break;
+                            //CHANGE STATUS TRANSACTION
+                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
+
+                            //CONFIRM SEND OF TRANSMISSION
+                            transactionTransmissionManager.confirmReception(transmissionIdNew);
+                            break;
+
+                        } else {
+
+                            throw new UnexpectedResultReturnedFromDatabaseException(
+                                    "Checking pending transactions.",
+                                    "Contract Hash Not exist, Cannot Send The Ack Confirm Notification Reception.");
+
+                        }
 
                     }
 
