@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
 
 import java.util.UUID;
@@ -16,7 +15,8 @@ public class CryptoBrokerWalletProviderSettingImpl implements CryptoBrokerWallet
     private String currencyFrom;
     private String currencyTo;
 
-    public CryptoBrokerWalletProviderSettingImpl(){}
+    public CryptoBrokerWalletProviderSettingImpl() {
+    }
 
     @Override
     public UUID getId() {

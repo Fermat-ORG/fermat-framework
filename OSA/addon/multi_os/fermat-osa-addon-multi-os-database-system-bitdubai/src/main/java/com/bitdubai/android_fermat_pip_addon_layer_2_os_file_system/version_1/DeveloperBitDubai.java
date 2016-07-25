@@ -3,9 +3,6 @@ package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bi
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.AddonDeveloper;
-
 /**
  * Created by toshiba on 20/05/2015.
  */

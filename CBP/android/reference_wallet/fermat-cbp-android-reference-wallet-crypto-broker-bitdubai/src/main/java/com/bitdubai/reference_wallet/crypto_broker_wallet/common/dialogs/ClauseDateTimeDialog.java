@@ -23,7 +23,7 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
         void getDate(long selectedValue);
     }
 
-    public ClauseDateTimeDialog(Activity activity, long timeInMillis){
+    public ClauseDateTimeDialog(Activity activity, long timeInMillis) {
 
         this.activity = activity;
 
@@ -68,12 +68,12 @@ public class ClauseDateTimeDialog implements DatePickerFragment.SelectedDate, Ti
 
     }
 
-    public void showDateDialog(){
+    public void showDateDialog() {
         DatePickerFragment datePicker = DatePickerFragment.getNewInstance(year, monthOfYear, dayOfMonth, this);
         datePicker.show(activity.getFragmentManager(), "datePicker");
     }
 
-    public void showTimeDialog(){
+    public void showTimeDialog() {
         TimePickerFragment timePicker = TimePickerFragment.getNewInstance(hourOfDay, minute, this);
         timePicker.show(activity.getFragmentManager(), "timePicker");
     }

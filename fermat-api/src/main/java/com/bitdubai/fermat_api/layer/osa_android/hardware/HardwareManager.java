@@ -10,7 +10,7 @@ public interface HardwareManager {
     String getOSVersion();
 
     enum OS {
-        WINDOWS,LINUX,ANDROID,IOS
+        WINDOWS, LINUX, ANDROID, IOS
     }
 
     OS getOperativeSystem();

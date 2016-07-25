@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetIdTest {
 
     @Test
-    public void getId() throws Exception{
+    public void getId() throws Exception {
         TransactionTransmissionConnectionRecord transactionTransmissionConnectionRecord = mock(TransactionTransmissionConnectionRecord.class);
         when(transactionTransmissionConnectionRecord.getId()).thenReturn(UUID.randomUUID());
         assertThat(transactionTransmissionConnectionRecord.getId()).isNotNull();

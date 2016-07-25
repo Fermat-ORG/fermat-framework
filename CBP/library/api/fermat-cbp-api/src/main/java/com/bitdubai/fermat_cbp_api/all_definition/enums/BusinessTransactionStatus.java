@@ -6,12 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by Yordin Alayn on 23.09.15.
  */
- 
+
 public enum BusinessTransactionStatus implements FermatEnum {
     PAUSED("PAU"),
     PENDING_PAYMENT("PEN"),
     COMPLETED("COM"),
-    CANCELLED ("CAN");
+    CANCELLED("CAN");
 
     private String code;
 
@@ -26,11 +26,16 @@ public enum BusinessTransactionStatus implements FermatEnum {
 
     public static BusinessTransactionStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "PAU": return BusinessTransactionStatus.PAUSED;
-            case "PEN": return BusinessTransactionStatus.PENDING_PAYMENT;
-            case "COM": return BusinessTransactionStatus.COMPLETED;
-            case "CAN": return BusinessTransactionStatus.CANCELLED;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BusinessTransactionStatus enum");
+            case "PAU":
+                return BusinessTransactionStatus.PAUSED;
+            case "PEN":
+                return BusinessTransactionStatus.PENDING_PAYMENT;
+            case "COM":
+                return BusinessTransactionStatus.COMPLETED;
+            case "CAN":
+                return BusinessTransactionStatus.CANCELLED;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the BusinessTransactionStatus enum");
         }
     }
 }

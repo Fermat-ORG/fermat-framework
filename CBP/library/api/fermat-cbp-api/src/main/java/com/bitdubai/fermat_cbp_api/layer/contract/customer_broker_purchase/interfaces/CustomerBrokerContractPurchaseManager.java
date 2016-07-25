@@ -12,17 +12,15 @@ import java.util.Collection;
  * Created by angel on 16/9/15.
  */
 
-public interface CustomerBrokerContractPurchaseManager extends FermatManager{
+public interface CustomerBrokerContractPurchaseManager extends FermatManager {
 
     /**
-     *
-     * @return  a list of all contracts
+     * @return a list of all contracts
      * @throws CantGetListCustomerBrokerContractPurchaseException
      */
     Collection<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchase() throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
-     *
      * @param ContractId
      * @return a CustomerBrokerContractPurchase with information of contract with ContractId
      * @throws CantGetListCustomerBrokerContractPurchaseException
@@ -30,7 +28,6 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
     CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseForContractId(final String ContractId) throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
-     *
      * @param status
      * @return an Collection of CustomerBrokerContractPurchase with information of contract with status
      * @throws CantGetListCustomerBrokerContractPurchaseException
@@ -38,13 +35,11 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
     Collection<CustomerBrokerContractPurchase> getCustomerBrokerContractPurchaseForStatus(final ContractStatus status) throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
-     *
      * @return an ListsForStatus with separate lists and sorted by status
      */
     ListsForStatusPurchase getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
-     *
      * @param contract
      * @return a CustomerBrokerContractPurchase with information of contract created
      * @throws CantCreateCustomerBrokerContractPurchaseException
@@ -52,7 +47,6 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
     CustomerBrokerContractPurchase createCustomerBrokerContractPurchase(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException;
 
     /**
-     *
      * @param contractId
      * @param status
      * @throws CantUpdateCustomerBrokerContractPurchaseException
@@ -60,7 +54,6 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
     void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantUpdateCustomerBrokerContractPurchaseException;
 
     /**
-     *
      * @param contractId
      * @param status
      * @throws CantUpdateCustomerBrokerContractPurchaseException
@@ -68,7 +61,6 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
     void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractPurchaseException;
 
     /**
-     *
      * @param contractId
      * @param reason
      * @throws CantUpdateCustomerBrokerContractPurchaseException

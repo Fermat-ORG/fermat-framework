@@ -8,14 +8,11 @@ import java.lang.reflect.Method;
 public class LargeWorkOnMainThreadException extends RuntimeException {
 
     public LargeWorkOnMainThreadException(Object object, Method method) {
-        super("LargeWorkOnMainThreadException in:"+object.getClass().getInterfaces()[0].getName()+"\n" +
-                "Method: "+ method+ "\n" +
-                "Please use a new thread to work with large data request");
+        super(new StringBuilder().append("LargeWorkOnMainThreadException in:").append(object.getClass().getInterfaces()[0].getName()).append("\n").append("Method: ").append(method).append("\n").append("Please use a new thread to work with large data request").toString());
     }
-    public LargeWorkOnMainThreadException(Object object, Method method,Exception e) {
-        super("LargeWorkOnMainThreadException in:"+object.getClass().getInterfaces()[0].getName()+"\n" +
-                "Method: "+ method+ "\n" +
-                "Please use a new thread to work with large data request", e);
+
+    public LargeWorkOnMainThreadException(Object object, Method method, Exception e) {
+        super(new StringBuilder().append("LargeWorkOnMainThreadException in:").append(object.getClass().getInterfaces()[0].getName()).append("\n").append("Method: ").append(method).append("\n").append("Please use a new thread to work with large data request").toString(), e);
     }
 
 }

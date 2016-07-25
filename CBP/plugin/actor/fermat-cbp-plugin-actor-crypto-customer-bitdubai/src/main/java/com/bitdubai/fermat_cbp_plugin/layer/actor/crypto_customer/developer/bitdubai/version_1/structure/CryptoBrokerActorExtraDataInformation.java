@@ -12,7 +12,7 @@ public class CryptoBrokerActorExtraDataInformation implements CryptoBrokerActorE
 
     private Collection<CryptoBrokerActorQuotes> quotes;
 
-    public CryptoBrokerActorExtraDataInformation(Collection<CryptoBrokerActorQuotes> quotes){
+    public CryptoBrokerActorExtraDataInformation(Collection<CryptoBrokerActorQuotes> quotes) {
         this.quotes = quotes;
     }
 

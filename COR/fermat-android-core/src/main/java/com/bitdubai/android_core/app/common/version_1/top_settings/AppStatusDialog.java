@@ -25,7 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidC
 /**
  * Created by mati on 2016.02.10..
  */
-public class AppStatusDialog extends Dialog{
+public class AppStatusDialog extends Dialog {
 
 
     private AndroidCoreModule androidCoreModule;
@@ -33,7 +33,7 @@ public class AppStatusDialog extends Dialog{
     private AndroidCoreSettings androidCoreSettings;
     RadioButton radioChecked;
 
-    public AppStatusDialog(Context context,AndroidCoreModule androidCoreModule,AppStatusCallbackChanges appStatusCallbackChanges) {
+    public AppStatusDialog(Context context, AndroidCoreModule androidCoreModule, AppStatusCallbackChanges appStatusCallbackChanges) {
         super(context);
         this.appStatusCallbackChanges = appStatusCallbackChanges;
         this.androidCoreModule = androidCoreModule;
@@ -65,11 +65,11 @@ public class AppStatusDialog extends Dialog{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.app_status_dialog_main);
 
-        final RadioButton radioButton =(RadioButton) findViewById(R.id.radio_release);
+        final RadioButton radioButton = (RadioButton) findViewById(R.id.radio_release);
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     Toast.makeText(getContext(), "No apps in Release for now", Toast.LENGTH_SHORT).show();
                     buttonView.setChecked(false);
 //                    androidCoreSettings.setAppsStatus(AppsStatus.RELEASE);
@@ -81,12 +81,11 @@ public class AppStatusDialog extends Dialog{
         });
 
 
-
-        RadioButton radioButton1 =(RadioButton)findViewById(R.id.radio_beta);
+        RadioButton radioButton1 = (RadioButton) findViewById(R.id.radio_beta);
         radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     Toast.makeText(getContext(), "No apps in Beta for now", Toast.LENGTH_SHORT).show();
                     buttonView.setChecked(false);
 //                    androidCoreSettings.setAppsStatus(AppsStatus.BETA);
@@ -99,11 +98,11 @@ public class AppStatusDialog extends Dialog{
             }
         });
 
-        RadioButton radioButton2 =(RadioButton)findViewById(R.id.radio_alpha);
+        RadioButton radioButton2 = (RadioButton) findViewById(R.id.radio_alpha);
         radioButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     androidCoreSettings.setAppsStatus(AppsStatus.ALPHA);
 //                    uncheckAllExcept();
                     radioChecked.setChecked(false);
@@ -115,11 +114,11 @@ public class AppStatusDialog extends Dialog{
             }
         });
 
-        RadioButton radioButton3 =(RadioButton)findViewById(R.id.radio_dev);
+        RadioButton radioButton3 = (RadioButton) findViewById(R.id.radio_dev);
         radioButton3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     androidCoreSettings.setAppsStatus(AppsStatus.DEV);
 //                    uncheckAllExcept();
                     radioChecked.setChecked(false);
@@ -131,7 +130,7 @@ public class AppStatusDialog extends Dialog{
             }
         });
 
-        switch (androidCoreSettings.getAppsStatus()){
+        switch (androidCoreSettings.getAppsStatus()) {
             case RELEASE:
                 radioChecked = radioButton;
                 radioButton.setChecked(true);
@@ -155,7 +154,7 @@ public class AppStatusDialog extends Dialog{
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()){
+                switch (v.getId()) {
                     case R.id.txt_release:
                     case R.id.linear_relese:
                         Toast.makeText(getContext(), "No apps in Release for now", Toast.LENGTH_SHORT).show();
@@ -196,31 +195,30 @@ public class AppStatusDialog extends Dialog{
         findViewById(R.id.txt_dev).setOnClickListener(onClickListener);
 
 
-        ((FermatTextView)findViewById(R.id.txt_release)).setFont(FontType.CAVIAR_DREAMS);
-        ((FermatTextView)findViewById(R.id.txt_beta)).setFont(FontType.CAVIAR_DREAMS);
-        ((FermatTextView)findViewById(R.id.txt_alpha)).setFont(FontType.CAVIAR_DREAMS);
-        ((FermatTextView)findViewById(R.id.txt_dev)).setFont(FontType.CAVIAR_DREAMS);
-        ((FermatTextView)findViewById(R.id.txt_title_app_status)).setFont(FontType.CAVIAR_DREAMS_BOLD);
-
+        ((FermatTextView) findViewById(R.id.txt_release)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView) findViewById(R.id.txt_beta)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView) findViewById(R.id.txt_alpha)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView) findViewById(R.id.txt_dev)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView) findViewById(R.id.txt_title_app_status)).setFont(FontType.CAVIAR_DREAMS_BOLD);
 
 
     }
 
-    private void uncheckAllExcept(){
+    private void uncheckAllExcept() {
         for (AppsStatus status : AppsStatus.values()) {
-            if(status!=androidCoreSettings.getAppsStatus()){
-                switch (status){
+            if (status != androidCoreSettings.getAppsStatus()) {
+                switch (status) {
                     case RELEASE:
-                        ((RadioButton)findViewById(R.id.radio_release)).setChecked(false);
+                        ((RadioButton) findViewById(R.id.radio_release)).setChecked(false);
                         break;
                     case BETA:
-                        ((RadioButton)findViewById(R.id.radio_beta)).setChecked(false);
+                        ((RadioButton) findViewById(R.id.radio_beta)).setChecked(false);
                         break;
                     case ALPHA:
-                        ((RadioButton)findViewById(R.id.radio_alpha)).setChecked(false);
+                        ((RadioButton) findViewById(R.id.radio_alpha)).setChecked(false);
                         break;
                     case DEV:
-                        ((RadioButton)findViewById(R.id.radio_dev)).setChecked(false);
+                        ((RadioButton) findViewById(R.id.radio_dev)).setChecked(false);
                         break;
                 }
             }

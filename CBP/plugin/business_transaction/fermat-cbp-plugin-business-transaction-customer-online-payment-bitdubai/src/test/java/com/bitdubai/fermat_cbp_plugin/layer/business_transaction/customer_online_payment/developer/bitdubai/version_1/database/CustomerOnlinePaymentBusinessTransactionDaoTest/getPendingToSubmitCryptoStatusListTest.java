@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDaoTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -8,7 +9,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,19 +38,20 @@ public class getPendingToSubmitCryptoStatusListTest {
     DatabaseTable databaseTable;
     @Mock
     DatabaseTableRecord databaseTableRecord;
-    List<DatabaseTableRecord> databaseTableRecordsList  = new ArrayList<>();
+    List<DatabaseTableRecord> databaseTableRecordsList = new ArrayList<>();
     private UUID testId;
 
     @Before
-    public void setup()throws Exception{
+    public void setup() throws Exception {
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
-                pluginDatabaseSystem,testId,database,errorManager);
+                pluginDatabaseSystem, testId, database, errorManager);
         databaseTableRecordsList.add(databaseTableRecord);
         setupMockitoGeneraRules();
     }
-    public void setupMockitoGeneraRules()throws Exception{
+
+    public void setupMockitoGeneraRules() throws Exception {
         doNothing().when(databaseTable).loadToMemory();
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordsList);
         when(databaseTableRecord.getStringValue(
@@ -60,8 +61,9 @@ public class getPendingToSubmitCryptoStatusListTest {
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                         ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME)).thenReturn("mainnet");
     }
+
     @Test
-    public void getPendingToSubmitCryptoStatusListTest_Should_Equal_Class()throws Exception{
+    public void getPendingToSubmitCryptoStatusListTest_Should_Equal_Class() throws Exception {
         when(database.getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME
         )).thenReturn(databaseTable);
@@ -69,8 +71,9 @@ public class getPendingToSubmitCryptoStatusListTest {
                 customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList().
                         get(0).getContractTransactionStatus());
     }
+
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getPendingToSubmitCryptoStatusListTest_Should_Throw_Exception()throws Exception{
+    public void getPendingToSubmitCryptoStatusListTest_Should_Throw_Exception() throws Exception {
         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList();
     }
 }

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
  * This addon handles a layer of file representation.
  * Encapsulates all the necessary functions to manage files.
  * For interfaces PluginFile the modules need to authenticate with their plugin ids
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  */
 public class PlatformBroadcasterSystemAndroidAddonRoot extends AbstractAddon {

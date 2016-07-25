@@ -10,7 +10,7 @@ public interface Service {
     void start() throws CantStartException;
 
     void pause();
-    
+
     void resume();
 
     void stop();

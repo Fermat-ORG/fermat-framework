@@ -21,7 +21,7 @@ public class UserLevelBusinessTransactionLayer extends AbstractLayer {
 
             registerPlugin(new CustomerBrokerPurchaseSubsystem());
             registerPlugin(new CustomerBrokerSaleSubsystem());
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

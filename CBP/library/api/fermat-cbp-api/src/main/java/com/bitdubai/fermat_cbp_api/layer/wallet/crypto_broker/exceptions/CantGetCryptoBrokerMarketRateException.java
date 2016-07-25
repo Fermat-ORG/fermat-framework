@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantGetCryptoBrokerMarketRateException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T GET CRYPTO BROKER MARKET RATE";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

@@ -10,16 +10,16 @@ import java.util.UUID;
  */
 public class ConfirmMessage extends NegotiationTransmissionMessage {
 
-    private final UUID                  transmissionId;
+    private final UUID transmissionId;
     private final PlatformComponentType actorReceiveType;
 
     public ConfirmMessage(
-        final UUID transmissionId,
-        final PlatformComponentType actorReceiveType
-    ){
+            final UUID transmissionId,
+            final PlatformComponentType actorReceiveType
+    ) {
         super(NegotiationTransmissionType.TRANSMISSION_CONFIRM);
         this.transmissionId = transmissionId;
-        this.actorReceiveType    = actorReceiveType   ;
+        this.actorReceiveType = actorReceiveType;
     }
 
     public UUID getTransmissionId() {
@@ -32,9 +32,10 @@ public class ConfirmMessage extends NegotiationTransmissionMessage {
 
     @Override
     public String toString() {
-        return  "ConfirmMessage{" +
-                "  transmissionId   =" + transmissionId +
-                ", action           =" + actorReceiveType +
-                "}";
+        return new StringBuilder()
+                .append("ConfirmMessage{")
+                .append("  transmissionId   =").append(transmissionId)
+                .append(", action           =").append(actorReceiveType)
+                .append("}").toString();
     }
 }

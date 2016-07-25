@@ -2,7 +2,7 @@ package com.bitdubai.fermat_android_api.ui.expandableRecicler;
 
 /**
  * Custom child list item.
- *
+ * <p/>
  * This is for demo purposes, although it is recommended having a separate
  * child list item from your parent list item.
  *

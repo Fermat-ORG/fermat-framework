@@ -2,13 +2,13 @@
 
 /**
  * Copyright 2011 Google Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,10 +39,11 @@ import java.math.BigInteger;
  * </ul>
  */
 public class Base58 {
-	
+
     private static final char[] ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
 
     private static final int[] INDEXES = new int[128];
+
     static {
         for (int i = 0; i < INDEXES.length; i++) {
             INDEXES[i] = -1;
@@ -53,22 +54,22 @@ public class Base58 {
     }
 
     /** Encodes the given bytes in base58. No checksum is appended. */
-	public static String encode(final String input) {
-		BigInteger version = new BigInteger(input.substring(0,2),16);
-		BigInteger data = new BigInteger(input.substring(2),16);
-		return encode(version) + encode(data);
-	}
+    public static String encode(final String input) {
+        BigInteger version = new BigInteger(input.substring(0, 2), 16);
+        BigInteger data = new BigInteger(input.substring(2), 16);
+        return encode(version) + encode(data);
+    }
 
-	public static String encode(BigInteger input) {
-		byte[] inputArray = input.toByteArray();
-		
-		return encode(inputArray);
-	}
+    public static String encode(BigInteger input) {
+        byte[] inputArray = input.toByteArray();
+
+        return encode(inputArray);
+    }
 
     public static String encode(byte[] input) {
         if (input.length == 0) {
             return "";
-        }       
+        }
         input = copyOfRange(input, 0, input.length);
         // Count leading zeroes.
         int zeroCount = 0;
@@ -104,77 +105,78 @@ public class Base58 {
             throw new RuntimeException(e);  // Cannot happen.
         }
     }
-/*
-    public static byte[] decode(String input) throws AddressFormatException {
-        if (input.length() == 0) {
-            return new byte[0];
-        }
-        byte[] input58 = new byte[input.length()];
-        // Transform the String to a base58 byte sequence
-        for (int i = 0; i < input.length(); ++i) {
-            char c = input.charAt(i);
 
-            int digit58 = -1;
-            if (c >= 0 && c < 128) {
-                digit58 = INDEXES[c];
+    /*
+        public static byte[] decode(String input) throws AddressFormatException {
+            if (input.length() == 0) {
+                return new byte[0];
             }
-            if (digit58 < 0) {
-                throw new AddressFormatException("Illegal character " + c + " at " + i);
+            byte[] input58 = new byte[input.length()];
+            // Transform the String to a base58 byte sequence
+            for (int i = 0; i < input.length(); ++i) {
+                char c = input.charAt(i);
+
+                int digit58 = -1;
+                if (c >= 0 && c < 128) {
+                    digit58 = INDEXES[c];
+                }
+                if (digit58 < 0) {
+                    throw new AddressFormatException("Illegal character " + c + " at " + i);
+                }
+
+                input58[i] = (byte) digit58;
+            }
+            // Count leading zeroes
+            int zeroCount = 0;
+            while (zeroCount < input58.length && input58[zeroCount] == 0) {
+                ++zeroCount;
+            }
+            // The encoding
+            byte[] temp = new byte[input.length()];
+            int j = temp.length;
+
+            int startAt = zeroCount;
+            while (startAt < input58.length) {
+                byte mod = divmod256(input58, startAt);
+                if (input58[startAt] == 0) {
+                    ++startAt;
+                }
+
+                temp[--j] = mod;
+            }
+            // Do no add extra leading zeroes, move j to first non null byte.
+            while (j < temp.length && temp[j] == 0) {
+                ++j;
             }
 
-            input58[i] = (byte) digit58;
-        }
-        // Count leading zeroes
-        int zeroCount = 0;
-        while (zeroCount < input58.length && input58[zeroCount] == 0) {
-            ++zeroCount;
-        }
-        // The encoding
-        byte[] temp = new byte[input.length()];
-        int j = temp.length;
-
-        int startAt = zeroCount;
-        while (startAt < input58.length) {
-            byte mod = divmod256(input58, startAt);
-            if (input58[startAt] == 0) {
-                ++startAt;
-            }
-
-            temp[--j] = mod;
-        }
-        // Do no add extra leading zeroes, move j to first non null byte.
-        while (j < temp.length && temp[j] == 0) {
-            ++j;
+            return copyOfRange(temp, j - zeroCount, temp.length);
         }
 
-        return copyOfRange(temp, j - zeroCount, temp.length);
-    }
-    
-    public static BigInteger decodeToBigInteger(String input) throws AddressFormatException {
-        return new BigInteger(1, decode(input));
-    }
+        public static BigInteger decodeToBigInteger(String input) throws AddressFormatException {
+            return new BigInteger(1, decode(input));
+        }
 
-    /**
-     * Uses the checksum in the last 4 bytes of the decoded data to verify the rest are correct. The checksum is
-     * removed from the returned data.
-     *
-     * @throws AddressFormatException if the input is not base 58 or the checksum does not validate.
-     
-    public static byte[] decodeChecked(String input) throws AddressFormatException {
-        byte tmp [] = decode(input);
-        if (tmp.length < 4)
-            throw new AddressFormatException("Input too short");
-        byte[] bytes = copyOfRange(tmp, 0, tmp.length - 4);
-        byte[] checksum = copyOfRange(tmp, tmp.length - 4, tmp.length);
-        
-        tmp = Utils.doubleDigest(bytes);
-        byte[] hash = copyOfRange(tmp, 0, 4);
-        if (!Arrays.equals(checksum, hash)) 
-            throw new AddressFormatException("Checksum does not validate");
-        
-        return bytes;
-    }
-    */
+        /**
+         * Uses the checksum in the last 4 bytes of the decoded data to verify the rest are correct. The checksum is
+         * removed from the returned data.
+         *
+         * @throws AddressFormatException if the input is not base 58 or the checksum does not validate.
+
+        public static byte[] decodeChecked(String input) throws AddressFormatException {
+            byte tmp [] = decode(input);
+            if (tmp.length < 4)
+                throw new AddressFormatException("Input too short");
+            byte[] bytes = copyOfRange(tmp, 0, tmp.length - 4);
+            byte[] checksum = copyOfRange(tmp, tmp.length - 4, tmp.length);
+
+            tmp = Utils.doubleDigest(bytes);
+            byte[] hash = copyOfRange(tmp, 0, 4);
+            if (!Arrays.equals(checksum, hash))
+                throw new AddressFormatException("Checksum does not validate");
+
+            return bytes;
+        }
+        */
     //
     // number -> number / 58, returns number % 58
     //

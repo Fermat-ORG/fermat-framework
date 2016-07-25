@@ -14,7 +14,7 @@ import org.junit.Test;
 public class xmlConversionTest {
     @Test
     public void fromClassToXml() {
-        Language language = new Language("Default", Languages.LATIN_AMERICAN_SPANISH, new Version(1,0,0));
+        Language language = new Language("Default", Languages.LATIN_AMERICAN_SPANISH, new Version(1, 0, 0));
         language.addString("boton_aceptar", "Accept");
         language.addString("boton_atras", "Back");
         language.addString("tab_balance_titulo", "Balance");

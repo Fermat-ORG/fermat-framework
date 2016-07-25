@@ -37,7 +37,7 @@ public class OpenDatabaseTest {
     private UUID ownerId;
 
     @Before
-    public void setUpContext(){
+    public void setUpContext() {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
 
@@ -45,31 +45,31 @@ public class OpenDatabaseTest {
     }
 
     @Test
-    public void openDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
-        testDatabase.createDatabase(ownerId,testDatabaseName);
-        catchException(testDatabase).openDatabase(ownerId,testDatabaseName);
+    public void openDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception {
+        testDatabase.createDatabase(ownerId, testDatabaseName);
+        catchException(testDatabase).openDatabase(ownerId, testDatabaseName);
         assertThat(caughtException()).isNull();
     }
 
     @Test
-    public void openDatabase_DatabaseInAlreadyOpen_InvokedSuccesfully() throws Exception{
-        testDatabase.createDatabase(ownerId,testDatabaseName);
-        testDatabase.openDatabase(ownerId,testDatabaseName);
-        catchException(testDatabase).openDatabase(ownerId,testDatabaseName);
+    public void openDatabase_DatabaseInAlreadyOpen_InvokedSuccesfully() throws Exception {
+        testDatabase.createDatabase(ownerId, testDatabaseName);
+        testDatabase.openDatabase(ownerId, testDatabaseName);
+        catchException(testDatabase).openDatabase(ownerId, testDatabaseName);
         assertThat(caughtException()).isNull();
     }
 
     @Test
-    public void openDatabase_NoDatabaseInPath_ThrowException() throws Exception{
-        catchException(testDatabase).openDatabase(ownerId,testDatabaseName);
+    public void openDatabase_NoDatabaseInPath_ThrowException() throws Exception {
+        catchException(testDatabase).openDatabase(ownerId, testDatabaseName);
         assertThat(caughtException()).isInstanceOf(DatabaseNotFoundException.class);
 
     }
 
     @Test
-    public void openDatabase_DatabaseInPath_InvokedSuccesfully1() throws Exception{
+    public void openDatabase_DatabaseInPath_InvokedSuccesfully1() throws Exception {
         testDatabase.createDatabase(ownerId, testDatabaseName);
-        catchException(testDatabase).openDatabase(ownerId,testDatabaseName);
+        catchException(testDatabase).openDatabase(ownerId, testDatabaseName);
         assertThat(caughtException()).isNull();
 
     }

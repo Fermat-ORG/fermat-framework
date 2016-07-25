@@ -20,7 +20,7 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
     private PluginVersionReference pluginVersionReference;
 
 
-    private Map<Integer,Method> methodsIdentifiers;
+    private Map<Integer, Method> methodsIdentifiers;
 
 
     public ProxyInvocationHandlerAIDL(ClientSystemBrokerServiceAIDL clientSystemBrokerService, PluginVersionReference pluginVersionReference) {
@@ -40,7 +40,7 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
         final MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
 
         int quantity = 0;
-        if(methodDetail!=null) quantity = methodDetail.methodParallelQuantity();
+        if (methodDetail != null) quantity = methodDetail.methodParallelQuantity();
 
 //        if(quantity>0){
 //            synchronized (this) {
@@ -65,9 +65,9 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
 //                Log.e(TAG,"Acá hay algo mal, contactar a furszy");
 //            }
 //        }
-        if(returnedObject instanceof Exception){
+        if (returnedObject instanceof Exception) {
             throw (Throwable) returnedObject;
-        }else {
+        } else {
             return returnedObject;
         }
 

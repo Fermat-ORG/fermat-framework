@@ -32,10 +32,10 @@ public class ConstructionTest {
     private CustomerBrokerNewPurchaseNegotiationTransaction testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new CustomerBrokerNewPurchaseNegotiationTransaction(
-            customerBrokerPurchaseNegotiationManager,
-            customerBrokerNewNegotiationTransactionDatabaseDao
+                customerBrokerPurchaseNegotiationManager,
+                customerBrokerNewNegotiationTransactionDatabaseDao
         );
     }
 

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetConceptTest {
 
     @Test
-    public void getConcept() throws Exception{
+    public void getConcept() throws Exception {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getConcept()).thenReturn(new String());
         assertThat(cryptoMoneyDestockTransaction.getConcept()).isNotNull();

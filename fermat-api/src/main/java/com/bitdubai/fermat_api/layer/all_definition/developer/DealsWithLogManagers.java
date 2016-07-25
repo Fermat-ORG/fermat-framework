@@ -13,10 +13,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
  */
 public interface DealsWithLogManagers {
 
-    void addLogManager(PluginVersionReference  pluginVersionReference ,
+    void addLogManager(PluginVersionReference pluginVersionReference,
                        Plugin logManagerForDevelopers);
 
-    void addLogManager(AddonVersionReference   addonVersionReference  ,
+    void addLogManager(AddonVersionReference addonVersionReference,
                        Addon logManagerForDevelopers);
 
 }

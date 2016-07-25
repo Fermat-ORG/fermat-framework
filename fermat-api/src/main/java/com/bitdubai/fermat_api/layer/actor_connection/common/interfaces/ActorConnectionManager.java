@@ -41,41 +41,38 @@ public interface ActorConnectionManager<T extends LinkedActorIdentity, Z extends
      * Through the method <code>requestConnection</code> we can request an actor for a connection.
      * When we're connected with an actor, we're enabled to interact with him.
      *
-     * @param actorSending    the actor which is trying to connect.
-     * @param actorReceiving  the actor which we're trying to connect with.
-     *
+     * @param actorSending   the actor which is trying to connect.
+     * @param actorReceiving the actor which we're trying to connect with.
      * @throws CantRequestActorConnectionException if something goes wrong.
      * @throws UnsupportedActorTypeException       if the requested kind of actor is not supported by the actor identity.
      */
-    void requestConnection(final ActorIdentityInformation actorSending  ,
+    void requestConnection(final ActorIdentityInformation actorSending,
                            final ActorIdentityInformation actorReceiving) throws CantRequestActorConnectionException,
-                                                                                 UnsupportedActorTypeException      ,
-                                                                                 ConnectionAlreadyRequestedException;
+            UnsupportedActorTypeException,
+            ConnectionAlreadyRequestedException;
 
     /**
      * Through the method <code>disconnect</code> we can disconnect from an actor.
      * If we don't want to interact anymore with the other actor, you can disconnect from him.
      *
-     * @param connectionId   id of the actor connection to be disconnected.
-     *
-     * @throws CantDisconnectFromActorException   if something goes wrong.
-     * @throws ActorConnectionNotFoundException   if we can't find an actor connection with this connection id.
+     * @param connectionId id of the actor connection to be disconnected.
+     * @throws CantDisconnectFromActorException if something goes wrong.
+     * @throws ActorConnectionNotFoundException if we can't find an actor connection with this connection id.
      */
     void disconnect(final UUID connectionId) throws CantDisconnectFromActorException,
-                                                    ActorConnectionNotFoundException,
+            ActorConnectionNotFoundException,
             UnexpectedConnectionStateException;
 
     /**
      * Through the method <code>denyConnection</code> we can deny an actor connection.
      * The actor identity can deny a connection request if he doesn't trust in the counterpart.
      *
-     * @param connectionId   id of the actor connection to be denied.
-     *
-     * @throws CantDenyActorConnectionRequestException   if something goes wrong.
-     * @throws ActorConnectionNotFoundException          if we can't find an actor connection with this connection id.
+     * @param connectionId id of the actor connection to be denied.
+     * @throws CantDenyActorConnectionRequestException if something goes wrong.
+     * @throws ActorConnectionNotFoundException        if we can't find an actor connection with this connection id.
      */
     void denyConnection(final UUID connectionId) throws CantDenyActorConnectionRequestException,
-                                                        ActorConnectionNotFoundException       ,
+            ActorConnectionNotFoundException,
             UnexpectedConnectionStateException;
 
     /**
@@ -83,25 +80,23 @@ public interface ActorConnectionManager<T extends LinkedActorIdentity, Z extends
      * The actor could cancel a connection request previously sent.
      * We've to check the state of the connection here.
      *
-     * @param connectionId   id of the actor connection request to be canceled.
-     *
-     * @throws CantCancelActorConnectionRequestException   if something goes wrong.
-     * @throws ActorConnectionNotFoundException            if we can't find an actor connection with this connection id.
+     * @param connectionId id of the actor connection request to be canceled.
+     * @throws CantCancelActorConnectionRequestException if something goes wrong.
+     * @throws ActorConnectionNotFoundException          if we can't find an actor connection with this connection id.
      */
     void cancelConnection(final UUID connectionId) throws CantCancelActorConnectionRequestException,
-                                                          ActorConnectionNotFoundException         ,
+            ActorConnectionNotFoundException,
             UnexpectedConnectionStateException;
 
     /**
      * Through the method <code>acceptConnection</code> we can accept a received connection request.
      *
-     * @param connectionId   id of the actor connection to be accepted.
-     *
-     * @throws CantAcceptActorConnectionRequestException   if something goes wrong.
-     * @throws ActorConnectionNotFoundException            if we can't find an actor connection with this connection id.
+     * @param connectionId id of the actor connection to be accepted.
+     * @throws CantAcceptActorConnectionRequestException if something goes wrong.
+     * @throws ActorConnectionNotFoundException          if we can't find an actor connection with this connection id.
      */
     void acceptConnection(final UUID connectionId) throws CantAcceptActorConnectionRequestException,
-                                                          ActorConnectionNotFoundException         ,
+            ActorConnectionNotFoundException,
             UnexpectedConnectionStateException;
 
 }

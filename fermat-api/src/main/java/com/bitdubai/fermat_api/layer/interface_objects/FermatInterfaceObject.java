@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.AppsStatus;
 /**
  * Created by mati on 2015.11.01..
  */
-public interface FermatInterfaceObject{
+public interface FermatInterfaceObject {
 
     InterfaceType getType();
 

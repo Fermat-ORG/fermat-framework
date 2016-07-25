@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by mati on 2016.02.22..
  */
-public interface InstalledDesktop extends FermatApp,Serializable{
+public interface InstalledDesktop extends FermatApp, Serializable {
 
 
 }

@@ -11,6 +11,7 @@ import java.util.UUID;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 /**
  * Created by roy on 5/02/16.
  */
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetNegotiationIdTest {
     @Test
-    public void getNegotiationId(){
+    public void getNegotiationId() {
         CryptoBrokerWalletModuleContractBasicInformation cryptoBrokerWalletModuleContractBasicInformation = mock(CryptoBrokerWalletModuleContractBasicInformation.class);
         when(cryptoBrokerWalletModuleContractBasicInformation.getNegotiationId()).thenReturn(UUID.randomUUID());
         assertThat(cryptoBrokerWalletModuleContractBasicInformation.getNegotiationId()).isNotNull();

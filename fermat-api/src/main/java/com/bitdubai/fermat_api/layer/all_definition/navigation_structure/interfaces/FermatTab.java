@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface FermatTab  extends Serializable {
+public interface FermatTab extends Serializable {
 
     void setLabel(String texto);
 

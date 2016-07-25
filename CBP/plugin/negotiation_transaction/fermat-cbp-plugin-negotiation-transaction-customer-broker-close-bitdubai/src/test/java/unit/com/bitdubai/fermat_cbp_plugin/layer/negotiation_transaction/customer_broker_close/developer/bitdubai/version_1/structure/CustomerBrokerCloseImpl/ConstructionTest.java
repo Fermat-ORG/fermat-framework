@@ -20,37 +20,37 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private final Date                            time                            = new Date();
+    private final Date time = new Date();
 
-    private final UUID                            transactionId                   = UUID.randomUUID();
+    private final UUID transactionId = UUID.randomUUID();
 
-    private final UUID                            negotiationId                   = UUID.randomUUID();
+    private final UUID negotiationId = UUID.randomUUID();
 
-    private final String                          publicKeyBroker                 = "publicKeyBroker";
+    private final String publicKeyBroker = "publicKeyBroker";
 
-    private final String                          publicKeyCustomer               = "publicKeyCustomer";
+    private final String publicKeyCustomer = "publicKeyCustomer";
 
-    private final NegotiationTransactionStatus    negotiationTransactionStatus    = NegotiationTransactionStatus.PENDING_SUBMIT;
+    private final NegotiationTransactionStatus negotiationTransactionStatus = NegotiationTransactionStatus.PENDING_SUBMIT;
 
-    private final NegotiationType                 negotiationType                 = NegotiationType.PURCHASE;
+    private final NegotiationType negotiationType = NegotiationType.PURCHASE;
 
-    private final String                          negotiationXML                  = "negotiationXML";
+    private final String negotiationXML = "negotiationXML";
 
-    private final long                            timestamp                       = time.getTime();
+    private final long timestamp = time.getTime();
 
     private CustomerBrokerCloseImpl testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new CustomerBrokerCloseImpl(
-            transactionId,
-            negotiationId,
-            publicKeyBroker,
-            publicKeyCustomer,
-            negotiationTransactionStatus,
-            negotiationType,
-            negotiationXML,
-            timestamp
+                transactionId,
+                negotiationId,
+                publicKeyBroker,
+                publicKeyCustomer,
+                negotiationTransactionStatus,
+                negotiationType,
+                negotiationXML,
+                timestamp
         );
     }
 

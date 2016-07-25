@@ -18,25 +18,21 @@ import java.util.UUID;
 public interface BrokerCustomerRelationship {
 
     /**
-     *
      * @return
      */
     UUID getRelationshipId();
 
     /**
-     *
      * @return
      */
     CryptoBrokerIdentity getCryptoBroker();
 
     /**
-     *
      * @return
      */
     CryptoCustomerIdentity getCryptoCustomer();
 
     /**
-     *
      * @return
      */
     CustomerType getCustomerType();

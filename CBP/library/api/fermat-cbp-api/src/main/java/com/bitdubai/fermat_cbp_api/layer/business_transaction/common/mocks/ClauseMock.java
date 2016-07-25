@@ -6,7 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 
 import java.util.UUID;
 
-/** This mock is only for testing
+/**
+ * This mock is only for testing
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/12/15.
  */
 public class ClauseMock implements Clause {

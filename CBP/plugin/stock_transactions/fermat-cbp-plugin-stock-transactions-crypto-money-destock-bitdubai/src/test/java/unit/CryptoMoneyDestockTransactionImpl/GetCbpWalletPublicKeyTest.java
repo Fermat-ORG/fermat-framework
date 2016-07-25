@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetCbpWalletPublicKeyTest {
 
     @Test
-    public void getCbpWalletPublicKey(){
+    public void getCbpWalletPublicKey() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getCbpWalletPublicKey()).thenReturn(new String());
         assertThat(cryptoMoneyDestockTransaction.getCbpWalletPublicKey()).isNotNull();

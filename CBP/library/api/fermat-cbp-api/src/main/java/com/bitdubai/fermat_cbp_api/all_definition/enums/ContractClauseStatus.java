@@ -27,11 +27,16 @@ public enum ContractClauseStatus implements FermatEnum {
 
     public static ContractClauseStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "PEN": return PENDING;
-            case "QUE": return QUEUED;
-            case "INP": return INPROGRESS;
-            case "EXE": return EXECUTED;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseStatus enum");
+            case "PEN":
+                return PENDING;
+            case "QUE":
+                return QUEUED;
+            case "INP":
+                return INPROGRESS;
+            case "EXE":
+                return EXECUTED;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ClauseStatus enum");
         }
     }
 }

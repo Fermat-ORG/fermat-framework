@@ -45,11 +45,11 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * This method initialize the installation presses of the SubApp by giving the control to the
      * SubApp manager.
      *
-     * @param subAppCategory the category of the SubApp to install
-     * @param skinId the skin to install with the SubApp
-     * @param languageId the language to install in the SubApp
+     * @param subAppCategory    the category of the SubApp to install
+     * @param skinId            the skin to install with the SubApp
+     * @param languageId        the language to install in the SubApp
      * @param SubAppCatalogueId the SubApp identifier in the catalogue
-     * @param version the version of the SubApp to install
+     * @param version           the version of the SubApp to install
      * @throws CantStartSubAppInstallationException
      */
     void installSubApp(SubAppCategory subAppCategory,
@@ -59,13 +59,12 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
                        Version version) throws CantStartSubAppInstallationException;
 
 
-
     /**
      * This method initialize the installation presses of a skin by giving the control to the
      * SubApp manager.
      *
      * @param subAppCatalogueId the SubApp identifier where to install the skin in.
-     * @param languageId the language identifier
+     * @param languageId        the language identifier
      * @throws CantStartSubAppLanguageInstallationException
      */
     void installLanguage(UUID subAppCatalogueId, UUID languageId) throws CantStartSubAppLanguageInstallationException;
@@ -75,7 +74,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * SubApp manager.
      *
      * @param subAppCatalogueId the SubApp identifier where to install the skin in.
-     * @param skinId the skin identifier
+     * @param skinId            the skin identifier
      * @throws CantStartSubAppSkinInstallationException
      */
     void installSkin(UUID subAppCatalogueId, UUID skinId) throws CantStartSubAppSkinInstallationException;
@@ -86,7 +85,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * SubApp manager.
      *
      * @param subAppCatalogueId the SubApp identifier where to uninstall the skin from.
-     * @param languageId the language identifier
+     * @param languageId        the language identifier
      * @throws CantStartUninstallSubAppLanguageException
      */
     void uninstallLanguage(UUID subAppCatalogueId, UUID languageId) throws CantStartUninstallSubAppLanguageException;
@@ -96,7 +95,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * SubApp manager.
      *
      * @param subAppCatalogueId the SubApp identifier where to uninstall the skin from.
-     * @param skinId the skin identifier
+     * @param skinId            the skin identifier
      * @throws CantStartUninstallSubAppSkinException
      */
     void uninstallSkin(UUID subAppCatalogueId, UUID skinId) throws CantStartUninstallSubAppSkinException;

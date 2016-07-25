@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum RequestStatus implements FermatEnum {
     ACCEPTED("ACC"),
     POSTPONED("POS"),
-    IN_PROCESS ("INP");
+    IN_PROCESS("INP");
 
     private String code;
 
@@ -24,10 +24,14 @@ public enum RequestStatus implements FermatEnum {
 
     public static RequestStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "ACC": return RequestStatus.ACCEPTED;
-            case "POS": return RequestStatus.POSTPONED;
-            case "INP": return RequestStatus.IN_PROCESS;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
+            case "ACC":
+                return RequestStatus.ACCEPTED;
+            case "POS":
+                return RequestStatus.POSTPONED;
+            case "INP":
+                return RequestStatus.IN_PROCESS;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the ContactState enum");
         }
     }
 }

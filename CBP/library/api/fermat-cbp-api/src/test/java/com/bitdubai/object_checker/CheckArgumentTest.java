@@ -14,8 +14,8 @@ import org.junit.rules.ExpectedException;
 public class CheckArgumentTest {
 
     @Test
-    public void checkValidArgumentTest() throws Exception{
-        String argument="Valid Argument";
+    public void checkValidArgumentTest() throws Exception {
+        String argument = "Valid Argument";
         ObjectChecker.checkArgument(argument);
     }
 
@@ -23,8 +23,8 @@ public class CheckArgumentTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void checkInvalidArgumentTest() throws Exception{
-        String argument=null;
+    public void checkInvalidArgumentTest() throws Exception {
+        String argument = null;
         thrown.expect(ObjectNotSetException.class);
         thrown.expectMessage("The argument is null");
         ObjectChecker.checkArgument(argument);

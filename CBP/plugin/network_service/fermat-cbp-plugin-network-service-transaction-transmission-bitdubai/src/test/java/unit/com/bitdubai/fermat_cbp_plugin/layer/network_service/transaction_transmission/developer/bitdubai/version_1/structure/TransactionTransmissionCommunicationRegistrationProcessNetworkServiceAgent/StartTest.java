@@ -14,8 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 21/12/15.
  */
@@ -30,7 +28,7 @@ public class StartTest {
     private TransactionTransmissionNetworkServicePluginRoot transactionTransmissionNetworkServicePluginRoot;
 
     @Test
-    public void Start_ParametersProperlySet_ThreadStarted() throws Exception{
+    public void Start_ParametersProperlySet_ThreadStarted() throws Exception {
         TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent transactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent = new TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(
                 this.transactionTransmissionNetworkServicePluginRoot,
                 this.wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()

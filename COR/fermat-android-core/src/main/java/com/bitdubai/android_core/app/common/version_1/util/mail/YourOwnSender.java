@@ -22,7 +22,7 @@ public class YourOwnSender implements ReportSender {
     @Override
     public void send(Context context, CrashReportData errorContent) throws ReportSenderException {
 
-        final String subject = mContext.getPackageName() + " Crash Report";
+        final String subject = new StringBuilder().append(mContext.getPackageName()).append(" Crash Report").toString();
         final String body = buildBody(errorContent);
 
 //        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SENDTO);
@@ -32,9 +32,9 @@ public class YourOwnSender implements ReportSender {
 //        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
 //        mContext.startActivity(emailIntent);
 
-        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
+        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com", "fermat123");
         try {
-            gMailSender.sendMail("error report",body,"matiasfurszyfer@gmail.com","matiasfurszyfer@gmail.com");
+            gMailSender.sendMail("error report", body, "matiasfurszyfer@gmail.com", "matiasfurszyfer@gmail.com");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class YourOwnSender implements ReportSender {
 
     private String buildBody(CrashReportData errorContent) {
         ReportField[] fields = ACRA.getConfig().customReportContent();
-        if(fields.length == 0) {
+        if (fields.length == 0) {
             fields = ACRAConstants.DEFAULT_MAIL_REPORT_FIELDS;
         }
 
@@ -55,15 +55,15 @@ public class YourOwnSender implements ReportSender {
         return builder.toString();
     }
 
-    public void send(String userTo,String body) throws Exception {
-        if(userTo==null || userTo.equals("")) throw new IllegalArgumentException();
-        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
-        gMailSender.sendMail("error report",body,userTo,userTo);
+    public void send(String userTo, String body) throws Exception {
+        if (userTo == null || userTo.equals("")) throw new IllegalArgumentException();
+        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com", "fermat123");
+        gMailSender.sendMail("error report", body, userTo, userTo);
     }
 
-    public void sendPrivateKey(String userTo,String body) throws Exception {
-        if(userTo==null || userTo.equals("")) throw new IllegalArgumentException();
-        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
-        gMailSender.sendMailPrivateKey("Private Key",body,userTo,userTo);
+    public void sendPrivateKey(String userTo, String body) throws Exception {
+        if (userTo == null || userTo.equals("")) throw new IllegalArgumentException();
+        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com", "fermat123");
+        gMailSender.sendMailPrivateKey("Private Key", body, userTo, userTo);
     }
 }

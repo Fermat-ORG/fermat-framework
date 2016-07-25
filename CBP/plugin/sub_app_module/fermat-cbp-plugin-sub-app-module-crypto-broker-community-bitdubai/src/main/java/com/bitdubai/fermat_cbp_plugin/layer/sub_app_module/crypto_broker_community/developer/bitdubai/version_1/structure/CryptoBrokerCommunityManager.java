@@ -181,7 +181,7 @@ public class CryptoBrokerCommunityManager
             brokerActor.setCountry(country);
             brokerActor.setPlace(place);
 
-            System.out.println("************** Actor Broker Register: " + brokerActor.getAlias() + " - " + brokerActor.getProfileStatus() + " - " + brokerActor.getConnectionState());
+            System.out.println(new StringBuilder().append("************** Actor Broker Register: ").append(brokerActor.getAlias()).append(" - ").append(brokerActor.getProfileStatus()).append(" - ").append(brokerActor.getConnectionState()).toString());
         }
 
         return worldBrokerList;
@@ -424,12 +424,14 @@ public class CryptoBrokerCommunityManager
             for (CryptoBrokerActorConnection connectedActor : connectedActors) {
                 cryptoBrokerExposingData = getCryptoBrokerSearch().getResult(connectedActor.getPublicKey());
                 if (cryptoBrokerExposingData != null) {
+
                     cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, cryptoBrokerExposingData);
                 } else {
                     cryptoBrokerCommunitySubAppModuleInformation = new CryptoBrokerCommunitySubAppModuleInformation(connectedActor, connectedActor.getLocation());
                 }
 
                 Location actorLocation = cryptoBrokerCommunitySubAppModuleInformation.getLocation();
+
                 try {
                     final Address address = geolocationManager.getAddressByCoordinate(actorLocation.getLatitude(), actorLocation.getLongitude());
                     cryptoBrokerCommunitySubAppModuleInformation.setCountry(address.getCountry());
@@ -671,7 +673,7 @@ public class CryptoBrokerCommunityManager
 
         if (name.equals("Customer")) {
             try {
-                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, GeoFrequency.NONE);
+                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {

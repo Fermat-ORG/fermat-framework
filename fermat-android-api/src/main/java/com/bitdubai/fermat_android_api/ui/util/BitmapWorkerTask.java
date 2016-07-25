@@ -25,7 +25,7 @@ public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
     private final int resImageInCaseOfError;
     private boolean isCircle = false;
 
-    public BitmapWorkerTask(ImageView imageView, Resources res,@Nullable int resImageInCaseOfError, boolean isCircle) {
+    public BitmapWorkerTask(ImageView imageView, Resources res, @Nullable int resImageInCaseOfError, boolean isCircle) {
         this.res = res;
         this.isCircle = isCircle;
         // Use a WeakReference to ensure the ImageView can be garbage collected

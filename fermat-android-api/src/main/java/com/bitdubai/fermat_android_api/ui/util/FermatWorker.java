@@ -57,7 +57,7 @@ public abstract class FermatWorker extends Thread {
     @Override
     public void run() {
         try {
-            if(mHandler==null)mHandler = new Handler(context.getMainLooper());
+            if (mHandler == null) mHandler = new Handler(context.getMainLooper());
             //todo: check connection availability
             final Object result = doInBackground();
             if (context != null && callBack != null) {
@@ -112,7 +112,7 @@ public abstract class FermatWorker extends Thread {
         return executor;
     }
 
-    public void shutdownNow(){
+    public void shutdownNow() {
         interrupt();
     }
 

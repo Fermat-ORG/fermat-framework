@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 
 /**
  * This interface must be used to create manager interface in CustomerAckOnlineMerchandiseManager and
@@ -14,6 +12,7 @@ public interface CustomerAckMerchandiseManager extends BusinessTransactionManage
 
     /**
      * This method returns the ContractTransactionStatus by contractHash
+     *
      * @param contractHash
      * @return
      */

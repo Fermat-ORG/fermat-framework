@@ -7,22 +7,20 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * <p>The abstract class <code>com.bitdubai.fermat_api.layer.osa_android.database_syste.DatabaseTableRecord</code> is a interface
+ * that define the methods to get and set database table record values.
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.osa_android.database_syste.DatabaseTableRecord</code> is a interface
- *     that define the methods to get and set database table record values.
- *
- *
- *  @author  Luis
- *  @version 1.0.0
- *  @since   01/02/2015.
- * */
+ * @author Luis
+ * @version 1.0.0
+ * @since 01/02/2015.
+ */
 
- public interface DatabaseTableRecord {
-    
+public interface DatabaseTableRecord {
+
     String getStringValue(String columnName);
-    
+
     UUID getUUIDValue(String columnName);
-    
+
     long getLongValue(String columnName);
 
     Integer getIntegerValue(String columnName);
@@ -31,9 +29,9 @@ import java.util.UUID;
 
     double getDoubleValue(String columnName);
 
-    void setStringValue (String columnName, String value);
+    void setStringValue(String columnName, String value);
 
-    void setUUIDValue (String columnName, UUID value);
+    void setUUIDValue(String columnName, UUID value);
 
     void setLongValue(String columnName, long value);
 
