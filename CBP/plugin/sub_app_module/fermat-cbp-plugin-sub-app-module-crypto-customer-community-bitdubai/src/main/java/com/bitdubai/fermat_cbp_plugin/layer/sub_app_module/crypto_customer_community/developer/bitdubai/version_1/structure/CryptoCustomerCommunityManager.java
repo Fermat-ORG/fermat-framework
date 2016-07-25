@@ -449,7 +449,7 @@ public class CryptoCustomerCommunityManager
         String createdPublicKey;
 
         try {
-            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, GeoFrequency.NONE);
+            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
             createdPublicKey = createdIdentity.getPublicKey();
 
             new Thread() {
