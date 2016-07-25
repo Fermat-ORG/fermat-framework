@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,20 +18,26 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatBroadcastReceiver;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatIntentFilter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
@@ -80,6 +87,7 @@ public class CryptoBrokerIdentityListFragment
     @Override
     public void onStart() {
         super.onStart();
+//        onRefreshCustomer();
         onRefresh();
     }
 
@@ -273,6 +281,85 @@ public class CryptoBrokerIdentityListFragment
         if (appSession.getData(FragmentsCommons.ORIGINAL_IMAGE) != null)
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
     }
+
+    /**
+     * Checking if a customer profile is already created before a broker is created
+     */
+//    public void onRefreshCustomer() {
+//        try{
+//            final FermatWorker worker = new FermatWorker() {
+//                @Override
+//                protected Object doInBackground() throws Exception {
+//                    return getMoreDataAsyncCustomer();
+//                }
+//            };
+//            worker.setContext(getActivity());
+//            worker.setCallBack(new FermatWorkerCallBack() {
+//                @SuppressWarnings("unchecked")
+//                @Override
+//                public void onPostExecute(Object... result) {
+//                    if (isAttached) {
+//                        if (result != null &&
+//                                result.length > 0) {
+//                            if (getActivity() != null) {
+//                                existentCustomerIdentityDialog();
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onErrorOccurred(Exception ex) {
+//                    try{
+//                        worker.shutdownNow();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            worker.execute();
+//        }catch (Exception ignore){
+//            if (executor != null) {
+//                executor.shutdown();
+//                executor = null;
+//            }
+//        }
+//    }
+//
+//    public void existentCustomerIdentityDialog() {
+//        try {
+//            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
+//                    .setBody(R.string.cbp_broker_identity_existent_customer)
+//                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                    .setIconRes(R.drawable.bi_icon)
+//                    .setCheckButtonAndTextVisible(0)
+//                    .setIsCheckEnabled(false)
+//                    .setBannerRes(R.drawable.banner_identity)
+//                    .setVIewColor(R.color.background_toolbar)
+//                    .build();
+//            pd.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    getActivity().onBackPressed();
+//                }
+//            });
+//            pd.show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public List<CryptoCustomerIdentityInformation> getMoreDataAsyncCustomer() {
+//        List<CryptoCustomerIdentityInformation> data = new ArrayList<>();
+//        try {
+//            data = appSession.getModuleManager().getAllCryptoCustomersIdentities(0, 0);
+//        } catch (CantGetCryptoCustomerListException ex) {
+//            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+//        }
+//        return data;
+//    }
 
     /**
      * Receiver class implemented
