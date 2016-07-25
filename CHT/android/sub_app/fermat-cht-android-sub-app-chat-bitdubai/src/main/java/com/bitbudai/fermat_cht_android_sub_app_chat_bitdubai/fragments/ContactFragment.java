@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -113,10 +115,12 @@ public class ContactFragment
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             contacticon.add(bmd.getBitmap());
 
-
+            long time = con.getCreationDate();
+            Date date = new java.util.Date(time);
+            String myDate = date.toString();
 
             contactStatusDate = (TextView) layout.findViewById(R.id.contact_status_date);
-            contactStatusDate.setText("25/07/2016");
+            contactStatusDate.setText(myDate);
 
 //            ContactAdapter adapter = new ContactAdapter(getActivity(), contactname, contactalias, contactid, "detail", errorManager);
             contactName = (TextView) layout.findViewById(R.id.contact_name_fragment);
