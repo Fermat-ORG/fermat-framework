@@ -1217,7 +1217,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        final ActorIdentity cryptoBrokerIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, GeoFrequency.NONE);
+        final ActorIdentity cryptoBrokerIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 10, GeoFrequency.NORMAL);
         cryptoBrokerIdentityManager.publishIdentity(cryptoBrokerIdentity.getPublicKey());
     }
 
