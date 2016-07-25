@@ -60,6 +60,7 @@ import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.Notification
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.NOTIFICATION_ID;
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.NotificationBundleConstants.SOURCE_PLUGIN;
 
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 03/07/16.
  */
@@ -119,7 +120,7 @@ public class OpenContractMonitorAgent2
             ContractSaleRecord saleContract = new ContractSaleRecord();
             ContractType contractType;
             UUID transmissionId = UUID.randomUUID();
-            UUID transactionId;
+            UUID transactionContractId;
 
             // Check if exist in database new contracts to send
             List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
@@ -128,7 +129,7 @@ public class OpenContractMonitorAgent2
                     try {
                         contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
                         contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
-                        transactionId = openContractBusinessTransactionDao.getTransactionId(hashToSubmit);
+                        transactionContractId = openContractBusinessTransactionDao.getTransactionId(hashToSubmit);
 
                         System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: " + contractType + "\n");
 
@@ -138,7 +139,7 @@ public class OpenContractMonitorAgent2
                                 purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
                                 transactionTransmissionManager.sendContractHash(
                                         transmissionId,
-                                        transactionId,
+                                        transactionContractId,
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
@@ -152,7 +153,7 @@ public class OpenContractMonitorAgent2
                                 saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                                 transactionTransmissionManager.sendContractHash(
                                         transmissionId,
-                                        transactionId,
+                                        transactionContractId,
                                         saleContract.getPublicKeyBroker(),
                                         saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
@@ -163,7 +164,7 @@ public class OpenContractMonitorAgent2
                                 break;
                         }
                         //Update the ContractTransactionStatus
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CHECKING_HASH);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionContractId, ContractTransactionStatus.CHECKING_HASH);
                         transactionTransmissionManager.confirmReception(transmissionId);
                     } catch (Exception e) {
                         reportError(e);
@@ -263,7 +264,7 @@ public class OpenContractMonitorAgent2
     }
 
     private void raiseNewContractEvent(String contractHash) {
-        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - raiseNewContractEvent() - NEW_CONTRACT_OPENED \n - Contract Hash: "+contractHash+"\n");
+        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - raiseNewContractEvent() - NEW_CONTRACT_OPENED \n - Contract Hash: " + contractHash + "\n");
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
         NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
         newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
@@ -277,7 +278,7 @@ public class OpenContractMonitorAgent2
             String contractHash;
             ContractType contractType;
             UUID transmissionId;
-            UUID transactionId;
+            UUID transactionContractId;
             BusinessTransactionMetadata businessTransactionMetadata;
             ContractTransactionStatus contractTransactionStatusRemote;
 
@@ -288,8 +289,16 @@ public class OpenContractMonitorAgent2
             for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
 
                 businessTransactionMetadata = record.getInformation();
+                Plugins remoteBusinessTransaction = businessTransactionMetadata.getRemoteBusinessTransaction();
+
+                System.out.println("OPEN_CONTRACT - remoteBusinessTransaction = " + remoteBusinessTransaction);
+                if (remoteBusinessTransaction != Plugins.OPEN_CONTRACT)
+                    continue;
+
+                System.out.println("OPEN_CONTRACT - PASS remoteBusinessTransaction = " + remoteBusinessTransaction);
+
                 contractHash = businessTransactionMetadata.getContractHash();
-                transactionId = businessTransactionMetadata.getTransactionContractId();
+                transactionContractId = businessTransactionMetadata.getTransactionContractId();
                 transmissionId = record.getTransactionID();
 
                 contractTransactionStatusRemote = businessTransactionMetadata.getContractTransactionStatus();
@@ -302,7 +311,12 @@ public class OpenContractMonitorAgent2
 
                     if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.PENDING_REMOTE_CONFIRMATION.getCode())) {
 
-                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH\n");
+                        String contractXML = openContractBusinessTransactionDao.getContractXML(contractHash);
+
+                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH " +
+                                "\n - contractHash: "+contractHash+"" +
+                                "\n - Exist Contract: " +Boolean.toString(openContractBusinessTransactionDao.isContractHashExists(contractHash)) +
+                                "\n - contractXML: \n"+contractXML);
 
                         if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
 
@@ -314,14 +328,14 @@ public class OpenContractMonitorAgent2
                                     businessTransactionMetadata.getSenderId(),
                                     contractHash,
                                     transmissionIdNew.toString(),
-                                    transactionId,
+                                    transactionContractId,
                                     Plugins.OPEN_CONTRACT,
                                     businessTransactionMetadata.getReceiverType(),
                                     businessTransactionMetadata.getSenderType()
                             );
 
                             //CHANGE STATUS TRANSACTION
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
+                            openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
 
                             //CONFIRM TRANSMISSION OF SEND
                             transactionTransmissionManager.confirmReception(transmissionIdNew);
@@ -346,14 +360,14 @@ public class OpenContractMonitorAgent2
                                 businessTransactionMetadata.getSenderId(),
                                 contractHash,
                                 transmissionIdNew.toString(),
-                                transactionId,
+                                transactionContractId,
                                 Plugins.OPEN_CONTRACT,
                                 businessTransactionMetadata.getReceiverType(),
                                 businessTransactionMetadata.getSenderType()
                         );
 
                         //CHANGE STATUS TRANSACTION
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_CONFIRMED);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
 
                         //CONFIRM SEND OF TRANSMISSION
                         transactionTransmissionManager.confirmReception(transmissionIdNew);
@@ -377,7 +391,7 @@ public class OpenContractMonitorAgent2
                             case PURCHASE:
                                 CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                                 if (!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode()) &&
-                                    !contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
+                                        !contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
 
                                     customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
                                             ContractStatus.PENDING_PAYMENT);
@@ -392,7 +406,7 @@ public class OpenContractMonitorAgent2
                             case SALE:
                                 CustomerBrokerContractSale contractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                                 if (!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode()) &&
-                                    !contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
+                                        !contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED.getCode())) {
 
                                     customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
                                             ContractStatus.PENDING_PAYMENT);
@@ -410,7 +424,7 @@ public class OpenContractMonitorAgent2
                         }
 
                         //CHANGE STATUS TRANSACTION
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(transactionId, ContractTransactionStatus.CONTRACT_OPENED);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_OPENED);
 
                     }
 
@@ -470,24 +484,29 @@ public class OpenContractMonitorAgent2
 
     private void closeNegotiation(ContractType contractType, String negotiationId) throws UnexpectedResultReturnedFromDatabaseException {
 
+        UUID uuidNegotiationId = UUID.fromString(negotiationId);
         try {
 
             System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
-                    "\n - closeNegotiation "+contractType+" : "+negotiationId+"\n");
+                    "\n - closeNegotiation " + contractType + " : " + negotiationId + "\n");
 
             if (contractType.equals(ContractType.PURCHASE)) {
 
+                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
+                        "\n - closeNegotiation - PURCHASE\n");
                 //CLOSE PURCHASE NEGOTIATION
-                CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.
-                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                customerBrokerPurchaseNegotiationManager.closeNegotiation(purchaseNegotiation);
+//                CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+//                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                customerBrokerPurchaseNegotiationManager.closeNegotiation(uuidNegotiationId);
 
             } else if (contractType.equals(ContractType.SALE)) {
 
+                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL" +
+                        "\n - closeNegotiation - SALE\n");
                 //CLOSE SALE NEGOTIATION
-                CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
-                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                customerBrokerSaleNegotiationManager.closeNegotiation(saleNegotiation);
+//                CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
+//                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                customerBrokerSaleNegotiationManager.closeNegotiation(uuidNegotiationId);
 
             } else {
 
@@ -496,21 +515,21 @@ public class OpenContractMonitorAgent2
             }
 
 
-        } catch (CantGetListPurchaseNegotiationsException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(
-                    e,
-                    "Close Purchase Negotiation",
-                    "Error in get negotiation");
+//        } catch (CantGetListPurchaseNegotiationsException e) {
+//            throw new UnexpectedResultReturnedFromDatabaseException(
+//                    e,
+//                    "Close Purchase Negotiation",
+//                    "Error in get negotiation");
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
                     "Close Purchase Negotiation",
                     "Error Closing negotiation");
-        } catch (CantGetListSaleNegotiationsException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(
-                    e,
-                    "Close Sale Negotiation",
-                    "Error in get negotiation");
+//        } catch (CantGetListSaleNegotiationsException e) {
+//            throw new UnexpectedResultReturnedFromDatabaseException(
+//                    e,
+//                    "Close Sale Negotiation",
+//                    "Error in get negotiation");
         } catch (CantUpdateCustomerBrokerSaleException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
@@ -519,11 +538,12 @@ public class OpenContractMonitorAgent2
         }
     }
 
-    private void notificationNewOpenContract(ContractType contractType) throws UnexpectedResultReturnedFromDatabaseException{
+    private void notificationNewOpenContract(ContractType contractType) throws UnexpectedResultReturnedFromDatabaseException {
 
+//        FermatBundle fermatBundle;
         if (contractType.equals(ContractType.PURCHASE)) {
 
-            FermatBundle fermatBundle = new FermatBundle();
+            /*FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_PURCHASE.getCode());
             fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
             fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
@@ -532,11 +552,29 @@ public class OpenContractMonitorAgent2
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);*/
+
+            /*fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);*/
+
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_PURCHASE.getCode());
+            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode()));
+            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+            fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CCW_NEW_CONTRACT_NOTIFICATION);
+            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+            fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode());
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
         } else if (contractType.equals(ContractType.SALE)) {
 
-            FermatBundle fermatBundle = new FermatBundle();
+            /*FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
             fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
             fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
@@ -545,7 +583,25 @@ public class OpenContractMonitorAgent2
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
 
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);*/
+
+            /*fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);*/
+
+            FermatBundle fermatBundle = new FermatBundle();
+            fermatBundle.put(SOURCE_PLUGIN, Plugins.CUSTOMER_BROKER_SALE.getCode());
+            fermatBundle.put(APP_NOTIFICATION_PAINTER_FROM, new Owner(WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode()));
+            fermatBundle.put(APP_TO_OPEN_PUBLIC_KEY, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            fermatBundle.put(NOTIFICATION_ID, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
+            fermatBundle.put(APP_ACTIVITY_TO_OPEN_CODE, Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, fermatBundle);
+
+            fermatBundle = new FermatBundle();
+            fermatBundle.put(Broadcaster.PUBLISH_ID, WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+            fermatBundle.put(Broadcaster.NOTIFICATION_TYPE, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
 
         } else {
 

@@ -75,48 +75,51 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
+            System.out.println("**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****");
 
-            System.out.print("\n --- Negotiation Mock XML Date" +
-                            "\n- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
-                            "\n- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
-                            "\n- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey()+
-                            "\n- Status = " + customerBrokerPurchaseNegotiation.getStatus()
+            System.out.println(" --- Negotiation Mock XML Date" +
+                            "- NegotiationId = " + customerBrokerPurchaseNegotiation.getNegotiationId() +
+                            "- CustomerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "- BrokerPublicKey = " + customerBrokerPurchaseNegotiation.getCustomerPublicKey() +
+                            "- Status = " + customerBrokerPurchaseNegotiation.getStatus()
             );
+
             String changeClause = "";
             for (final Clause value : customerBrokerPurchaseNegotiation.getClauses()) {
-                changeClause = changeClause +"\n  - Type = "+value.getType()+". Value = "+value.getValue()+". Status = "+value.getStatus();
+                changeClause = changeClause + "\n  - Type = " + value.getType() + ". Value = " + value.getValue() + ". Status = " + value.getStatus();
             }
+
             System.out.println(" - Clauses = \n" + changeClause);
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                cryptoAddressBookManager,
-                cryptoVaultManager,
-                walletManagerManager,
-                pluginRoot,
-                intraWalletUserIdentityManager
+                    cryptoAddressBookManager,
+                    cryptoVaultManager,
+                    walletManagerManager,
+                    pluginRoot,
+                    intraWalletUserIdentityManager
             );
 
-            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
 
-                System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n");
                 //ADD CRYPTO ADREESS OF THE CUSTOMER AT THE CLAUSES
+                System.out.println("**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****");
                 customerBrokerPurchaseNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerPurchaseNegotiation);
 
-                System.out.print("\n\n**** 3.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. UPDATE NEGOTIATION ****\n");
-                //SAVE CRYPTO ADREESS OF THE CUSTOMER
-                this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
+            } else {
+                System.out.println("**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****");
+            }
 
-            } else { System.out.print("\n\n**** 3.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. NOT IS CRYPTO CURRENCY ****\n"); }
-
-            System.out.print("\n\n**** 3.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****\n");
+            //UPDATE NEGOTIATION
+            System.out.println("**** 3.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. UPDATE NEGOTIATION ****");
+            this.customerBrokerPurchaseNegotiationManager.updateCustomerBrokerPurchaseNegotiation(customerBrokerPurchaseNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
+            System.out.println("**** 3.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CLOSE NEGOTIATION ****");
             this.customerBrokerCloseNegotiationTransactionDatabaseDao.createCustomerBrokerCloseNegotiationTransaction(
-                transactionId,
-                customerBrokerPurchaseNegotiation,
-                NegotiationType.PURCHASE,
-                NegotiationTransactionStatus.PENDING_SUBMIT
+                    transactionId,
+                    customerBrokerPurchaseNegotiation,
+                    NegotiationType.PURCHASE,
+                    NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
         } catch (CantDetermineCryptoCurrencyException e) {

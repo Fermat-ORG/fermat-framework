@@ -228,13 +228,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             } else {
 
                 if (clausesTemp.get(clause.getType()) != null) {
-                    if (!clausesTemp.get(clause.getType()).getValue().equals("INSERT BANK ACCOUNT IN WALLET SETTINGS.")) {
-                        if (clausesTemp.get(clause.getType()).getValue().equals(clause.getValue()))
-                            putClause(clause, ACCEPTED);
-                        else
-                            putClause(clause, CHANGED);
-                    }else
+
+
+                    if (clausesTemp.get(clause.getType()).getValue().equals(clause.getValue()))
                         putClause(clause, ACCEPTED);
+                    else
+                        putClause(clause, CHANGED);
+
                 } else {
                     putClause(clause, ACCEPTED);
                 }
@@ -1124,11 +1124,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         ClauseStatus statusClause = clause.getStatus();
         if (clausesTemp.get(clause.getType()) != null) {
-
-            if (!clausesTemp.get(clause.getType()).getValue().equals("INSERT BANK ACCOUNT IN WALLET SETTINGS.")) {
-                if (!clausesTemp.get(clause.getType()).getValue().equals(newValue) && clause.getStatus() == ACCEPTED) {
-                    statusClause = CHANGED;
-                }
+            if (!clausesTemp.get(clause.getType()).getValue().equals(newValue) && clause.getStatus() == ACCEPTED) {
+                statusClause = CHANGED;
             }
         }
 
