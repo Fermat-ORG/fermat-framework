@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -34,19 +33,19 @@ public final class FermatPluginVersionReferenceBuilder {
         String[] keySplit = key.split(Pattern.quote(KEY_SEPARATOR));
 
         if (keySplit.length != 5)
-            throw new InvalidParameterException("Key: " + key, "This key should respect the separation pattern using \"" + KEY_SEPARATOR + "\"");
+            throw new InvalidParameterException(new StringBuilder().append("Key: ").append(key).toString(), new StringBuilder().append("This key should respect the separation pattern using \"").append(KEY_SEPARATOR).append("\"").toString());
 
-        final String platformString   = keySplit[0];
-        final String layerString      = keySplit[1];
+        final String platformString = keySplit[0];
+        final String layerString = keySplit[1];
         final String pluginEnumString = keySplit[2];
-        final String developerString  = keySplit[3];
-        final String versionString    = keySplit[4];
+        final String developerString = keySplit[3];
+        final String versionString = keySplit[4];
 
-        final Platforms  platform   = Platforms.getByCode(platformString);
-        final Layers     layer      = Layers.getByCode(layerString);
+        final Platforms platform = Platforms.getByCode(platformString);
+        final Layers layer = Layers.getByCode(layerString);
         final FermatPluginsEnum pluginEnum = FermatPluginsEnumSelector.getByPlatformAndCode(platform, pluginEnumString);
-        final Developers developer  = Developers.getByCode(developerString);
-        final Version    version    = new Version(versionString);
+        final Developers developer = Developers.getByCode(developerString);
+        final Version version = new Version(versionString);
 
         return new PluginVersionReference(platform, layer, pluginEnum, developer, version);
     }
@@ -55,14 +54,14 @@ public final class FermatPluginVersionReferenceBuilder {
 
         PluginDeveloperReference pluginDeveloperReference = pluginVersionReference.getPluginDeveloperReference();
 
-        PluginReference   pluginReference   = pluginDeveloperReference.getPluginReference();
-        LayerReference    layerReference    = pluginReference.getLayerReference();
+        PluginReference pluginReference = pluginDeveloperReference.getPluginReference();
+        LayerReference layerReference = pluginReference.getLayerReference();
         PlatformReference platformReference = layerReference.getPlatformReference();
 
-        Platforms         platform  = platformReference.getPlatform();
-        Layers            layer     = layerReference.getLayer();
-        FermatPluginsEnum plugin    = pluginReference.getPlugin();
-        Developers        developer = pluginDeveloperReference.getDeveloper();
+        Platforms platform = platformReference.getPlatform();
+        Layers layer = layerReference.getLayer();
+        FermatPluginsEnum plugin = pluginReference.getPlugin();
+        Developers developer = pluginDeveloperReference.getDeveloper();
 
         return platform.getCode() + KEY_SEPARATOR +
                 layer.getCode() + KEY_SEPARATOR +

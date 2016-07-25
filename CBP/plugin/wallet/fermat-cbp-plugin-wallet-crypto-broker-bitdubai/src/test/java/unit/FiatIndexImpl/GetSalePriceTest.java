@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetSalePriceTest {
 
     @Test
-    public void getSalePrice(){
+    public void getSalePrice() {
         FiatIndexImpl fiatIndex = mock(FiatIndexImpl.class);
         when(fiatIndex.getSalePrice()).thenReturn(1f);
         assertThat(fiatIndex.getSalePrice()).isNotNull();

@@ -17,12 +17,13 @@ public class testSetLoggingLevelPerClass {
     private CustomerOnlinePaymentPluginRoot customerOnlinePaymentPluginRoot = new CustomerOnlinePaymentPluginRoot();
     static final LogLevel logLevel = LogLevel.AGGRESSIVE_LOGGING;
     static final String classToTest = "Test";
+
     @Test
-    public void TestSetLogLevelPerClass(){
-        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>() ;
+    public void TestSetLogLevelPerClass() {
+        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
         newLoggingLevel.put(classToTest, logLevel);
         customerOnlinePaymentPluginRoot.setLoggingLevelPerClass(newLoggingLevel);
-        assertEquals(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(classToTest), logLevel );
+        assertEquals(CustomerOnlinePaymentPluginRoot.getLogLevelByClass(classToTest), logLevel);
         LogLevel newLogLevel = LogLevel.MINIMAL_LOGGING;
         newLoggingLevel.clear();
         newLoggingLevel.put(classToTest, newLogLevel);
@@ -31,11 +32,11 @@ public class testSetLoggingLevelPerClass {
     }
 
     @Test
-    public void TestGetLogLevelPerClass_Should_Return_Default_Log_Level() throws Exception{
-        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>() ;
+    public void TestGetLogLevelPerClass_Should_Return_Default_Log_Level() throws Exception {
+        Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
         newLoggingLevel.put(classToTest, logLevel);
         customerOnlinePaymentPluginRoot.setLoggingLevelPerClass(newLoggingLevel);
-        assertEquals(customerOnlinePaymentPluginRoot.getLogLevelByClass(null),logLevel.MINIMAL_LOGGING);
+        assertEquals(customerOnlinePaymentPluginRoot.getLogLevelByClass(null), logLevel.MINIMAL_LOGGING);
     }
 
 

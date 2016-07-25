@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by eze on 09/06/15.
  */
 public enum Action {
-    APPLY ("APP"),
-    REVERT ("REV");
+    APPLY("APP"),
+    REVERT("REV");
 
     private final String code;
 
@@ -15,15 +15,20 @@ public enum Action {
         this.code = Code;
     }
 
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     public static Action getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "APP": return Action.APPLY;
-            case "REV": return Action.REVERT;
+            case "APP":
+                return Action.APPLY;
+            case "REV":
+                return Action.REVERT;
             //Modified by Manuel Perez on 04/08/2015
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Action enum");
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the Action enum");
 
         }
 

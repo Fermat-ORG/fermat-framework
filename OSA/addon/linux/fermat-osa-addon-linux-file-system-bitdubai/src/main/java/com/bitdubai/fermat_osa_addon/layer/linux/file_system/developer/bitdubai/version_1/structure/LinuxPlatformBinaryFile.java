@@ -20,7 +20,7 @@ import java.io.OutputStream;
 /**
  * The Plugin File System is the implementation of the file system that is handled to external plugins.
  * That Plugin manage binary files
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  * Copied from AndroidPluginBinaryFile.
  *
@@ -47,24 +47,24 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
     }
-    
-	public String getFileName() {
-		return fileName;
-	}
 
-	public String getDirectoryName() {
-		return directoryName;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public FilePrivacy getPrivacyLevel() {
-		return privacyLevel;
-	}
+    public String getDirectoryName() {
+        return directoryName;
+    }
 
-	public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
+    public FilePrivacy getPrivacyLevel() {
+        return privacyLevel;
+    }
 
-	/**
+    public FileLifeSpan getLifeSpan() {
+        return lifeSpan;
+    }
+
+    /**
      * PluginBinaryFile Interface implementation.
      */
     @Override
@@ -79,7 +79,7 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
-        if(content == null){
+        if (content == null) {
             String message = CantCreateFileException.DEFAULT_MESSAGE;
             FermatException cause = null;
             String context = "Content: null";
@@ -91,7 +91,7 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path = EnvironmentVariables.getExternalStorageDirectory().toString();
         else
             path = EnvironmentVariables.getInternalStorageDirectory().toString();
@@ -100,7 +100,7 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
          */
 
 
-        if(!this.directoryName.isEmpty())
+        if (!this.directoryName.isEmpty())
             path += "/" + this.directoryName;
 
         /**
@@ -120,10 +120,10 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
             /**
              * Finally I write the content.
              */
-            OutputStream outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(this.content);
             outputStream.close();
-            
+
         } catch (IOException e) {
             String message = CantCreateFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
@@ -137,21 +137,21 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-    	FileInputStream  binaryStream = null;
-    	
-        try {
-        /**
-         *  Evaluate privacyLevel to determine the location of directory - external or internal
-         */
-        String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
-            path = EnvironmentVariables.getExternalStorageDirectory().toString();
-            
+        FileInputStream binaryStream = null;
 
-        /**
-         * Get the file handle.
-         */
-        File file = new File(path + "/" + this.directoryName + "/" + this.fileName);
+        try {
+            /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+            if (privacyLevel == FilePrivacy.PUBLIC)
+                path = EnvironmentVariables.getExternalStorageDirectory().toString();
+
+
+            /**
+             * Get the file handle.
+             */
+            File file = new File(path + "/" + this.directoryName + "/" + this.fileName);
 
 
             /**
@@ -172,25 +172,25 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
             /**
              * return content.
              */
-            this.content =buffer.toByteArray();
+            this.content = buffer.toByteArray();
 
         } catch (Exception e) {
             throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause");
-            
+
         } finally {
-        	try {
-        		if (binaryStream != null)
-        		    binaryStream.close();
-        	} catch (Exception e) {
+            try {
+                if (binaryStream != null)
+                    binaryStream.close();
+            } catch (Exception e) {
                 throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause");
-        	}
-        	
+            }
+
         }
     }
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof LinuxPlatformBinaryFile))
+        if (!(o instanceof LinuxPlatformBinaryFile))
             return false;
 
         LinuxPlatformBinaryFile compare = (LinuxPlatformBinaryFile) o;
@@ -198,22 +198,22 @@ public class LinuxPlatformBinaryFile implements PlatformBinaryFile {
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += directoryName.hashCode();
         c += fileName.hashCode();
         c += privacyLevel.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
+        if (privacyLevel == FilePrivacy.PUBLIC)
             path = EnvironmentVariables.getExternalStorageDirectory().toString();
         else
             path = EnvironmentVariables.getInternalStorageDirectory().toString();
-        return path +"/"+ this.directoryName + "/" + fileName;
+        return path + "/" + this.directoryName + "/" + fileName;
     }
 
 

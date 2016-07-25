@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfaces;
 
 
-
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 
 import java.io.Serializable;

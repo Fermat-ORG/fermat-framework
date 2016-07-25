@@ -4,11 +4,17 @@ import java.math.BigInteger;
 import java.security.spec.ECParameterSpec;
 
 public interface Curve {
-	BigInteger getA();
-	BigInteger getB();
-	Point getG();
-	int getH();
-	BigInteger getN();
-	BigInteger getP();
-	ECParameterSpec getParams();
+    BigInteger getA();
+
+    BigInteger getB();
+
+    Point getG();
+
+    int getH();
+
+    BigInteger getN();
+
+    BigInteger getP();
+
+    ECParameterSpec getParams();
 }

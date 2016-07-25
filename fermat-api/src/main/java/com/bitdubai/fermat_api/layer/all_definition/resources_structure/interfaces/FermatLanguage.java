@@ -10,8 +10,9 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatLanguage</code>
  * indicates the functionality of a Fermat Language.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/07/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */

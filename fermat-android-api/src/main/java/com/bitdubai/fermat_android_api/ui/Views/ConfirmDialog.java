@@ -56,7 +56,7 @@ public class ConfirmDialog extends FermatDialog<ReferenceAppFermatSession, Resou
         noBtn.setOnClickListener(this);
 
         if (title != null) titleText.setText(title);
-        if (message != null)  descriptionText.setText(message);
+        if (message != null) descriptionText.setText(message);
         if (colorStyle != 0) {
             titleText.setBackgroundColor(colorStyle);
             yesBtn.setTextColor(colorStyle);

@@ -80,22 +80,22 @@ public class ImageUtil {
         long terabyte = gigabyte * 1024;
 
         if ((bytes >= 0) && (bytes < kilobyte)) {
-            return bytes + " B";
+            return new StringBuilder().append(bytes).append(" B").toString();
 
         } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
-            return (bytes / kilobyte) + " KB";
+            return new StringBuilder().append(bytes / kilobyte).append(" KB").toString();
 
         } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
-            return (bytes / megabyte) + " MB";
+            return new StringBuilder().append(bytes / megabyte).append(" MB").toString();
 
         } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
-            return (bytes / gigabyte) + " GB";
+            return new StringBuilder().append(bytes / gigabyte).append(" GB").toString();
 
         } else if (bytes >= terabyte) {
-            return (bytes / terabyte) + " TB";
+            return new StringBuilder().append(bytes / terabyte).append(" TB").toString();
 
         } else {
-            return bytes + " Bytes";
+            return new StringBuilder().append(bytes).append(" Bytes").toString();
         }
     }
 
@@ -109,7 +109,7 @@ public class ImageUtil {
      * @param newHeight
      * @return BufferedImage
      */
-    public static BufferedImage resize(BufferedImage originalImage, int newWidth, int newHeight){
+    public static BufferedImage resize(BufferedImage originalImage, int newWidth, int newHeight) {
 
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, originalImage.getType());
         Graphics2D g = resizedImage.createGraphics();
@@ -124,9 +124,9 @@ public class ImageUtil {
      * Compress a image to the specify quality
      *
      * @param originalImage the image
-     * @param format of the image (PNG, JGP ...)
-     * @param quality a number between 0.0001 and 1 where 0 is the max compression
-     * @throws IOException when io exception occurs
+     * @param format        of the image (PNG, JGP ...)
+     * @param quality       a number between 0.0001 and 1 where 0 is the max compression
+     * @throws IOException           when io exception occurs
      * @throws IllegalStateException when no compatible format writers found
      */
     public static BufferedImage compress(BufferedImage originalImage, String format, float quality) throws IOException {
@@ -135,13 +135,13 @@ public class ImageUtil {
         ImageOutputStream ios = null;
         InputStream inputStream = null;
 
-        try{
+        try {
 
-            if (quality <= 0){
+            if (quality <= 0) {
                 throw new IllegalArgumentException("The quality must be greater than zero (0)");
             }
 
-            if (quality >= 1){
+            if (quality >= 1) {
                 throw new IllegalArgumentException("The quality should be less than one (1)");
             }
 
@@ -149,8 +149,8 @@ public class ImageUtil {
              * Get a ImageWriter for the format.
              */
             Iterator<ImageWriter> writers = ImageIO.getImageWritersBySuffix(format);
-            if (!writers.hasNext()){
-                throw new IllegalStateException("No writers found for the specified format "+format);
+            if (!writers.hasNext()) {
+                throw new IllegalStateException(new StringBuilder().append("No writers found for the specified format ").append(format).toString());
             }
 
             /*
@@ -182,7 +182,7 @@ public class ImageUtil {
 
             return compressImage;
 
-        }finally {
+        } finally {
 
             if (ios != null)
                 ios.close();
@@ -194,7 +194,6 @@ public class ImageUtil {
         }
 
     }
-
 
 
     /**
@@ -225,12 +224,12 @@ public class ImageUtil {
      * @return byte []
      * @throws IOException
      */
-    public static  byte [] getByteArray(BufferedImage originalImage, String format) throws IOException {
+    public static byte[] getByteArray(BufferedImage originalImage, String format) throws IOException {
 
         ByteArrayOutputStream temporal = new ByteArrayOutputStream();
         ImageIO.write(originalImage, format, temporal);
         temporal.close();
-        byte [] bytes = temporal.toByteArray();
+        byte[] bytes = temporal.toByteArray();
         temporal.close();
 
         return bytes;
@@ -243,7 +242,7 @@ public class ImageUtil {
      * @return BufferedImage
      * @throws IOException
      */
-    public static BufferedImage getBufferedImage(byte [] data) throws IOException {
+    public static BufferedImage getBufferedImage(byte[] data) throws IOException {
 
         InputStream inputStream = new ByteArrayInputStream(data);
         BufferedImage bufferedImage = ImageIO.read(inputStream);
@@ -268,14 +267,14 @@ public class ImageUtil {
     }
 
 
-    public static void main(String [] args){
+    public static void main(String[] args) {
 
         try {
 
             File file = new File("/home/rrequena/Imágenes/Test/original_image.jpg");
             BufferedImage originalImage = ImageIO.read(file);
 
-            System.out.println("Original image Size = " + ImageUtil.bytesIntoHumanReadable(file.length()));
+            System.out.println(new StringBuilder().append("Original image Size = ").append(ImageUtil.bytesIntoHumanReadable(file.length())).toString());
 
        /*     BufferedImage resizeImage = ImageUtil.resize(originalImage, 100, 100);
             System.out.println("Resize image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(originalImage, JPG_FORMAT)));
@@ -302,7 +301,7 @@ public class ImageUtil {
             ImageIO.write(resizeCompressImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/resize_compress_image.jpg")); */
 
             BufferedImage thumbnail = ImageUtil.generateThumbnail(originalImage, JPG_FORMAT);
-            System.out.println("thumbnail image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(thumbnail, JPG_FORMAT)));
+            System.out.println(new StringBuilder().append("thumbnail image Size = ").append(ImageUtil.bytesIntoHumanReadable(getSize(thumbnail, JPG_FORMAT))).toString());
             ImageIO.write(thumbnail, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/thumbnail5.jpg"));
 
         } catch (IOException e) {

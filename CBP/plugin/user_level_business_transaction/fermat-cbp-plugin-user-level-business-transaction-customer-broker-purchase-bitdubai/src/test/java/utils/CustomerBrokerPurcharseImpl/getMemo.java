@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class getMemo {
 
     @Test
-    public void getMemo(){
+    public void getMemo() {
         CustomerBrokerPurchaseImpl customerBrokerPurchaseImpl = mock(CustomerBrokerPurchaseImpl.class);
         when(customerBrokerPurchaseImpl.getMemo()).thenReturn(new String());
         assertThat(customerBrokerPurchaseImpl.getMemo()).isNotNull();

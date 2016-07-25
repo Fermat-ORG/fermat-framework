@@ -8,14 +8,14 @@ import java.io.Serializable;
 /**
  * Created by mati on 2016.03.03..
  */
-public class RecentApp implements FermatRecentApp,Serializable {
+public class RecentApp implements FermatRecentApp, Serializable {
 
     private String publicKey;
     private FermatApp fermatApp;
 
     private int taskStackPosition;
 
-    public RecentApp(String publicKey, FermatApp fermatApp,int taskStackPosition) {
+    public RecentApp(String publicKey, FermatApp fermatApp, int taskStackPosition) {
         this.publicKey = publicKey;
         this.fermatApp = fermatApp;
         this.taskStackPosition = taskStackPosition;

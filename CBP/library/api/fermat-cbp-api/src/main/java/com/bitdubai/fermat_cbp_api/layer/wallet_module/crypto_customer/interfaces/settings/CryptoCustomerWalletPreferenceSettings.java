@@ -28,15 +28,21 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings, S
     private FeeOrigin feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT;
     private BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-    public boolean isHomeTutorialDialogEnabled() {return isHomeTutorialDialogEnabled;}
+    public boolean isHomeTutorialDialogEnabled() {
+        return isHomeTutorialDialogEnabled;
+    }
 
-    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;}
+    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
+        this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
+    }
 
     public boolean isWalletConfigured() {
         return isWalletConfigured;
     }
 
-    public void setIsWalletConfigured(boolean isWalletConfigured) {this.isWalletConfigured = isWalletConfigured;}
+    public void setIsWalletConfigured(boolean isWalletConfigured) {
+        this.isWalletConfigured = isWalletConfigured;
+    }
 
 
     /**
@@ -85,7 +91,7 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings, S
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-        isHomeTutorialDialogEnabled=b;
+        isHomeTutorialDialogEnabled = b;
     }
 
     public List<CryptoCustomerWalletProviderSetting> getSelectedProviders() {

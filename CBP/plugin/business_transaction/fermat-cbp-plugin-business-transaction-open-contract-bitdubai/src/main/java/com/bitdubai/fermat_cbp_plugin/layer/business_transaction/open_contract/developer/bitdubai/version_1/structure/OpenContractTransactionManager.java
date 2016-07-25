@@ -178,9 +178,7 @@ public class OpenContractTransactionManager implements OpenContractManager {
      * If returns 0 the transaction is processing.
      *
      * @param contractHash
-     *
      * @return
-     *
      * @throws CantGetCompletionDateException
      */
     @Override
@@ -191,7 +189,7 @@ public class OpenContractTransactionManager implements OpenContractManager {
 
     @Override
     public boolean isOpenContract(String negotiationId)
-            throws UnexpectedResultReturnedFromDatabaseException{
+            throws UnexpectedResultReturnedFromDatabaseException {
 
         return openContractBusinessTransactionDao.contractOfNegotiationExists(UUID.fromString(negotiationId));
 

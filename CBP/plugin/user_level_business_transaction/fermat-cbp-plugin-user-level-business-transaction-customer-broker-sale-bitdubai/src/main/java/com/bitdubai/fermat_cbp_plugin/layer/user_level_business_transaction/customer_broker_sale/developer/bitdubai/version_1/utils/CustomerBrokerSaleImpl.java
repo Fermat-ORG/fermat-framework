@@ -9,7 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.custome
 public class CustomerBrokerSaleImpl implements CustomerBrokerSale {
     private String transactionId;
     private String contractTransactionId;
-    private long   timestamp;
+    private long timestamp;
     private String purchaseStatus;
     private String contractStatus;
     private TransactionStatus transactionStatus;
@@ -25,16 +25,16 @@ public class CustomerBrokerSaleImpl implements CustomerBrokerSale {
                                   TransactionStatus transactionStatus,
                                   String currencyType,
                                   String transactionType,
-                                  String memo){
+                                  String memo) {
         this.transactionId = transactionId;
         this.contractTransactionId = contractTransactionId;
-        this.timestamp             = timestamp;
-        this.purchaseStatus        = purchaseStatus;
-        this.contractStatus        = contractStatus;
-        this.transactionStatus     = transactionStatus;
-        this.currencyType          = currencyType;
-        this.transactionType       = transactionType;
-        this.memo                  = memo;
+        this.timestamp = timestamp;
+        this.purchaseStatus = purchaseStatus;
+        this.contractStatus = contractStatus;
+        this.transactionStatus = transactionStatus;
+        this.currencyType = currencyType;
+        this.transactionType = transactionType;
+        this.memo = memo;
     }
 
     public String getTransactionId() {

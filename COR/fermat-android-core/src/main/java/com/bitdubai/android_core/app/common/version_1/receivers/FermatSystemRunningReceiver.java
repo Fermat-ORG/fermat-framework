@@ -10,7 +10,7 @@ import com.bitdubai.android_core.app.FermatApplication;
 /**
  * Created by Matias Furszyfer on 2016.04.22..
  */
-public class FermatSystemRunningReceiver extends BroadcastReceiver{
+public class FermatSystemRunningReceiver extends BroadcastReceiver {
 
 
     private static final String TAG = "FermatSystemReceiver";
@@ -20,7 +20,7 @@ public class FermatSystemRunningReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG,"Receiving fermat running");
+        Log.i(TAG, "Receiving fermat running");
         FermatApplication.getInstance().setFermatRunning(true);
     }
 }

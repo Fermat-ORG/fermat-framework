@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetTimestampTest {
 
     @Test
-    public void getTimestamp(){
+    public void getTimestamp() {
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
         when(cryptoBrokerStockTransaction.getTimestamp()).thenReturn(1l);
         assertThat(cryptoBrokerStockTransaction.getTimestamp()).isNotNull();

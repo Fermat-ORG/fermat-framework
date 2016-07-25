@@ -74,6 +74,7 @@ public interface FiatIndex extends Serializable {
      * @return a float of the volatility of rate
      */
     float getPriceVolatility();
+
     /**
      * The method <code>getFiatCurrency</code> returns the fiat currency of the FiatIndex
      *

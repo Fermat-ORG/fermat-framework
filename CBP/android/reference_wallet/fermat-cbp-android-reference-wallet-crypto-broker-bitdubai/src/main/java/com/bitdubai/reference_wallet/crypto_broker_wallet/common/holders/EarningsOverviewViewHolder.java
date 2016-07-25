@@ -42,19 +42,22 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
 
         double amount = data.getAmount();
 
-        if(earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+        if (earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
             amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
         final String diff = numberFormat.format(amount);
 
         if (amount > 0) {
-            differenceTextView.setText(String.format("+ %s %s", diff, currencyCode));
+//            differenceTextView.setText(String.format("+ %s %s", diff, currencyCode));
+            differenceTextView.setText(new StringBuilder().append("+ ").append(diff).append(" ").append(currencyCode).toString());
             differenceTextView.setTextColor(Color.parseColor("#39ab89"));
         } else if (amount < 0) {
-            differenceTextView.setText(String.format("%s %s", diff, currencyCode));
+//            differenceTextView.setText(String.format("%s %s", diff, currencyCode));
+            differenceTextView.setText(new StringBuilder().append(diff).append(" ").append(currencyCode).toString());
             differenceTextView.setTextColor(Color.parseColor("#d14846"));
         } else {
-            differenceTextView.setText(String.format("0.0 %s", currencyCode));
+//            differenceTextView.setText(String.format("0.0 %s", currencyCode));
+            differenceTextView.setText(new StringBuilder().append("0.0 ").append(currencyCode).toString());
             differenceTextView.setTextColor(Color.parseColor("#7c7c7c"));
         }
 

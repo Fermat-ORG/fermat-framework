@@ -34,10 +34,10 @@ public class NotificationReceiver extends BroadcastReceiver {
         String code = intent.getStringExtra(ApplicationConstants.INTENT_EXTRA_DATA);
         FermatBundle data = (FermatBundle) intent.getSerializableExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE);
         try {
-            if(data!=null) weakSession.get().getNotificationService().notificate( data);
+            if (data != null) weakSession.get().getNotificationService().notificate(data);
             else weakSession.get().getNotificationService().notificate(appPublicKey, code);
-        }catch (Exception e){
-            Log.e(TAG,"Process name: "+getCurrentProcess().processName);
+        } catch (Exception e) {
+            Log.e(TAG, new StringBuilder().append("Process name: ").append(getCurrentProcess().processName).toString());
             e.printStackTrace();
         }
     }
@@ -51,7 +51,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         for (int idx = 0; idx < procInfos.size(); idx++) {
             ActivityManager.RunningAppProcessInfo process = procInfos.get(idx);
             String processName = process.processName;
-            if(pId == process.pid) {
+            if (pId == process.pid) {
                 return process;
             }
         }

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class SetDescriptionTest {
 
     @Test
-    public void setDescription(){
+    public void setDescription() {
         CryptoBrokerWalletProviderSettingImpl cryptoBrokerWalletProviderSetting = mock(CryptoBrokerWalletProviderSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoBrokerWalletProviderSetting).setDescription(Mockito.any(String.class));
     }

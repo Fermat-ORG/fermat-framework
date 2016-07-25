@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class Wizard implements FermatWizard,Serializable {
+public class Wizard implements FermatWizard, Serializable {
 
     protected ArrayList<WizardPage> pages;
 

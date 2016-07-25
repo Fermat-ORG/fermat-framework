@@ -5,10 +5,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destoc
 
 import org.junit.Test;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by Jose Vilchez on 18/01/16.
@@ -18,7 +17,7 @@ public class GetTransactionStatusTest {
     private TransactionStatusRestockDestock transactionStatusRestockDestock = TransactionStatusRestockDestock.INIT_TRANSACTION;
 
     @Test
-    public void getTransactionStatus(){
+    public void getTransactionStatus() {
         CashMoneyDestockTransactionImpl cashMoneyDestockTransaction = mock(CashMoneyDestockTransactionImpl.class);
         when(cashMoneyDestockTransaction.getTransactionStatus()).thenReturn(transactionStatusRestockDestock);
         assertThat(cashMoneyDestockTransaction.getTransactionStatus()).isNotNull();

@@ -24,7 +24,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
@@ -61,19 +60,37 @@ public class CreateNewBankAccountFragment
 
     private CryptoCustomerWalletModuleManager moduleManager;
     private final TextWatcher bankNameTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
     private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
-        public void onTextChanged(CharSequence s, int start, int before, int count) {accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));}
-        public void afterTextChanged(Editable s) {}
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));
+        }
+
+        public void afterTextChanged(Editable s) {
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     };
 
 
@@ -189,15 +206,15 @@ public class CreateNewBankAccountFragment
         List<String> data = new ArrayList<>();
 
         for (FiatCurrency country : countries)
-            data.add(country.getFriendlyName() + " (" + country.getCode() + ")");
+            data.add(new StringBuilder().append(country.getFriendlyName()).append(" (").append(country.getCode()).append(")").toString());
 
         return data;
     }
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add("Saving (" + BankAccountType.SAVINGS.getCode() + ")");
-        data.add("Current (" + BankAccountType.CHECKING.getCode() + ")");
+        data.add(new StringBuilder().append("Saving (").append(BankAccountType.SAVINGS.getCode()).append(")").toString());
+        data.add(new StringBuilder().append("Current (").append(BankAccountType.CHECKING.getCode()).append(")").toString());
 
         return data;
     }

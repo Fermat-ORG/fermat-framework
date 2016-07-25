@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPluginDatabaseSystem;
 
 import org.junit.Before;
@@ -38,16 +37,16 @@ public class CreateDatabaseTest {
 
 
     @Before
-    public void createDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception{
+    public void createDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
 
-        catchException(testDatabase).createDatabase(UUID.randomUUID(),testDatabaseName);
+        catchException(testDatabase).createDatabase(UUID.randomUUID(), testDatabaseName);
         assertThat(caughtException()).isNull();
     }
 
     @Test
-    public void createDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception{
+    public void createDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
 
         catchException(testDatabase).createDatabase(UUID.randomUUID(), testDatabaseName);

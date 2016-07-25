@@ -37,11 +37,11 @@ public class ConstructionTest {
     private CustomerBrokerUpdateManagerImpl testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new CustomerBrokerUpdateManagerImpl(
-            customerBrokerUpdateNegotiationTransactionDatabaseDao,
-            customerBrokerPurchaseNegotiationManager,
-            customerBrokerSaleNegotiationManager
+                customerBrokerUpdateNegotiationTransactionDatabaseDao,
+                customerBrokerPurchaseNegotiationManager,
+                customerBrokerSaleNegotiationManager
         );
     }
 

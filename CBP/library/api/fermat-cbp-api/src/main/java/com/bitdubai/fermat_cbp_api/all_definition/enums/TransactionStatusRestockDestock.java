@@ -27,16 +27,25 @@ public enum TransactionStatusRestockDestock implements FermatEnum {
     public String getCode() {
         return this.code;
     }
+
     public static TransactionStatusRestockDestock getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "ITRANS":    return TransactionStatusRestockDestock.INIT_TRANSACTION;
-            case "IHOLD":     return TransactionStatusRestockDestock.IN_HOLD;
-            case "IUNHOLD":   return TransactionStatusRestockDestock.IN_UNHOLD;
-            case "IWALLET":   return TransactionStatusRestockDestock.IN_WALLET;
-            case "IEJEC":   return TransactionStatusRestockDestock.IN_EXECUTION;
-            case "COMPLETED": return TransactionStatusRestockDestock.COMPLETED;
-            case "REJECTED":  return TransactionStatusRestockDestock.REJECTED;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatusRestockDestock enum");
+            case "ITRANS":
+                return TransactionStatusRestockDestock.INIT_TRANSACTION;
+            case "IHOLD":
+                return TransactionStatusRestockDestock.IN_HOLD;
+            case "IUNHOLD":
+                return TransactionStatusRestockDestock.IN_UNHOLD;
+            case "IWALLET":
+                return TransactionStatusRestockDestock.IN_WALLET;
+            case "IEJEC":
+                return TransactionStatusRestockDestock.IN_EXECUTION;
+            case "COMPLETED":
+                return TransactionStatusRestockDestock.COMPLETED;
+            case "REJECTED":
+                return TransactionStatusRestockDestock.REJECTED;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, new StringBuilder().append("Code Received: ").append(code).toString(), "This Code Is Not Valid for the TransactionStatusRestockDestock enum");
         }
     }
 }

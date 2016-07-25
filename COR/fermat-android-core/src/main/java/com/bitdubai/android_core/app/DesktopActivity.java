@@ -50,14 +50,15 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 /**
  * Created by Matias Furszyfer on 2015.11.19..
  */
-public class DesktopActivity extends FermatActivity implements FermatScreenSwapper,DesktopAppSelector {
+public class DesktopActivity extends FermatActivity implements FermatScreenSwapper, DesktopAppSelector {
 
 
     private static final String TAG = "DesktopActivity";
     private BottomMenuReveal bottomMenuReveal;
 
     /**
-     *  Called when the activity is first created
+     * Called when the activity is first created
+     *
      * @param savedInstanceState
      */
 
@@ -70,7 +71,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             //reportUnexpectedUICoreException
             //hacer un enum con areas genericas
             //TODO error manager null
-             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
@@ -90,15 +91,16 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 //            abstractPluginStart.invoke(ab);
 //
 //        Log.i(TAG,o.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
     @Override
     protected void onDestroy() {
 
-        if(bottomMenuReveal !=null) bottomMenuReveal.clear();
+        if (bottomMenuReveal != null) bottomMenuReveal.clear();
         super.onDestroy();
 
         unbindDrawables(findViewById(R.id.drawer_layout));
@@ -107,7 +109,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
     private void unbindDrawables(View view) {
-        if(view!=null) {
+        if (view != null) {
             if (view.getBackground() != null) {
                 view.getBackground().setCallback(null);
             }
@@ -122,6 +124,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     /**
      * This hook is called whenever an item in your options menu is selected.
+     *
      * @param item
      * @return true if button is clicked
      */
@@ -164,7 +167,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             // Check if no view has focus:
             View view = this.getCurrentFocus();
             if (view != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
 
@@ -180,7 +183,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             onBackPressedNotificate();
 
-            if(activity.getType() == Activities.DESKTOP_SETTING_FERMAT_NETWORK){
+            if (activity.getType() == Activities.DESKTOP_SETTING_FERMAT_NETWORK) {
                 try {
                     String[] ipPort = ((FermatNetworkSettings) getAdapter().getLstCurrentFragments().get(0)).getIpPort();
                     final String ip = ipPort[0];
@@ -188,34 +191,33 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                     Thread threadChangeIP = new Thread() {
                         @Override
-                        public void run(){
+                        public void run() {
                             getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
                         }
                     };
 
                     executor.submit(threadChangeIP);
 
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }
 
             if (fragment != null) frgBackType = fragment.getBack();
 
-            if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
-                changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
+            if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey() != null) {
+                changeActivity(activity.getBackActivity().getCode(), activity.getBackAppPublicKey());
             } else {
                 finish();
                 super.onBackPressed();
             }
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
 
 
     /**
@@ -229,7 +231,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
      */
 
     @Override
-    public void changeScreen(String screen,int idContainer,Object[] objects) {
+    public void changeScreen(String screen, int idContainer, Object[] objects) {
 
         try {
 
@@ -244,14 +246,14 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
     @Override
-    public void selectWallet(InstalledWallet installedWallet){
+    public void selectWallet(InstalledWallet installedWallet) {
         Intent intent;
 
         try {
 
-            FermatStructure walletNavigationStructure= getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
+            FermatStructure walletNavigationStructure = getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
             intent = new Intent(this, AppActivity.class);
-            intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP ,installedWallet);
+            intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedWallet);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             removecallbacks();
             finish();
@@ -259,7 +261,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
@@ -269,25 +271,25 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     public void changeActivity(String activityName, String appBackPublicKey, Object... objects) {
         try {
             Activities activities = Activities.getValueFromString(activityName);
-                if(!activities.equals(Activities.CCP_DESKTOP)){
-                    getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
+            if (!activities.equals(Activities.CCP_DESKTOP)) {
+                getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
+                resetThisActivity();
+                loadUI();
+            } else {
+                try {
                     resetThisActivity();
-                    loadUI();
-                }else {
-                    try {
-                        resetThisActivity();
-                        getDesktopRuntimeManager().getLastApp().getActivity(activities);
+                    getDesktopRuntimeManager().getLastApp().getActivity(activities);
 
-                        Intent intent = new Intent(this, DesktopActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        finish();
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
-                        Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-                    }
+                    Intent intent = new Intent(this, DesktopActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+                    startActivity(intent);
+                } catch (Exception e) {
+                    getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+                    Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
                 }
+            }
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
@@ -305,30 +307,30 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         try {
 
-            if(installedSubApp.getSubAppType() == SubApps.SETTINGS){
+            if (installedSubApp.getSubAppType() == SubApps.SETTINGS) {
 
                 bottomMenuReveal.getOnClickListener().onClick(null);
 
 
-            }else {
+            } else {
 
 
                 FermatStructure subAppNavigationStructure = getWalletRuntimeManager().getWallet(installedSubApp.getAppPublicKey());
 
 //                if(subAppNavigationStructure.getPlatform() != Platforms.CRYPTO_BROKER_PLATFORM || subAppNavigationStructure.getPlatform() != Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION) {
-                    intent = new Intent(this, AppActivity.class);
-                    intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedSubApp);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    resetThisActivity();
-                    finish();
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                intent = new Intent(this, AppActivity.class);
+                intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedSubApp);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                resetThisActivity();
+                finish();
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 //                }else{
 //                    Toast.makeText(this,"App in develop :)",Toast.LENGTH_SHORT).show();
 //                }
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
@@ -338,7 +340,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     public void selectApp(FermatApp installedApp) {
         Intent intent;
         try {
-            if(installedApp.getAppName().equals("Chat")){
+            if (installedApp.getAppName().equals("Chat")) {
                 intent = new Intent(this, AppActivity.class);
                 intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedApp);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -346,8 +348,8 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }else {
-                Toast.makeText(this,"App in develop :)",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "App in develop :)", Toast.LENGTH_SHORT).show();
             }
 
 //            intent = new Intent();
@@ -357,7 +359,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 //            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 //            intent.setAction("org.fermat.APP_LAUNCHER");
 //            sendBroadcast(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
@@ -387,7 +389,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             try {
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
 
-                
+
                 FermatApplication.getInstance().getAppManager().openApp(getDesktopManager(), fermatAppConnection);
                 //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
                 /**
@@ -399,56 +401,55 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 activity = fermatStructure.getLastActivity();
 
 
-
 //                if(isHelpEnabled(fermatStructure.getPublicKey())){
 //                    if (activity.getWizards() != null)
 //                        setWizards(activity.getWizards());
 //                    showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
 //                }else {
 
-                    loadBasicUI(activity, fermatAppConnection);
+                loadBasicUI(activity, fermatAppConnection);
 
-                    if (activity.getType() == Activities.CCP_DESKTOP) {
-                        showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
+                if (activity.getType() == Activities.CCP_DESKTOP) {
+                    showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
+                    findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
+                    initialisePaging();
+                    if (bottomMenuReveal == null) {
                         findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
-                        initialisePaging();
-                        if(bottomMenuReveal ==null){
-                            findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
-                            bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
-                            bottomMenuReveal.buildMenuSettings();
-                        }
-                    } else {
-
-                        hideBottonIcons();
-
-                        findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
-
-                        if (activity.getFragments().size() == 1) {
-                            setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), FermatApplication.getInstance().getAppManager().lastAppSession(), activity.getLastFragment());
-                        }
+                        bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal), this);
+                        bottomMenuReveal.buildMenuSettings();
                     }
+                } else {
 
-                    paintScreen(activity);
+                    hideBottonIcons();
 
-                    if ((activity.getBottomNavigationMenu()) != null) {
-                        bottomNavigationEnabled(true);
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
+
+                    if (activity.getFragments().size() == 1) {
+                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), FermatApplication.getInstance().getAppManager().lastAppSession(), activity.getLastFragment());
                     }
+                }
+
+                paintScreen(activity);
+
+                if ((activity.getBottomNavigationMenu()) != null) {
+                    bottomNavigationEnabled(true);
+                }
             } catch (Exception e) {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                         Toast.LENGTH_LONG).show();
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    private boolean loadSettings(){
+    private boolean loadSettings() {
         AndroidCoreSettings androidCoreSettings = null;
         try {
-            androidCoreSettings =getAndroidCoreModule().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
+            androidCoreSettings = getAndroidCoreModule().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -469,7 +470,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     private void paintScreen(Activity activity) {
         String backgroundColor = activity.getBackgroundColor();
-        if(backgroundColor!=null){
+        if (backgroundColor != null) {
             Drawable colorDrawable = new ColorDrawable(Color.parseColor(backgroundColor));
             getWindow().setBackgroundDrawable(colorDrawable);
         }
@@ -481,17 +482,17 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     protected void onNavigationMenuItemTouchListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
         try {
             String activityCode = data.getLinkToActivity().getCode();
-            if(activityCode.equals("develop_mode")){
+            if (activityCode.equals("develop_mode")) {
                 onBackPressed();
-            }else
-                changeActivity(activityCode,data.getAppLinkPublicKey());
-        }catch (Exception e){
+            } else
+                changeActivity(activityCode, data.getAppLinkPublicKey());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void setTabCustomImageView(int position,View view) {
+    public void setTabCustomImageView(int position, View view) {
 
     }
 

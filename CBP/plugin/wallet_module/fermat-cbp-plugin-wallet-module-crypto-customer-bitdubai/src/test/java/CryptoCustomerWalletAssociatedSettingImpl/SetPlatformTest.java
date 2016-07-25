@@ -3,7 +3,6 @@ package CryptoCustomerWalletAssociatedSettingImpl;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletAssociatedSettingImpl;
 
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -19,7 +18,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class SetPlatformTest {
     @Test
-    public void setPlatform (){
+    public void setPlatform() {
         CryptoCustomerWalletAssociatedSettingImpl cryptoCustomerWalletAssociatedSetting = mock(CryptoCustomerWalletAssociatedSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(cryptoCustomerWalletAssociatedSetting).setPlatform(Mockito.any(Platforms.class));
     }

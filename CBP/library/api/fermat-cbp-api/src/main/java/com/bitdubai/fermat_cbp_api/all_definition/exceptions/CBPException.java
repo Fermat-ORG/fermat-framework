@@ -15,7 +15,7 @@ public class CBPException extends FermatException {
     }
 
     public CBPException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CBPException(final String message, final Exception cause) {

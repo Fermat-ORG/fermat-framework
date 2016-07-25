@@ -11,7 +11,7 @@ import com.bitdubai.sub_app.crypto_customer_community.R;
 /**
  * Created by nelsonalfo on 28/06/16.
  */
-public class GeolocationViewHolder extends FermatViewHolder  {
+public class GeolocationViewHolder extends FermatViewHolder {
 
     private TextView country;
     private TextView state;
@@ -24,7 +24,7 @@ public class GeolocationViewHolder extends FermatViewHolder  {
         state = (TextView) itemView.findViewById(R.id.ccc_state_search);
     }
 
-    public void bind(ExtendedCity data){
+    public void bind(ExtendedCity data) {
         country.setText(data.getCountryName());
         state.setText(data.getName());
     }

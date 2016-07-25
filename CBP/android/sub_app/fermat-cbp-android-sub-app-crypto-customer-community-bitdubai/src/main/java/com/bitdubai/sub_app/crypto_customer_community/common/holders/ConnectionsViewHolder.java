@@ -46,11 +46,11 @@ public class ConnectionsViewHolder extends FermatViewHolder {
         customerName.setText(data.getAlias());
         customerImage.setImageDrawable(getImgDrawable(data.getImage()));
         if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
-            countryAddress= "--";
-        else countryAddress =  data.getCountry();
+            countryAddress = "--";
+        else countryAddress = data.getCountry();
         if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
-            placeAddress= "--";
-        else placeAddress =  data.getPlace();
+            placeAddress = "--";
+        else placeAddress = data.getPlace();
         customerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
     }
 

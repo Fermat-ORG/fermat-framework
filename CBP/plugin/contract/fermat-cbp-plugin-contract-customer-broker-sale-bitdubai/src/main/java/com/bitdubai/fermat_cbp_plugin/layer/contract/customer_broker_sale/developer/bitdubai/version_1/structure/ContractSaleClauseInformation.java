@@ -27,7 +27,7 @@ public class ContractSaleClauseInformation implements ContractClause, Serializab
             ContractClauseType type,
             Integer executionOrder,
             ContractClauseStatus status
-    ){
+    ) {
         this.clauseID = clauseID;
         this.type = type;
         this.executionOrder = executionOrder;
@@ -55,28 +55,28 @@ public class ContractSaleClauseInformation implements ContractClause, Serializab
     }
 
     @Override
-    public boolean equals(final Object o){
-        if(!(o instanceof ContractClause))
+    public boolean equals(final Object o) {
+        if (!(o instanceof ContractClause))
             return false;
         ContractSaleClauseInformation compare = (ContractSaleClauseInformation) o;
 
-        if(!this.clauseID.equals(compare.getClauseId()))
+        if (!this.clauseID.equals(compare.getClauseId()))
             return false;
-        if(!this.type.equals(compare.getType()))
+        if (!this.type.equals(compare.getType()))
             return false;
-        if(!this.executionOrder.equals(compare.getExecutionOrder()))
+        if (!this.executionOrder.equals(compare.getExecutionOrder()))
             return false;
         return this.status == compare.getStatus();
 
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += clauseID.hashCode();
         c += type.hashCode();
         c += executionOrder.hashCode();
         c += status.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

@@ -17,10 +17,8 @@ public enum CurrencyTypes implements FermatEnum, Serializable {
      * To do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    CRYPTO  ("CRY"),
-    FIAT    ("FIA"),
-
-    ;
+    CRYPTO("CRY"),
+    FIAT("FIA"),;
 
     private final String code;
 
@@ -32,12 +30,14 @@ public enum CurrencyTypes implements FermatEnum, Serializable {
 
         switch (code) {
 
-            case "CRY":  return CRYPTO;
-            case "FIA":  return FIAT  ;
+            case "CRY":
+                return CRYPTO;
+            case "FIA":
+                return FIAT;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "The received code is not valid for the CurrencyTypes enum"
                 );
         }

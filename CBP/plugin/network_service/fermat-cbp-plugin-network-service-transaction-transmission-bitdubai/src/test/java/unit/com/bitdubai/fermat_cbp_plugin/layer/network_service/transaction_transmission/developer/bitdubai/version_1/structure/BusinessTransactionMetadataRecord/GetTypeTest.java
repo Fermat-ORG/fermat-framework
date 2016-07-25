@@ -20,7 +20,7 @@ public class GetTypeTest {
     private BusinessTransactionTransactionType platformComponentType = BusinessTransactionTransactionType.CONFIRM_MESSAGE;
 
     @Test
-    public void getType() throws Exception{
+    public void getType() throws Exception {
         BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class);
         when(businessTransactionMetadataRecord.getType()).thenReturn(platformComponentType);
         assertThat(businessTransactionMetadataRecord.getType()).isNotNull();

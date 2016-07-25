@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 /**
  * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoCustomerLinkedActorIdentity</code>
  * represents a crypto broker actor identity.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
 public final class CryptoBrokerLinkedActorIdentity extends LinkedActorIdentity {

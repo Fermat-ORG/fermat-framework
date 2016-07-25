@@ -16,7 +16,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -39,7 +38,7 @@ import java.text.ParseException;
 public class CloseContractDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
     private static final String TAG = "CloseContractDetails";
 
-    private NumberFormat numberFormat=DecimalFormat.getInstance();
+    private NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
     public static CloseContractDetailsFragment newInstance() {
@@ -96,9 +95,10 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_payment_method);
         String typeOfPaymentStr = "";
-        try{
+        try {
             typeOfPaymentStr = MoneyType.getByCode(contractBasicInfo.getTypeOfPayment()).getFriendlyName();
-        }catch (InvalidParameterException e) {}
+        } catch (InvalidParameterException e) {
+        }
         paymentMethod.setText(typeOfPaymentStr);
 
         LinearLayout cancellationReasonContainer = (LinearLayout) rootView.findViewById(R.id.ccw_cancellation_reason_container);
@@ -123,13 +123,12 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
     }
 
 
-
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -140,14 +139,14 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<Referen
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

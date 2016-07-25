@@ -11,6 +11,4 @@ public class NavMenuBasic {
     private NavMenuBasicAdapter navMenuBasicBodyAdapter;
 
 
-
-
 }

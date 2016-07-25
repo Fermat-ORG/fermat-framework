@@ -55,7 +55,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         mDataTextView.setText(parentText);
     }
 
-    public void configureStyle(int backgroundColorResource, int textColorResource, int arrowImageResource){
+    public void configureStyle(int backgroundColorResource, int textColorResource, int arrowImageResource) {
         setBackgroundColor(backgroundColorResource);
         setTextColor(textColorResource);
         setArrowImage(arrowImageResource);
@@ -83,7 +83,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         mDataTextView.setTextColor(color);
     }
 
-    private void setArrowImage(int imageResource){
+    private void setArrowImage(int imageResource) {
         Drawable drawable;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
