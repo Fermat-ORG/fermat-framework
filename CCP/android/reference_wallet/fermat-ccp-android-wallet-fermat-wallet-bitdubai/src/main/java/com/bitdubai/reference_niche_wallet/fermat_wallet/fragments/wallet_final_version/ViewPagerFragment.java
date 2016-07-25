@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +51,7 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
     ErrorManager errorManager;
     FiatCurrency fiatCurrency;
     private TextView tvLabelRate;
+    private ListView lstCurrencyView;
     private static ReferenceAppFermatSession<FermatWallet> fermatSession;
     //newInstance constructor for creating fragment with arguments
     public static ViewPagerFragment newInstance(int page, String providerName,UUID providerId, String fiatCurrency,ReferenceAppFermatSession<FermatWallet> fermatWalletSession ) {
@@ -86,7 +89,8 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
      try {
          View view = inflater.inflate(R.layout.view_pager, container, false);
          tvLabelRate = (TextView) view.findViewById(R.id.txt_rate_amount);
-         WheelView wheel = (WheelView) view.findViewById(R.id.wheel_picker);
+         lstCurrencyView = (ListView) view.findViewById(R.id.currency_list);
+         //WheelView wheel = (WheelView) view.findViewById(R.id.wheel_picker);
 
          List<String> lstCurrencies = new ArrayList<>();
          lstCurrencies.add(FiatCurrency.US_DOLLAR.getCode());
@@ -94,15 +98,21 @@ public class ViewPagerFragment extends AbstractFermatFragment<ReferenceAppFermat
          lstCurrencies.add(FiatCurrency.ARGENTINE_PESO.getCode());
          lstCurrencies.add(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
 
-         StringWheelAdapter wheelAdapter = new StringWheelAdapter(lstCurrencies);
-         wheel.setAdapter(wheelAdapter);
+         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                 getActivity(),
+                 R.layout.wheel_item,
+                 lstCurrencies);
 
-         wheel.addChangingListener(new OnWheelChangedListener() {
+         lstCurrencyView.setAdapter(arrayAdapter);
+         //StringWheelAdapter wheelAdapter = new StringWheelAdapter(lstCurrencies);
+         //wheel.setAdapter(wheelAdapter);
+
+        /* wheel.addChangingListener(new OnWheelChangedListener() {
              @Override
              public void onChanged(WheelView wheel, int oldValue, int newValue) {
                  Log.i("Valor ","oldValue: "+oldValue+": newValue: "+newValue);
              }
-         });
+         });*/
 
          getAndShowMarketExchangeRateData(container);
 
