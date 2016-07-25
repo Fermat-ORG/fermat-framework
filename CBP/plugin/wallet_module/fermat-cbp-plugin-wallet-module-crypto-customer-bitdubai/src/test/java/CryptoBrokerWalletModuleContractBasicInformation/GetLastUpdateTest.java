@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetLastUpdateTest {
     @Test
-    public void getLastUpdate(){
+    public void getLastUpdate() {
         CryptoBrokerWalletModuleContractBasicInformation cryptoBrokerWalletModuleContractBasicInformation = mock(CryptoBrokerWalletModuleContractBasicInformation.class);
         when(cryptoBrokerWalletModuleContractBasicInformation.getLastUpdate()).thenReturn(1L);
         assertThat(cryptoBrokerWalletModuleContractBasicInformation.getLastUpdate()).isNotNull();

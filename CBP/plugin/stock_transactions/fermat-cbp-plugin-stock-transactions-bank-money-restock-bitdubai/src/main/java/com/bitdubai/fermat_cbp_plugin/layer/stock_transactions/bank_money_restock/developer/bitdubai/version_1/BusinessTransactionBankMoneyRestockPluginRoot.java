@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -33,9 +35,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restoc
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.database.BusinessTransactionBankMoneyRestockDeveloperFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.database.BussinessTransactionBankMoneyRestockDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyRestockManager;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyRestockMonitorAgent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.events.BusinessTransactionBankMoneyRestockMonitorAgent2;
 
 import java.util.List;
@@ -45,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  * Created by franklin on 16/11/15.
  */
 @PluginInfo(createdBy = "franklinmarcano1970", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.BANK_MONEY_RESTOCK)
-public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugin  implements
+public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers {
 
     public BusinessTransactionBankMoneyRestockPluginRoot() {
@@ -79,7 +78,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
     @Override
     public void start() throws CantStartPluginException {
-        stockTransactionBankMoneyRestockManager = new StockTransactionBankMoneyRestockManager(pluginDatabaseSystem ,pluginId, this);
+        stockTransactionBankMoneyRestockManager = new StockTransactionBankMoneyRestockManager(pluginDatabaseSystem, pluginId, this);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_DATABASE_NAME);
 
@@ -89,21 +88,16 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
             startMonitorAgent();
 
             database.closeDatabase();
-        }
-        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException  e)
-        {
-            try
-            {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
+            try {
                 System.out.println("******* Init Bank Money Restock ****** CATCH");
                 startMonitorAgent();
                 BusinessTransactionBankMoneyRestockDatabaseFactory businessTransactionBankMoneyRestockDatabaseFactory = new BusinessTransactionBankMoneyRestockDatabaseFactory(this.pluginDatabaseSystem);
                 businessTransactionBankMoneyRestockDatabaseFactory.createDatabase(this.pluginId, BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_DATABASE_NAME);
-            }
-            catch(CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException)
-            {
+            } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException) {
                 reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
-            }catch (Exception exception) {
+            } catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
             }
         }
@@ -147,12 +141,14 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
 
     private BusinessTransactionBankMoneyRestockMonitorAgent2 businessTransactionBankMoneyRestockMonitorAgent;
+
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
+     *
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if(businessTransactionBankMoneyRestockMonitorAgent == null) {
+        if (businessTransactionBankMoneyRestockMonitorAgent == null) {
             businessTransactionBankMoneyRestockMonitorAgent = new BusinessTransactionBankMoneyRestockMonitorAgent2(
                     SLEEP_TIME,
                     TIME_UNIT,
@@ -167,10 +163,9 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
             );
 
             businessTransactionBankMoneyRestockMonitorAgent.start();
-        serviceStatus = ServiceStatus.STARTED;
+            serviceStatus = ServiceStatus.STARTED;
 
-        }
-        else {
+        } else {
             businessTransactionBankMoneyRestockMonitorAgent.start();
             serviceStatus = ServiceStatus.STARTED;
         }

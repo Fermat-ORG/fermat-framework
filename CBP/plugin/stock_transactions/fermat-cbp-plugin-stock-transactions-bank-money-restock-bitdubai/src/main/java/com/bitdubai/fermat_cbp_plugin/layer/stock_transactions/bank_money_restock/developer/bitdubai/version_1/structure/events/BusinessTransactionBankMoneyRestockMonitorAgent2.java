@@ -1,11 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.AbstractAgent;
-import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -29,7 +26,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restoc
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 
 /**
@@ -124,7 +120,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent2 extends AbstractAg
                         if (BankTransactionStatus.CONFIRMED.equals(holdTransactionStatus))
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
 
-                        //If REJECTED, set status to REJECTED
+                            //If REJECTED, set status to REJECTED
                         else if (BankTransactionStatus.REJECTED.equals(holdTransactionStatus)) {
                             //Send error broadcast to Stock Management Fragment
                             broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_OPERATION_DESTOCK_OR_RESTOCK_UPDATE_VIEW_ERROR);

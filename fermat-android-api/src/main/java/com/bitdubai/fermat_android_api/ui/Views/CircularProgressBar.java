@@ -15,12 +15,13 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+
 import com.bitdubai.android_api.R;
 
 import java.util.List;
 
 /**
- *  Created by Furszyfer Matias 4-10-2015
+ * Created by Furszyfer Matias 4-10-2015
  */
 
 
@@ -133,7 +134,8 @@ public class CircularProgressBar extends View {
         mLayoutHeight = newHeight;
         setupBounds();
     }
-//
+
+    //
     private void setupBounds() {
         int minValue = Math.min(mLayoutWidth, mLayoutHeight);
 
@@ -208,19 +210,19 @@ public class CircularProgressBar extends View {
         mCircleProgressBounds.set(STROKE_WIDTH, STROKE_WIDTH, min + STROKE_WIDTH, min + STROKE_WIDTH);
     }
 
-    public void setProgressValue(int mProgressValue)throws IllegalArgumentException{
+    public void setProgressValue(int mProgressValue) throws IllegalArgumentException {
         validateProgressValue(mProgressValue);
         this.mProgressValue = getProgressValue(mProgressValue);
         postInvalidate();
     }
 
-    public void setProgressValue2(int mProgressValue)throws IllegalArgumentException{
+    public void setProgressValue2(int mProgressValue) throws IllegalArgumentException {
         validateProgressValue(mProgressValue);
         this.mProgress2Value = getProgressValue(mProgressValue);
         postInvalidate();
     }
 
-    private void validateProgressValue(int mProgressValue)throws IllegalArgumentException{
+    private void validateProgressValue(int mProgressValue) throws IllegalArgumentException {
         if (mProgressValue < 0 || mProgressValue > 100) {
             throw new IllegalArgumentException("Value must be between 0 and 100");
         }
@@ -231,16 +233,18 @@ public class CircularProgressBar extends View {
         return 360 * mProgressValue / 100;
     }
 
-    public void setText(String text,int color) {
+    public void setText(String text, int color) {
         this.mText = text;
         this.mPaintText.setColor(color);
         postInvalidate();
     }
-    public void setProgressColor(int color){
+
+    public void setProgressColor(int color) {
         mProgressColor = color;
         mPaintProgress.setColor(mProgressColor);
     }
-    public void setProgressColor2(int color){
+
+    public void setProgressColor2(int color) {
         mProgressColor2 = color;
         mPaintProgress2.setColor(mProgressColor2);
     }

@@ -8,7 +8,7 @@ import com.bitdubai.android_core.app.common.version_1.communication.platform_ser
 /**
  * Created by mati on 2016.05.03..
  */
-public class LocalServerSocketSession extends LocalSocketSession{
+public class LocalServerSocketSession extends LocalSocketSession {
 
 
     public LocalServerSocketSession(String pkIdentity, LocalSocket localSocket) {

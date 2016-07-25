@@ -19,9 +19,9 @@ import static org.mockito.Mockito.mock;
 public class ConfirmReadTest {
 
     @Test
-    public void confirmRead() throws Exception{
+    public void confirmRead() throws Exception {
 
-        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class,Mockito.RETURNS_DEEP_STUBS);
+        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(businessTransactionMetadataRecord).confirmRead();
 
     }

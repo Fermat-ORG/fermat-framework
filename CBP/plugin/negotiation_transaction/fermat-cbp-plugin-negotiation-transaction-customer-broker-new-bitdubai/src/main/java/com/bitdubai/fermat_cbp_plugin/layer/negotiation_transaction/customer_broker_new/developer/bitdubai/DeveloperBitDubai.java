@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 /**
  * Created by Yordin Alayn on 16.09.15.
  */
-public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor{
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));

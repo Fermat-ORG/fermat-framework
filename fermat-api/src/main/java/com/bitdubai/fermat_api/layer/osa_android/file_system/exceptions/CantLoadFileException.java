@@ -6,9 +6,9 @@ package com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions;
 public class CantLoadFileException extends FileSystemException {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3969485077547243542L;
+     *
+     */
+    private static final long serialVersionUID = -3969485077547243542L;
 
 
     public static final String DEFAULT_MESSAGE = "CAN'T LOAD FILE";

@@ -20,24 +20,25 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private final   UUID                negotiationId               = UUID.randomUUID();;
+    private final UUID negotiationId = UUID.randomUUID();
+    ;
 
-    private final   String              publicKeyCustomer           = "publicKeyCustomer";
+    private final String publicKeyCustomer = "publicKeyCustomer";
 
-    private final   String              publicKeyBroker             = "publicKeyBroker";
+    private final String publicKeyBroker = "publicKeyBroker";
 
-    private final   long                startDataTime               = 0;
+    private final long startDataTime = 0;
 
-    private final   long                negotiationExpirationDate   = 0;
+    private final long negotiationExpirationDate = 0;
 
-    private final NegotiationStatus     statusNegotiation           = NegotiationStatus.SENT_TO_BROKER;
+    private final NegotiationStatus statusNegotiation = NegotiationStatus.SENT_TO_BROKER;
 
-    private final Collection<Clause>    clauses                     = null;
+    private final Collection<Clause> clauses = null;
 
     private CustomerBrokerSaleNegotiationImpl testObj1;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testObj1 = new CustomerBrokerSaleNegotiationImpl(
                 negotiationId,
                 publicKeyCustomer,

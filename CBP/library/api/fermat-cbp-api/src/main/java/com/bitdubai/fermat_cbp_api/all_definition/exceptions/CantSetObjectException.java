@@ -30,7 +30,7 @@ public class CantSetObjectException extends CBPException {
      * @param possibleReason
      */
     public CantSetObjectException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

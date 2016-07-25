@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * <p>The enum <code>DatabaseDataType</code>
  * defined data types for fields in a table
- *
+ * <p/>
  * Modified by Manuel Perez on 05/08/2015
  * Updated by Leon Acosta (laion.cj91a@gmail.com) on 03/02/2016.
  *
@@ -16,15 +16,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum DatabaseDataType implements FermatEnum {
 
-    BLOB          ("BLB"),
-    INTEGER       ("INT"),
-    LONG_INTEGER  ("LIN"),
-    MONEY         ("MNY"),
-    REAL          ("REL"),
-    STRING        ("STR"),
-    TEXT          ("TXT"),
-
-    ;
+    BLOB("BLB"),
+    INTEGER("INT"),
+    LONG_INTEGER("LIN"),
+    MONEY("MNY"),
+    REAL("REL"),
+    STRING("STR"),
+    TEXT("TXT"),;
 
     private final String code;
 
@@ -37,17 +35,24 @@ public enum DatabaseDataType implements FermatEnum {
 
         switch (code) {
 
-            case "BLB":return BLOB        ;
-            case "INT":return INTEGER     ;
-            case "LIN":return LONG_INTEGER;
-            case "MNY":return MONEY       ;
-            case "REL":return REAL        ;
-            case "STR":return STRING      ;
-            case "TXT":return TEXT        ;
+            case "BLB":
+                return BLOB;
+            case "INT":
+                return INTEGER;
+            case "LIN":
+                return LONG_INTEGER;
+            case "MNY":
+                return MONEY;
+            case "REL":
+                return REAL;
+            case "STR":
+                return STRING;
+            case "TXT":
+                return TEXT;
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code,
+                        new StringBuilder().append("Code Received: ").append(code).toString(),
                         "This code is not valid for the DatabaseDataType enum."
                 );
         }

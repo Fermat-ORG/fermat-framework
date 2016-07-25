@@ -22,8 +22,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,14 +57,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.BitcoinFee;
 import com.bitdubai.fermat_bch_api.layer.definition.crypto_fee.FeeOrigin;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
@@ -121,6 +128,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
     private TextView txt_balance;
+    private String feeLevel = "";
 
     private FermatWorker fermatWorker;
 
@@ -148,6 +156,16 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private List<WalletContact> walletContactList = new ArrayList<>();
 
     private ExecutorService _executor;
+    private EditText editFeedamount;
+    private CheckBox feed_Substract;
+    private LinearLayout advances_btn;
+    private LinearLayout layoutAdvances;
+    private RadioGroup feeGroup;
+    private RadioButton fee_low_btn;
+    private RadioButton fee_medium_btn;
+    private RadioButton fee_high_btn;
+
+    private BitcoinWalletSettings bitcoinWalletSettings = null;
 
     public static SendFormFragment newInstance() {
         return new SendFormFragment();
@@ -288,9 +306,65 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         txt_balance = (TextView) rootView.findViewById(R.id.balance);
+        editFeedamount = (EditText) rootView.findViewById(R.id.feed_amount);
+        feed_Substract= (CheckBox) rootView.findViewById(R.id.checkBoxSubstract);
 
 
-        try {
+        advances_btn = (LinearLayout) rootView.findViewById(R.id.advances_btn);
+        layoutAdvances = (LinearLayout) rootView.findViewById(R.id.feed_advances);
+        feeGroup = (RadioGroup) rootView.findViewById(R.id.feeGroup);
+        fee_low_btn = (RadioButton) rootView.findViewById(R.id.fee_low);
+        fee_medium_btn = (RadioButton) rootView.findViewById(R.id.fee_Medium);
+        fee_high_btn = (RadioButton) rootView.findViewById(R.id.fee_High);
+
+        advances_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layoutAdvances.getVisibility() == View.GONE) {
+                    layoutAdvances.setVisibility(View.VISIBLE);
+                } else {
+                    layoutAdvances.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+        if (feeLevel.equals(String.valueOf(BitcoinFee.SLOW))) {
+            fee_low_btn.setChecked(true);
+        }else if(feeLevel.equals(String.valueOf(BitcoinFee.NORMAL))) {
+            fee_medium_btn.setChecked(true);
+        }else if(feeLevel.equals(String.valueOf(BitcoinFee.FAST))) {
+            fee_high_btn.setChecked(true);
+        }
+
+        editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.valueOf(feeLevel).getFee())));
+
+
+        feeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.fee_low) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.SLOW.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.SLOW);
+                } else if (checkedId == R.id.fee_Medium) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.NORMAL.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.NORMAL);
+                } else if (checkedId == R.id.fee_High) {
+                    editFeedamount.setText(bitcoinConverter.getBTC(String.valueOf(BitcoinFee.FAST.getFee())));
+                    feeLevel = String.valueOf(BitcoinFee.FAST);
+                }
+
+                bitcoinWalletSettings.setFeedLevel(feeLevel);
+
+                try {
+                    lossProtectedWalletManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+                try {
             long balance = 0;
             balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
             txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");

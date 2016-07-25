@@ -64,6 +64,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
 
     /**
      * Default constructor with parameters
+     *
      * @param sleepTime
      * @param timeUnit
      * @param initDelayTime
@@ -103,9 +104,9 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<String> pendingMoneyEventIdList = dao.getPendingIncomingMoneyEvents();
             for (String eventId : pendingMoneyEventIdList) {
-                try{
+                try {
                     checkPendingIncomingMoneyEvents(eventId);
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -118,7 +119,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
             for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                try{
+                try {
                     System.out.println("ACK_ONLINE_PAYMENT [Broker] - getting Pending To Submit Notification Record");
 
                     contractHash = pendingToSubmitNotificationRecord.getContractHash();
@@ -136,7 +137,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
 
                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_PAYMENT_ACK);
                     System.out.println("ACK_ONLINE_PAYMENT [Broker] - ContractTransactionStatus updated to ONLINE_PAYMENT_ACK");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -147,7 +148,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
              */
             List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmList();
             for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                try{
+                try {
                     System.out.println("ACK_ONLINE_PAYMENT [Customer] - getting Pending To Submit Confirmation Record");
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
@@ -164,7 +165,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
 
                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
                     System.out.println("ACK_ONLINE_PAYMENT [Customer] - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_PAYMENT");
-                } catch (Exception e){
+                } catch (Exception e) {
                     reportError(e);
                 }
 
@@ -301,7 +302,7 @@ public class BrokerAckOnlinePaymentMonitorAgent2
                         long cryptoAmount = getCryptoAmount(amountStr, paymentCurrencyCode);
 
                         dao.persistContractInDatabase(saleContract, cryptoAmount, paymentCurrency);
-                        System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED - persisted sale contract. cryptoAmount = " + cryptoAmount + " - paymentCurrency = " + paymentCurrency);
+                        System.out.println(new StringBuilder().append("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED - persisted sale contract. cryptoAmount = ").append(cryptoAmount).append(" - paymentCurrency = ").append(paymentCurrency).toString());
                     }
                 } catch (Exception e) {
                     System.out.println("BROKER_ACK_ONLINE_PAYMENT - NEW_CONTRACT_OPENED - EXCEPTION!! Probably this is been executed in the Customer Side");
@@ -365,23 +366,20 @@ public class BrokerAckOnlinePaymentMonitorAgent2
             long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
             long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
             if (incomingCryptoAmount != contractCryptoAmount) {
-                throw new IncomingOnlinePaymentException("The incoming crypto amount received is " + incomingCryptoAmount +
-                        "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
+                throw new IncomingOnlinePaymentException(new StringBuilder().append("The incoming crypto amount received is ").append(incomingCryptoAmount).append("\nThe amount excepted in contract ").append(contractHash).append("\nis ").append(contractCryptoAmount).toString());
             }
 
             //TODO probar esto
             CryptoCurrency incomingCryptoCurrency = incomingMoneyEventWrapper.getCryptoCurrency();
             CryptoCurrency contractCryptoCurrency = businessTransactionRecord.getCryptoCurrency();
             if (incomingCryptoCurrency != contractCryptoCurrency) {
-                throw new IncomingOnlinePaymentException("The incoming crypto currency received is " + incomingCryptoCurrency +
-                        "\nThe crypto currency excepted in contract " + contractHash + "\nis " + contractCryptoCurrency);
+                throw new IncomingOnlinePaymentException(new StringBuilder().append("The incoming crypto currency received is ").append(incomingCryptoCurrency).append("\nThe crypto currency excepted in contract ").append(contractHash).append("\nis ").append(contractCryptoCurrency).toString());
             }
 
             String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
             String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
             if (!receiverActorPublicKey.equals(expectedActorPublicKey)) {
-                throw new IncomingOnlinePaymentException("The actor public key that receive the money is " + receiverActorPublicKey +
-                        "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);
+                throw new IncomingOnlinePaymentException(new StringBuilder().append("The actor public key that receive the money is ").append(receiverActorPublicKey).append("\nThe broker public key in contract ").append(contractHash).append("\nis ").append(expectedActorPublicKey).toString());
             }
 
             businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);

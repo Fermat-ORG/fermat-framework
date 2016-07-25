@@ -36,11 +36,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- *
  * Helper class to style a {@link SearchView}.</p>
- *
+ * <p/>
  * Example usage:</p>
- *
+ * <p/>
  * <pre>
  * <code>
  * SearchViewStyleHelper.on(searchView)
@@ -58,7 +57,7 @@ import java.lang.reflect.Method;
  *    .setSearchPlateTint(Color.WHITE)
  *    .setSubmitAreaTint(Color.WHITE);
  * </pre>
- *
+ * <p/>
  * </code>
  *
  * @author Jared Rummler <jared.rummler@gmail.com>
@@ -170,7 +169,7 @@ public class SearchViewStyleHelper {
 
     private int getId(final String name) {
         return mSearchView.getContext().getResources()
-                .getIdentifier("android:id/" + name, null, null);
+                .getIdentifier(new StringBuilder().append("android:id/").append(name).toString(), null, null);
     }
 
     @SuppressWarnings("unchecked")

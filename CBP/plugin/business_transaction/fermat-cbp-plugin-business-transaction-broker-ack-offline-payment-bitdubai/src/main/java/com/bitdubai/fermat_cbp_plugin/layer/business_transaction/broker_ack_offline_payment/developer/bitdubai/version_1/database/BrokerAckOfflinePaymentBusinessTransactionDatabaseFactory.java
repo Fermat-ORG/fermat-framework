@@ -9,15 +9,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.AbstractBusinessTransactionDatabaseFactory;
 
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Manuel Perez - (darkpriestrelative@gmail.com) on 15/12/15.
  *
  * @version 1.0
@@ -28,6 +27,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory /*extends
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
+
     /**
      * Constructor with parameters to instantiate class
      * .
@@ -37,6 +37,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory /*extends
     public BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
     /**
      * Create the database
      *
@@ -79,11 +80,11 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory /*extends
             table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
             table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
-            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EXTERNAL_TRANSACTION_ID_COLUMN_NAME,DatabaseDataType.TEXT, 64,Boolean.FALSE);
-            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME,DatabaseDataType.TEXT,100,Boolean.FALSE);
-            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.TEXT, 64,Boolean.FALSE);
-            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.TEXT, 64,Boolean.FALSE);
-            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME,DatabaseDataType.LONG_INTEGER, 64,Boolean.FALSE);
+            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EXTERNAL_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 64, Boolean.FALSE);
+            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 64, Boolean.FALSE);
+            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 64, Boolean.FALSE);
+            table.addColumn(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 64, Boolean.FALSE);
 
 
             table.addIndex(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_FIRST_KEY_COLUMN);
@@ -109,7 +110,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory /*extends
                 //Create the table
                 databaseFactory.createTable(ownerId, eventsRecorderTable);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+ BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, new StringBuilder().append("Creating ").append(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME).append(" table").toString(), "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
             //Message status table
@@ -119,7 +120,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory /*extends
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+ BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, new StringBuilder().append("Creating ").append(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME).append(" table").toString(), "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
@@ -131,6 +132,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory /*extends
         }
         return database;
     }
+
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -46,12 +47,10 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.event_handler.CustomerAckOnlineMerchandiseRecorderService;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseMonitorAgent2;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.structure.CustomerAckOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -363,7 +362,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             String[] correctedClass = className.split((Pattern.quote("$")));
             return CustomerAckOnlineMerchandisePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
-            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
+            System.err.println(new StringBuilder().append("CantGetLogLevelByClass: ").append(e.getMessage()).toString());
             return DEFAULT_LOG_LEVEL;
         }
     }
@@ -380,9 +379,9 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             incomingMoneyNotificationEvent.setIntraUserIdentityPublicKey("BrokerPublicKey");
             incomingMoneyNotificationEvent.setWalletPublicKey("TestWalletPublicKey");
             eventManager.raiseEvent(incomingMoneyNotificationEvent);
-            System.out.println("Event raised:\n" + incomingMoneyNotificationEvent.toString());
+            System.out.println(new StringBuilder().append("Event raised:\n").append(incomingMoneyNotificationEvent.toString()).toString());
         } catch (Exception e) {
-            System.out.println("Exception in Broker Ack Online Merchandise Test: " + e);
+            System.out.println(new StringBuilder().append("Exception in Broker Ack Online Merchandise Test: ").append(e).toString());
             e.printStackTrace();
         }
     }
@@ -395,7 +394,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             brokerAckPaymentConfirmed.setContractHash("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
             eventManager.raiseEvent(brokerAckPaymentConfirmed);
         } catch (Exception e) {
-            System.out.println("Exception in Broker Ack Online Merchandise Test: " + e);
+            System.out.println(new StringBuilder().append("Exception in Broker Ack Online Merchandise Test: ").append(e).toString());
         }
     }
 

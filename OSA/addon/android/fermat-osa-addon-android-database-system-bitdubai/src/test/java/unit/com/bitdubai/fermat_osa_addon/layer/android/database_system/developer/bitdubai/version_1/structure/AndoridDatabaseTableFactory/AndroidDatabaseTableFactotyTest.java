@@ -26,7 +26,7 @@ public class AndroidDatabaseTableFactotyTest {
     AndroidDatabaseTableFactory tableFactory2;
 
     @Before
-    public void setUpTableFactory1(){
+    public void setUpTableFactory1() {
         tableFactory1 = constructDatabaseTableFactory(
                 tabla1,
                 index1,
@@ -36,7 +36,7 @@ public class AndroidDatabaseTableFactotyTest {
     }
 
     @Test
-    public void Indexs_AreEquals(){
+    public void Indexs_AreEquals() {
         tableFactory2 = constructDatabaseTableFactory(
                 tabla1,
                 index1,
@@ -48,7 +48,7 @@ public class AndroidDatabaseTableFactotyTest {
     }
 
     @Test
-    public void Indexs_NotEquals(){
+    public void Indexs_NotEquals() {
         tableFactory2 = constructDatabaseTableFactory(
                 tabla2,
                 index2,
@@ -60,7 +60,7 @@ public class AndroidDatabaseTableFactotyTest {
     }
 
     @Test
-    public void toString_AreEquals(){
+    public void toString_AreEquals() {
         tableFactory2 = constructDatabaseTableFactory(
                 tabla1,
                 index1,
@@ -72,7 +72,7 @@ public class AndroidDatabaseTableFactotyTest {
     }
 
     @Test
-    public void toString_NotEquals(){
+    public void toString_NotEquals() {
         tableFactory2 = constructDatabaseTableFactory(
                 tabla2,
                 index2,
@@ -88,13 +88,13 @@ public class AndroidDatabaseTableFactotyTest {
             String index,
             String columnName, DatabaseDataType dataType, int dataTypeSize, boolean primaryKey,
             boolean columns
-    ){
+    ) {
         AndroidDatabaseTableFactory tableFactory = new AndroidDatabaseTableFactory(tablaName);
         tableFactory.addIndex(index);
         tableFactory.addColumn(columnName, dataType, dataTypeSize, primaryKey);
 
-        if(columns){
-            tableFactory.addColumn("extra"+columnName, dataType, dataTypeSize, primaryKey);
+        if (columns) {
+            tableFactory.addColumn("extra" + columnName, dataType, dataTypeSize, primaryKey);
         }
 
         return tableFactory;

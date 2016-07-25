@@ -173,10 +173,10 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
                 if (providerManagers != null) {
                     for (CurrencyPairAndProvider providerManager : providerManagers) {
 
-                        tempS = currencyFrom.getCode() + " " + currencyTo.getCode() + " " + providerManager.getProviderName();
+                        tempS = new StringBuilder().append(currencyFrom.getCode()).append(" ").append(currencyTo.getCode()).append(" ").append(providerManager.getProviderName()).toString();
 
                         if (!temp.contains(tempS)) {
-                            temp.add(currencyFrom.getCode() + " " + currencyTo.getCode() + " " + providerManager.getProviderName());
+                            temp.add(new StringBuilder().append(currencyFrom.getCode()).append(" ").append(currencyTo.getCode()).append(" ").append(providerManager.getProviderName()).toString());
                             providers.add(providerManager);
                         }
                     }
@@ -322,7 +322,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment<Refer
     private List<String> getFormattedCurrencies(List<Currency> currencies) {
         ArrayList<String> data = new ArrayList<>();
         for (Currency currency : currencies) {
-            data.add(currency.getFriendlyName() + " (" + currency.getCode() + ")");
+            data.add(new StringBuilder().append(currency.getFriendlyName()).append(" (").append(currency.getCode()).append(")").toString());
         }
 
         return data;

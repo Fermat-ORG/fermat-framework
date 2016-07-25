@@ -12,19 +12,22 @@ public interface DesignerIdentity {
 
     /**
      * Get the alias of the represented designer identity
+     *
      * @return String alias
      */
     String getAlias();
 
     /**
      * Get the public key of the represented designer
+     *
      * @return String publicKey
      */
     String getPublicKey();
 
     /**
-     Sign a message with designer private key
-     * @param  mensage to sign
+     * Sign a message with designer private key
+     *
+     * @param mensage to sign
      * @return string signed message
      * @throws CantSingMessageException
      */

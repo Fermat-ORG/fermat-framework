@@ -10,9 +10,9 @@ import com.mati.fermat_osa_addon_android_broadcaster_system_bitdubai.structure.v
 /**
  * The class <code>com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.DeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Platform File System Android Addon.
- *
+ * <p/>
  * Here we can choose between the different versions of the Platform File System Addon.
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  */
 public class PlatformBroadcasterSystemDeveloperBitDubai extends AbstractAddonDeveloper {

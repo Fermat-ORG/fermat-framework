@@ -13,25 +13,25 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2016.06.02..
  */
-public class AbstractComboFermatSession<A extends FermatApp,R extends ResourceProviderManager> extends BaseFermatSession<A,R> implements ComboAppFermatSession {
-    
-    private Map<Class,ModuleManager> moduleManagerMap;
+public class AbstractComboFermatSession<A extends FermatApp, R extends ResourceProviderManager> extends BaseFermatSession<A, R> implements ComboAppFermatSession {
 
-    public AbstractComboFermatSession(String publicKey, A fermatApp, R resourceProviderManager, ErrorManager errorManager,ModuleManager... modules) {
+    private Map<Class, ModuleManager> moduleManagerMap;
+
+    public AbstractComboFermatSession(String publicKey, A fermatApp, R resourceProviderManager, ErrorManager errorManager, ModuleManager... modules) {
         super(publicKey, fermatApp, resourceProviderManager, errorManager);
         moduleManagerMap = new HashMap<>();
         init(modules);
     }
 
-    private void init(ModuleManager[] modules){
+    private void init(ModuleManager[] modules) {
         for (ModuleManager moduleManager : modules) {
-            moduleManagerMap.put(moduleManager.getClass(),moduleManager);
+            moduleManagerMap.put(moduleManager.getClass(), moduleManager);
         }
     }
 
     @Override
     public <T extends ModuleManager> T getModuleManager(Class<T> classType) throws InvalidParameterException {
-        if(!moduleManagerMap.containsKey(classType)) throw new InvalidParameterException();
+        if (!moduleManagerMap.containsKey(classType)) throw new InvalidParameterException();
         return (T) moduleManagerMap.get(classType);
     }
 }

@@ -20,7 +20,7 @@ public class GetOriginTransactionTest {
     OriginTransaction originTransaction = OriginTransaction.STOCK_INITIAL;
 
     @Test
-    public void getOriginTransaction() throws Exception{
+    public void getOriginTransaction() throws Exception {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getOriginTransaction()).thenReturn(originTransaction);
         assertThat(cryptoMoneyDestockTransaction.getOriginTransaction()).isNotNull();

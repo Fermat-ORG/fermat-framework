@@ -28,69 +28,68 @@ public class LinuxPluginFileSystem implements PluginFileSystem {
     private static final String DIGEST_ALGORITHM = "SHA-256";
 
     @Override
-    public final PluginTextFile getTextFile(final UUID         ownerId      ,
-                                            final String       directoryName,
-                                            final String       fileName     ,
-                                            final FilePrivacy  privacyLevel ,
-                                            final FileLifeSpan lifeSpan     ) throws FileNotFoundException   ,
+    public final PluginTextFile getTextFile(final UUID ownerId,
+                                            final String directoryName,
+                                            final String fileName,
+                                            final FilePrivacy privacyLevel,
+                                            final FileLifeSpan lifeSpan) throws FileNotFoundException,
             CantCreateFileException {
 
         try {
             LinuxPluginTextFile newFile = new LinuxPluginTextFile(
-                    ownerId                        ,
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    ownerId,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
             newFile.loadFromMedia();
             return newFile;
-        }
-        catch (CantLoadFileException exception){
+        } catch (CantLoadFileException exception) {
 
             throw new FileNotFoundException(exception, null, "Check the cause of this error, maybe it has the name of another file in other plug-in and cannot decode");
-        } catch(Exception e){
+        } catch (Exception e) {
 
-            throw new CantCreateFileException(e,"", "Unhandled error.");
+            throw new CantCreateFileException(e, "", "Unhandled error.");
         }
 
     }
 
     @Override
-    public final PluginTextFile createTextFile(final UUID         ownerId      ,
-                                               final String       directoryName,
-                                               final String       fileName     ,
-                                               final FilePrivacy  privacyLevel ,
-                                               final FileLifeSpan lifeSpan     ) throws  CantCreateFileException {
+    public final PluginTextFile createTextFile(final UUID ownerId,
+                                               final String directoryName,
+                                               final String fileName,
+                                               final FilePrivacy privacyLevel,
+                                               final FileLifeSpan lifeSpan) throws CantCreateFileException {
 
         try {
 
             return new LinuxPluginTextFile(
-                    ownerId                        ,
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    ownerId,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
-            throw new CantCreateFileException(e,"", "Unhandled error.");
+            throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan)  throws Exception{
+    public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws Exception {
 
         String content = null;
 
         try {
             LinuxPluginTextFile androidPluginTextFile = new LinuxPluginTextFile(
-                    ownerId                        ,
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    ownerId,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
@@ -103,8 +102,8 @@ public class LinuxPluginFileSystem implements PluginFileSystem {
         }
 
 
-        if (content!=null){
-            if(!content.equals("")){
+        if (content != null) {
+            if (!content.equals("")) {
                 return true;
             }
         }
@@ -113,78 +112,78 @@ public class LinuxPluginFileSystem implements PluginFileSystem {
     }
 
     @Override
-    public final PluginBinaryFile getBinaryFile(final UUID         ownerId      ,
-                                                final String       directoryName,
-                                                final String       fileName     ,
-                                                final FilePrivacy  privacyLevel ,
-                                                final FileLifeSpan lifeSpan     ) throws FileNotFoundException   ,
+    public final PluginBinaryFile getBinaryFile(final UUID ownerId,
+                                                final String directoryName,
+                                                final String fileName,
+                                                final FilePrivacy privacyLevel,
+                                                final FileLifeSpan lifeSpan) throws FileNotFoundException,
             CantCreateFileException {
 
         try {
 
             final LinuxPluginBinaryFile newFile = new LinuxPluginBinaryFile(
-                    ownerId                        ,
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    ownerId,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
             newFile.loadFromMedia();
             return newFile;
 
-        } catch (CantLoadFileException e){
+        } catch (CantLoadFileException e) {
 
             throw new FileNotFoundException(e, "", "Check the cause");
-        }catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public final PluginBinaryFile createBinaryFile(final UUID         ownerId      ,
-                                                   final String       directoryName,
-                                                   final String       fileName     ,
-                                                   final FilePrivacy  privacyLevel ,
-                                                   final FileLifeSpan lifeSpan     ) throws CantCreateFileException {
+    public final PluginBinaryFile createBinaryFile(final UUID ownerId,
+                                                   final String directoryName,
+                                                   final String fileName,
+                                                   final FilePrivacy privacyLevel,
+                                                   final FileLifeSpan lifeSpan) throws CantCreateFileException {
 
         try {
 
             return new LinuxPluginBinaryFile(
-                    ownerId                        ,
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    ownerId,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public final void deleteTextFile(final UUID         ownerId      ,
-                                     final String       directoryName,
-                                     final String       fileName     ,
-                                     final FilePrivacy  privacyLevel ,
-                                     final FileLifeSpan lifeSpan     ) throws CantCreateFileException,
-            FileNotFoundException  {
+    public final void deleteTextFile(final UUID ownerId,
+                                     final String directoryName,
+                                     final String fileName,
+                                     final FilePrivacy privacyLevel,
+                                     final FileLifeSpan lifeSpan) throws CantCreateFileException,
+            FileNotFoundException {
 
         try {
 
-            final LinuxPluginTextFile newFile =  new LinuxPluginTextFile(
-                    ownerId                        ,
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+            final LinuxPluginTextFile newFile = new LinuxPluginTextFile(
+                    ownerId,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
             newFile.delete();
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Check the cause");
         }
@@ -192,35 +191,34 @@ public class LinuxPluginFileSystem implements PluginFileSystem {
     }
 
     @Override
-    public final void deleteBinaryFile(final UUID         ownerId      ,
-                                       final String       directoryName,
-                                       final String       fileName     ,
-                                       final FilePrivacy  privacyLevel ,
-                                       final FileLifeSpan lifeSpan     ) throws CantCreateFileException,
-            FileNotFoundException  {
+    public final void deleteBinaryFile(final UUID ownerId,
+                                       final String directoryName,
+                                       final String fileName,
+                                       final FilePrivacy privacyLevel,
+                                       final FileLifeSpan lifeSpan) throws CantCreateFileException,
+            FileNotFoundException {
 
         try {
 
             final LinuxPluginBinaryFile newFile = new LinuxPluginBinaryFile(
-                    ownerId                        ,
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    ownerId,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
             newFile.delete();
 
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
 
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Check the cause");
         }
     }
-    
+
     /**
-     *
      * Hash the file name using the algorithm SHA 256
      */
 
@@ -234,9 +232,9 @@ public class LinuxPluginFileSystem implements PluginFileSystem {
             Base64 base64 = new Base64();
             byte[] encoded = base64.encode(digest);
             final String encryptedString = new String(encoded, CHARSET_NAME);
-            return encryptedString.replace("/","");
+            return encryptedString.replace("/", "");
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantHashFileNameException(e, "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }

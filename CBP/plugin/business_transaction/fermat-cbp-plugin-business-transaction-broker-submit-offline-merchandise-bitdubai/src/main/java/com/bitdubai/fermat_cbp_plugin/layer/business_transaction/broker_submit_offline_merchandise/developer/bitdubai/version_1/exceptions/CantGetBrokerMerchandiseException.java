@@ -31,7 +31,7 @@ public class CantGetBrokerMerchandiseException extends CBPException {
      * @param possibleReason
      */
     public CantGetBrokerMerchandiseException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**

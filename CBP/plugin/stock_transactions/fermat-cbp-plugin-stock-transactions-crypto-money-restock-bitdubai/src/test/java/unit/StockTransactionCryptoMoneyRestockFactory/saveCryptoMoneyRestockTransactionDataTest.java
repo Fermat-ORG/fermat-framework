@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class saveCryptoMoneyRestockTransactionDataTest {
 
     @Test
-    public void saveCryptoMoneyRestockTransactionData() throws Exception{
+    public void saveCryptoMoneyRestockTransactionData() throws Exception {
         StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory = mock(StockTransactionCryptoMoneyRestockFactory.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(stockTransactionCryptoMoneyRestockFactory).saveCryptoMoneyRestockTransactionData(Mockito.any(CryptoMoneyTransaction.class));
     }

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class getContractStatus {
 
     @Test
-    public void getContractStatus(){
+    public void getContractStatus() {
         CustomerBrokerSaleImpl customerBrokerPurchaseImpl = mock(CustomerBrokerSaleImpl.class);
         when(customerBrokerPurchaseImpl.getContractStatus()).thenReturn(new String());
         assertThat(customerBrokerPurchaseImpl.getContractStatus()).isNotNull();

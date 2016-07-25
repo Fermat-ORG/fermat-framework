@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
@@ -9,7 +10,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.ListsForStatusSale;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.CustomerBrokerContractSalePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerContractSaleDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Collection;
 
@@ -23,16 +23,16 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
     private final CustomerBrokerContractSalePluginRoot pluginRoot;
 
     public CustomerBrokerSaleManager(
-        final CustomerBrokerContractSaleDao customerBrokerContractSaleDao,
-        final CustomerBrokerContractSalePluginRoot pluginRoot
-    ){
+            final CustomerBrokerContractSaleDao customerBrokerContractSaleDao,
+            final CustomerBrokerContractSalePluginRoot pluginRoot
+    ) {
         this.customerBrokerContractSaleDao = customerBrokerContractSaleDao;
         this.pluginRoot = pluginRoot;
     }
 
     @Override
     public Collection<CustomerBrokerContractSale> getAllCustomerBrokerContractSale() throws CantGetListCustomerBrokerContractSaleException {
-        try{
+        try {
             return this.customerBrokerContractSaleDao.getAllCustomerBrokerContractSale();
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -42,7 +42,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
 
     @Override
     public CustomerBrokerContractSale getCustomerBrokerContractSaleForContractId(String contractId) throws CantGetListCustomerBrokerContractSaleException {
-        try{
+        try {
             return this.customerBrokerContractSaleDao.getCustomerBrokerSaleContractForcontractID(contractId);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -52,7 +52,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
 
     @Override
     public Collection<CustomerBrokerContractSale> getCustomerBrokerContractSaleForStatus(ContractStatus status) throws CantGetListCustomerBrokerContractSaleException {
-        try{
+        try {
             return this.customerBrokerContractSaleDao.getCustomerBrokerContractSaleForStatus(status);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -62,7 +62,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
 
     @Override
     public ListsForStatusSale getCustomerBrokerContractHistory() throws CantGetListCustomerBrokerContractSaleException {
-        try{
+        try {
             return this.customerBrokerContractSaleDao.getCustomerBrokerContractHistory();
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -72,7 +72,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
 
     @Override
     public CustomerBrokerContractSale createCustomerBrokerContractSale(CustomerBrokerContractSale contract) throws CantCreateCustomerBrokerContractSaleException {
-        try{
+        try {
             return this.customerBrokerContractSaleDao.createCustomerBrokerSaleContract(contract);
         } catch (CantCreateCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -82,7 +82,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
 
     @Override
     public void updateStatusCustomerBrokerSaleContractStatus(String contractId, ContractStatus status) throws CantUpdateCustomerBrokerContractSaleException {
-        try{
+        try {
             this.customerBrokerContractSaleDao.updateStatusCustomerBrokerSaleContract(contractId, status);
         } catch (CantUpdateCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -92,7 +92,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
 
     @Override
     public void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractSaleException {
-        try{
+        try {
             this.customerBrokerContractSaleDao.updateContractNearExpirationDatetime(contractId, status);
         } catch (CantUpdateCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -101,8 +101,8 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
     }
 
     @Override
-    public void cancelContract(String contractId, String reason)  throws CantUpdateCustomerBrokerContractSaleException {
-        try{
+    public void cancelContract(String contractId, String reason) throws CantUpdateCustomerBrokerContractSaleException {
+        try {
             this.customerBrokerContractSaleDao.cancelContract(contractId, reason);
         } catch (CantUpdateCustomerBrokerContractSaleException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

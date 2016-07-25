@@ -18,7 +18,6 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  *
  * @author lnacosta
  * @version 1.0.0
- *
  */
 
 public class ConnectionsViewHolder extends FermatViewHolder {
@@ -51,17 +50,18 @@ public class ConnectionsViewHolder extends FermatViewHolder {
             brokerName.setTextColor(Color.RED);
         else if (data.getProfileStatus() != null && data.getProfileStatus().getCode().equalsIgnoreCase("ON"))
             brokerName.setTextColor(Color.GREEN);
-        else if(data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
+        else if (data.getProfileStatus() == null || data.getProfileStatus().getCode().equalsIgnoreCase("UN"))
             brokerName.setTextColor(Color.parseColor("#4d4d4d"));//BLACK);//res.getColor(R.color.color_black_light));
 
         String countryAddress;
         if (data.getCountry().equals("null") || data.getCountry().equals("") || data.getCountry().equals("country"))
             countryAddress = "--";
-        else countryAddress =  data.getCountry();
+
+        else countryAddress = data.getCountry();
         String placeAddress;
         if (data.getPlace().equals("null") || data.getPlace().equals("") || data.getPlace().equals("country"))
             placeAddress = "--";
-        else placeAddress =  data.getPlace();
+        else placeAddress = data.getPlace();
         brokerLocation.setText(String.format("%s / %s", placeAddress, countryAddress));
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
 

@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.AbstractAgent;
-import com.bitdubai.fermat_api.Agent;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -12,7 +10,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantAgentExtraDataUpdateException;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +31,7 @@ public class CryptoBrokerExtraDataUpdateAgent extends AbstractAgent {
             final CryptoCustomerActorDao dao,
             final CryptoCustomerActorPluginRoot pluginRoot,
             final PluginVersionReference pluginVersionReference
-    ){
+    ) {
         super(sleepTime, timeUnit);
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.dao = dao;
@@ -57,14 +54,14 @@ public class CryptoBrokerExtraDataUpdateAgent extends AbstractAgent {
     protected void onErrorOccur() {
         pluginRoot.reportError(
                 UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                new Exception(this.getClass().getName()+" Error"));
+                new Exception(new StringBuilder().append(this.getClass().getName()).append(" Error").toString()));
     }
 
     void doTheMainTask() {
         try {
             Collection<ActorExtraData> actors = this.dao.getAllActorExtraData();
-            for(ActorExtraData actor : actors){
-                if( actor.getQuotes() != null ){
+            for (ActorExtraData actor : actors) {
+                if (actor.getQuotes() != null) {
                     this.cryptoBrokerANSManager.requestQuotes(actor.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actor.getBrokerIdentity().getPublicKey());
                 }
             }

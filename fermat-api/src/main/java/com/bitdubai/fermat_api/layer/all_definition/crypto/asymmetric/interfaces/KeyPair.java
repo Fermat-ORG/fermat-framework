@@ -8,5 +8,6 @@ import java.io.Serializable;
  */
 public interface KeyPair extends Serializable {
     String getPublicKey();
+
     String getPrivateKey();
 }

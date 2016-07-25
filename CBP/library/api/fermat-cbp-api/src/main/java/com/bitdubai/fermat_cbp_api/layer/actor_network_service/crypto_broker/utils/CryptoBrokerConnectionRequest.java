@@ -5,49 +5,48 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest</code>
  * represents a crypto broker connection new, it can be a connection request or a disconnection.
- * <p>
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 17/11/2015.
  */
 public final class CryptoBrokerConnectionRequest {
 
-    private final UUID                    requestId           ;
-    private final String                  senderPublicKey     ;
-    private final Actors                  senderActorType     ;
-    private final String                  senderAlias         ;
-    private final byte[]                  senderImage         ;
-    private final String                  destinationPublicKey;
-    private final RequestType             requestType         ;
-    private final ProtocolState           protocolState       ;
-    private final ConnectionRequestAction requestAction       ;
-    private final long                    sentTime            ;
+    private final UUID requestId;
+    private final String senderPublicKey;
+    private final Actors senderActorType;
+    private final String senderAlias;
+    private final byte[] senderImage;
+    private final String destinationPublicKey;
+    private final RequestType requestType;
+    private final ProtocolState protocolState;
+    private final ConnectionRequestAction requestAction;
+    private final long sentTime;
 
-    public CryptoBrokerConnectionRequest(final UUID                    requestId           ,
-                                         final String                  senderPublicKey     ,
-                                         final Actors                  senderActorType     ,
-                                         final String                  senderAlias         ,
-                                         final byte[]                  senderImage         ,
-                                         final String                  destinationPublicKey,
-                                         final RequestType             requestType         ,
-                                         final ProtocolState           protocolState       ,
-                                         final ConnectionRequestAction requestAction       ,
-                                         final long                    sentTime            ) {
+    public CryptoBrokerConnectionRequest(final UUID requestId,
+                                         final String senderPublicKey,
+                                         final Actors senderActorType,
+                                         final String senderAlias,
+                                         final byte[] senderImage,
+                                         final String destinationPublicKey,
+                                         final RequestType requestType,
+                                         final ProtocolState protocolState,
+                                         final ConnectionRequestAction requestAction,
+                                         final long sentTime) {
 
-        this.requestId            = requestId           ;
-        this.senderPublicKey      = senderPublicKey     ;
-        this.senderActorType      = senderActorType     ;
-        this.senderAlias          = senderAlias         ;
-        this.senderImage          = senderImage         ;
+        this.requestId = requestId;
+        this.senderPublicKey = senderPublicKey;
+        this.senderActorType = senderActorType;
+        this.senderAlias = senderAlias;
+        this.senderImage = senderImage;
         this.destinationPublicKey = destinationPublicKey;
-        this.requestType          = requestType         ;
-        this.protocolState        = protocolState       ;
-        this.requestAction        = requestAction       ;
-        this.sentTime             = sentTime            ;
+        this.requestType = requestType;
+        this.protocolState = protocolState;
+        this.requestAction = requestAction;
+        this.sentTime = sentTime;
     }
 
     /**
@@ -122,17 +121,21 @@ public final class CryptoBrokerConnectionRequest {
 
     @Override
     public String toString() {
-        return "CryptoBrokerConnectionRequest{" +
-                "requestId=" + requestId +
-                ", senderPublicKey='" + senderPublicKey + '\'' +
-                ", senderActorType=" + senderActorType +
-                ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + (senderImage != null )+
-                ", destinationPublicKey='" + destinationPublicKey + '\'' +
-                ", requestType=" + requestType +
-                ", protocolState=" + protocolState +
-                ", requestAction=" + requestAction +
-                ", sentTime=" + sentTime +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerConnectionRequest{")
+                .append("requestId=").append(requestId)
+                .append(", senderPublicKey='").append(senderPublicKey)
+                .append('\'')
+                .append(", senderActorType=").append(senderActorType)
+                .append(", senderAlias='").append(senderAlias)
+                .append('\'')
+                .append(", senderImage=").append(senderImage != null)
+                .append(", destinationPublicKey='").append(destinationPublicKey)
+                .append('\'')
+                .append(", requestType=").append(requestType)
+                .append(", protocolState=").append(protocolState)
+                .append(", requestAction=").append(requestAction)
+                .append(", sentTime=").append(sentTime)
+                .append('}').toString();
     }
 }

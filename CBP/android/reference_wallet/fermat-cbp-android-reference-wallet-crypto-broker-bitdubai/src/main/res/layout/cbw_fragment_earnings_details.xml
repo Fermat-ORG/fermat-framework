@@ -21,6 +21,8 @@
             android:paddingBottom="8dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:paddingTop="8dp"
             android:text="@string/cbw_current_earings_title"
             android:textColor="@color/cbw_second_line_item"
@@ -44,9 +46,11 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/cbw_earning_separator"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginEnd="16dp"
-            tools:text="Today"
-            android:textColor="#CCC"/>
+            android:layout_marginRight="16dp"
+            android:textColor="#CCC"
+            tools:text="Today"/>
 
         <View
             android:id="@+id/cbw_earning_separator"
@@ -78,10 +82,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_below="@+id/cbw_earning_separator"
             android:layout_marginEnd="16dp"
-            tools:text="Last Month"
-            android:textColor="#CCC"/>
+            android:layout_marginRight="16dp"
+            android:textColor="#CCC"
+            tools:text="Last Month"/>
 
     </RelativeLayout>
 
@@ -90,8 +96,10 @@
         android:layout_height="35dp"
         android:background="#d9d9d9"
         android:orientation="horizontal"
+        android:paddingEnd="16dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:paddingStart="16dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_earning_time_field"
@@ -107,8 +115,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:text="@string/cbw_earnings_title"/>
+            android:text="@string/cbw_earnings_title"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -116,8 +124,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:paddingEnd="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
+        android:paddingStart="16dp"
         tools:listitem="@layout/cbw_earnings_list_item"/>
 
 </LinearLayout>

@@ -20,7 +20,7 @@ public class BrokerSubmitOnlinePaymentPluginSubsystem extends AbstractPluginSubs
         try {
             registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+            System.err.println(new StringBuilder().append("Exception: ").append(e.getMessage()).toString());
             throw new CantStartSubsystemException(e, null, null);
         }
     }

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetMoneyTypeTest {
 
     @Test
-    public void getCurrencyType(){
+    public void getCurrencyType() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class);
         when(cryptoBrokerWalletAssociatedSetting.getMoneyType()).thenReturn(MoneyType.CRYPTO);
         assertThat(cryptoBrokerWalletAssociatedSetting.getMoneyType()).isNotNull();

@@ -25,7 +25,7 @@ import java.security.MessageDigest;
  * The Platform File System is the implementation of the file system that is handled to external plugins not requires the plug in to identify itself.
  */
 
-public class AndroidPlatformFileSystem implements PlatformFileSystem  {
+public class AndroidPlatformFileSystem implements PlatformFileSystem {
 
     private static final String CHARSET_NAME = "UTF-8";
     private static final String DIGEST_ALGORITHM = "SHA-256";
@@ -42,103 +42,102 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem  {
 
 
     @Override
-    public final PlatformTextFile getFile(final String       directoryName,
-                                          final String       fileName     ,
-                                          final FilePrivacy  privacyLevel ,
-                                          final FileLifeSpan lifeSpan     ) throws FileNotFoundException   ,
+    public final PlatformTextFile getFile(final String directoryName,
+                                          final String fileName,
+                                          final FilePrivacy privacyLevel,
+                                          final FileLifeSpan lifeSpan) throws FileNotFoundException,
             CantCreateFileException {
 
         try {
 
             final AndroidPlatformTextFile newFile = new AndroidPlatformTextFile(
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
             newFile.loadFromMedia();
             return newFile;
-        }
-        catch (CantLoadFileException exception){
+        } catch (CantLoadFileException exception) {
 
             throw new FileNotFoundException(exception, null, "Check the cause of this error");
-        } catch(Exception e){
+        } catch (Exception e) {
 
-            throw new CantCreateFileException(e,"", "Unhandled error.");
+            throw new CantCreateFileException(e, "", "Unhandled error.");
         }
 
     }
 
     @Override
-    public final PlatformTextFile createFile(final String       directoryName,
-                                             final String       fileName     ,
-                                             final FilePrivacy  privacyLevel ,
-                                             final FileLifeSpan lifeSpan     ) throws  CantCreateFileException {
+    public final PlatformTextFile createFile(final String directoryName,
+                                             final String fileName,
+                                             final FilePrivacy privacyLevel,
+                                             final FileLifeSpan lifeSpan) throws CantCreateFileException {
 
         try {
 
             return new AndroidPlatformTextFile(
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
-        } catch(Exception e){
-
-            throw new CantCreateFileException(e,"", "Unhandled error.");
-        }
-    }
-
-    @Override
-    public final PlatformBinaryFile getBinaryFile(final String       directoryName,
-                                                  final String       fileName     ,
-                                                  final FilePrivacy  privacyLevel ,
-                                                  final FileLifeSpan lifeSpan     ) throws FileNotFoundException   ,
-            CantCreateFileException {
-
-        try {
-
-            final AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(
-                    context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
-                    lifeSpan
-            );
-
-            newFile.loadFromMedia();
-            return newFile;
-
-        } catch (CantLoadFileException e){
-
-            throw new FileNotFoundException(e, "", "Check the cause");
-        }catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
     }
 
     @Override
-    public final PlatformBinaryFile createBinaryFile(final String       directoryName,
-                                                     final String       fileName     ,
-                                                     final FilePrivacy  privacyLevel ,
-                                                     final FileLifeSpan lifeSpan     ) throws CantCreateFileException {
+    public final PlatformBinaryFile getBinaryFile(final String directoryName,
+                                                  final String fileName,
+                                                  final FilePrivacy privacyLevel,
+                                                  final FileLifeSpan lifeSpan) throws FileNotFoundException,
+            CantCreateFileException {
+
+        try {
+
+            final AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(
+                    context.getFilesDir().getPath(),
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
+                    lifeSpan
+            );
+
+            newFile.loadFromMedia();
+            return newFile;
+
+        } catch (CantLoadFileException e) {
+
+            throw new FileNotFoundException(e, "", "Check the cause");
+        } catch (Exception e) {
+
+            throw new CantCreateFileException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public final PlatformBinaryFile createBinaryFile(final String directoryName,
+                                                     final String fileName,
+                                                     final FilePrivacy privacyLevel,
+                                                     final FileLifeSpan lifeSpan) throws CantCreateFileException {
 
         try {
 
             return new AndroidPlatformBinaryFile(
                     context.getFilesDir().getPath(),
-                    directoryName                  ,
-                    hashFileName(fileName)         ,
-                    privacyLevel                   ,
+                    directoryName,
+                    hashFileName(fileName),
+                    privacyLevel,
                     lifeSpan
             );
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateFileException(e, "", "Unhandled error.");
         }
@@ -151,11 +150,11 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem  {
             final MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
             md.update(fileName.getBytes(Charset.forName(CHARSET_NAME)));
             byte[] digest = md.digest();
-            byte[] encoded = Base64.encode(digest,1);
+            byte[] encoded = Base64.encode(digest, 1);
             final String encryptedString = new String(encoded, CHARSET_NAME);
-            return encryptedString.replace("/","");
+            return encryptedString.replace("/", "");
 
-        } catch(Exception e){
+        } catch (Exception e) {
 
             throw new CantHashFileNameException(e, "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }

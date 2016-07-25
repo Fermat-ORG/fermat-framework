@@ -75,71 +75,73 @@ public class CustomerBrokerNewAgent implements
         DealsWithLogger,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        DealsWithPluginIdentity{
+        DealsWithPluginIdentity {
 
-    private Database                                            database;
+    private Database database;
 
-    private Thread                                              agentThread;
+    private Thread agentThread;
 
-    private LogManager                                          logManager;
+    private LogManager logManager;
 
-    private EventManager                                        eventManager;
-    
-    private NegotiationTransactionCustomerBrokerNewPluginRoot   pluginRoot;
+    private EventManager eventManager;
 
-    private PluginDatabaseSystem                                pluginDatabaseSystem;
+    private NegotiationTransactionCustomerBrokerNewPluginRoot pluginRoot;
 
-    private UUID                                                pluginId;
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    private UUID pluginId;
 
     /*Represent the Network Service*/
-    private NegotiationTransmissionManager                      negotiationTransmissionManager;
+    private NegotiationTransmissionManager negotiationTransmissionManager;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation                   customerBrokerPurchaseNegotiation;
+    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager                customerBrokerSaleNegotiationManager;
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /*Represent the Monitor Agent*/
-    private MonitorAgentTransaction                             monitorAgentTransaction;
+    private MonitorAgentTransaction monitorAgentTransaction;
 
-    /** Let me send a fire a broadcast to show a notification or update a view*/
-    private Broadcaster                                 broadcaster;
+    /**
+     * Let me send a fire a broadcast to show a notification or update a view
+     */
+    private Broadcaster broadcaster;
 
     /*Represent Plugin Version*/
-    private PluginVersionReference                      pluginVersionReference;
+    private PluginVersionReference pluginVersionReference;
 
 
     public CustomerBrokerNewAgent(
-            PluginDatabaseSystem                                pluginDatabaseSystem,
-            LogManager                                          logManager,
-            NegotiationTransactionCustomerBrokerNewPluginRoot   pluginRoot,
-            EventManager                                        eventManager,
-            UUID                                                pluginId,
-            NegotiationTransmissionManager                      negotiationTransmissionManager,
-            CustomerBrokerPurchaseNegotiation                   customerBrokerPurchaseNegotiation,
-            CustomerBrokerSaleNegotiation                       customerBrokerSaleNegotiation,
-            CustomerBrokerPurchaseNegotiationManager            customerBrokerPurchaseNegotiationManager,
-            CustomerBrokerSaleNegotiationManager                customerBrokerSaleNegotiationManager,
-            Broadcaster                                         broadcaster
-    ){
-        this.pluginDatabaseSystem                       = pluginDatabaseSystem;
-        this.logManager                                 = logManager;
-        this.pluginRoot                               = pluginRoot;
-        this.eventManager                               = eventManager;
-        this.pluginId                                   = pluginId;
-        this.negotiationTransmissionManager             = negotiationTransmissionManager;
-        this.customerBrokerPurchaseNegotiation          = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
-        this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
-        this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
-        this.broadcaster                                = broadcaster;
+            PluginDatabaseSystem pluginDatabaseSystem,
+            LogManager logManager,
+            NegotiationTransactionCustomerBrokerNewPluginRoot pluginRoot,
+            EventManager eventManager,
+            UUID pluginId,
+            NegotiationTransmissionManager negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
+            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            Broadcaster broadcaster
+    ) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.logManager = logManager;
+        this.pluginRoot = pluginRoot;
+        this.eventManager = eventManager;
+        this.pluginId = pluginId;
+        this.negotiationTransmissionManager = negotiationTransmissionManager;
+        this.customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiation;
+        this.customerBrokerSaleNegotiation = customerBrokerSaleNegotiation;
+        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+        this.broadcaster = broadcaster;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -165,65 +167,71 @@ public class CustomerBrokerNewAgent implements
     }
 
     @Override
-    public void stop() { this.agentThread.interrupt(); }
+    public void stop() {
+        this.agentThread.interrupt();
+    }
 
     /*IMPLEMENTATION DealsWithEvents*/
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 
     /*IMPLEMENTATION DealsWithLogger*/
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
+        this.logManager = logManager;
     }
 
     /*IMPLEMENTATION DealsWithPluginDatabaseSystem*/
     @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { this.pluginDatabaseSystem=pluginDatabaseSystem; }
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
 
     /*IMPLEMENTATION DealsWithPluginIdentity*/
     @Override
     public void setPluginId(UUID pluginId) {
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     /*INNER CLASSES*/
     private class MonitorAgentTransaction implements DealsWithPluginDatabaseSystem, Runnable {
 
-        private CustomerBrokerNewSaleNegotiationTransaction     customerBrokerNewSaleNegotiationTransaction;
+        private CustomerBrokerNewSaleNegotiationTransaction customerBrokerNewSaleNegotiationTransaction;
 
-        private volatile boolean                            agentRunning;
+        private volatile boolean agentRunning;
 
-        PluginDatabaseSystem                                pluginDatabaseSystem;
+        PluginDatabaseSystem pluginDatabaseSystem;
 
-        CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
+        CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao;
 
-        boolean                                             threadWorking;
+        boolean threadWorking;
 
-        public final int                                    SLEEP_TIME = 5000;
+        public final int SLEEP_TIME = 5000;
 
-        int                                                 iterationNumber = 0;
+        int iterationNumber = 0;
 
-        int                                                 iterationConfirmSend = 0;
+        int iterationConfirmSend = 0;
 
-        Map<UUID,Integer>                                   transactionSend     = new HashMap<>();
+        Map<UUID, Integer> transactionSend = new HashMap<>();
 
         //public MonitorAgentTransaction() { startAgent(); }
 
         /*IMPLEMENTATION DealsWithPluginIdentity*/
         @Override
-        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { this.pluginDatabaseSystem=pluginDatabaseSystem; }
+        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+            this.pluginDatabaseSystem = pluginDatabaseSystem;
+        }
 
         /*IMPLEMENTATION Runnable*/
         @Override
         public void run() {
 
-            threadWorking=true;
-            logManager.log(NegotiationTransactionCustomerBrokerNewPluginRoot.getLogLevelByClass(this.getClass().getName()),"Customer Broker New Monitor Agent: running...", null, null);
+            threadWorking = true;
+            logManager.log(NegotiationTransactionCustomerBrokerNewPluginRoot.getLogLevelByClass(this.getClass().getName()), "Customer Broker New Monitor Agent: running...", null, null);
 
-            while(threadWorking){
+            while (threadWorking) {
                 //Increase the iteration counter
                 iterationNumber++;
                 iterationConfirmSend++;
@@ -238,7 +246,7 @@ public class CustomerBrokerNewAgent implements
                 //now I will check if there are pending transactions to raise the event
                 try {
 
-                    logManager.log(NegotiationTransactionCustomerBrokerNewPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(NegotiationTransactionCustomerBrokerNewPluginRoot.getLogLevelByClass(this.getClass().getName()), new StringBuilder().append("Iteration number ").append(iterationNumber).toString(), null, null);
                     doTheMainTask();
 
                 } catch (CantSendCustomerBrokerNewNegotiationTransactionException | CantSendCustomerBrokerNewConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
@@ -284,36 +292,41 @@ public class CustomerBrokerNewAgent implements
 
         }*/
 
-        public void stopAgent() { agentRunning = false; }
+        public void stopAgent() {
+            agentRunning = false;
+        }
 
-        public void startAgent() { agentRunning = true; }
+        public void startAgent() {
+            agentRunning = true;
+        }
 
-        public boolean isAgentRunning() { return agentRunning; }
+        public boolean isAgentRunning() {
+            return agentRunning;
+        }
         /*END INNER CLASS PUBLIC METHOD*/
 
         /*INNER CLASS PRIVATE METHOD*/
         private void doTheMainTask() throws
                 CantSendCustomerBrokerNewNegotiationTransactionException,
                 CantSendCustomerBrokerNewConfirmationNegotiationTransactionException,
-                CantUpdateRecordException
-        {
-            try{
+                CantUpdateRecordException {
+            try {
 
 //                customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId);
 //                customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
                 customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
-                String                              negotiationXML;
-                NegotiationType                     negotiationType;
-                UUID                                transactionId;
-                List<CustomerBrokerNew>             negotiationPendingToSubmitList;
-                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
-                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
-                int                                 timeConfirmSend     = 20;
+                String negotiationXML;
+                NegotiationType negotiationType;
+                UUID transactionId;
+                List<CustomerBrokerNew> negotiationPendingToSubmitList;
+                CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
+                int timeConfirmSend = 20;
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
-                negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
-                if(!negotiationPendingToSubmitList.isEmpty()){
+                negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
+                if (!negotiationPendingToSubmitList.isEmpty()) {
                     for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
                         System.out.print("\n\n**** 5) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND ****\n");
@@ -321,10 +334,10 @@ public class CustomerBrokerNewAgent implements
                         negotiationType = negotiationTransaction.getNegotiationType();
                         transactionId = negotiationTransaction.getTransactionId();
 
-                        switch (negotiationType){
+                        switch (negotiationType) {
                             case PURCHASE:
-                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                                System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
+                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                System.out.print(new StringBuilder().append("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): ").append(purchaseNegotiation.getNegotiationId()).append(" ****\n").toString());
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 break;
@@ -340,19 +353,19 @@ public class CustomerBrokerNewAgent implements
 
                 //SEND CONFIRM PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_CONFIRMATION)
                 negotiationPendingToSubmitList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmtNegotiation();
-                if(!negotiationPendingToSubmitList.isEmpty()){
+                if (!negotiationPendingToSubmitList.isEmpty()) {
                     for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
                         negotiationXML = negotiationTransaction.getNegotiationXML();
                         negotiationType = negotiationTransaction.getNegotiationType();
                         transactionId = negotiationTransaction.getTransactionId();
 
-                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + transactionId + " ****\n");
+                        System.out.print(new StringBuilder().append("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: ").append(transactionId).append(" ****\n").toString());
 
-                        switch (negotiationType){
+                        switch (negotiationType) {
                             case SALE:
-                                saleNegotiation = (CustomerBrokerSaleNegotiation)XMLParser.parseXML(negotiationXML,saleNegotiation);
-                                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + transactionId + " ****\n");
+                                saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+                                System.out.print(new StringBuilder().append("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): ").append(transactionId).append(" ****\n").toString());
                                 negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 break;
                         }
@@ -369,13 +382,13 @@ public class CustomerBrokerNewAgent implements
                 }
 
                 //PROCES PENDING EVENT
-                List<UUID> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
-                for(UUID eventId : pendingEventsIdList){
+                List<UUID> pendingEventsIdList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
+                for (UUID eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
 
                 //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
-                if(timeConfirmSend == iterationConfirmSend){
+                if (timeConfirmSend == iterationConfirmSend) {
 
                     CustomerBrokerNewForwardTransaction forwardTransaction = new CustomerBrokerNewForwardTransaction(
                             customerBrokerNewNegotiationTransactionDatabaseDao,
@@ -391,22 +404,22 @@ public class CustomerBrokerNewAgent implements
 
             } catch (CantGetNegotiationTransactionListException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot get the Negotiation list from database");
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Negotiation", "Cannot get the Negotiation list from database");
             } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot Update State the Negotiation from database");
+                throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "Sending Negotiation", "Cannot Update State the Negotiation from database");
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,e,"Sending Negotiation","Unexpected result in database");
+                throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "Sending Negotiation", "Unexpected result in database");
             } catch (CantSendNegotiationToCryptoBrokerException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Sale Negotiation","Error in Negotiation Transmission Network Service");
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Sale Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantSendConfirmToCryptoCustomerException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerNewConfirmationNegotiationTransactionException(CantSendCustomerBrokerNewConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (Exception e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
+                throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Sending Negotiation", "UNKNOWN FAILURE.");
             }
         }
 
@@ -415,14 +428,14 @@ public class CustomerBrokerNewAgent implements
 
             try {
 
-                UUID                            transactionId;
-                UUID                            transmissionId;
-                NegotiationTransmission         negotiationTransmission;
-                NegotiationTransaction          negotiationTransaction;
-                NegotiationType                 negotiationType;
-                String                          negotiationXML;
-                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
-                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
+                UUID transactionId;
+                UUID transmissionId;
+                NegotiationTransmission negotiationTransmission;
+                NegotiationTransaction negotiationTransaction;
+                NegotiationType negotiationType;
+                String negotiationXML;
+                CustomerBrokerPurchaseNegotiation purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation saleNegotiation = new NegotiationSaleRecord();
 
                 String eventTypeCode = customerBrokerNewNegotiationTransactionDatabaseDao.getEventType(eventId);
                 String eventStatus = customerBrokerNewNegotiationTransactionDatabaseDao.getEventStatus(eventId);
@@ -434,7 +447,7 @@ public class CustomerBrokerNewAgent implements
 
                         negotiationTransmission = record.getInformation();
 
-                        if(negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode())){
+                        if (negotiationTransmission.getNegotiationTransactionType().getCode().equals(NegotiationTransactionType.CUSTOMER_BROKER_NEW.getCode())) {
 
                             negotiationXML = negotiationTransmission.getNegotiationXML();
                             transmissionId = negotiationTransmission.getTransmissionId();
@@ -454,7 +467,7 @@ public class CustomerBrokerNewAgent implements
                                             System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
                                             saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
 
-                                            if(negotiationTransaction == null) {
+                                            if (negotiationTransaction == null) {
 
                                                 System.out.print("\n**** 21.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION NEW ****\n");
                                                 customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
@@ -496,7 +509,7 @@ public class CustomerBrokerNewAgent implements
                                     switch (negotiationType) {
                                         case PURCHASE:
 
-                                            if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
+                                            if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
 
                                                 //CREATE CONFIRM NEGOTIATION
                                                 System.out.print("\n**** 25.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
@@ -539,7 +552,7 @@ public class CustomerBrokerNewAgent implements
             } catch (CantConfirmTransactionException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
-            } catch (CantUpdateRecordException e){
+            } catch (CantUpdateRecordException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             } catch (Exception e) {

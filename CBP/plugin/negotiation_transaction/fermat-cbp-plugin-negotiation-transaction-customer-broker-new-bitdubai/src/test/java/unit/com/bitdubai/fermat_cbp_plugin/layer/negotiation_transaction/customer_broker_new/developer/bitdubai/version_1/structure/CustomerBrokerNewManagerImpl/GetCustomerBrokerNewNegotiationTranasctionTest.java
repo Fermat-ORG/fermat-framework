@@ -23,7 +23,7 @@ public class GetCustomerBrokerNewNegotiationTranasctionTest {
     private UUID transactionId = UUID.randomUUID();
 
     @Test
-    public void getCustomerBrokerNewNegotiationTranasction() throws Exception{
+    public void getCustomerBrokerNewNegotiationTranasction() throws Exception {
 
         CustomerBrokerNew customerBrokerNew = null;
 

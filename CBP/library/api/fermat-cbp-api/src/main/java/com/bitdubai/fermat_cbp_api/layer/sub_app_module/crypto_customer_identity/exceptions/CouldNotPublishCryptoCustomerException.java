@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CouldNotPublishCryptoCustomerException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "Could Not Publish Crypto Customer eXCEPTION";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

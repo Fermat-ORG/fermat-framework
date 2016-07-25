@@ -17,7 +17,7 @@ public interface NavigationViewPainter {
 
     FermatAdapter addNavigationViewAdapter();
 
-    ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater,ViewGroup base);
+    ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base);
 
     Bitmap addBodyBackground();
 

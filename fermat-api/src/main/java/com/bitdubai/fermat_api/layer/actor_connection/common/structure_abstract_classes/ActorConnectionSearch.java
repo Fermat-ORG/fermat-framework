@@ -26,15 +26,15 @@ import static com.bitdubai.fermat_api.layer.actor_connection.common.database_com
  */
 public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T extends ActorConnection<Z>> {
 
-    protected final Z                        actorIdentity;
-    protected final ActorConnectionDao<Z, T> dao          ;
-    protected       DatabaseTable            databaseTable;
+    protected final Z actorIdentity;
+    protected final ActorConnectionDao<Z, T> dao;
+    protected DatabaseTable databaseTable;
 
-    public ActorConnectionSearch(final Z                        actorIdentity,
-                                 final ActorConnectionDao<Z, T> dao          ) {
+    public ActorConnectionSearch(final Z actorIdentity,
+                                 final ActorConnectionDao<Z, T> dao) {
 
         this.actorIdentity = actorIdentity;
-        this.dao           = dao;
+        this.dao = dao;
 
         this.resetFilters();
     }
@@ -67,7 +67,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      *
      * @param actorType of the actor.
      */
-    public final void addActorType(final Actors actorType){
+    public final void addActorType(final Actors actorType) {
 
         databaseTable.addFermatEnumFilter(
                 ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME,
@@ -96,8 +96,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      * with the parameters set.
      *
      * @return a list of crypto brokers with their information.
-     *
-     * @throws CantListActorConnectionsException  if something goes wrong.
+     * @throws CantListActorConnectionsException if something goes wrong.
      */
     public List<T> getResult() throws CantListActorConnectionsException {
 
@@ -110,14 +109,12 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      * We'll receive at most the quantity of @max set. If null by default the max will be 100.
      * We'll receive the results since @offset set. If null by default the offset will be 0.
      *
-     * @param max     maximum quantity of results expected.
-     * @param offset  position to start bringing the results.
-     *
+     * @param max    maximum quantity of results expected.
+     * @param offset position to start bringing the results.
      * @return a list of crypto brokers with their information.
-     *
-     * @throws CantListActorConnectionsException  if something goes wrong.
+     * @throws CantListActorConnectionsException if something goes wrong.
      */
-    public List<T> getResult(final Integer max   ,
+    public List<T> getResult(final Integer max,
                              final Integer offset) throws CantListActorConnectionsException {
 
         databaseTable.setFilterTop(max.toString());
