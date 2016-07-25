@@ -18,6 +18,7 @@ public class FermatVaultPluginSubsystem extends AbstractPluginSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
+<<<<<<< HEAD
             try {
                 registerDeveloperMati("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.DeveloperBitDubai");
             }catch (Exception e){
@@ -30,6 +31,18 @@ public class FermatVaultPluginSubsystem extends AbstractPluginSubsystem {
                 System.err.println("##############################################\n");
             }
         } catch (Exception e) {
+=======
+            registerDeveloperMati("com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.DeveloperBitDubai");
+        }catch (Exception e){
+            System.err.println("##############################################\n");
+            System.err.println("##############################################\n");
+            System.err.println("Fermat network not found");
+            System.err.println("Search type:"+AbstractPluginDeveloper.class.getName());
+            e.printStackTrace();
+            System.err.println("##############################################\n");
+            System.err.println("##############################################\n");
+
+>>>>>>> c8fb512529ca9f6578dd2ca3467315bfbb51c181
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
         }
