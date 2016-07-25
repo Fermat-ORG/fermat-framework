@@ -24,6 +24,7 @@ public class LossProtectedWalletSettings implements WalletSettings,Serializable 
     private boolean notificationEnabled;
     private boolean lossProtectedEnabled;
     private UUID exchangeProvider;
+    private String feedLeel;
 
     public LossProtectedWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -107,5 +108,11 @@ public class LossProtectedWalletSettings implements WalletSettings,Serializable 
         this.lossProtectedEnabled = lossProtectedEnabled;
     }
 
+    public String getFeedLevel() {
+        return this.feedLeel;
+    }
 
+    public void setFeedLevel(String feedLeel) {
+        this.feedLeel = feedLeel;
+    }
 }

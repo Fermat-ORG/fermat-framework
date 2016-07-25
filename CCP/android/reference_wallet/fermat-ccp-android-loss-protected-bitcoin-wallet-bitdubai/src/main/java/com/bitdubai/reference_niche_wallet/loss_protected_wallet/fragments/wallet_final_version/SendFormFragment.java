@@ -40,6 +40,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -73,6 +74,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantFindLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
@@ -83,12 +85,14 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConfirmSendDialog_feeCase;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_send_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
+
 
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
@@ -129,7 +133,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private BitcoinConverter bitcoinConverter;
     private TextView txt_balance;
     private String feeLevel = "";
-
+    private String feeOrigin = "";
     private FermatWorker fermatWorker;
 
     /**
@@ -164,6 +168,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private RadioButton fee_low_btn;
     private RadioButton fee_medium_btn;
     private RadioButton fee_high_btn;
+    private long Balance = 0;
 
     private BitcoinWalletSettings bitcoinWalletSettings = null;
 
@@ -190,6 +195,18 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
                 lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
+
+
+                if (lossProtectedWalletSettings.getFeedLevel() == null){
+                    lossProtectedWalletSettings.setFeedLevel(BitcoinFee.NORMAL.toString());
+                    feeLevel = lossProtectedWalletSettings.getFeedLevel();
+                }
+
+
+                else
+                    feeLevel = lossProtectedWalletSettings.getFeedLevel();
+
+
             }
 
 
@@ -297,6 +314,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
     }
     private void setUpUI() {
+
+        try{
         contactName = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
@@ -356,149 +375,157 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                 bitcoinWalletSettings.setFeedLevel(feeLevel);
 
+
                 try {
-                    lossProtectedWalletManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                    lossProtectedWalletManager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
                 } catch (CantPersistSettingsException e) {
                     e.printStackTrace();
                 }
 
+
             }
         });
-                try {
-            long balance = 0;
-            balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
-            txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
+            txt_balance.setText(WalletUtils.formatBalanceString(Balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         } catch (CantGetLossProtectedBalanceException e) {
             e.printStackTrace();
         }
 
+        try {
 
-        List<String> list = new ArrayList<String>();
-        list.add("BTC");
-        list.add("Bits");
-        list.add("Satoshis");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.list_item_spinner, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
+            List<String> list = new ArrayList<String>();
+            list.add("BTC");
+            list.add("Bits");
+            list.add("Satoshis");
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                    R.layout.list_item_spinner, list);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(dataAdapter);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String text = "";
-                String txtType = txt_type.getText().toString();
-                String amount = editTextAmount.getText().toString();
-                String newAmount = "";
-                switch (position) {
-                    case 0:
-                        text = "[btc]";
-                        if (!amount.equals("") && amount != null) {
-                            if (txtType.equals("[bits]")) {
-                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = bitcoinConverter.getBTC(amount);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String text = "";
+                    String txtType = txt_type.getText().toString();
+                    String amount = editTextAmount.getText().toString();
+                    String newAmount = "";
+                    switch (position) {
+                        case 0:
+                            text = "[btc]";
+                            if (!amount.equals("") && amount != null) {
+                                if (txtType.equals("[bits]")) {
+                                    newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                                } else if (txtType.equals("[satoshis]")) {
+                                    newAmount = bitcoinConverter.getBTC(amount);
+                                } else {
+                                    newAmount = amount;
+                                }
                             } else {
                                 newAmount = amount;
                             }
-                        } else {
-                            newAmount = amount;
-                        }
 
 
-                        break;
-                    case 1:
-                        text = "[bits]";
-                        if (!amount.equals("") && amount != null) {
-                            if (txtType.equals("[btc]")) {
-                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = bitcoinConverter.getBits(amount);
+                            break;
+                        case 1:
+                            text = "[bits]";
+                            if (!amount.equals("") && amount != null) {
+                                if (txtType.equals("[btc]")) {
+                                    newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                                } else if (txtType.equals("[satoshis]")) {
+                                    newAmount = bitcoinConverter.getBits(amount);
+                                } else {
+                                    newAmount = amount;
+                                }
                             } else {
                                 newAmount = amount;
                             }
-                        } else {
-                            newAmount = amount;
-                        }
 
-                        break;
-                    case 2:
-                        text = "[satoshis]";
-                        if (!amount.equals("") && amount != null) {
-                            if (txtType.equals("[bits]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                            } else if (txtType.equals("[btc]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                            break;
+                        case 2:
+                            text = "[satoshis]";
+                            if (!amount.equals("") && amount != null) {
+                                if (txtType.equals("[bits]")) {
+                                    newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                } else if (txtType.equals("[btc]")) {
+                                    newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                } else {
+                                    newAmount = amount;
+                                }
                             } else {
                                 newAmount = amount;
                             }
-                        } else {
-                            newAmount = amount;
+                            break;
+                    }
+                    AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
+                    alphaAnimation.setDuration(300);
+                    final String finalText = text;
+                    if (newAmount.equals("0"))
+                        newAmount = "";
+
+                    final String finalAmount = newAmount;
+                    alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            txt_type.setText(finalText);
+                            editTextAmount.setText(finalAmount);
                         }
-                        break;
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    txt_type.startAnimation(alphaAnimation);
+
                 }
-                AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
-                alphaAnimation.setDuration(300);
-                final String finalText = text;
-                if (newAmount.equals("0"))
-                    newAmount = "";
 
-                final String finalAmount = newAmount;
-                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        txt_type.setText(finalText);
-                        editTextAmount.setText(finalAmount);
-                    }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                txt_type.startAnimation(alphaAnimation);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        spinnerArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinner.performClick();
-            }
-        });
-
+                }
+            });
+            spinnerArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    spinner.performClick();
+                }
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUpActions() {
+        try {
+            /**
+             * Listeners
+             */
 
-        /**
-         * Listeners
-         */
+            imageView_contact.setOnClickListener(this);
+            send_button.setOnClickListener(this);
+            rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
-        imageView_contact.setOnClickListener(this);
-        send_button.setOnClickListener(this);
-        rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
+            contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
-        contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    // in.hideSoftInputFromWindow(autoEditText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    //Commented line is for hide keyboard. Just make above code as comment and test your requirement
-                    //It will work for your need. I just putted that line for your understanding only
-                    //You can use own requirement here also.
+                public boolean onEditorAction(TextView v, int actionId,
+                                              KeyEvent event) {
+                    if (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                        InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        // in.hideSoftInputFromWindow(autoEditText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        //Commented line is for hide keyboard. Just make above code as comment and test your requirement
+                        //It will work for your need. I just putted that line for your understanding only
+                        //You can use own requirement here also.
 
                    /* if (!connectionDialogIsShow) {
                         ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appSession.getResourceProviderManager());
@@ -512,11 +539,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                         });
                         connectionDialogIsShow = true;
                     }*/
-                    return true;
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
        /* contactName.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -525,20 +552,20 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 keyboard.showSoftInput(contactName, 0);
             }
         }, 50);*/
-        contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                onFocus = hasFocus;
-                if (!onFocus) {
-                    if (walletContact == null) {
-                        contactName.setText("");
+            contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    onFocus = hasFocus;
+                    if (!onFocus) {
+                        if (walletContact == null) {
+                            contactName.setText("");
+                        }
                     }
                 }
-            }
-        });
-        /**
-         *  Amount observer
-         */
+            });
+            /**
+             *  Amount observer
+             */
         /*editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
@@ -556,13 +583,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         });
         */
 
-        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
+            editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
 
 
-        /**
-         * Selector
-         */
-        //send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
+            /**
+             * Selector
+             */
+            //send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void setUpUIData() {
@@ -755,30 +786,31 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     @Override
     public void onClick(View v) {
+        try {
+            int id = v.getId();
 
-        int id = v.getId();
-
-        if (id == R.id.scan_qr) {
-            IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
-            integrator.initiateScan();
-        } else if (id == R.id.send_button) {
-            InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
-                im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            if (id == R.id.scan_qr) {
+                IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
+                integrator.initiateScan();
+            } else if (id == R.id.send_button) {
+                InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
+                    im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                }
+                if (lossProtectedWalletContact != null) {
+                    sendCrypto();
+                } else
+                    Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+            } else if (id == R.id.imageView_contact) {
+                // if user press the profile image
+            } else if (id == R.id.btn_expand_send_form) {
+                Object[] objects = new Object[1];
+                objects[0] = walletContact;
+                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, objects);
             }
-            if (lossProtectedWalletContact != null) {
-                sendCrypto();
-            } else
-                Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.imageView_contact) {
-            // if user press the profile image
-        } else if (id == R.id.btn_expand_send_form) {
-            Object[] objects = new Object[1];
-            objects[0] = walletContact;
-            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, objects);
+        }catch(Exception e) {
+         e.printStackTrace();
         }
-
-
     }
     //TODO: Check if the setting for protecting the user from spending btc is working
     private void sendCrypto() {
@@ -791,6 +823,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (validAddress != null) {
                         EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                         String amount = txtAmount.getText().toString();
+
+                        EditText txtFee= (EditText) rootView.findViewById(R.id.feed_amount);
+                        String fee = txtFee.getText().toString();
+
+                        if(feed_Substract.isChecked())
+                            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_AMOUNT.getCode();
+                        else
+                            feeOrigin = FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode();
 
                         BigDecimal money;
 
@@ -808,24 +848,76 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                                 String txtType = txt_type.getText().toString();
                                 String newAmount = "";
+                                String newFee = "";
                                 String msg = "";
 
                                 if (txtType.equals("[btc]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                    newFee = fee;
                                      msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
 
                                    // newAmount = String.valueOf(Integer.valueOf(newAmount)); //without decimal .00000
                                 } else if (txtType.equals("[satoshis]")) {
                                     newAmount = amount;
+                                    newFee = fee;
                                     msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                                 } else if (txtType.equals("[bits]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                    newFee = fee;
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
-                                long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
-                                BigDecimal amountDecimal = new BigDecimal(newAmount);
+                               // long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
+                               // BigDecimal amountDecimal = new BigDecimal(newAmount);
 
+                                BigDecimal decimalFeed = new BigDecimal(newFee);
+                                BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                                BigDecimal operator = new BigDecimal(newAmount);
+
+
+                                if(operator.compareTo(minSatoshis) == 1 )
+                                {
+                                    //check amount + fee less than balance
+                                    long total = 0;
+                                    if(feeOrigin.equals(FeeOrigin.SUBSTRACT_FEE_FROM_FUNDS.getCode()))
+                                        total =  operator.longValueExact() +  decimalFeed.longValueExact();
+                                    else
+                                        total =  operator.longValueExact() -  decimalFeed.longValueExact();
+
+                                    if(total < Balance)
+                                    {
+                                        ConfirmSendDialog_feeCase sendConfirmDialog = new ConfirmSendDialog_feeCase(getActivity(),
+                                                lossProtectedWalletManager,
+                                                operator.longValueExact(),
+                                                decimalFeed.longValueExact(),
+                                                total,
+                                                FeeOrigin.getByCode(feeOrigin),
+                                                validAddress,
+                                                notes,
+                                                lossProtectedWalletContact.getActorPublicKey(),
+                                                lossProtectedWalletContact.getActorType(),
+                                                blockchainNetworkType,
+                                                appSession);
+
+                                        sendConfirmDialog.show();
+                                        sendConfirmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog) {
+
+                                                onBack(null);
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        Toast.makeText(getActivity(), "Insufficient funds.", Toast.LENGTH_LONG).show();
+                                    }
+
+                                }else{
+                                    Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
+                                }
+
+                                /*
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 
                                     long availableBalance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
@@ -890,7 +982,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 } else {
                                     Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
                                 }
-
+*/
 
                             } catch (Exception e) {
                                 appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
