@@ -86,6 +86,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
     private List<String> getColumns(SQLiteDatabase database) {
         List<String> columns = new ArrayList<>();
+
         Cursor c = database.rawQuery("SELECT * FROM " + tableName, null);
         String[] columnNames = c.getColumnNames();
         c.close();
@@ -214,6 +215,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
          * and construct de ContentValues array for SqlLite
          */
         SQLiteDatabase database = null;
+        StringBuilder query = new StringBuilder("");
+
         try {
             StringBuilder strRecords = new StringBuilder("");
             StringBuilder strValues = new StringBuilder("");
@@ -233,8 +236,18 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append(records.get(i).getValue())
                         .append("'");
             }
+
+            query.append("INSERT INTO ")
+                    .append(tableName)
+                    .append("(")
+                    .append(strRecords)
+                    .append(") VALUES (")
+                    .append(strValues)
+                    .append(")");
+
             database = this.database.getWritableDatabase();
-            database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+            database.execSQL(query.toString());
+
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
