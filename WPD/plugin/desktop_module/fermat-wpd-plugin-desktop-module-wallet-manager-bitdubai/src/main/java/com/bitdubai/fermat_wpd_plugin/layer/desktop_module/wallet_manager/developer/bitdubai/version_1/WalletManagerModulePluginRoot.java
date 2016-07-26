@@ -460,6 +460,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
+
         CryptoAddress cryptoAddress = cryptoVaultManager.getCryptoAddress(blockchainNetworkType);
         cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, "", Actors.EXTRA_USER, "", Actors.EXTRA_USER, Platforms.CRYPTO_CURRENCY_PLATFORM, VaultType.CRYPTO_CURRENCY_VAULT, VaultType.CRYPTO_CURRENCY_VAULT.getCode(), "reference_wallet", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
