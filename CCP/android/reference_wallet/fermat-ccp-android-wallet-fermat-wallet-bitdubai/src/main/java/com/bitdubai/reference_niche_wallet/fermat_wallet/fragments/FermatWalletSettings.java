@@ -293,7 +293,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(),fermatWalletModule);
+                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(),fermatWalletModule,blockchainNetworkType);
                 if (validAddress != null) {
 
                 }

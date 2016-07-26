@@ -854,6 +854,16 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     }
 
     @Override
+    public boolean isValidAddress(CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) {
+        try {
+            return cryptoVaultManager.isValidAddress(cryptoAddress,blockchainNetworkType);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public FermatWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException {
         try {
             WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(alias, walletPublicKey);
@@ -1492,12 +1502,6 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         } catch (Exception e) {
             throw new CantListPaymentRequestDateOrderException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
-    }
-
-    @Override
-    public boolean isValidAddress(CryptoAddress cryptoAddress) {
-        //todo Natalia corregir
-        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
     }
 
     @Override

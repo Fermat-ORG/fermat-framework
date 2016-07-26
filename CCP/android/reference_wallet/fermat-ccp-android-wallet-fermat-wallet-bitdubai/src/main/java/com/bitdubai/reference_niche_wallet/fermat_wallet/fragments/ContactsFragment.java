@@ -614,7 +614,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void lauchCreateContactDialog(boolean withImage) {
         dialog = new CreateContactFragmentDialog(
                 getActivity(),
-                referenceWalletSession,
+                fermatWallet,
+                referenceWalletSession.getAppPublicKey(),
                 walletContact,
                 user_id,
                 ((withImage) ? contactImageBitmap : null),

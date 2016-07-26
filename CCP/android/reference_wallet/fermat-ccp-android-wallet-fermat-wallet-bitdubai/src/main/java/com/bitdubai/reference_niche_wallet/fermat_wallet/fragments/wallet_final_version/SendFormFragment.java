@@ -732,7 +732,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), fermatWallet);
+                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), fermatWallet,blockchainNetworkType);
                 if (validAddress != null) {
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                     String amount = txtAmount.getText().toString();

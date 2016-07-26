@@ -63,7 +63,9 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
 
-    private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
+    private FermatWallet fermatWallet;
+
+    private String appPublicKey;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -96,12 +98,13 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
 
 
-    public CreateContactFragmentDialog(Activity a, ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
+    public CreateContactFragmentDialog(Activity a, FermatWallet fermatWallet, String appPublicKey, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
 
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
-        this.fermatWalletSessionReferenceApp = fermatWalletSessionReferenceApp;
+        this.fermatWallet = fermatWallet;
+        this.appPublicKey = appPublicKey;
         this.walletContact=walletContact;
         this.userId = userId;
         this.contactImageBitmap = contactImageBitmap;
@@ -114,22 +117,22 @@ public class CreateContactFragmentDialog extends Dialog implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
-        FermatWalletSettings bitcoinWalletSettings = null;
+        FermatWalletSettings fermatWalletSettings = null;
         try {
-            bitcoinWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
+            fermatWalletSettings = fermatWallet.loadAndGetSettings(appPublicKey);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
             e.printStackTrace();
         }
 
-        if(bitcoinWalletSettings != null) {
+        if(fermatWalletSettings != null) {
 
-            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            if (fermatWalletSettings.getBlockchainNetworkType() == null) {
+                fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
             try {
-                fermatWalletSessionReferenceApp.getModuleManager().persistSettings(fermatWalletSessionReferenceApp.getAppPublicKey(), bitcoinWalletSettings);
+                fermatWallet.persistSettings(appPublicKey, fermatWalletSettings);
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -137,7 +140,7 @@ public class CreateContactFragmentDialog extends Dialog implements
         }
 
         try {
-            blockchainNetworkType = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType();
+            blockchainNetworkType = fermatWallet.loadAndGetSettings(appPublicKey).getBlockchainNetworkType();
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -227,9 +230,8 @@ public class CreateContactFragmentDialog extends Dialog implements
     private void saveContact() {
         try {
 
-            FermatWallet fermatWallet = fermatWalletSessionReferenceApp.getModuleManager();
 
-            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), fermatWallet);
+            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), fermatWallet,blockchainNetworkType);
 
             String name =contact_name.getText().toString();
 
@@ -246,7 +248,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             null,
                             Actors.EXTRA_USER,
-                            fermatWalletSessionReferenceApp.getAppPublicKey(),
+                            appPublicKey,
                             toByteArray(contactImageBitmap),
                             blockchainNetworkType
                     );
@@ -259,7 +261,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             null,
                             Actors.EXTRA_USER,
-                            fermatWalletSessionReferenceApp.getAppPublicKey(),
+                            appPublicKey,
                             blockchainNetworkType
                     );
                 }
@@ -275,11 +277,11 @@ public class CreateContactFragmentDialog extends Dialog implements
                 Toast.makeText(activity.getApplicationContext(), "Please enter a valid address...", Toast.LENGTH_SHORT).show();
             }
         } catch (CantCreateWalletContactException e) {
-            fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            e.printStackTrace();
             Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error-" + e.getMessage(), Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            e.printStackTrace();
             Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error - " +  e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -299,7 +301,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 EditText editText = (EditText) findViewById(R.id.txt_address);
-                CryptoAddress validAddress = validateAddress(item.getText().toString(), fermatWalletSessionReferenceApp.getModuleManager());
+                CryptoAddress validAddress = validateAddress(item.getText().toString(), fermatWallet,blockchainNetworkType);
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {
@@ -310,7 +312,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(false);
             }
         } catch (Exception e) {
-            fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            e.printStackTrace();
             Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
