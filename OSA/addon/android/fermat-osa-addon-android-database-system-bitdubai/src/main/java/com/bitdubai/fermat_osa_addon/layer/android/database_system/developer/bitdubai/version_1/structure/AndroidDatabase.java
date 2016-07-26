@@ -201,10 +201,12 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                                                           final DatabaseTableRecord record  ) throws CantSelectRecordException {
 
         List<AndroidVariable> variablesResult = new ArrayList<>();
-
+        Cursor c = null;
         try {
 
             StringBuilder strRecords = new StringBuilder("");
+
+            StringBuilder query = new StringBuilder("");
 
             List<DatabaseRecord> records = record.getValues();
 
@@ -247,7 +249,13 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            Cursor c = database.rawQuery("SELECT " + strRecords + " FROM " + table.getTableName() + " " + table.makeFilter(), null);
+            query.append("SELECT ")
+                    .append(strRecords)
+                    .append(" FROM ")
+                    .append(table.getTableName())
+                            .append(table.makeFilter());
+
+            c = database.rawQuery(query.toString(), null);
             int columnsCant = 0;
 
             if (c.moveToFirst()) {
@@ -266,8 +274,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 } while (c.moveToNext());
             }
             c.close();
+
             return variablesResult;
         } catch (Exception exception) {
+            if (c != null)
+                c.close();
             throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
     }
@@ -473,6 +484,8 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         /**
          * I check that the owner id is the same I currently have..
          */
+        StringBuilder query = new StringBuilder("");
+
         if (this.ownerId != ownerId) {
             String context = "database Owner Id: " + ownerId;
             context += InvalidOwnerIdException.CONTEXT_CONTENT_SEPARATOR;
@@ -492,39 +505,67 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
          */
         try {
             List<String> primaryKey = new ArrayList<>();
-            String query = "CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
+
+           query.append("CREATE TABLE IF NOT EXISTS " );
+            query.append(table.getTableName());
+            query.append( "(");
+
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                query += tableColumns.get(i).getName() + " " + tableColumns.get(i).getDataType().name();
+                query.append(tableColumns.get(i).getName() );
+                query.append(" ");
+                query.append(tableColumns.get(i).getDataType().name());
+
                 if (tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
-                    query += "(" + String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
+                {
+                    query.append("(");
+                    query.append(String.valueOf(tableColumns.get(i).getDataTypeSize()));
+                    query.append(")");
+                }
+
 
                 if (tableColumns.get(i).isPrimaryKey())
                     primaryKey.add(tableColumns.get(i).getName());
 
                 if (i < tableColumns.size() - 1)
-                    query += ",";
+                    query.append(",");
             }
 
             /**
              * add primary key
              */
             if (!primaryKey.isEmpty())
-                query += ", PRIMARY KEY (" + StringUtils.join(primaryKey, ",") + ") ";
+            {
+                query.append(", PRIMARY KEY (");
+                query.append(StringUtils.join(primaryKey, ","));
+                query.append(") ");
+            }
 
-            query += ")";
 
-            executeQuery(query);
+            query.append(")");
+
+            executeQuery(query.toString());
 
             /**
              * get index column
              */
+            query = new StringBuilder("");
             List<List<String>> indexes = table.listIndexes();
             for (List<String> indexColumns : indexes) {
-                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
-                executeQuery(query);
+
+                query.append(" CREATE INDEX IF NOT EXISTS ");
+                query.append(table.getTableName());
+                query.append("_");
+                query.append(StringUtils.join(indexColumns, "_"));
+                query.append("_idx ON ");
+                query.append(table.getTableName());
+                query.append(" (" );
+                query.append(StringUtils.join(indexColumns, ","));
+                query.append(")");
+
+                executeQuery(query.toString());
             }
         } catch (Exception ex) {
             String context = "Owner Id : " + ownerId.toString();
@@ -592,6 +633,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             List<DatabaseRecord> records = record.getValues();
             StringBuilder strRecords = new StringBuilder();
+            StringBuilder query = new StringBuilder("");
 
             for (DatabaseRecord dbRecord : records) {
 
@@ -619,7 +661,14 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            database.execSQL("UPDATE " + table.getTableName() + " SET " + strRecords + " " + table.makeFilter());
+            query.append("UPDATE ")
+                    .append(table.getTableName())
+                    .append(" SET ")
+                    .append(strRecords)
+                    .append(" ")
+                    .append(table.makeFilter());
+
+            database.execSQL(query.toString());
 
         } catch (Exception exception) {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
@@ -631,7 +680,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             StringBuilder strRecords = new StringBuilder("");
             StringBuilder strValues = new StringBuilder("");
-
+            StringBuilder query = new StringBuilder("");
             List<DatabaseRecord> records = record.getValues();
 
 
@@ -660,7 +709,16 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
             }
 
-            database.execSQL("INSERT INTO " + table.getTableName() + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+            query.append("INSERT INTO ")
+                    .append(table.getTableName())
+                    .append("( ")
+                    .append(strRecords)
+                    .append(") VALUES (")
+                    .append(strValues)
+                    .append(")");
+
+            database.execSQL(query.toString());
+
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
