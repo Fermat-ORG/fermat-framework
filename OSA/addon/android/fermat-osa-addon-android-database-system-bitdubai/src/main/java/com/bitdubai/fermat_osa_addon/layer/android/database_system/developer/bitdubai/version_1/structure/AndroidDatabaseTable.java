@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
-import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
@@ -86,7 +84,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
     private List<String> getColumns(SQLiteDatabase database) {
         List<String> columns = new ArrayList<>();
-        Cursor c = database.rawQuery(new StringBuilder().append("SELECT * FROM ").append(tableName).toString(), null);
+        Cursor c = database.rawQuery("SELECT * FROM " + tableName, null);
         String[] columnNames = c.getColumnNames();
         c.close();
 
@@ -234,7 +232,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append("'");
             }
             database = this.database.getWritableDatabase();
-            database.execSQL(new StringBuilder().append("INSERT INTO ").append(tableName).append("(").append(strRecords).append(")").append(" VALUES (").append(strValues).append(")").toString());
+            database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
@@ -245,11 +243,10 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public void truncate() throws CantTruncateTableException {
-
-        try (SQLiteDatabase database = this.database.getWritableDatabase()) {
-
-            database.execSQL(new StringBuilder().append("DELETE FROM ").append(tableName).toString());
-
+        SQLiteDatabase database = null;
+        try{
+            database = this.database.getWritableDatabase();
+            database.execSQL("DELETE FROM " + tableName);
         } catch (Exception exception) {
 
             throw new CantTruncateTableException(
@@ -257,6 +254,14 @@ public class AndroidDatabaseTable implements DatabaseTable {
                     null,
                     "Check the cause for this error"
             );
+        } finally {
+
+            assert database != null;
+            try {
+                database.close();
+            }catch (Exception e){
+                //nothing
+            }
         }
     }
 
@@ -274,10 +279,10 @@ public class AndroidDatabaseTable implements DatabaseTable {
         String topSentence = "";
         String offsetSentence = "";
         if (!this.top.isEmpty())
-            topSentence = new StringBuilder().append(" LIMIT ").append(this.top).toString();
+            topSentence = " LIMIT " + this.top;
 
         if (!this.offset.isEmpty())
-            offsetSentence = new StringBuilder().append(" OFFSET ").append(this.offset).toString();
+            offsetSentence = " OFFSET " + this.offset;
 
         Cursor cursor = null;
 
@@ -288,6 +293,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         SQLiteDatabase database = null;
         try {
             database = this.database.getReadableDatabase();
+
             List<String> columns = getColumns(database);
             queryString.append("SELECT *");
             queryString.append(makeOutputColumns());
@@ -297,6 +303,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
             queryString.append(makeOrder());
             queryString.append(topSentence);
             queryString.append(offsetSentence);
+
+//            database.beginTransaction();
+//            SQLiteStatement sqLiteStatement = database.compileStatement(queryString.toString());
+
+
 
             cursor = database.rawQuery(queryString.toString(), null);
             while (cursor.moveToNext()) {
@@ -347,7 +358,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 if (customResult) {
                     for (int i = 0; i < cursor.getColumnCount(); i++) {
                         DatabaseRecord recordValue = new AndroidRecord(
-                                new StringBuilder().append("Column").append(i).toString(),
+                                "Column" + i,
                                 cursor.getString(i),
                                 false
                         );
@@ -392,7 +403,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         Cursor cursor = null;
         try {
             database = this.database.getReadableDatabase();
-            cursor = database.rawQuery(new StringBuilder().append("select DISTINCT tbl_name from sqlite_master where tbl_name = '").append(this.tableName).append("'").toString(), null);
+            cursor = database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + this.tableName + "'", null);
             if (cursor != null) {
                 if (cursor.getCount() > 0) {
                     cursor.close();
@@ -568,7 +579,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
 
             filter = strFilter.toString();
-            if (strFilter.length() > 0) filter = new StringBuilder().append(" WHERE ").append(filter).toString();
+            if (strFilter.length() > 0) filter = " WHERE " + filter;
 
             return filter;
         } else {
@@ -619,7 +630,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
 
         filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = new StringBuilder().append(" WHERE ").append(filter).toString();
+        if (strFilter.length() > 0) filter = " WHERE " + filter;
 
         return filter;
     }
@@ -630,7 +641,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
             String filter = ", ";
             for (DatabaseAggregateFunction AggregateFunction : tableAggregateFunction) {
-                filter += new StringBuilder().append(AggregateFunction.toSQLQuery()).append(", ").toString();
+                filter += AggregateFunction.toSQLQuery() + ", ";
             }
 
             return filter.substring(0, filter.length() - 2);
@@ -665,9 +676,9 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
             database = this.database.getWritableDatabase();
             if (queryWhereClause != null) {
-                database.execSQL(new StringBuilder().append("DELETE FROM ").append(tableName).append(" WHERE ").append(queryWhereClause.toString()).toString());
+                database.execSQL("DELETE FROM " + tableName + " WHERE " + queryWhereClause.toString());
             } else {
-                database.execSQL(new StringBuilder().append("DELETE FROM ").append(tableName).toString());
+                database.execSQL("DELETE FROM " + tableName);
             }
 
         } catch (Exception exception) {
@@ -685,7 +696,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         Cursor c = null;
         try {
             database = this.database.getReadableDatabase();
-            c = database.rawQuery(new StringBuilder().append(" SELECT * from ").append(tableName).append(" WHERE pk=").append(pk).toString(), null);
+            c = database.rawQuery(" SELECT * from " + tableName + " WHERE pk=" + pk, null);
 
             List<String> columns = getColumns(database);
             AndroidDatabaseRecord tableRecord1 = new AndroidDatabaseRecord();
@@ -787,7 +798,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
 
         order = strOrder.toString();
-        if (strOrder.length() > 0) order = new StringBuilder().append(" ORDER BY ").append(order).toString();
+        if (strOrder.length() > 0) order = " ORDER BY " + order;
 
         return order;
     }
