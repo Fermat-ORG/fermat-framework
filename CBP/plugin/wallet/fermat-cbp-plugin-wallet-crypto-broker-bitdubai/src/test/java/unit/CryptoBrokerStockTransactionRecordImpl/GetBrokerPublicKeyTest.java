@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetBrokerPublicKeyTest {
 
     @Test
-    public void getBrokerPublicKey(){
+    public void getBrokerPublicKey() {
         CryptoBrokerStockTransactionRecordImpl cryptoBrokerStockTransactionRecord = mock(CryptoBrokerStockTransactionRecordImpl.class);
         when(cryptoBrokerStockTransactionRecord.getBrokerPublicKey()).thenReturn(new String());
         assertThat(cryptoBrokerStockTransactionRecord.getBrokerPublicKey()).isNotNull();

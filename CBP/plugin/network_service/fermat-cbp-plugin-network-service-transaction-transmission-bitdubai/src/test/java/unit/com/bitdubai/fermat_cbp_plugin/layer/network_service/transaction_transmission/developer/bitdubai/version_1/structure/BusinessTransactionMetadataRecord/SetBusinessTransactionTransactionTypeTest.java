@@ -19,9 +19,9 @@ import static org.mockito.Mockito.mock;
 public class SetBusinessTransactionTransactionTypeTest {
 
     @Test
-    public void setBusinessTransactionTransactionType() throws Exception{
+    public void setBusinessTransactionTransactionType() throws Exception {
 
-        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class,Mockito.RETURNS_DEEP_STUBS);
+        BusinessTransactionMetadataRecord businessTransactionMetadataRecord = mock(BusinessTransactionMetadataRecord.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(businessTransactionMetadataRecord).setBusinessTransactionTransactionType(Mockito.any(BusinessTransactionTransactionType.class));
 
     }

@@ -4,5 +4,5 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
  * Created by ciencias on 01.02.15.
  */
 public enum DatabaseDataType {
-    STRING, INTEGER, LONG_INTEGER, MONEY,REAL
+    STRING, INTEGER, LONG_INTEGER, MONEY, REAL
 }

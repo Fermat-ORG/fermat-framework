@@ -18,10 +18,10 @@ import static org.mockito.Mockito.when;
 public class GetActorPublicKeyTest {
 
     @Test
-    public void getActorPublicKey(){
+    public void getActorPublicKey() {
         CashMoneyRestockTransactionImpl cashMoneyRestockTransaction = mock(CashMoneyRestockTransactionImpl.class);
-            when(cashMoneyRestockTransaction.getActorPublicKey()).thenReturn(new String());
-            assertThat(cashMoneyRestockTransaction.getActorPublicKey()).isNotNull();
+        when(cashMoneyRestockTransaction.getActorPublicKey()).thenReturn(new String());
+        assertThat(cashMoneyRestockTransaction.getActorPublicKey()).isNotNull();
     }
 
 }

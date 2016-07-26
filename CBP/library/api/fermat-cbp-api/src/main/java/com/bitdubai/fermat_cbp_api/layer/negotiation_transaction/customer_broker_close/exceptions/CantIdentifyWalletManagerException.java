@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 27.12.15.
  */
-public class CantIdentifyWalletManagerException extends FermatException{
+public class CantIdentifyWalletManagerException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER CLOSE. CAN'T IDENTIFY WALLET MANAGER EXCEPTION";
 
@@ -24,7 +24,7 @@ public class CantIdentifyWalletManagerException extends FermatException{
     /**
      * This is the constructor that every inherited FermatException must implement
      *
-     * @param context        a String that provides the values of the variables that could have affected the exception
+     * @param context a String that provides the values of the variables that could have affected the exception
      */
     public CantIdentifyWalletManagerException(String context) {
         this(DEFAULT_MESSAGE, null, context, null);

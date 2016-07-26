@@ -8,34 +8,34 @@ import java.util.UUID;
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation</code>
  * represents a crypto broker and exposes all the functionality of it.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  */
 public final class CryptoBrokerConnectionInformation {
 
-    private final UUID   connectionId        ;
-    private final String senderPublicKey     ;
-    private final Actors senderActorType     ;
-    private final String senderAlias         ;
-    private final byte[] senderImage         ;
+    private final UUID connectionId;
+    private final String senderPublicKey;
+    private final Actors senderActorType;
+    private final String senderAlias;
+    private final byte[] senderImage;
     private final String destinationPublicKey;
-    private final long   sendingTime         ;
+    private final long sendingTime;
 
-    public CryptoBrokerConnectionInformation(final UUID   connectionId        ,
-                                             final String senderPublicKey     ,
-                                             final Actors senderActorType     ,
-                                             final String senderAlias         ,
-                                             final byte[] senderImage         ,
+    public CryptoBrokerConnectionInformation(final UUID connectionId,
+                                             final String senderPublicKey,
+                                             final Actors senderActorType,
+                                             final String senderAlias,
+                                             final byte[] senderImage,
                                              final String destinationPublicKey,
-                                             final long   sendingTime         ) {
+                                             final long sendingTime) {
 
-        this.connectionId         = connectionId        ;
-        this.senderPublicKey      = senderPublicKey     ;
-        this.senderActorType      = senderActorType     ;
-        this.senderAlias          = senderAlias         ;
-        this.senderImage          = senderImage         ;
+        this.connectionId = connectionId;
+        this.senderPublicKey = senderPublicKey;
+        this.senderActorType = senderActorType;
+        this.senderAlias = senderAlias;
+        this.senderImage = senderImage;
         this.destinationPublicKey = destinationPublicKey;
-        this.sendingTime          = sendingTime         ;
+        this.sendingTime = sendingTime;
     }
 
     /**
@@ -86,14 +86,18 @@ public final class CryptoBrokerConnectionInformation {
 
     @Override
     public String toString() {
-        return "CryptoBrokerConnectionInformation{" +
-                "connectionId=" + connectionId +
-                ", senderPublicKey='" + senderPublicKey + '\'' +
-                ", senderActorType=" + senderActorType +
-                ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + Arrays.toString(senderImage) +
-                ", destinationPublicKey='" + destinationPublicKey + '\'' +
-                ", sendingTime=" + sendingTime +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerConnectionInformation{")
+                .append("connectionId=").append(connectionId)
+                .append(", senderPublicKey='").append(senderPublicKey)
+                .append('\'')
+                .append(", senderActorType=").append(senderActorType)
+                .append(", senderAlias='").append(senderAlias)
+                .append('\'')
+                .append(", senderImage=").append(Arrays.toString(senderImage))
+                .append(", destinationPublicKey='").append(destinationPublicKey)
+                .append('\'')
+                .append(", sendingTime=").append(sendingTime)
+                .append('}').toString();
     }
 }

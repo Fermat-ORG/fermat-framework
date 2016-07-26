@@ -11,9 +11,9 @@ public class SettingsItem {
     private String subText;
     private boolean isBlock;
 
-    public SettingsItem(SettingsType settingsType,int imgRes, String text, String subText) {
+    public SettingsItem(SettingsType settingsType, int imgRes, String text, String subText) {
         this.imgRes = imgRes;
-        this.settingsType =settingsType;
+        this.settingsType = settingsType;
         this.text = text;
         this.subText = subText;
     }

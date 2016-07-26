@@ -13,22 +13,22 @@ import java.util.UUID;
  * Created by franklin on 17/11/15.
  */
 public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
-    UUID                            transactionId;
-    String                          actorPublicKey;
-    FiatCurrency                    fiatCurrency;
-    String                          cbpWalletPublicKey;
-    String                          bnkWalletPublicKey;
-    String                          memo;
-    String                          concept;
-    String                          cashReference;
-    BigDecimal                      amount;
-    Timestamp                       timeStamp;
+    UUID transactionId;
+    String actorPublicKey;
+    FiatCurrency fiatCurrency;
+    String cbpWalletPublicKey;
+    String bnkWalletPublicKey;
+    String memo;
+    String concept;
+    String cashReference;
+    BigDecimal amount;
+    Timestamp timeStamp;
     TransactionStatusRestockDestock transactionStatus;
-    BigDecimal                      priceReference;
-    OriginTransaction               originTransaction;
-    String                          originTransactionId;
+    BigDecimal priceReference;
+    OriginTransaction originTransaction;
+    String originTransactionId;
 
-    public CashMoneyDestockTransactionImpl(){
+    public CashMoneyDestockTransactionImpl() {
 
     }
 
@@ -45,23 +45,22 @@ public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
                                            TransactionStatusRestockDestock transactionStatus,
                                            BigDecimal priceReference,
                                            OriginTransaction originTransaction,
-                                           String originTransactionId){
-        this.transactionId      = transactionId;
-        this.actorPublicKey     = actorPublicKey;
-        this.fiatCurrency       = fiatCurrency;
+                                           String originTransactionId) {
+        this.transactionId = transactionId;
+        this.actorPublicKey = actorPublicKey;
+        this.fiatCurrency = fiatCurrency;
         this.cbpWalletPublicKey = cbpWalletPublicKey;
         this.bnkWalletPublicKey = bnkWalletPublicKey;
-        this.memo               = memo;
-        this.concept            = concept;
-        this.cashReference      = cashReference;
-        this.amount             = amount;
-        this.timeStamp          = timeStamp;
-        this.transactionStatus  = transactionStatus;
-        this.priceReference     = priceReference;
-        this.originTransaction  = originTransaction;
-        this.originTransactionId= originTransactionId;
+        this.memo = memo;
+        this.concept = concept;
+        this.cashReference = cashReference;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.transactionStatus = transactionStatus;
+        this.priceReference = priceReference;
+        this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
     }
-
 
 
     @Override

@@ -1,17 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionFee;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -33,8 +25,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     private TextView buyingText;
     private FermatButton buyingValue;
     private boolean paymentBuy;
-    NumberFormat numberFormat=DecimalFormat.getInstance();
-
+    NumberFormat numberFormat = DecimalFormat.getInstance();
 
 
     public AmountToBuyViewHolder(View itemView) {
@@ -42,9 +33,9 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
         this.paymentBuy = Boolean.TRUE;
 
-        currencyToBuyTextValue  = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
-        buyingText              = (TextView) itemView.findViewById(R.id.ccw_buying_text);
-        buyingValue             = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
+        currencyToBuyTextValue = (TextView) itemView.findViewById(R.id.ccw_currency_to_buy);
+        buyingText = (TextView) itemView.findViewById(R.id.ccw_buying_text);
+        buyingValue = (FermatButton) itemView.findViewById(R.id.ccw_buying_value);
 
         //This not limit the decimal, it just to left the complete decimal that came in clause
 
@@ -71,11 +62,11 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
         currencyToBuyTextValue.setText(currencyToBuy.getValue());
         buyingText.setText(buyingTextValue);
-    //    buyingValue.setText(clause.getValue());
-    //lostwood
-        if(clause.getValue().equals("0.0") || clause.getValue().equals("0")){
+        //    buyingValue.setText(clause.getValue());
+        //lostwood
+        if (clause.getValue().equals("0.0") || clause.getValue().equals("0")) {
             buyingValue.setText("0.0");
-        }else{
+        } else {
             buyingValue.setText(fixFormat(clause.getValue()));
         }
 
@@ -108,17 +99,17 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
         return R.id.ccw_card_view_title;
     }
 
-    public boolean setPaymentBuy(boolean paymentBuy){
+    public boolean setPaymentBuy(boolean paymentBuy) {
         return this.paymentBuy = paymentBuy;
     }
 
 
-    private String fixFormat(String value){
+    private String fixFormat(String value) {
 
         try {
-            if(compareLessThan1(value)){
+            if (compareLessThan1(value)) {
                 numberFormat.setMaximumFractionDigits(8);
-            }else{
+            } else {
                 numberFormat.setMaximumFractionDigits(2);
             }
             return numberFormat.format(new BigDecimal(numberFormat.parse(value).toString()));
@@ -129,14 +120,14 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
 
     }
 
-    private Boolean compareLessThan1(String value){
-        Boolean lessThan1=true;
+    private Boolean compareLessThan1(String value) {
+        Boolean lessThan1 = true;
         try {
-            if(BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
-                    compareTo(BigDecimal.ONE)==-1){
-                lessThan1=true;
-            }else{
-                lessThan1=false;
+            if (BigDecimal.valueOf(numberFormat.parse(value).doubleValue()).
+                    compareTo(BigDecimal.ONE) == -1) {
+                lessThan1 = true;
+            } else {
+                lessThan1 = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetCryWalletPublicKeyTest {
 
     @Test
-    public void getCryWalletPublicKey(){
+    public void getCryWalletPublicKey() {
         CryptoMoneyDestockTransactionImpl cryptoMoneyDestockTransaction = mock(CryptoMoneyDestockTransactionImpl.class);
         when(cryptoMoneyDestockTransaction.getCryWalletPublicKey()).thenReturn(new String());
         assertThat(cryptoMoneyDestockTransaction.getCryWalletPublicKey()).isNotNull();

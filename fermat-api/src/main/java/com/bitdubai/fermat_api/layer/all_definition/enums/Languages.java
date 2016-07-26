@@ -14,27 +14,32 @@ public enum Languages implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    AMERICAN_ENGLISH        ("AMERICAN_ENGLISH"),
-    ENGLISH                 ("ENGLISH"),
-    GREAT_BRITAIN_ENGLISH   ("GREAT_BRITAIN_ENGLISH"),
-    LATIN_AMERICAN_SPANISH  ("LATIN_AMERICAN_SPANISH"),
-    SPANISH                 ("SPANISH")
-
-    ;
+    AMERICAN_ENGLISH("AMERICAN_ENGLISH"),
+    ENGLISH("ENGLISH"),
+    GREAT_BRITAIN_ENGLISH("GREAT_BRITAIN_ENGLISH"),
+    LATIN_AMERICAN_SPANISH("LATIN_AMERICAN_SPANISH"),
+    SPANISH("SPANISH");
 
     private final String code;
 
-    Languages(final String code) { this.code = code; }
+    Languages(final String code) {
+        this.code = code;
+    }
 
     public static Languages fromValue(String code) {
 
         switch (code) {
 
-            case "AMERICAN_ENGLISH":       return AMERICAN_ENGLISH;
-            case "ENGLISH":                return ENGLISH;
-            case "GREAT_BRITAIN_ENGLISH":  return GREAT_BRITAIN_ENGLISH;
-            case "LATIN_AMERICAN_SPANISH": return LATIN_AMERICAN_SPANISH;
-            case "SPANISH":                return SPANISH;
+            case "AMERICAN_ENGLISH":
+                return AMERICAN_ENGLISH;
+            case "ENGLISH":
+                return ENGLISH;
+            case "GREAT_BRITAIN_ENGLISH":
+                return GREAT_BRITAIN_ENGLISH;
+            case "LATIN_AMERICAN_SPANISH":
+                return LATIN_AMERICAN_SPANISH;
+            case "SPANISH":
+                return SPANISH;
 
             default:
                 return Languages.ENGLISH;

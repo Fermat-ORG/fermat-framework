@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetQuantityTest {
 
     @Test
-    public void getQuantity(){
+    public void getQuantity() {
         QuoteImpl quote = mock(QuoteImpl.class);
         when(quote.getQuantity()).thenReturn(1f);
         assertThat(quote.getQuantity()).isNotNull();

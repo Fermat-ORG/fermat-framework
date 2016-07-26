@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class GetTransactionTypeTest {
 
     @Test
-    public void getTransactionType(){
+    public void getTransactionType() {
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
         when(cryptoBrokerStockTransaction.getTransactionType()).thenReturn(TransactionType.CREDIT);
         assertThat(cryptoBrokerStockTransaction.getTransactionType()).isNotNull();

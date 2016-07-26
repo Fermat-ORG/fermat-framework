@@ -6,10 +6,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.crypto_broker_community.fragments.NotificationsTabFragment;
+import com.bitdubai.sub_app.crypto_broker_community.fragments.BrowserTabFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsTabFragment;
-import com.bitdubai.sub_app.crypto_broker_community.fragments.BrowserTabFragment;
+import com.bitdubai.sub_app.crypto_broker_community.fragments.NotificationsTabFragment;
 
 
 /**

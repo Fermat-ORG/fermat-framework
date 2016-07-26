@@ -8,7 +8,6 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantList
 import com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantListFrequentCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantListSporadicCustomersException;
 
-
 import java.util.List;
 import java.util.UUID;
 
@@ -32,26 +31,27 @@ public interface CustomerMiddlewareManager {
      * @return
      * @throws CantCreateCustomerRelationshipException
      */
-     BrokerCustomerRelationship createCustomerRelationship(CryptoBrokerIdentity brokerIdentity, CryptoCustomerIdentity customerIdentity, CustomerType customerType) throws CantCreateCustomerRelationshipException;
+    BrokerCustomerRelationship createCustomerRelationship(CryptoBrokerIdentity brokerIdentity, CryptoCustomerIdentity customerIdentity, CustomerType customerType) throws CantCreateCustomerRelationshipException;
 
 
     /**
      * The method <code>removeCustomerRelationship</code> is used to remove a relationship between a broker and a CustomerIdentity
+     *
      * @param RelationshipId Id of relationship
      * @throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantDeleteCustomerRelationshipException
      */
-    void  removeCustomerRelationship(UUID RelationshipId) throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantDeleteCustomerRelationshipException;
+    void removeCustomerRelationship(UUID RelationshipId) throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantDeleteCustomerRelationshipException;
 
     /**
-     *
      * @param brokerCustomerRelationship
      * @throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantDeleteCustomerRelationshipException
      */
 
-    void  modifyCustomerRelationship(BrokerCustomerRelationship brokerCustomerRelationship) throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantModifyCustomerRelationshipException;
+    void modifyCustomerRelationship(BrokerCustomerRelationship brokerCustomerRelationship) throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantModifyCustomerRelationshipException;
 
     /**
      * The method <code>getAllBrokerCustomers</code> returns the list of all  customers to a broker identity
+     *
      * @param brokerIdentity
      * @return
      * @throws CantListCustomersException
@@ -60,6 +60,7 @@ public interface CustomerMiddlewareManager {
 
     /**
      * The method <code>getSporadicBrokerCustomers</code> returns the list of sporadic broker's customers
+     *
      * @param brokerIdentity
      * @return
      * @throws CantListSporadicCustomersException
@@ -69,6 +70,7 @@ public interface CustomerMiddlewareManager {
 
     /**
      * The method <code>getFrequentBrokerCustomers</code> returns the list of frequent broker's customers
+     *
      * @param brokerIdentity
      * @return
      * @throws CantListFrequentCustomersException
@@ -77,11 +79,12 @@ public interface CustomerMiddlewareManager {
 
     /**
      * The method <code>searchBrokerCustomerByName</code> returns the list of broker's customers searching by name
+     *
      * @param brokerIdentity
      * @param customerIdentity
      * @return
      * @throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantSearchCustomersException
      */
-     List<BrokerCustomerRelationship> searchBrokerCustomerByName(CryptoBrokerIdentity brokerIdentity,CryptoCustomerIdentity customerIdentity) throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantSearchCustomersException;
+    List<BrokerCustomerRelationship> searchBrokerCustomerByName(CryptoBrokerIdentity brokerIdentity, CryptoCustomerIdentity customerIdentity) throws com.bitdubai.fermat_cbp_api.layer.middleware.customer.exceptions.CantSearchCustomersException;
 
 }

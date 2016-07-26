@@ -15,7 +15,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.07.17..
  */
 
-public class OptionsMenu implements FermatMainMenu<OptionMenuItem>,Serializable {
+public class OptionsMenu implements FermatMainMenu<OptionMenuItem>, Serializable {
 
     /**
      * OptionsMenu class member variables
@@ -32,7 +32,7 @@ public class OptionsMenu implements FermatMainMenu<OptionMenuItem>,Serializable 
         this.menuItems = menuItems;
     }
 
-    public void addMenuItem (OptionMenuItem menuItem){
+    public void addMenuItem(OptionMenuItem menuItem) {
         menuItems.add(menuItem);
     }
 
@@ -40,7 +40,7 @@ public class OptionsMenu implements FermatMainMenu<OptionMenuItem>,Serializable 
      * OptionsMenu class getters
      */
 
-    public List<OptionMenuItem> getMenuItems () {
+    public List<OptionMenuItem> getMenuItems() {
         return menuItems;
     }
 

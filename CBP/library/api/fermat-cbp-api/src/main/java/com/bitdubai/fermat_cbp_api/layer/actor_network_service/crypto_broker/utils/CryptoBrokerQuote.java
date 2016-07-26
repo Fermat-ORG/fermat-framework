@@ -15,33 +15,33 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
 
     private final Currency merchandise;
     private final Currency paymentCurrency;
-    private final Float    price;
-    private       String   supportedPlatforms;
+    private final Float price;
+    private String supportedPlatforms;
 
-    public CryptoBrokerQuote(final Currency merchandise    ,
+    public CryptoBrokerQuote(final Currency merchandise,
                              final Currency paymentCurrency,
-                             final Float    price          ) {
+                             final Float price) {
 
-        this.merchandise     = merchandise    ;
+        this.merchandise = merchandise;
         this.paymentCurrency = paymentCurrency;
-        this.price           = price          ;
+        this.price = price;
     }
 
-    public CryptoBrokerQuote(final Currency merchandise    ,
+    public CryptoBrokerQuote(final Currency merchandise,
                              final Currency paymentCurrency,
-                             final Float    price,
-                             final String   supportedPlatforms) {
+                             final Float price,
+                             final String supportedPlatforms) {
 
-        this.merchandise         = merchandise    ;
-        this.paymentCurrency     = paymentCurrency;
-        this.price               = price          ;
-        this.supportedPlatforms  = supportedPlatforms          ;
+        this.merchandise = merchandise;
+        this.paymentCurrency = paymentCurrency;
+        this.price = price;
+        this.supportedPlatforms = supportedPlatforms;
     }
 
-    public CryptoBrokerQuote(Quote quote){
-        this.merchandise     = (Currency) quote.getMerchandise();
+    public CryptoBrokerQuote(Quote quote) {
+        this.merchandise = (Currency) quote.getMerchandise();
         this.paymentCurrency = quote.getFiatCurrency();
-        this.price           = quote.getPriceReference();
+        this.price = quote.getPriceReference();
     }
 
     public final Currency getMerchandise() {
@@ -62,12 +62,13 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
 
     @Override
     public String toString() {
-        return "CryptoBrokerQuote{" +
-                "merchandise=" + merchandise +
-                ", paymentCurrency=" + paymentCurrency +
-                ", price=" + price +
-                ", supportedPlatforms=" + supportedPlatforms +
-                '}';
+        return new StringBuilder()
+                .append("CryptoBrokerQuote{")
+                .append("merchandise=").append(merchandise)
+                .append(", paymentCurrency=").append(paymentCurrency)
+                .append(", price=").append(price)
+                .append(", supportedPlatforms=").append(supportedPlatforms)
+                .append('}').toString();
     }
 
 }

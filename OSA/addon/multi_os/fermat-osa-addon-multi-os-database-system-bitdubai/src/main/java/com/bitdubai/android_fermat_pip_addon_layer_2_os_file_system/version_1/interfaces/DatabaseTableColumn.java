@@ -4,9 +4,9 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
  * Created by ciencias on 01.02.15.
  */
 public interface DatabaseTableColumn {
-    
+
     public String getName();
-    
+
     public void setName(String name);
 
     public DatabaseDataType getType();
@@ -20,5 +20,5 @@ public interface DatabaseTableColumn {
     public void setPrimaryKey(boolean primaryKey);
 
     public boolean getPrimaryKey();
-    
+
 }

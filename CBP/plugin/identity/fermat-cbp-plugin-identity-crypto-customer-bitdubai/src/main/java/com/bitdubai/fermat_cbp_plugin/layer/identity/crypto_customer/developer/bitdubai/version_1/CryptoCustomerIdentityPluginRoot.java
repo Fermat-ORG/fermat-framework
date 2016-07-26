@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -28,7 +29,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.GeoFrequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
@@ -79,7 +79,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM  , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER         )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_CUSTOMER)
     CryptoCustomerManager cryptoCustomerANSManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
@@ -97,8 +97,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
     public static final String CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME = "cryptoCustomerIdentityPrivateKey";
 
-     /*CryptoCustomerIdentityManager Interface implementation.*/
-     public List<CryptoCustomerIdentity> listAllCryptoCustomerFromCurrentDeviceUser() throws CantListCryptoCustomerIdentityException {
+    /*CryptoCustomerIdentityManager Interface implementation.*/
+    public List<CryptoCustomerIdentity> listAllCryptoCustomerFromCurrentDeviceUser() throws CantListCryptoCustomerIdentityException {
         try {
             List<CryptoCustomerIdentity> cryptoCustomerIdentityList1;
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -168,7 +168,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
             CryptoCustomerIdentity customer = cryptoCustomerIdentityDatabaseDao.getIdentity(publicKey);
             Location location = locationManager.getLocation();
             long refreshInterval = customer.getFrequency().getRefreshInterval();
-            if( customer.isPublished() ){
+            if (customer.isPublished()) {
                 cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location, refreshInterval, customer.getAccuracy(), ProfileStatus.UNKNOWN));
             }
         } catch (CantGetIdentityException e) {
@@ -258,8 +258,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
                 if (identity.isPublished()) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoCustomerExposingData(
-                                    identity.getPublicKey()   ,
-                                    identity.getAlias()       ,
+                                    identity.getPublicKey(),
+                                    identity.getAlias(),
                                     identity.getProfileImage(),
                                     location,
                                     refreshInterval,

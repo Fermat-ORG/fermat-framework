@@ -13,7 +13,7 @@ import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 public class CryptoBrokerCommunityResourceSearcher extends ResourceSearcher {
 
 
-    public int obtainResDrawable(Context context,int id){
+    public int obtainResDrawable(Context context, int id) {
         int resId = 0;
         switch (id) {
             case FragmentsCommons.HELP_OPTION_MENU_ID:

@@ -101,8 +101,8 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<Crypto
             try {
                 if (information != null && identity != null) {
 
-                    System.out.println("*********** i'm the selected identity: "+identity);
-                    System.out.println("*********** i'm the selected broker information: " + information);
+                    System.out.println(new StringBuilder().append("*********** i'm the selected identity: ").append(identity).toString());
+                    System.out.println(new StringBuilder().append("*********** i'm the selected broker information: ").append(information).toString());
 
                     getSession().getModuleManager().requestConnectionToCryptoBroker(identity, information);
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();

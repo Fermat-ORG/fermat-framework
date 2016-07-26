@@ -28,7 +28,7 @@ public class MemoryUtils {
     }
 
     public static Bitmap decodeSampledBitmapFromByteArray(byte[] image,
-                                                         int reqWidth, int reqHeight) {
+                                                          int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -40,7 +40,7 @@ public class MemoryUtils {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeByteArray(image,0, image.length, options);
+        return BitmapFactory.decodeByteArray(image, 0, image.length, options);
     }
 
     public static int calculateInSampleSize(

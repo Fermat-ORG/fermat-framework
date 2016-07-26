@@ -12,17 +12,17 @@ import java.util.TimeZone;
  */
 public class DateTimeZone {
 
-    private String  timeZone;
-    private String  dateTime;
-    private String  formDate;
+    private String timeZone;
+    private String dateTime;
+    private String formDate;
 
-    public DateTimeZone(String  timeZone, String  dateTime, String  formDate){
+    public DateTimeZone(String timeZone, String dateTime, String formDate) {
         this.timeZone = timeZone;
         this.formDate = formDate;
         this.dateTime = dateTime;
     }
 
-    public DateTimeZone(String  timeZone, long  dateTime, String  formDate){
+    public DateTimeZone(String timeZone, long dateTime, String formDate) {
         this.timeZone = timeZone;
         this.formDate = formDate;
         this.dateTime = getDateTimeToLong(dateTime);
@@ -30,9 +30,10 @@ public class DateTimeZone {
 
     /**
      * This method returns a date in String of the time zone indicate
+     *
      * @return to String of date
      */
-    public String getDate(){
+    public String getDate() {
 
         Date parsed = getDateTimeDefaul(TimeZone.getDefault());
         SimpleDateFormat destFormt = getDateTimeZone(this.timeZone);
@@ -42,10 +43,11 @@ public class DateTimeZone {
 
     /**
      * This method returns a date in String of the time zone indicate
+     *
      * @param timeZone
      * @return to String of date
      */
-    public String getDate(TimeZone timeZone){
+    public String getDate(TimeZone timeZone) {
 
         Date parsed = getDateTimeDefaul(timeZone);
         SimpleDateFormat destFormt = getDateTimeZone(this.timeZone);
@@ -53,7 +55,7 @@ public class DateTimeZone {
 
     }
 
-    public String getDateUTC(){
+    public String getDateUTC() {
 
         String timeZoneUTC = TimeZone.getTimeZone("UTC").getID();
 
@@ -65,9 +67,10 @@ public class DateTimeZone {
 
     /**
      * This method returns a date Today UTC in String
+     *
      * @return to String of date UTC
      */
-    public String getDateTodayUTC(){
+    public String getDateTodayUTC() {
 
         String dateText = "";
 
@@ -76,8 +79,8 @@ public class DateTimeZone {
             Date dateTimeToday = UniversalTime.getUTC();
             SimpleDateFormat df2 = new SimpleDateFormat(this.formDate);
             dateText = df2.format(dateTimeToday);
-            
-        } catch (CantGetUTCException e){
+
+        } catch (CantGetUTCException e) {
             System.out.print("CBP-API-DateTimeZone: ERROR GET DATE TODAY IN UTC");
         }
 
@@ -86,10 +89,11 @@ public class DateTimeZone {
 
     /**
      * This method returns a date in String From a long
+     *
      * @param dateTime
      * @return to String of date
      */
-    private String getDateTimeToLong (long  dateTime){
+    private String getDateTimeToLong(long dateTime) {
 
         Date date = new Date(dateTime);
         SimpleDateFormat df2 = new SimpleDateFormat(this.formDate);
@@ -100,9 +104,10 @@ public class DateTimeZone {
 
     /**
      * This method returns a date in time zone default
+     *
      * @return to Date in Time Zone Default
      */
-    private Date getDateTimeDefaul(TimeZone timeZone){
+    private Date getDateTimeDefaul(TimeZone timeZone) {
 
         Date parsed = null;
 
@@ -112,7 +117,7 @@ public class DateTimeZone {
             sourceFormat.setTimeZone(timeZone);
             parsed = sourceFormat.parse(this.dateTime);
 
-        } catch (ParseException e){
+        } catch (ParseException e) {
             System.out.print("CBP-API-DateTimeZone: ERROR IN PARSE DATE");
         }
 
@@ -120,7 +125,7 @@ public class DateTimeZone {
 
     }
 
-    private SimpleDateFormat getDateTimeZone(String timeZone){
+    private SimpleDateFormat getDateTimeZone(String timeZone) {
 
         TimeZone tz = TimeZone.getTimeZone(timeZone);
         SimpleDateFormat destFormat = new SimpleDateFormat(this.formDate);

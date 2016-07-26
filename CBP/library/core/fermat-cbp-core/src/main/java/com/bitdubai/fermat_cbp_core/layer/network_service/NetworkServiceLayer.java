@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_cbp_core.layer.network_service;
 
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_cbp_core.layer.network_service.negotiation_transmission.NegotiationTransmissionPluginSubsystem;
 import com.bitdubai.fermat_cbp_core.layer.network_service.transaction_transmission.TransactionTransmissionPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 22/11/15.

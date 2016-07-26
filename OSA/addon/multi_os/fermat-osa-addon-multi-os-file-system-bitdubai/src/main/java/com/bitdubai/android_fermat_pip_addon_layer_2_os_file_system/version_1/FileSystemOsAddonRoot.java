@@ -7,8 +7,6 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 
-
-
 /**
  * Created by Natalia on 18/05/2015.
  */
@@ -20,7 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
  * For interfaces PluginFile the modules need to authenticate with their plugin ids
  * * * *
  */
-public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
+public class FileSystemOsAddonRoot implements Addon, FileSystemOs, Service {
 
     /**
      * Os interface member variables.
@@ -30,10 +28,10 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
     PlatformFileSystem platformFileSystem;
 
 
-
     public PluginFileSystem getPluginFileSystem() {
         return pluginFileSystem;
     }
+
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
@@ -41,9 +39,11 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
     public ServiceStatus getServiceStatus() {
         return serviceStatus;
     }
+
     public void setServiceStatus(ServiceStatus serviceStatus) {
         this.serviceStatus = serviceStatus;
     }
+
     public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
         this.platformFileSystem = platformFileSystem;
     }
@@ -55,16 +55,17 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     // Public constructor declarations.
+
     /**
-     *  <p>Addon implementation constructor Constructor
+     * <p>Addon implementation constructor Constructor
      */
-    public FileSystemOsAddonRoot()
-    {
+    public FileSystemOsAddonRoot() {
         //I initialize instances of the interfaces
         this.pluginFileSystem = new DesktopPluginFileSystem();
         this.platformFileSystem = new DesktopPlatformFileSystem();
 
     }
+
     /**
      * FileSystemOs interfaces implementation.
      */
@@ -81,7 +82,7 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
 
     // This method is only for android OS
     @Override
-    public void setContext (Object context){
+    public void setContext(Object context) {
         //this.context = (Context)context;
         //this.pluginFileSystem.setContext(context);
         //this.platformFileSystem.setContext(context);
@@ -117,7 +118,6 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
-
 
 
     @Override

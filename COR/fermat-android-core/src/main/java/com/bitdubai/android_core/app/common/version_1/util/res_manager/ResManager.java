@@ -17,28 +17,28 @@ public class ResManager extends ResourceSearcher {
     private static volatile ResourceSearcher instance;
 
     public static ResourceSearcher getInstance() {
-        if(instance==null){
+        if (instance == null) {
             instance = new ResManager();
         }
         return instance;
     }
 
     @Override
-    public Drawable obtainDrawable(Context context,FermatDrawable fermatDrawable) {
-        return ResDrawableFrameworkHelper.obtainDrawable(context,fermatDrawable);
+    public Drawable obtainDrawable(Context context, FermatDrawable fermatDrawable) {
+        return ResDrawableFrameworkHelper.obtainDrawable(context, fermatDrawable);
     }
 
     @Override
-    public View obtainView(Context context,FermatView fermatView) {
-        return ResViewFrameworkHelper.obtainView(context,fermatView);
+    public View obtainView(Context context, FermatView fermatView) {
+        return ResViewFrameworkHelper.obtainView(context, fermatView);
     }
 
     @Override
-    public int obtainRes(int resType,Context context, int id) {
+    public int obtainRes(int resType, Context context, int id) {
         int resId = 0;
-        switch (resType){
+        switch (resType) {
             case DRAWABLE_TYPE:
-                resId = ResDrawableFrameworkHelper.obtainResDrawable(context,id);
+                resId = ResDrawableFrameworkHelper.obtainResDrawable(context, id);
                 break;
             case VIEW_TYPE:
                 break;

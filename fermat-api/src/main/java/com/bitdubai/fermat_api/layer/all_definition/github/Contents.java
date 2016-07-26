@@ -9,11 +9,11 @@ public class Contents extends RepositoryContents {
 
     private String message;
 
-    public void setMessage(String message){
+    public void setMessage(String message) {
         this.message = message;
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return this.message;
     }
 }

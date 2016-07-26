@@ -8,7 +8,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Unit Test para el metodo getValue() de CryptoBrokerWalletFragmentsEnumType
- *
+ * <p/>
  * Created by nelson on 17/09/15.
  */
 public class GetValueTest {

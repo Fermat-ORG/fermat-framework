@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantCreateCryptoCustomerIdentityException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T CREATE THE CRYPTO CUSTOMER IDENTITY";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

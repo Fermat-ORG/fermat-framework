@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2016.02.08..
  */
-public interface AbstractFermatFragmentInterface<S extends FermatSession,R extends ResourceProviderManager> {
+public interface AbstractFermatFragmentInterface<S extends FermatSession, R extends ResourceProviderManager> {
 
 
     void setAppSession(S appSession);
@@ -21,13 +21,16 @@ public interface AbstractFermatFragmentInterface<S extends FermatSession,R exten
      * Methods for view updates
      */
     void onUpdateViewOnUIThread(FermatBundle code);
+
     void onUpdateView(FermatBundle code);
+
     void onUpdateViewOnUIThread(String code);
 
     /**
      * This method is called when the user press the back button
      */
     void onBackPressed();
+
     /**
      * This method is called when the fragment is on user's focus
      */

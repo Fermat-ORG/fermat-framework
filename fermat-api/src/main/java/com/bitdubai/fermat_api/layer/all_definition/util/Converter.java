@@ -21,7 +21,8 @@ public final class Converter {
 
     // We declare a private constructor to avoid
     // clients creating instances of this class
-    private Converter(){}
+    private Converter() {
+    }
 
     /*
      * Round down a double
@@ -31,7 +32,7 @@ public final class Converter {
      * (long) x, both round down the value
      * https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html#longValue()
      */
-    private static long roundDown(double x){
+    private static long roundDown(double x) {
         return (long) x;
     }
 
@@ -41,7 +42,7 @@ public final class Converter {
      * number that is greater than or equal to x.
      * Source: http://docs.oracle.com/javase/7/docs/api/java/lang/Math.html#ceil(double)
      */
-    private static long roundUp(double x){
+    private static long roundUp(double x) {
         return (long) Math.ceil(x);
     }
 
@@ -73,20 +74,18 @@ public final class Converter {
     }
 
 
-
     public static long getProportionalCryptoAmountRoundedDown(long cryptoAmountExchangeRateReference,
                                                               long fiatAmountExchangeRateReference,
                                                               long fiatAmountToConvert) {
-        double cryptoAmount = fiatAmountToConvert * (((double)cryptoAmountExchangeRateReference) / fiatAmountExchangeRateReference);
+        double cryptoAmount = fiatAmountToConvert * (((double) cryptoAmountExchangeRateReference) / fiatAmountExchangeRateReference);
         return roundDown(cryptoAmount);
     }
-
 
 
     public static long getProportionalFiatAmountRoundedDown(long cryptoAmountExchangeRateReference,
                                                             long fiatAmountExchangeRateReference,
                                                             long cryptoAmountToConvert) {
-        double fiatAmount = cryptoAmountToConvert * (((double)fiatAmountExchangeRateReference) / cryptoAmountExchangeRateReference);
+        double fiatAmount = cryptoAmountToConvert * (((double) fiatAmountExchangeRateReference) / cryptoAmountExchangeRateReference);
         return roundDown(fiatAmount);
     }
 
@@ -120,16 +119,15 @@ public final class Converter {
     public static long getProportionalCryptoAmountRoundedUp(long cryptoAmountExchangeRateReference,
                                                             long fiatAmountExchangeRateReference,
                                                             long fiatAmountToConvert) {
-        double cryptoAmount = fiatAmountToConvert * (((double)cryptoAmountExchangeRateReference) / fiatAmountExchangeRateReference);
+        double cryptoAmount = fiatAmountToConvert * (((double) cryptoAmountExchangeRateReference) / fiatAmountExchangeRateReference);
         return roundUp(cryptoAmount);
     }
-
 
 
     public static long getProportionalFiatAmountRoundedUp(long cryptoAmountExchangeRateReference,
                                                           long fiatAmountExchangeRateReference,
                                                           long cryptoAmountToConvert) {
-        double fiatAmount = cryptoAmountToConvert * (((double)fiatAmountExchangeRateReference) / cryptoAmountExchangeRateReference);
+        double fiatAmount = cryptoAmountToConvert * (((double) fiatAmountExchangeRateReference) / cryptoAmountExchangeRateReference);
         return roundUp(fiatAmount);
     }
 }

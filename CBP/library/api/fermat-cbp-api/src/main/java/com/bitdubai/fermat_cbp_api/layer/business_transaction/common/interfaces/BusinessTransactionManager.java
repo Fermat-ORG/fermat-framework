@@ -12,9 +12,7 @@ public interface BusinessTransactionManager extends FermatManager {
      * This method returns the transaction completion date. If returns 0 the transaction is processing.
      *
      * @param contractHash the contract hash
-     *
      * @return the completion datetime in millis
-     *
      * @throws CantGetCompletionDateException
      */
     long getCompletionDate(String contractHash) throws CantGetCompletionDateException;

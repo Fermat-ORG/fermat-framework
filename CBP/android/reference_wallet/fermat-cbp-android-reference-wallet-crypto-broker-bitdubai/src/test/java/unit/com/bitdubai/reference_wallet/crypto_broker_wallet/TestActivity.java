@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
  * Created by nelson on 21/09/15.

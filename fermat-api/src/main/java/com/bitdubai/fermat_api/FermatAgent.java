@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 /**
  * The abstract class <code>com.bitdubai.fermat_api.FermatAgent</code>
  * provides the basic functionality of a fermat agent.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 12/10/2015.
  */
 public abstract class FermatAgent {
@@ -28,11 +28,11 @@ public abstract class FermatAgent {
         this.status = AgentStatus.STOPPED;
     }
 
-    public AgentStatus getStatus(){
+    public AgentStatus getStatus() {
         return status;
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return status == AgentStatus.STARTED;
     }
 

@@ -23,7 +23,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/02/16.
  *
  * @author lnacosta
@@ -34,16 +34,16 @@ import java.util.UUID;
 public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID                 pluginId            ;
+    private final UUID pluginId;
 
 
     private Database database;
 
     public MatchingEngineMiddlewareDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                            final UUID                 pluginId            ) {
+                                                            final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
     /**
@@ -122,14 +122,14 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
          */
         List<String> earningPairColumns = new ArrayList<>();
 
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME                        );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME          );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME     );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME           );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME      );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME);
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME);
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME);
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME);
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME);
         earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNINGS_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME         );
-        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME                     );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME);
 
         /**
          * Table Earning Pair addition.
@@ -142,13 +142,13 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
          */
         List<String> earningTransactionColumns = new ArrayList<>();
 
-        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_ID_COLUMN_NAME                   );
-        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_COLUMN_NAME     );
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_ID_COLUMN_NAME);
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_COLUMN_NAME);
         earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_CURRENCY_TYPE_COLUMN_NAME);
-        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_AMOUNT_COLUMN_NAME               );
-        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_STATE_COLUMN_NAME                );
-        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_TIME_COLUMN_NAME                 );
-        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME      );
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_AMOUNT_COLUMN_NAME);
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_STATE_COLUMN_NAME);
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_TIME_COLUMN_NAME);
+        earningTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME);
 
         /**
          * Table Earning Transaction addition.
@@ -161,18 +161,18 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
          */
         List<String> inputTransactionColumns = new ArrayList<>();
 
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_ID_COLUMN_NAME                     );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME  );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME        );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME   );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME          );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME     );
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_ID_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_GIVING_TYPE_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_GIVING_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_COLUMN_NAME);
         inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_CURRENCY_RECEIVING_TYPE_COLUMN_NAME);
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME       );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_TYPE_COLUMN_NAME                   );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_STATE_COLUMN_NAME                  );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_TRANSACTION_ID_COLUMN_NAME );
-        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME        );
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_AMOUNT_RECEIVING_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_TYPE_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_STATE_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_TRANSACTION_ID_COLUMN_NAME);
+        inputTransactionColumns.add(MatchingEngineMiddlewareDatabaseConstants.INPUT_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME);
 
         /**
          * Table Input Transaction addition.
@@ -200,7 +200,7 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
 
             List<String> developerRow;
 
-            for (final DatabaseTableRecord row: records){
+            for (final DatabaseTableRecord row : records) {
 
                 developerRow = new ArrayList<>();
 
@@ -212,14 +212,14 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
 
             return returnedRecords;
 
-        } catch (final CantLoadTableToMemoryException  |
-                       CantInitializeDatabaseException e) {
+        } catch (final CantLoadTableToMemoryException |
+                CantInitializeDatabaseException e) {
 
             System.err.println(e);
 
             return new ArrayList<>();
 
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             return new ArrayList<>();
         }

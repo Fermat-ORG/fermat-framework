@@ -10,12 +10,12 @@ import java.util.Stack;
 public class RecentsStack extends Stack<RecentApp> {
 
 
-    public RecentApp getApp(String publickKey){
+    public RecentApp getApp(String publickKey) {
         int pos = 0;
         RecentApp recentApp = null;
-        while(true){
-            recentApp =  elementAt(pos);
-            if (recentApp.getPublicKey().equals(publickKey)){
+        while (true) {
+            recentApp = elementAt(pos);
+            if (recentApp.getPublicKey().equals(publickKey)) {
                 break;
             }
             pos++;
@@ -40,22 +40,22 @@ public class RecentsStack extends Stack<RecentApp> {
     }
 
     /**
-     *  If the element is found return the position of the element if is not return -1
+     * If the element is found return the position of the element if is not return -1
      *
      * @param appPublicKey
      * @return
      */
 
-    public int searchApp(String appPublicKey){
-        for (int i=0;i<elementCount;i++){
-            if(elementAt(i).getPublicKey().equals(appPublicKey)){
+    public int searchApp(String appPublicKey) {
+        for (int i = 0; i < elementCount; i++) {
+            if (elementAt(i).getPublicKey().equals(appPublicKey)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public boolean containsKey(String appPublicKey){
+    public boolean containsKey(String appPublicKey) {
         return (searchApp(appPublicKey) != -1);
     }
 }

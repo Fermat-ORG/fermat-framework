@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class GetBankAccountTest {
 
     @Test
-    public void getBankAccount(){
+    public void getBankAccount() {
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class);
         when(cryptoBrokerWalletAssociatedSetting.getBankAccount()).thenReturn(new String());
         assertThat(cryptoBrokerWalletAssociatedSetting.getBankAccount()).isNotNull();

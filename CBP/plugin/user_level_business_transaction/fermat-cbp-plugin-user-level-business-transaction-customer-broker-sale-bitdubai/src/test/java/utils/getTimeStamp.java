@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class getTimeStamp {
 
     @Test
-    public void getTimeStamp(){
+    public void getTimeStamp() {
         CustomerBrokerSaleImpl customerBrokerPurchaseImpl = mock(CustomerBrokerSaleImpl.class);
         when(customerBrokerPurchaseImpl.getTimestamp()).thenReturn(new Long("101010"));
         assertThat(customerBrokerPurchaseImpl.getTimestamp()).isNotNull();
