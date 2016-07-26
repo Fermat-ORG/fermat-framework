@@ -57,26 +57,18 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     public void onBindViewHolder(ContractDetailViewHolder holder, int position) {
         int holderType = getItemViewType(position);
 
+        final ContractDetailActivityFragment parentFragment = (ContractDetailActivityFragment) walletSession.getData("ContractDetailFragment");
+
         switch (holderType) {
             case TYPE_BROKER:
                 ContractDetail brokerViewHolder = dataSet.get(position);
-                holder.setWalletModuleManager(this.walletManager);
-                holder.setSession(this.walletSession);
-                holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.walletSession.getData(
-                                "ContractDetailFragment"));
-                holder.setErrorManager(this.walletSession.getErrorManager());
-                holder.bind(brokerViewHolder);
+                holder.setParentFragment(parentFragment);
+                holder.bind(brokerViewHolder, walletSession);
                 break;
             case TYPE_CUSTOMER:
                 ContractDetail customerHolder = dataSet.get(position);
-                holder.setWalletModuleManager(this.walletManager);
-                holder.setSession(this.walletSession);
-                holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.walletSession.getData(
-                                "ContractDetailFragment"));
-                holder.setErrorManager(this.walletSession.getErrorManager());
-                holder.bind(customerHolder);
+                holder.setParentFragment(parentFragment);
+                holder.bind(customerHolder, walletSession);
                 break;
         }
     }
