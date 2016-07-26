@@ -67,7 +67,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
     private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
     private com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings bitcoinWalletSettings = null;
-    private String previousSelectedItem = "RegTest";
+    private String previousSelectedItem = "TestNet";
 
     private FermatWalletWalletContact cryptoWalletWalletContact;
     private BlockchainNetworkType blockchainNetworkType;
@@ -170,7 +170,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.parseColor("#54ACEC")));
 
-            list.add(new PreferenceSettingsLinkText(13, "Received Regtest Bitcoins", "", 15, Color.parseColor("#54ACEC")));
+            //list.add(new PreferenceSettingsLinkText(13, "Received Regtest Bitcoins", "", 15, Color.parseColor("#54ACEC")));
 
             //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 

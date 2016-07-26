@@ -127,7 +127,7 @@ public class WalletUtils {
     public static CryptoAddress validateAddress(String strToValidate,FermatWallet fermatWallet,BlockchainNetworkType blockchainNetworkType) {
         String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
 
-        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);
+        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.FERMAT);
         for (String token : tokens) {
             token = token.trim();
             if (token.length() > 25 && token.length() < 40) {
